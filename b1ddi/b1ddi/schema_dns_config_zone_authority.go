@@ -144,7 +144,7 @@ func expandConfigZoneAuthority(d []interface{}) *models.ConfigZoneAuthority {
 	in := d[0].(map[string]interface{})
 
 	mname := in["mname"].(string)
-	if in["use_default_mname"].(bool) == true {
+	if in["use_default_mname"].(bool) {
 		mname = ""
 	}
 

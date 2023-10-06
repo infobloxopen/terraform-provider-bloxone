@@ -631,7 +631,7 @@ func resourceConfigAuthZoneDelete(ctx context.Context, d *schema.ResourceData, m
 }
 
 func inheritanceSourceObjUpdater(d []interface{}, r *models.ConfigAuthZoneInheritance) *models.ConfigAuthZoneInheritance {
-	if d == nil || len(d) == 0 || r == nil {
+	if len(d) == 0 || r == nil {
 		return nil
 	}
 	authZoneInheritance := new(models.ConfigAuthZoneInheritance)

@@ -1,5 +1,8 @@
 # Goland
-.idea
+.idea/workspace.xml
+
+# Mac specific files
+.DS_Store
 
 # Vim
 [._]*.s[a-w][a-z]
@@ -12,9 +15,6 @@ pyvenv.cfg
 
 # Go coverage files
 cover.out
-
-# Go vendor directory
-vendor
 
 # Terraform files in the examples directory
 examples/*/*/.terraform

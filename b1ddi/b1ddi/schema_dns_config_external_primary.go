@@ -91,7 +91,7 @@ func flattenConfigExternalPrimary(r *models.ConfigExternalPrimary) map[string]in
 }
 
 func expandConfigExternalPrimary(d map[string]interface{}) *models.ConfigExternalPrimary {
-	if d == nil || len(d) == 0 {
+	if len(d) == 0 {
 		return nil
 	}
 	return &models.ConfigExternalPrimary{

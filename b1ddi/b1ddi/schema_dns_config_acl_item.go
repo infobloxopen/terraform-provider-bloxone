@@ -88,7 +88,7 @@ func flattenConfigACLItem(r *models.ConfigACLItem) map[string]interface{} {
 }
 
 func expandConfigACLItem(d map[string]interface{}) *models.ConfigACLItem {
-	if d == nil || len(d) == 0 {
+	if len(d) == 0 {
 		return nil
 	}
 

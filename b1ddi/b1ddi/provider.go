@@ -55,7 +55,6 @@ func Provider() *schema.Provider {
 			"b1ddi_dns_record":      resourceDataRecord(),
 			"b1ddi_dns_auth_nsg":    resourceConfigAuthNSG(),
 			"b1ddi_dns_forward_nsg": resourceConfigForwardNSG(),
-			//"b1ddi_ipam_next_available_subnet": resourceIpamsvcNextAvailableSubnetResponse(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"b1ddi_ip_spaces":                   dataSourceIpamsvcIPSpace(),

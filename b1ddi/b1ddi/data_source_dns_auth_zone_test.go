@@ -13,13 +13,13 @@ func TestAccDataSourceConfigAuthZone_Basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceDnsAuthZoneBasicTestStep(t),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					data "b1ddi_dns_auth_zones" "tf_acc_auth_zones" {
 						filters = {
 							fqdn = "tf-acc-test.com."
 						}
 					}
-				`),
+				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.b1ddi_dns_auth_zones.tf_acc_auth_zones", "results.#", "1"),
 					resource.TestCheckResourceAttrSet("data.b1ddi_dns_auth_zones.tf_acc_auth_zones", "results.0.id"),
@@ -37,13 +37,13 @@ func TestAccDataSourceConfigAuthZone_FullConfigCloud(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceDnsAuthZoneFullConfigCloudTestStep(t),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					data "b1ddi_dns_auth_zones" "tf_acc_auth_zones" {
 						filters = {
 							fqdn = "tf-acc-test.com."
 						}
 					}
-				`),
+				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.b1ddi_dns_auth_zones.tf_acc_auth_zones", "results.#", "1"),
 					resource.TestCheckResourceAttrSet("data.b1ddi_dns_auth_zones.tf_acc_auth_zones", "results.0.id"),
