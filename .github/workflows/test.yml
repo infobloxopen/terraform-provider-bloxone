@@ -1,0 +1,51 @@
+# This GitHub action runs your tests for each commit push and/or PR. Optionally
+# you can turn it on using a cron schedule for regular testing.
+#
+name: basic checks
+on:
+  pull_request:
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+
+jobs:
+  # ensure the code builds...
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+
+      - name: Setup Go 1.18
+        uses: actions/setup-go@v2.1.3
+        with:
+          go-version: '1.18'
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2.4.0
+
+      - name: Get dependencies
+        run: |
+          go mod download
+
+      # Run go lint on the code
+      - name: Run go lint
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.54.2
+          
+          golangci-lint run
+
+      - name: Build
+        run: |
+          go build -v .
+
+      - name: Terraform acceptance tests
+        timeout-minutes: 10
+        env:
+          TF_ACC: "1"
+          B1DDI_HOST: ${{ secrets.BLOXONE_HOST }}
+          B1DDI_API_KEY: ${{ secrets.BLOXONE_API_KEY }}
+          INTERNAL_SECONDARY: ${{ secrets.INTERNAL_SECONDARY }}
+        run: |
+          go test -v -cover ./b1ddi

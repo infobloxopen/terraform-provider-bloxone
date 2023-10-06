@@ -1,0 +1,26 @@
+# Goland
+.idea
+
+# Vim
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+pyvenv.cfg
+
+# Go coverage files
+cover.out
+
+# Go vendor directory
+vendor
+
+# Terraform files in the examples directory
+examples/*/*/.terraform
+examples/*/*/.terraform.lock.hcl
+examples/*/*/terraform.tfstate
+examples/*/*/terraform.tfstate.backup
+
+# Test coverage reports
+*cover.out
