@@ -75,4 +75,5 @@ jobs:
           B1DDI_API_KEY: ${{ secrets.BLOXONE_API_KEY }}
           INTERNAL_SECONDARY: ${{ secrets.INTERNAL_SECONDARY }}
         run: |
+          echo $B1DDI_HOST, $B1DDI_API_KEY
           go test -v -cover ./b1ddi/b1ddi
