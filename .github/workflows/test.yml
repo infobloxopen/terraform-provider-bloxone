@@ -27,7 +27,7 @@ jobs:
           go mod download
       - name: Build
         run: |
-          go build -v .    
+          go build -v ./b1ddi    
 
   lint:
     name: Go Linter
