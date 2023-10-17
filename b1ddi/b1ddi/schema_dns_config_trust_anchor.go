@@ -89,7 +89,7 @@ func flattenConfigTrustAnchor(r *models.ConfigTrustAnchor) map[string]interface{
 }
 
 func expandConfigTrustAnchor(d map[string]interface{}) *models.ConfigTrustAnchor {
-	if d == nil || len(d) == 0 {
+	if len(d) == 0 {
 		return nil
 	}
 

@@ -1,7 +1,6 @@
 package b1ddi
 
 import (
-	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
 )
@@ -13,14 +12,13 @@ func TestAccDataSourceIpamsvcAddressBlock_Basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceAddressBlockBasicTestStep(),
 			{
-				Config: fmt.Sprintf(`
-					data "b1ddi_address_blocks" "tf_acc_address_blocks" {
+				Config: `data "b1ddi_address_blocks" "tf_acc_address_blocks" {
 						filters = {
 							# Check string filter
 							"name" = "tf_acc_test_address_block"
 						}
 					}
-				`),
+				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.b1ddi_address_blocks.tf_acc_address_blocks", "results.#", "1"),
 					resource.TestCheckResourceAttrSet("data.b1ddi_address_blocks.tf_acc_address_blocks", "results.0.id"),
@@ -38,14 +36,14 @@ func TestAccDataSourceIpamsvcAddressBlock_FullConfig(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceAddressBlockFullConfigTestStep(),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					data "b1ddi_address_blocks" "tf_acc_address_blocks" {
 						filters = {
 							# Check string filter
 							"name" = "tf_acc_test_address_block"
 						}
 					}
-				`),
+				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.b1ddi_address_blocks.tf_acc_address_blocks", "results.#", "1"),
 					resource.TestCheckResourceAttrSet("data.b1ddi_address_blocks.tf_acc_address_blocks", "results.0.id"),

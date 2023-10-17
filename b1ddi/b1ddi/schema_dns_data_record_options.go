@@ -7,8 +7,8 @@ import (
 )
 
 /*
-	updateDataRecordOptions helps convert string options(supposed to be boolean) values into boolean
-    Introduced to fix issues where terraform converts boolean values to string in rendered config
+		updateDataRecordOptions helps convert string options(supposed to be boolean) values into boolean
+	    Introduced to fix issues where terraform converts boolean values to string in rendered config
 */
 func updateDataRecordOptions(d interface{}, recordType string) (interface{}, diag.Diagnostics) {
 	if d == nil {

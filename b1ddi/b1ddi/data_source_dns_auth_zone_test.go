@@ -1,7 +1,6 @@
 package b1ddi
 
 import (
-	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
 )
@@ -61,13 +60,13 @@ func TestAccDataSourceConfigAuthZone_FullConfigExternal(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceDnsAuthZoneFullConfigExternalTestStep(t),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					data "b1ddi_dns_auth_zones" "tf_acc_auth_zones" {
 						filters = {
 							fqdn = "tf-acc-test.com."
 						}
 					}
-				`),
+				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.b1ddi_dns_auth_zones.tf_acc_auth_zones", "results.#", "1"),
 					resource.TestCheckResourceAttrSet("data.b1ddi_dns_auth_zones.tf_acc_auth_zones", "results.0.id"),

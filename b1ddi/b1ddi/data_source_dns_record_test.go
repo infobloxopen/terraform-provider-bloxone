@@ -1,7 +1,6 @@
 package b1ddi
 
 import (
-	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
 )
@@ -13,7 +12,7 @@ func TestAccDataSourceDataRecord(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceDnsRecordBasicTestStep(t),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					data "b1ddi_dns_records" "tf_acc_dns_records" {
 						filters = {
 							# Check string filter
@@ -21,7 +20,7 @@ func TestAccDataSourceDataRecord(t *testing.T) {
 							"type" = "A"
 						}
 					}
-				`),
+				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.b1ddi_dns_records.tf_acc_dns_records", "results.#", "1"),
 					resource.TestCheckResourceAttrSet("data.b1ddi_dns_records.tf_acc_dns_records", "results.0.id"),

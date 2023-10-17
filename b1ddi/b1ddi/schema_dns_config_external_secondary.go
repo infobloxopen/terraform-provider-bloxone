@@ -87,7 +87,7 @@ func flattenConfigExternalSecondary(r *models.ConfigExternalSecondary) map[strin
 }
 
 func expandConfigExternalSecondary(d map[string]interface{}) *models.ConfigExternalSecondary {
-	if d == nil || len(d) == 0 {
+	if len(d) == 0 {
 		return nil
 	}
 	return &models.ConfigExternalSecondary{

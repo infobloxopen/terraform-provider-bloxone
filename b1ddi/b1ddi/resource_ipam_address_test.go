@@ -28,8 +28,7 @@ func TestAccResourceAddress_Basic(t *testing.T) {
 
 func resourceAddressBasicTestStep() resource.TestStep {
 	return resource.TestStep{
-		Config: fmt.Sprintf(`
-					resource "b1ddi_ip_space" "tf_acc_test_space" {
+		Config: `resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
 					}
@@ -45,7 +44,7 @@ func resourceAddressBasicTestStep() resource.TestStep {
 						comment = "This Address is created by terraform provider acceptance test"
 						space = b1ddi_ip_space.tf_acc_test_space.id
 						depends_on = [b1ddi_subnet.tf_acc_test_subnet]
-					}`),
+					}`,
 		Check: resource.ComposeAggregateTestCheckFunc(
 			testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
 			testCheckSubnetExists("b1ddi_subnet.tf_acc_test_subnet"),
@@ -77,7 +76,7 @@ func TestAccResourceAddress_FullConfig(t *testing.T) {
 		ProviderFactories: testAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -104,7 +103,7 @@ func TestAccResourceAddress_FullConfig(t *testing.T) {
 							TestType = "Acceptance"
 						}
 						depends_on = [b1ddi_subnet.tf_acc_test_subnet]
-					}`),
+					}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
 					testCheckSubnetExists("b1ddi_subnet.tf_acc_test_subnet"),
@@ -151,7 +150,7 @@ func TestAccResourceAddress_UpdateSpaceExpectError(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceAddressBasicTestStep(),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -172,7 +171,7 @@ func TestAccResourceAddress_UpdateSpaceExpectError(t *testing.T) {
 						comment = "This Address is created by terraform provider acceptance test"
 						space = b1ddi_ip_space.tf_acc_new_test_space.id
 						depends_on = [b1ddi_subnet.tf_acc_test_subnet]
-					}`),
+					}`,
 				ExpectError: regexp.MustCompile("changing the value of '[a-z]*' field is not allowed"),
 			},
 			{
@@ -191,7 +190,7 @@ func TestAccResourceAddress_Update(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceAddressBasicTestStep(),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -218,7 +217,7 @@ func TestAccResourceAddress_Update(t *testing.T) {
 							TestType = "Acceptance"
 						}
 						depends_on = [b1ddi_subnet.tf_acc_test_subnet]
-					}`),
+					}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccAddressExists("b1ddi_address.tf_acc_test_address"),
 					testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
@@ -266,7 +265,7 @@ func TestAccResourceAddress_NextAvailableIP(t *testing.T) {
 		ProviderFactories: testAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -282,7 +281,7 @@ func TestAccResourceAddress_NextAvailableIP(t *testing.T) {
 						parent = b1ddi_subnet.tf_acc_test_subnet.id
 						comment = "This Address is created by terraform provider acceptance test"
 						space = b1ddi_ip_space.tf_acc_test_space.id
-					}`),
+					}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
 					testCheckSubnetExists("b1ddi_subnet.tf_acc_test_subnet"),
@@ -323,7 +322,7 @@ func TestAccResourceAddress_NextAvailableIP_FullConfig(t *testing.T) {
 		ProviderFactories: testAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -348,7 +347,7 @@ func TestAccResourceAddress_NextAvailableIP_FullConfig(t *testing.T) {
 						tags = {
 							TestType = "Acceptance"
 						}
-					}`),
+					}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
 					testCheckSubnetExists("b1ddi_subnet.tf_acc_test_subnet"),

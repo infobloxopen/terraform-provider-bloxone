@@ -598,13 +598,14 @@ func resourceIpamsvcAddressBlockUpdate(ctx context.Context, d *schema.ResourceDa
 func resourceIpamsvcAddressBlockDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*b1ddiclient.Client)
 
-	var diags diag.Diagnostics
-
 	_, err := c.IPAddressManagementAPI.AddressBlock.AddressBlockDelete(&address_block.AddressBlockDeleteParams{ID: d.Id(), Context: ctx}, nil)
 	if err != nil {
 		switch err.Error() {
 		case errAddressBlockNotFound, errRecordNotFound, errIncorrectUtilizationUpdateRef:
-			diags = append(diags, diag.Diagnostic{Severity: diag.Warning, Summary: err.Error()})
+			return diag.Diagnostics{
+				diag.Diagnostic{Severity: diag.Warning, Summary: err.Error()},
+			}
+
 		default:
 			return diag.FromErr(err)
 		}

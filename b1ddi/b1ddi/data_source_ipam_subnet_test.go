@@ -1,7 +1,6 @@
 package b1ddi
 
 import (
-	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
 )
@@ -15,7 +14,7 @@ func TestAccDataSourceIpamsvcSubnet_Basic(t *testing.T) {
 			resourceSubnetBasicTestStep(),
 			// Check Subnet data source
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					data "b1ddi_subnets" "tf_acc_subnets" {
 						filters = {
 							# Check string filter
@@ -24,7 +23,7 @@ func TestAccDataSourceIpamsvcSubnet_Basic(t *testing.T) {
 							"cidr" = 24
 						}
 					}
-				`),
+				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.b1ddi_subnets.tf_acc_subnets", "results.#", "1"),
 					resource.TestCheckResourceAttrSet("data.b1ddi_subnets.tf_acc_subnets", "results.0.id"),
@@ -44,7 +43,7 @@ func TestAccDataSourceIpamsvcSubnet_FullConfig(t *testing.T) {
 			resourceSubnetFullConfigTestStep(t),
 			// Check Subnet data source
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					data "b1ddi_subnets" "tf_acc_subnets" {
 						filters = {
 							# Check string filter
@@ -53,7 +52,7 @@ func TestAccDataSourceIpamsvcSubnet_FullConfig(t *testing.T) {
 							"cidr" = 24
 						}
 					}
-				`),
+				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.b1ddi_subnets.tf_acc_subnets", "results.#", "1"),
 					resource.TestCheckResourceAttrSet("data.b1ddi_subnets.tf_acc_subnets", "results.0.id"),

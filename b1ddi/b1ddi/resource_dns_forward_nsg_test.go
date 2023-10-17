@@ -27,10 +27,10 @@ func TestAccResourceDnsForwardNsg_Basic(t *testing.T) {
 
 func resourceDnsForwardNsgBasicTestStep() resource.TestStep {
 	return resource.TestStep{
-		Config: fmt.Sprintf(`
+		Config: `
 		resource "b1ddi_dns_forward_nsg" "tf_acc_test_forward_nsg" {
 			name = "tf_acc_test_forward_nsg"
-		}`),
+		}`,
 		Check: resource.ComposeAggregateTestCheckFunc(
 			testAccDnsForwardNsgExists("b1ddi_dns_forward_nsg.tf_acc_test_forward_nsg"),
 			resource.TestCheckResourceAttr("b1ddi_dns_forward_nsg.tf_acc_test_forward_nsg", "comment", ""),

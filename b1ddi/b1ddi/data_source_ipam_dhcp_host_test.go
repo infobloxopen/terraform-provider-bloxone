@@ -12,9 +12,9 @@ func TestAccDataSourceIpamsvcDhcpHost(t *testing.T) {
 		ProviderFactories: testAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					data "b1ddi_dhcp_hosts" "dhcp_hosts" {}
-				`),
+				`,
 			},
 		},
 	})

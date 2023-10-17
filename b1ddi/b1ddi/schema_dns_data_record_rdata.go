@@ -11,8 +11,8 @@ var (
 )
 
 /*
-	updateDataRecordRData helps convert rDATA record fields of type integer from string value
-    Introduced to fix issues where terraform converts integer values to string in rendered config
+		updateDataRecordRData helps convert rDATA record fields of type integer from string value
+	    Introduced to fix issues where terraform converts integer values to string in rendered config
 */
 func updateDataRecordRData(d interface{}, recordType string) (interface{}, diag.Diagnostics) {
 	if d == nil {

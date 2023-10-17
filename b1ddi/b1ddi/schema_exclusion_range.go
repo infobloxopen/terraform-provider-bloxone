@@ -53,7 +53,7 @@ func flattenIpamsvcExclusionRange(r *models.IpamsvcExclusionRange) map[string]in
 }
 
 func expandIpamsvcExclusionRange(d map[string]interface{}) *models.IpamsvcExclusionRange {
-	if d == nil || len(d) == 0 {
+	if len(d) == 0 {
 		return nil
 	}
 

@@ -48,7 +48,7 @@ func flattenIpamsvcName(r *models.IpamsvcName) map[string]interface{} {
 }
 
 func expandIpamsvcName(d map[string]interface{}) *models.IpamsvcName {
-	if d == nil || len(d) == 0 {
+	if len(d) == 0 {
 		return nil
 	}
 

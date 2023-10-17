@@ -12,9 +12,9 @@ func TestAccDataSourceDnsHost(t *testing.T) {
 		ProviderFactories: testAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					data "b1ddi_dns_hosts" "dns_hosts" {}
-				`),
+				`,
 			},
 		},
 	})

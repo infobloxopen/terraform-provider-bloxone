@@ -1,7 +1,6 @@
 package b1ddi
 
 import (
-	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
 )
@@ -13,7 +12,7 @@ func TestAccDataSourceIpamsvcAddress(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceAddressBasicTestStep(),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					data "b1ddi_addresses" "tf_acc_addresses" {
 						filters = {
 							# Check string filter
@@ -21,7 +20,7 @@ func TestAccDataSourceIpamsvcAddress(t *testing.T) {
 							"comment" = "This Address is created by terraform provider acceptance test"
 						}
 					}
-				`),
+				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.b1ddi_addresses.tf_acc_addresses", "results.#", "1"),
 					resource.TestCheckResourceAttrSet("data.b1ddi_addresses.tf_acc_addresses", "results.0.id"),

@@ -1,7 +1,6 @@
 package b1ddi
 
 import (
-	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
 )
@@ -13,7 +12,7 @@ func TestAccDataSourceIpamsvcRange_Basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceRangeBasicTestStep(),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					data "b1ddi_ranges" "tf_acc_ranges" {
 						filters = {
 							# Check string filter
@@ -22,7 +21,7 @@ func TestAccDataSourceIpamsvcRange_Basic(t *testing.T) {
 							"end" = "192.168.1.30"
 						}
 					}
-				`),
+				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.b1ddi_ranges.tf_acc_ranges", "results.#", "1"),
 					resource.TestCheckResourceAttrSet("data.b1ddi_ranges.tf_acc_ranges", "results.0.id"),
@@ -40,7 +39,7 @@ func TestAccDataSourceIpamsvcRange_FullConfig(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceRangeFullConfigTestStep(),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					data "b1ddi_ranges" "tf_acc_ranges" {
 						filters = {
 							# Check string filter
@@ -49,7 +48,7 @@ func TestAccDataSourceIpamsvcRange_FullConfig(t *testing.T) {
 							"end" = "192.168.1.30"
 						}
 					}
-				`),
+				`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.b1ddi_ranges.tf_acc_ranges", "results.#", "1"),
 					resource.TestCheckResourceAttrSet("data.b1ddi_ranges.tf_acc_ranges", "results.0.id"),

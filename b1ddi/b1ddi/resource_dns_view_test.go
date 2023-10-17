@@ -27,10 +27,10 @@ func TestAccResourceDnsView_Basic(t *testing.T) {
 
 func resourceDnsViewBasicTestStep() resource.TestStep {
 	return resource.TestStep{
-		Config: fmt.Sprintf(`
+		Config: `
 					resource "b1ddi_dns_view" "tf_acc_test_dns_view" {
 						name = "tf_acc_test_dns_view"
-					}`),
+					}`,
 		Check: resource.ComposeAggregateTestCheckFunc(
 			testAccDnsViewExists("b1ddi_dns_view.tf_acc_test_dns_view"),
 			resource.TestCheckResourceAttr("b1ddi_dns_view.tf_acc_test_dns_view", "comment", ""),
@@ -123,7 +123,7 @@ func TestAccResourceDnsView_FullConfig(t *testing.T) {
 
 func resourceDnsViewFullConfigTestStep() resource.TestStep {
 	return resource.TestStep{
-		Config: fmt.Sprintf(`
+		Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -233,7 +233,7 @@ func resourceDnsViewFullConfigTestStep() resource.TestStep {
 							rname = "rname"
 							use_default_mname = false
 						}
-					}`),
+					}`,
 		Check: resource.ComposeAggregateTestCheckFunc(
 			testAccDnsViewExists("b1ddi_dns_view.tf_acc_test_dns_view"),
 			resource.TestCheckResourceAttr("b1ddi_dns_view.tf_acc_test_dns_view", "comment", "This DNS View is created by the terraform provider acceptance test"),
@@ -353,7 +353,7 @@ func TestAccResourceDnsView_Update(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceDnsViewBasicTestStep(),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -462,7 +462,7 @@ func TestAccResourceDnsView_Update(t *testing.T) {
 							rname = "rname"
 							use_default_mname = false
 						}
-					}`),
+					}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccDnsViewExists("b1ddi_dns_view.tf_acc_test_dns_view"),
 					resource.TestCheckResourceAttr("b1ddi_dns_view.tf_acc_test_dns_view", "comment", "This DNS View is created by the terraform provider acceptance test"),

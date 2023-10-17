@@ -36,7 +36,7 @@ func flattenConfigInternalSecondary(r *models.ConfigInternalSecondary) map[strin
 }
 
 func expandConfigInternalSecondary(d map[string]interface{}) *models.ConfigInternalSecondary {
-	if d == nil || len(d) == 0 {
+	if len(d) == 0 {
 		return nil
 	}
 	return &models.ConfigInternalSecondary{

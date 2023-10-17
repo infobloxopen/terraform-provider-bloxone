@@ -27,7 +27,7 @@ func TestAccResourceFixedAddress_Basic(t *testing.T) {
 
 func resourceFixedAddressBasicTestStep() resource.TestStep {
 	return resource.TestStep{
-		Config: fmt.Sprintf(`
+		Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -47,7 +47,7 @@ func resourceFixedAddressBasicTestStep() resource.TestStep {
 						match_value = "00:00:00:00:00:00"
 						comment = "This Fixed Address is created by terraform provider acceptance test"
 						depends_on = [b1ddi_subnet.tf_acc_test_subnet]
-					}`),
+					}`,
 		Check: resource.ComposeAggregateTestCheckFunc(
 			testCheckFixedAddressExists("b1ddi_fixed_address.tf_acc_test_fixed_address"),
 			resource.TestCheckResourceAttr("b1ddi_fixed_address.tf_acc_test_fixed_address", "address", "192.168.1.15"),
@@ -89,7 +89,7 @@ func TestAccResourceFixedAddress_FullConfig(t *testing.T) {
 
 func resourceFixedAddressFullConfigTestStep() resource.TestStep {
 	return resource.TestStep{
-		Config: fmt.Sprintf(`
+		Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -132,7 +132,7 @@ func resourceFixedAddressFullConfigTestStep() resource.TestStep {
 							TestType = "Acceptance"
 						}
 						depends_on = [b1ddi_subnet.tf_acc_test_subnet]
-					}`),
+					}`,
 		Check: resource.ComposeAggregateTestCheckFunc(
 			testCheckFixedAddressExists("b1ddi_fixed_address.tf_acc_test_fixed_address"),
 			resource.TestCheckResourceAttr("b1ddi_fixed_address.tf_acc_test_fixed_address", "address", "192.168.1.15"),
@@ -170,7 +170,7 @@ func TestAccResourceFixedAddress_Update(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceFixedAddressBasicTestStep(),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -213,7 +213,7 @@ func TestAccResourceFixedAddress_Update(t *testing.T) {
 							TestType = "Acceptance"
 						}
 						depends_on = [b1ddi_subnet.tf_acc_test_subnet]
-					}`),
+					}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testCheckFixedAddressExists("b1ddi_fixed_address.tf_acc_test_fixed_address"),
 					resource.TestCheckResourceAttr("b1ddi_fixed_address.tf_acc_test_fixed_address", "address", "192.168.1.15"),

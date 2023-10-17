@@ -59,7 +59,7 @@ func flattenConfigECSZone(r *models.ConfigECSZone) map[string]interface{} {
 }
 
 func expandConfigECSZone(d map[string]interface{}) *models.ConfigECSZone {
-	if d == nil || len(d) == 0 {
+	if len(d) == 0 {
 		return nil
 	}
 

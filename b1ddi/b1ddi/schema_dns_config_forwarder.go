@@ -55,7 +55,7 @@ func flattenConfigForwarder(r *models.ConfigForwarder) map[string]interface{} {
 }
 
 func expandConfigForwarder(d map[string]interface{}) *models.ConfigForwarder {
-	if d == nil || len(d) == 0 {
+	if len(d) == 0 {
 		return nil
 	}
 

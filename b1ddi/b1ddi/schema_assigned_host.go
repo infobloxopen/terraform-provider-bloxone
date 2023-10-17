@@ -10,10 +10,10 @@ import (
 // InheritanceAssignedHost AssignedHost
 //
 // _ddi/assigned_host_ represents a BloxOne DDI host assigned to one of the following:
-//  * Subnet (_ipam/subnet_)
-//  * Range (_ipam/range_)
-//  * Fixed Address (_dhcp/fixed_address_)
-//  * Authoritative Zone (_dns/auth_zone_)
+//   - Subnet (_ipam/subnet_)
+//   - Range (_ipam/range_)
+//   - Fixed Address (_dhcp/fixed_address_)
+//   - Authoritative Zone (_dns/auth_zone_)
 //
 // swagger:model inheritanceAssignedHost
 func schemaInheritanceAssignedHost() *schema.Resource {

@@ -29,7 +29,7 @@ func TestAccResourceAddressBlock_Basic(t *testing.T) {
 
 func resourceAddressBlockBasicTestStep() resource.TestStep {
 	return resource.TestStep{
-		Config: fmt.Sprintf(`
+		Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -43,7 +43,7 @@ func resourceAddressBlockBasicTestStep() resource.TestStep {
 						tags = {
 							TestType = "Acceptance"
 						}
-					}`),
+					}`,
 		Check: resource.ComposeAggregateTestCheckFunc(
 			testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
 			testAccAddressBlockExists("b1ddi_address_block.tf_acc_test_address_block"),
@@ -127,7 +127,7 @@ func TestAccResourceAddressBlock_FullConfig(t *testing.T) {
 
 func resourceAddressBlockFullConfigTestStep() resource.TestStep {
 	return resource.TestStep{
-		Config: fmt.Sprintf(`
+		Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -175,7 +175,7 @@ func resourceAddressBlockFullConfigTestStep() resource.TestStep {
 						tags = {
 							TestType = "Acceptance"
 						}
-					}`),
+					}`,
 		Check: resource.ComposeAggregateTestCheckFunc(
 			testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
 			testAccAddressBlockExists("b1ddi_address_block.tf_acc_test_address_block"),
@@ -251,8 +251,7 @@ func TestAccResourceAddressBlock_UpdateAddressExpectError(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceAddressBlockBasicTestStep(),
 			{
-				Config: fmt.Sprintf(`
-					resource "b1ddi_ip_space" "tf_acc_test_space" {
+				Config: ` resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
 					}
@@ -265,7 +264,7 @@ func TestAccResourceAddressBlock_UpdateAddressExpectError(t *testing.T) {
 						tags = {
 							TestType = "Acceptance"
 						}
-					}`),
+					}`,
 				ExpectError: regexp.MustCompile("changing the value of '[a-z]*' field is not allowed"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
@@ -289,7 +288,7 @@ func TestAccResourceAddressBlock_UpdateSpaceExpectError(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceAddressBlockBasicTestStep(),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -307,7 +306,7 @@ func TestAccResourceAddressBlock_UpdateSpaceExpectError(t *testing.T) {
 						tags = {
 							TestType = "Acceptance"
 						}
-					}`),
+					}`,
 				ExpectError: regexp.MustCompile("changing the value of '[a-z]*' field is not allowed"),
 			},
 			{
@@ -327,7 +326,7 @@ func TestAccResourceAddressBlock_Update(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceAddressBlockBasicTestStep(),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -375,7 +374,7 @@ func TestAccResourceAddressBlock_Update(t *testing.T) {
 						tags = {
 							TestType = "Acceptance"
 						}
-					}`),
+					}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
 					testAccAddressBlockExists("b1ddi_address_block.tf_acc_test_address_block"),

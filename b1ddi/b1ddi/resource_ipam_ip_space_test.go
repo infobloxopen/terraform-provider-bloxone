@@ -32,11 +32,10 @@ func TestAccResourceIPSpace_Basic(t *testing.T) {
 
 func resourceIPSpaceBasicTestStep() resource.TestStep {
 	return resource.TestStep{
-		Config: fmt.Sprintf(`
-					resource "b1ddi_ip_space" "tf_acc_test_space" {
+		Config: `resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
-					}`),
+					}`,
 		Check: resource.ComposeAggregateTestCheckFunc(
 			testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
 			// Check default values
@@ -120,7 +119,7 @@ func TestAccResourceIPSpace_FullConfig(t *testing.T) {
 
 func resourceIPSpaceFullConfigTestStep() resource.TestStep {
 	return resource.TestStep{
-		Config: fmt.Sprintf(`
+		Config: `
 				data "b1ddi_option_codes" "tf_acc_option_code" {
 					filters = {
 						"name" = "routers"
@@ -184,7 +183,7 @@ func resourceIPSpaceFullConfigTestStep() resource.TestStep {
 					}
 
 					
-				}`),
+				}`,
 		Check: resource.ComposeAggregateTestCheckFunc(
 			testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
 
@@ -263,7 +262,7 @@ func TestAccResourceIPSpace_Update(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceIPSpaceBasicTestStep(),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 				data "b1ddi_option_codes" "tf_acc_option_code" {
 					filters = {
 						"name" = "routers"
@@ -318,7 +317,7 @@ func TestAccResourceIPSpace_Update(t *testing.T) {
 					}
 
 					
-				}`),
+				}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
 

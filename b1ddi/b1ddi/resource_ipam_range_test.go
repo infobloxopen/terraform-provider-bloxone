@@ -29,7 +29,7 @@ func TestAccResourceRange_basic(t *testing.T) {
 
 func resourceRangeBasicTestStep() resource.TestStep {
 	return resource.TestStep{
-		Config: fmt.Sprintf(`
+		Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -48,7 +48,7 @@ func resourceRangeBasicTestStep() resource.TestStep {
 						space = b1ddi_ip_space.tf_acc_test_space.id 
   						comment = "This Range is created by terraform provider acceptance test"
 						depends_on = [b1ddi_subnet.tf_acc_test_subnet]
-					}`),
+					}`,
 		Check: resource.ComposeAggregateTestCheckFunc(
 			testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
 			testCheckSubnetExists("b1ddi_subnet.tf_acc_test_subnet"),
@@ -97,7 +97,7 @@ func TestAccResourceRange_full_config(t *testing.T) {
 
 func resourceRangeFullConfigTestStep() resource.TestStep {
 	return resource.TestStep{
-		Config: fmt.Sprintf(`
+		Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -142,7 +142,7 @@ func resourceRangeFullConfigTestStep() resource.TestStep {
 						}
 						#threshold {}
 						depends_on = [b1ddi_subnet.tf_acc_test_subnet]
-					}`),
+					}`,
 		Check: resource.ComposeAggregateTestCheckFunc(
 			testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
 			testCheckSubnetExists("b1ddi_subnet.tf_acc_test_subnet"),
@@ -187,7 +187,7 @@ func TestAccResourceRange_UpdateSpaceExpectError(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceRangeBasicTestStep(),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -210,7 +210,7 @@ func TestAccResourceRange_UpdateSpaceExpectError(t *testing.T) {
 						space = b1ddi_ip_space.tf_acc_new_test_space.id 
   						comment = "This Range is created by terraform provider acceptance test"
 						depends_on = [b1ddi_subnet.tf_acc_test_subnet]
-					}`),
+					}`,
 				ExpectError: regexp.MustCompile("changing the value of '[a-z]*' field is not allowed"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
@@ -238,7 +238,7 @@ func TestAccResourceRange_Update(t *testing.T) {
 		Steps: []resource.TestStep{
 			resourceRangeBasicTestStep(),
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 					resource "b1ddi_ip_space" "tf_acc_test_space" {
   						name = "tf_acc_test_space"
   						comment = "This IP Space is created by terraform provider acceptance test"
@@ -283,7 +283,7 @@ func TestAccResourceRange_Update(t *testing.T) {
 						}
 						#threshold {}
 						depends_on = [b1ddi_subnet.tf_acc_test_subnet]
-					}`),
+					}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testCheckIPSpaceExists("b1ddi_ip_space.tf_acc_test_space"),
 					testCheckSubnetExists("b1ddi_subnet.tf_acc_test_subnet"),

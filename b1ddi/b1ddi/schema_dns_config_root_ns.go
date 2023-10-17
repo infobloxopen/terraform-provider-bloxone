@@ -8,7 +8,7 @@ import (
 
 // ConfigRootNS RootNS
 //
-// Root nameserver
+// # Root nameserver
 //
 // swagger:model configRootNS
 func schemaConfigRootNS() *schema.Resource {
@@ -54,7 +54,7 @@ func flattenConfigRootNS(r *models.ConfigRootNS) map[string]interface{} {
 }
 
 func expandConfigRootNS(d map[string]interface{}) *models.ConfigRootNS {
-	if d == nil || len(d) == 0 {
+	if len(d) == 0 {
 		return nil
 	}
 	return &models.ConfigRootNS{
