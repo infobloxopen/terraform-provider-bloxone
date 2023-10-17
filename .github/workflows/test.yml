@@ -57,6 +57,16 @@ jobs:
     timeout-minutes: 10
     needs: build
     steps:
+      - name: Setup Go 1.18
+        uses: actions/setup-go@v2.1.3
+        with:
+          go-version: '1.18'
+        id: go
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2.4.0
+      - name: Get dependencies
+        run: |
+          go mod download
       - name: Run tests
         timeout-minutes: 10
         env:
