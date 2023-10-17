@@ -27,7 +27,7 @@ jobs:
           go mod download
       - name: Build
         run: |
-          go build -v ./b1ddi    
+          go build -v ./b1ddi/b1ddi   
 
   lint:
     name: Go Linter
@@ -75,4 +75,4 @@ jobs:
           B1DDI_API_KEY: ${{ secrets.BLOXONE_API_KEY }}
           INTERNAL_SECONDARY: ${{ secrets.INTERNAL_SECONDARY }}
         run: |
-          go test -v -cover ./b1ddi
+          go test -v -cover ./b1ddi/b1ddi
