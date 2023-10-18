@@ -70,7 +70,7 @@ jobs:
           TF_ACC: "1"
           B1DDI_HOST: ${{ secrets.BLOXONE_HOST }}
           B1DDI_API_KEY: ${{ secrets.BLOXONE_API_KEY }}
-          INTERNAL_SECONDARY: ${{ secrets.INTERNAL_SECONDARY }}
+          DHCP_HOST: ${{ secrets.DHCP_HOST }}
+          DNS_HOST: ${{ secrets.DNS_HOST }}
         run: |
-          env
           go test -v -cover ./b1ddi/b1ddi
