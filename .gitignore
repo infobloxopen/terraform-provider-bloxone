@@ -1,5 +1,5 @@
 # Goland
-.idea/workspace.xml
+/.idea
 
 # Mac specific files
 .DS_Store
@@ -7,10 +7,9 @@
 # Vim
 [._]*.s[a-w][a-z]
 [._]s[a-w][a-z]
-*.un~
+*.un
 Session.vim
 .netrwhist
-*~
 pyvenv.cfg
 
 # Go coverage files
@@ -22,5 +21,3 @@ examples/*/*/.terraform.lock.hcl
 examples/*/*/terraform.tfstate
 examples/*/*/terraform.tfstate.backup
 
-# Test coverage reports
-*cover.out
