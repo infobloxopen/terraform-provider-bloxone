@@ -1,7 +1,5 @@
-# This GitHub action runs your tests for each commit push and/or PR. Optionally
-# you can turn it on using a cron schedule for regular testing.
-#
-name: basic checks
+# This GitHub action runs your tests for each commit push and/or PR.
+name: Build
 on:
   pull_request:
     paths-ignore:
@@ -20,7 +18,7 @@ jobs:
         with:
           go-version: '1.18'
         id: go
-      - name: Check out code into the Go module directory
+      - name: Check out the code into the Go module directory
         uses: actions/checkout@v2.4.0
       - name: Get dependencies
         run: |
@@ -28,7 +26,7 @@ jobs:
       - name: Build
         run: |
           go build -v ./b1ddi/b1ddi   
-
+          
   lint:
     name: Go Linter
     runs-on: ubuntu-latest
@@ -41,20 +39,18 @@ jobs:
           go-version: '1.18'
         id: go
 
-      - name: Check out code into the Go module directory
+      - name: Check out the code into the Go module directory
         uses: actions/checkout@v2.4.0
 
       # Run go lint on the code
       - name: Run go lint
         run: |
           curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.54.2
-
           golangci-lint run --max-issues-per-linter 0 --max-same-issues 0 --timeout 10m
-
+          
   tests:
     name: Terraform acceptance tests
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     environment: testing
     needs: build
     steps:
@@ -63,13 +59,18 @@ jobs:
         with:
           go-version: '1.18'
         id: go
-      - name: Check out code into the Go module directory
+      - name: Check out the code into the Go module directory
         uses: actions/checkout@v2.4.0
       - name: Get dependencies
         run: |
           go mod download
       - name: Run tests
         timeout-minutes: 10
+        env:
+          TF_ACC: "1"
+          B1DDI_HOST: ${{ secrets.BLOXONE_HOST }}
+          B1DDI_API_KEY: ${{ secrets.BLOXONE_API_KEY }}
+          INTERNAL_SECONDARY: ${{ secrets.INTERNAL_SECONDARY }}
         run: |
           echo ${B1DDI_HOST}, ${B1DDI_API_KEY}
           go test -v -cover ./b1ddi/b1ddi
