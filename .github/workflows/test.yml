@@ -55,7 +55,7 @@ jobs:
     name: Terraform acceptance tests
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    environment: Acceptance tests
+    environment: testing
     needs: build
     steps:
       - name: Setup Go 1.18
@@ -76,5 +76,5 @@ jobs:
           B1DDI_API_KEY: ${{ secrets.BLOXONE_API_KEY }}
           INTERNAL_SECONDARY: ${{ secrets.INTERNAL_SECONDARY }}
         run: |
-          echo $B1DDI_HOST, $B1DDI_API_KEY
+          echo ${B1DDI_HOST}, ${B1DDI_API_KEY}
           go test -v -cover ./b1ddi/b1ddi
