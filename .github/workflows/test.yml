@@ -49,12 +49,13 @@ jobs:
         run: |
           curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.54.2
 
-          golangci-lint run
+          golangci-lint run --max-issues-per-linter 0 --max-same-issues 0 --timeout 10m
 
   tests:
     name: Terraform acceptance tests
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    environment: testing
     needs: build
     steps:
       - name: Setup Go 1.18
@@ -75,4 +76,5 @@ jobs:
           B1DDI_API_KEY: ${{ secrets.BLOXONE_API_KEY }}
           INTERNAL_SECONDARY: ${{ secrets.INTERNAL_SECONDARY }}
         run: |
+          echo ${B1DDI_HOST}, ${B1DDI_API_KEY}
           go test -v -cover ./b1ddi/b1ddi
