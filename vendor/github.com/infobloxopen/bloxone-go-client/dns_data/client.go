@@ -1,7 +1,7 @@
 /*
 DNS Data API
 
-The DNS Data is a BloxOne DDI service providing primary authoritative zone support. DNS Data is authoritative for all DNS resource records and is acting as a primary DNS server. It is part of the full-featured, DDI cloud solution that enables customers to deploy large numbers of protocol servers to deliver DNS and DHCP throughout their enterprise network.   
+The DNS Data is a BloxOne DDI service providing primary authoritative zone support. DNS Data is authoritative for all DNS resource records and is acting as a primary DNS server. It is part of the full-featured, DDI cloud solution that enables customers to deploy large numbers of protocol servers to deliver DNS and DHCP throughout their enterprise network.
 
 API version: v1
 */
@@ -11,13 +11,13 @@ API version: v1
 package dns_data
 
 import (
-    "github.com/infobloxopen/bloxone-go-client/internal"
+	"github.com/infobloxopen/bloxone-go-client/internal"
 )
 
 // APIClient manages communication with the DNS Data API API vv1
 // In most cases there should be only one, shared, APIClient.
 type APIClient struct {
-    *internal.APIClient
+	*internal.APIClient
 
 	// API Services
 	RecordAPI RecordAPI
@@ -27,7 +27,7 @@ type APIClient struct {
 // optionally a custom http.Client to allow for advanced features such as caching.
 func NewAPIClient(cfg *internal.Configuration) *APIClient {
 	c := &APIClient{}
-    c.APIClient = internal.NewAPIClient(cfg)
+	c.APIClient = internal.NewAPIClient(cfg)
 
 	// API Services
 	c.RecordAPI = (*RecordAPIService)(&c.Common)

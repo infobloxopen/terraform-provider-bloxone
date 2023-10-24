@@ -11,16 +11,16 @@ API version: v1
 package infra_provision
 
 import (
-    "github.com/infobloxopen/bloxone-go-client/internal"
+	"github.com/infobloxopen/bloxone-go-client/internal"
 )
 
 // APIClient manages communication with the Host Activation Service API vv1
 // In most cases there should be only one, shared, APIClient.
 type APIClient struct {
-    *internal.APIClient
+	*internal.APIClient
 
 	// API Services
-	UICSRAPI UICSRAPI
+	UICSRAPI       UICSRAPI
 	UIJoinTokenAPI UIJoinTokenAPI
 }
 
@@ -28,7 +28,7 @@ type APIClient struct {
 // optionally a custom http.Client to allow for advanced features such as caching.
 func NewAPIClient(cfg *internal.Configuration) *APIClient {
 	c := &APIClient{}
-    c.APIClient = internal.NewAPIClient(cfg)
+	c.APIClient = internal.NewAPIClient(cfg)
 
 	// API Services
 	c.UICSRAPI = (*UICSRAPIService)(&c.Common)

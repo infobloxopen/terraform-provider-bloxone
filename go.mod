@@ -7,7 +7,7 @@ require (
 	github.com/hashicorp/terraform-plugin-framework v1.4.0
 	github.com/hashicorp/terraform-plugin-framework-timetypes v0.3.0
 	github.com/hashicorp/terraform-plugin-log v0.9.0
-	github.com/infobloxopen/bloxone-go-client v0.0.0-unpublished
+	github.com/infobloxopen/bloxone-go-client v0.0.0-20231024161608-5f27bf574555
 )
 
 require (
@@ -63,5 +63,3 @@ require (
 	google.golang.org/grpc v1.57.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 )
-
-replace github.com/infobloxopen/bloxone-go-client => ../bloxone-go-client
