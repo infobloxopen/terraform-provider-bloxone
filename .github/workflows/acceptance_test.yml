@@ -1,0 +1,35 @@
+name: Acceptance Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - release-*
+    paths-ignore:
+    - 'README.md'
+    - 'Makefile'
+    - 'docs/**'
+    - 'examples/**'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    environment: testing
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - uses: actions/setup-go@v4.1.0
+        with:
+          go-version: '1.19'
+      - name: Run tests
+        timeout-minutes: 10
+        env:
+          TF_ACC: "1"
+          BLOXONE_CSP_URL: ${{ secrets.BLOXONE_CSP_URL }}
+          BLOXONE_API_KEY: ${{ secrets.BLOXONE_API_KEY }}
+          DHCP_HOST: ${{ secrets.DHCP_HOST }}
+          DNS_HOST: ${{ secrets.DNS_HOST }}
+        run: |
+          go test $(go list ./... | grep -v 'vendor') -v -cover
