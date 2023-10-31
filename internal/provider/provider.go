@@ -8,8 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/services/ipam"
 )
 
 // Ensure BloxOneProvider satisfies various provider interfaces.
@@ -26,8 +28,8 @@ type BloxOneProvider struct {
 
 // BloxOneProviderModel describes the provider data model.
 type BloxOneProviderModel struct {
-	CSPUrl string `tfsdk:"csp_url"`
-	APIKey string `tfsdk:"api_key"`
+	CSPUrl types.String `tfsdk:"csp_url"`
+	APIKey types.String `tfsdk:"api_key"`
 }
 
 func (p *BloxOneProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -44,7 +46,7 @@ func (p *BloxOneProvider) Schema(ctx context.Context, req provider.SchemaRequest
 			},
 			"api_key": schema.StringAttribute{
 				MarkdownDescription: "API key for accessing the BloxOne API. Can also be configured by using the `BLOXONE_API_KEY` environment variable. https://docs.infoblox.com/space/BloxOneCloud/35430405/Configuring+User+API+Keys",
-				Required:            true,
+				Optional:            true,
 			},
 		},
 	}
@@ -61,7 +63,8 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 	client, err := bloxoneclient.NewAPIClient(bloxoneclient.Configuration{
 		ClientName: fmt.Sprintf("terraform/%s#%s", p.version, p.commit),
-		APIKey:     data.APIKey,
+		APIKey:     data.APIKey.ValueString(),
+		CSPURL:     data.CSPUrl.ValueString(),
 	})
 	if err != nil {
 		resp.Diagnostics.AddError("Client error", fmt.Sprintf("Unable to create new API client: %s", err))
@@ -72,11 +75,15 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 }
 
 func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resource {
-	return []func() resource.Resource{}
+	return []func() resource.Resource{
+		ipam.NewIpSpaceResource,
+	}
 }
 
 func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
-	return []func() datasource.DataSource{}
+	return []func() datasource.DataSource{
+		ipam.NewIpSpaceDataSource,
+	}
 }
 
 func New(version, commit string) func() provider.Provider {

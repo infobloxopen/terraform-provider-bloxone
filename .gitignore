@@ -33,3 +33,5 @@ terraform.tfstate
 *.backup
 
 /terraform-provider-bloxone
+
+.openapi-generator/

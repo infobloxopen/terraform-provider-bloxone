@@ -14,6 +14,48 @@ import (
 
 type FrameworkElementFlExFunc[T any, U any] func(context.Context, T, *diag.Diagnostics) U
 
+func FlattenString(s string) types.String {
+	if s == "" {
+		return types.StringNull()
+	}
+	return types.StringValue(s)
+}
+
+func FlattenStringPointer(s *string) types.String {
+	if s == nil {
+		return types.StringNull()
+	}
+	return FlattenString(*s)
+}
+
+func FlattenInt64(i int64) types.Int64 {
+	if i == 0 {
+		return types.Int64Null()
+	}
+	return types.Int64Value(i)
+}
+
+func FlattenInt64Pointer(i *int64) types.Int64 {
+	if i == nil {
+		return types.Int64Null()
+	}
+	return FlattenInt64(*i)
+}
+
+func FlattenFloat64(f float64) types.Float64 {
+	if f == 0 {
+		return types.Float64Null()
+	}
+	return types.Float64Value(f)
+}
+
+func FlattenFloat64Pointer(f *float64) types.Float64 {
+	if f == nil {
+		return types.Float64Null()
+	}
+	return FlattenFloat64(*f)
+}
+
 func FlattenFrameworkMapString(ctx context.Context, m map[string]interface{}, diags *diag.Diagnostics) types.Map {
 	if len(m) == 0 {
 		return types.MapNull(types.StringType)
@@ -42,6 +84,10 @@ func FlattenFrameworkListString(ctx context.Context, l []string, diags *diag.Dia
 }
 
 func FlattenFrameworkListNestedBlock[T any, U any](ctx context.Context, data []T, attrTypes map[string]attr.Type, diags *diag.Diagnostics, f FrameworkElementFlExFunc[*T, U]) types.List {
+	if len(data) == 0 {
+		return types.ListNull(types.ObjectType{AttrTypes: attrTypes})
+	}
+
 	tfData := ApplyToAll(data, func(t T) U {
 		return f(ctx, &t, diags)
 	})
