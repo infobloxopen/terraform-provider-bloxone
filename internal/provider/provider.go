@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/services/ipam"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/ipam"
 )
 
 // Ensure BloxOneProvider satisfies various provider interfaces.

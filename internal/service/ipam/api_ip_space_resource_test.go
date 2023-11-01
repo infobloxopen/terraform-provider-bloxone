@@ -646,7 +646,7 @@ func testAccIpSpaceBasicConfig(name string) string {
 	// TODO: create basic resource with required fields
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test" {
-    name = "%s"
+    name = %q
 }
 `, name)
 }
@@ -654,18 +654,18 @@ resource "bloxone_ipam_ip_space" "test" {
 func testAccIpSpaceAsmConfig(name string, asmThreshold int, enable, enableNotification bool, forecastPeriod, growthFactor int, growthType string, history, minTotal, minUnused int, reenableDate string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_asm_config" {
-    name = "%s"
+    name = %q
     asm_config = {
 		asm_threshold = %d
 		enable = %t
 		enable_notification = %t
 		forecast_period = %d
 		growth_factor = %d
-		growth_type = "%s"
+		growth_type = %q
 		history = %d
 		min_total = %d
 		min_unused = %d
-		reenable_date = "%s"
+		reenable_date = %q
 	}
 }
 `, name, asmThreshold, enable, enableNotification, forecastPeriod, growthFactor, growthType, history, minTotal, minUnused, reenableDate)
@@ -674,8 +674,8 @@ resource "bloxone_ipam_ip_space" "test_asm_config" {
 func testAccIpSpaceComment(name, comment string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_comment" {
-    name = "%s"
-    comment = "%s"
+    name = %q
+    comment = %q
 }
 `, name, comment)
 }
@@ -683,8 +683,8 @@ resource "bloxone_ipam_ip_space" "test_comment" {
 func testAccIpSpaceDdnsClientUpdate(name, ddnsClientUpdate string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_ddns_client_update" {
-    name = "%s"
-    ddns_client_update = "%s"
+    name = %q
+    ddns_client_update = %q
 }
 `, name, ddnsClientUpdate)
 }
@@ -692,9 +692,9 @@ resource "bloxone_ipam_ip_space" "test_ddns_client_update" {
 func testAccIpSpaceDdnsConflictResolutionMode(name string, ddnsUseConflictResolution bool, ddnsConflictResolutionMode string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_ddns_conflict_resolution_mode" {
-    name = "%s"
+    name = %q
 	ddns_use_conflict_resolution = %t
-    ddns_conflict_resolution_mode = "%s"
+    ddns_conflict_resolution_mode = %q
 }
 `, name, ddnsUseConflictResolution, ddnsConflictResolutionMode)
 }
@@ -702,8 +702,8 @@ resource "bloxone_ipam_ip_space" "test_ddns_conflict_resolution_mode" {
 func testAccIpSpaceDdnsDomain(name, ddnsDomain string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_ddns_domain" {
-    name = "%s"
-    ddns_domain = "%s"
+    name = %q
+    ddns_domain = %q
 }
 `, name, ddnsDomain)
 }
@@ -711,7 +711,7 @@ resource "bloxone_ipam_ip_space" "test_ddns_domain" {
 func testAccIpSpaceDdnsGenerateName(name string, ddnsGenerateName bool) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_ddns_generate_name" {
-    name = "%s"
+    name = %q
     ddns_generate_name = %t
 }
 `, name, ddnsGenerateName)
@@ -720,8 +720,8 @@ resource "bloxone_ipam_ip_space" "test_ddns_generate_name" {
 func testAccIpSpaceDdnsGeneratedPrefix(name, ddnsGeneratedPrefix string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_ddns_generated_prefix" {
-    name = "%s"
-    ddns_generated_prefix = "%s"
+    name = %q
+    ddns_generated_prefix = %q
 }
 `, name, ddnsGeneratedPrefix)
 }
@@ -729,7 +729,7 @@ resource "bloxone_ipam_ip_space" "test_ddns_generated_prefix" {
 func testAccIpSpaceDdnsSendUpdates(name string, ddnsSendUpdates bool) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_ddns_send_updates" {
-    name = "%s"
+    name = %q
     ddns_send_updates = %t
 }
 `, name, ddnsSendUpdates)
@@ -738,7 +738,7 @@ resource "bloxone_ipam_ip_space" "test_ddns_send_updates" {
 func testAccIpSpaceDdnsTtlPercent(name, ddnsTtlPercent string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_ddns_ttl_percent" {
-    name = "%s"
+    name = %q
     ddns_ttl_percent = %s
 }
 `, name, ddnsTtlPercent)
@@ -747,7 +747,7 @@ resource "bloxone_ipam_ip_space" "test_ddns_ttl_percent" {
 func testAccIpSpaceDdnsUpdateOnRenew(name string, ddnsUpdateOnRenew bool) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_ddns_update_on_renew" {
-    name = "%s"
+    name = %q
     ddns_update_on_renew = %t
 }
 `, name, ddnsUpdateOnRenew)
@@ -759,7 +759,7 @@ func testAccIpSpaceDhcpConfig(name string,
 	leaseTime, leaseTimeV6 int) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_dhcp_config" {
-    name = "%s"
+    name = %q
     dhcp_config = {
 		abandoned_reclaim_time = %d
 		abandoned_reclaim_time_v6 = %d
@@ -776,8 +776,8 @@ resource "bloxone_ipam_ip_space" "test_dhcp_config" {
 func testAccIpSpaceHeaderOptionFilename(name, headerOptionFilename string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_header_option_filename" {
-    name = "%s"
-    header_option_filename = "%s"
+    name = %q
+    header_option_filename = %q
 }
 `, name, headerOptionFilename)
 }
@@ -785,8 +785,8 @@ resource "bloxone_ipam_ip_space" "test_header_option_filename" {
 func testAccIpSpaceHeaderOptionServerAddress(name, headerOptionServerAddress string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_header_option_server_address" {
-    name = "%s"
-    header_option_server_address = "%s"
+    name = %q
+    header_option_server_address = %q
 }
 `, name, headerOptionServerAddress)
 }
@@ -794,8 +794,8 @@ resource "bloxone_ipam_ip_space" "test_header_option_server_address" {
 func testAccIpSpaceHeaderOptionServerName(name, headerOptionServerName string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_header_option_server_name" {
-    name = "%s"
-    header_option_server_name = "%s"
+    name = %q
+    header_option_server_name = %q
 }
 `, name, headerOptionServerName)
 }
@@ -803,8 +803,8 @@ resource "bloxone_ipam_ip_space" "test_header_option_server_name" {
 func testAccIpSpaceHostnameRewriteChar(name, hostnameRewriteChar string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_hostname_rewrite_char" {
-    name = "%s"
-    hostname_rewrite_char = "%s"
+    name = %q
+    hostname_rewrite_char = %q
 }
 `, name, hostnameRewriteChar)
 }
@@ -812,7 +812,7 @@ resource "bloxone_ipam_ip_space" "test_hostname_rewrite_char" {
 func testAccIpSpaceHostnameRewriteEnabled(name string, hostnameRewriteEnabled bool) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_hostname_rewrite_enabled" {
-    name = "%s"
+    name = %q
     hostname_rewrite_enabled = %t
 }
 `, name, hostnameRewriteEnabled)
@@ -821,8 +821,8 @@ resource "bloxone_ipam_ip_space" "test_hostname_rewrite_enabled" {
 func testAccIpSpaceHostnameRewriteRegex(name, hostnameRewriteRegex string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_hostname_rewrite_regex" {
-    name = "%s"
-    hostname_rewrite_regex = "%s"
+    name = %q
+    hostname_rewrite_regex = %q
 }
 `, name, hostnameRewriteRegex)
 }
@@ -831,14 +831,14 @@ func testAccIpSpaceTags(name string, tags map[string]string) string {
 	tagsStr := "{\n"
 	for k, v := range tags {
 		tagsStr += fmt.Sprintf(`
-		%s = "%s"
+		%s = %q
 `, k, v)
 	}
 	tagsStr += "\t}"
 
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_tags" {
-    name = "%s"
+    name = %q
     tags = %s
 }
 `, name, tagsStr)

@@ -83,7 +83,7 @@ var IpamsvcIPSpaceAttrTypes = map[string]attr.Type{
 	"id":                                  types.StringType,
 	"inheritance_sources":                 types.ObjectType{AttrTypes: IpamsvcIPSpaceInheritanceAttrTypes},
 	"name":                                types.StringType,
-	"tags":                                types.MapType{},
+	"tags":                                types.MapType{ElemType: types.StringType},
 	"threshold":                           types.ObjectType{AttrTypes: IpamsvcUtilizationThresholdAttrTypes},
 	"updated_at":                          timetypes.RFC3339Type{},
 	"utilization":                         types.ObjectType{AttrTypes: IpamsvcUtilizationAttrTypes},
@@ -124,8 +124,8 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"ddns_client_update": schema.StringAttribute{
 		Optional:            true,
-		Default:             stringdefault.StaticString("client"),
 		Computed:            true,
+		Default:             stringdefault.StaticString("client"),
 		MarkdownDescription: `Controls who does the DDNS updates.  Valid values are: * _client_: DHCP server updates DNS if requested by client. * _server_: DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _ignore_: DHCP server always updates DNS, even if the client says not to. * _over_client_update_: Same as _server_. DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _over_no_update_: DHCP server updates DNS even if the client requests that no updates be done. If the client requests to do the update, DHCP server allows it.  Defaults to _client_.`,
 		Validators: []validator.String{
 			stringvalidator.OneOf("client", "server", "ignore", "over_client_update", "over_no_update"),
@@ -133,8 +133,8 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"ddns_conflict_resolution_mode": schema.StringAttribute{
 		Optional:            true,
-		Default:             stringdefault.StaticString("check_with_dhcid"),
 		Computed:            true,
+		Default:             stringdefault.StaticString("check_with_dhcid"),
 		MarkdownDescription: `The mode used for resolving conflicts while performing DDNS updates.  Valid values are: * _check_with_dhcid_: It includes adding a DHCID record and checking that record via conflict detection as per RFC 4703. * _no_check_with_dhcid_: This will ignore conflict detection but add a DHCID record when creating/updating an entry. * _check_exists_with_dhcid_: This will check if there is an existing DHCID record but does not verify the value of the record matches the update. This will also update the DHCID record for the entry. * _no_check_without_dhcid_: This ignores conflict detection and will not add a DHCID record when creating/updating a DDNS entry.  Defaults to _check_with_dhcid_.`,
 		Validators: []validator.String{
 			stringvalidator.OneOf("check_with_dhcid", "no_check_with_dhcid", "check_exists_with_dhcid"),
@@ -146,20 +146,20 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"ddns_generate_name": schema.BoolAttribute{
 		Optional:            true,
-		Default:             booldefault.StaticBool(false),
 		Computed:            true,
+		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: `Indicates if DDNS needs to generate a hostname when not supplied by the client.  Defaults to _false_.`,
 	},
 	"ddns_generated_prefix": schema.StringAttribute{
 		Optional:            true,
-		Default:             stringdefault.StaticString("myhost"),
 		Computed:            true,
+		Default:             stringdefault.StaticString("myhost"),
 		MarkdownDescription: `The prefix used in the generation of an FQDN.  When generating a name, DHCP server will construct the name in the format: [ddns-generated-prefix]-[address-text].[ddns-qualifying-suffix]. where address-text is simply the lease IP address converted to a hyphenated string.  Defaults to \"myhost\".`,
 	},
 	"ddns_send_updates": schema.BoolAttribute{
 		Optional:            true,
-		Default:             booldefault.StaticBool(true),
 		Computed:            true,
+		Default:             booldefault.StaticBool(true),
 		MarkdownDescription: `Determines if DDNS updates are enabled at the IP space level. Defaults to _true_.`,
 	},
 	"ddns_ttl_percent": schema.Float64Attribute{
@@ -168,14 +168,14 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"ddns_update_on_renew": schema.BoolAttribute{
 		Optional:            true,
-		Default:             booldefault.StaticBool(false),
 		Computed:            true,
+		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: `Instructs the DHCP server to always update the DNS information when a lease is renewed even if its DNS information has not changed.  Defaults to _false_.`,
 	},
 	"ddns_use_conflict_resolution": schema.BoolAttribute{
 		Optional:            true,
-		Default:             booldefault.StaticBool(true),
 		Computed:            true,
+		Default:             booldefault.StaticBool(true),
 		MarkdownDescription: `When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.`,
 	},
 	"dhcp_config": schema.SingleNestedAttribute{
@@ -222,24 +222,24 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `The configuration for header option server name field.`,
 	},
 	"hostname_rewrite_char": schema.StringAttribute{
-		Optional: true,
-		Default:  stringdefault.StaticString("-"),
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString("-"),
+		MarkdownDescription: `The character to replace non-matching characters with, when hostname rewrite is enabled.  Any single ASCII character or no character if the invalid characters should be removed without replacement.  Defaults to \"-\".`,
 		Validators: []validator.String{
 			stringvalidator.LengthAtMost(1),
 		},
-		Computed:            true,
-		MarkdownDescription: `The character to replace non-matching characters with, when hostname rewrite is enabled.  Any single ASCII character or no character if the invalid characters should be removed without replacement.  Defaults to \"-\".`,
 	},
 	"hostname_rewrite_enabled": schema.BoolAttribute{
 		Optional:            true,
-		Default:             booldefault.StaticBool(false),
 		Computed:            true,
+		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: `Indicates if client supplied hostnames will be rewritten prior to DDNS update by replacing every character that does not match _hostname_rewrite_regex_ by _hostname_rewrite_char_.  Defaults to _false_.`,
 	},
 	"hostname_rewrite_regex": schema.StringAttribute{
 		Optional:            true,
-		Default:             stringdefault.StaticString("[^a-zA-Z0-9_.]"),
 		Computed:            true,
+		Default:             stringdefault.StaticString("[^a-zA-Z0-9_.]"),
 		MarkdownDescription: `The regex bracket expression to match valid characters.  Must begin with \"[\" and end with \"]\" and be a compilable POSIX regex.  Defaults to \"[^a-zA-Z0-9_.]\".`,
 	},
 	"id": schema.StringAttribute{
