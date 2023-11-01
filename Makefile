@@ -21,3 +21,8 @@ test:
 
 testacc:
 	TF_LOG=debug TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m -coverprofile testacc-cover.out
+
+gen:
+	go generate
+
+.PHONY: default build install test testacc gen

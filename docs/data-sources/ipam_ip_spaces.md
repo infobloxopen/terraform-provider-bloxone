@@ -74,9 +74,6 @@ Optional:
 - `hostname_rewrite_regex` (String) The regex bracket expression to match valid characters.  Must begin with \"[\" and end with \"]\" and be a compilable POSIX regex.  Defaults to \"[^a-zA-Z0-9_.]\".
 - `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources))
 - `tags` (Map of String) The tags for the IP space in JSON format.
-- `threshold` (Attributes) (see [below for nested schema](#nestedatt--results--threshold))
-- `utilization` (Attributes) (see [below for nested schema](#nestedatt--results--utilization))
-- `utilization_v6` (Attributes) (see [below for nested schema](#nestedatt--results--utilization_v6))
 - `vendor_specific_option_option_space` (String) The resource identifier.
 
 Read-Only:
@@ -84,7 +81,10 @@ Read-Only:
 - `asm_scope_flag` (Number) The number of times the automated scope management usage limits have been exceeded for any of the subnets in this IP space.
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
+- `threshold` (Attributes) (see [below for nested schema](#nestedatt--results--threshold))
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
+- `utilization` (Attributes) (see [below for nested schema](#nestedatt--results--utilization))
+- `utilization_v6` (Attributes) (see [below for nested schema](#nestedatt--results--utilization_v6))
 
 <a id="nestedatt--results--asm_config"></a>
 ### Nested Schema for `results.asm_config`

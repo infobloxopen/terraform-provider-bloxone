@@ -60,7 +60,7 @@ func TestAccIpSpaceResource_basic(t *testing.T) {
 	})
 }
 
-func TestAccIpSpace_disappears(t *testing.T) {
+func TestAccIpSpaceResource_disappears(t *testing.T) {
 	resourceName := "bloxone_ipam_ip_space.test"
 	var v ipam.IpamsvcIPSpace
 
