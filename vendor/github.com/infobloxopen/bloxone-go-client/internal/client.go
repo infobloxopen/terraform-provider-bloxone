@@ -639,14 +639,14 @@ func NewGenericOpenAPIError(error string) error {
 func NewGenericOpenAPIErrorWithBody(error string, body []byte) error {
 	return GenericOpenAPIError{
 		body:  body,
-		error: error,
+		error: fmt.Sprintf("%s, '%s'", error, body),
 	}
 }
 
 func NewGenericOpenAPIErrorWithBodyAndModel(error string, body []byte, model interface{}) error {
 	return GenericOpenAPIError{
 		body:  body,
-		error: error,
+		error: fmt.Sprintf("%s, '%s'", error, body),
 		model: model,
 	}
 }

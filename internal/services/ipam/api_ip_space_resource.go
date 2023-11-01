@@ -3,6 +3,7 @@ package ipam
 import (
 	"context"
 	"fmt"
+	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -92,11 +93,15 @@ func (r *IpSpaceResource) Read(ctx context.Context, req resource.ReadRequest, re
 		return
 	}
 
-	apiRes, _, err := r.client.IPAddressManagementAPI.
+	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		IpSpaceAPI.
 		IpSpaceRead(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
+		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
+			resp.State.RemoveResource(ctx)
+			return
+		}
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read IpSpace, got error: %s", err))
 		return
 	}
@@ -145,11 +150,14 @@ func (r *IpSpaceResource) Delete(ctx context.Context, req resource.DeleteRequest
 		return
 	}
 
-	_, err := r.client.IPAddressManagementAPI.
+	httpRes, err := r.client.IPAddressManagementAPI.
 		IpSpaceAPI.
 		IpSpaceDelete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
+		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
+			return
+		}
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete IpSpace, got error: %s", err))
 		return
 	}

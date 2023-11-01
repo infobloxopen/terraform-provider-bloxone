@@ -7,6 +7,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -45,43 +48,63 @@ var IpamsvcASMConfigAttrTypes = map[string]attr.Type{
 var IpamsvcASMConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"asm_threshold": schema.Int64Attribute{
 		Optional:            true,
+		Default:             int64default.StaticInt64(90),
+		Computed:            true,
 		MarkdownDescription: `ASM shows the number of addresses forecast to be used _forecast_period_ days in the future, if it is greater than _asm_threshold_ percent * _dhcp_total_ (see _dhcp_utilization_) then the subnet is flagged.`,
 	},
 	"enable": schema.BoolAttribute{
 		Optional:            true,
+		Default:             booldefault.StaticBool(true),
+		Computed:            true,
 		MarkdownDescription: `Indicates if Automated Scope Management is enabled.`,
 	},
 	"enable_notification": schema.BoolAttribute{
 		Optional:            true,
+		Default:             booldefault.StaticBool(true),
+		Computed:            true,
 		MarkdownDescription: `Indicates if ASM should send notifications to the user.`,
 	},
 	"forecast_period": schema.Int64Attribute{
 		Optional:            true,
+		Default:             int64default.StaticInt64(14),
+		Computed:            true,
 		MarkdownDescription: `The forecast period in days.`,
 	},
 	"growth_factor": schema.Int64Attribute{
 		Optional:            true,
+		Default:             int64default.StaticInt64(20),
+		Computed:            true,
 		MarkdownDescription: `Indicates the growth in the number or percentage of IP addresses.`,
 	},
 	"growth_type": schema.StringAttribute{
 		Optional:            true,
+		Default:             stringdefault.StaticString("percent"),
+		Computed:            true,
 		MarkdownDescription: `The type of factor to use: _percent_ or _count_.`,
 	},
 	"history": schema.Int64Attribute{
 		Optional:            true,
+		Default:             int64default.StaticInt64(30),
+		Computed:            true,
 		MarkdownDescription: `The minimum amount of history needed before ASM can run on this subnet.`,
 	},
 	"min_total": schema.Int64Attribute{
 		Optional:            true,
+		Default:             int64default.StaticInt64(10),
+		Computed:            true,
 		MarkdownDescription: `The minimum size of range needed for ASM to run on this subnet.`,
 	},
 	"min_unused": schema.Int64Attribute{
 		Optional:            true,
+		Default:             int64default.StaticInt64(10),
+		Computed:            true,
 		MarkdownDescription: `The minimum percentage of addresses that must be available outside of the DHCP ranges and fixed addresses when making a suggested change..`,
 	},
 	"reenable_date": schema.StringAttribute{
 		CustomType: timetypes.RFC3339Type{},
 		Optional:   true,
+		Computed:   true,
+		Default:    stringdefault.StaticString("1970-01-01T00:00:00Z"),
 	},
 }
 
@@ -111,7 +134,7 @@ func (m *IpamsvcASMConfigModel) Expand(ctx context.Context, diags *diag.Diagnost
 		History:            utils.Ptr(int64(m.History.ValueInt64())),
 		MinTotal:           utils.Ptr(int64(m.MinTotal.ValueInt64())),
 		MinUnused:          utils.Ptr(int64(m.MinUnused.ValueInt64())),
-		ReenableDate:       utils.Ptr(flex.ExpandTime(ctx, m.ReenableDate, diags)),
+		ReenableDate:       flex.ExpandTimePointer(ctx, m.ReenableDate, diags),
 	}
 	return to
 }

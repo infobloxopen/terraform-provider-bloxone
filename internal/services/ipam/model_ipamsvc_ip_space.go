@@ -4,13 +4,16 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -93,6 +96,18 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		Attributes: IpamsvcASMConfigResourceSchemaAttributes,
 		Optional:   true,
 		Computed:   true,
+		Default: objectdefault.StaticValue(types.ObjectValueMust(IpamsvcASMConfigAttrTypes, map[string]attr.Value{
+			"asm_threshold":       types.Int64Value(90),
+			"enable":              types.BoolValue(true),
+			"enable_notification": types.BoolValue(true),
+			"forecast_period":     types.Int64Value(14),
+			"growth_factor":       types.Int64Value(20),
+			"growth_type":         types.StringValue("percent"),
+			"history":             types.Int64Value(30),
+			"min_total":           types.Int64Value(10),
+			"min_unused":          types.Int64Value(10),
+			"reenable_date":       timetypes.NewRFC3339ValueMust("1970-01-01T00:00:00Z"),
+		})),
 	},
 	"asm_scope_flag": schema.Int64Attribute{
 		Computed:            true,
@@ -112,12 +127,18 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		Default:             stringdefault.StaticString("client"),
 		Computed:            true,
 		MarkdownDescription: `Controls who does the DDNS updates.  Valid values are: * _client_: DHCP server updates DNS if requested by client. * _server_: DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _ignore_: DHCP server always updates DNS, even if the client says not to. * _over_client_update_: Same as _server_. DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _over_no_update_: DHCP server updates DNS even if the client requests that no updates be done. If the client requests to do the update, DHCP server allows it.  Defaults to _client_.`,
+		Validators: []validator.String{
+			stringvalidator.OneOf("client", "server", "ignore", "over_client_update", "over_no_update"),
+		},
 	},
 	"ddns_conflict_resolution_mode": schema.StringAttribute{
 		Optional:            true,
 		Default:             stringdefault.StaticString("check_with_dhcid"),
 		Computed:            true,
 		MarkdownDescription: `The mode used for resolving conflicts while performing DDNS updates.  Valid values are: * _check_with_dhcid_: It includes adding a DHCID record and checking that record via conflict detection as per RFC 4703. * _no_check_with_dhcid_: This will ignore conflict detection but add a DHCID record when creating/updating an entry. * _check_exists_with_dhcid_: This will check if there is an existing DHCID record but does not verify the value of the record matches the update. This will also update the DHCID record for the entry. * _no_check_without_dhcid_: This ignores conflict detection and will not add a DHCID record when creating/updating a DDNS entry.  Defaults to _check_with_dhcid_.`,
+		Validators: []validator.String{
+			stringvalidator.OneOf("check_with_dhcid", "no_check_with_dhcid", "check_exists_with_dhcid"),
+		},
 	},
 	"ddns_domain": schema.StringAttribute{
 		Optional:            true,
@@ -161,6 +182,18 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes,
 		Optional:   true,
 		Computed:   true,
+		Default: objectdefault.StaticValue(types.ObjectValueMust(IpamsvcDHCPConfigAttrTypes, map[string]attr.Value{
+			"abandoned_reclaim_time":    types.Int64Value(3600),
+			"abandoned_reclaim_time_v6": types.Int64Value(3600),
+			"allow_unknown":             types.BoolValue(true),
+			"allow_unknown_v6":          types.BoolValue(true),
+			"filters":                   types.ListNull(types.StringType),
+			"filters_v6":                types.ListNull(types.StringType),
+			"ignore_client_uid":         types.BoolValue(true),
+			"ignore_list":               types.ListNull(types.ObjectType{AttrTypes: IpamsvcIgnoreItemAttrTypes}),
+			"lease_time":                types.Int64Value(3600),
+			"lease_time_v6":             types.Int64Value(3600),
+		})),
 	},
 	"dhcp_options": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
@@ -189,8 +222,11 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `The configuration for header option server name field.`,
 	},
 	"hostname_rewrite_char": schema.StringAttribute{
-		Optional:            true,
-		Default:             stringdefault.StaticString("-"),
+		Optional: true,
+		Default:  stringdefault.StaticString("-"),
+		Validators: []validator.String{
+			stringvalidator.LengthAtMost(1),
+		},
 		Computed:            true,
 		MarkdownDescription: `The character to replace non-matching characters with, when hostname rewrite is enabled.  Any single ASCII character or no character if the invalid characters should be removed without replacement.  Defaults to \"-\".`,
 	},
@@ -229,7 +265,6 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"threshold": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationThresholdResourceSchemaAttributes,
-		Optional:   true,
 		Computed:   true,
 	},
 	"updated_at": schema.StringAttribute{
@@ -239,12 +274,10 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"utilization": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationResourceSchemaAttributes,
-		Optional:   true,
 		Computed:   true,
 	},
 	"utilization_v6": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationV6ResourceSchemaAttributes,
-		Optional:   true,
 		Computed:   true,
 	},
 	"vendor_specific_option_option_space": schema.StringAttribute{

@@ -27,7 +27,8 @@
 /test/
 
 api*.go
-!api_ip_space_*.go
+!api_ip_space_resource.go
+!api_ip_space_data_source.go
 
 model*.go
 !model_inheritance_inherited*.go

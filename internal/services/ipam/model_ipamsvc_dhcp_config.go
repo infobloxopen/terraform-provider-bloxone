@@ -6,6 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -44,18 +46,26 @@ var IpamsvcDHCPConfigAttrTypes = map[string]attr.Type{
 var IpamsvcDHCPConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"abandoned_reclaim_time": schema.Int64Attribute{
 		Optional:            true,
+		Default:             int64default.StaticInt64(3600),
+		Computed:            true,
 		MarkdownDescription: `The abandoned reclaim time in seconds for IPV4 clients.`,
 	},
 	"abandoned_reclaim_time_v6": schema.Int64Attribute{
 		Optional:            true,
+		Default:             int64default.StaticInt64(3600),
+		Computed:            true,
 		MarkdownDescription: `The abandoned reclaim time in seconds for IPV6 clients.`,
 	},
 	"allow_unknown": schema.BoolAttribute{
 		Optional:            true,
+		Default:             booldefault.StaticBool(true),
+		Computed:            true,
 		MarkdownDescription: `Disable to allow leases only for known IPv4 clients, those for which a fixed address is configured.`,
 	},
 	"allow_unknown_v6": schema.BoolAttribute{
 		Optional:            true,
+		Default:             booldefault.StaticBool(true),
+		Computed:            true,
 		MarkdownDescription: `Disable to allow leases only for known IPV6 clients, those for which a fixed address is configured.`,
 	},
 	"filters": schema.ListAttribute{
@@ -70,6 +80,8 @@ var IpamsvcDHCPConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"ignore_client_uid": schema.BoolAttribute{
 		Optional:            true,
+		Default:             booldefault.StaticBool(false),
+		Computed:            true,
 		MarkdownDescription: `Enable to ignore the client UID when issuing a DHCP lease. Use this option to prevent assigning two IP addresses for a client which does not have a UID during one phase of PXE boot but acquires one for the other phase.`,
 	},
 	"ignore_list": schema.ListNestedAttribute{
@@ -81,10 +93,14 @@ var IpamsvcDHCPConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"lease_time": schema.Int64Attribute{
 		Optional:            true,
+		Default:             int64default.StaticInt64(3600),
+		Computed:            true,
 		MarkdownDescription: `The lease duration in seconds.`,
 	},
 	"lease_time_v6": schema.Int64Attribute{
 		Optional:            true,
+		Default:             int64default.StaticInt64(3600),
+		Computed:            true,
 		MarkdownDescription: `The lease duration in seconds for IPV6 clients.`,
 	},
 }

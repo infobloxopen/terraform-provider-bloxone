@@ -13,7 +13,6 @@ import (
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 type IpamsvcAsmEnableBlockModel struct {
@@ -63,7 +62,7 @@ func (m *IpamsvcAsmEnableBlockModel) Expand(ctx context.Context, diags *diag.Dia
 	to := &ipam.IpamsvcAsmEnableBlock{
 		Enable:             m.Enable.ValueBoolPointer(),
 		EnableNotification: m.EnableNotification.ValueBoolPointer(),
-		ReenableDate:       utils.Ptr(flex.ExpandTime(ctx, m.ReenableDate, diags)),
+		ReenableDate:       flex.ExpandTimePointer(ctx, m.ReenableDate, diags),
 	}
 	return to
 }

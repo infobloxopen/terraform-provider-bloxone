@@ -113,13 +113,27 @@ func ExpandTime(_ context.Context, dt timetypes.RFC3339, diags *diag.Diagnostics
 	return t
 }
 
+func ExpandTimePointer(_ context.Context, dt timetypes.RFC3339, diags *diag.Diagnostics) *time.Time {
+	if dt.IsNull() || dt.IsUnknown() {
+		return nil
+	}
+	t, d := dt.ValueRFC3339Time()
+	diags.Append(d...)
+	return &t
+}
+
 func ExpandFrameworkMapString(ctx context.Context, tfMap types.Map, diags *diag.Diagnostics) map[string]interface{} {
 	if tfMap.IsNull() || tfMap.IsUnknown() {
 		return nil
 	}
-	elements := make(map[string]interface{}, len(tfMap.Elements()))
+	elements := make(map[string]string, len(tfMap.Elements()))
 	diags.Append(tfMap.ElementsAs(ctx, &elements, false)...)
-	return elements
+
+	elementsNew := make(map[string]interface{}, len(tfMap.Elements()))
+	for k, v := range elements {
+		elementsNew[k] = v
+	}
+	return elementsNew
 }
 
 func ExpandFrameworkListNestedBlock[T any, U any](ctx context.Context, tfList types.List, diags *diag.Diagnostics, f FrameworkElementFlExFunc[T, *U]) []U {
