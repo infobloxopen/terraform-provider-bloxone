@@ -1,6 +1,8 @@
 package acctest
 
 import (
+	"fmt"
+	"math/rand"
 	"os"
 	"testing"
 
@@ -23,6 +25,16 @@ var (
 		"bloxone": providerserver.NewProtocol6WithError(provider.New("test", "none")()),
 	}
 )
+
+const letterBytes = "abcdefghijklmnopqrstuvwxyz"
+
+func RandomNameWithPrefix(prefix string) string {
+	b := make([]byte, 6)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return fmt.Sprintf("%s-%s", prefix, b)
+}
 
 func PreCheck(t *testing.T) {
 	cspURL := os.Getenv("BLOXONE_CSP_URL")

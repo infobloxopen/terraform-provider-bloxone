@@ -28,7 +28,7 @@ type HostactivationJoinToken struct {
 	LastUsedAt *time.Time                `json:"last_used_at,omitempty"`
 	Name       *string                   `json:"name,omitempty"`
 	Status     *JoinTokenJoinTokenStatus `json:"status,omitempty"`
-	Tags       *TypesJSONValue           `json:"tags,omitempty"`
+	Tags       map[string]interface{}    `json:"tags,omitempty"`
 	// first half of the token.
 	TokenId    *string `json:"token_id,omitempty"`
 	UseCounter *int64  `json:"use_counter,omitempty"`
@@ -280,19 +280,19 @@ func (o *HostactivationJoinToken) SetStatus(v JoinTokenJoinTokenStatus) {
 }
 
 // GetTags returns the Tags field value if set, zero value otherwise.
-func (o *HostactivationJoinToken) GetTags() TypesJSONValue {
+func (o *HostactivationJoinToken) GetTags() map[string]interface{} {
 	if o == nil || IsNil(o.Tags) {
-		var ret TypesJSONValue
+		var ret map[string]interface{}
 		return ret
 	}
-	return *o.Tags
+	return o.Tags
 }
 
 // GetTagsOk returns a tuple with the Tags field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *HostactivationJoinToken) GetTagsOk() (*TypesJSONValue, bool) {
+func (o *HostactivationJoinToken) GetTagsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Tags) {
-		return nil, false
+		return map[string]interface{}{}, false
 	}
 	return o.Tags, true
 }
@@ -306,9 +306,9 @@ func (o *HostactivationJoinToken) HasTags() bool {
 	return false
 }
 
-// SetTags gets a reference to the given TypesJSONValue and assigns it to the Tags field.
-func (o *HostactivationJoinToken) SetTags(v TypesJSONValue) {
-	o.Tags = &v
+// SetTags gets a reference to the given map[string]interface{} and assigns it to the Tags field.
+func (o *HostactivationJoinToken) SetTags(v map[string]interface{}) {
+	o.Tags = v
 }
 
 // GetTokenId returns the TokenId field value if set, zero value otherwise.
