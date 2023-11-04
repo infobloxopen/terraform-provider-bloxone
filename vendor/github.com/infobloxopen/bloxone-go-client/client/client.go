@@ -20,15 +20,31 @@ type APIClient struct {
 
 // NewAPIClient creates a new BloxOne API Client.
 func NewAPIClient(conf Configuration) (*APIClient, error) {
-	c, err := conf.internal()
+	ipamConf, err := conf.internal(ipam.ServiceBasePath)
+	if err != nil {
+		return nil, err
+	}
+	dnsConfigConf, err := conf.internal(dns_config.ServiceBasePath)
+	if err != nil {
+		return nil, err
+	}
+	dnsDataConf, err := conf.internal(dns_data.ServiceBasePath)
+	if err != nil {
+		return nil, err
+	}
+	infraProvisionConf, err := conf.internal(infra_provision.ServiceBasePath)
+	if err != nil {
+		return nil, err
+	}
+	infraMgmtConf, err := conf.internal(infra_mgmt.ServiceBasePath)
 	if err != nil {
 		return nil, err
 	}
 	return &APIClient{
-		IPAddressManagementAPI: ipam.NewAPIClient(c),
-		DNSConfigurationAPI:    dns_config.NewAPIClient(c),
-		DNSDataAPI:             dns_data.NewAPIClient(c),
-		HostActivationAPI:      infra_provision.NewAPIClient(c),
-		InfraManagementAPI:     infra_mgmt.NewAPIClient(c),
+		IPAddressManagementAPI: ipam.NewAPIClient(ipamConf),
+		DNSConfigurationAPI:    dns_config.NewAPIClient(dnsConfigConf),
+		DNSDataAPI:             dns_data.NewAPIClient(dnsDataConf),
+		HostActivationAPI:      infra_provision.NewAPIClient(infraProvisionConf),
+		InfraManagementAPI:     infra_mgmt.NewAPIClient(infraMgmtConf),
 	}, nil
 }

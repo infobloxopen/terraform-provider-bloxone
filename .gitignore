@@ -26,6 +26,8 @@ _testmain.go
 # IDE
 /.idea
 
+testacc-cover.out
+
 # Terraform state files
 .terraform/
 terraform.tfplan
@@ -33,3 +35,6 @@ terraform.tfstate
 *.backup
 
 /terraform-provider-bloxone
+
+.openapi-generator/
+internal/service/*/.openapi-generator-ignore

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"net/url"
 	"os"
 
 	"github.com/infobloxopen/bloxone-go-client/internal"
@@ -33,7 +32,7 @@ type Configuration struct {
 	// CSPURL is the URL for BloxOne Cloud Services Portal.
 	// Can also be configured using the `BLOXONE_CSP_URL` environment variable.
 	// Optional. Default is https://csp.infoblox.com
-	CSPURL *url.URL
+	CSPURL string
 
 	// APIKey for accessing the BloxOne API.
 	// Can also be configured by using the `BLOXONE_API_KEY` environment variable.
@@ -46,31 +45,28 @@ type Configuration struct {
 	HTTPClient *http.Client
 }
 
-func (c Configuration) internal() (*internal.Configuration, error) {
-	var err error
-	cspURL := c.CSPURL
-	if cspURL == nil {
-		cspURL = &url.URL{Scheme: "https", Host: "csp.infoblox.com"}
-		if v, ok := os.LookupEnv(ENVBloxOneCSPURL); ok {
-			if cspURL, err = url.Parse(v); err != nil {
-				return nil, err
-			}
-		}
+func (c Configuration) internal(basePath string) (*internal.Configuration, error) {
+	cspURL := "https://csp.infoblox.com"
+	if v, ok := os.LookupEnv(ENVBloxOneCSPURL); ok {
+		cspURL = v
 	}
-	if len(cspURL.Scheme) == 0 {
-		cspURL.Scheme = "https"
+	if len(c.CSPURL) > 0 {
+		cspURL = c.CSPURL
 	}
+	cspURL = cspURL + basePath
 
-	apiKey := c.APIKey
+	apiKey := ""
+	if v, ok := os.LookupEnv(ENVBloxOneAPIKey); ok {
+		apiKey = v
+	}
+	if len(c.APIKey) > 0 {
+		apiKey = c.APIKey
+	}
 	if len(apiKey) == 0 {
-		var ok bool
-		if apiKey, ok = os.LookupEnv(ENVBloxOneAPIKey); !ok {
-			return nil, errors.New("APIKey is required")
-		}
+		return nil, errors.New("APIKey is required")
 	}
 
-	clientName := c.ClientName
-	if len(clientName) == 0 {
+	if len(c.ClientName) == 0 {
 		return nil, errors.New("ClientName is required")
 	}
 
@@ -81,19 +77,18 @@ func (c Configuration) internal() (*internal.Configuration, error) {
 
 	defaultHeaders := map[string]string{
 		HeaderAuthorization: "Token " + apiKey,
-		HeaderClient:        clientName,
+		HeaderClient:        c.ClientName,
 		HeaderSDK:           sdkIdentifier,
 	}
 
 	userAgent := fmt.Sprintf("bloxone-%s/%s", sdkIdentifier, version)
 
 	return &internal.Configuration{
-		Host:             cspURL.Host,
-		Scheme:           cspURL.Host,
 		DefaultHeader:    defaultHeaders,
 		UserAgent:        userAgent,
 		Debug:            false,
 		OperationServers: nil,
+		Servers:          []internal.ServerConfiguration{{URL: cspURL}},
 		HTTPClient:       httpClient,
 	}, nil
 }

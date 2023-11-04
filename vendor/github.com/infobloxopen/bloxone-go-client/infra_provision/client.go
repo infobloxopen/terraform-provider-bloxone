@@ -14,6 +14,8 @@ import (
 	"github.com/infobloxopen/bloxone-go-client/internal"
 )
 
+var ServiceBasePath = "/host-activation/v1"
+
 // APIClient manages communication with the Host Activation Service API vv1
 // In most cases there should be only one, shared, APIClient.
 type APIClient struct {
