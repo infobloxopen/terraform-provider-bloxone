@@ -93,5 +93,4 @@ func (m *IpamsvcInheritedAsmEnableBlockModel) Flatten(ctx context.Context, from 
 	m.DisplayName = flex.FlattenStringPointer(from.DisplayName)
 	m.Source = flex.FlattenStringPointer(from.Source)
 	m.Value = FlattenIpamsvcAsmEnableBlock(ctx, from.Value, diags)
-
 }

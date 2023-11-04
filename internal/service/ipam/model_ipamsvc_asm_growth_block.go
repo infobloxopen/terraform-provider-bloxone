@@ -79,5 +79,4 @@ func (m *IpamsvcAsmGrowthBlockModel) Flatten(ctx context.Context, from *ipam.Ipa
 	}
 	m.GrowthFactor = flex.FlattenInt64(int64(*from.GrowthFactor))
 	m.GrowthType = flex.FlattenStringPointer(from.GrowthType)
-
 }

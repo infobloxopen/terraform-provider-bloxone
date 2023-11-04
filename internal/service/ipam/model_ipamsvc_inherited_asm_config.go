@@ -116,5 +116,4 @@ func (m *IpamsvcInheritedASMConfigModel) Flatten(ctx context.Context, from *ipam
 	m.History = FlattenInheritanceInheritedUInt32(ctx, from.History, diags)
 	m.MinTotal = FlattenInheritanceInheritedUInt32(ctx, from.MinTotal, diags)
 	m.MinUnused = FlattenInheritanceInheritedUInt32(ctx, from.MinUnused, diags)
-
 }

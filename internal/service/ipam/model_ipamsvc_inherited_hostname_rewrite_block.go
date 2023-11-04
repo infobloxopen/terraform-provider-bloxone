@@ -93,5 +93,4 @@ func (m *IpamsvcInheritedHostnameRewriteBlockModel) Flatten(ctx context.Context,
 	m.DisplayName = flex.FlattenStringPointer(from.DisplayName)
 	m.Source = flex.FlattenStringPointer(from.Source)
 	m.Value = FlattenIpamsvcHostnameRewriteBlock(ctx, from.Value, diags)
-
 }

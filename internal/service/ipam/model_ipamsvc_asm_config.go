@@ -167,5 +167,4 @@ func (m *IpamsvcASMConfigModel) Flatten(ctx context.Context, from *ipam.IpamsvcA
 	m.MinTotal = flex.FlattenInt64(int64(*from.MinTotal))
 	m.MinUnused = flex.FlattenInt64(int64(*from.MinUnused))
 	m.ReenableDate = timetypes.NewRFC3339TimePointerValue(from.ReenableDate)
-
 }

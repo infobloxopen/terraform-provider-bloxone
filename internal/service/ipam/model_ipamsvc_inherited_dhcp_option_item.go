@@ -78,5 +78,4 @@ func (m *IpamsvcInheritedDHCPOptionItemModel) Flatten(ctx context.Context, from 
 	}
 	m.Option = FlattenIpamsvcOptionItem(ctx, from.Option, diags)
 	m.OverridingGroup = flex.FlattenStringPointer(from.OverridingGroup)
-
 }

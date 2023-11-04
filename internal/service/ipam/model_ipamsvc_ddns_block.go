@@ -173,5 +173,4 @@ func (m *IpamsvcDDNSBlockModel) Flatten(ctx context.Context, from *ipam.IpamsvcD
 	m.KerberosTkeyLifetime = flex.FlattenInt64(int64(*from.KerberosTkeyLifetime))
 	m.KerberosTkeyProtocol = flex.FlattenStringPointer(from.KerberosTkeyProtocol)
 	m.ServerPrincipal = flex.FlattenStringPointer(from.ServerPrincipal)
-
 }

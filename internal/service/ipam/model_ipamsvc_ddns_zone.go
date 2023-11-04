@@ -128,5 +128,4 @@ func (m *IpamsvcDDNSZoneModel) Flatten(ctx context.Context, from *ipam.IpamsvcDD
 	m.View = flex.FlattenStringPointer(from.View)
 	m.ViewName = flex.FlattenStringPointer(from.ViewName)
 	m.Zone = flex.FlattenString(from.Zone)
-
 }

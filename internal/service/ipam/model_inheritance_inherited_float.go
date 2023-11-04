@@ -92,5 +92,4 @@ func (m *InheritanceInheritedFloatModel) Flatten(ctx context.Context, from *ipam
 	m.DisplayName = flex.FlattenStringPointer(from.DisplayName)
 	m.Source = flex.FlattenStringPointer(from.Source)
 	m.Value = flex.FlattenFloat64(float64(*from.Value))
-
 }

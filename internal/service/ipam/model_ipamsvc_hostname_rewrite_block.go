@@ -86,5 +86,4 @@ func (m *IpamsvcHostnameRewriteBlockModel) Flatten(ctx context.Context, from *ip
 	m.HostnameRewriteChar = flex.FlattenStringPointer(from.HostnameRewriteChar)
 	m.HostnameRewriteEnabled = types.BoolPointerValue(from.HostnameRewriteEnabled)
 	m.HostnameRewriteRegex = flex.FlattenStringPointer(from.HostnameRewriteRegex)
-
 }

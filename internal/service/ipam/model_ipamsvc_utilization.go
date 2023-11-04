@@ -117,5 +117,4 @@ func (m *IpamsvcUtilizationModel) Flatten(ctx context.Context, from *ipam.Ipamsv
 	m.Total = flex.FlattenStringPointer(from.Total)
 	m.Used = flex.FlattenStringPointer(from.Used)
 	m.Utilization = flex.FlattenInt64(int64(*from.Utilization))
-
 }

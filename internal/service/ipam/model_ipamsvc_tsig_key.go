@@ -109,5 +109,4 @@ func (m *IpamsvcTSIGKeyModel) Flatten(ctx context.Context, from *ipam.IpamsvcTSI
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.ProtocolName = flex.FlattenStringPointer(from.ProtocolName)
 	m.Secret = flex.FlattenStringPointer(from.Secret)
-
 }

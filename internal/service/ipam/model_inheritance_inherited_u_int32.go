@@ -92,5 +92,4 @@ func (m *InheritanceInheritedUInt32Model) Flatten(ctx context.Context, from *ipa
 	m.DisplayName = flex.FlattenStringPointer(from.DisplayName)
 	m.Source = flex.FlattenStringPointer(from.Source)
 	m.Value = flex.FlattenInt64(int64(*from.Value))
-
 }

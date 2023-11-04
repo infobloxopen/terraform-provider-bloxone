@@ -86,5 +86,4 @@ func (m *IpamsvcUtilizationThresholdModel) Flatten(ctx context.Context, from *ip
 	m.Enabled = types.BoolValue(from.Enabled)
 	m.High = flex.FlattenInt64(int64(from.High))
 	m.Low = flex.FlattenInt64(int64(from.Low))
-
 }

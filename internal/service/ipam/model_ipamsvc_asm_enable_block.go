@@ -88,5 +88,4 @@ func (m *IpamsvcAsmEnableBlockModel) Flatten(ctx context.Context, from *ipam.Ipa
 	m.Enable = types.BoolPointerValue(from.Enable)
 	m.EnableNotification = types.BoolPointerValue(from.EnableNotification)
 	m.ReenableDate = timetypes.NewRFC3339TimePointerValue(from.ReenableDate)
-
 }

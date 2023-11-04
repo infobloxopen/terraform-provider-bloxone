@@ -164,5 +164,4 @@ func (m *IpamsvcDHCPConfigModel) Flatten(ctx context.Context, from *ipam.Ipamsvc
 	m.IgnoreList = flex.FlattenFrameworkListNestedBlock(ctx, from.IgnoreList, IpamsvcIgnoreItemAttrTypes, diags, FlattenIpamsvcIgnoreItem)
 	m.LeaseTime = flex.FlattenInt64(int64(*from.LeaseTime))
 	m.LeaseTimeV6 = flex.FlattenInt64(int64(*from.LeaseTimeV6))
-
 }

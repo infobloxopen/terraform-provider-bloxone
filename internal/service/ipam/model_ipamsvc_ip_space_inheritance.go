@@ -196,5 +196,4 @@ func (m *IpamsvcIPSpaceInheritanceModel) Flatten(ctx context.Context, from *ipam
 	m.HeaderOptionServerName = FlattenInheritanceInheritedString(ctx, from.HeaderOptionServerName, diags)
 	m.HostnameRewriteBlock = FlattenIpamsvcInheritedHostnameRewriteBlock(ctx, from.HostnameRewriteBlock, diags)
 	m.VendorSpecificOptionOptionSpace = FlattenInheritanceInheritedIdentifier(ctx, from.VendorSpecificOptionOptionSpace, diags)
-
 }

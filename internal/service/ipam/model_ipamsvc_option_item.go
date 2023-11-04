@@ -94,5 +94,4 @@ func (m *IpamsvcOptionItemModel) Flatten(ctx context.Context, from *ipam.Ipamsvc
 	m.OptionCode = flex.FlattenStringPointer(from.OptionCode)
 	m.OptionValue = flex.FlattenStringPointer(from.OptionValue)
 	m.Type = flex.FlattenStringPointer(from.Type)
-
 }

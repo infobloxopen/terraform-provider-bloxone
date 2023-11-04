@@ -78,5 +78,4 @@ func (m *IpamsvcDDNSHostnameBlockModel) Flatten(ctx context.Context, from *ipam.
 	}
 	m.DdnsGenerateName = types.BoolPointerValue(from.DdnsGenerateName)
 	m.DdnsGeneratedPrefix = flex.FlattenStringPointer(from.DdnsGeneratedPrefix)
-
 }

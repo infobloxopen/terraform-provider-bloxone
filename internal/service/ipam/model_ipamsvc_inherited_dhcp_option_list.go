@@ -81,5 +81,4 @@ func (m *IpamsvcInheritedDHCPOptionListModel) Flatten(ctx context.Context, from 
 	}
 	m.Action = flex.FlattenStringPointer(from.Action)
 	m.Value = flex.FlattenFrameworkListNestedBlock(ctx, from.Value, IpamsvcInheritedDHCPOptionAttrTypes, diags, FlattenIpamsvcInheritedDHCPOption)
-
 }

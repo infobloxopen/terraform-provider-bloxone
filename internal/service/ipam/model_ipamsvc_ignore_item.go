@@ -78,5 +78,4 @@ func (m *IpamsvcIgnoreItemModel) Flatten(ctx context.Context, from *ipam.Ipamsvc
 	}
 	m.Type = flex.FlattenString(from.Type)
 	m.Value = flex.FlattenString(from.Value)
-
 }

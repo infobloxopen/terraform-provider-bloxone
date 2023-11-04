@@ -78,5 +78,4 @@ func (m *IpamsvcDDNSUpdateBlockModel) Flatten(ctx context.Context, from *ipam.Ip
 	}
 	m.DdnsDomain = flex.FlattenStringPointer(from.DdnsDomain)
 	m.DdnsSendUpdates = types.BoolPointerValue(from.DdnsSendUpdates)
-
 }

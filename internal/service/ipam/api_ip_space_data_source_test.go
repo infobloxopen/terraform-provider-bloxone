@@ -22,7 +22,7 @@ func TestAccIpSpaceDataSource_Filters(t *testing.T) {
 		CheckDestroy:             testAccCheckIpSpaceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccIpSpaceDataSourceConfigFilters("ip_space_name"),
+				Config: testAccIpSpaceDataSourceConfigFilters("NAME_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
@@ -43,7 +43,7 @@ func TestAccIpSpaceDataSource_TagFilters(t *testing.T) {
 		CheckDestroy:             testAccCheckIpSpaceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccIpSpaceDataSourceConfigTagFilters("ip_space_name", "value1"),
+				Config: testAccIpSpaceDataSourceConfigTagFilters("NAME_REPLACE_ME", "value1"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckIpSpaceExists(context.Background(), resourceName, &v),

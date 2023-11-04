@@ -383,5 +383,4 @@ func (m *IpamsvcIPSpaceModel) Flatten(ctx context.Context, from *ipam.IpamsvcIPS
 	m.Utilization = FlattenIpamsvcUtilization(ctx, from.Utilization, diags)
 	m.UtilizationV6 = FlattenIpamsvcUtilizationV6(ctx, from.UtilizationV6, diags)
 	m.VendorSpecificOptionOptionSpace = flex.FlattenStringPointer(from.VendorSpecificOptionOptionSpace)
-
 }

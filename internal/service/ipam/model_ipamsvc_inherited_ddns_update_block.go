@@ -93,5 +93,4 @@ func (m *IpamsvcInheritedDDNSUpdateBlockModel) Flatten(ctx context.Context, from
 	m.DisplayName = flex.FlattenStringPointer(from.DisplayName)
 	m.Source = flex.FlattenStringPointer(from.Source)
 	m.Value = FlattenIpamsvcDDNSUpdateBlock(ctx, from.Value, diags)
-
 }

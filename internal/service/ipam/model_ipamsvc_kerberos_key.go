@@ -105,5 +105,4 @@ func (m *IpamsvcKerberosKeyModel) Flatten(ctx context.Context, from *ipam.Ipamsv
 	m.Principal = flex.FlattenStringPointer(from.Principal)
 	m.UploadedAt = flex.FlattenStringPointer(from.UploadedAt)
 	m.Version = flex.FlattenInt64(int64(*from.Version))
-
 }

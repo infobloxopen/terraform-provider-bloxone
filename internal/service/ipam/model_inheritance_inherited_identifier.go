@@ -93,5 +93,4 @@ func (m *InheritanceInheritedIdentifierModel) Flatten(ctx context.Context, from 
 	m.DisplayName = flex.FlattenStringPointer(from.DisplayName)
 	m.Source = flex.FlattenStringPointer(from.Source)
 	m.Value = flex.FlattenStringPointer(from.Value)
-
 }

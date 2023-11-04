@@ -95,5 +95,4 @@ func (m *InheritedDHCPConfigIgnoreItemListModel) Flatten(ctx context.Context, fr
 	m.DisplayName = flex.FlattenStringPointer(from.DisplayName)
 	m.Source = flex.FlattenStringPointer(from.Source)
 	m.Value = flex.FlattenFrameworkListNestedBlock(ctx, from.Value, IpamsvcIgnoreItemAttrTypes, diags, FlattenIpamsvcIgnoreItem)
-
 }

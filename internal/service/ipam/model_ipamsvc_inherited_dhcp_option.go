@@ -93,5 +93,4 @@ func (m *IpamsvcInheritedDHCPOptionModel) Flatten(ctx context.Context, from *ipa
 	m.DisplayName = flex.FlattenStringPointer(from.DisplayName)
 	m.Source = flex.FlattenStringPointer(from.Source)
 	m.Value = FlattenIpamsvcInheritedDHCPOptionItem(ctx, from.Value, diags)
-
 }

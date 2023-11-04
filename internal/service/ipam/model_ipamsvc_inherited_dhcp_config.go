@@ -140,5 +140,4 @@ func (m *IpamsvcInheritedDHCPConfigModel) Flatten(ctx context.Context, from *ipa
 	m.IgnoreList = FlattenInheritedDHCPConfigIgnoreItemList(ctx, from.IgnoreList, diags)
 	m.LeaseTime = FlattenInheritanceInheritedUInt32(ctx, from.LeaseTime, diags)
 	m.LeaseTimeV6 = FlattenInheritanceInheritedUInt32(ctx, from.LeaseTimeV6, diags)
-
 }

@@ -126,5 +126,4 @@ func (m *IpamsvcNameserverModel) Flatten(ctx context.Context, from *ipam.Ipamsvc
 	m.KerberosTkeyProtocol = flex.FlattenStringPointer(from.KerberosTkeyProtocol)
 	m.Nameserver = flex.FlattenStringPointer(from.Nameserver)
 	m.ServerPrincipal = flex.FlattenStringPointer(from.ServerPrincipal)
-
 }
