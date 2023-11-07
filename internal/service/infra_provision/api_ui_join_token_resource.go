@@ -80,6 +80,7 @@ func (r *UIJoinTokenResource) Create(ctx context.Context, req resource.CreateReq
 
 	res := apiRes.GetResult()
 	data.Flatten(ctx, &res, &resp.Diagnostics)
+	data.JoinToken = flex.FlattenString(apiRes.GetJoinToken())
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

@@ -18,6 +18,7 @@ import (
 )
 
 type HostactivationJoinTokenModel struct {
+	JoinToken   types.String      `tfsdk:"join_token"`
 	DeletedAt   timetypes.RFC3339 `tfsdk:"deleted_at"`
 	Description types.String      `tfsdk:"description"`
 	ExpiresAt   timetypes.RFC3339 `tfsdk:"expires_at"`
@@ -31,6 +32,7 @@ type HostactivationJoinTokenModel struct {
 }
 
 var HostactivationJoinTokenAttrTypes = map[string]attr.Type{
+	"join_token":   types.StringType,
 	"deleted_at":   timetypes.RFC3339Type{},
 	"description":  types.StringType,
 	"expires_at":   timetypes.RFC3339Type{},
@@ -44,6 +46,12 @@ var HostactivationJoinTokenAttrTypes = map[string]attr.Type{
 }
 
 var HostactivationJoinTokenResourceSchemaAttributes = map[string]schema.Attribute{
+	"join_token": schema.StringAttribute{
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+		},
+	},
 	"deleted_at": schema.StringAttribute{
 		CustomType: timetypes.RFC3339Type{},
 		Computed:   true,

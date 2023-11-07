@@ -41,6 +41,7 @@ Read-Only:
 
 - `deleted_at` (String)
 - `id` (String) The resource identifier.
+- `join_token` (String)
 - `last_used_at` (String)
 - `status` (String)
 - `token_id` (String) first half of the token.

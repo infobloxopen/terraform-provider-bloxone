@@ -33,6 +33,7 @@ func TestAccUIJoinTokenResource_basic(t *testing.T) {
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "token_id"),
+					resource.TestCheckResourceAttrSet(resourceName, "join_token"),
 					resource.TestCheckResourceAttr(resourceName, "status", "ACTIVE"),
 				),
 			},
