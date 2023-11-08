@@ -177,3 +177,47 @@ func ApplyToAll[T, U any](s []T, f func(T) U) []U {
 
 	return v
 }
+
+func ExpandString(v types.String) string {
+	return v.ValueString()
+}
+
+func ExpandStringPointer(v types.String) *string {
+	if v.IsNull() || v.IsUnknown() {
+		return nil
+	}
+	return v.ValueStringPointer()
+}
+
+func ExpandInt64(v types.Int64) int64 {
+	return v.ValueInt64()
+}
+
+func ExpandInt64Pointer(v types.Int64) *int64 {
+	if v.IsNull() || v.IsUnknown() {
+		return nil
+	}
+	return v.ValueInt64Pointer()
+}
+
+func ExpandFloat64(v types.Float64) float64 {
+	return v.ValueFloat64()
+}
+
+func ExpandFloat64Pointer(v types.Float64) *float64 {
+	if v.IsNull() || v.IsUnknown() {
+		return nil
+	}
+	return v.ValueFloat64Pointer()
+}
+
+func ExpandBool(v types.Bool) bool {
+	return v.ValueBool()
+}
+
+func ExpandBoolPointer(v types.Bool) *bool {
+	if v.IsNull() || v.IsUnknown() {
+		return nil
+	}
+	return v.ValueBoolPointer()
+}

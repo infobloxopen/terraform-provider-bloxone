@@ -35,7 +35,7 @@ type InfraDetailService struct {
 	// The desired version of the Service.
 	DesiredVersion *string `json:"desired_version,omitempty"`
 	// Configuration for the interfaces through which this Service can send outgoing traffic.
-	Destinations map[string]map[string]interface{} `json:"destinations,omitempty"`
+	Destinations map[string]interface{} `json:"destinations,omitempty"`
 	// List of Hosts on which this Service is deployed.
 	Hosts []InfraDetailServiceHost `json:"hosts,omitempty"`
 	// The resource identifier.
@@ -49,9 +49,9 @@ type InfraDetailService struct {
 	// The type of the Service deployed on the Host (`dns`, `cdc`, etc.).
 	ServiceType *string `json:"service_type,omitempty"`
 	// Configuration for the interfaces through which this Service can take incoming traffic.
-	SourceInterfaces map[string]map[string]interface{} `json:"source_interfaces,omitempty"`
+	SourceInterfaces map[string]interface{} `json:"source_interfaces,omitempty"`
 	// Tags associated with this Service.
-	Tags map[string]map[string]interface{} `json:"tags,omitempty"`
+	Tags map[string]interface{} `json:"tags,omitempty"`
 	// Timestamp of the latest update on Service.
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
@@ -298,9 +298,9 @@ func (o *InfraDetailService) SetDesiredVersion(v string) {
 }
 
 // GetDestinations returns the Destinations field value if set, zero value otherwise.
-func (o *InfraDetailService) GetDestinations() map[string]map[string]interface{} {
+func (o *InfraDetailService) GetDestinations() map[string]interface{} {
 	if o == nil || IsNil(o.Destinations) {
-		var ret map[string]map[string]interface{}
+		var ret map[string]interface{}
 		return ret
 	}
 	return o.Destinations
@@ -308,9 +308,9 @@ func (o *InfraDetailService) GetDestinations() map[string]map[string]interface{}
 
 // GetDestinationsOk returns a tuple with the Destinations field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *InfraDetailService) GetDestinationsOk() (map[string]map[string]interface{}, bool) {
+func (o *InfraDetailService) GetDestinationsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Destinations) {
-		return map[string]map[string]interface{}{}, false
+		return map[string]interface{}{}, false
 	}
 	return o.Destinations, true
 }
@@ -324,8 +324,8 @@ func (o *InfraDetailService) HasDestinations() bool {
 	return false
 }
 
-// SetDestinations gets a reference to the given map[string]map[string]interface{} and assigns it to the Destinations field.
-func (o *InfraDetailService) SetDestinations(v map[string]map[string]interface{}) {
+// SetDestinations gets a reference to the given map[string]interface{} and assigns it to the Destinations field.
+func (o *InfraDetailService) SetDestinations(v map[string]interface{}) {
 	o.Destinations = v
 }
 
@@ -554,9 +554,9 @@ func (o *InfraDetailService) SetServiceType(v string) {
 }
 
 // GetSourceInterfaces returns the SourceInterfaces field value if set, zero value otherwise.
-func (o *InfraDetailService) GetSourceInterfaces() map[string]map[string]interface{} {
+func (o *InfraDetailService) GetSourceInterfaces() map[string]interface{} {
 	if o == nil || IsNil(o.SourceInterfaces) {
-		var ret map[string]map[string]interface{}
+		var ret map[string]interface{}
 		return ret
 	}
 	return o.SourceInterfaces
@@ -564,9 +564,9 @@ func (o *InfraDetailService) GetSourceInterfaces() map[string]map[string]interfa
 
 // GetSourceInterfacesOk returns a tuple with the SourceInterfaces field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *InfraDetailService) GetSourceInterfacesOk() (map[string]map[string]interface{}, bool) {
+func (o *InfraDetailService) GetSourceInterfacesOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.SourceInterfaces) {
-		return map[string]map[string]interface{}{}, false
+		return map[string]interface{}{}, false
 	}
 	return o.SourceInterfaces, true
 }
@@ -580,15 +580,15 @@ func (o *InfraDetailService) HasSourceInterfaces() bool {
 	return false
 }
 
-// SetSourceInterfaces gets a reference to the given map[string]map[string]interface{} and assigns it to the SourceInterfaces field.
-func (o *InfraDetailService) SetSourceInterfaces(v map[string]map[string]interface{}) {
+// SetSourceInterfaces gets a reference to the given map[string]interface{} and assigns it to the SourceInterfaces field.
+func (o *InfraDetailService) SetSourceInterfaces(v map[string]interface{}) {
 	o.SourceInterfaces = v
 }
 
 // GetTags returns the Tags field value if set, zero value otherwise.
-func (o *InfraDetailService) GetTags() map[string]map[string]interface{} {
+func (o *InfraDetailService) GetTags() map[string]interface{} {
 	if o == nil || IsNil(o.Tags) {
-		var ret map[string]map[string]interface{}
+		var ret map[string]interface{}
 		return ret
 	}
 	return o.Tags
@@ -596,9 +596,9 @@ func (o *InfraDetailService) GetTags() map[string]map[string]interface{} {
 
 // GetTagsOk returns a tuple with the Tags field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *InfraDetailService) GetTagsOk() (map[string]map[string]interface{}, bool) {
+func (o *InfraDetailService) GetTagsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Tags) {
-		return map[string]map[string]interface{}{}, false
+		return map[string]interface{}{}, false
 	}
 	return o.Tags, true
 }
@@ -612,8 +612,8 @@ func (o *InfraDetailService) HasTags() bool {
 	return false
 }
 
-// SetTags gets a reference to the given map[string]map[string]interface{} and assigns it to the Tags field.
-func (o *InfraDetailService) SetTags(v map[string]map[string]interface{}) {
+// SetTags gets a reference to the given map[string]interface{} and assigns it to the Tags field.
+func (o *InfraDetailService) SetTags(v map[string]interface{}) {
 	o.Tags = v
 }
 
