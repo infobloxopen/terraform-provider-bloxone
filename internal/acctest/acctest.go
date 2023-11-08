@@ -1,6 +1,8 @@
 package acctest
 
 import (
+	"fmt"
+	"math/rand"
 	"os"
 	"testing"
 
@@ -23,6 +25,18 @@ var (
 		"bloxone": providerserver.NewProtocol6WithError(provider.New("test", "none")()),
 	}
 )
+
+const letterBytes = "abcdefghijklmnopqrstuvwxyz"
+
+// RandomNameWithPrefix generates a random name with the given prefix.
+// This is used in the acceptance tests where an unique name is required for the resource.
+func RandomNameWithPrefix(prefix string) string {
+	b := make([]byte, 6)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return fmt.Sprintf("%s-%s", prefix, b)
+}
 
 func PreCheck(t *testing.T) {
 	cspURL := os.Getenv("BLOXONE_CSP_URL")
