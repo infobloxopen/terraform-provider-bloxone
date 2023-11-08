@@ -47,7 +47,8 @@ var HostactivationJoinTokenAttrTypes = map[string]attr.Type{
 
 var HostactivationJoinTokenResourceSchemaAttributes = map[string]schema.Attribute{
 	"join_token": schema.StringAttribute{
-		Computed: true,
+		Computed:  true,
+		Sensitive: true,
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.UseStateForUnknown(),
 		},
