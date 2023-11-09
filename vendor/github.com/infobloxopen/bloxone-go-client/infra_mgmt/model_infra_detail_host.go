@@ -23,8 +23,8 @@ type InfraDetailHost struct {
 	// Composite Status of this Host (`online`, `degraded`, `error`, `offline`, `pending`, `awaiting approval`).
 	CompositeStatus *string `json:"composite_status,omitempty"`
 	// The list of Host-specific configurations for each Service deployed on this Host.
-	Configs             []InfraDetailHostServiceConfig    `json:"configs,omitempty"`
-	ConnectivityMonitor map[string]map[string]interface{} `json:"connectivity_monitor,omitempty"`
+	Configs             []InfraDetailHostServiceConfig `json:"configs,omitempty"`
+	ConnectivityMonitor map[string]interface{}         `json:"connectivity_monitor,omitempty"`
 	// The timestamp of creation of Host.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// The description of the Host.
@@ -60,7 +60,7 @@ type InfraDetailHost struct {
 	// The Site ID of the Host.
 	SiteId *string `json:"site_id,omitempty"`
 	// Tags associated with this Host.
-	Tags map[string]map[string]interface{} `json:"tags,omitempty"`
+	Tags map[string]interface{} `json:"tags,omitempty"`
 	// The timezone of the Host.
 	Timezone *string `json:"timezone,omitempty"`
 	// The timestamp of the latest update on Host.
@@ -149,9 +149,9 @@ func (o *InfraDetailHost) SetConfigs(v []InfraDetailHostServiceConfig) {
 }
 
 // GetConnectivityMonitor returns the ConnectivityMonitor field value if set, zero value otherwise.
-func (o *InfraDetailHost) GetConnectivityMonitor() map[string]map[string]interface{} {
+func (o *InfraDetailHost) GetConnectivityMonitor() map[string]interface{} {
 	if o == nil || IsNil(o.ConnectivityMonitor) {
-		var ret map[string]map[string]interface{}
+		var ret map[string]interface{}
 		return ret
 	}
 	return o.ConnectivityMonitor
@@ -159,9 +159,9 @@ func (o *InfraDetailHost) GetConnectivityMonitor() map[string]map[string]interfa
 
 // GetConnectivityMonitorOk returns a tuple with the ConnectivityMonitor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *InfraDetailHost) GetConnectivityMonitorOk() (map[string]map[string]interface{}, bool) {
+func (o *InfraDetailHost) GetConnectivityMonitorOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.ConnectivityMonitor) {
-		return map[string]map[string]interface{}{}, false
+		return map[string]interface{}{}, false
 	}
 	return o.ConnectivityMonitor, true
 }
@@ -175,8 +175,8 @@ func (o *InfraDetailHost) HasConnectivityMonitor() bool {
 	return false
 }
 
-// SetConnectivityMonitor gets a reference to the given map[string]map[string]interface{} and assigns it to the ConnectivityMonitor field.
-func (o *InfraDetailHost) SetConnectivityMonitor(v map[string]map[string]interface{}) {
+// SetConnectivityMonitor gets a reference to the given map[string]interface{} and assigns it to the ConnectivityMonitor field.
+func (o *InfraDetailHost) SetConnectivityMonitor(v map[string]interface{}) {
 	o.ConnectivityMonitor = v
 }
 
@@ -789,9 +789,9 @@ func (o *InfraDetailHost) SetSiteId(v string) {
 }
 
 // GetTags returns the Tags field value if set, zero value otherwise.
-func (o *InfraDetailHost) GetTags() map[string]map[string]interface{} {
+func (o *InfraDetailHost) GetTags() map[string]interface{} {
 	if o == nil || IsNil(o.Tags) {
-		var ret map[string]map[string]interface{}
+		var ret map[string]interface{}
 		return ret
 	}
 	return o.Tags
@@ -799,9 +799,9 @@ func (o *InfraDetailHost) GetTags() map[string]map[string]interface{} {
 
 // GetTagsOk returns a tuple with the Tags field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *InfraDetailHost) GetTagsOk() (map[string]map[string]interface{}, bool) {
+func (o *InfraDetailHost) GetTagsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Tags) {
-		return map[string]map[string]interface{}{}, false
+		return map[string]interface{}{}, false
 	}
 	return o.Tags, true
 }
@@ -815,8 +815,8 @@ func (o *InfraDetailHost) HasTags() bool {
 	return false
 }
 
-// SetTags gets a reference to the given map[string]map[string]interface{} and assigns it to the Tags field.
-func (o *InfraDetailHost) SetTags(v map[string]map[string]interface{}) {
+// SetTags gets a reference to the given map[string]interface{} and assigns it to the Tags field.
+func (o *InfraDetailHost) SetTags(v map[string]interface{}) {
 	o.Tags = v
 }
 

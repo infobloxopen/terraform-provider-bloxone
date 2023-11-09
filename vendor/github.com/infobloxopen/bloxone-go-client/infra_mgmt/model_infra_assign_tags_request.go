@@ -20,9 +20,9 @@ var _ MappedNullable = &InfraAssignTagsRequest{}
 // InfraAssignTagsRequest struct for InfraAssignTagsRequest
 type InfraAssignTagsRequest struct {
 	// The resource identifier.
-	Ids      []string                          `json:"ids,omitempty"`
-	Override *bool                             `json:"override,omitempty"`
-	Tags     map[string]map[string]interface{} `json:"tags,omitempty"`
+	Ids      []string               `json:"ids,omitempty"`
+	Override *bool                  `json:"override,omitempty"`
+	Tags     map[string]interface{} `json:"tags,omitempty"`
 }
 
 // NewInfraAssignTagsRequest instantiates a new InfraAssignTagsRequest object
@@ -107,9 +107,9 @@ func (o *InfraAssignTagsRequest) SetOverride(v bool) {
 }
 
 // GetTags returns the Tags field value if set, zero value otherwise.
-func (o *InfraAssignTagsRequest) GetTags() map[string]map[string]interface{} {
+func (o *InfraAssignTagsRequest) GetTags() map[string]interface{} {
 	if o == nil || IsNil(o.Tags) {
-		var ret map[string]map[string]interface{}
+		var ret map[string]interface{}
 		return ret
 	}
 	return o.Tags
@@ -117,9 +117,9 @@ func (o *InfraAssignTagsRequest) GetTags() map[string]map[string]interface{} {
 
 // GetTagsOk returns a tuple with the Tags field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *InfraAssignTagsRequest) GetTagsOk() (map[string]map[string]interface{}, bool) {
+func (o *InfraAssignTagsRequest) GetTagsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Tags) {
-		return map[string]map[string]interface{}{}, false
+		return map[string]interface{}{}, false
 	}
 	return o.Tags, true
 }
@@ -133,8 +133,8 @@ func (o *InfraAssignTagsRequest) HasTags() bool {
 	return false
 }
 
-// SetTags gets a reference to the given map[string]map[string]interface{} and assigns it to the Tags field.
-func (o *InfraAssignTagsRequest) SetTags(v map[string]map[string]interface{}) {
+// SetTags gets a reference to the given map[string]interface{} and assigns it to the Tags field.
+func (o *InfraAssignTagsRequest) SetTags(v map[string]interface{}) {
 	o.Tags = v
 }
 

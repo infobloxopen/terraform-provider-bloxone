@@ -20,7 +20,7 @@ var _ MappedNullable = &InfraDetailLocation{}
 // InfraDetailLocation struct for InfraDetailLocation
 type InfraDetailLocation struct {
 	// The address of the Location containing address, postal_code, city, state, and country.
-	Address map[string]map[string]interface{} `json:"address,omitempty"`
+	Address map[string]interface{} `json:"address,omitempty"`
 	// The resource identifier.
 	Id *string `json:"id,omitempty"`
 	// Latitude of the Location.
@@ -28,7 +28,7 @@ type InfraDetailLocation struct {
 	// Longitude of the Location.
 	Longitude *float64 `json:"longitude,omitempty"`
 	// The metadata of the Location which could contain other info such as attributions.
-	Metadata map[string]map[string]interface{} `json:"metadata,omitempty"`
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // NewInfraDetailLocation instantiates a new InfraDetailLocation object
@@ -49,9 +49,9 @@ func NewInfraDetailLocationWithDefaults() *InfraDetailLocation {
 }
 
 // GetAddress returns the Address field value if set, zero value otherwise.
-func (o *InfraDetailLocation) GetAddress() map[string]map[string]interface{} {
+func (o *InfraDetailLocation) GetAddress() map[string]interface{} {
 	if o == nil || IsNil(o.Address) {
-		var ret map[string]map[string]interface{}
+		var ret map[string]interface{}
 		return ret
 	}
 	return o.Address
@@ -59,9 +59,9 @@ func (o *InfraDetailLocation) GetAddress() map[string]map[string]interface{} {
 
 // GetAddressOk returns a tuple with the Address field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *InfraDetailLocation) GetAddressOk() (map[string]map[string]interface{}, bool) {
+func (o *InfraDetailLocation) GetAddressOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Address) {
-		return map[string]map[string]interface{}{}, false
+		return map[string]interface{}{}, false
 	}
 	return o.Address, true
 }
@@ -75,8 +75,8 @@ func (o *InfraDetailLocation) HasAddress() bool {
 	return false
 }
 
-// SetAddress gets a reference to the given map[string]map[string]interface{} and assigns it to the Address field.
-func (o *InfraDetailLocation) SetAddress(v map[string]map[string]interface{}) {
+// SetAddress gets a reference to the given map[string]interface{} and assigns it to the Address field.
+func (o *InfraDetailLocation) SetAddress(v map[string]interface{}) {
 	o.Address = v
 }
 
@@ -177,9 +177,9 @@ func (o *InfraDetailLocation) SetLongitude(v float64) {
 }
 
 // GetMetadata returns the Metadata field value if set, zero value otherwise.
-func (o *InfraDetailLocation) GetMetadata() map[string]map[string]interface{} {
+func (o *InfraDetailLocation) GetMetadata() map[string]interface{} {
 	if o == nil || IsNil(o.Metadata) {
-		var ret map[string]map[string]interface{}
+		var ret map[string]interface{}
 		return ret
 	}
 	return o.Metadata
@@ -187,9 +187,9 @@ func (o *InfraDetailLocation) GetMetadata() map[string]map[string]interface{} {
 
 // GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *InfraDetailLocation) GetMetadataOk() (map[string]map[string]interface{}, bool) {
+func (o *InfraDetailLocation) GetMetadataOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Metadata) {
-		return map[string]map[string]interface{}{}, false
+		return map[string]interface{}{}, false
 	}
 	return o.Metadata, true
 }
@@ -203,8 +203,8 @@ func (o *InfraDetailLocation) HasMetadata() bool {
 	return false
 }
 
-// SetMetadata gets a reference to the given map[string]map[string]interface{} and assigns it to the Metadata field.
-func (o *InfraDetailLocation) SetMetadata(v map[string]map[string]interface{}) {
+// SetMetadata gets a reference to the given map[string]interface{} and assigns it to the Metadata field.
+func (o *InfraDetailLocation) SetMetadata(v map[string]interface{}) {
 	o.Metadata = v
 }
 
