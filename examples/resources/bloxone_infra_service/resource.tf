@@ -10,7 +10,7 @@ resource "bloxone_infra_service" "example" {
   service_type = "dhcp"
 
   # Other Optional fields
-  description     = "An example host"
+  description     = "DHCP service"
   desired_version = "3.5.0"
   desired_state   = "start"
   tags = {

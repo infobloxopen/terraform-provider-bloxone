@@ -103,6 +103,9 @@ var InfraServiceResourceSchemaAttributes = map[string]schema.Attribute{
 	"service_type": schema.StringAttribute{
 		Required:            true,
 		MarkdownDescription: "The type of the Service deployed on the Host (`dns`, `cdc`, etc.).",
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 	},
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
