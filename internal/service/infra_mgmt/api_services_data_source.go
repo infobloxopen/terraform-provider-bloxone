@@ -16,35 +16,35 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ datasource.DataSource = &HostsDataSource{}
+var _ datasource.DataSource = &ServicesDataSource{}
 
-func NewHostsDataSource() datasource.DataSource {
-	return &HostsDataSource{}
+func NewServicesDataSource() datasource.DataSource {
+	return &ServicesDataSource{}
 }
 
-// HostsDataSource defines the data source implementation.
-type HostsDataSource struct {
+// ServicesDataSource defines the data source implementation.
+type ServicesDataSource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (d *HostsDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "infra_hosts"
+func (d *ServicesDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "infra_services"
 }
 
-type InfraHostModelWithFilter struct {
+type InfraServiceModelWithFilter struct {
 	Filters    types.Map  `tfsdk:"filters"`
 	TagFilters types.Map  `tfsdk:"tag_filters"`
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *InfraHostModelWithFilter) FlattenResults(ctx context.Context, from []infra_mgmt.InfraHost, diags *diag.Diagnostics) {
+func (m *InfraServiceModelWithFilter) FlattenResults(ctx context.Context, from []infra_mgmt.InfraService, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, InfraHostAttrTypes, diags, FlattenInfraHost)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, InfraServiceAttrTypes, diags, FlattenInfraService)
 }
 
-func (d *HostsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *ServicesDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "",
 		Attributes: map[string]schema.Attribute{
@@ -60,7 +60,7 @@ func (d *HostsDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			},
 			"results": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
-					Attributes: utils.DataSourceAttributeMap(InfraHostResourceSchemaAttributes, &resp.Diagnostics),
+					Attributes: utils.DataSourceAttributeMap(InfraServiceResourceSchemaAttributes, &resp.Diagnostics),
 				},
 				Computed: true,
 			},
@@ -68,7 +68,7 @@ func (d *HostsDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 	}
 }
 
-func (d *HostsDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (d *ServicesDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -88,8 +88,8 @@ func (d *HostsDataSource) Configure(ctx context.Context, req datasource.Configur
 	d.client = client
 }
 
-func (d *HostsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data InfraHostModelWithFilter
+func (d *ServicesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data InfraServiceModelWithFilter
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -99,13 +99,13 @@ func (d *HostsDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	}
 
 	apiRes, _, err := d.client.InfraManagementAPI.
-		HostsAPI.
-		HostsList(ctx).
+		ServicesAPI.
+		ServicesList(ctx).
 		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Hosts, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Services, got error: %s", err))
 		return
 	}
 

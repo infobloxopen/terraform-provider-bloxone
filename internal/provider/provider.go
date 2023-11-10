@@ -79,16 +79,22 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		ipam.NewIpSpaceResource,
+
 		infra_provision.NewUIJoinTokenResource,
+
 		infra_mgmt.NewHostsResource,
+		infra_mgmt.NewServicesResource,
 	}
 }
 
 func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		ipam.NewIpSpaceDataSource,
+
 		infra_provision.NewUIJoinTokenDataSource,
+
 		infra_mgmt.NewHostsDataSource,
+		infra_mgmt.NewServicesDataSource,
 	}
 }
 

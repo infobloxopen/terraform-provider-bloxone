@@ -1,0 +1,178 @@
+package infra_mgmt
+
+import (
+	"context"
+
+	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+
+	"github.com/infobloxopen/bloxone-go-client/infra_mgmt"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+)
+
+type InfraServiceModel struct {
+	Configs         types.List        `tfsdk:"configs"`
+	CreatedAt       timetypes.RFC3339 `tfsdk:"created_at"`
+	Description     types.String      `tfsdk:"description"`
+	DesiredState    types.String      `tfsdk:"desired_state"`
+	DesiredVersion  types.String      `tfsdk:"desired_version"`
+	Id              types.String      `tfsdk:"id"`
+	InterfaceLabels types.List        `tfsdk:"interface_labels"`
+	Name            types.String      `tfsdk:"name"`
+	PoolId          types.String      `tfsdk:"pool_id"`
+	ServiceType     types.String      `tfsdk:"service_type"`
+	Tags            types.Map         `tfsdk:"tags"`
+	UpdatedAt       timetypes.RFC3339 `tfsdk:"updated_at"`
+}
+
+var InfraServiceAttrTypes = map[string]attr.Type{
+	"configs":          types.ListType{ElemType: types.ObjectType{AttrTypes: InfraServiceHostConfigAttrTypes}},
+	"created_at":       timetypes.RFC3339Type{},
+	"description":      types.StringType,
+	"desired_state":    types.StringType,
+	"desired_version":  types.StringType,
+	"id":               types.StringType,
+	"interface_labels": types.ListType{ElemType: types.StringType},
+	"name":             types.StringType,
+	"pool_id":          types.StringType,
+	"service_type":     types.StringType,
+	"tags":             types.MapType{ElemType: types.StringType},
+	"updated_at":       timetypes.RFC3339Type{},
+}
+
+var InfraServiceResourceSchemaAttributes = map[string]schema.Attribute{
+	"configs": schema.ListNestedAttribute{
+		NestedObject: schema.NestedAttributeObject{
+			Attributes: InfraServiceHostConfigResourceSchemaAttributes,
+		},
+		Computed:            true,
+		MarkdownDescription: "List of Host-specific configurations of this Service.",
+	},
+	"created_at": schema.StringAttribute{
+		CustomType:          timetypes.RFC3339Type{},
+		Computed:            true,
+		MarkdownDescription: "Timestamp of creation of Service.",
+	},
+	"description": schema.StringAttribute{
+		Optional:            true,
+		MarkdownDescription: "The description of the Service (optional).",
+	},
+	"desired_state": schema.StringAttribute{
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString("stop"),
+		MarkdownDescription: "The desired state of the Service. Should either be `\"start\"` or `\"stop\"`.",
+		Validators: []validator.String{
+			stringvalidator.OneOf("start", "stop"),
+		},
+	},
+	"desired_version": schema.StringAttribute{
+		Optional:            true,
+		MarkdownDescription: "The desired version of the Service.",
+	},
+	"id": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+		},
+	},
+	"interface_labels": schema.ListAttribute{
+		ElementType:         types.StringType,
+		Optional:            true,
+		MarkdownDescription: "List of interfaces on which this Service can operate. Note: The list can contain custom interface labels (Example: `[\"WAN\",\"LAN\",\"label1\",\"label2\"]`)",
+	},
+	"name": schema.StringAttribute{
+		Required:            true,
+		MarkdownDescription: "The name of the Service (unique).",
+	},
+	"pool_id": schema.StringAttribute{
+		Required:            true,
+		MarkdownDescription: "The resource identifier.",
+	},
+	"service_type": schema.StringAttribute{
+		Required:            true,
+		MarkdownDescription: "The type of the Service deployed on the Host (`dns`, `cdc`, etc.).",
+	},
+	"tags": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Optional:            true,
+		MarkdownDescription: "Tags associated with this Service.",
+	},
+	"updated_at": schema.StringAttribute{
+		CustomType:          timetypes.RFC3339Type{},
+		Computed:            true,
+		MarkdownDescription: "Timestamp of the latest update on Service.",
+	},
+}
+
+func ExpandInfraService(ctx context.Context, o types.Object, diags *diag.Diagnostics) *infra_mgmt.InfraService {
+	if o.IsNull() || o.IsUnknown() {
+		return nil
+	}
+	var m InfraServiceModel
+	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
+	if diags.HasError() {
+		return nil
+	}
+	return m.Expand(ctx, diags)
+}
+
+func (m *InfraServiceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *infra_mgmt.InfraService {
+	if m == nil {
+		return nil
+	}
+	to := &infra_mgmt.InfraService{
+		Description:     flex.ExpandStringPointer(m.Description),
+		DesiredState:    flex.ExpandStringPointer(m.DesiredState),
+		DesiredVersion:  flex.ExpandStringPointer(m.DesiredVersion),
+		InterfaceLabels: flex.ExpandFrameworkListString(ctx, m.InterfaceLabels, diags),
+		Name:            flex.ExpandString(m.Name),
+		PoolId:          flex.ExpandString(m.PoolId),
+		ServiceType:     flex.ExpandString(m.ServiceType),
+		Tags:            flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
+	}
+	return to
+}
+
+func FlattenInfraService(ctx context.Context, from *infra_mgmt.InfraService, diags *diag.Diagnostics) types.Object {
+	if from == nil {
+		return types.ObjectNull(InfraServiceAttrTypes)
+	}
+	m := InfraServiceModel{}
+	m.Flatten(ctx, from, diags)
+	t, d := types.ObjectValueFrom(ctx, InfraServiceAttrTypes, m)
+	diags.Append(d...)
+	return t
+}
+
+func (m *InfraServiceModel) Flatten(ctx context.Context, from *infra_mgmt.InfraService, diags *diag.Diagnostics) {
+	if from == nil {
+		return
+	}
+	if m == nil {
+		*m = InfraServiceModel{}
+	}
+	m.Configs = flex.FlattenFrameworkListNestedBlock(ctx, from.Configs, InfraServiceHostConfigAttrTypes, diags, FlattenInfraServiceHostConfig)
+	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
+	m.Description = flex.FlattenStringPointer(from.Description)
+	m.DesiredState = flex.FlattenStringPointer(from.DesiredState)
+	m.DesiredVersion = flex.FlattenStringPointer(from.DesiredVersion)
+	m.Id = flex.FlattenStringPointer(from.Id)
+	m.InterfaceLabels = flex.FlattenFrameworkListString(ctx, from.InterfaceLabels, diags)
+	m.Name = flex.FlattenString(from.Name)
+	m.PoolId = flex.FlattenString(from.PoolId)
+	m.ServiceType = flex.FlattenString(from.ServiceType)
+	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
+}
