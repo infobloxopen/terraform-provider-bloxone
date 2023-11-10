@@ -273,13 +273,13 @@ func testAccCheckServicesDisappears(ctx context.Context, v *infra_mgmt.InfraServ
 	}
 }
 func testAccServicesBase() string {
-	return fmt.Sprintf(`
+	return `
 data "bloxone_infra_hosts" "test" {
     tag_filters = {
 		used_for = "Terraform Provider Acceptance Tests"
 	}
 }
-`)
+`
 }
 
 func testAccServicesBasicConfig(serviceName, serviceType string) string {
