@@ -102,9 +102,12 @@ var InfraServiceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"service_type": schema.StringAttribute{
 		Required:            true,
-		MarkdownDescription: "The type of the Service deployed on the Host (`dns`, `cdc`, etc.).",
+		MarkdownDescription: "The type of the Service deployed on the Host (`dns`, `cdc`, etc.).\nThe following is a list of the different Services and their string types (the string types are to be used with the APIs for the `service_type` field):\n | Service name | Service type | \n | ------ | ------ | \n | Access Authentication | authn | \n | Anycast | anycast | \n | Data Connector | cdc | \n | DHCP | dhcp | \n | DNS | dns | \n | DNS Forwarding Proxy | dfp | \n | NIOS Grid Connector | orpheus | \n | MS AD Sync | msad | \n | NTP | ntp | \n | BGP | bgp | \n | RIP | rip | \n | OSPF | ospf | \n",
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
+		Validators: []validator.String{
+			stringvalidator.OneOf("authn", "anycast", "cdc", "dhcp", " dns", "dfp", "orpheus", "msad", "ntp", "bgp", "rip", "ospf"),
 		},
 	},
 	"tags": schema.MapAttribute{
