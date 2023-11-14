@@ -37,7 +37,7 @@ data "bloxone_infra_hosts" "example_all" {}
 ### Optional
 
 - `filters` (Map of String) Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
-- `tag_filters` (Map of String) Tag Filters are used to filter by tags return a more specific list of results. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
+- `tag_filters` (Map of String) Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
 
 ### Read-Only
 
@@ -88,7 +88,22 @@ Optional:
 - `extra_data` (String) The field to carry any extra data specific to this configuration.
 - `host_id` (String) The resource identifier.
 - `service_id` (String) The resource identifier.
-- `service_type` (String) The type of the Service deployed on the Host (`dns`, `cdc`, etc.).
+- `service_type` (String) The type of the Service deployed on the Host (`dns`, `cdc`, etc.). The following is a list of the different Services and their string types (the string types are to be used with the APIs for the `service_type` field):
+
+  | Service name | Service type | 
+  | ------ | ------ | 
+  | Access Authentication | authn | 
+  | Anycast | anycast | 
+  | Data Connector | cdc | 
+  | DHCP | dhcp | 
+  | DNS | dns | 
+  | DNS Forwarding Proxy | dfp | 
+  | NIOS Grid Connector | orpheus | 
+  | MS AD Sync | msad | 
+  | NTP | ntp | 
+  | BGP | bgp | 
+  | RIP | rip | 
+  | OSPF | ospf |
 - `upgraded_at` (String) The timestamp of the latest upgrade of the Host-specific Service configuration.
 
 Read-Only:
