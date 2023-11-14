@@ -88,7 +88,22 @@ Optional:
 - `extra_data` (String) The field to carry any extra data specific to this configuration.
 - `host_id` (String) The resource identifier.
 - `service_id` (String) The resource identifier.
-- `service_type` (String) The type of the Service deployed on the Host (`dns`, `cdc`, etc.).
+- `service_type` (String) The type of the Service deployed on the Host (`dns`, `cdc`, etc.). The following is a list of the different Services and their string types (the string types are to be used with the APIs for the `service_type` field):
+
+  | Service name | Service type | 
+  | ------ | ------ | 
+  | Access Authentication | authn | 
+  | Anycast | anycast | 
+  | Data Connector | cdc | 
+  | DHCP | dhcp | 
+  | DNS | dns | 
+  | DNS Forwarding Proxy | dfp | 
+  | NIOS Grid Connector | orpheus | 
+  | MS AD Sync | msad | 
+  | NTP | ntp | 
+  | BGP | bgp | 
+  | RIP | rip | 
+  | OSPF | ospf |
 - `upgraded_at` (String) The timestamp of the latest upgrade of the Host-specific Service configuration.
 
 Read-Only:
