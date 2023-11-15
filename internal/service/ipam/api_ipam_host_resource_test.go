@@ -195,35 +195,6 @@ resource "bloxone_ipam_host" "test" {
 `, name)
 }
 
-func testAccIpamHostAddresses(name, address string) string {
-	return fmt.Sprintf(`
-	resource "bloxone_ipam_ip_space" "test_ip_space"{
-		name = %q
-}
-	resource "bloxone_ipam_host" "test_addresses" {
-    	name = "%s"
-    	addresses = [
-		{
-			address = %q,
-			space = bloxone_ipam_ip_space.test_ip_space.id
-		}
-]
-}
-`, acctest.RandomNameWithPrefix("ip_space"), name, address)
-}
-
-func testAccIpamHostAutoGenerateRecords(name, autoGenerateRecords string) string {
-	return fmt.Sprintf(`
-resource "bloxone_ipam_host" "test_auto_generate_records" {
-    name = "%s"
-	host_names = [
-
-	]
-    auto_generate_records = "%s"
-}
-`, name, autoGenerateRecords)
-}
-
 func testAccIpamHostComment(name, comment string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_host" "test_comment" {
@@ -231,15 +202,6 @@ resource "bloxone_ipam_host" "test_comment" {
     comment = "%s"
 }
 `, name, comment)
-}
-
-func testAccIpamHostHostNames(name, hostNames string) string {
-	return fmt.Sprintf(`
-resource "bloxone_ipam_host" "test_host_names" {
-    name = "%s"
-    host_names = "%s"
-}
-`, name, hostNames)
 }
 
 func testAccIpamHostTags(name string, tags map[string]string) string {
