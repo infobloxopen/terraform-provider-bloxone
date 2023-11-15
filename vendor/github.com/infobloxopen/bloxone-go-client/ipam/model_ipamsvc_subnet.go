@@ -21,7 +21,7 @@ var _ MappedNullable = &IpamsvcSubnet{}
 // IpamsvcSubnet A __Subnet__ object (_ipam/subnet_) is a set of contiguous IP addresses in the same IP space with no gap, expressed as an address and CIDR values. It represents a set of addresses from which addresses are assigned to network equipment interfaces.
 type IpamsvcSubnet struct {
 	// The address of the subnet in the form “a.b.c.d/n” where the “/n” may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form “a.b.c.d”.
-	Address   string            `json:"address"`
+	Address   *string           `json:"address,omitempty"`
 	AsmConfig *IpamsvcASMConfig `json:"asm_config,omitempty"`
 	// Set to 1 to indicate that the subnet may run out of addresses.
 	AsmScopeFlag *int64 `json:"asm_scope_flag,omitempty"`
@@ -91,7 +91,7 @@ type IpamsvcSubnet struct {
 	// The lease renew time (T1) in seconds.
 	RenewTime *int64 `json:"renew_time,omitempty"`
 	// The resource identifier.
-	Space string `json:"space"`
+	Space *string `json:"space,omitempty"`
 	// The tags for the subnet in JSON format.
 	Tags      map[string]interface{}       `json:"tags,omitempty"`
 	Threshold *IpamsvcUtilizationThreshold `json:"threshold,omitempty"`
@@ -107,10 +107,8 @@ type IpamsvcSubnet struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewIpamsvcSubnet(address string, space string) *IpamsvcSubnet {
+func NewIpamsvcSubnet() *IpamsvcSubnet {
 	this := IpamsvcSubnet{}
-	this.Address = address
-	this.Space = space
 	return &this
 }
 
@@ -122,28 +120,36 @@ func NewIpamsvcSubnetWithDefaults() *IpamsvcSubnet {
 	return &this
 }
 
-// GetAddress returns the Address field value
+// GetAddress returns the Address field value if set, zero value otherwise.
 func (o *IpamsvcSubnet) GetAddress() string {
-	if o == nil {
+	if o == nil || IsNil(o.Address) {
 		var ret string
 		return ret
 	}
-
-	return o.Address
+	return *o.Address
 }
 
-// GetAddressOk returns a tuple with the Address field value
+// GetAddressOk returns a tuple with the Address field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IpamsvcSubnet) GetAddressOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Address) {
 		return nil, false
 	}
-	return &o.Address, true
+	return o.Address, true
 }
 
-// SetAddress sets field value
+// HasAddress returns a boolean if a field has been set.
+func (o *IpamsvcSubnet) HasAddress() bool {
+	if o != nil && !IsNil(o.Address) {
+		return true
+	}
+
+	return false
+}
+
+// SetAddress gets a reference to the given string and assigns it to the Address field.
 func (o *IpamsvcSubnet) SetAddress(v string) {
-	o.Address = v
+	o.Address = &v
 }
 
 // GetAsmConfig returns the AsmConfig field value if set, zero value otherwise.
@@ -1298,28 +1304,36 @@ func (o *IpamsvcSubnet) SetRenewTime(v int64) {
 	o.RenewTime = &v
 }
 
-// GetSpace returns the Space field value
+// GetSpace returns the Space field value if set, zero value otherwise.
 func (o *IpamsvcSubnet) GetSpace() string {
-	if o == nil {
+	if o == nil || IsNil(o.Space) {
 		var ret string
 		return ret
 	}
-
-	return o.Space
+	return *o.Space
 }
 
-// GetSpaceOk returns a tuple with the Space field value
+// GetSpaceOk returns a tuple with the Space field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IpamsvcSubnet) GetSpaceOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Space) {
 		return nil, false
 	}
-	return &o.Space, true
+	return o.Space, true
 }
 
-// SetSpace sets field value
+// HasSpace returns a boolean if a field has been set.
+func (o *IpamsvcSubnet) HasSpace() bool {
+	if o != nil && !IsNil(o.Space) {
+		return true
+	}
+
+	return false
+}
+
+// SetSpace gets a reference to the given string and assigns it to the Space field.
 func (o *IpamsvcSubnet) SetSpace(v string) {
-	o.Space = v
+	o.Space = &v
 }
 
 // GetTags returns the Tags field value if set, zero value otherwise.
@@ -1524,7 +1538,9 @@ func (o IpamsvcSubnet) MarshalJSON() ([]byte, error) {
 
 func (o IpamsvcSubnet) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["address"] = o.Address
+	if !IsNil(o.Address) {
+		toSerialize["address"] = o.Address
+	}
 	if !IsNil(o.AsmConfig) {
 		toSerialize["asm_config"] = o.AsmConfig
 	}
@@ -1633,7 +1649,9 @@ func (o IpamsvcSubnet) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RenewTime) {
 		toSerialize["renew_time"] = o.RenewTime
 	}
-	toSerialize["space"] = o.Space
+	if !IsNil(o.Space) {
+		toSerialize["space"] = o.Space
+	}
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}

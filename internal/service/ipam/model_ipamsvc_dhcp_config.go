@@ -14,7 +14,6 @@ import (
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 type IpamsvcDHCPConfigModel struct {
@@ -47,13 +46,11 @@ var IpamsvcDHCPConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"abandoned_reclaim_time": schema.Int64Attribute{
 		Optional:            true,
 		Computed:            true,
-		Default:             int64default.StaticInt64(3600),
 		MarkdownDescription: `The abandoned reclaim time in seconds for IPV4 clients.`,
 	},
 	"abandoned_reclaim_time_v6": schema.Int64Attribute{
 		Optional:            true,
 		Computed:            true,
-		Default:             int64default.StaticInt64(3600),
 		MarkdownDescription: `The abandoned reclaim time in seconds for IPV6 clients.`,
 	},
 	"allow_unknown": schema.BoolAttribute{
@@ -122,16 +119,16 @@ func (m *IpamsvcDHCPConfigModel) Expand(ctx context.Context, diags *diag.Diagnos
 		return nil
 	}
 	to := &ipam.IpamsvcDHCPConfig{
-		AbandonedReclaimTime:   utils.Ptr(int64(m.AbandonedReclaimTime.ValueInt64())),
-		AbandonedReclaimTimeV6: utils.Ptr(int64(m.AbandonedReclaimTimeV6.ValueInt64())),
-		AllowUnknown:           m.AllowUnknown.ValueBoolPointer(),
-		AllowUnknownV6:         m.AllowUnknownV6.ValueBoolPointer(),
+		AbandonedReclaimTime:   flex.ExpandInt64Pointer(m.AbandonedReclaimTime),
+		AbandonedReclaimTimeV6: flex.ExpandInt64Pointer(m.AbandonedReclaimTimeV6),
+		AllowUnknown:           flex.ExpandBoolPointer(m.AllowUnknown),
+		AllowUnknownV6:         flex.ExpandBoolPointer(m.AllowUnknownV6),
 		Filters:                flex.ExpandFrameworkListString(ctx, m.Filters, diags),
 		FiltersV6:              flex.ExpandFrameworkListString(ctx, m.FiltersV6, diags),
-		IgnoreClientUid:        m.IgnoreClientUid.ValueBoolPointer(),
+		IgnoreClientUid:        flex.ExpandBoolPointer(m.IgnoreClientUid),
 		IgnoreList:             flex.ExpandFrameworkListNestedBlock(ctx, m.IgnoreList, diags, ExpandIpamsvcIgnoreItem),
-		LeaseTime:              utils.Ptr(int64(m.LeaseTime.ValueInt64())),
-		LeaseTimeV6:            utils.Ptr(int64(m.LeaseTimeV6.ValueInt64())),
+		LeaseTime:              flex.ExpandInt64Pointer(m.LeaseTime),
+		LeaseTimeV6:            flex.ExpandInt64Pointer(m.LeaseTimeV6),
 	}
 	return to
 }
@@ -154,14 +151,14 @@ func (m *IpamsvcDHCPConfigModel) Flatten(ctx context.Context, from *ipam.Ipamsvc
 	if m == nil {
 		*m = IpamsvcDHCPConfigModel{}
 	}
-	m.AbandonedReclaimTime = flex.FlattenInt64(int64(*from.AbandonedReclaimTime))
-	m.AbandonedReclaimTimeV6 = flex.FlattenInt64(int64(*from.AbandonedReclaimTimeV6))
+	m.AbandonedReclaimTime = flex.FlattenInt64Pointer(from.AbandonedReclaimTime)
+	m.AbandonedReclaimTimeV6 = flex.FlattenInt64Pointer(from.AbandonedReclaimTimeV6)
 	m.AllowUnknown = types.BoolPointerValue(from.AllowUnknown)
 	m.AllowUnknownV6 = types.BoolPointerValue(from.AllowUnknownV6)
 	m.Filters = flex.FlattenFrameworkListString(ctx, from.Filters, diags)
 	m.FiltersV6 = flex.FlattenFrameworkListString(ctx, from.FiltersV6, diags)
 	m.IgnoreClientUid = types.BoolPointerValue(from.IgnoreClientUid)
 	m.IgnoreList = flex.FlattenFrameworkListNestedBlock(ctx, from.IgnoreList, IpamsvcIgnoreItemAttrTypes, diags, FlattenIpamsvcIgnoreItem)
-	m.LeaseTime = flex.FlattenInt64(int64(*from.LeaseTime))
-	m.LeaseTimeV6 = flex.FlattenInt64(int64(*from.LeaseTimeV6))
+	m.LeaseTime = flex.FlattenInt64Pointer(from.LeaseTime)
+	m.LeaseTimeV6 = flex.FlattenInt64Pointer(from.LeaseTimeV6)
 }

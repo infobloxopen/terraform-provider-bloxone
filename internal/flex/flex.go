@@ -10,6 +10,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 type FrameworkElementFlExFunc[T any, U any] func(context.Context, T, *diag.Diagnostics) U
@@ -209,6 +211,17 @@ func ExpandFloat64Pointer(v types.Float64) *float64 {
 		return nil
 	}
 	return v.ValueFloat64Pointer()
+}
+
+func ExpandFloat32(v types.Float64) float32 {
+	return float32(v.ValueFloat64())
+}
+
+func ExpandFloat32Pointer(v types.Float64) *float32 {
+	if v.IsNull() || v.IsUnknown() {
+		return nil
+	}
+	return utils.Ptr(float32(v.ValueFloat64()))
 }
 
 func ExpandBool(v types.Bool) bool {

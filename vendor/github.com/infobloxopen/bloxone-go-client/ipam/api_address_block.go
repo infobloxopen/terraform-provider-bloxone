@@ -464,6 +464,34 @@ type ApiAddressBlockCreateNextAvailableABRequest struct {
 	ctx        context.Context
 	ApiService AddressBlockAPI
 	id         string
+	cidr       *int32
+	count      *int32
+	name       *string
+	comment    *string
+}
+
+// The cidr value of address blocks to be created.
+func (r ApiAddressBlockCreateNextAvailableABRequest) Cidr(cidr int32) ApiAddressBlockCreateNextAvailableABRequest {
+	r.cidr = &cidr
+	return r
+}
+
+// Number of address blocks to generate. Default 1 if not set.
+func (r ApiAddressBlockCreateNextAvailableABRequest) Count(count int32) ApiAddressBlockCreateNextAvailableABRequest {
+	r.count = &count
+	return r
+}
+
+// Name of next available address blocks.
+func (r ApiAddressBlockCreateNextAvailableABRequest) Name(name string) ApiAddressBlockCreateNextAvailableABRequest {
+	r.name = &name
+	return r
+}
+
+// Comment of next available address blocks.
+func (r ApiAddressBlockCreateNextAvailableABRequest) Comment(comment string) ApiAddressBlockCreateNextAvailableABRequest {
+	r.comment = &comment
+	return r
 }
 
 func (r ApiAddressBlockCreateNextAvailableABRequest) Execute() (*IpamsvcCreateNextAvailableABResponse, *http.Response, error) {
@@ -510,7 +538,23 @@ func (a *AddressBlockAPIService) AddressBlockCreateNextAvailableABExecute(r ApiA
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.cidr == nil {
+		return localVarReturnValue, nil, internal.ReportError("cidr is required and must be specified")
+	}
 
+	internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "cidr", r.cidr, "")
+	if r.count != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "count", r.count, "")
+	} else {
+		var defaultValue int32 = 1
+		r.count = &defaultValue
+	}
+	if r.name != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "")
+	}
+	if r.comment != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "comment", r.comment, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -577,6 +621,20 @@ type ApiAddressBlockCreateNextAvailableIPRequest struct {
 	ctx        context.Context
 	ApiService AddressBlockAPI
 	id         string
+	contiguous *bool
+	count      *int32
+}
+
+// Indicates whether the IP addresses should belong to a contiguous block.  Defaults to _false_.
+func (r ApiAddressBlockCreateNextAvailableIPRequest) Contiguous(contiguous bool) ApiAddressBlockCreateNextAvailableIPRequest {
+	r.contiguous = &contiguous
+	return r
+}
+
+// The number of IP addresses requested.  Defaults to 1.
+func (r ApiAddressBlockCreateNextAvailableIPRequest) Count(count int32) ApiAddressBlockCreateNextAvailableIPRequest {
+	r.count = &count
+	return r
 }
 
 func (r ApiAddressBlockCreateNextAvailableIPRequest) Execute() (*IpamsvcCreateNextAvailableIPResponse, *http.Response, error) {
@@ -624,6 +682,18 @@ func (a *AddressBlockAPIService) AddressBlockCreateNextAvailableIPExecute(r ApiA
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.contiguous != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "contiguous", r.contiguous, "")
+	} else {
+		var defaultValue bool = false
+		r.contiguous = &defaultValue
+	}
+	if r.count != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "count", r.count, "")
+	} else {
+		var defaultValue int32 = 1
+		r.count = &defaultValue
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -690,6 +760,41 @@ type ApiAddressBlockCreateNextAvailableSubnetRequest struct {
 	ctx        context.Context
 	ApiService AddressBlockAPI
 	id         string
+	cidr       *int32
+	count      *int32
+	name       *string
+	comment    *string
+	dhcpHost   *string
+}
+
+// The cidr value of subnets to be created.
+func (r ApiAddressBlockCreateNextAvailableSubnetRequest) Cidr(cidr int32) ApiAddressBlockCreateNextAvailableSubnetRequest {
+	r.cidr = &cidr
+	return r
+}
+
+// Number of subnets to generate. Default 1 if not set.
+func (r ApiAddressBlockCreateNextAvailableSubnetRequest) Count(count int32) ApiAddressBlockCreateNextAvailableSubnetRequest {
+	r.count = &count
+	return r
+}
+
+// Name of next available subnets.
+func (r ApiAddressBlockCreateNextAvailableSubnetRequest) Name(name string) ApiAddressBlockCreateNextAvailableSubnetRequest {
+	r.name = &name
+	return r
+}
+
+// Comment of next available subnets.
+func (r ApiAddressBlockCreateNextAvailableSubnetRequest) Comment(comment string) ApiAddressBlockCreateNextAvailableSubnetRequest {
+	r.comment = &comment
+	return r
+}
+
+// Reference of OnPrem Host associated with the next available subnets to be created.
+func (r ApiAddressBlockCreateNextAvailableSubnetRequest) DhcpHost(dhcpHost string) ApiAddressBlockCreateNextAvailableSubnetRequest {
+	r.dhcpHost = &dhcpHost
+	return r
 }
 
 func (r ApiAddressBlockCreateNextAvailableSubnetRequest) Execute() (*IpamsvcCreateNextAvailableSubnetResponse, *http.Response, error) {
@@ -736,7 +841,26 @@ func (a *AddressBlockAPIService) AddressBlockCreateNextAvailableSubnetExecute(r 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.cidr == nil {
+		return localVarReturnValue, nil, internal.ReportError("cidr is required and must be specified")
+	}
 
+	internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "cidr", r.cidr, "")
+	if r.count != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "count", r.count, "")
+	} else {
+		var defaultValue int32 = 1
+		r.count = &defaultValue
+	}
+	if r.name != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "")
+	}
+	if r.comment != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "comment", r.comment, "")
+	}
+	if r.dhcpHost != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "dhcp_host", r.dhcpHost, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
