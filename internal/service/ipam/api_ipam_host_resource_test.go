@@ -48,7 +48,7 @@ func TestAccIpamHostResource_basic(t *testing.T) {
 	})
 }
 
-func TestAccIpamHost_disappears(t *testing.T) {
+func TestAccIpamHostResource_disappears(t *testing.T) {
 	resourceName := "bloxone_ipam_host.test"
 	var v ipam.IpamsvcIpamHost
 	var name = acctest.RandomNameWithPrefix("ipam_host")
