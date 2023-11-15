@@ -13,30 +13,30 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &HostsResource{}
-var _ resource.ResourceWithImportState = &HostsResource{}
+var _ resource.Resource = &ServicesResource{}
+var _ resource.ResourceWithImportState = &ServicesResource{}
 
-func NewHostsResource() resource.Resource {
-	return &HostsResource{}
+func NewServicesResource() resource.Resource {
+	return &ServicesResource{}
 }
 
-// HostsResource defines the resource implementation.
-type HostsResource struct {
+// ServicesResource defines the resource implementation.
+type ServicesResource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (r *HostsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "infra_host"
+func (r *ServicesResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "infra_service"
 }
 
-func (r *HostsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *ServicesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "",
-		Attributes:          InfraHostResourceSchemaAttributes,
+		Attributes:          InfraServiceResourceSchemaAttributes,
 	}
 }
 
-func (r *HostsResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *ServicesResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -56,8 +56,8 @@ func (r *HostsResource) Configure(ctx context.Context, req resource.ConfigureReq
 	r.client = client
 }
 
-func (r *HostsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data InfraHostModel
+func (r *ServicesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data InfraServiceModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -67,12 +67,12 @@ func (r *HostsResource) Create(ctx context.Context, req resource.CreateRequest, 
 	}
 
 	apiRes, _, err := r.client.InfraManagementAPI.
-		HostsAPI.
-		HostsCreate(ctx).
+		ServicesAPI.
+		ServicesCreate(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Hosts, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Services, got error: %s", err))
 		return
 	}
 
@@ -83,8 +83,8 @@ func (r *HostsResource) Create(ctx context.Context, req resource.CreateRequest, 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *HostsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data InfraHostModel
+func (r *ServicesResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data InfraServiceModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -94,15 +94,15 @@ func (r *HostsResource) Read(ctx context.Context, req resource.ReadRequest, resp
 	}
 
 	apiRes, httpRes, err := r.client.InfraManagementAPI.
-		HostsAPI.
-		HostsRead(ctx, data.Id.ValueString()).
+		ServicesAPI.
+		ServicesRead(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			resp.State.RemoveResource(ctx)
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Hosts, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Services, got error: %s", err))
 		return
 	}
 
@@ -113,8 +113,8 @@ func (r *HostsResource) Read(ctx context.Context, req resource.ReadRequest, resp
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *HostsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data InfraHostModel
+func (r *ServicesResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var data InfraServiceModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -124,12 +124,12 @@ func (r *HostsResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	}
 
 	apiRes, _, err := r.client.InfraManagementAPI.
-		HostsAPI.
-		HostsUpdate(ctx, data.Id.ValueString()).
+		ServicesAPI.
+		ServicesUpdate(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Hosts, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Services, got error: %s", err))
 		return
 	}
 
@@ -140,8 +140,8 @@ func (r *HostsResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *HostsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data InfraHostModel
+func (r *ServicesResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data InfraServiceModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -151,18 +151,18 @@ func (r *HostsResource) Delete(ctx context.Context, req resource.DeleteRequest, 
 	}
 
 	httpRes, err := r.client.InfraManagementAPI.
-		HostsAPI.
-		HostsDelete(ctx, data.Id.ValueString()).
+		ServicesAPI.
+		ServicesDelete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete Hosts, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete Services, got error: %s", err))
 		return
 	}
 }
 
-func (r *HostsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *ServicesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
