@@ -84,26 +84,6 @@ type IpamsvcIPSpace struct {
 // will change when the set of required properties is changed
 func NewIpamsvcIPSpace(name string) *IpamsvcIPSpace {
 	this := IpamsvcIPSpace{}
-	var ddnsClientUpdate string = "client"
-	this.DdnsClientUpdate = &ddnsClientUpdate
-	var ddnsConflictResolutionMode string = "check_with_dhcid"
-	this.DdnsConflictResolutionMode = &ddnsConflictResolutionMode
-	var ddnsGenerateName bool = false
-	this.DdnsGenerateName = &ddnsGenerateName
-	var ddnsGeneratedPrefix string = "myhost"
-	this.DdnsGeneratedPrefix = &ddnsGeneratedPrefix
-	var ddnsSendUpdates bool = true
-	this.DdnsSendUpdates = &ddnsSendUpdates
-	var ddnsUpdateOnRenew bool = false
-	this.DdnsUpdateOnRenew = &ddnsUpdateOnRenew
-	var ddnsUseConflictResolution bool = true
-	this.DdnsUseConflictResolution = &ddnsUseConflictResolution
-	var hostnameRewriteChar string = "-"
-	this.HostnameRewriteChar = &hostnameRewriteChar
-	var hostnameRewriteEnabled bool = false
-	this.HostnameRewriteEnabled = &hostnameRewriteEnabled
-	var hostnameRewriteRegex string = "[^a-zA-Z0-9_.]"
-	this.HostnameRewriteRegex = &hostnameRewriteRegex
 	this.Name = name
 	return &this
 }
@@ -113,26 +93,6 @@ func NewIpamsvcIPSpace(name string) *IpamsvcIPSpace {
 // but it doesn't guarantee that properties required by API are set
 func NewIpamsvcIPSpaceWithDefaults() *IpamsvcIPSpace {
 	this := IpamsvcIPSpace{}
-	var ddnsClientUpdate string = "client"
-	this.DdnsClientUpdate = &ddnsClientUpdate
-	var ddnsConflictResolutionMode string = "check_with_dhcid"
-	this.DdnsConflictResolutionMode = &ddnsConflictResolutionMode
-	var ddnsGenerateName bool = false
-	this.DdnsGenerateName = &ddnsGenerateName
-	var ddnsGeneratedPrefix string = "myhost"
-	this.DdnsGeneratedPrefix = &ddnsGeneratedPrefix
-	var ddnsSendUpdates bool = true
-	this.DdnsSendUpdates = &ddnsSendUpdates
-	var ddnsUpdateOnRenew bool = false
-	this.DdnsUpdateOnRenew = &ddnsUpdateOnRenew
-	var ddnsUseConflictResolution bool = true
-	this.DdnsUseConflictResolution = &ddnsUseConflictResolution
-	var hostnameRewriteChar string = "-"
-	this.HostnameRewriteChar = &hostnameRewriteChar
-	var hostnameRewriteEnabled bool = false
-	this.HostnameRewriteEnabled = &hostnameRewriteEnabled
-	var hostnameRewriteRegex string = "[^a-zA-Z0-9_.]"
-	this.HostnameRewriteRegex = &hostnameRewriteRegex
 	return &this
 }
 
