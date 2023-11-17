@@ -133,16 +133,16 @@ func TestAccIpSpaceResource_Comment(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceComment("ip_space_name", "COMMENT_REPLACE_ME"),
+				Config: testAccIpSpaceComment("ip_space_name", "some comment"),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "comment", "some comment"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceComment("ip_space_name", "COMMENT_UPDATE_REPLACE_ME"),
+				Config: testAccIpSpaceComment("ip_space_name", "updated comment"),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "comment", "updated comment"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -213,16 +213,16 @@ func TestAccIpSpaceResource_DdnsDomain(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceDdnsDomain("ip_space_name", "DDNS_DOMAIN_REPLACE_ME"),
+				Config: testAccIpSpaceDdnsDomain("ip_space_name", "abc"),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "DDNS_DOMAIN_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "abc"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceDdnsDomain("ip_space_name", "DDNS_DOMAIN_UPDATE_REPLACE_ME"),
+				Config: testAccIpSpaceDdnsDomain("ip_space_name", "xyz"),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "DDNS_DOMAIN_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "xyz"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -265,16 +265,16 @@ func TestAccIpSpaceResource_DdnsGeneratedPrefix(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceDdnsGeneratedPrefix("ip_space_name", "DDNS_GENERATED_PREFIX_REPLACE_ME"),
+				Config: testAccIpSpaceDdnsGeneratedPrefix("ip_space_name", "host-prefix"),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "ddns_generated_prefix", "DDNS_GENERATED_PREFIX_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_generated_prefix", "host-prefix"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceDdnsGeneratedPrefix("ip_space_name", "DDNS_GENERATED_PREFIX_UPDATE_REPLACE_ME"),
+				Config: testAccIpSpaceDdnsGeneratedPrefix("ip_space_name", "host-another-prefix"),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "ddns_generated_prefix", "DDNS_GENERATED_PREFIX_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_generated_prefix", "host-another-prefix"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase

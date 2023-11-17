@@ -400,6 +400,20 @@ type ApiSubnetCreateNextAvailableIPRequest struct {
 	ctx        context.Context
 	ApiService SubnetAPI
 	id         string
+	contiguous *bool
+	count      *int32
+}
+
+// Indicates whether the IP addresses should belong to a contiguous block.  Defaults to _false_.
+func (r ApiSubnetCreateNextAvailableIPRequest) Contiguous(contiguous bool) ApiSubnetCreateNextAvailableIPRequest {
+	r.contiguous = &contiguous
+	return r
+}
+
+// The number of IP addresses requested.  Defaults to 1.
+func (r ApiSubnetCreateNextAvailableIPRequest) Count(count int32) ApiSubnetCreateNextAvailableIPRequest {
+	r.count = &count
+	return r
 }
 
 func (r ApiSubnetCreateNextAvailableIPRequest) Execute() (*IpamsvcCreateNextAvailableIPResponse, *http.Response, error) {
@@ -447,6 +461,18 @@ func (a *SubnetAPIService) SubnetCreateNextAvailableIPExecute(r ApiSubnetCreateN
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.contiguous != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "contiguous", r.contiguous, "")
+	} else {
+		var defaultValue bool = false
+		r.contiguous = &defaultValue
+	}
+	if r.count != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "count", r.count, "")
+	} else {
+		var defaultValue int32 = 1
+		r.count = &defaultValue
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

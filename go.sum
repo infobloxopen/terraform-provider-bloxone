@@ -110,8 +110,8 @@ github.com/huandu/xstrings v1.3.2/go.mod h1:y5/lhBue+AyNmUVz9RLU9xbLR0o4KIIExikq
 github.com/imdario/mergo v0.3.11/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH0dnCYA=
 github.com/imdario/mergo v0.3.15 h1:M8XP7IuFNsqUx6VPK2P9OSmsYsI/YFaGil0uD21V3dM=
 github.com/imdario/mergo v0.3.15/go.mod h1:WBLT9ZmE3lPoWsEzCh9LPo3TiwVN+ZKEjmz+hD27ysY=
-github.com/infobloxopen/bloxone-go-client v0.0.0-20231108231539-9a3bfb3b1e0c h1:BdBWHAtTZKrI7dIPhm6x2yadtJ2TMJyxjodgpzZt2wo=
-github.com/infobloxopen/bloxone-go-client v0.0.0-20231108231539-9a3bfb3b1e0c/go.mod h1:kneBd/8Si0u3+WiEGIlVPgYr1d6P7om6pJinEUWOcoE=
+github.com/infobloxopen/bloxone-go-client v0.0.0-20231116183252-cf4a4cbff266 h1:nGsm8LvwFk/ZR/i0YPoX7D8IbLcNdIMlGXsi04CwzxA=
+github.com/infobloxopen/bloxone-go-client v0.0.0-20231116183252-cf4a4cbff266/go.mod h1:kneBd/8Si0u3+WiEGIlVPgYr1d6P7om6pJinEUWOcoE=
 github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 h1:BQSFePA1RWJOlocH6Fxy8MmwDt+yVQYULKfN0RoTN8A=
 github.com/jhump/protoreflect v1.15.1 h1:HUMERORf3I3ZdX05WaQ6MIpd/NJ434hTp5YiKgfCL6c=
 github.com/kevinburke/ssh_config v1.2.0 h1:x584FjTGwHzMwvHx18PXxbBVzfnxogHaAReU4gf13a4=

@@ -326,9 +326,6 @@ func (m *IpamsvcIPSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostic
 		InheritanceSources:              ExpandIpamsvcIPSpaceInheritance(ctx, m.InheritanceSources, diags),
 		Name:                            m.Name.ValueString(),
 		Tags:                            flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
-		Threshold:                       ExpandIpamsvcUtilizationThreshold(ctx, m.Threshold, diags),
-		Utilization:                     ExpandIpamsvcUtilization(ctx, m.Utilization, diags),
-		UtilizationV6:                   ExpandIpamsvcUtilizationV6(ctx, m.UtilizationV6, diags),
 		VendorSpecificOptionOptionSpace: m.VendorSpecificOptionOptionSpace.ValueStringPointer(),
 	}
 	return to

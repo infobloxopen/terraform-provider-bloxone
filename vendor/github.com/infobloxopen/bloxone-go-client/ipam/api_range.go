@@ -260,6 +260,20 @@ type ApiRangeCreateNextAvailableIPRequest struct {
 	ctx        context.Context
 	ApiService RangeAPI
 	id         string
+	contiguous *bool
+	count      *int32
+}
+
+// Indicates whether the IP addresses should belong to a contiguous block.  Defaults to _false_.
+func (r ApiRangeCreateNextAvailableIPRequest) Contiguous(contiguous bool) ApiRangeCreateNextAvailableIPRequest {
+	r.contiguous = &contiguous
+	return r
+}
+
+// The number of IP addresses requested.  Defaults to 1.
+func (r ApiRangeCreateNextAvailableIPRequest) Count(count int32) ApiRangeCreateNextAvailableIPRequest {
+	r.count = &count
+	return r
 }
 
 func (r ApiRangeCreateNextAvailableIPRequest) Execute() (*IpamsvcCreateNextAvailableIPResponse, *http.Response, error) {
@@ -307,6 +321,18 @@ func (a *RangeAPIService) RangeCreateNextAvailableIPExecute(r ApiRangeCreateNext
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.contiguous != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "contiguous", r.contiguous, "")
+	} else {
+		var defaultValue bool = false
+		r.contiguous = &defaultValue
+	}
+	if r.count != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "count", r.count, "")
+	} else {
+		var defaultValue int32 = 1
+		r.count = &defaultValue
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
