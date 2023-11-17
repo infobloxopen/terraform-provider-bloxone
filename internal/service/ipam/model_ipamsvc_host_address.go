@@ -58,9 +58,9 @@ func (m *IpamsvcHostAddressModel) Expand(ctx context.Context, diags *diag.Diagno
 		return nil
 	}
 	to := &ipam.IpamsvcHostAddress{
-		Address: m.Address.ValueString(),
-		Ref:     m.Ref.ValueString(),
-		Space:   m.Space.ValueString(),
+		Address: flex.ExpandString(m.Address),
+		Ref:     flex.ExpandString(m.Ref),
+		Space:   flex.ExpandString(m.Space),
 	}
 	return to
 }

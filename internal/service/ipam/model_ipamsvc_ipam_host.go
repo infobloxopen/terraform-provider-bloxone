@@ -50,7 +50,6 @@ var IpamsvcIpamHostResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `The list of all addresses associated with the IPAM host, which may be in different IP spaces.`,
 	},
 	"auto_generate_records": schema.BoolAttribute{
-		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: `This flag specifies if resource records have to be auto generated for the host.`,
 	},
@@ -111,10 +110,10 @@ func (m *IpamsvcIpamHostModel) Expand(ctx context.Context, diags *diag.Diagnosti
 	}
 	to := &ipam.IpamsvcIpamHost{
 		Addresses:           flex.ExpandFrameworkListNestedBlock(ctx, m.Addresses, diags, ExpandIpamsvcHostAddress),
-		AutoGenerateRecords: m.AutoGenerateRecords.ValueBoolPointer(),
-		Comment:             m.Comment.ValueStringPointer(),
+		AutoGenerateRecords: flex.ExpandBoolPointer(m.AutoGenerateRecords),
+		Comment:             flex.ExpandStringPointer(m.Comment),
 		HostNames:           flex.ExpandFrameworkListNestedBlock(ctx, m.HostNames, diags, ExpandIpamsvcHostName),
-		Name:                m.Name.ValueString(),
+		Name:                flex.ExpandString(m.Name),
 		Tags:                flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 	return to

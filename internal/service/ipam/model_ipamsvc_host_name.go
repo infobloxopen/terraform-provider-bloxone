@@ -1,17 +1,17 @@
 package ipam
 
 import (
-    "context"
+	"context"
 
-    "github.com/hashicorp/terraform-plugin-framework/attr"
-    "github.com/hashicorp/terraform-plugin-framework/diag"
-    schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-    "github.com/hashicorp/terraform-plugin-framework/types"
-    "github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-    "github.com/infobloxopen/bloxone-go-client/ipam"
+	"github.com/infobloxopen/bloxone-go-client/ipam"
 
-    "github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
 type IpamsvcHostNameModel struct {
@@ -64,10 +64,10 @@ func (m *IpamsvcHostNameModel) Expand(ctx context.Context, diags *diag.Diagnosti
 		return nil
 	}
 	to := &ipam.IpamsvcHostName{
-		Alias:       m.Alias.ValueBoolPointer(),
-		Name:        m.Name.ValueString(),
-		PrimaryName: m.PrimaryName.ValueBoolPointer(),
-		Zone:        m.Zone.ValueString(),
+		Alias:       flex.ExpandBoolPointer(m.Alias),
+		Name:        flex.ExpandString(m.Name),
+		PrimaryName: flex.ExpandBoolPointer(m.PrimaryName),
+		Zone:        flex.ExpandString(m.Zone),
 	}
 	return to
 }

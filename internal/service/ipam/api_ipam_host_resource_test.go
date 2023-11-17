@@ -18,7 +18,7 @@ import (
 // The following require additional resource/data source objects to be supported.
 // - auto_generate_records
 // - addresses
-// - host_namesFi
+// - host_names
 
 // Test case
 func TestAccIpamHostResource_basic(t *testing.T) {
@@ -72,6 +72,7 @@ func TestAccIpamHostResource_disappears(t *testing.T) {
 
 func TestAccIpamHostResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_ipam_host.test_comment"
+	var v ipam.IpamsvcIpamHost
 	var name = acctest.RandomNameWithPrefix("ipam_host")
 
 	resource.Test(t, resource.TestCase{
@@ -82,6 +83,7 @@ func TestAccIpamHostResource_Comment(t *testing.T) {
 			{
 				Config: testAccIpamHostComment(name, "test comment"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpamHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "test comment"),
 				),
 			},
@@ -89,6 +91,7 @@ func TestAccIpamHostResource_Comment(t *testing.T) {
 			{
 				Config: testAccIpamHostComment(name, "test comment updated"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpamHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "test comment updated"),
 				),
 			},
@@ -99,6 +102,7 @@ func TestAccIpamHostResource_Comment(t *testing.T) {
 
 func TestAccIpamHostResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_ipam_host.test_tags"
+	var v ipam.IpamsvcIpamHost
 	var name = acctest.RandomNameWithPrefix("ipam_host")
 
 	resource.Test(t, resource.TestCase{
@@ -112,6 +116,7 @@ func TestAccIpamHostResource_Tags(t *testing.T) {
 					"tag2": "value2",
 				}),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpamHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
 				),
@@ -123,6 +128,7 @@ func TestAccIpamHostResource_Tags(t *testing.T) {
 					"tag3": "value3",
 				}),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpamHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2changed"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag3", "value3"),
 				),
