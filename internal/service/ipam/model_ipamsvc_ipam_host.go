@@ -2,6 +2,7 @@ package ipam
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 
@@ -50,7 +51,9 @@ var IpamsvcIpamHostResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `The list of all addresses associated with the IPAM host, which may be in different IP spaces.`,
 	},
 	"auto_generate_records": schema.BoolAttribute{
+		Optional:            true,
 		Computed:            true,
+		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: `This flag specifies if resource records have to be auto generated for the host.`,
 	},
 	"comment": schema.StringAttribute{

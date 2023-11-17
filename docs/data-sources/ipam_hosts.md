@@ -53,13 +53,13 @@ Required:
 Optional:
 
 - `addresses` (Attributes List) The list of all addresses associated with the IPAM host, which may be in different IP spaces. (see [below for nested schema](#nestedatt--results--addresses))
+- `auto_generate_records` (Boolean) This flag specifies if resource records have to be auto generated for the host.
 - `comment` (String) The description for the IPAM host. May contain 0 to 1024 characters. Can include UTF-8.
 - `host_names` (Attributes List) The name records to be generated for the host.  This field is required if _auto_generate_records_ is true. (see [below for nested schema](#nestedatt--results--host_names))
 - `tags` (Map of String) The tags for the IPAM host in JSON format.
 
 Read-Only:
 
-- `auto_generate_records` (Boolean) This flag specifies if resource records have to be auto generated for the host.
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
