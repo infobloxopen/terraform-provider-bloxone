@@ -269,7 +269,7 @@ github.com/huandu/xstrings
 # github.com/imdario/mergo v0.3.15
 ## explicit; go 1.13
 github.com/imdario/mergo
-# github.com/infobloxopen/bloxone-go-client v0.0.0-20231116183252-cf4a4cbff266
+# github.com/infobloxopen/bloxone-go-client v0.0.0-20231130172827-48119d9218de => ../bloxone-go-client
 ## explicit; go 1.19
 github.com/infobloxopen/bloxone-go-client/client
 github.com/infobloxopen/bloxone-go-client/dns_config
@@ -278,6 +278,7 @@ github.com/infobloxopen/bloxone-go-client/infra_mgmt
 github.com/infobloxopen/bloxone-go-client/infra_provision
 github.com/infobloxopen/bloxone-go-client/internal
 github.com/infobloxopen/bloxone-go-client/ipam
+github.com/infobloxopen/bloxone-go-client/keys
 # github.com/mattn/go-colorable v0.1.13
 ## explicit; go 1.15
 github.com/mattn/go-colorable
@@ -494,3 +495,4 @@ google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/emptypb
 google.golang.org/protobuf/types/known/timestamppb
+# github.com/infobloxopen/bloxone-go-client => ../bloxone-go-client
