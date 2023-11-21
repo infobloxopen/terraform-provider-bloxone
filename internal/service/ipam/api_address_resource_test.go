@@ -283,6 +283,42 @@ func TestAccAddressResource_Tags(t *testing.T) {
 	})
 }
 
+func TestAccAddressResource_NextAvailable_Subnet(t *testing.T) {
+	var resourceName = "bloxone_ipam_address.test_next_available"
+	var v1 ipam.IpamsvcAddress
+	var v2 ipam.IpamsvcAddress
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAddressNextAvailableInSubnet("10.0.0.0", 24),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_ipam_subnet.test", "id"),
+					resource.TestCheckResourceAttr(resourceName, "address", "10.0.0.1"), // first address after broadcast address
+					resource.TestCheckResourceAttrSet(resourceName, "id"),
+				),
+			},
+			// Update and Read
+			// Update of next_available_id will destroy existing resource and create a new resource
+			{
+				Config: testAccAddressNextAvailableInSubnet("12.0.0.0", 24),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressDestroy(context.Background(), &v1),
+					testAccCheckAddressExists(context.Background(), resourceName, &v2),
+					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_ipam_subnet.test", "id"),
+					resource.TestCheckResourceAttr(resourceName, "address", "12.0.0.1"),
+					resource.TestCheckResourceAttrSet(resourceName, "id"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func testAccCheckAddressExists(ctx context.Context, resourceName string, v *ipam.IpamsvcAddress) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
@@ -385,30 +421,6 @@ resource "bloxone_ipam_address" "test_comment" {
 	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }
 
-func testAccAddressDhcpInfo(address string, dhcpInfo string) string {
-	config := fmt.Sprintf(`
-resource "bloxone_ipam_address" "test_dhcp_info" {
-    address = %q
-    space = bloxone_ipam_ip_space.test.id
-    dhcp_info = %q
-    depends_on = [bloxone_ipam_subnet.test]
-}
-`, address, dhcpInfo)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
-}
-
-func testAccAddressHost(address string, host string) string {
-	config := fmt.Sprintf(`
-resource "bloxone_ipam_address" "test_host" {
-    address = %q
-    space = bloxone_ipam_ip_space.test.id
-    host = %q
-    depends_on = [bloxone_ipam_subnet.test]
-}
-`, address, host)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
-}
-
 func testAccAddressHwaddr(address string, hwaddr string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address" "test_hwaddr" {
@@ -451,30 +463,6 @@ resource "bloxone_ipam_address" "test_names" {
     depends_on = [bloxone_ipam_subnet.test]
 }
 `, address, strings.Join(quotedNames, ","))
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
-}
-
-func testAccAddressParent(address string, parent string) string {
-	config := fmt.Sprintf(`
-resource "bloxone_ipam_address" "test_parent" {
-    address = %q
-    space = bloxone_ipam_ip_space.test.id
-    parent = %q
-    depends_on = [bloxone_ipam_subnet.test]
-}
-`, address, parent)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
-}
-
-func testAccAddressRange(address string, range_ string) string {
-	config := fmt.Sprintf(`
-resource "bloxone_ipam_address" "test_range" {
-    address = %q
-    space = bloxone_ipam_ip_space.test.id
-    range = %q
-    depends_on = [bloxone_ipam_subnet.test]
-}
-`, address, range_)
 	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }
 
@@ -523,4 +511,20 @@ resource "bloxone_ipam_address" "test_tags" {
 }
 `, address, tagsStr)
 	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+}
+
+func testAccAddressNextAvailableInSubnet(address string, cidr int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_subnet" "test" {
+    address = %q
+    cidr = %d
+    space = bloxone_ipam_ip_space.test.id
+}
+
+resource "bloxone_ipam_address" "test_next_available" {
+    next_available_id = bloxone_ipam_subnet.test.id
+    space = bloxone_ipam_ip_space.test.id
+}
+`, address, cidr)
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }

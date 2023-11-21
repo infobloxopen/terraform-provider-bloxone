@@ -1,7 +1,8 @@
 # Get subnets filtered by an attribute
 data "bloxone_ipam_subnets" "example_by_attribute" {
   filters = {
-    "name" = "example_subnet"
+    "address" = "10.0.0.0"
+    "cidr"    = "24"
   }
 }
 
