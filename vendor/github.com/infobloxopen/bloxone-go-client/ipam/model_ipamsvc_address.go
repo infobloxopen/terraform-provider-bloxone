@@ -50,7 +50,7 @@ type IpamsvcAddress struct {
 	// The resource identifier.
 	Range *string `json:"range,omitempty"`
 	// The resource identifier.
-	Space string `json:"space"`
+	Space *string `json:"space,omitempty"`
 	// The state of the address (_used_ or _free_).
 	State *string `json:"state,omitempty"`
 	// The tags for this address in JSON format.
@@ -65,10 +65,9 @@ type IpamsvcAddress struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewIpamsvcAddress(address string, space string) *IpamsvcAddress {
+func NewIpamsvcAddress(address string) *IpamsvcAddress {
 	this := IpamsvcAddress{}
 	this.Address = address
-	this.Space = space
 	return &this
 }
 
@@ -552,28 +551,36 @@ func (o *IpamsvcAddress) SetRange(v string) {
 	o.Range = &v
 }
 
-// GetSpace returns the Space field value
+// GetSpace returns the Space field value if set, zero value otherwise.
 func (o *IpamsvcAddress) GetSpace() string {
-	if o == nil {
+	if o == nil || IsNil(o.Space) {
 		var ret string
 		return ret
 	}
-
-	return o.Space
+	return *o.Space
 }
 
-// GetSpaceOk returns a tuple with the Space field value
+// GetSpaceOk returns a tuple with the Space field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IpamsvcAddress) GetSpaceOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Space) {
 		return nil, false
 	}
-	return &o.Space, true
+	return o.Space, true
 }
 
-// SetSpace sets field value
+// HasSpace returns a boolean if a field has been set.
+func (o *IpamsvcAddress) HasSpace() bool {
+	if o != nil && !IsNil(o.Space) {
+		return true
+	}
+
+	return false
+}
+
+// SetSpace gets a reference to the given string and assigns it to the Space field.
 func (o *IpamsvcAddress) SetSpace(v string) {
-	o.Space = v
+	o.Space = &v
 }
 
 // GetState returns the State field value if set, zero value otherwise.
@@ -757,7 +764,9 @@ func (o IpamsvcAddress) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Range) {
 		toSerialize["range"] = o.Range
 	}
-	toSerialize["space"] = o.Space
+	if !IsNil(o.Space) {
+		toSerialize["space"] = o.Space
+	}
 	if !IsNil(o.State) {
 		toSerialize["state"] = o.State
 	}

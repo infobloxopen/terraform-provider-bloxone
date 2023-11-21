@@ -119,7 +119,7 @@ data "bloxone_ipam_subnets" "test" {
   }
 }
 `, address, cidr)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetDataSourceConfigTagFilters(address string, cidr int, tagValue string) string {
@@ -138,6 +138,6 @@ data "bloxone_ipam_subnets" "test" {
   }
 }
 `, address, cidr, tagValue)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 
 }
