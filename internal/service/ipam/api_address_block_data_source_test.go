@@ -12,43 +12,43 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-func TestAccSubnetDataSource_Filters(t *testing.T) {
-	dataSourceName := "data.bloxone_ipam_subnets.test"
-	resourceName := "bloxone_ipam_subnet.test"
-	var v ipam.IpamsvcSubnet
+func TestAccAddressBlockDataSource_Filters(t *testing.T) {
+	dataSourceName := "data.bloxone_ipam_address_blocks.test"
+	resourceName := "bloxone_ipam_address_block.test"
+	var v ipam.IpamsvcAddressBlock
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckSubnetDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckAddressBlockDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSubnetDataSourceConfigFilters("11.0.0.0", 24),
+				Config: testAccAddressBlockDataSourceConfigFilters(acctest.RandomNameWithPrefix("tf-ab"), "12.0.0.0", 8),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
-						testAccCheckSubnetExists(context.Background(), resourceName, &v),
-					}, testAccCheckSubnetResourceAttrPair(resourceName, dataSourceName)...)...,
+						testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
+					}, testAccCheckAddressBlockResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
 	})
 }
 
-func TestAccSubnetDataSource_TagFilters(t *testing.T) {
-	dataSourceName := "data.bloxone_ipam_subnets.test"
-	resourceName := "bloxone_ipam_subnet.test"
-	var v ipam.IpamsvcSubnet
+func TestAccAddressBlockDataSource_TagFilters(t *testing.T) {
+	dataSourceName := "data.bloxone_ipam_address_blocks.test"
+	resourceName := "bloxone_ipam_address_block.test"
+	var v ipam.IpamsvcAddressBlock
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckSubnetDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckAddressBlockDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSubnetDataSourceConfigTagFilters("11.0.0.0", 24, "value1"),
+				Config: testAccAddressBlockDataSourceConfigTagFilters(acctest.RandomNameWithPrefix("tf-ab"), "12.0.0.0", "value1", 8),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
-						testAccCheckSubnetExists(context.Background(), resourceName, &v),
-					}, testAccCheckSubnetResourceAttrPair(resourceName, dataSourceName)...)...,
+						testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
+					}, testAccCheckAddressBlockResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
@@ -57,7 +57,7 @@ func TestAccSubnetDataSource_TagFilters(t *testing.T) {
 
 // below all TestAcc functions
 
-func testAccCheckSubnetResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
+func testAccCheckAddressBlockResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
 	return []resource.TestCheckFunc{
 		resource.TestCheckResourceAttrPair(resourceName, "address", dataSourceName, "results.0.address"),
 		resource.TestCheckResourceAttrPair(resourceName, "asm_config", dataSourceName, "results.0.asm_config"),
@@ -75,10 +75,8 @@ func testAccCheckSubnetResourceAttrPair(resourceName, dataSourceName string) []r
 		resource.TestCheckResourceAttrPair(resourceName, "ddns_update_on_renew", dataSourceName, "results.0.ddns_update_on_renew"),
 		resource.TestCheckResourceAttrPair(resourceName, "ddns_use_conflict_resolution", dataSourceName, "results.0.ddns_use_conflict_resolution"),
 		resource.TestCheckResourceAttrPair(resourceName, "dhcp_config", dataSourceName, "results.0.dhcp_config"),
-		resource.TestCheckResourceAttrPair(resourceName, "dhcp_host", dataSourceName, "results.0.dhcp_host"),
 		resource.TestCheckResourceAttrPair(resourceName, "dhcp_options", dataSourceName, "results.0.dhcp_options"),
 		resource.TestCheckResourceAttrPair(resourceName, "dhcp_utilization", dataSourceName, "results.0.dhcp_utilization"),
-		resource.TestCheckResourceAttrPair(resourceName, "disable_dhcp", dataSourceName, "results.0.disable_dhcp"),
 		resource.TestCheckResourceAttrPair(resourceName, "discovery_attrs", dataSourceName, "results.0.discovery_attrs"),
 		resource.TestCheckResourceAttrPair(resourceName, "discovery_metadata", dataSourceName, "results.0.discovery_metadata"),
 		resource.TestCheckResourceAttrPair(resourceName, "header_option_filename", dataSourceName, "results.0.header_option_filename"),
@@ -88,14 +86,11 @@ func testAccCheckSubnetResourceAttrPair(resourceName, dataSourceName string) []r
 		resource.TestCheckResourceAttrPair(resourceName, "hostname_rewrite_enabled", dataSourceName, "results.0.hostname_rewrite_enabled"),
 		resource.TestCheckResourceAttrPair(resourceName, "hostname_rewrite_regex", dataSourceName, "results.0.hostname_rewrite_regex"),
 		resource.TestCheckResourceAttrPair(resourceName, "id", dataSourceName, "results.0.id"),
-		resource.TestCheckResourceAttrPair(resourceName, "inheritance_assigned_hosts", dataSourceName, "results.0.inheritance_assigned_hosts"),
 		resource.TestCheckResourceAttrPair(resourceName, "inheritance_parent", dataSourceName, "results.0.inheritance_parent"),
 		resource.TestCheckResourceAttrPair(resourceName, "inheritance_sources", dataSourceName, "results.0.inheritance_sources"),
 		resource.TestCheckResourceAttrPair(resourceName, "name", dataSourceName, "results.0.name"),
 		resource.TestCheckResourceAttrPair(resourceName, "parent", dataSourceName, "results.0.parent"),
 		resource.TestCheckResourceAttrPair(resourceName, "protocol", dataSourceName, "results.0.protocol"),
-		resource.TestCheckResourceAttrPair(resourceName, "rebind_time", dataSourceName, "results.0.rebind_time"),
-		resource.TestCheckResourceAttrPair(resourceName, "renew_time", dataSourceName, "results.0.renew_time"),
 		resource.TestCheckResourceAttrPair(resourceName, "space", dataSourceName, "results.0.space"),
 		resource.TestCheckResourceAttrPair(resourceName, "tags", dataSourceName, "results.0.tags"),
 		resource.TestCheckResourceAttrPair(resourceName, "threshold", dataSourceName, "results.0.threshold"),
@@ -106,38 +101,43 @@ func testAccCheckSubnetResourceAttrPair(resourceName, dataSourceName string) []r
 	}
 }
 
-func testAccSubnetDataSourceConfigFilters(address string, cidr int) string {
+func testAccAddressBlockDataSourceConfigFilters(name, address string, cidr int) string {
 	config := fmt.Sprintf(`
-resource "bloxone_ipam_subnet" "test" {
-    address = %q
-    cidr = %d
-    space = bloxone_ipam_ip_space.test.id
+resource "bloxone_ipam_address_block" "test" {
+  name = %q
+  address = %q
+  cidr = %d
+  space = bloxone_ipam_ip_space.test.id
 }
-data "bloxone_ipam_subnets" "test" {
+
+data "bloxone_ipam_address_blocks" "test" {
   filters = {
-	address = bloxone_ipam_subnet.test.address
+	name = bloxone_ipam_address_block.test.name
   }
 }
-`, address, cidr)
+`, name, address, cidr)
+
 	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
-func testAccSubnetDataSourceConfigTagFilters(address string, cidr int, tagValue string) string {
+func testAccAddressBlockDataSourceConfigTagFilters(name, address, tagValue string, cidr int) string {
 	config := fmt.Sprintf(`
-resource "bloxone_ipam_subnet" "test" {
-    address = %q
-    cidr = %d
-    space = bloxone_ipam_ip_space.test.id
-    tags = {
-	  tag1 = %q
-    }
-}
-data "bloxone_ipam_subnets" "test" {
-  tag_filters = {
-	tag1 = bloxone_ipam_subnet.test.tags.tag1
+resource "bloxone_ipam_address_block" "test" {
+  name = %q
+  address = %q
+  cidr = %d
+  space = bloxone_ipam_ip_space.test.id
+  tags = {
+	tag1 = %q
   }
 }
-`, address, cidr, tagValue)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 
+data "bloxone_ipam_address_blocks" "test" {
+  tag_filters = {
+	tag1 = bloxone_ipam_address_block.test.tags.tag1
+  }
+}
+`, name, address, cidr, tagValue)
+
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }

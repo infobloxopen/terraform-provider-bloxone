@@ -881,13 +881,23 @@ func testAccCheckSubnetDisappears(ctx context.Context, v *ipam.IpamsvcSubnet) re
 	}
 }
 
-func testAccSubnetBase() string {
+func testAccBaseWithIPSpace() string {
 	name := acctest.RandomNameWithPrefix("ip-space")
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test" {
     name = %q
 }
 `, name)
+}
+
+func testAccMultiSpace(space1, space2 string) string {
+	return fmt.Sprintf(`
+	resource "bloxone_ipam_ip_space" "one" {
+    name = %q
+}
+resource "bloxone_ipam_ip_space" "two" {
+    name = %q
+}`, space1, space2)
 }
 
 func testAccSubnetBasicConfig(address string, cidr int) string {
@@ -898,24 +908,18 @@ resource "bloxone_ipam_subnet" "test" {
     space = bloxone_ipam_ip_space.test.id
 }
 `, address, cidr)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetSpace(space string) string {
 	config := fmt.Sprintf(`
-resource "bloxone_ipam_ip_space" "one" {
-    name = %q
-}
-resource "bloxone_ipam_ip_space" "two" {
-    name = %q
-}
 resource "bloxone_ipam_subnet" "test" {
     address = "10.0.0.0"
     cidr = 24
     space = %s.id
 }
-`, acctest.RandomNameWithPrefix("ip-space"), acctest.RandomNameWithPrefix("ip-space"), space)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+`, space)
+	return strings.Join([]string{testAccBaseWithIPSpace(), testAccMultiSpace(acctest.RandomNameWithPrefix("ip-space"), acctest.RandomNameWithPrefix("ip-space")), config}, "")
 }
 
 func testAccSubnetAsmConfig(address string, cidr int, asmThreshold int, enable, enableNotification bool, forecastPeriod, growthFactor int, growthType string, history, minTotal, minUnused int, reenableDate string) string {
@@ -938,7 +942,7 @@ resource "bloxone_ipam_subnet" "test_asm_config" {
 	}
 }
 `, address, cidr, asmThreshold, enable, enableNotification, forecastPeriod, growthFactor, growthType, history, minTotal, minUnused, reenableDate)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetComment(address string, cidr int, comment string) string {
@@ -950,7 +954,7 @@ resource "bloxone_ipam_subnet" "test_comment" {
     comment = %q
 }
 `, address, cidr, comment)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetDdnsClientUpdate(address string, cidr int, ddnsClientUpdate string) string {
@@ -962,7 +966,7 @@ resource "bloxone_ipam_subnet" "test_ddns_client_update" {
     ddns_client_update = %q
 }
 `, address, cidr, ddnsClientUpdate)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetDdnsConflictResolutionMode(address string, cidr int, ddnsUseConflictResolution bool, ddnsConflictResolutionMode string) string {
@@ -975,7 +979,7 @@ resource "bloxone_ipam_subnet" "test_ddns_conflict_resolution_mode" {
     ddns_conflict_resolution_mode = %q
 }
 `, address, cidr, ddnsUseConflictResolution, ddnsConflictResolutionMode)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetDdnsDomain(address string, cidr int, ddnsDomain string) string {
@@ -987,7 +991,7 @@ resource "bloxone_ipam_subnet" "test_ddns_domain" {
     ddns_domain = %q
 }
 `, address, cidr, ddnsDomain)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetDdnsGenerateName(address string, cidr int, ddnsGenerateName bool) string {
@@ -999,7 +1003,7 @@ resource "bloxone_ipam_subnet" "test_ddns_generate_name" {
     ddns_generate_name = %t
 }
 `, address, cidr, ddnsGenerateName)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetDdnsGeneratedPrefix(address string, cidr int, ddnsGeneratedPrefix string) string {
@@ -1011,7 +1015,7 @@ resource "bloxone_ipam_subnet" "test_ddns_generated_prefix" {
     ddns_generated_prefix = %q
 }
 `, address, cidr, ddnsGeneratedPrefix)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetDdnsSendUpdates(address string, cidr int, ddnsSendUpdates bool) string {
@@ -1023,7 +1027,7 @@ resource "bloxone_ipam_subnet" "test_ddns_send_updates" {
     ddns_send_updates = %t
 }
 `, address, cidr, ddnsSendUpdates)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetDdnsTtlPercent(address string, cidr int, ddnsTtlPercent string) string {
@@ -1035,7 +1039,7 @@ resource "bloxone_ipam_subnet" "test_ddns_ttl_percent" {
     ddns_ttl_percent = %q
 }
 `, address, cidr, ddnsTtlPercent)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetDdnsUpdateOnRenew(address string, cidr int, ddnsUpdateOnRenew bool) string {
@@ -1047,7 +1051,7 @@ resource "bloxone_ipam_subnet" "test_ddns_update_on_renew" {
     ddns_update_on_renew = %t
 }
 `, address, cidr, ddnsUpdateOnRenew)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetDhcpConfig(address string, cidr int, allowUnknown, allowUnknownV6, ignoreClientUid bool,
@@ -1066,7 +1070,7 @@ resource "bloxone_ipam_subnet" "test_dhcp_config" {
 	}
 }
 `, address, cidr, allowUnknown, allowUnknownV6, ignoreClientUid, leaseTime, leaseTimeV6)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetDisableDhcp(address string, cidr int, disableDhcp bool) string {
@@ -1078,7 +1082,7 @@ resource "bloxone_ipam_subnet" "test_disable_dhcp" {
     disable_dhcp = %t
 }
 `, address, cidr, disableDhcp)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetHeaderOptionFilename(address string, cidr int, headerOptionFilename string) string {
@@ -1090,7 +1094,7 @@ resource "bloxone_ipam_subnet" "test_header_option_filename" {
     header_option_filename = %q
 }
 `, address, cidr, headerOptionFilename)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetHeaderOptionServerAddress(address string, cidr int, headerOptionServerAddress string) string {
@@ -1102,7 +1106,7 @@ resource "bloxone_ipam_subnet" "test_header_option_server_address" {
     header_option_server_address = %q
 }
 `, address, cidr, headerOptionServerAddress)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetHeaderOptionServerName(address string, cidr int, headerOptionServerName string) string {
@@ -1114,7 +1118,7 @@ resource "bloxone_ipam_subnet" "test_header_option_server_name" {
     header_option_server_name = %q
 }
 `, address, cidr, headerOptionServerName)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetHostnameRewriteChar(address string, cidr int, hostnameRewriteChar string) string {
@@ -1126,7 +1130,7 @@ resource "bloxone_ipam_subnet" "test_hostname_rewrite_char" {
     hostname_rewrite_char = %q
 }
 `, address, cidr, hostnameRewriteChar)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetHostnameRewriteEnabled(address string, cidr int, hostnameRewriteEnabled bool) string {
@@ -1138,7 +1142,7 @@ resource "bloxone_ipam_subnet" "test_hostname_rewrite_enabled" {
     hostname_rewrite_enabled = %t
 }
 `, address, cidr, hostnameRewriteEnabled)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetHostnameRewriteRegex(address string, cidr int, hostnameRewriteRegex string) string {
@@ -1150,7 +1154,7 @@ resource "bloxone_ipam_subnet" "test_hostname_rewrite_regex" {
     hostname_rewrite_regex = %q
 }
 `, address, cidr, hostnameRewriteRegex)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetName(address string, cidr int, name string) string {
@@ -1162,7 +1166,7 @@ resource "bloxone_ipam_subnet" "test_name" {
     name = %q
 }
 `, address, cidr, name)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetRebindTimeAndRenewTime(address string, cidr int, rebindTime, renewTime string) string {
@@ -1175,7 +1179,7 @@ resource "bloxone_ipam_subnet" "test_renew_time" {
     renew_time = %q
 }
 `, address, cidr, rebindTime, renewTime)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccSubnetTags(address string, cidr int, tags map[string]string) string {
@@ -1195,5 +1199,5 @@ resource "bloxone_ipam_subnet" "test_tags" {
     tags = %s
 }
 `, address, cidr, tagsStr)
-	return strings.Join([]string{testAccSubnetBase(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
