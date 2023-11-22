@@ -78,6 +78,7 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		ipam.NewIpamHostResource,
 		ipam.NewIpSpaceResource,
 		ipam.NewSubnetResource,
 		ipam.NewAddressBlockResource,
@@ -91,6 +92,7 @@ func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resou
 
 func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		ipam.NewIpamHostDataSource,
 		ipam.NewIpSpaceDataSource,
 		ipam.NewSubnetDataSource,
 		ipam.NewAddressBlockDataSource,
