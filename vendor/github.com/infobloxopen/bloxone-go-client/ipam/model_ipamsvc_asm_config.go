@@ -47,6 +47,24 @@ type IpamsvcASMConfig struct {
 // will change when the set of required properties is changed
 func NewIpamsvcASMConfig() *IpamsvcASMConfig {
 	this := IpamsvcASMConfig{}
+	var asmThreshold int64 = 90
+	this.AsmThreshold = &asmThreshold
+	var enable bool = true
+	this.Enable = &enable
+	var enableNotification bool = true
+	this.EnableNotification = &enableNotification
+	var forecastPeriod int64 = 14
+	this.ForecastPeriod = &forecastPeriod
+	var growthFactor int64 = 20
+	this.GrowthFactor = &growthFactor
+	var growthType string = "percent"
+	this.GrowthType = &growthType
+	var history int64 = 30
+	this.History = &history
+	var minTotal int64 = 10
+	this.MinTotal = &minTotal
+	var minUnused int64 = 10
+	this.MinUnused = &minUnused
 	return &this
 }
 
@@ -55,6 +73,24 @@ func NewIpamsvcASMConfig() *IpamsvcASMConfig {
 // but it doesn't guarantee that properties required by API are set
 func NewIpamsvcASMConfigWithDefaults() *IpamsvcASMConfig {
 	this := IpamsvcASMConfig{}
+	var asmThreshold int64 = 90
+	this.AsmThreshold = &asmThreshold
+	var enable bool = true
+	this.Enable = &enable
+	var enableNotification bool = true
+	this.EnableNotification = &enableNotification
+	var forecastPeriod int64 = 14
+	this.ForecastPeriod = &forecastPeriod
+	var growthFactor int64 = 20
+	this.GrowthFactor = &growthFactor
+	var growthType string = "percent"
+	this.GrowthType = &growthType
+	var history int64 = 30
+	this.History = &history
+	var minTotal int64 = 10
+	this.MinTotal = &minTotal
+	var minUnused int64 = 10
+	this.MinUnused = &minUnused
 	return &this
 }
 

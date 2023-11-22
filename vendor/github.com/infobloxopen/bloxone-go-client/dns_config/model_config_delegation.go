@@ -26,7 +26,7 @@ type ConfigDelegation struct {
 	// Optional. _true_ to disable object. A disabled object is effectively non-existent when generating resource records.
 	Disabled *bool `json:"disabled,omitempty"`
 	// Delegation FQDN. The FQDN supplied at creation will be converted to canonical form.  Read-only after creation.
-	Fqdn string `json:"fqdn"`
+	Fqdn *string `json:"fqdn,omitempty"`
 	// The resource identifier.
 	Id *string `json:"id,omitempty"`
 	// The resource identifier.
@@ -43,9 +43,8 @@ type ConfigDelegation struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewConfigDelegation(fqdn string) *ConfigDelegation {
+func NewConfigDelegation() *ConfigDelegation {
 	this := ConfigDelegation{}
-	this.Fqdn = fqdn
 	return &this
 }
 
@@ -153,28 +152,36 @@ func (o *ConfigDelegation) SetDisabled(v bool) {
 	o.Disabled = &v
 }
 
-// GetFqdn returns the Fqdn field value
+// GetFqdn returns the Fqdn field value if set, zero value otherwise.
 func (o *ConfigDelegation) GetFqdn() string {
-	if o == nil {
+	if o == nil || IsNil(o.Fqdn) {
 		var ret string
 		return ret
 	}
-
-	return o.Fqdn
+	return *o.Fqdn
 }
 
-// GetFqdnOk returns a tuple with the Fqdn field value
+// GetFqdnOk returns a tuple with the Fqdn field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ConfigDelegation) GetFqdnOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Fqdn) {
 		return nil, false
 	}
-	return &o.Fqdn, true
+	return o.Fqdn, true
 }
 
-// SetFqdn sets field value
+// HasFqdn returns a boolean if a field has been set.
+func (o *ConfigDelegation) HasFqdn() bool {
+	if o != nil && !IsNil(o.Fqdn) {
+		return true
+	}
+
+	return false
+}
+
+// SetFqdn gets a reference to the given string and assigns it to the Fqdn field.
 func (o *ConfigDelegation) SetFqdn(v string) {
-	o.Fqdn = v
+	o.Fqdn = &v
 }
 
 // GetId returns the Id field value if set, zero value otherwise.
@@ -356,7 +363,9 @@ func (o ConfigDelegation) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Disabled) {
 		toSerialize["disabled"] = o.Disabled
 	}
-	toSerialize["fqdn"] = o.Fqdn
+	if !IsNil(o.Fqdn) {
+		toSerialize["fqdn"] = o.Fqdn
+	}
 	if !IsNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
