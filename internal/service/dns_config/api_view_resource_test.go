@@ -409,7 +409,11 @@ func TestAccViewResource_EcsEnabled(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "ecs_enabled", "false"),
 				),
 			},
-
+			// Update and Read
+			{
+				Config:      testAccViewEcsEnabled(name, "true", false),
+				ExpectError: regexp.MustCompile("should not be empty if ECS is enabled"),
+			},
 			// Update and Read
 			{
 				Config: testAccViewEcsEnabled(name, "true", true),
