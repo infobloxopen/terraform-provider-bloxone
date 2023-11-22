@@ -30,12 +30,12 @@ description: |-
 Required:
 
 - `address` (String) The address field in form “a.b.c.d/n” where the “/n” may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form “a.b.c.d”.
+- `cidr` (Number) The CIDR of the address block. This is required, if _address_ does not specify it in its input.
 - `space` (String) The resource identifier.
 
 Optional:
 
 - `asm_config` (Attributes) (see [below for nested schema](#nestedatt--results--asm_config))
-- `cidr` (Number) The CIDR of the address block. This is required, if _address_ does not specify it in its input.
 - `comment` (String) The description for the address block. May contain 0 to 1024 characters. Can include UTF-8.
 - `ddns_client_update` (String) Controls who does the DDNS updates.  Valid values are: * _client_: DHCP server updates DNS if requested by client. * _server_: DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _ignore_: DHCP server always updates DNS, even if the client says not to. * _over_client_update_: Same as _server_. DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _over_no_update_: DHCP server updates DNS even if the client requests that no updates be done. If the client requests to do the update, DHCP server allows it.  Defaults to _client_.
 - `ddns_conflict_resolution_mode` (String) The mode used for resolving conflicts while performing DDNS updates.  Valid values are: * _check_with_dhcid_: It includes adding a DHCID record and checking that record via conflict detection as per RFC 4703. * _no_check_with_dhcid_: This will ignore conflict detection but add a DHCID record when creating/updating an entry. * _check_exists_with_dhcid_: This will check if there is an existing DHCID record but does not verify the value of the record matches the update. This will also update the DHCID record for the entry. * _no_check_without_dhcid_: This ignores conflict detection and will not add a DHCID record when creating/updating a DDNS entry.  Defaults to _check_with_dhcid_.

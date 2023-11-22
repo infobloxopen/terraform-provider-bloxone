@@ -847,18 +847,6 @@ resource "bloxone_ipam_address_block" "test" {
 	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
 }
 
-func testAccAddressBlockAddress(address, cidr string) string {
-	config := fmt.Sprintf(`
-resource "bloxone_ipam_address_block" "test_address" {
-    address = %q
-	cidr = %q
-    space = bloxone_ipam_ip_space.test.id
-}
-`, address, cidr)
-
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
-}
-
 func testAccAddressBlockAsmConfig(address, cidr string, asmThreshold int, enable, enableNotification bool, forecastPeriod, growthFactor int, growthType string, history, minTotal, minUnused int, reenableDate string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_asm_config" {
@@ -916,17 +904,6 @@ resource "bloxone_ipam_address_block" "test_ddns_client_update" {
     ddns_client_update = %q
 }
 `, address, cidr, ddnsClientUpdate)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
-}
-
-func testAccAddressBlockDdnsConflictResolutionMode(address string, space string, ddnsConflictResolutionMode string) string {
-	config := fmt.Sprintf(`
-resource "bloxone_ipam_address_block" "test_ddns_conflict_resolution_mode" {
-    address = %q
-    space = %q
-    ddns_conflict_resolution_mode = %q
-}
-`, address, space, ddnsConflictResolutionMode)
 	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
 }
 
