@@ -2,28 +2,24 @@ package ipam
 
 import (
 	"context"
-	"regexp"
-
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
-type IpamsvcSubnetModel struct {
+type IpamsvcAddressBlockModel struct {
 	Address                    types.String      `tfsdk:"address"`
 	AsmConfig                  types.Object      `tfsdk:"asm_config"`
 	AsmScopeFlag               types.Int64       `tfsdk:"asm_scope_flag"`
@@ -40,10 +36,8 @@ type IpamsvcSubnetModel struct {
 	DdnsUpdateOnRenew          types.Bool        `tfsdk:"ddns_update_on_renew"`
 	DdnsUseConflictResolution  types.Bool        `tfsdk:"ddns_use_conflict_resolution"`
 	DhcpConfig                 types.Object      `tfsdk:"dhcp_config"`
-	DhcpHost                   types.String      `tfsdk:"dhcp_host"`
 	DhcpOptions                types.List        `tfsdk:"dhcp_options"`
 	DhcpUtilization            types.Object      `tfsdk:"dhcp_utilization"`
-	DisableDhcp                types.Bool        `tfsdk:"disable_dhcp"`
 	DiscoveryAttrs             types.Map         `tfsdk:"discovery_attrs"`
 	DiscoveryMetadata          types.Map         `tfsdk:"discovery_metadata"`
 	HeaderOptionFilename       types.String      `tfsdk:"header_option_filename"`
@@ -53,14 +47,11 @@ type IpamsvcSubnetModel struct {
 	HostnameRewriteEnabled     types.Bool        `tfsdk:"hostname_rewrite_enabled"`
 	HostnameRewriteRegex       types.String      `tfsdk:"hostname_rewrite_regex"`
 	Id                         types.String      `tfsdk:"id"`
-	InheritanceAssignedHosts   types.List        `tfsdk:"inheritance_assigned_hosts"`
 	InheritanceParent          types.String      `tfsdk:"inheritance_parent"`
 	InheritanceSources         types.Object      `tfsdk:"inheritance_sources"`
 	Name                       types.String      `tfsdk:"name"`
 	Parent                     types.String      `tfsdk:"parent"`
 	Protocol                   types.String      `tfsdk:"protocol"`
-	RebindTime                 types.Int64       `tfsdk:"rebind_time"`
-	RenewTime                  types.Int64       `tfsdk:"renew_time"`
 	Space                      types.String      `tfsdk:"space"`
 	Tags                       types.Map         `tfsdk:"tags"`
 	Threshold                  types.Object      `tfsdk:"threshold"`
@@ -68,10 +59,9 @@ type IpamsvcSubnetModel struct {
 	Usage                      types.List        `tfsdk:"usage"`
 	Utilization                types.Object      `tfsdk:"utilization"`
 	UtilizationV6              types.Object      `tfsdk:"utilization_v6"`
-	NextAvailableId            types.String      `tfsdk:"next_available_id"`
 }
 
-var IpamsvcSubnetAttrTypes = map[string]attr.Type{
+var IpamsvcAddressBlockAttrTypes = map[string]attr.Type{
 	"address":                       types.StringType,
 	"asm_config":                    types.ObjectType{AttrTypes: IpamsvcASMConfigAttrTypes},
 	"asm_scope_flag":                types.Int64Type,
@@ -88,10 +78,8 @@ var IpamsvcSubnetAttrTypes = map[string]attr.Type{
 	"ddns_update_on_renew":          types.BoolType,
 	"ddns_use_conflict_resolution":  types.BoolType,
 	"dhcp_config":                   types.ObjectType{AttrTypes: IpamsvcDHCPConfigAttrTypes},
-	"dhcp_host":                     types.StringType,
 	"dhcp_options":                  types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
 	"dhcp_utilization":              types.ObjectType{AttrTypes: IpamsvcDHCPUtilizationAttrTypes},
-	"disable_dhcp":                  types.BoolType,
 	"discovery_attrs":               types.MapType{ElemType: types.StringType},
 	"discovery_metadata":            types.MapType{ElemType: types.StringType},
 	"header_option_filename":        types.StringType,
@@ -101,14 +89,11 @@ var IpamsvcSubnetAttrTypes = map[string]attr.Type{
 	"hostname_rewrite_enabled":      types.BoolType,
 	"hostname_rewrite_regex":        types.StringType,
 	"id":                            types.StringType,
-	"inheritance_assigned_hosts":    types.ListType{ElemType: types.ObjectType{AttrTypes: InheritanceAssignedHostAttrTypes}},
 	"inheritance_parent":            types.StringType,
 	"inheritance_sources":           types.ObjectType{AttrTypes: IpamsvcDHCPInheritanceAttrTypes},
 	"name":                          types.StringType,
 	"parent":                        types.StringType,
 	"protocol":                      types.StringType,
-	"rebind_time":                   types.Int64Type,
-	"renew_time":                    types.Int64Type,
 	"space":                         types.StringType,
 	"tags":                          types.MapType{ElemType: types.StringType},
 	"threshold":                     types.ObjectType{AttrTypes: IpamsvcUtilizationThresholdAttrTypes},
@@ -116,20 +101,15 @@ var IpamsvcSubnetAttrTypes = map[string]attr.Type{
 	"usage":                         types.ListType{ElemType: types.StringType},
 	"utilization":                   types.ObjectType{AttrTypes: IpamsvcUtilizationAttrTypes},
 	"utilization_v6":                types.ObjectType{AttrTypes: IpamsvcUtilizationV6AttrTypes},
-	"next_available_id":             types.StringType,
 }
 
-var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
+var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
-		MarkdownDescription: "The address of the subnet in the form “a.b.c.d”",
-		Validators: []validator.String{
-			stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
-		},
+		Required: true,
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 		},
+		MarkdownDescription: "The address field in form 'a.b.c.d'.",
 	},
 	"asm_config": schema.SingleNestedAttribute{
 		Attributes: IpamsvcASMConfigResourceSchemaAttributes,
@@ -150,15 +130,15 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"asm_scope_flag": schema.Int64Attribute{
 		Computed:            true,
-		MarkdownDescription: "Set to 1 to indicate that the subnet may run out of addresses.",
+		MarkdownDescription: "Incremented by 1 if the IP address usage limits for automated scope management are exceeded for any subnets in the address block.",
 	},
 	"cidr": schema.Int64Attribute{
 		Required:            true,
-		MarkdownDescription: "The CIDR of the subnet. This is required if _address_ does not include CIDR.",
+		MarkdownDescription: "The CIDR of the address block. This is required, if _address_ does not specify it in its input.",
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
-		MarkdownDescription: "The description for the subnet. May contain 0 to 1024 characters. Can include UTF-8.",
+		MarkdownDescription: "The description for the address block. May contain 0 to 1024 characters. Can include UTF-8.",
 	},
 	"created_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -168,17 +148,12 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	"ddns_client_update": schema.StringAttribute{
 		Optional:            true,
 		Computed:            true,
-		Default:             stringdefault.StaticString("client"),
 		MarkdownDescription: "Controls who does the DDNS updates.  Valid values are: * _client_: DHCP server updates DNS if requested by client. * _server_: DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _ignore_: DHCP server always updates DNS, even if the client says not to. * _over_client_update_: Same as _server_. DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _over_no_update_: DHCP server updates DNS even if the client requests that no updates be done. If the client requests to do the update, DHCP server allows it.  Defaults to _client_.",
 	},
 	"ddns_conflict_resolution_mode": schema.StringAttribute{
 		Optional:            true,
 		Computed:            true,
-		Default:             stringdefault.StaticString("check_with_dhcid"),
 		MarkdownDescription: "The mode used for resolving conflicts while performing DDNS updates.  Valid values are: * _check_with_dhcid_: It includes adding a DHCID record and checking that record via conflict detection as per RFC 4703. * _no_check_with_dhcid_: This will ignore conflict detection but add a DHCID record when creating/updating an entry. * _check_exists_with_dhcid_: This will check if there is an existing DHCID record but does not verify the value of the record matches the update. This will also update the DHCID record for the entry. * _no_check_without_dhcid_: This ignores conflict detection and will not add a DHCID record when creating/updating a DDNS entry.  Defaults to _check_with_dhcid_.",
-		Validators: []validator.String{
-			stringvalidator.OneOf("check_with_dhcid", "no_check_with_dhcid", "check_exists_with_dhcid"),
-		},
 	},
 	"ddns_domain": schema.StringAttribute{
 		Optional:            true,
@@ -187,7 +162,6 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	"ddns_generate_name": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
-		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: "Indicates if DDNS needs to generate a hostname when not supplied by the client.  Defaults to _false_.",
 	},
 	"ddns_generated_prefix": schema.StringAttribute{
@@ -200,7 +174,7 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		Computed:            true,
 		Default:             booldefault.StaticBool(true),
-		MarkdownDescription: "Determines if DDNS updates are enabled at the subnet level. Defaults to _true_.",
+		MarkdownDescription: "Determines if DDNS updates are enabled at the address block level. Defaults to _true_.",
 	},
 	"ddns_ttl_percent": schema.Float64Attribute{
 		Optional:            true,
@@ -235,36 +209,29 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 			"lease_time_v6":             types.Int64Value(3600),
 		})),
 	},
-	"dhcp_host": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: "The resource identifier.",
-	},
 	"dhcp_options": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: IpamsvcOptionItemResourceSchemaAttributes,
 		},
 		Optional:            true,
-		MarkdownDescription: "The DHCP options of the subnet. This can either be a specific option or a group of options.",
+		MarkdownDescription: "The list of DHCP options for the address block. May be either a specific option or a group of options.",
 	},
 	"dhcp_utilization": schema.SingleNestedAttribute{
 		Attributes: IpamsvcDHCPUtilizationResourceSchemaAttributes,
+		Optional:   true,
 		Computed:   true,
-	},
-	"disable_dhcp": schema.BoolAttribute{
-		Optional:            true,
-		Computed:            true,
-		Default:             booldefault.StaticBool(false),
-		MarkdownDescription: "Optional. _true_ to disable object. A disabled object is effectively non-existent when generating configuration.  Defaults to _false_.",
 	},
 	"discovery_attrs": schema.MapAttribute{
 		ElementType:         types.StringType,
+		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "The discovery attributes for this subnet in JSON format.",
+		MarkdownDescription: "The discovery attributes for this address block in JSON format.",
 	},
 	"discovery_metadata": schema.MapAttribute{
 		ElementType:         types.StringType,
+		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "The discovery metadata for this subnet in JSON format.",
+		MarkdownDescription: "The discovery metadata for this address block in JSON format.",
 	},
 	"header_option_filename": schema.StringAttribute{
 		Optional:            true,
@@ -303,14 +270,8 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 			stringplanmodifier.UseStateForUnknown(),
 		},
 	},
-	"inheritance_assigned_hosts": schema.ListNestedAttribute{
-		NestedObject: schema.NestedAttributeObject{
-			Attributes: InheritanceAssignedHostResourceSchemaAttributes,
-		},
-		Computed:            true,
-		MarkdownDescription: "The list of the inheritance assigned hosts of the object.",
-	},
 	"inheritance_parent": schema.StringAttribute{
+		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
@@ -320,35 +281,27 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"name": schema.StringAttribute{
 		Optional:            true,
-		MarkdownDescription: "The name of the subnet. May contain 1 to 256 characters. Can include UTF-8.",
+		MarkdownDescription: "The name of the address block. May contain 1 to 256 characters. Can include UTF-8.",
 	},
 	"parent": schema.StringAttribute{
-		Computed:            true,
+		Optional:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 	"protocol": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The type of protocol of the subnet (_ip4_ or _ip6_).",
-	},
-	"rebind_time": schema.Int64Attribute{
-		Optional:            true,
-		MarkdownDescription: "The lease rebind time (T2) in seconds.",
-	},
-	"renew_time": schema.Int64Attribute{
-		Optional:            true,
-		MarkdownDescription: "The lease renew time (T1) in seconds.",
+		MarkdownDescription: "The type of protocol of address block (_ip4_ or _ip6_).",
 	},
 	"space": schema.StringAttribute{
-		Required:            true,
-		MarkdownDescription: "The resource identifier.",
+		Required: true,
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 		},
+		MarkdownDescription: "The resource identifier.",
 	},
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
-		MarkdownDescription: "The tags for the subnet in JSON format.",
+		MarkdownDescription: "The tags for the address block in JSON format.",
 	},
 	"threshold": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationThresholdResourceSchemaAttributes,
@@ -362,7 +315,7 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	"usage": schema.ListAttribute{
 		ElementType:         types.StringType,
 		Computed:            true,
-		MarkdownDescription: "The usage is a combination of indicators, each tracking a specific associated use. Listed below are usage indicators with their meaning:  usage indicator        | description  ---------------------- | --------------------------------  _IPAM_                 |  Subnet is managed in BloxOne DDI.  _DHCP_                 |  Subnet is served by a DHCP Host.  _DISCOVERED_           |  Subnet is discovered by some network discovery probe like Network Insight or NetMRI in NIOS.",
+		MarkdownDescription: "The usage is a combination of indicators, each tracking a specific associated use. Listed below are usage indicators with their meaning:  usage indicator        | description  ---------------------- | --------------------------------  _IPAM_                 |  AddressBlock is managed in BloxOne DDI.  _DISCOVERED_           |  AddressBlock is discovered by some network discovery probe like Network Insight or NetMRI in NIOS.",
 	},
 	"utilization": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationResourceSchemaAttributes,
@@ -372,25 +325,25 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		Attributes: IpamsvcUtilizationV6ResourceSchemaAttributes,
 		Computed:   true,
 	},
-	"next_available_id": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: "The resource identifier for the address block where the next available subnet should be generated",
-		Validators: []validator.String{
-			stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
-			stringvalidator.RegexMatches(regexp.MustCompile(`^ipam/address_block/[0-9a-f-].*$`), "Should be the resource identifier of an address block."),
-		},
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
-			stringplanmodifier.UseStateForUnknown(),
-		},
-	},
 }
 
-func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcSubnet {
+func ExpandIpamsvcAddressBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcAddressBlock {
+	if o.IsNull() || o.IsUnknown() {
+		return nil
+	}
+	var m IpamsvcAddressBlockModel
+	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
+	if diags.HasError() {
+		return nil
+	}
+	return m.Expand(ctx, diags, true)
+}
+
+func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcAddressBlock {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcSubnet{
+	to := &ipam.IpamsvcAddressBlock{
 		AsmConfig:                  ExpandIpamsvcASMConfig(ctx, m.AsmConfig, diags),
 		Cidr:                       flex.ExpandInt64Pointer(m.Cidr),
 		Comment:                    flex.ExpandStringPointer(m.Comment),
@@ -404,10 +357,10 @@ func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		DdnsUpdateOnRenew:          flex.ExpandBoolPointer(m.DdnsUpdateOnRenew),
 		DdnsUseConflictResolution:  flex.ExpandBoolPointer(m.DdnsUseConflictResolution),
 		DhcpConfig:                 ExpandIpamsvcDHCPConfig(ctx, m.DhcpConfig, diags),
-		DhcpHost:                   flex.ExpandStringPointer(m.DhcpHost),
 		DhcpOptions:                flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
 		DhcpUtilization:            ExpandIpamsvcDHCPUtilization(ctx, m.DhcpUtilization, diags),
-		DisableDhcp:                flex.ExpandBoolPointer(m.DisableDhcp),
+		DiscoveryAttrs:             flex.ExpandFrameworkMapString(ctx, m.DiscoveryAttrs, diags),
+		DiscoveryMetadata:          flex.ExpandFrameworkMapString(ctx, m.DiscoveryMetadata, diags),
 		HeaderOptionFilename:       flex.ExpandStringPointer(m.HeaderOptionFilename),
 		HeaderOptionServerAddress:  flex.ExpandStringPointer(m.HeaderOptionServerAddress),
 		HeaderOptionServerName:     flex.ExpandStringPointer(m.HeaderOptionServerName),
@@ -418,41 +371,37 @@ func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		InheritanceSources:         ExpandIpamsvcDHCPInheritance(ctx, m.InheritanceSources, diags),
 		Name:                       flex.ExpandStringPointer(m.Name),
 		Parent:                     flex.ExpandStringPointer(m.Parent),
-		RebindTime:                 flex.ExpandInt64Pointer(m.RebindTime),
-		RenewTime:                  flex.ExpandInt64Pointer(m.RenewTime),
 		Tags:                       flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
+		Threshold:                  ExpandIpamsvcUtilizationThreshold(ctx, m.Threshold, diags),
+		Utilization:                ExpandIpamsvcUtilization(ctx, m.Utilization, diags),
+		UtilizationV6:              ExpandIpamsvcUtilizationV6(ctx, m.UtilizationV6, diags),
 	}
 
 	if isCreate {
-		if !m.NextAvailableId.IsNull() && !m.NextAvailableId.IsUnknown() {
-			nasId := flex.ExpandString(m.NextAvailableId) + "/nextavailablesubnet"
-			to.Address = &nasId
-		} else {
-			to.Address = flex.ExpandStringPointer(m.Address)
-		}
+		to.Address = flex.ExpandStringPointer(m.Address)
 		to.Space = flex.ExpandStringPointer(m.Space)
 	}
 
 	return to
 }
 
-func FlattenIpamsvcSubnet(ctx context.Context, from *ipam.IpamsvcSubnet, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcAddressBlock(ctx context.Context, from *ipam.IpamsvcAddressBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
-		return types.ObjectNull(IpamsvcSubnetAttrTypes)
+		return types.ObjectNull(IpamsvcAddressBlockAttrTypes)
 	}
-	m := IpamsvcSubnetModel{}
+	m := IpamsvcAddressBlockModel{}
 	m.Flatten(ctx, from, diags)
-	t, d := types.ObjectValueFrom(ctx, IpamsvcSubnetAttrTypes, m)
+	t, d := types.ObjectValueFrom(ctx, IpamsvcAddressBlockAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.IpamsvcSubnet, diags *diag.Diagnostics) {
+func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.IpamsvcAddressBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
 	if m == nil {
-		*m = IpamsvcSubnetModel{}
+		*m = IpamsvcAddressBlockModel{}
 	}
 	m.Address = flex.FlattenStringPointer(from.Address)
 	m.AsmConfig = FlattenIpamsvcASMConfig(ctx, from.AsmConfig, diags)
@@ -470,10 +419,8 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.IpamsvcSubn
 	m.DdnsUpdateOnRenew = types.BoolPointerValue(from.DdnsUpdateOnRenew)
 	m.DdnsUseConflictResolution = types.BoolPointerValue(from.DdnsUseConflictResolution)
 	m.DhcpConfig = FlattenIpamsvcDHCPConfig(ctx, from.DhcpConfig, diags)
-	m.DhcpHost = flex.FlattenStringPointer(from.DhcpHost)
 	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DhcpUtilization = FlattenIpamsvcDHCPUtilization(ctx, from.DhcpUtilization, diags)
-	m.DisableDhcp = types.BoolPointerValue(from.DisableDhcp)
 	m.DiscoveryAttrs = flex.FlattenFrameworkMapString(ctx, from.DiscoveryAttrs, diags)
 	m.DiscoveryMetadata = flex.FlattenFrameworkMapString(ctx, from.DiscoveryMetadata, diags)
 	m.HeaderOptionFilename = flex.FlattenStringPointer(from.HeaderOptionFilename)
@@ -483,14 +430,11 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.IpamsvcSubn
 	m.HostnameRewriteEnabled = types.BoolPointerValue(from.HostnameRewriteEnabled)
 	m.HostnameRewriteRegex = flex.FlattenStringPointer(from.HostnameRewriteRegex)
 	m.Id = flex.FlattenStringPointer(from.Id)
-	m.InheritanceAssignedHosts = flex.FlattenFrameworkListNestedBlock(ctx, from.InheritanceAssignedHosts, InheritanceAssignedHostAttrTypes, diags, FlattenInheritanceAssignedHost)
 	m.InheritanceParent = flex.FlattenStringPointer(from.InheritanceParent)
 	m.InheritanceSources = FlattenIpamsvcDHCPInheritance(ctx, from.InheritanceSources, diags)
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Parent = flex.FlattenStringPointer(from.Parent)
 	m.Protocol = flex.FlattenStringPointer(from.Protocol)
-	m.RebindTime = flex.FlattenInt64(*from.RebindTime)
-	m.RenewTime = flex.FlattenInt64(*from.RenewTime)
 	m.Space = flex.FlattenStringPointer(from.Space)
 	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Threshold = FlattenIpamsvcUtilizationThreshold(ctx, from.Threshold, diags)

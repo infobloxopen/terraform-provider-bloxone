@@ -81,7 +81,9 @@ func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resou
 		ipam.NewIpamHostResource,
 		ipam.NewIpSpaceResource,
 		ipam.NewSubnetResource,
+		ipam.NewAddressBlockResource,
 		ipam.NewAddressResource,
+		ipam.NewRangeResource,
 
 		infra_provision.NewUIJoinTokenResource,
 
@@ -95,7 +97,9 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		ipam.NewIpamHostDataSource,
 		ipam.NewIpSpaceDataSource,
 		ipam.NewSubnetDataSource,
+		ipam.NewAddressBlockDataSource,
 		ipam.NewAddressDataSource,
+		ipam.NewRangeDataSource,
 
 		infra_provision.NewUIJoinTokenDataSource,
 

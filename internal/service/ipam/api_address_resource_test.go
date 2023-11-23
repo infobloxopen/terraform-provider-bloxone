@@ -381,7 +381,7 @@ resource "bloxone_ipam_ip_space" "test" {
 }
 resource "bloxone_ipam_subnet" "test" {
     address = "10.0.0.0"
-    cidr = 24
+    cidr = 8
 	space = bloxone_ipam_ip_space.test.id
 }
 `, name)
