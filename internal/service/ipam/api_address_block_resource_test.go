@@ -805,7 +805,7 @@ func testAccAddressBlockBasicConfig(address, cidr string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test" {
     address = %q
-	cidr = %q
+    cidr = %q
     space = bloxone_ipam_ip_space.test.id
 }
 `, address, cidr)
@@ -998,7 +998,7 @@ func testAccAddressBlockHostnameRewriteChar(address, cidr, hostnameRewriteChar s
 resource "bloxone_ipam_address_block" "test_hostname_rewrite_char" {
     address = %q
     cidr = %q
-	space = bloxone_ipam_ip_space.test.id
+    space = bloxone_ipam_ip_space.test.id
     hostname_rewrite_char = %q
 }
 `, address, cidr, hostnameRewriteChar)
@@ -1010,7 +1010,7 @@ func testAccAddressBlockHostnameRewriteEnabled(address, cidr, hostnameRewriteEna
 resource "bloxone_ipam_address_block" "test_hostname_rewrite_enabled" {
     address = %q
     cidr = %q
-	space = bloxone_ipam_ip_space.test.id
+    space = bloxone_ipam_ip_space.test.id
     hostname_rewrite_enabled = %q
 }
 `, address, cidr, hostnameRewriteEnabled)

@@ -885,14 +885,14 @@ func testAccBaseWithIPSpace() string {
 	name := acctest.RandomNameWithPrefix("ip-space")
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test" {
-  name = %q
+    name = %q
 }
 `, name)
 }
 
 func testAccBaseWithTwoIPSpace() string {
 	return fmt.Sprintf(`
-	resource "bloxone_ipam_ip_space" "one" {
+resource "bloxone_ipam_ip_space" "one" {
     name = %q
 }
 resource "bloxone_ipam_ip_space" "two" {
