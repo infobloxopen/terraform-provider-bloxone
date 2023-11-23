@@ -5,7 +5,7 @@ data "b1ddi_ranges" "example_all_ranges" {}
 data "b1ddi_ranges" "example_range_by_start_end" {
   filters = {
     "start" = "192.168.1.15",
-    "end" = "192.168.1.30"
+    "end"   = "192.168.1.30"
   }
 }
 
@@ -17,7 +17,7 @@ data "b1ddi_ranges" "example_range_by_name" {
 }
 
 # Get Range by tag
-data "b1ddi_ranges" "example_range_by_tag"{
+data "b1ddi_ranges" "example_range_by_tag" {
   tag_filters = {
     location = "site1"
   }

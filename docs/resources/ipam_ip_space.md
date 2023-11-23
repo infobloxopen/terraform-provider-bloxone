@@ -3,12 +3,12 @@
 page_title: "bloxone_ipam_ip_space Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  The IPSpace object represents an entire address space.
 ---
 
 # bloxone_ipam_ip_space (Resource)
 
-
+The IPSpace object represents an entire address space.
 
 ## Example Usage
 

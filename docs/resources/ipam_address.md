@@ -3,12 +3,12 @@
 page_title: "bloxone_ipam_address Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  The Address object represents any single IP address within a given IP space.
 ---
 
 # bloxone_ipam_address (Resource)
 
-
+The Address object represents any single IP address within a given IP space.
 
 ## Example Usage
 
