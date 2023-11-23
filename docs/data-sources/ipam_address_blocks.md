@@ -37,7 +37,7 @@ data "bloxone_ipam_address_blocks" "example_all" {}
 ### Optional
 
 - `filters` (Map of String) Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
-- `tag_filters` (Map of String) Tag Filters are used to filter by tags return a more specific list of results. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
+- `tag_filters` (Map of String) Tag Filters are used to filter return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
 
 ### Read-Only
 
@@ -48,7 +48,7 @@ data "bloxone_ipam_address_blocks" "example_all" {}
 
 Required:
 
-- `address` (String) The address field in form “a.b.c.d/n” where the “/n” may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form “a.b.c.d”.
+- `address` (String) The address field in form 'a.b.c.d'.
 - `cidr` (Number) The CIDR of the address block. This is required, if _address_ does not specify it in its input.
 - `space` (String) The resource identifier.
 
