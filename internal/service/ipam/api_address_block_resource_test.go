@@ -646,7 +646,7 @@ func TestAccAddressBlockResource_HostnameRewriteRegex(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_regex", "[^a-z]"),
 				),
 			},
-			// Create and Read
+			// Update and Read
 			{
 				Config: testAccAddressBlockHostnameRewriteRegex("192.168.0.0", "16", "[^g-hG-H0-9_.]"),
 				Check: resource.ComposeTestCheckFunc(
