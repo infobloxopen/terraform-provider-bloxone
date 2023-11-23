@@ -31,7 +31,7 @@ func (r *AddressResource) Metadata(ctx context.Context, req resource.MetadataReq
 
 func (r *AddressResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "The Address object represents any single IP address within a given IP space.",
 		Attributes:          IpamsvcAddressResourceSchemaAttributes,
 	}
 }

@@ -31,8 +31,10 @@ func (r *RangeResource) Metadata(_ context.Context, req resource.MetadataRequest
 
 func (r *RangeResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
-		Attributes:          IpamsvcRangeResourceSchemaAttributes,
+		MarkdownDescription: "A Range object represents a set of contiguous IP addresses in the same IP space with no gap, " +
+			"expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. " +
+			"The start and end values are not required to align with CIDR boundaries.",
+		Attributes: IpamsvcRangeResourceSchemaAttributes,
 	}
 }
 
