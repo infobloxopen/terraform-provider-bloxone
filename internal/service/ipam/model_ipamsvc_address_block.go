@@ -109,7 +109,7 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 		},
-		MarkdownDescription: "The address field in form “a.b.c.d/n” where the “/n” may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form “a.b.c.d”.",
+		MarkdownDescription: "The address field in form 'a.b.c.d'.",
 	},
 	"asm_config": schema.SingleNestedAttribute{
 		Attributes: IpamsvcASMConfigResourceSchemaAttributes,
@@ -285,7 +285,6 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"parent": schema.StringAttribute{
 		Optional:            true,
-		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 	"protocol": schema.StringAttribute{

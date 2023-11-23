@@ -1,4 +1,4 @@
-# Get Address block/s filtered by an attribute
+# Get Address blocks filtered by an attribute
 data "bloxone_ipam_address_blocks" "example_by_attribute" {
   filters = {
     "name" = "example_subnet"

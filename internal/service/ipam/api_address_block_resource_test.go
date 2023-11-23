@@ -15,6 +15,10 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
+// TODO: add tests for the following
+// Test to be enabled once DhcpOptions is implemented
+// Inheritance sources - After _inherit support is added
+
 func TestAccAddressBlockResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test"
 	var v ipam.IpamsvcAddressBlock
@@ -30,7 +34,7 @@ func TestAccAddressBlockResource_basic(t *testing.T) {
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					// TODO: check and validate these
 					resource.TestCheckResourceAttr(resourceName, "address", "192.168.0.0"),
-					resource.TestCheckResourceAttrSet(resourceName, "space"),
+					resource.TestCheckResourceAttrPair(resourceName, "space", "bloxone_ipam_ip_space.test", "id"),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "asm_config.%"),
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
@@ -481,36 +485,6 @@ func TestAccAddressBlockResource_DhcpConfig(t *testing.T) {
 	})
 }
 
-// Test to be enabled once DhcpOptions is implemented
-/*func TestAccAddressBlockResource_DhcpOptions(t *testing.T) {
-	var resourceName = "bloxone_ipam_address_block.test_dhcp_options"
-	var v ipam.IpamsvcAddressBlock
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// Create and Read
-			{
-				Config: testAccAddressBlockDhcpOptions("192.168.0.0", "16", "DHCP_OPTIONS_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "dhcp_options", "DHCP_OPTIONS_REPLACE_ME"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccAddressBlockDhcpOptions("192.168.0.0", "16", "DHCP_OPTIONS_UPDATE_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "dhcp_options", "DHCP_OPTIONS_UPDATE_REPLACE_ME"),
-				),
-			},
-			// Delete testing automatically occurs in TestCase
-		},
-	})
-}*/
-
 func TestAccAddressBlockResource_HeaderOptionFilename(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_header_option_filename"
 	var v ipam.IpamsvcAddressBlock
@@ -672,7 +646,6 @@ func TestAccAddressBlockResource_HostnameRewriteRegex(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_regex", "[^a-z]"),
 				),
 			},
-			// Update and read
 			// Create and Read
 			{
 				Config: testAccAddressBlockHostnameRewriteRegex("192.168.0.0", "16", "[^g-hG-H0-9_.]"),
@@ -828,13 +801,6 @@ func testAccCheckAddressBlockDisappears(ctx context.Context, v *ipam.IpamsvcAddr
 	}
 }
 
-func testAccAddressBlockIPSpace() string {
-	return `
-	resource "bloxone_ipam_ip_space" "test" {
-    	name = "test"
-	}`
-}
-
 func testAccAddressBlockBasicConfig(address, cidr string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test" {
@@ -844,7 +810,7 @@ resource "bloxone_ipam_address_block" "test" {
 }
 `, address, cidr)
 
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockAsmConfig(address, cidr string, asmThreshold int, enable, enableNotification bool, forecastPeriod, growthFactor int, growthType string, history, minTotal, minUnused int, reenableDate string) string {
@@ -868,7 +834,7 @@ resource "bloxone_ipam_address_block" "test_asm_config" {
 }
 `, address, cidr, asmThreshold, enable, enableNotification, forecastPeriod, growthFactor, growthType, history, minTotal, minUnused, reenableDate)
 
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockCidr(address string, cidr string) string {
@@ -880,7 +846,7 @@ resource "bloxone_ipam_address_block" "test_cidr" {
 } 
 `, address, cidr)
 
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockComment(address string, cidr string, comment string) string {
@@ -892,7 +858,7 @@ resource "bloxone_ipam_address_block" "test_comment" {
     comment = %q
 }
 `, address, cidr, comment)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockDdnsClientUpdate(address string, cidr string, ddnsClientUpdate string) string {
@@ -904,7 +870,7 @@ resource "bloxone_ipam_address_block" "test_ddns_client_update" {
     ddns_client_update = %q
 }
 `, address, cidr, ddnsClientUpdate)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockDdnsDomain(address string, cidr string, ddnsDomain string) string {
@@ -916,7 +882,7 @@ resource "bloxone_ipam_address_block" "test_ddns_domain" {
     ddns_domain = %q
 }
 `, address, cidr, ddnsDomain)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockDdnsGenerateName(address string, cidr string, ddnsGenerateName string) string {
@@ -928,7 +894,7 @@ resource "bloxone_ipam_address_block" "test_ddns_generate_name" {
     ddns_generate_name = %q
 }
 `, address, cidr, ddnsGenerateName)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockDdnsGeneratedPrefix(address, cidr, ddnsGeneratedPrefix string) string {
@@ -940,7 +906,7 @@ resource "bloxone_ipam_address_block" "test_ddns_generated_prefix" {
     ddns_generated_prefix = %q
 }
 `, address, cidr, ddnsGeneratedPrefix)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockDdnsSendUpdates(address, cidr, ddnsSendUpdates string) string {
@@ -952,7 +918,7 @@ resource "bloxone_ipam_address_block" "test_ddns_send_updates" {
     ddns_send_updates = %q
 }
 `, address, cidr, ddnsSendUpdates)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockDdnsTtlPercent(address, cidr, ddnsTtlPercent string) string {
@@ -964,7 +930,7 @@ resource "bloxone_ipam_address_block" "test_ddns_ttl_percent" {
     ddns_ttl_percent = %q
 }
 `, address, cidr, ddnsTtlPercent)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockDdnsUpdateOnRenew(address, cidr, ddnsUpdateOnRenew string) string {
@@ -976,7 +942,7 @@ resource "bloxone_ipam_address_block" "test_ddns_update_on_renew" {
     ddns_update_on_renew = %q
 }
 `, address, cidr, ddnsUpdateOnRenew)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockDdnsUseConflictResolution(address, cidr, ddnsUseConflictResolution string) string {
@@ -988,7 +954,7 @@ resource "bloxone_ipam_address_block" "test_ddns_use_conflict_resolution" {
     ddns_use_conflict_resolution = %q
 }
 `, address, cidr, ddnsUseConflictResolution)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockHeaderOptionFilename(address, cidr, headerOptionFilename string) string {
@@ -1000,7 +966,7 @@ resource "bloxone_ipam_address_block" "test_header_option_filename" {
     header_option_filename = %q
 }
 `, address, cidr, headerOptionFilename)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockHeaderOptionServerAddress(address, cidr, headerOptionServerAddress string) string {
@@ -1012,7 +978,7 @@ resource "bloxone_ipam_address_block" "test_header_option_server_address" {
     header_option_server_address = %q
 }
 `, address, cidr, headerOptionServerAddress)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockHeaderOptionServerName(address, cidr, headerOptionServerName string) string {
@@ -1024,7 +990,7 @@ resource "bloxone_ipam_address_block" "test_header_option_server_name" {
     header_option_server_name = %q
 }
 `, address, cidr, headerOptionServerName)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockHostnameRewriteChar(address, cidr, hostnameRewriteChar string) string {
@@ -1036,7 +1002,7 @@ resource "bloxone_ipam_address_block" "test_hostname_rewrite_char" {
     hostname_rewrite_char = %q
 }
 `, address, cidr, hostnameRewriteChar)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockHostnameRewriteEnabled(address, cidr, hostnameRewriteEnabled string) string {
@@ -1048,7 +1014,7 @@ resource "bloxone_ipam_address_block" "test_hostname_rewrite_enabled" {
     hostname_rewrite_enabled = %q
 }
 `, address, cidr, hostnameRewriteEnabled)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockHostnameRewriteRegex(address, cidr, hostnameRewriteRegex string) string {
@@ -1060,7 +1026,7 @@ resource "bloxone_ipam_address_block" "test_hostname_rewrite_regex" {
     hostname_rewrite_regex = %q
 }
 `, address, cidr, hostnameRewriteRegex)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockDhcpConfig(address, cidr string, allowUnknown, allowUnknownV6, ignoreClientUid bool,
@@ -1091,7 +1057,7 @@ resource "bloxone_ipam_address_block" "test_name" {
     name = %q
 }
 `, address, cidr, name)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockSpace(address, cidr, space string) string {
@@ -1102,7 +1068,7 @@ resource "bloxone_ipam_address_block" "test_space" {
     space = %s.id
 }
 `, address, cidr, space)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), testAccMultiSpace(acctest.RandomNameWithPrefix("ip-space"), acctest.RandomNameWithPrefix("ip-space")), config}, "")
+	return strings.Join([]string{testAccMultiSpace(), config}, "")
 }
 
 func testAccAddressBlockTags(address, cidr string, tags map[string]string) string {
@@ -1122,5 +1088,5 @@ resource "bloxone_ipam_address_block" "test_tags" {
     tags = %s
 }
 `, address, cidr, tagsStr)
-	return strings.Join([]string{testAccAddressBlockIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }

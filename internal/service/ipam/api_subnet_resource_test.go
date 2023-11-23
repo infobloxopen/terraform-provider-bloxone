@@ -885,19 +885,19 @@ func testAccBaseWithIPSpace() string {
 	name := acctest.RandomNameWithPrefix("ip-space")
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test" {
-    name = %q
+  name = %q
 }
 `, name)
 }
 
-func testAccMultiSpace(space1, space2 string) string {
+func testAccMultiSpace() string {
 	return fmt.Sprintf(`
 	resource "bloxone_ipam_ip_space" "one" {
     name = %q
 }
 resource "bloxone_ipam_ip_space" "two" {
     name = %q
-}`, space1, space2)
+}`, acctest.RandomNameWithPrefix("ip-space"), acctest.RandomNameWithPrefix("ip-space"))
 }
 
 func testAccSubnetBasicConfig(address string, cidr int) string {
@@ -919,7 +919,7 @@ resource "bloxone_ipam_subnet" "test" {
     space = %s.id
 }
 `, space)
-	return strings.Join([]string{testAccBaseWithIPSpace(), testAccMultiSpace(acctest.RandomNameWithPrefix("ip-space"), acctest.RandomNameWithPrefix("ip-space")), config}, "")
+	return strings.Join([]string{testAccMultiSpace(), config}, "")
 }
 
 func testAccSubnetAsmConfig(address string, cidr int, asmThreshold int, enable, enableNotification bool, forecastPeriod, growthFactor int, growthType string, history, minTotal, minUnused int, reenableDate string) string {

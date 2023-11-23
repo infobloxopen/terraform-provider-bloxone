@@ -12,11 +12,13 @@ resource "b1ddi_address_block" "example" {
   space   = b1ddi_ip_space.example.id
 }
 
-resource "b1ddi_address_block" "example" {
+resource "b1ddi_address_block" "example_tags" {
   address = "10.0.0.0"
   cidr    = 8
-  name    = "example_address_block_tags"
   space   = b1ddi_ip_space.example.id
+
+  # Other optional fields
+  name    = "example_address_block_tags"
   comment = "Example address block with tags created by the terraform provider"
   tags = {
     location = "site1"
