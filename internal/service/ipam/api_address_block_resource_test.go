@@ -1068,7 +1068,7 @@ resource "bloxone_ipam_address_block" "test_space" {
     space = %s.id
 }
 `, address, cidr, space)
-	return strings.Join([]string{testAccMultiSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithTwoIPSpace(), config}, "")
 }
 
 func testAccAddressBlockTags(address, cidr string, tags map[string]string) string {

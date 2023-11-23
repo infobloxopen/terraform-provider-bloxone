@@ -890,7 +890,7 @@ resource "bloxone_ipam_ip_space" "test" {
 `, name)
 }
 
-func testAccMultiSpace() string {
+func testAccBaseWithTwoIPSpace() string {
 	return fmt.Sprintf(`
 	resource "bloxone_ipam_ip_space" "one" {
     name = %q
@@ -919,7 +919,7 @@ resource "bloxone_ipam_subnet" "test" {
     space = %s.id
 }
 `, space)
-	return strings.Join([]string{testAccMultiSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithTwoIPSpace(), config}, "")
 }
 
 func testAccSubnetAsmConfig(address string, cidr int, asmThreshold int, enable, enableNotification bool, forecastPeriod, growthFactor int, growthType string, history, minTotal, minUnused int, reenableDate string) string {
