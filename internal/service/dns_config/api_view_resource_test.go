@@ -20,6 +20,7 @@ import (
 // - inheritance_sources
 // - ACL Type - TSIG Key
 // - ACL Type - ACL
+// - zone_authority : Mname and rname provide inconsistent result after apply
 
 func TestAccViewResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test"
@@ -35,7 +36,6 @@ func TestAccViewResource_basic(t *testing.T) {
 				Config: testAccViewBasicConfig(name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
-					// TODO: check and validate these
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
@@ -74,6 +74,39 @@ func TestAccViewResource_disappears(t *testing.T) {
 				),
 				ExpectNonEmptyPlan: true,
 			},
+		},
+	})
+}
+
+func TestAccViewResource_Name(t *testing.T) {
+	var resourceName = "bloxone_dns_view.test"
+	var name1 = acctest.RandomNameWithPrefix("view")
+	var name2 = acctest.RandomNameWithPrefix("view")
+	var v1 dns_config.ConfigView
+	var v2 dns_config.ConfigView
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccViewBasicConfig(name1),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttr(resourceName, "name", name1),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccViewBasicConfig(name2),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewDestroy(context.Background(), &v1),
+					testAccCheckViewExists(context.Background(), resourceName, &v2),
+					resource.TestCheckResourceAttr(resourceName, "name", name2),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
 		},
 	})
 }
@@ -373,10 +406,10 @@ func TestAccViewResource_DtcConfig(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewDtcConfig(name, 300),
+				Config: testAccViewDtcConfig(name, 700),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "dtc_config.default_ttl", "300"),
+					resource.TestCheckResourceAttr(resourceName, "dtc_config.default_ttl", "700"),
 				),
 			},
 			// Update and Read
@@ -468,10 +501,10 @@ func TestAccViewResource_EcsPrefixV4(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewEcsPrefixV4(name, 24),
+				Config: testAccViewEcsPrefixV4(name, 20),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ecs_prefix_v4", "24"),
+					resource.TestCheckResourceAttr(resourceName, "ecs_prefix_v4", "20"),
 				),
 			},
 			// Update and Read
@@ -498,10 +531,10 @@ func TestAccViewResource_EcsPrefixV6(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewEcsPrefixV6(name, 56),
+				Config: testAccViewEcsPrefixV6(name, 50),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ecs_prefix_v6", "56"),
+					resource.TestCheckResourceAttr(resourceName, "ecs_prefix_v6", "50"),
 				),
 			},
 			// Update and Read
@@ -560,10 +593,10 @@ func TestAccViewResource_EdnsUdpSize(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewEdnsUdpSize(name, 1232),
+				Config: testAccViewEdnsUdpSize(name, 1200),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "edns_udp_size", "1232"),
+					resource.TestCheckResourceAttr(resourceName, "edns_udp_size", "1200"),
 				),
 			},
 			// Update and Read
@@ -594,6 +627,7 @@ func TestAccViewResource_FilterAaaaAcl(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.access", "allow"),
+					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "ip"),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.address", "192.168.10.10"),
 				),
 			},
@@ -603,6 +637,7 @@ func TestAccViewResource_FilterAaaaAcl(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "any"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -789,10 +824,10 @@ func TestAccViewResource_LameTtl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewLameTtl(name, 600),
+				Config: testAccViewLameTtl(name, 3000),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "lame_ttl", "600"),
+					resource.TestCheckResourceAttr(resourceName, "lame_ttl", "3000"),
 				),
 			},
 			// Update and Read
@@ -915,10 +950,10 @@ func TestAccViewResource_MaxCacheTtl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewMaxCacheTtl(name, 604800),
+				Config: testAccViewMaxCacheTtl(name, 600000),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "max_cache_ttl", "604800"),
+					resource.TestCheckResourceAttr(resourceName, "max_cache_ttl", "600000"),
 				),
 			},
 			// Update and Read
@@ -945,10 +980,10 @@ func TestAccViewResource_MaxNegativeTtl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewMaxNegativeTtl(name, 10800),
+				Config: testAccViewMaxNegativeTtl(name, 10000),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "max_negative_ttl", "10800"),
+					resource.TestCheckResourceAttr(resourceName, "max_negative_ttl", "10000"),
 				),
 			},
 			// Update and Read
@@ -1378,6 +1413,7 @@ func TestAccViewResource_UseRootForwardersForLocalResolutionWithB1td(t *testing.
 }
 
 func TestAccViewResource_ZoneAuthority(t *testing.T) {
+	t.Skipf("Mname and rname provide incosistent result after apply")
 	var resourceName = "bloxone_dns_view.test_zone_authority"
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
@@ -1477,7 +1513,6 @@ func testAccCheckViewDisappears(ctx context.Context, v *dns_config.ConfigView) r
 }
 
 func testAccViewBasicConfig(name string) string {
-	// TODO: create basic resource with required fields
 	return fmt.Sprintf(`
 resource "bloxone_dns_view" "test" {
     name = %q

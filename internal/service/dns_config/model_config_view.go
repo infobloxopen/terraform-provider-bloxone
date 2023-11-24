@@ -23,6 +23,14 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
+var aclDefaultValues = map[string]attr.Value{
+	"access":   types.StringValue("allow"),
+	"acl":      types.StringNull(),
+	"address":  types.StringNull(),
+	"element":  types.StringValue("any"),
+	"tsig_key": types.ObjectNull(ConfigTSIGKeyAttrTypes),
+}
+
 type ConfigViewModel struct {
 	AddEdnsOptionInOutgoingQuery                types.Bool        `tfsdk:"add_edns_option_in_outgoing_query"`
 	Comment                                     types.String      `tfsdk:"comment"`
@@ -302,13 +310,7 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional: true,
 		Computed: true,
 		Default: listdefault.StaticValue(types.ListValueMust(types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}, []attr.Value{
-			types.ObjectValueMust(ConfigACLItemAttrTypes, map[string]attr.Value{
-				"access":   types.StringValue("allow"),
-				"acl":      types.StringNull(),
-				"address":  types.StringNull(),
-				"element":  types.StringValue("any"),
-				"tsig_key": types.ObjectNull(ConfigTSIGKeyAttrTypes),
-			}),
+			types.ObjectValueMust(ConfigACLItemAttrTypes, aclDefaultValues),
 		})),
 		MarkdownDescription: `Optional. Specifies which clients have access to the view.  Defaults to empty.`,
 	},
@@ -319,13 +321,7 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional: true,
 		Computed: true,
 		Default: listdefault.StaticValue(types.ListValueMust(types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}, []attr.Value{
-			types.ObjectValueMust(ConfigACLItemAttrTypes, map[string]attr.Value{
-				"access":   types.StringValue("allow"),
-				"acl":      types.StringNull(),
-				"address":  types.StringNull(),
-				"element":  types.StringValue("any"),
-				"tsig_key": types.ObjectNull(ConfigTSIGKeyAttrTypes),
-			}),
+			types.ObjectValueMust(ConfigACLItemAttrTypes, aclDefaultValues),
 		})),
 		MarkdownDescription: `Optional. Specifies which destination addresses have access to the view.  Defaults to empty.`,
 	},
@@ -360,7 +356,10 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `Optional. When enabled, the DNS server will only add records to the authority and additional data sections when they are required.  Defaults to _false_.`,
 	},
 	"name": schema.StringAttribute{
-		Required:            true,
+		Required: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: `Name of view.`,
 	},
 	"notify": schema.BoolAttribute{
@@ -440,21 +439,20 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"zone_authority": schema.SingleNestedAttribute{
 		Attributes: ConfigZoneAuthorityResourceSchemaAttributes,
-		Optional:   true,
 		Computed:   true,
-		Default: objectdefault.StaticValue(types.ObjectValueMust(ConfigZoneAuthorityAttrTypes, map[string]attr.Value{
-			"default_ttl":       types.Int64Value(28800),
-			"expire":            types.Int64Value(2.4192e+06),
-			"mname":             types.StringValue("ns.b1ddi"),
-			"negative_ttl":      types.Int64Value(900),
-			"protocol_mname":    types.StringValue("ns.b1ddi"),
-			"protocol_rname":    types.StringValue("hostmaster"),
-			"refresh":           types.Int64Value(10800),
-			"retry":             types.Int64Value(3600),
-			"rname":             types.StringValue("hostmaster"),
-			"use_default_mname": types.BoolValue(false),
-		}),
-		),
+		//Default: objectdefault.StaticValue(types.ObjectValueMust(ConfigZoneAuthorityAttrTypes, map[string]attr.Value{
+		//	"default_ttl":       types.Int64Value(28800),
+		//	"expire":            types.Int64Value(2.4192e+06),
+		//	"mname":             types.StringValue("ns.b1ddi"),
+		//	"negative_ttl":      types.Int64Value(900),
+		//	"protocol_mname":    types.StringValue("ns.b1ddi"),
+		//	"protocol_rname":    types.StringValue("hostmaster"),
+		//	"refresh":           types.Int64Value(10800),
+		//	"retry":             types.Int64Value(3600),
+		//	"rname":             types.StringValue("hostmaster"),
+		//	"use_default_mname": types.BoolValue(false),
+		//}),
+		//),
 	},
 }
 

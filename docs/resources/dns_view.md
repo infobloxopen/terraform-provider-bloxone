@@ -17,12 +17,12 @@ resource "bloxone_ipam_ip_space" "example_ip_space" {
   name = "example_ip_space"
 }
 
-resource "bloxone_ipam_ip_space" "example_dns_view" {
-  name = "example_ip_space"
+resource "bloxone_dns_view" "example_dns_view" {
+  name = "example_dns_view"
 
   # Other Optional fields
   comment  = "An example view"
-  ip_space = bloxone_ipam_ip_space.current.id
+  ip_space = bloxone_ipam_ip_space.example_ip_space.id
   tags = {
     site = "Test Site"
   }
@@ -89,7 +89,6 @@ resource "bloxone_ipam_ip_space" "example_dns_view" {
 - `update_acl` (Attributes List) Optional. Specifies which hosts are allowed to issue Dynamic DNS updates for authoritative zones of _primary_type_ _cloud_.  Defaults to empty. (see [below for nested schema](#nestedatt--update_acl))
 - `use_forwarders_for_subzones` (Boolean) Optional. Use default forwarders to resolve queries for subzones.  Defaults to _true_.
 - `use_root_forwarders_for_local_resolution_with_b1td` (Boolean) _use_root_forwarders_for_local_resolution_with_b1td_ allows DNS recursive queries sent to root forwarders for local resolution when deployed alongside BloxOne Thread Defense. Defaults to _false_.
-- `zone_authority` (Attributes) (see [below for nested schema](#nestedatt--zone_authority))
 
 ### Read-Only
 
@@ -97,6 +96,7 @@ resource "bloxone_ipam_ip_space" "example_dns_view" {
 - `dnssec_root_keys` (Attributes List) DNSSEC root keys. The root keys are not configurable.  A default list is provided by cloud management and included here for config generation. (see [below for nested schema](#nestedatt--dnssec_root_keys))
 - `id` (String) The resource identifier.
 - `updated_at` (String) The timestamp when the object has been updated. Equals to _created_at_ if not updated after creation.
+- `zone_authority` (Attributes) (see [below for nested schema](#nestedatt--zone_authority))
 
 <a id="nestedatt--custom_root_ns"></a>
 ### Nested Schema for `custom_root_ns`
@@ -1229,6 +1229,24 @@ Read-Only:
 
 
 
+<a id="nestedatt--dnssec_root_keys"></a>
+### Nested Schema for `dnssec_root_keys`
+
+Required:
+
+- `algorithm` (Number)
+- `public_key` (String) DNSSEC key data. Non-empty, valid base64 string.
+- `zone` (String) Zone FQDN.
+
+Optional:
+
+- `sep` (Boolean) Optional. Secure Entry Point flag.  Defaults to _true_.
+
+Read-Only:
+
+- `protocol_zone` (String) Zone FQDN in punycode.
+
+
 <a id="nestedatt--zone_authority"></a>
 ### Nested Schema for `zone_authority`
 
@@ -1247,21 +1265,3 @@ Read-Only:
 
 - `protocol_mname` (String) Optional. ZoneAuthority master name server in punycode.  Defaults to empty.
 - `protocol_rname` (String) Optional. A domain name which specifies the mailbox of the person responsible for this zone.  Defaults to empty.
-
-
-<a id="nestedatt--dnssec_root_keys"></a>
-### Nested Schema for `dnssec_root_keys`
-
-Required:
-
-- `algorithm` (Number)
-- `public_key` (String) DNSSEC key data. Non-empty, valid base64 string.
-- `zone` (String) Zone FQDN.
-
-Optional:
-
-- `sep` (Boolean) Optional. Secure Entry Point flag.  Defaults to _true_.
-
-Read-Only:
-
-- `protocol_zone` (String) Zone FQDN in punycode.
