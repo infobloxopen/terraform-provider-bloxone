@@ -13,30 +13,32 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &SubnetResource{}
-var _ resource.ResourceWithImportState = &SubnetResource{}
+var _ resource.Resource = &RangeResource{}
+var _ resource.ResourceWithImportState = &RangeResource{}
 
-func NewSubnetResource() resource.Resource {
-	return &SubnetResource{}
+func NewRangeResource() resource.Resource {
+	return &RangeResource{}
 }
 
-// SubnetResource defines the resource implementation.
-type SubnetResource struct {
+// RangeResource defines the resource implementation.
+type RangeResource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (r *SubnetResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "ipam_subnet"
+func (r *RangeResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "ipam_range"
 }
 
-func (r *SubnetResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *RangeResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The Subnet object represents a set of addresses from which addresses are assigned to network equipment interfaces.",
-		Attributes:          IpamsvcSubnetResourceSchemaAttributes,
+		MarkdownDescription: "A Range object represents a set of contiguous IP addresses in the same IP space with no gap, " +
+			"expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. " +
+			"The start and end values are not required to align with CIDR boundaries.",
+		Attributes: IpamsvcRangeResourceSchemaAttributes,
 	}
 }
 
-func (r *SubnetResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *RangeResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -56,8 +58,8 @@ func (r *SubnetResource) Configure(ctx context.Context, req resource.ConfigureRe
 	r.client = client
 }
 
-func (r *SubnetResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data IpamsvcSubnetModel
+func (r *RangeResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data IpamsvcRangeModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -67,12 +69,12 @@ func (r *SubnetResource) Create(ctx context.Context, req resource.CreateRequest,
 	}
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
-		SubnetAPI.
-		SubnetCreate(ctx).
+		RangeAPI.
+		RangeCreate(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Subnet, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Range, got error: %s", err))
 		return
 	}
 
@@ -83,8 +85,8 @@ func (r *SubnetResource) Create(ctx context.Context, req resource.CreateRequest,
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *SubnetResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data IpamsvcSubnetModel
+func (r *RangeResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data IpamsvcRangeModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -94,15 +96,15 @@ func (r *SubnetResource) Read(ctx context.Context, req resource.ReadRequest, res
 	}
 
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
-		SubnetAPI.
-		SubnetRead(ctx, data.Id.ValueString()).
+		RangeAPI.
+		RangeRead(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			resp.State.RemoveResource(ctx)
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Subnet, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Range, got error: %s", err))
 		return
 	}
 
@@ -113,8 +115,8 @@ func (r *SubnetResource) Read(ctx context.Context, req resource.ReadRequest, res
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *SubnetResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data IpamsvcSubnetModel
+func (r *RangeResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var data IpamsvcRangeModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -124,12 +126,12 @@ func (r *SubnetResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
-		SubnetAPI.
-		SubnetUpdate(ctx, data.Id.ValueString()).
+		RangeAPI.
+		RangeUpdate(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Subnet, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Range, got error: %s", err))
 		return
 	}
 
@@ -140,8 +142,8 @@ func (r *SubnetResource) Update(ctx context.Context, req resource.UpdateRequest,
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *SubnetResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data IpamsvcSubnetModel
+func (r *RangeResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data IpamsvcRangeModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -151,18 +153,18 @@ func (r *SubnetResource) Delete(ctx context.Context, req resource.DeleteRequest,
 	}
 
 	httpRes, err := r.client.IPAddressManagementAPI.
-		SubnetAPI.
-		SubnetDelete(ctx, data.Id.ValueString()).
+		RangeAPI.
+		RangeDelete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete Subnet, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete Range, got error: %s", err))
 		return
 	}
 }
 
-func (r *SubnetResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *RangeResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
