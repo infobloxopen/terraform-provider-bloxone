@@ -51,6 +51,7 @@ resource "bloxone_ipam_address" "example_na_ab" {
   next_available_id = bloxone_ipam_address_block.example.id
   space             = bloxone_ipam_ip_space.example.id
 }
+
 # Next available address in range
 resource "bloxone_ipam_address" "example_na_rng" {
   next_available_id = bloxone_ipam_range.example.id
