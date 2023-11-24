@@ -100,10 +100,7 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Optional. _true_ to disable object. A disabled object is effectively non-existent when generating configuration.  Defaults to _false_.",
 	},
 	"end": schema.StringAttribute{
-		Required: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
-		},
+		Required:            true,
 		MarkdownDescription: "The end IP address of the range.",
 	},
 	"exclusion_ranges": schema.ListNestedAttribute{
@@ -167,10 +164,7 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The resource identifier.",
 	},
 	"start": schema.StringAttribute{
-		Required: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
-		},
+		Required:            true,
 		MarkdownDescription: "The start IP address of the range.",
 	},
 	"tags": schema.MapAttribute{

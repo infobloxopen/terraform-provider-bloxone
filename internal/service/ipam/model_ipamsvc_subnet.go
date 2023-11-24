@@ -456,7 +456,7 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.IpamsvcSubn
 	}
 	m.Address = flex.FlattenStringPointer(from.Address)
 	m.AsmConfig = FlattenIpamsvcASMConfig(ctx, from.AsmConfig, diags)
-	m.AsmScopeFlag = flex.FlattenInt64(*from.AsmScopeFlag)
+	m.AsmScopeFlag = flex.FlattenInt64Pointer(from.AsmScopeFlag)
 	m.Cidr = flex.FlattenInt64(*from.Cidr)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
