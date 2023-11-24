@@ -47,6 +47,20 @@ type IpamsvcDHCPConfig struct {
 // will change when the set of required properties is changed
 func NewIpamsvcDHCPConfig() *IpamsvcDHCPConfig {
 	this := IpamsvcDHCPConfig{}
+	var abandonedReclaimTime int64 = 3600
+	this.AbandonedReclaimTime = &abandonedReclaimTime
+	var abandonedReclaimTimeV6 int64 = 3600
+	this.AbandonedReclaimTimeV6 = &abandonedReclaimTimeV6
+	var allowUnknown bool = true
+	this.AllowUnknown = &allowUnknown
+	var allowUnknownV6 bool = true
+	this.AllowUnknownV6 = &allowUnknownV6
+	var ignoreClientUid bool = false
+	this.IgnoreClientUid = &ignoreClientUid
+	var leaseTime int64 = 3600
+	this.LeaseTime = &leaseTime
+	var leaseTimeV6 int64 = 3600
+	this.LeaseTimeV6 = &leaseTimeV6
 	return &this
 }
 
@@ -55,6 +69,20 @@ func NewIpamsvcDHCPConfig() *IpamsvcDHCPConfig {
 // but it doesn't guarantee that properties required by API are set
 func NewIpamsvcDHCPConfigWithDefaults() *IpamsvcDHCPConfig {
 	this := IpamsvcDHCPConfig{}
+	var abandonedReclaimTime int64 = 3600
+	this.AbandonedReclaimTime = &abandonedReclaimTime
+	var abandonedReclaimTimeV6 int64 = 3600
+	this.AbandonedReclaimTimeV6 = &abandonedReclaimTimeV6
+	var allowUnknown bool = true
+	this.AllowUnknown = &allowUnknown
+	var allowUnknownV6 bool = true
+	this.AllowUnknownV6 = &allowUnknownV6
+	var ignoreClientUid bool = false
+	this.IgnoreClientUid = &ignoreClientUid
+	var leaseTime int64 = 3600
+	this.LeaseTime = &leaseTime
+	var leaseTimeV6 int64 = 3600
+	this.LeaseTimeV6 = &leaseTimeV6
 	return &this
 }
 
