@@ -1196,17 +1196,21 @@ func TestAccViewResource_SortList(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewSortList(name, "ip"),
+				Config: testAccViewSortList(name, "ip", "192.168.12.12"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "sort_list.0.element", "ip"),
 					resource.TestCheckResourceAttr(resourceName, "sort_list.0.source", "192.168.11.11"),
+					resource.TestCheckResourceAttr(resourceName, "sort_list.0.prioritized_networks.0", "192.168.12.12"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccViewSortList(name, "any"),
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttr(resourceName, "sort_list.0.element", "any")),
+				Config: testAccViewSortList(name, "any", "192.168.13.13"),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "sort_list.0.element", "any"),
+					resource.TestCheckResourceAttr(resourceName, "sort_list.0.prioritized_networks.0", "192.168.13.13"),
+				),
 			},
 			// Delete testing automatically occurs in TestCase
 		},
@@ -1897,7 +1901,7 @@ resource "bloxone_dns_view" "test_recursion_enabled" {
 `, name, recursionEnabled)
 }
 
-func testAccViewSortList(name, element string) string {
+func testAccViewSortList(name string, element string, addressPrioritizedNetworks string) string {
 	sourceAdd := ""
 	if element == "ip" {
 		sourceAdd = "source = \"192.168.11.11\""
@@ -1907,12 +1911,14 @@ resource "bloxone_dns_view" "test_sort_list" {
     name = %q
     sort_list = [
 		{
+			
 			element = %q
 			%s
+			prioritized_networks = [ "%s" ]
 		}
 ]
 }
-`, name, element, sourceAdd)
+`, name, element, sourceAdd, addressPrioritizedNetworks)
 }
 
 func testAccViewSynthesizeAddressRecordsFromHttps(name, synthesizeAddressRecordsFromHttps string) string {
