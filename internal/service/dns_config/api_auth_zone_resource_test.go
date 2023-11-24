@@ -243,6 +243,37 @@ func TestAccAuthZoneResource_ExternalPrimaries(t *testing.T) {
 	})
 }
 
+func TestAccAuthZoneResource_ExternalSecondaries(t *testing.T) {
+	var resourceName = "bloxone_dns_auth_zone.test_external_secondaries"
+	var v dns_config.ConfigAuthZone
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAuthZoneExternalSecondaries("tf-acc-test.com.", "external", "tf-infoblox-test.com.", "192.168.10.10"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "external_secondaries.0.fqdn", "tf-infoblox-test.com."),
+					resource.TestCheckResourceAttr(resourceName, "external_secondaries.0.address", "192.168.10.10"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAuthZoneExternalSecondaries("tf-acc-test.com.", "external", "tf-infoblox.com.", "192.168.11.11"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "external_secondaries.0.fqdn", "tf-infoblox.com."),
+					resource.TestCheckResourceAttr(resourceName, "external_secondaries.0.address", "192.168.11.11"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccAuthZoneResource_GssTsigEnabled(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_gss_tsig_enabled"
 	var v dns_config.ConfigAuthZone
@@ -677,21 +708,6 @@ resource "bloxone_dns_auth_zone" "test_initial_soa_serial" {
 `, fqdn, primaryType, initialSoaSerial)
 }
 
-func testAccAuthZoneInternalSecondaries(fqdn, primaryType, internalSecondariesHost string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_auth_zone" "test_internal_secondaries" {
-    fqdn = %q
-    primary_type = %q
-    internal_secondaries = [
-		{
-			host = %q
-			
-		}
-]
-}
-`, fqdn, primaryType, internalSecondariesHost)
-}
-
 func testAccAuthZoneNotify(fqdn, primaryType, notify string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_auth_zone" "test_notify" {
@@ -759,16 +775,6 @@ resource "bloxone_dns_auth_zone" "test_use_forwarders_for_subzones" {
     use_forwarders_for_subzones = %q
 }
 `, fqdn, primaryType, useForwardersForSubzones)
-}
-
-func testAccAuthZoneView(fqdn, primaryType, view string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_auth_zone" "test_view" {
-    fqdn = %q
-    primary_type = %q
-    view = %q
-}
-`, fqdn, primaryType, view)
 }
 
 func testAccAuthZoneZoneAuthority(fqdn string, primaryType string, defaultTTL int64, expire int64, mName string, negativeTTL int64,
