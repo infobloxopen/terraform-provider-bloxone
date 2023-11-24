@@ -440,19 +440,20 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 	"zone_authority": schema.SingleNestedAttribute{
 		Attributes: ConfigZoneAuthorityResourceSchemaAttributes,
 		Computed:   true,
-		//Default: objectdefault.StaticValue(types.ObjectValueMust(ConfigZoneAuthorityAttrTypes, map[string]attr.Value{
-		//	"default_ttl":       types.Int64Value(28800),
-		//	"expire":            types.Int64Value(2.4192e+06),
-		//	"mname":             types.StringValue("ns.b1ddi"),
-		//	"negative_ttl":      types.Int64Value(900),
-		//	"protocol_mname":    types.StringValue("ns.b1ddi"),
-		//	"protocol_rname":    types.StringValue("hostmaster"),
-		//	"refresh":           types.Int64Value(10800),
-		//	"retry":             types.Int64Value(3600),
-		//	"rname":             types.StringValue("hostmaster"),
-		//	"use_default_mname": types.BoolValue(false),
-		//}),
-		//),
+		Optional:   true,
+		Default: objectdefault.StaticValue(types.ObjectValueMust(ConfigZoneAuthorityAttrTypes, map[string]attr.Value{
+			"default_ttl":       types.Int64Value(28800),
+			"expire":            types.Int64Value(2.4192e+06),
+			"mname":             types.StringValue("ns.b1ddi"),
+			"negative_ttl":      types.Int64Value(900),
+			"protocol_mname":    types.StringValue("ns.b1ddi"),
+			"protocol_rname":    types.StringValue("hostmaster"),
+			"refresh":           types.Int64Value(10800),
+			"retry":             types.Int64Value(3600),
+			"rname":             types.StringValue("hostmaster"),
+			"use_default_mname": types.BoolValue(true),
+		}),
+		),
 	},
 }
 

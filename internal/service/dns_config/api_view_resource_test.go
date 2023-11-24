@@ -1417,7 +1417,7 @@ func TestAccViewResource_UseRootForwardersForLocalResolutionWithB1td(t *testing.
 }
 
 func TestAccViewResource_ZoneAuthority(t *testing.T) {
-	t.Skipf("Mname and rname provide incosistent result after apply")
+	//t.Skipf("Mname and rname provide incosistent result after apply")
 	var resourceName = "bloxone_dns_view.test_zone_authority"
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
@@ -1428,28 +1428,29 @@ func TestAccViewResource_ZoneAuthority(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewZoneAuthority(name, 28800, 2419200, "ns.b1ddi", 900,
-					10800, 3600, "hostmaster", "false"),
+				Config: testAccViewZoneAuthority(name, 28600, 2519200, "ns.b1ddi", 700,
+					10500, 3500, "hostmaster", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "zone_authority.default_ttl", "28800"),
-					resource.TestCheckResourceAttr(resourceName, "zone_authority.expire", "2419200"),
+					resource.TestCheckResourceAttr(resourceName, "zone_authority.default_ttl", "28600"),
+					resource.TestCheckResourceAttr(resourceName, "zone_authority.expire", "2519200"),
 					resource.TestCheckResourceAttr(resourceName, "zone_authority.mname", "ns.b1ddi"),
-					resource.TestCheckResourceAttr(resourceName, "zone_authority.negative_ttl", "900"),
-					resource.TestCheckResourceAttr(resourceName, "zone_authority.refresh", "10800"),
-					resource.TestCheckResourceAttr(resourceName, "zone_authority.retry", "3600"),
+					resource.TestCheckResourceAttr(resourceName, "zone_authority.negative_ttl", "700"),
+					resource.TestCheckResourceAttr(resourceName, "zone_authority.refresh", "10500"),
+					resource.TestCheckResourceAttr(resourceName, "zone_authority.retry", "3500"),
 					resource.TestCheckResourceAttr(resourceName, "zone_authority.rname", "hostmaster"),
 					resource.TestCheckResourceAttr(resourceName, "zone_authority.use_default_mname", "false"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccViewZoneAuthority(name, 30000, 2519200, "ns.b1ddi.infoblox", 800, 11800, 3700, "hostmaster", "false"),
+				Config: testAccViewZoneAuthority(name, 30000, 2519200,
+					"ns.b1ddi", 800, 11800, 3700, "hostmaster", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "zone_authority.default_ttl", "30000"),
 					resource.TestCheckResourceAttr(resourceName, "zone_authority.expire", "2519200"),
-					resource.TestCheckResourceAttr(resourceName, "zone_authority.mname", "ns.b1ddi.infoblox"),
+					resource.TestCheckResourceAttr(resourceName, "zone_authority.mname", "ns.b1ddi"),
 					resource.TestCheckResourceAttr(resourceName, "zone_authority.negative_ttl", "800"),
 					resource.TestCheckResourceAttr(resourceName, "zone_authority.refresh", "11800"),
 					resource.TestCheckResourceAttr(resourceName, "zone_authority.retry", "3700"),
@@ -1989,7 +1990,7 @@ resource "bloxone_dns_view" "test_zone_authority" {
 			refresh = %d           
 			retry = %d             
 			rname = %q             
-			use_default_mname = %q 
+			use_default_mname = %q  
 }
 }
 `, name, defaultTTL, expire, mName, negativeTTL, refresh, retry, rName, useDefaultMName)

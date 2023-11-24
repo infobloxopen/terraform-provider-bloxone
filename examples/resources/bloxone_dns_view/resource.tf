@@ -1,14 +1,14 @@
 
-resource "bloxone_ipam_ip_space" "example_ip_space" {
+resource "bloxone_ipam_ip_space" "example" {
   name = "example_ip_space"
 }
 
-resource "bloxone_dns_view" "example_dns_view" {
+resource "bloxone_dns_view" "example" {
   name = "example_dns_view"
 
   # Other Optional fields
   comment  = "An example view"
-  ip_space = bloxone_ipam_ip_space.example_ip_space.id
+  ip_space = bloxone_ipam_ip_space.example.id
   tags = {
     site = "Test Site"
   }
