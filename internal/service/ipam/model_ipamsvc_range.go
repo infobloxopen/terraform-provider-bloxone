@@ -148,7 +148,6 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The name of the range. May contain 1 to 256 characters. Can include UTF-8.",
 	},
 	"parent": schema.StringAttribute{
-		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},

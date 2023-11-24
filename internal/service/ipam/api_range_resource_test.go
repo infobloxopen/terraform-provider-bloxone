@@ -242,7 +242,7 @@ func TestAccRangeResource_Space(t *testing.T) {
 			{
 				Config: testAccRangeSpace("10.0.0.8", "10.0.0.20", "bloxone_ipam_ip_space.one"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRangeExists(context.Background(), resourceName, &v1),
+					testAccCheckRangeDestroy(context.Background(), &v1),
 					testAccCheckRangeExists(context.Background(), resourceName, &v2),
 					resource.TestCheckResourceAttrPair(resourceName, "space", "bloxone_ipam_ip_space.one", "id"),
 				),

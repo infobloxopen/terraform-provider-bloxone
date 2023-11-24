@@ -70,7 +70,6 @@ Optional:
 - `filters` (Attributes List) The list of all allow/deny filters of the range. (see [below for nested schema](#nestedatt--results--filters))
 - `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources))
 - `name` (String) The name of the range. May contain 1 to 256 characters. Can include UTF-8.
-- `parent` (String) The resource identifier.
 - `tags` (Map of String) The tags for the range in JSON format.
 
 Read-Only:
@@ -79,6 +78,7 @@ Read-Only:
 - `id` (String) The resource identifier.
 - `inheritance_assigned_hosts` (Attributes List) The list of the inheritance assigned hosts of the object. (see [below for nested schema](#nestedatt--results--inheritance_assigned_hosts))
 - `inheritance_parent` (String) The resource identifier.
+- `parent` (String) The resource identifier.
 - `protocol` (String) The type of protocol (_ip4_ or _ip6_).
 - `threshold` (Attributes) (see [below for nested schema](#nestedatt--results--threshold))
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.

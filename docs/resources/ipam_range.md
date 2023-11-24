@@ -32,7 +32,7 @@ resource "bloxone_ipam_subnet" "example" {
   }
 }
 
-resource "bloxone_range" "example" {
+resource "bloxone_ipam_range" "example" {
   start = "192.168.1.15"
   end   = "192.168.1.30"
   space = bloxone_ipam_ip_space.example.id
@@ -66,7 +66,6 @@ resource "bloxone_range" "example" {
 - `filters` (Attributes List) The list of all allow/deny filters of the range. (see [below for nested schema](#nestedatt--filters))
 - `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources))
 - `name` (String) The name of the range. May contain 1 to 256 characters. Can include UTF-8.
-- `parent` (String) The resource identifier.
 - `tags` (Map of String) The tags for the range in JSON format.
 
 ### Read-Only
@@ -75,6 +74,7 @@ resource "bloxone_range" "example" {
 - `id` (String) The resource identifier.
 - `inheritance_assigned_hosts` (Attributes List) The list of the inheritance assigned hosts of the object. (see [below for nested schema](#nestedatt--inheritance_assigned_hosts))
 - `inheritance_parent` (String) The resource identifier.
+- `parent` (String) The resource identifier.
 - `protocol` (String) The type of protocol (_ip4_ or _ip6_).
 - `threshold` (Attributes) (see [below for nested schema](#nestedatt--threshold))
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.

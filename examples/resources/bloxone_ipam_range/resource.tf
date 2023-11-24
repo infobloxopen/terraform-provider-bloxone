@@ -17,7 +17,7 @@ resource "bloxone_ipam_subnet" "example" {
   }
 }
 
-resource "bloxone_range" "example" {
+resource "bloxone_ipam_range" "example" {
   start = "192.168.1.15"
   end   = "192.168.1.30"
   space = bloxone_ipam_ip_space.example.id
