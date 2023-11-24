@@ -33,7 +33,7 @@ type ConfigAuthZone struct {
 	// DNS secondaries external to BloxOne DDI. Order is not significant.
 	ExternalSecondaries []ConfigExternalSecondary `json:"external_secondaries,omitempty"`
 	// Zone FQDN. The FQDN supplied at creation will be converted to canonical form.  Read-only after creation.
-	Fqdn string `json:"fqdn"`
+	Fqdn *string `json:"fqdn,omitempty"`
 	// _gss_tsig_enabled_ enables/disables GSS-TSIG signed dynamic updates.  Defaults to _false_.
 	GssTsigEnabled *bool `json:"gss_tsig_enabled,omitempty"`
 	// The resource identifier.
@@ -56,7 +56,7 @@ type ConfigAuthZone struct {
 	// The resource identifier.
 	Parent *string `json:"parent,omitempty"`
 	// Primary type for an authoritative zone. Read only after creation. Allowed values:  * _external_: zone data owned by an external nameserver,  * _cloud_: zone data is owned by a BloxOne DDI host.
-	PrimaryType string `json:"primary_type"`
+	PrimaryType *string `json:"primary_type,omitempty"`
 	// Zone FQDN in punycode.
 	ProtocolFqdn *string `json:"protocol_fqdn,omitempty"`
 	// Optional. Clients must match this ACL to make authoritative queries. Also used for recursive queries if that ACL is unset.  Defaults to empty.
@@ -82,10 +82,8 @@ type ConfigAuthZone struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewConfigAuthZone(fqdn string, primaryType string) *ConfigAuthZone {
+func NewConfigAuthZone() *ConfigAuthZone {
 	this := ConfigAuthZone{}
-	this.Fqdn = fqdn
-	this.PrimaryType = primaryType
 	return &this
 }
 
@@ -289,28 +287,36 @@ func (o *ConfigAuthZone) SetExternalSecondaries(v []ConfigExternalSecondary) {
 	o.ExternalSecondaries = v
 }
 
-// GetFqdn returns the Fqdn field value
+// GetFqdn returns the Fqdn field value if set, zero value otherwise.
 func (o *ConfigAuthZone) GetFqdn() string {
-	if o == nil {
+	if o == nil || IsNil(o.Fqdn) {
 		var ret string
 		return ret
 	}
-
-	return o.Fqdn
+	return *o.Fqdn
 }
 
-// GetFqdnOk returns a tuple with the Fqdn field value
+// GetFqdnOk returns a tuple with the Fqdn field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ConfigAuthZone) GetFqdnOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Fqdn) {
 		return nil, false
 	}
-	return &o.Fqdn, true
+	return o.Fqdn, true
 }
 
-// SetFqdn sets field value
+// HasFqdn returns a boolean if a field has been set.
+func (o *ConfigAuthZone) HasFqdn() bool {
+	if o != nil && !IsNil(o.Fqdn) {
+		return true
+	}
+
+	return false
+}
+
+// SetFqdn gets a reference to the given string and assigns it to the Fqdn field.
 func (o *ConfigAuthZone) SetFqdn(v string) {
-	o.Fqdn = v
+	o.Fqdn = &v
 }
 
 // GetGssTsigEnabled returns the GssTsigEnabled field value if set, zero value otherwise.
@@ -665,28 +671,36 @@ func (o *ConfigAuthZone) SetParent(v string) {
 	o.Parent = &v
 }
 
-// GetPrimaryType returns the PrimaryType field value
+// GetPrimaryType returns the PrimaryType field value if set, zero value otherwise.
 func (o *ConfigAuthZone) GetPrimaryType() string {
-	if o == nil {
+	if o == nil || IsNil(o.PrimaryType) {
 		var ret string
 		return ret
 	}
-
-	return o.PrimaryType
+	return *o.PrimaryType
 }
 
-// GetPrimaryTypeOk returns a tuple with the PrimaryType field value
+// GetPrimaryTypeOk returns a tuple with the PrimaryType field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ConfigAuthZone) GetPrimaryTypeOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.PrimaryType) {
 		return nil, false
 	}
-	return &o.PrimaryType, true
+	return o.PrimaryType, true
 }
 
-// SetPrimaryType sets field value
+// HasPrimaryType returns a boolean if a field has been set.
+func (o *ConfigAuthZone) HasPrimaryType() bool {
+	if o != nil && !IsNil(o.PrimaryType) {
+		return true
+	}
+
+	return false
+}
+
+// SetPrimaryType gets a reference to the given string and assigns it to the PrimaryType field.
 func (o *ConfigAuthZone) SetPrimaryType(v string) {
-	o.PrimaryType = v
+	o.PrimaryType = &v
 }
 
 // GetProtocolFqdn returns the ProtocolFqdn field value if set, zero value otherwise.
@@ -1037,7 +1051,9 @@ func (o ConfigAuthZone) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ExternalSecondaries) {
 		toSerialize["external_secondaries"] = o.ExternalSecondaries
 	}
-	toSerialize["fqdn"] = o.Fqdn
+	if !IsNil(o.Fqdn) {
+		toSerialize["fqdn"] = o.Fqdn
+	}
 	if !IsNil(o.GssTsigEnabled) {
 		toSerialize["gss_tsig_enabled"] = o.GssTsigEnabled
 	}
@@ -1071,7 +1087,9 @@ func (o ConfigAuthZone) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Parent) {
 		toSerialize["parent"] = o.Parent
 	}
-	toSerialize["primary_type"] = o.PrimaryType
+	if !IsNil(o.PrimaryType) {
+		toSerialize["primary_type"] = o.PrimaryType
+	}
 	if !IsNil(o.ProtocolFqdn) {
 		toSerialize["protocol_fqdn"] = o.ProtocolFqdn
 	}
