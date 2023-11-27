@@ -14,7 +14,6 @@ import (
 
 func TestAccHostDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_hosts.test"
-	//resourceName := "bloxone_.test"
 	var v dns_config.ConfigHost
 
 	resource.Test(t, resource.TestCase{
@@ -37,7 +36,6 @@ func TestAccHostDataSource_Filters(t *testing.T) {
 
 func TestAccHostDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_hosts.test"
-	//resourceName := "bloxone_.test"
 	var v dns_config.ConfigHost
 
 	resource.Test(t, resource.TestCase{
@@ -58,11 +56,8 @@ func TestAccHostDataSource_TagFilters(t *testing.T) {
 	})
 }
 
-// below all TestAcc functions
-
 func testAccHostDataSourceConfigFilters() string {
 	return fmt.Sprintf(`
-
 data "bloxone_dns_hosts" "test" {
   filters = {
 	name = "Terraform Provider Acceptance Tests"
@@ -73,7 +68,6 @@ data "bloxone_dns_hosts" "test" {
 
 func testAccHostDataSourceConfigTagFilters() string {
 	return `
-
 data "bloxone_dns_hosts" "test" {
   tag_filters = {
 	used_for = "Terraform Provider Acceptance Tests"
