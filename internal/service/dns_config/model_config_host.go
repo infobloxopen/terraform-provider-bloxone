@@ -74,8 +74,9 @@ var ConfigHostResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Anycast address configured to the host. Order is not significant.",
 	},
 	"associated_server": schema.SingleNestedAttribute{
-		Attributes: ConfigHostAssociatedServerResourceSchemaAttributes,
-		Optional:   true,
+		Attributes:          ConfigHostAssociatedServerResourceSchemaAttributes,
+		Optional:            true,
+		MarkdownDescription: "Host associated server configuration.",
 	},
 	"comment": schema.StringAttribute{
 		Computed:            true,
@@ -98,8 +99,9 @@ var ConfigHostResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The resource identifier.",
 	},
 	"inheritance_sources": schema.SingleNestedAttribute{
-		Attributes: ConfigHostInheritanceResourceSchemaAttributes,
-		Optional:   true,
+		Attributes:          ConfigHostInheritanceResourceSchemaAttributes,
+		Optional:            true,
+		MarkdownDescription: "Optional. Inheritance configuration.",
 	},
 	"kerberos_keys": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
