@@ -319,6 +319,77 @@ func TestAccAddressResource_NextAvailable_Subnet(t *testing.T) {
 	})
 }
 
+func TestAccAddressResource_NextAvailable_AddressBlock(t *testing.T) {
+	var resourceName = "bloxone_ipam_address.test_next_available"
+	var v1 ipam.IpamsvcAddress
+	var v2 ipam.IpamsvcAddress
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAddressNextAvailableInAddressBlock("10.0.0.0", 24),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_ipam_subnet.test", "id"),
+					resource.TestCheckResourceAttr(resourceName, "address", "10.0.0.1"),
+					resource.TestCheckResourceAttrSet(resourceName, "id"),
+				),
+			},
+			// Update and Read
+			// Update of next_available_id will destroy existing resource and create a new resource
+			{
+				Config: testAccAddressNextAvailableInAddressBlock("12.0.0.0", 24),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressDestroy(context.Background(), &v1),
+					testAccCheckAddressExists(context.Background(), resourceName, &v2),
+					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_ipam_subnet.test", "id"),
+					resource.TestCheckResourceAttr(resourceName, "address", "12.0.0.1"),
+					resource.TestCheckResourceAttrSet(resourceName, "id"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccAddressResource_NextAvailable_Range(t *testing.T) {
+	var resourceName = "bloxone_ipam_address.test_next_available"
+	var v1, v2 ipam.IpamsvcAddress
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAddressNextAvailableInRange("10.0.0.10", "10.0.0.20"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_ipam_subnet.test", "id"),
+					resource.TestCheckResourceAttr(resourceName, "address", "10.0.0.10"),
+					resource.TestCheckResourceAttrSet(resourceName, "id"),
+				),
+			},
+			// Update and Read
+			// Update of next_available_id will destroy existing resource and create a new resource
+			{
+				Config: testAccAddressNextAvailableInRange("10.0.0.16", "10.0.0.26"),
+				Taint:  []string{resourceName}, // Forces the recreation of the object
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressExists(context.Background(), resourceName, &v2),
+					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_ipam_subnet.test", "id"),
+					resource.TestCheckResourceAttr(resourceName, "address", "10.0.0.16"),
+					resource.TestCheckResourceAttrSet(resourceName, "id"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func testAccCheckAddressExists(ctx context.Context, resourceName string, v *ipam.IpamsvcAddress) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
@@ -382,7 +453,7 @@ resource "bloxone_ipam_ip_space" "test" {
 resource "bloxone_ipam_subnet" "test" {
     address = "10.0.0.0"
     cidr = 24
-	space = bloxone_ipam_ip_space.test.id
+    space = bloxone_ipam_ip_space.test.id
 }
 `, name)
 }
@@ -527,4 +598,44 @@ resource "bloxone_ipam_address" "test_next_available" {
 }
 `, address, cidr)
 	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+}
+
+func testAccAddressNextAvailableInAddressBlock(address string, cidr int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test" {
+    address = %q
+    cidr = %d
+    space = bloxone_ipam_ip_space.test.id
+}
+
+resource "bloxone_ipam_subnet" "test" {
+    address = %q
+    cidr = 26
+    space = bloxone_ipam_ip_space.test.id
+}
+
+resource "bloxone_ipam_address" "test_next_available" {
+    next_available_id = bloxone_ipam_address_block.test.id
+    space = bloxone_ipam_ip_space.test.id
+    depends_on = [bloxone_ipam_subnet.test]
+}
+`, address, cidr, address)
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+}
+
+func testAccAddressNextAvailableInRange(start, end string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_range" "test" {
+    start = %q
+    end = %q
+    space = bloxone_ipam_ip_space.test.id
+    depends_on = [bloxone_ipam_subnet.test]
+}
+
+resource "bloxone_ipam_address" "test_next_available" {
+    next_available_id = bloxone_ipam_range.test.id
+    space = bloxone_ipam_ip_space.test.id
+}
+`, start, end)
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }

@@ -3,12 +3,12 @@
 page_title: "bloxone_ipam_host Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  The IpamHost object (ipam/host) represents any network connected equipment that is assigned one or more IP Addresses.
 ---
 
 # bloxone_ipam_host (Resource)
 
-
+The IpamHost object (ipam/host) represents any network connected equipment that is assigned one or more IP Addresses.
 
 ## Example Usage
 

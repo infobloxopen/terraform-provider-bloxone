@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_mgmt"
@@ -83,11 +84,14 @@ func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resou
 		ipam.NewSubnetResource,
 		ipam.NewAddressBlockResource,
 		ipam.NewAddressResource,
+		ipam.NewRangeResource,
 
 		infra_provision.NewUIJoinTokenResource,
 
 		infra_mgmt.NewHostsResource,
 		infra_mgmt.NewServicesResource,
+
+		dns_config.NewViewResource,
 	}
 }
 
@@ -98,11 +102,14 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		ipam.NewSubnetDataSource,
 		ipam.NewAddressBlockDataSource,
 		ipam.NewAddressDataSource,
+		ipam.NewRangeDataSource,
 
 		infra_provision.NewUIJoinTokenDataSource,
 
 		infra_mgmt.NewHostsDataSource,
 		infra_mgmt.NewServicesDataSource,
+
+		dns_config.NewViewDataSource,
 	}
 }
 
