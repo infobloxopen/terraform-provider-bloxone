@@ -108,6 +108,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 
 		dns_config.NewViewDataSource,
 		dns_config.NewAuthNsgDataSource,
+		dns_config.NewHostDataSource,
 
 		infra_provision.NewUIJoinTokenDataSource,
 
