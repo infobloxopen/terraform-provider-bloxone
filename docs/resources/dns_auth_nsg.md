@@ -17,7 +17,7 @@ resource "bloxone_dns_auth_nsg" "example" {
   name = "example_dns_auth_nsg"
 
   # Other Optional fields
-  comment = "An example view"
+  comment = "An example auth nsg"
   external_primaries = [
     {
       address = "12.10.2.1",
