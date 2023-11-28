@@ -24,7 +24,7 @@ data "bloxone_dns_hosts" "dns_host_by_name" {
 }
 
 # Get DNS Hosts with the specific tags
-data "bloxone_dns_hosts" "all_dns_hosts_by_tags" {
+data "bloxone_dns_hosts" "all_dns_hosts_by_tag" {
   tag_filters = {
     location = "site1"
   }
@@ -48,8 +48,8 @@ data "bloxone_dns_hosts" "all_dns_hosts_by_tags" {
 
 Optional:
 
-- `associated_server` (Attributes) (see [below for nested schema](#nestedatt--results--associated_server))
-- `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources))
+- `associated_server` (Attributes) Host associated server configuration. (see [below for nested schema](#nestedatt--results--associated_server))
+- `inheritance_sources` (Attributes) Optional. Inheritance configuration. (see [below for nested schema](#nestedatt--results--inheritance_sources))
 - `kerberos_keys` (Attributes List) Optional. _kerberos_keys_ contains a list of keys for GSS-TSIG signed dynamic updates.  Defaults to empty. (see [below for nested schema](#nestedatt--results--kerberos_keys))
 - `server` (String) The resource identifier.
 - `tags` (Map of String) Host tagging specifics.
