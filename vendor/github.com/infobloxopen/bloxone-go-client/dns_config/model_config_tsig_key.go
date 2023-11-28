@@ -24,7 +24,7 @@ type ConfigTSIGKey struct {
 	// Comment for TSIG key.
 	Comment *string `json:"comment,omitempty"`
 	// The resource identifier.
-	Key string `json:"key"`
+	Key *string `json:"key,omitempty"`
 	// TSIG key name, FQDN.
 	Name *string `json:"name,omitempty"`
 	// TSIG key name in punycode.
@@ -37,9 +37,8 @@ type ConfigTSIGKey struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewConfigTSIGKey(key string) *ConfigTSIGKey {
+func NewConfigTSIGKey() *ConfigTSIGKey {
 	this := ConfigTSIGKey{}
-	this.Key = key
 	return &this
 }
 
@@ -115,28 +114,36 @@ func (o *ConfigTSIGKey) SetComment(v string) {
 	o.Comment = &v
 }
 
-// GetKey returns the Key field value
+// GetKey returns the Key field value if set, zero value otherwise.
 func (o *ConfigTSIGKey) GetKey() string {
-	if o == nil {
+	if o == nil || IsNil(o.Key) {
 		var ret string
 		return ret
 	}
-
-	return o.Key
+	return *o.Key
 }
 
-// GetKeyOk returns a tuple with the Key field value
+// GetKeyOk returns a tuple with the Key field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ConfigTSIGKey) GetKeyOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Key) {
 		return nil, false
 	}
-	return &o.Key, true
+	return o.Key, true
 }
 
-// SetKey sets field value
+// HasKey returns a boolean if a field has been set.
+func (o *ConfigTSIGKey) HasKey() bool {
+	if o != nil && !IsNil(o.Key) {
+		return true
+	}
+
+	return false
+}
+
+// SetKey gets a reference to the given string and assigns it to the Key field.
 func (o *ConfigTSIGKey) SetKey(v string) {
-	o.Key = v
+	o.Key = &v
 }
 
 // GetName returns the Name field value if set, zero value otherwise.
@@ -251,7 +258,9 @@ func (o ConfigTSIGKey) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Comment) {
 		toSerialize["comment"] = o.Comment
 	}
-	toSerialize["key"] = o.Key
+	if !IsNil(o.Key) {
+		toSerialize["key"] = o.Key
+	}
 	if !IsNil(o.Name) {
 		toSerialize["name"] = o.Name
 	}
