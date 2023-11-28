@@ -57,13 +57,13 @@ func TestAccHostDataSource_TagFilters(t *testing.T) {
 }
 
 func testAccHostDataSourceConfigFilters() string {
-	return fmt.Sprintf(`
+	return `
 data "bloxone_dns_hosts" "test" {
   filters = {
 	name = "Terraform Provider Acceptance Tests"
   }
 }
-`)
+`
 }
 
 func testAccHostDataSourceConfigTagFilters() string {
