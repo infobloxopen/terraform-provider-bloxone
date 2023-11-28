@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -32,22 +31,22 @@ var ConfigInheritedKerberosKeysAttrTypes = map[string]attr.Type{
 var ConfigInheritedKerberosKeysResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
 		Optional:            true,
-		MarkdownDescription: "Optional. Inheritance setting for a field. Defaults to _inherit_.",
+		MarkdownDescription: `Optional. Inheritance setting for a field. Defaults to _inherit_.`,
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "Human-readable display name for the object referred to by _source_.",
+		MarkdownDescription: `Human-readable display name for the object referred to by _source_.`,
 	},
 	"source": schema.StringAttribute{
 		Optional:            true,
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigKerberosKeyResourceSchemaAttributes,
 		},
 		Computed:            true,
-		MarkdownDescription: "Inherited value.",
+		MarkdownDescription: `Inherited value.`,
 	},
 }
 

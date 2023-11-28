@@ -6,9 +6,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -35,27 +35,27 @@ var ConfigKerberosKeyAttrTypes = map[string]attr.Type{
 var ConfigKerberosKeyResourceSchemaAttributes = map[string]schema.Attribute{
 	"algorithm": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "Encryption algorithm of the key in accordance with RFC 3961.",
+		MarkdownDescription: `Encryption algorithm of the key in accordance with RFC 3961.`,
 	},
 	"domain": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "Kerberos realm of the principal.",
+		MarkdownDescription: `Kerberos realm of the principal.`,
 	},
 	"key": schema.StringAttribute{
 		Required:            true,
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: `The resource identifier.`,
 	},
 	"principal": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "Kerberos principal associated with key.",
+		MarkdownDescription: `Kerberos principal associated with key.`,
 	},
 	"uploaded_at": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "Upload time for the key.",
+		MarkdownDescription: `Upload time for the key.`,
 	},
 	"version": schema.Int64Attribute{
 		Computed:            true,
-		MarkdownDescription: "The version number (KVNO) of the key.",
+		MarkdownDescription: `The version number (KVNO) of the key.`,
 	},
 }
 
