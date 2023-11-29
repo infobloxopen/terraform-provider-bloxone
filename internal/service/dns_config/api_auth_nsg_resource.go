@@ -31,7 +31,7 @@ func (r *AuthNsgResource) Metadata(ctx context.Context, req resource.MetadataReq
 
 func (r *AuthNsgResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: `This object (dns/auth_zone) represents an authoritative zone.`,
 		Attributes:          ConfigAuthNSGResourceSchemaAttributes,
 	}
 }
