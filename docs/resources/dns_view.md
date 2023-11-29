@@ -3,12 +3,12 @@
 page_title: "bloxone_dns_view Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  Use this method to create a View object. Named collection of DNS View settings.
 ---
 
 # bloxone_dns_view (Resource)
 
-
+Use this method to create a View object. Named collection of DNS View settings.
 
 ## Example Usage
 
