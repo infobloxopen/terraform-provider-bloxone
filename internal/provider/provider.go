@@ -89,13 +89,12 @@ func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resou
 
 		dns_config.NewViewResource,
 		dns_config.NewAuthNsgResource,
+		dns_config.NewForwardNsgResource,
 
 		infra_provision.NewUIJoinTokenResource,
 
 		infra_mgmt.NewHostsResource,
 		infra_mgmt.NewServicesResource,
-
-		dns_config.NewForwardNsgResource,
 	}
 }
 
@@ -111,13 +110,12 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		dns_config.NewViewDataSource,
 		dns_config.NewAuthNsgDataSource,
 		dns_config.NewHostDataSource,
+		dns_config.NewForwardNsgDataSource,
 
 		infra_provision.NewUIJoinTokenDataSource,
 
 		infra_mgmt.NewHostsDataSource,
 		infra_mgmt.NewServicesDataSource,
-
-		dns_config.NewForwardNsgDataSource,
 	}
 }
 
