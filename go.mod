@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/terraform-plugin-framework-validators v0.12.0
 	github.com/hashicorp/terraform-plugin-go v0.19.0
 	github.com/hashicorp/terraform-plugin-testing v1.5.1
-	github.com/infobloxopen/bloxone-go-client v0.0.0-20231121183431-b6d876cadf41
+	github.com/infobloxopen/bloxone-go-client v0.0.0-20231125034329-c1862bd3c2fc
 )
 
 require (

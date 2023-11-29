@@ -14,6 +14,11 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
+/* TODO: Add tests for the following
+   - hosts
+   - internal forwarders
+*/
+
 func TestAccForwardNsgResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_nsg.test"
 	var v dns_config.ConfigForwardNSG
@@ -24,14 +29,15 @@ func TestAccForwardNsgResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardNsgBasicConfig("NAME_REPLACE_ME"),
+				Config: testAccForwardNsgBasicConfig("terraform-acc-test.com"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
 					// TODO: check and validate these
-					resource.TestCheckResourceAttr(resourceName, "name", "NAME_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "name", "terraform-acc-test.com"),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					// Test fields with default value
+					resource.TestCheckResourceAttr(resourceName, "forwarders_only", "false"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -49,7 +55,7 @@ func TestAccForwardNsgResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckForwardNsgDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccForwardNsgBasicConfig("NAME_REPLACE_ME"),
+				Config: testAccForwardNsgBasicConfig("terraform-acc-test.com"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
 					testAccCheckForwardNsgDisappears(context.Background(), &v),
@@ -70,18 +76,18 @@ func TestAccForwardNsgResource_Comment(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardNsgComment("NAME_REPLACE_ME", "COMMENT_REPLACE_ME"),
+				Config: testAccForwardNsgComment("terraform-acc-test.com", "This Forward zone is created through Terraform"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "comment", "This Forward zone is created through Terraform"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccForwardNsgComment("NAME_REPLACE_ME", "COMMENT_UPDATE_REPLACE_ME"),
+				Config: testAccForwardNsgComment("terraform-acc-test.com", "This Forward zone was created through Terraform"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "comment", "This Forward zone was created through Terraform"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -99,18 +105,22 @@ func TestAccForwardNsgResource_ExternalForwarders(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardNsgExternalForwarders("NAME_REPLACE_ME", "EXTERNAL_FORWARDERS_REPLACE_ME"),
+				Config: testAccForwardNsgExternalForwarders("terraform-acc-test.com", "192.168.1.0", "terraform-acc-forward-ext."),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "external_forwarders", "EXTERNAL_FORWARDERS_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "external_forwarders.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "external_forwarders.0.fqdn", "terraform-acc-forward-ext."),
+					resource.TestCheckResourceAttr(resourceName, "external_forwarders.0.address", "192.168.1.0"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccForwardNsgExternalForwarders("NAME_REPLACE_ME", "EXTERNAL_FORWARDERS_UPDATE_REPLACE_ME"),
+				Config: testAccForwardNsgExternalForwarders("terraform-acc-test.com", "192.168.1.1", "terraform-acc-forward-ext-1."),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "external_forwarders", "EXTERNAL_FORWARDERS_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "external_forwarders.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "external_forwarders.0.fqdn", "terraform-acc-forward-ext-1."),
+					resource.TestCheckResourceAttr(resourceName, "external_forwarders.0.address", "192.168.1.1"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -128,76 +138,18 @@ func TestAccForwardNsgResource_ForwardersOnly(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardNsgForwardersOnly("NAME_REPLACE_ME", "FORWARDERS_ONLY_REPLACE_ME"),
+				Config: testAccForwardNsgForwardersOnly("terraform-acc-test.com", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "forwarders_only", "FORWARDERS_ONLY_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "forwarders_only", "true"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccForwardNsgForwardersOnly("NAME_REPLACE_ME", "FORWARDERS_ONLY_UPDATE_REPLACE_ME"),
+				Config: testAccForwardNsgForwardersOnly("terraform-acc-test.com", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "forwarders_only", "FORWARDERS_ONLY_UPDATE_REPLACE_ME"),
-				),
-			},
-			// Delete testing automatically occurs in TestCase
-		},
-	})
-}
-
-func TestAccForwardNsgResource_Hosts(t *testing.T) {
-	var resourceName = "bloxone_dns_forward_nsg.test_hosts"
-	var v dns_config.ConfigForwardNSG
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// Create and Read
-			{
-				Config: testAccForwardNsgHosts("NAME_REPLACE_ME", "HOSTS_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "hosts", "HOSTS_REPLACE_ME"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccForwardNsgHosts("NAME_REPLACE_ME", "HOSTS_UPDATE_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "hosts", "HOSTS_UPDATE_REPLACE_ME"),
-				),
-			},
-			// Delete testing automatically occurs in TestCase
-		},
-	})
-}
-
-func TestAccForwardNsgResource_InternalForwarders(t *testing.T) {
-	var resourceName = "bloxone_dns_forward_nsg.test_internal_forwarders"
-	var v dns_config.ConfigForwardNSG
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// Create and Read
-			{
-				Config: testAccForwardNsgInternalForwarders("NAME_REPLACE_ME", "INTERNAL_FORWARDERS_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "internal_forwarders", "INTERNAL_FORWARDERS_REPLACE_ME"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccForwardNsgInternalForwarders("NAME_REPLACE_ME", "INTERNAL_FORWARDERS_UPDATE_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "internal_forwarders", "INTERNAL_FORWARDERS_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "forwarders_only", "false"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -215,18 +167,18 @@ func TestAccForwardNsgResource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardNsgName("NAME_REPLACE_ME"),
+				Config: testAccForwardNsgName("terraform-acc-test.com"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "NAME_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "name", "terraform-acc-test.com"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccForwardNsgName("NAME_REPLACE_ME"),
+				Config: testAccForwardNsgName("test.change.com"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "NAME_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "name", "test.change.com"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -244,18 +196,20 @@ func TestAccForwardNsgResource_Nsgs(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardNsgNsgs("NAME_REPLACE_ME", "NSGS_REPLACE_ME"),
+				Config: testAccForwardNsgNsgs("terraform-acc-test-1.com", "test-nsg"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "nsgs", "NSGS_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "nsgs.#", "1"),
+					resource.TestCheckResourceAttrPair(resourceName, "nsgs.0", "bloxone_dns_forward_nsg.nsg", "id"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccForwardNsgNsgs("NAME_REPLACE_ME", "NSGS_UPDATE_REPLACE_ME"),
+				Config: testAccForwardNsgNsgs("terraform-acc-test-1.com", "test-nsg-1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "nsgs", "NSGS_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "nsgs.#", "1"),
+					resource.TestCheckResourceAttrPair(resourceName, "nsgs.0", "bloxone_dns_forward_nsg.nsg", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -273,18 +227,26 @@ func TestAccForwardNsgResource_Tags(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardNsgTags("NAME_REPLACE_ME", "TAGS_REPLACE_ME"),
+				Config: testAccForwardNsgTags("terraform-acc-test.com", map[string]string{
+					"tag1": "value1",
+					"tag2": "value2",
+				}),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "tags", "TAGS_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccForwardNsgTags("NAME_REPLACE_ME", "TAGS_UPDATE_REPLACE_ME"),
+				Config: testAccForwardNsgTags("terraform-acc-test.com", map[string]string{
+					"tag2": "value2changed",
+					"tag3": "value3",
+				}),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "tags", "TAGS_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2changed"),
+					resource.TestCheckResourceAttr(resourceName, "tags.tag3", "value3"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -355,7 +317,7 @@ resource "bloxone_dns_forward_nsg" "test" {
 `, name)
 }
 
-func testAccForwardNsgComment(name string, comment string) string {
+func testAccForwardNsgComment(name, comment string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_forward_nsg" "test_comment" {
     name = %q
@@ -364,40 +326,25 @@ resource "bloxone_dns_forward_nsg" "test_comment" {
 `, name, comment)
 }
 
-func testAccForwardNsgExternalForwarders(name string, externalForwarders string) string {
+func testAccForwardNsgExternalForwarders(name, address, fqdn string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_forward_nsg" "test_external_forwarders" {
     name = %q
-    external_forwarders = %q
+    external_forwarders = [{
+		address = %q
+		fqdn = %q
+    }]
 }
-`, name, externalForwarders)
+`, name, address, fqdn)
 }
 
-func testAccForwardNsgForwardersOnly(name string, forwardersOnly string) string {
+func testAccForwardNsgForwardersOnly(name, forwardersOnly string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_forward_nsg" "test_forwarders_only" {
     name = %q
     forwarders_only = %q
 }
 `, name, forwardersOnly)
-}
-
-func testAccForwardNsgHosts(name string, hosts string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_forward_nsg" "test_hosts" {
-    name = %q
-    hosts = %q
-}
-`, name, hosts)
-}
-
-func testAccForwardNsgInternalForwarders(name string, internalForwarders string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_forward_nsg" "test_internal_forwarders" {
-    name = %q
-    internal_forwarders = %q
-}
-`, name, internalForwarders)
 }
 
 func testAccForwardNsgName(name string) string {
@@ -408,20 +355,32 @@ resource "bloxone_dns_forward_nsg" "test_name" {
 `, name)
 }
 
-func testAccForwardNsgNsgs(name string, nsgs string) string {
+func testAccForwardNsgNsgs(name, nsgs string) string {
 	return fmt.Sprintf(`
-resource "bloxone_dns_forward_nsg" "test_nsgs" {
+resource "bloxone_dns_forward_nsg" "nsg" {
     name = %q
-    nsgs = %q
-}
-`, name, nsgs)
 }
 
-func testAccForwardNsgTags(name string, tags string) string {
+resource "bloxone_dns_forward_nsg" "test_nsgs" {
+    name = %q
+    nsgs = [bloxone_dns_forward_nsg.nsg.id]
+}
+`, nsgs, name)
+}
+
+func testAccForwardNsgTags(name string, tags map[string]string) string {
+	tagsStr := "{\n"
+	for k, v := range tags {
+		tagsStr += fmt.Sprintf(`
+		%s = %q
+`, k, v)
+	}
+	tagsStr += "\t}"
+
 	return fmt.Sprintf(`
 resource "bloxone_dns_forward_nsg" "test_tags" {
     name = %q
-    tags = %q
+    tags = %s
 }
-`, name, tags)
+`, name, tagsStr)
 }

@@ -27,7 +27,7 @@ type ForwardNsgDataSource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (d *ForwardNsgDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *ForwardNsgDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + "dns_forward_nsgs"
 }
 
@@ -44,7 +44,7 @@ func (m *ConfigForwardNSGModelWithFilter) FlattenResults(ctx context.Context, fr
 	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigForwardNSGAttrTypes, diags, FlattenConfigForwardNSG)
 }
 
-func (d *ForwardNsgDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *ForwardNsgDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "",
 		Attributes: map[string]schema.Attribute{
@@ -68,7 +68,7 @@ func (d *ForwardNsgDataSource) Schema(ctx context.Context, req datasource.Schema
 	}
 }
 
-func (d *ForwardNsgDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (d *ForwardNsgDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return

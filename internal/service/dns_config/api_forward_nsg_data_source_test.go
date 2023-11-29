@@ -22,7 +22,7 @@ func TestAccForwardNsgDataSource_Filters(t *testing.T) {
 		CheckDestroy:             testAccCheckForwardNsgDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccForwardNsgDataSourceConfigFilters("NAME_REPLACE_ME"),
+				Config: testAccForwardNsgDataSourceConfigFilters("test.com"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
@@ -43,7 +43,7 @@ func TestAccForwardNsgDataSource_TagFilters(t *testing.T) {
 		CheckDestroy:             testAccCheckForwardNsgDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccForwardNsgDataSourceConfigTagFilters("NAME_REPLACE_ME", "value1"),
+				Config: testAccForwardNsgDataSourceConfigTagFilters("test.tag.com", "value1"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckForwardNsgExists(context.Background(), resourceName, &v),

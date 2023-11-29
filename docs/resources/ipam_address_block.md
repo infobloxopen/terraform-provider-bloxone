@@ -3,12 +3,12 @@
 page_title: "bloxone_ipam_address_block Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  The AddressBlock object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
 ---
 
 # bloxone_ipam_address_block (Resource)
 
-
+The AddressBlock object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
 
 ## Example Usage
 

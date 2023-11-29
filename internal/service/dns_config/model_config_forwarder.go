@@ -29,15 +29,15 @@ var ConfigForwarderAttrTypes = map[string]attr.Type{
 var ConfigForwarderResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
 		Required:            true,
-		MarkdownDescription: "Server IP address.",
+		MarkdownDescription: `Server IP address.`,
 	},
 	"fqdn": schema.StringAttribute{
 		Required:            true,
-		MarkdownDescription: "Server FQDN.",
+		MarkdownDescription: `Server FQDN.`,
 	},
 	"protocol_fqdn": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "Server FQDN in punycode.",
+		MarkdownDescription: `Server FQDN in punycode.`,
 	},
 }
 
