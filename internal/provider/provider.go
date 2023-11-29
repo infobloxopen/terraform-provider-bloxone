@@ -89,6 +89,7 @@ func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resou
 
 		dns_config.NewViewResource,
 		dns_config.NewAuthNsgResource,
+		dns_config.NewDelegationResource,
 
 		infra_provision.NewUIJoinTokenResource,
 
@@ -109,6 +110,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		dns_config.NewViewDataSource,
 		dns_config.NewAuthNsgDataSource,
 		dns_config.NewHostDataSource,
+		dns_config.NewDelegationDataSource,
 
 		infra_provision.NewUIJoinTokenDataSource,
 
