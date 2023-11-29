@@ -54,7 +54,7 @@ func (d *AuthZoneDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Optional:    true,
 			},
 			"tag_filters": schema.MapAttribute{
-				Description: "Tag Filters are used to filter by tags return a more specific list of results. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
+				Description: "Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
 				ElementType: types.StringType,
 				Optional:    true,
 			},

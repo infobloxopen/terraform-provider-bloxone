@@ -22,7 +22,7 @@ import (
 // - ACL Type - ACL
 // - internal_secondaries
 // - nsgs
-// - zone_authority : Mname and rname provide inconsistent result after apply
+// - zone_authority : Mname and rname provide inconsistent results after apply
 // - view
 
 func TestAccAuthZoneResource_basic(t *testing.T) {
@@ -38,7 +38,6 @@ func TestAccAuthZoneResource_basic(t *testing.T) {
 				Config: testAccAuthZoneBasicConfig("tf-acc-test.com.", "cloud"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
-					// TODO: check and validate these
 					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-acc-test.com."),
 					resource.TestCheckResourceAttr(resourceName, "primary_type", "cloud"),
 					// Test Read Only fields
