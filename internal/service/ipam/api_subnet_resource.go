@@ -31,7 +31,7 @@ func (r *SubnetResource) Metadata(ctx context.Context, req resource.MetadataRequ
 
 func (r *SubnetResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "The Subnet object represents a set of addresses from which addresses are assigned to network equipment interfaces.",
 		Attributes:          IpamsvcSubnetResourceSchemaAttributes,
 	}
 }

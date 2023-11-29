@@ -2,11 +2,10 @@ package dns_config
 
 import (
 	"context"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
-
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -56,7 +55,7 @@ var ConfigExternalPrimaryResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		Computed:            true,
 		Default:             booldefault.StaticBool(false),
-		MarkdownDescription: `Optional. If enabled, secondaries will use the configured TSIG key when requesting a zone transfer from this primary.`,
+		MarkdownDescription: "Optional. If enabled, secondaries will use the configured TSIG key when requesting a zone transfer from this primary.",
 	},
 	"tsig_key": schema.SingleNestedAttribute{
 		Attributes: ConfigTSIGKeyResourceSchemaAttributes,
@@ -64,7 +63,7 @@ var ConfigExternalPrimaryResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"type": schema.StringAttribute{
 		Required:            true,
-		MarkdownDescription: `Allowed values: * _nsg_, * _primary_.`,
+		MarkdownDescription: "Allowed values: * _nsg_, * _primary_.",
 	},
 }
 
