@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_mgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_provision"
@@ -89,6 +88,7 @@ func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resou
 
 		dns_config.NewViewResource,
 		dns_config.NewAuthNsgResource,
+		dns_config.NewAuthZoneResource,
 		dns_config.NewDelegationResource,
 
 		infra_provision.NewUIJoinTokenResource,
@@ -110,6 +110,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		dns_config.NewViewDataSource,
 		dns_config.NewAuthNsgDataSource,
 		dns_config.NewHostDataSource,
+		dns_config.NewAuthZoneDataSource,
 		dns_config.NewDelegationDataSource,
 
 		infra_provision.NewUIJoinTokenDataSource,

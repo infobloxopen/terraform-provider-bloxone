@@ -38,19 +38,19 @@ var ConfigExternalPrimaryAttrTypes = map[string]attr.Type{
 var ConfigExternalPrimaryResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
 		Optional:            true,
-		MarkdownDescription: "Optional. Required only if _type_ is _server_. IP Address of nameserver.",
+		MarkdownDescription: `Optional. Required only if _type_ is _server_. IP Address of nameserver.`,
 	},
 	"fqdn": schema.StringAttribute{
 		Optional:            true,
-		MarkdownDescription: "Optional. Required only if _type_ is _server_. FQDN of nameserver.",
+		MarkdownDescription: `Optional. Required only if _type_ is _server_. FQDN of nameserver.`,
 	},
 	"nsg": schema.StringAttribute{
 		Optional:            true,
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: `The resource identifier.`,
 	},
 	"protocol_fqdn": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "FQDN of nameserver in punycode.",
+		MarkdownDescription: `FQDN of nameserver in punycode.`,
 	},
 	"tsig_enabled": schema.BoolAttribute{
 		Optional:            true,

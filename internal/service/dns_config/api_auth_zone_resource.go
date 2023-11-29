@@ -13,30 +13,30 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &DelegationResource{}
-var _ resource.ResourceWithImportState = &DelegationResource{}
+var _ resource.Resource = &AuthZoneResource{}
+var _ resource.ResourceWithImportState = &AuthZoneResource{}
 
-func NewDelegationResource() resource.Resource {
-	return &DelegationResource{}
+func NewAuthZoneResource() resource.Resource {
+	return &AuthZoneResource{}
 }
 
-// DelegationResource defines the resource implementation.
-type DelegationResource struct {
+// AuthZoneResource defines the resource implementation.
+type AuthZoneResource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (r *DelegationResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "dns_delegation"
+func (r *AuthZoneResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "dns_auth_zone"
 }
 
-func (r *DelegationResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *AuthZoneResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: `This object (dns/delegation) represents a zone delegation.`,
-		Attributes:          ConfigDelegationResourceSchemaAttributes,
+		MarkdownDescription: `This object (dns/auth_zone) represents an authoritative zone.`,
+		Attributes:          ConfigAuthZoneResourceSchemaAttributes,
 	}
 }
 
-func (r *DelegationResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *AuthZoneResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -56,8 +56,8 @@ func (r *DelegationResource) Configure(ctx context.Context, req resource.Configu
 	r.client = client
 }
 
-func (r *DelegationResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data ConfigDelegationModel
+func (r *AuthZoneResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data ConfigAuthZoneModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -67,12 +67,12 @@ func (r *DelegationResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
-		DelegationAPI.
-		DelegationCreate(ctx).
+		AuthZoneAPI.
+		AuthZoneCreate(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Delegation, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create AuthZone, got error: %s", err))
 		return
 	}
 
@@ -83,8 +83,8 @@ func (r *DelegationResource) Create(ctx context.Context, req resource.CreateRequ
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *DelegationResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data ConfigDelegationModel
+func (r *AuthZoneResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data ConfigAuthZoneModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -94,15 +94,15 @@ func (r *DelegationResource) Read(ctx context.Context, req resource.ReadRequest,
 	}
 
 	apiRes, httpRes, err := r.client.DNSConfigurationAPI.
-		DelegationAPI.
-		DelegationRead(ctx, data.Id.ValueString()).
+		AuthZoneAPI.
+		AuthZoneRead(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			resp.State.RemoveResource(ctx)
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Delegation, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read AuthZone, got error: %s", err))
 		return
 	}
 
@@ -113,8 +113,8 @@ func (r *DelegationResource) Read(ctx context.Context, req resource.ReadRequest,
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *DelegationResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data ConfigDelegationModel
+func (r *AuthZoneResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var data ConfigAuthZoneModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -124,12 +124,12 @@ func (r *DelegationResource) Update(ctx context.Context, req resource.UpdateRequ
 	}
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
-		DelegationAPI.
-		DelegationUpdate(ctx, data.Id.ValueString()).
+		AuthZoneAPI.
+		AuthZoneUpdate(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Delegation, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update AuthZone, got error: %s", err))
 		return
 	}
 
@@ -140,8 +140,8 @@ func (r *DelegationResource) Update(ctx context.Context, req resource.UpdateRequ
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *DelegationResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data ConfigDelegationModel
+func (r *AuthZoneResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data ConfigAuthZoneModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -151,18 +151,18 @@ func (r *DelegationResource) Delete(ctx context.Context, req resource.DeleteRequ
 	}
 
 	httpRes, err := r.client.DNSConfigurationAPI.
-		DelegationAPI.
-		DelegationDelete(ctx, data.Id.ValueString()).
+		AuthZoneAPI.
+		AuthZoneDelete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete Delegation, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete AuthZone, got error: %s", err))
 		return
 	}
 }
 
-func (r *DelegationResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *AuthZoneResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

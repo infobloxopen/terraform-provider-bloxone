@@ -2,6 +2,9 @@ package dns_config
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -52,18 +55,26 @@ var ConfigDelegationResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"disabled": schema.BoolAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: "Optional. _true_ to disable object. A disabled object is effectively non-existent when generating resource records.",
 	},
 	"fqdn": schema.StringAttribute{
-		Required:            true,
+		Required: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "Delegation FQDN. The FQDN supplied at creation will be converted to canonical form.  Read-only after creation.",
 	},
 	"id": schema.StringAttribute{
-		Computed:            true,
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+		},
 		MarkdownDescription: "The resource identifier.",
 	},
 	"parent": schema.StringAttribute{
-		Required:            true,
+		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 	"protocol_fqdn": schema.StringAttribute{
@@ -76,7 +87,10 @@ var ConfigDelegationResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Tagging specifics.",
 	},
 	"view": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "The resource identifier.",
 	},
 }
@@ -90,10 +104,10 @@ func ExpandConfigDelegation(ctx context.Context, o types.Object, diags *diag.Dia
 	if diags.HasError() {
 		return nil
 	}
-	return m.Expand(ctx, diags)
+	return m.Expand(ctx, diags, true)
 }
 
-func (m *ConfigDelegationModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigDelegation {
+func (m *ConfigDelegationModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *dns_config.ConfigDelegation {
 	if m == nil {
 		return nil
 	}
@@ -101,10 +115,12 @@ func (m *ConfigDelegationModel) Expand(ctx context.Context, diags *diag.Diagnost
 		Comment:           flex.ExpandStringPointer(m.Comment),
 		DelegationServers: flex.ExpandFrameworkListNestedBlock(ctx, m.DelegationServers, diags, ExpandConfigDelegationServer),
 		Disabled:          flex.ExpandBoolPointer(m.Disabled),
-		Fqdn:              flex.ExpandStringPointer(m.Fqdn),
 		Parent:            flex.ExpandStringPointer(m.Parent),
 		Tags:              flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
-		View:              flex.ExpandStringPointer(m.View),
+	}
+	if isCreate {
+		to.Fqdn = flex.ExpandStringPointer(m.Fqdn)
+		to.View = flex.ExpandStringPointer(m.View)
 	}
 	return to
 }

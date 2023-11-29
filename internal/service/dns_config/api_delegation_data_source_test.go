@@ -22,7 +22,7 @@ func TestAccDelegationDataSource_Filters(t *testing.T) {
 		CheckDestroy:             testAccCheckDelegationDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDelegationDataSourceConfigFilters("test.com"),
+				Config: testAccDelegationDataSourceConfigFilters("test.tf-acc-test.com."),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckDelegationExists(context.Background(), resourceName, &v),
@@ -43,7 +43,7 @@ func TestAccDelegationDataSource_TagFilters(t *testing.T) {
 		CheckDestroy:             testAccCheckDelegationDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDelegationDataSourceConfigTagFilters("test.com", "value1"),
+				Config: testAccDelegationDataSourceConfigTagFilters("test.tf-acc-test.com.", "value1"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckDelegationExists(context.Background(), resourceName, &v),
@@ -72,12 +72,25 @@ func testAccCheckDelegationResourceAttrPair(resourceName, dataSourceName string)
 
 func testAccDelegationDataSourceConfigFilters(fqdn string) string {
 	return fmt.Sprintf(`
+resource "bloxone_dns_view" "test" {
+    name = "example-view"
+}
+
+resource "bloxone_dns_auth_zone" test{
+  fqdn         = "tf-acc-test.com."
+  primary_type = "cloud"
+  view = bloxone_dns_view.test.id
+}
+
 resource "bloxone_dns_delegation" "test" {
+  // test.tf-acc-test.com.
   fqdn = %q
   delegation_servers = [{
 	address = "12.0.0.0"
-	fqdn = "test-delegation.com"
+	fqdn = "ns1.com."
   }]
+  view = bloxone_dns_view.test.id
+  depends_on = [bloxone_dns_view.test, bloxone_dns_auth_zone.test]
 }
 
 data "bloxone_dns_delegations" "test" {
@@ -90,18 +103,28 @@ data "bloxone_dns_delegations" "test" {
 
 func testAccDelegationDataSourceConfigTagFilters(fqdn string, tagValue string) string {
 	return fmt.Sprintf(`
-resource "bloxone_dns_auth_zone"
+resource "bloxone_dns_view" "test" {
+    name = "example-view"
+}
+
+resource "bloxone_dns_auth_zone" test {
+  fqdn         = "tf-acc-test.com."
+  primary_type = "cloud"
+  view = bloxone_dns_view.test.id
+  depends_on = [bloxone_dns_view.test]
+}
 
 resource "bloxone_dns_delegation" "test" {
   fqdn = %q
-  parent = 
   delegation_servers = [{
 	address = "12.0.0.0"
-	fqdn = "test-delegation.com"
+	fqdn = "test-delegation.com."
   }]
   tags = {
 	tag1 = %q
   }
+  view = bloxone_dns_view.test.id
+  depends_on = [bloxone_dns_view.test, bloxone_dns_auth_zone.test]
 }
 
 data "bloxone_dns_delegations" "test" {

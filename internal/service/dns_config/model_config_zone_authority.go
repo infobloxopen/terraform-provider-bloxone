@@ -51,6 +51,7 @@ var ConfigZoneAuthorityResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"mname": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `Defaults to empty.`,
 	},
 	"negative_ttl": schema.Int64Attribute{
@@ -75,6 +76,7 @@ var ConfigZoneAuthorityResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"rname": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `Optional. ZoneAuthority rname.  Defaults to empty.`,
 	},
 	"use_default_mname": schema.BoolAttribute{
