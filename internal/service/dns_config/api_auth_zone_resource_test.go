@@ -362,6 +362,35 @@ func TestAccAuthZoneResource_Notify(t *testing.T) {
 	})
 }
 
+func TestAccAuthZoneResource_Nsgs(t *testing.T) {
+	var resourceName = "bloxone_dns_auth_zone.test_nsgs"
+	var v dns_config.ConfigAuthZone
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAuthZoneNsgs("tf-acc-test.com.", "cloud", "bloxone_dns_auth_nsg.one"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrPair(resourceName, "nsgs.0", "bloxone_dns_auth_nsg.one", "id"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAuthZoneNsgs("tf-acc-test.com.", "cloud", "bloxone_dns_auth_nsg.two"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrPair(resourceName, "nsgs.0", "bloxone_dns_auth_nsg.two", "id"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccAuthZoneResource_QueryAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_query_acl"
 	var v dns_config.ConfigAuthZone
@@ -514,6 +543,37 @@ func TestAccAuthZoneResource_UseForwardersForSubzones(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "use_forwarders_for_subzones", "false"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccAuthZoneResource_View(t *testing.T) {
+	var resourceName = "bloxone_dns_auth_zone.test_view"
+	var v1 dns_config.ConfigAuthZone
+	var v2 dns_config.ConfigAuthZone
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAuthZoneView("tf-acc-test.com.", "cloud", "bloxone_dns_view.one"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttrPair(resourceName, "view", "bloxone_dns_view.one", "id"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAuthZoneView("tf-acc-test.com.", "cloud", "bloxone_dns_view.two"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneDestroy(context.Background(), &v1),
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v2),
+					resource.TestCheckResourceAttrPair(resourceName, "view", "bloxone_dns_view.two", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -717,6 +777,24 @@ resource "bloxone_dns_auth_zone" "test_notify" {
 `, fqdn, primaryType, notify)
 }
 
+func testAccAuthZoneNsgs(fqdn, primaryType, nsgs string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_auth_nsg" "one"{
+	name = %q
+}
+
+resource "bloxone_dns_auth_nsg" "two"{
+	name = %q
+}
+
+resource "bloxone_dns_auth_zone" "test_nsgs" {
+	fqdn = %q
+    primary_type = %q
+    nsgs = [%s.id]
+}
+`, acctest.RandomNameWithPrefix("auth-nsg"), acctest.RandomNameWithPrefix("auth-nsg"), fqdn, primaryType, nsgs)
+}
+
 func testAccAuthZoneAclIP(fqdn, primaryType, aclFieldName, access, address string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_auth_zone" "test_%[3]s" {
@@ -774,6 +852,24 @@ resource "bloxone_dns_auth_zone" "test_use_forwarders_for_subzones" {
     use_forwarders_for_subzones = %q
 }
 `, fqdn, primaryType, useForwardersForSubzones)
+}
+
+func testAccAuthZoneView(fqdn, primaryType, view string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_view" "one" {
+	name = %q
+}
+
+resource "bloxone_dns_view" "two" {
+	name = %q
+}
+
+resource "bloxone_dns_auth_zone" "test_view" {
+	fqdn = %q
+    primary_type = %q
+    view = %s.id
+}
+`, acctest.RandomNameWithPrefix("view"), acctest.RandomNameWithPrefix("view"), fqdn, primaryType, view)
 }
 
 func testAccAuthZoneZoneAuthority(fqdn string, primaryType string, defaultTTL int64, expire int64, mName string, negativeTTL int64,

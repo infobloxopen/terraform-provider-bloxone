@@ -16,15 +16,15 @@ description: |-
 # Get auth zones filtered by an attribute
 data "bloxone_dns_auth_zone" "example_by_attribute" {
   filters = {
-    "fqdn"         = "tf-acc-test.com."
-    "primary_type" = "cloud"
+    fqdn         = "tf-acc-test.com."
+    primary_type = "cloud"
   }
 }
 
 # Get auth zones filtered by tag
 data "bloxone_dns_auth_zone" "example_by_tag" {
   tag_filters = {
-    "region" = "eu"
+    region = "eu"
   }
 }
 
@@ -38,7 +38,7 @@ data "bloxone_dns_auth_zone" "example_all" {}
 ### Optional
 
 - `filters` (Map of String) Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
-- `tag_filters` (Map of String) Tag Filters are used to filter by tags return a more specific list of results. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
+- `tag_filters` (Map of String) Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
 
 ### Read-Only
 
@@ -107,16 +107,13 @@ Read-Only:
 <a id="nestedatt--results--external_primaries--tsig_key"></a>
 ### Nested Schema for `results.external_primaries.tsig_key`
 
-Required:
-
-- `key` (String) The resource identifier.
-
 Optional:
 
 - `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
 - `comment` (String) Comment for TSIG key.
+- `key` (String) The resource identifier.
 - `name` (String) TSIG key name, FQDN.
-- `secret` (String) TSIG key secret, base64 string.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
@@ -145,16 +142,13 @@ Read-Only:
 <a id="nestedatt--results--external_secondaries--tsig_key"></a>
 ### Nested Schema for `results.external_secondaries.tsig_key`
 
-Required:
-
-- `key` (String) The resource identifier.
-
 Optional:
 
 - `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
 - `comment` (String) Comment for TSIG key.
+- `key` (String) The resource identifier.
 - `name` (String) TSIG key name, FQDN.
-- `secret` (String) TSIG key secret, base64 string.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
@@ -233,16 +227,13 @@ Optional:
 <a id="nestedatt--results--inheritance_sources--query_acl--value--tsig_key"></a>
 ### Nested Schema for `results.inheritance_sources.query_acl.value.tsig_key`
 
-Required:
-
-- `key` (String) The resource identifier.
-
 Optional:
 
 - `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
 - `comment` (String) Comment for TSIG key.
+- `key` (String) The resource identifier.
 - `name` (String) TSIG key name, FQDN.
-- `secret` (String) TSIG key secret, base64 string.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
@@ -281,16 +272,13 @@ Optional:
 <a id="nestedatt--results--inheritance_sources--transfer_acl--value--tsig_key"></a>
 ### Nested Schema for `results.inheritance_sources.transfer_acl.value.tsig_key`
 
-Required:
-
-- `key` (String) The resource identifier.
-
 Optional:
 
 - `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
 - `comment` (String) Comment for TSIG key.
+- `key` (String) The resource identifier.
 - `name` (String) TSIG key name, FQDN.
-- `secret` (String) TSIG key secret, base64 string.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
@@ -329,16 +317,13 @@ Optional:
 <a id="nestedatt--results--inheritance_sources--update_acl--value--tsig_key"></a>
 ### Nested Schema for `results.inheritance_sources.update_acl.value.tsig_key`
 
-Required:
-
-- `key` (String) The resource identifier.
-
 Optional:
 
 - `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
 - `comment` (String) Comment for TSIG key.
+- `key` (String) The resource identifier.
 - `name` (String) TSIG key name, FQDN.
-- `secret` (String) TSIG key secret, base64 string.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
@@ -527,16 +512,13 @@ Optional:
 <a id="nestedatt--results--query_acl--tsig_key"></a>
 ### Nested Schema for `results.query_acl.tsig_key`
 
-Required:
-
-- `key` (String) The resource identifier.
-
 Optional:
 
 - `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
 - `comment` (String) Comment for TSIG key.
+- `key` (String) The resource identifier.
 - `name` (String) TSIG key name, FQDN.
-- `secret` (String) TSIG key secret, base64 string.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
@@ -561,16 +543,13 @@ Optional:
 <a id="nestedatt--results--transfer_acl--tsig_key"></a>
 ### Nested Schema for `results.transfer_acl.tsig_key`
 
-Required:
-
-- `key` (String) The resource identifier.
-
 Optional:
 
 - `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
 - `comment` (String) Comment for TSIG key.
+- `key` (String) The resource identifier.
 - `name` (String) TSIG key name, FQDN.
-- `secret` (String) TSIG key secret, base64 string.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
@@ -595,16 +574,13 @@ Optional:
 <a id="nestedatt--results--update_acl--tsig_key"></a>
 ### Nested Schema for `results.update_acl.tsig_key`
 
-Required:
-
-- `key` (String) The resource identifier.
-
 Optional:
 
 - `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
 - `comment` (String) Comment for TSIG key.
+- `key` (String) The resource identifier.
 - `name` (String) TSIG key name, FQDN.
-- `secret` (String) TSIG key secret, base64 string.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
