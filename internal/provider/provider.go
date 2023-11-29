@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_mgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_provision"
@@ -87,13 +86,15 @@ func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resou
 		ipam.NewAddressResource,
 		ipam.NewRangeResource,
 
-		dns_config.NewViewResource,
-		dns_config.NewAuthNsgResource,
 
 		infra_provision.NewUIJoinTokenResource,
 
 		infra_mgmt.NewHostsResource,
 		infra_mgmt.NewServicesResource,
+
+		dns_config.NewAuthZoneResource,
+		dns_config.NewViewResource,
+		dns_config.NewAuthNsgResource,
 	}
 }
 
@@ -106,14 +107,16 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		ipam.NewAddressDataSource,
 		ipam.NewRangeDataSource,
 
-		dns_config.NewViewDataSource,
-		dns_config.NewAuthNsgDataSource,
-		dns_config.NewHostDataSource,
 
 		infra_provision.NewUIJoinTokenDataSource,
 
 		infra_mgmt.NewHostsDataSource,
 		infra_mgmt.NewServicesDataSource,
+
+		dns_config.NewAuthZoneDataSource,
+		dns_config.NewViewDataSource,
+		dns_config.NewAuthNsgDataSource,
+		dns_config.NewHostDataSource,
 	}
 }
 
