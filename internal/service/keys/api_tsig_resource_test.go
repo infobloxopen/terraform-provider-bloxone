@@ -316,7 +316,7 @@ func testAccTsigSecret(name string, secret string) string {
 	return fmt.Sprintf(`
 resource "bloxone_keys_tsig" "test_secret" {
     name = %q
-	secret = %q
+    secret = %q
 }
 `, name, secret)
 }

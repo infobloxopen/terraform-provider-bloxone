@@ -3,12 +3,12 @@
 page_title: "bloxone_keys_tsig Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  A TSIGKey object represents a TSIG key.
 ---
 
 # bloxone_keys_tsig (Resource)
 
-
+A TSIGKey object represents a TSIG key.
 
 ## Example Usage
 
@@ -19,7 +19,7 @@ resource "bloxone_keys_tsig" "example" {
   # Other optional fields
   comment   = "key created through terraform"
   algorithm = "hmac_sha256"
-  secret    = "wuQuR0A08ApqKT65yaGiqWHalHxS7Ie8LF2VTUFZFZo="
+  secret    = "your-base64-encoded-secret-here"
   tags = {
     location = "site1"
   }
