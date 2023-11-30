@@ -77,10 +77,7 @@ var ConfigForwardNSGResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The resource identifier.",
 	},
 	"name": schema.StringAttribute{
-		Required: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
-		},
+		Required:            true,
 		MarkdownDescription: "Name of the object.",
 	},
 	"nsgs": schema.ListAttribute{
