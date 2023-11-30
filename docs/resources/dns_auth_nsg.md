@@ -3,12 +3,12 @@
 page_title: "bloxone_dns_auth_nsg Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  This object (dns/auth_zone) represents an authoritative zone.
+  The dns/auth_nsg object represents an Authoritative DNS Server Group for authoritative zones.
 ---
 
 # bloxone_dns_auth_nsg (Resource)
 
-This object (dns/auth_zone) represents an authoritative zone.
+The dns/auth_nsg object represents an Authoritative DNS Server Group for authoritative zones.
 
 ## Example Usage
 
