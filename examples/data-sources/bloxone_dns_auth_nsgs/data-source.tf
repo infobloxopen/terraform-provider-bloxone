@@ -1,4 +1,3 @@
-
 # Get Auth NSGs filtered by an attribute
 data "bloxone_dns_auth_nsgs" "example_by_attribute" {
   filters = {
