@@ -7,6 +7,7 @@ import (
 	"github.com/infobloxopen/bloxone-go-client/infra_mgmt"
 	"github.com/infobloxopen/bloxone-go-client/infra_provision"
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+	"github.com/infobloxopen/bloxone-go-client/keys"
 )
 
 // APIClient is an aggregation of different BloxOne API clients.
@@ -16,6 +17,7 @@ type APIClient struct {
 	DNSDataAPI             *dns_data.APIClient
 	HostActivationAPI      *infra_provision.APIClient
 	InfraManagementAPI     *infra_mgmt.APIClient
+	KeysAPI                *keys.APIClient
 }
 
 // NewAPIClient creates a new BloxOne API Client.
@@ -40,11 +42,17 @@ func NewAPIClient(conf Configuration) (*APIClient, error) {
 	if err != nil {
 		return nil, err
 	}
+	keysConf, err := conf.internal(keys.ServiceBasePath)
+	if err != nil {
+		return nil, err
+	}
+
 	return &APIClient{
 		IPAddressManagementAPI: ipam.NewAPIClient(ipamConf),
 		DNSConfigurationAPI:    dns_config.NewAPIClient(dnsConfigConf),
 		DNSDataAPI:             dns_data.NewAPIClient(dnsDataConf),
 		HostActivationAPI:      infra_provision.NewAPIClient(infraProvisionConf),
 		InfraManagementAPI:     infra_mgmt.NewAPIClient(infraMgmtConf),
+		KeysAPI:                keys.NewAPIClient(keysConf),
 	}, nil
 }
