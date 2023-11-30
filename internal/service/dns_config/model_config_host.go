@@ -2,6 +2,8 @@ package dns_config
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -97,6 +99,9 @@ var ConfigHostResourceSchemaAttributes = map[string]schema.Attribute{
 	"id": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+		},
 	},
 	"inheritance_sources": schema.SingleNestedAttribute{
 		Attributes:          ConfigHostInheritanceResourceSchemaAttributes,

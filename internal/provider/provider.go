@@ -88,6 +88,7 @@ func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resou
 
 		dns_config.NewViewResource,
 		dns_config.NewAuthNsgResource,
+		dns_config.NewForwardZoneResource,
 		dns_config.NewAuthZoneResource,
 		dns_config.NewForwardNsgResource,
 		dns_config.NewDelegationResource,
@@ -111,6 +112,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		dns_config.NewViewDataSource,
 		dns_config.NewAuthNsgDataSource,
 		dns_config.NewHostDataSource,
+		dns_config.NewForwardZoneDataSource,
 		dns_config.NewAuthZoneDataSource,
 		dns_config.NewForwardNsgDataSource,
 		dns_config.NewDelegationDataSource,
@@ -119,6 +121,8 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 
 		infra_mgmt.NewHostsDataSource,
 		infra_mgmt.NewServicesDataSource,
+
+
 	}
 }
 
