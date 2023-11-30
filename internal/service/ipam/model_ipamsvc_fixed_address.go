@@ -5,7 +5,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -13,7 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/ipam"
-
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -132,6 +131,9 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	"ip_space": schema.StringAttribute{
 		Optional:            true,
 		MarkdownDescription: "The resource identifier.",
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 	},
 	"match_type": schema.StringAttribute{
 		Required:            true,
@@ -146,7 +148,7 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The name of the fixed address. May contain 1 to 256 characters. Can include UTF-8.",
 	},
 	"parent": schema.StringAttribute{
-		Optional:            true,
+		Optional:            false,
 		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},

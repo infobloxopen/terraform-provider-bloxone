@@ -161,6 +161,93 @@ func TestAccFixedAddressResource_DisableDhcp(t *testing.T) {
 	})
 }
 
+func TestAccFixedAddressResource_HeaderOptionFilename(t *testing.T) {
+	var resourceName = "bloxone_dhcp_fixed_address.test_header_option_filename"
+	var v ipam.IpamsvcFixedAddress
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccFixedAddressHeaderOptionFilename("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", "header_option_filename"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "header_option_filename"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccFixedAddressHeaderOptionFilename("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", "header_option_filename_update"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "header_option_filename_update"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccFixedAddressResource_HeaderOptionServerAddress(t *testing.T) {
+	var resourceName = "bloxone_dhcp_fixed_address.test_header_option_server_address"
+	var v ipam.IpamsvcFixedAddress
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccFixedAddressHeaderOptionServerAddress("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", "10.0.0.12"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "header_option_server_address", "10.0.0.12"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccFixedAddressHeaderOptionServerAddress("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", "10.0.0.13"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "header_option_server_address", "10.0.0.13"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccFixedAddressResource_HeaderOptionServerName(t *testing.T) {
+	var resourceName = "bloxone_dhcp_fixed_address.test_header_option_server_name"
+	var v ipam.IpamsvcFixedAddress
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccFixedAddressHeaderOptionServerName("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", "header_option_server_name"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "header_option_server_name"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccFixedAddressHeaderOptionServerName("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", "header_option_server_name_update"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "header_option_server_name_update"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccFixedAddressResource_Hostname(t *testing.T) {
 	var resourceName = "bloxone_dhcp_fixed_address.test_hostname"
 	var v ipam.IpamsvcFixedAddress
@@ -183,6 +270,36 @@ func TestAccFixedAddressResource_Hostname(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname", "hostname2"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccFixedAddressResource_IpSpace(t *testing.T) {
+	var resourceName = "bloxone_dhcp_fixed_address.test_ip_space"
+	var v1, v2 ipam.IpamsvcFixedAddress
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccFixedAddressIpSpace("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", "bloxone_ipam_ip_space.one"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttrPair(resourceName, "ip_space", "bloxone_ipam_ip_space.one", "id"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccFixedAddressIpSpace("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", "bloxone_ipam_ip_space.two"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressDestroy(context.Background(), &v1),
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v2),
+					resource.TestCheckResourceAttrPair(resourceName, "ip_space", "bloxone_ipam_ip_space.two", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -368,52 +485,6 @@ func testAccCheckFixedAddressDisappears(ctx context.Context, v *ipam.IpamsvcFixe
 	}
 }
 
-func testAccBaseWithIPSpaceAndSubnetAndRange() string {
-	name := acctest.RandomNameWithPrefix("ip-space")
-	return fmt.Sprintf(`
-
-data "bloxone_dhcp_hosts" "dhcp_host_by_name" {
-  filters = {
-    name = "TF_TEST_HOST_01"
-  }
-}
-
-resource "bloxone_ipam_ip_space" "test" {
-  name    = %q
-  comment = "Example IP space create for FA Acceptance Test"
-  tags = {
-    "Test" = "Acceptance"
-  }
-}
-
-resource "bloxone_ipam_subnet" "test" {
-  name    = "example"
-  space   = bloxone_ipam_ip_space.test.id
-  address = "10.0.0.0"
-  cidr    = 24
-  comment = "Example Subnet create for FA Acceptance Test"
-  dhcp_host = data.bloxone_dhcp_hosts.dhcp_host_by_name.results.0.id
-  tags = {
-    "Test" = "Acceptance"
-  }
-}
-
-resource "bloxone_ipam_range" "test" {
-  start = "10.0.0.2"
-  end   = "10.0.0.20"
-  space = bloxone_ipam_ip_space.test.id
-
-  # Other optional fields
-  name    = "example"
-  comment = "Example Range create for FA Acceptance Test"
-  tags = {
-    "Test" = "Acceptance"
-  }
-  depends_on = [bloxone_ipam_subnet.test]
-}
-`, name)
-}
-
 func testAccFixedAddressBasicConfig(address, matchType, matchValue string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_fixed_address" "test" {
@@ -421,10 +492,10 @@ resource "bloxone_dhcp_fixed_address" "test" {
     address = %q
     match_type = %q
     match_value = %q
-    depends_on = [bloxone_ipam_range.test]
+    depends_on = [bloxone_ipam_subnet.test]
 }
 `, address, matchType, matchValue)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnetAndRange(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }
 
 func testAccFixedAddressAddress(address string, matchType string, matchValue string) string {
@@ -434,10 +505,10 @@ resource "bloxone_dhcp_fixed_address" "test_address" {
     address = %q
     match_type = %q
     match_value = %q
-    depends_on = [bloxone_ipam_range.test]
+    depends_on = [bloxone_ipam_subnet.test]
 }
 `, address, matchType, matchValue)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnetAndRange(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }
 
 func testAccFixedAddressComment(address string, matchType string, matchValue string, comment string) string {
@@ -448,10 +519,10 @@ resource "bloxone_dhcp_fixed_address" "test_comment" {
     match_type = %q
     match_value = %q
     comment = %q
-    depends_on = [bloxone_ipam_range.test]
+    depends_on = [bloxone_ipam_subnet.test]
 }
 `, address, matchType, matchValue, comment)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnetAndRange(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }
 
 func testAccFixedAddressDisableDhcp(address string, matchType string, matchValue string, disableDhcp string) string {
@@ -462,10 +533,52 @@ resource "bloxone_dhcp_fixed_address" "test_disable_dhcp" {
     match_type = %q
     match_value = %q
     disable_dhcp = %q
-    depends_on = [bloxone_ipam_range.test]
+    depends_on = [bloxone_ipam_subnet.test]
 }
 `, address, matchType, matchValue, disableDhcp)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnetAndRange(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+}
+
+func testAccFixedAddressHeaderOptionFilename(address string, matchType string, matchValue string, headerOptionFilename string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_fixed_address" "test_header_option_filename" {
+    ip_space = bloxone_ipam_ip_space.test.id
+    address = %q
+    match_type = %q
+    match_value = %q
+    header_option_filename = %q
+    depends_on = [bloxone_ipam_subnet.test]
+}
+`, address, matchType, matchValue, headerOptionFilename)
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+}
+
+func testAccFixedAddressHeaderOptionServerAddress(address string, matchType string, matchValue string, headerOptionServerAddress string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_fixed_address" "test_header_option_server_address" {
+    ip_space = bloxone_ipam_ip_space.test.id
+    address = %q
+    match_type = %q
+    match_value = %q
+    header_option_server_address = %q
+    depends_on = [bloxone_ipam_subnet.test]
+}
+`, address, matchType, matchValue, headerOptionServerAddress)
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+}
+
+func testAccFixedAddressHeaderOptionServerName(address string, matchType string, matchValue string, headerOptionServerName string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_fixed_address" "test_header_option_server_name" {
+    ip_space = bloxone_ipam_ip_space.test.id
+    address = %q
+    match_type = %q
+    match_value = %q
+    header_option_server_name = %q
+    depends_on = [bloxone_ipam_subnet.test]
+}
+`, address, matchType, matchValue, headerOptionServerName)
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }
 
 func testAccFixedAddressHostname(address string, matchType string, matchValue string, hostname string) string {
@@ -476,10 +589,29 @@ resource "bloxone_dhcp_fixed_address" "test_hostname" {
     match_type = %q
     match_value = %q
     hostname = %q
-    depends_on = [bloxone_ipam_range.test]
+    depends_on = [bloxone_ipam_subnet.test]
 }
 `, address, matchType, matchValue, hostname)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnetAndRange(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+}
+
+func testAccFixedAddressIpSpace(address string, matchType string, matchValue string, ipSpace string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_subnet" "test" {
+    address = "10.0.0.0"
+    cidr = 24
+    space = %s.id
+}
+
+resource "bloxone_dhcp_fixed_address" "test_ip_space" {
+    address = %q
+    match_type = %q
+    match_value = %q
+    ip_space = %s.id
+    depends_on = [bloxone_ipam_subnet.test]
+}
+`, ipSpace, address, matchType, matchValue, ipSpace)
+	return strings.Join([]string{testAccBaseWithTwoIPSpace(), config}, "")
 }
 
 func testAccFixedAddressMatchType(address string, matchType string, matchValue string) string {
@@ -489,10 +621,10 @@ resource "bloxone_dhcp_fixed_address" "test_match_type" {
     address = %q
     match_type = %q
     match_value = %q
-    depends_on = [bloxone_ipam_range.test]
+    depends_on = [bloxone_ipam_subnet.test]
 }
 `, address, matchType, matchValue)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnetAndRange(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }
 
 func testAccFixedAddressMatchValue(address string, matchType string, matchValue string) string {
@@ -502,10 +634,10 @@ resource "bloxone_dhcp_fixed_address" "test_match_value" {
     address = %q
     match_type = %q
     match_value = %q
-    depends_on = [bloxone_ipam_range.test]
+    depends_on = [bloxone_ipam_subnet.test]
 }
 `, address, matchType, matchValue)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnetAndRange(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }
 
 func testAccFixedAddressName(address string, matchType string, matchValue string, name string) string {
@@ -516,10 +648,10 @@ resource "bloxone_dhcp_fixed_address" "test_name" {
     match_type = %q
     match_value = %q
     name = %q
-    depends_on = [bloxone_ipam_range.test]
+    depends_on = [bloxone_ipam_subnet.test]
 }
 `, address, matchType, matchValue, name)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnetAndRange(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }
 
 func testAccFixedAddressTags(address string, matchType string, matchValue string, tags map[string]string) string {
@@ -538,8 +670,8 @@ resource "bloxone_dhcp_fixed_address" "test_tags" {
     match_type = %q
     match_value = %q
     tags = %s
-    depends_on = [bloxone_ipam_range.test]
+    depends_on = [bloxone_ipam_subnet.test]
 }
 `, address, matchType, matchValue, tagsStr)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnetAndRange(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }

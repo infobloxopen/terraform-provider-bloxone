@@ -3,19 +3,13 @@ package ipam_test
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
-
-/*
-TODO:
-// Add unit tests for DHCP config profiles
-*/
 
 func TestAccDhcpHostDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dhcp_hosts.test"
@@ -31,7 +25,6 @@ func TestAccDhcpHostDataSource_Filters(t *testing.T) {
 					testAccCheckDhcpHostExists(context.Background(), dataSourceName, &v),
 					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
 					resource.TestCheckResourceAttr(dataSourceName, "results.0.name", "TF_TEST_HOST_01"),
-					resource.TestCheckResourceAttr(dataSourceName, "results.0.id", "dhcp/host/465008"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "results.0.id"),
 				),
 			},
@@ -48,13 +41,12 @@ func TestAccDhcpHostDataSource_TagFilters(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDhcpHostDataSourceConfigTagFilters("value1"),
+				Config: testAccDhcpHostDataSourceConfigTagFilters("site1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDhcpHostExists(context.Background(), dataSourceName, &v),
 					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
 					resource.TestCheckResourceAttr(dataSourceName, "results.0.name", "TF_TEST_HOST_01"),
-					resource.TestCheckResourceAttr(dataSourceName, "results.0.tags.tag1", "value1"),
-					resource.TestCheckResourceAttr(dataSourceName, "results.0.id", "dhcp/host/465008"),
+					resource.TestCheckResourceAttr(dataSourceName, "results.0.tags.location", "site1"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "results.0.id"),
 				),
 			},
@@ -101,7 +93,7 @@ func testAccDhcpHostDataSourceConfigTagFilters(tagValue string) string {
 	return fmt.Sprintf(`
 data "bloxone_dhcp_hosts" "test_tag" {
   tag_filters = {
-	tag1 = %q
+	location = %q
   }
 }
 `, tagValue)

@@ -47,7 +47,7 @@ resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
   ip_space    = bloxone_ipam_ip_space.example.id
   match_type  = "mac"
   match_value = "00:00:00:00:00:00"
-  comment     = "This is the example Fixed Address created by the B1DDI terraform provider"
+  comment     = "Example Fixed Address created by the terraform provider"
   tags = {
     location : "site1"
   }

@@ -14,14 +14,14 @@ description: |-
 
 ```terraform
 # Get DHCP fixed address filtered by an attribute
-data "bloxone_dns_views" "dhcp_fixed_address_by_attribute" {
+data "bloxone_dhcp_fixed_addresses" "example_by_attribute" {
   filters = {
-    "name" = "example_fixed_address"
+    name = "example_fixed_address"
   }
 }
 
 # Get DHCP fixed address by tag
-data "bloxone_dhcp_fixed_addresses" "dhcp_fixed_by_tag" {
+data "bloxone_dhcp_fixed_addresses" "example_by_tag" {
   tag_filters = {
     location = "site1"
   }
@@ -65,7 +65,6 @@ Optional:
 - `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources))
 - `ip_space` (String) The resource identifier.
 - `name` (String) The name of the fixed address. May contain 1 to 256 characters. Can include UTF-8.
-- `parent` (String) The resource identifier.
 - `tags` (Map of String) The tags for the fixed address in JSON format.
 
 Read-Only:
@@ -73,6 +72,7 @@ Read-Only:
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
 - `inheritance_assigned_hosts` (Attributes List) The list of the inheritance assigned hosts of the object. (see [below for nested schema](#nestedatt--results--inheritance_assigned_hosts))
+- `parent` (String) The resource identifier.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 
 <a id="nestedatt--results--dhcp_options"></a>

@@ -89,7 +89,7 @@ resource "bloxone_dhcp_fixed_address" "test" {
   address = %q
   match_type = %q
   match_value = %q
-  depends_on = [bloxone_ipam_range.test]
+  depends_on = [bloxone_ipam_subnet.test]
 }
 
 data "bloxone_dhcp_fixed_addresses" "test" {
@@ -98,10 +98,10 @@ data "bloxone_dhcp_fixed_addresses" "test" {
   }
 }
 `, address, matchType, matchValue)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnetAndRange(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }
 
-func testAccFixedAddressDataSourceConfigTagFilters(address, matchType, matchValue string, tagValue string) string {
+func testAccFixedAddressDataSourceConfigTagFilters(address, matchType, matchValue, tagValue string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_fixed_address" "test" {
   ip_space = bloxone_ipam_ip_space.test.id
@@ -111,7 +111,7 @@ resource "bloxone_dhcp_fixed_address" "test" {
   tags = {
 	tag1 = %q
   }
-  depends_on = [bloxone_ipam_range.test]
+  depends_on = [bloxone_ipam_subnet.test]
 }
 
 data "bloxone_dhcp_fixed_addresses" "test" {
@@ -120,5 +120,5 @@ data "bloxone_dhcp_fixed_addresses" "test" {
   }
 }
 `, address, matchType, matchValue, tagValue)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnetAndRange(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }

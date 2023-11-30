@@ -447,6 +447,11 @@ func testAccCheckAddressDisappears(ctx context.Context, v *ipam.IpamsvcAddress) 
 func testAccBaseWithIPSpaceAndSubnet() string {
 	name := acctest.RandomNameWithPrefix("ip-space")
 	return fmt.Sprintf(`
+data "bloxone_dhcp_hosts" "dhcp_host_by_tag" {
+  tag_filters = {
+    location = "site1"
+  }
+}
 resource "bloxone_ipam_ip_space" "test" {
     name = %q
 }
@@ -454,6 +459,7 @@ resource "bloxone_ipam_subnet" "test" {
     address = "10.0.0.0"
     cidr = 24
     space = bloxone_ipam_ip_space.test.id
+    dhcp_host = data.bloxone_dhcp_hosts.dhcp_host_by_tag.results.0.id
 }
 `, name)
 }
