@@ -16,7 +16,7 @@ description: |-
 # Get DNS Views filtered by an attribute
 data "bloxone_dns_views" "example_by_attribute" {
   filters = {
-    "name" = "example_ip_space"
+    "name" = "example_view"
   }
 }
 
