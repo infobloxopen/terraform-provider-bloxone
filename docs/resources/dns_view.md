@@ -3,12 +3,12 @@
 page_title: "bloxone_dns_view Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  Named collection of DNS View settings.
 ---
 
 # bloxone_dns_view (Resource)
 
-
+Named collection of DNS View settings.
 
 ## Example Usage
 

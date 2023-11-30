@@ -31,7 +31,7 @@ func (r *AuthNsgResource) Metadata(ctx context.Context, req resource.MetadataReq
 
 func (r *AuthNsgResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: `The dns/auth_nsg object represents an Authoritative DNS Server Group for authoritative zones.`,
 		Attributes:          ConfigAuthNSGResourceSchemaAttributes,
 	}
 }
