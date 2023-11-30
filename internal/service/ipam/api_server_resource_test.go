@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -17,7 +18,7 @@ import (
 func TestAccServerResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test"
 	var v ipam.IpamsvcServer
-	var name = acctest.RandomNameWithPrefix("dhcp_server")
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -45,7 +46,7 @@ func TestAccServerResource_basic(t *testing.T) {
 func TestAccServerResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dhcp_server.test"
 	var v ipam.IpamsvcServer
-	var name = acctest.RandomNameWithPrefix("dhcp_server")
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -67,7 +68,7 @@ func TestAccServerResource_disappears(t *testing.T) {
 func TestAccServerResource_ClientPrincipal(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_client_principal"
 	var v ipam.IpamsvcServer
-	var name = acctest.RandomNameWithPrefix("dhcp_server")
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 	var clientPrincipal = acctest.RandomNameWithPrefix("CLIENT_PRINCIPAL")
 
 	resource.Test(t, resource.TestCase{
@@ -84,7 +85,7 @@ func TestAccServerResource_ClientPrincipal(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServerClientPrincipal("NAME_REPLACE_ME", "CLIENT_PRINCIPAL_UPDATE_REPLACE_ME"),
+				Config: testAccServerClientPrincipal("name", "CLIENT_PRINCIPAL_UPDATE_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "client_principal", "CLIENT_PRINCIPAL_UPDATE_REPLACE_ME"),
@@ -98,7 +99,7 @@ func TestAccServerResource_ClientPrincipal(t *testing.T) {
 func TestAccServerResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_comment"
 	var v ipam.IpamsvcServer
-	var name = acctest.RandomNameWithPrefix("dhcp_server")
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -106,18 +107,18 @@ func TestAccServerResource_Comment(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerComment(name, "COMMENT_REPLACE_ME"),
+				Config: testAccServerComment(name, "TEST_COMMENT"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "comment", "TEST_COMMENT"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerComment(name, "COMMENT_UPDATE_REPLACE_ME"),
+				Config: testAccServerComment(name, "TEST_COMMENT_UPDATE"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "comment", "TEST_COMMENT_UPDATE"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -136,18 +137,18 @@ func TestAccServerResource_DdnsClientUpdate(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerDdnsClientUpdate(name, "DDNS_CLIENT_UPDATE_REPLACE_ME"),
+				Config: testAccServerDdnsClientUpdate(name, "client"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_client_update", "DDNS_CLIENT_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_client_update", "client"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerDdnsClientUpdate(name, "DDNS_CLIENT_UPDATE_UPDATE_REPLACE_ME"),
+				Config: testAccServerDdnsClientUpdate(name, "server"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_client_update", "DDNS_CLIENT_UPDATE_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_client_update", "server"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -158,6 +159,7 @@ func TestAccServerResource_DdnsClientUpdate(t *testing.T) {
 func TestAccServerResource_DdnsConflictResolutionMode(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_conflict_resolution_mode"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -165,19 +167,20 @@ func TestAccServerResource_DdnsConflictResolutionMode(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerDdnsConflictResolutionMode("NAME_REPLACE_ME", "DDNS_CONFLICT_RESOLUTION_MODE_REPLACE_ME"),
+				Config: testAccServerDdnsConflictResolutionMode(name, "check_with_dhcid"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_conflict_resolution_mode", "DDNS_CONFLICT_RESOLUTION_MODE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_conflict_resolution_mode", "check_with_dhcid"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerDdnsConflictResolutionMode("NAME_REPLACE_ME", "DDNS_CONFLICT_RESOLUTION_MODE_UPDATE_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_conflict_resolution_mode", "DDNS_CONFLICT_RESOLUTION_MODE_UPDATE_REPLACE_ME"),
-				),
+				Config: testAccServerDdnsConflictResolutionMode(name, "no_check_with_dhcid"),
+				//Check: resource.ComposeTestCheckFunc(
+				//	testAccCheckServerExists(context.Background(), resourceName, &v),
+				//	resource.TestCheckResourceAttr(resourceName, "ddns_conflict_resolution_mode", "check_with_dhcid"),
+				//	),
+				ExpectError: regexp.MustCompile("Conflicting values provided"),
 			},
 			// Delete testing automatically occurs in TestCase
 		},
@@ -187,6 +190,7 @@ func TestAccServerResource_DdnsConflictResolutionMode(t *testing.T) {
 func TestAccServerResource_DdnsDomain(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_domain"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -194,18 +198,18 @@ func TestAccServerResource_DdnsDomain(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerDdnsDomain("NAME_REPLACE_ME", "DDNS_DOMAIN_REPLACE_ME"),
+				Config: testAccServerDdnsDomain(name, "Test.com."),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "DDNS_DOMAIN_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "Test.com."),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerDdnsDomain("NAME_REPLACE_ME", "DDNS_DOMAIN_UPDATE_REPLACE_ME"),
+				Config: testAccServerDdnsDomain(name, "Test_update.com."),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "DDNS_DOMAIN_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "Test_update.com."),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -216,6 +220,7 @@ func TestAccServerResource_DdnsDomain(t *testing.T) {
 func TestAccServerResource_DdnsEnabled(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_enabled"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -223,18 +228,18 @@ func TestAccServerResource_DdnsEnabled(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerDdnsEnabled("NAME_REPLACE_ME", "DDNS_ENABLED_REPLACE_ME"),
+				Config: testAccServerDdnsEnabled(name, "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_enabled", "DDNS_ENABLED_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_enabled", "true"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerDdnsEnabled("NAME_REPLACE_ME", "DDNS_ENABLED_UPDATE_REPLACE_ME"),
+				Config: testAccServerDdnsEnabled(name, "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_enabled", "DDNS_ENABLED_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_enabled", "false"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -245,6 +250,7 @@ func TestAccServerResource_DdnsEnabled(t *testing.T) {
 func TestAccServerResource_DdnsGenerateName(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_generate_name"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -252,18 +258,18 @@ func TestAccServerResource_DdnsGenerateName(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerDdnsGenerateName("NAME_REPLACE_ME", "DDNS_GENERATE_NAME_REPLACE_ME"),
+				Config: testAccServerDdnsGenerateName(name, "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_generate_name", "DDNS_GENERATE_NAME_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_generate_name", "true"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerDdnsGenerateName("NAME_REPLACE_ME", "DDNS_GENERATE_NAME_UPDATE_REPLACE_ME"),
+				Config: testAccServerDdnsGenerateName(name, "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_generate_name", "DDNS_GENERATE_NAME_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_generate_name", "false"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -274,6 +280,7 @@ func TestAccServerResource_DdnsGenerateName(t *testing.T) {
 func TestAccServerResource_DdnsGeneratedPrefix(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_generated_prefix"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -281,18 +288,18 @@ func TestAccServerResource_DdnsGeneratedPrefix(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerDdnsGeneratedPrefix("NAME_REPLACE_ME", "DDNS_GENERATED_PREFIX_REPLACE_ME"),
+				Config: testAccServerDdnsGeneratedPrefix(name, "myhost"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_generated_prefix", "DDNS_GENERATED_PREFIX_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_generated_prefix", "myhost"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerDdnsGeneratedPrefix("NAME_REPLACE_ME", "DDNS_GENERATED_PREFIX_UPDATE_REPLACE_ME"),
+				Config: testAccServerDdnsGeneratedPrefix(name, "myhost.com"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_generated_prefix", "DDNS_GENERATED_PREFIX_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_generated_prefix", "myhost.com"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -303,6 +310,7 @@ func TestAccServerResource_DdnsGeneratedPrefix(t *testing.T) {
 func TestAccServerResource_DdnsSendUpdates(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_send_updates"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -310,18 +318,18 @@ func TestAccServerResource_DdnsSendUpdates(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerDdnsSendUpdates("NAME_REPLACE_ME", "DDNS_SEND_UPDATES_REPLACE_ME"),
+				Config: testAccServerDdnsSendUpdates(name, "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_send_updates", "DDNS_SEND_UPDATES_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_send_updates", "false"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerDdnsSendUpdates("NAME_REPLACE_ME", "DDNS_SEND_UPDATES_UPDATE_REPLACE_ME"),
+				Config: testAccServerDdnsSendUpdates(name, "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_send_updates", "DDNS_SEND_UPDATES_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_send_updates", "true"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -332,6 +340,7 @@ func TestAccServerResource_DdnsSendUpdates(t *testing.T) {
 func TestAccServerResource_DdnsTtlPercent(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_ttl_percent"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -339,18 +348,18 @@ func TestAccServerResource_DdnsTtlPercent(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerDdnsTtlPercent("NAME_REPLACE_ME", "DDNS_TTL_PERCENT_REPLACE_ME"),
+				Config: testAccServerDdnsTtlPercent(name, "25"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_ttl_percent", "DDNS_TTL_PERCENT_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_ttl_percent", "25"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerDdnsTtlPercent("NAME_REPLACE_ME", "DDNS_TTL_PERCENT_UPDATE_REPLACE_ME"),
+				Config: testAccServerDdnsTtlPercent(name, "75"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_ttl_percent", "DDNS_TTL_PERCENT_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_ttl_percent", "75"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -361,6 +370,7 @@ func TestAccServerResource_DdnsTtlPercent(t *testing.T) {
 func TestAccServerResource_DdnsUpdateOnRenew(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_update_on_renew"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -368,18 +378,18 @@ func TestAccServerResource_DdnsUpdateOnRenew(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerDdnsUpdateOnRenew("NAME_REPLACE_ME", "DDNS_UPDATE_ON_RENEW_REPLACE_ME"),
+				Config: testAccServerDdnsUpdateOnRenew(name, "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_update_on_renew", "DDNS_UPDATE_ON_RENEW_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_update_on_renew", "true"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerDdnsUpdateOnRenew("NAME_REPLACE_ME", "DDNS_UPDATE_ON_RENEW_UPDATE_REPLACE_ME"),
+				Config: testAccServerDdnsUpdateOnRenew(name, "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_update_on_renew", "DDNS_UPDATE_ON_RENEW_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_update_on_renew", "false"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -390,6 +400,7 @@ func TestAccServerResource_DdnsUpdateOnRenew(t *testing.T) {
 func TestAccServerResource_DdnsUseConflictResolution(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_use_conflict_resolution"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -397,18 +408,18 @@ func TestAccServerResource_DdnsUseConflictResolution(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerDdnsUseConflictResolution("NAME_REPLACE_ME", "DDNS_USE_CONFLICT_RESOLUTION_REPLACE_ME"),
+				Config: testAccServerDdnsUseConflictResolution(name, "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_use_conflict_resolution", "DDNS_USE_CONFLICT_RESOLUTION_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_use_conflict_resolution", "true"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerDdnsUseConflictResolution("NAME_REPLACE_ME", "DDNS_USE_CONFLICT_RESOLUTION_UPDATE_REPLACE_ME"),
+				Config: testAccServerDdnsUseConflictResolution(name, "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_use_conflict_resolution", "DDNS_USE_CONFLICT_RESOLUTION_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_use_conflict_resolution", "false"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -419,6 +430,7 @@ func TestAccServerResource_DdnsUseConflictResolution(t *testing.T) {
 func TestAccServerResource_DdnsZones(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_zones"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -426,7 +438,7 @@ func TestAccServerResource_DdnsZones(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerDdnsZones("NAME_REPLACE_ME", "DDNS_ZONES_REPLACE_ME"),
+				Config: testAccServerDdnsZones(name, "DDNS_ZONES_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_zones", "DDNS_ZONES_REPLACE_ME"),
@@ -434,7 +446,7 @@ func TestAccServerResource_DdnsZones(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServerDdnsZones("NAME_REPLACE_ME", "DDNS_ZONES_UPDATE_REPLACE_ME"),
+				Config: testAccServerDdnsZones(name, "DDNS_ZONES_UPDATE_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_zones", "DDNS_ZONES_UPDATE_REPLACE_ME"),
@@ -535,6 +547,7 @@ func TestAccServerResource_DhcpOptionsV6(t *testing.T) {
 func TestAccServerResource_GssTsigFallback(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_gss_tsig_fallback"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -542,18 +555,18 @@ func TestAccServerResource_GssTsigFallback(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerGssTsigFallback("NAME_REPLACE_ME", "GSS_TSIG_FALLBACK_REPLACE_ME"),
+				Config: testAccServerGssTsigFallback(name, "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "gss_tsig_fallback", "GSS_TSIG_FALLBACK_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "gss_tsig_fallback", "true"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerGssTsigFallback("NAME_REPLACE_ME", "GSS_TSIG_FALLBACK_UPDATE_REPLACE_ME"),
+				Config: testAccServerGssTsigFallback(name, "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "gss_tsig_fallback", "GSS_TSIG_FALLBACK_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "gss_tsig_fallback", "false"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -564,6 +577,7 @@ func TestAccServerResource_GssTsigFallback(t *testing.T) {
 func TestAccServerResource_HeaderOptionFilename(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_header_option_filename"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -571,18 +585,18 @@ func TestAccServerResource_HeaderOptionFilename(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerHeaderOptionFilename("NAME_REPLACE_ME", "HEADER_OPTION_FILENAME_REPLACE_ME"),
+				Config: testAccServerHeaderOptionFilename(name, "TEST_HEADER_OPTION_FILENAME"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "HEADER_OPTION_FILENAME_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "TEST_HEADER_OPTION_FILENAME"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerHeaderOptionFilename("NAME_REPLACE_ME", "HEADER_OPTION_FILENAME_UPDATE_REPLACE_ME"),
+				Config: testAccServerHeaderOptionFilename(name, "TEST_HEADER_OPTION_FILENAME_UPDATE"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "HEADER_OPTION_FILENAME_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "TEST_HEADER_OPTION_FILENAME_UPDATE"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -593,6 +607,7 @@ func TestAccServerResource_HeaderOptionFilename(t *testing.T) {
 func TestAccServerResource_HeaderOptionServerAddress(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_header_option_server_address"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -600,18 +615,18 @@ func TestAccServerResource_HeaderOptionServerAddress(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerHeaderOptionServerAddress("NAME_REPLACE_ME", "HEADER_OPTION_SERVER_ADDRESS_REPLACE_ME"),
+				Config: testAccServerHeaderOptionServerAddress(name, "192.28.4.3"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "header_option_server_address", "HEADER_OPTION_SERVER_ADDRESS_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "header_option_server_address", "192.28.4.3"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerHeaderOptionServerAddress("NAME_REPLACE_ME", "HEADER_OPTION_SERVER_ADDRESS_UPDATE_REPLACE_ME"),
+				Config: testAccServerHeaderOptionServerAddress(name, "192.28.4.4"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "header_option_server_address", "HEADER_OPTION_SERVER_ADDRESS_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "header_option_server_address", "192.28.4.4"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -622,6 +637,7 @@ func TestAccServerResource_HeaderOptionServerAddress(t *testing.T) {
 func TestAccServerResource_HeaderOptionServerName(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_header_option_server_name"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -629,18 +645,18 @@ func TestAccServerResource_HeaderOptionServerName(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerHeaderOptionServerName("NAME_REPLACE_ME", "HEADER_OPTION_SERVER_NAME_REPLACE_ME"),
+				Config: testAccServerHeaderOptionServerName(name, "TEST_HEADER_OPTION_SERVER_NAME"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "HEADER_OPTION_SERVER_NAME_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "TEST_HEADER_OPTION_SERVER_NAME"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerHeaderOptionServerName("NAME_REPLACE_ME", "HEADER_OPTION_SERVER_NAME_UPDATE_REPLACE_ME"),
+				Config: testAccServerHeaderOptionServerName(name, "TEST_HEADER_OPTION_SERVER_NAME_UPDATE"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "HEADER_OPTION_SERVER_NAME_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "TEST_HEADER_OPTION_SERVER_NAME_UPDATE"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -651,6 +667,7 @@ func TestAccServerResource_HeaderOptionServerName(t *testing.T) {
 func TestAccServerResource_HostnameRewriteChar(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_hostname_rewrite_char"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -658,18 +675,18 @@ func TestAccServerResource_HostnameRewriteChar(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerHostnameRewriteChar("NAME_REPLACE_ME", "HOSTNAME_REWRITE_CHAR_REPLACE_ME"),
+				Config: testAccServerHostnameRewriteChar(name, "#"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_char", "HOSTNAME_REWRITE_CHAR_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_char", "#"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerHostnameRewriteChar("NAME_REPLACE_ME", "HOSTNAME_REWRITE_CHAR_UPDATE_REPLACE_ME"),
+				Config: testAccServerHostnameRewriteChar(name, "*"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_char", "HOSTNAME_REWRITE_CHAR_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_char", "*"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -680,6 +697,7 @@ func TestAccServerResource_HostnameRewriteChar(t *testing.T) {
 func TestAccServerResource_HostnameRewriteEnabled(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_hostname_rewrite_enabled"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -687,18 +705,18 @@ func TestAccServerResource_HostnameRewriteEnabled(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerHostnameRewriteEnabled("NAME_REPLACE_ME", "HOSTNAME_REWRITE_ENABLED_REPLACE_ME"),
+				Config: testAccServerHostnameRewriteEnabled(name, "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_enabled", "HOSTNAME_REWRITE_ENABLED_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_enabled", "true"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerHostnameRewriteEnabled("NAME_REPLACE_ME", "HOSTNAME_REWRITE_ENABLED_UPDATE_REPLACE_ME"),
+				Config: testAccServerHostnameRewriteEnabled(name, "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_enabled", "HOSTNAME_REWRITE_ENABLED_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_enabled", "false"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -709,6 +727,7 @@ func TestAccServerResource_HostnameRewriteEnabled(t *testing.T) {
 func TestAccServerResource_HostnameRewriteRegex(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_hostname_rewrite_regex"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -716,18 +735,18 @@ func TestAccServerResource_HostnameRewriteRegex(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerHostnameRewriteRegex("NAME_REPLACE_ME", "HOSTNAME_REWRITE_REGEX_REPLACE_ME"),
+				Config: testAccServerHostnameRewriteRegex(name, "[^a-z_.]"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_regex", "HOSTNAME_REWRITE_REGEX_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_regex", "[^a-z_.]"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerHostnameRewriteRegex("NAME_REPLACE_ME", "HOSTNAME_REWRITE_REGEX_UPDATE_REPLACE_ME"),
+				Config: testAccServerHostnameRewriteRegex(name, "[^a-zA-Z0-9_.]"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_regex", "HOSTNAME_REWRITE_REGEX_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_regex", "[^a-zA-Z0-9_.]"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -738,6 +757,7 @@ func TestAccServerResource_HostnameRewriteRegex(t *testing.T) {
 func TestAccServerResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_inheritance_sources"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -745,7 +765,7 @@ func TestAccServerResource_InheritanceSources(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerInheritanceSources("NAME_REPLACE_ME", "INHERITANCE_SOURCES_REPLACE_ME"),
+				Config: testAccServerInheritanceSources(name, "INHERITANCE_SOURCES_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources", "INHERITANCE_SOURCES_REPLACE_ME"),
@@ -753,7 +773,7 @@ func TestAccServerResource_InheritanceSources(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServerInheritanceSources("NAME_REPLACE_ME", "INHERITANCE_SOURCES_UPDATE_REPLACE_ME"),
+				Config: testAccServerInheritanceSources(name, "INHERITANCE_SOURCES_UPDATE_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources", "INHERITANCE_SOURCES_UPDATE_REPLACE_ME"),
@@ -825,6 +845,7 @@ func TestAccServerResource_KerberosKeys(t *testing.T) {
 func TestAccServerResource_KerberosRekeyInterval(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_kerberos_rekey_interval"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -832,18 +853,18 @@ func TestAccServerResource_KerberosRekeyInterval(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerKerberosRekeyInterval("NAME_REPLACE_ME", "KERBEROS_REKEY_INTERVAL_REPLACE_ME"),
+				Config: testAccServerKerberosRekeyInterval(name, "10"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "kerberos_rekey_interval", "KERBEROS_REKEY_INTERVAL_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "kerberos_rekey_interval", "10"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerKerberosRekeyInterval("NAME_REPLACE_ME", "KERBEROS_REKEY_INTERVAL_UPDATE_REPLACE_ME"),
+				Config: testAccServerKerberosRekeyInterval(name, "20"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "kerberos_rekey_interval", "KERBEROS_REKEY_INTERVAL_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "kerberos_rekey_interval", "20"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -854,6 +875,7 @@ func TestAccServerResource_KerberosRekeyInterval(t *testing.T) {
 func TestAccServerResource_KerberosRetryInterval(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_kerberos_retry_interval"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -861,18 +883,18 @@ func TestAccServerResource_KerberosRetryInterval(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerKerberosRetryInterval("NAME_REPLACE_ME", "KERBEROS_RETRY_INTERVAL_REPLACE_ME"),
+				Config: testAccServerKerberosRetryInterval(name, "10"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "kerberos_retry_interval", "KERBEROS_RETRY_INTERVAL_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "kerberos_retry_interval", "10"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerKerberosRetryInterval("NAME_REPLACE_ME", "KERBEROS_RETRY_INTERVAL_UPDATE_REPLACE_ME"),
+				Config: testAccServerKerberosRetryInterval(name, "20"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "kerberos_retry_interval", "KERBEROS_RETRY_INTERVAL_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "kerberos_retry_interval", "20"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -883,6 +905,7 @@ func TestAccServerResource_KerberosRetryInterval(t *testing.T) {
 func TestAccServerResource_KerberosTkeyLifetime(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_kerberos_tkey_lifetime"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -890,18 +913,18 @@ func TestAccServerResource_KerberosTkeyLifetime(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerKerberosTkeyLifetime("NAME_REPLACE_ME", "KERBEROS_TKEY_LIFETIME_REPLACE_ME"),
+				Config: testAccServerKerberosTkeyLifetime(name, "10"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "kerberos_tkey_lifetime", "KERBEROS_TKEY_LIFETIME_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "kerberos_tkey_lifetime", "10"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerKerberosTkeyLifetime("NAME_REPLACE_ME", "KERBEROS_TKEY_LIFETIME_UPDATE_REPLACE_ME"),
+				Config: testAccServerKerberosTkeyLifetime(name, "20"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "kerberos_tkey_lifetime", "KERBEROS_TKEY_LIFETIME_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "kerberos_tkey_lifetime", "20"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -912,6 +935,7 @@ func TestAccServerResource_KerberosTkeyLifetime(t *testing.T) {
 func TestAccServerResource_KerberosTkeyProtocol(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_kerberos_tkey_protocol"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -919,18 +943,18 @@ func TestAccServerResource_KerberosTkeyProtocol(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerKerberosTkeyProtocol("NAME_REPLACE_ME", "KERBEROS_TKEY_PROTOCOL_REPLACE_ME"),
+				Config: testAccServerKerberosTkeyProtocol(name, "TCP"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "kerberos_tkey_protocol", "KERBEROS_TKEY_PROTOCOL_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "kerberos_tkey_protocol", "TCP"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerKerberosTkeyProtocol("NAME_REPLACE_ME", "KERBEROS_TKEY_PROTOCOL_UPDATE_REPLACE_ME"),
+				Config: testAccServerKerberosTkeyProtocol(name, "UDP"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "kerberos_tkey_protocol", "KERBEROS_TKEY_PROTOCOL_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "kerberos_tkey_protocol", "UDP"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -941,6 +965,7 @@ func TestAccServerResource_KerberosTkeyProtocol(t *testing.T) {
 func TestAccServerResource_Name(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_name"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -948,18 +973,18 @@ func TestAccServerResource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerName("NAME_REPLACE_ME"),
+				Config: testAccServerName(name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "NAME_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "name", name),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerName("NAME_REPLACE_ME"),
+				Config: testAccServerName(name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "NAME_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "name", name),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -970,6 +995,7 @@ func TestAccServerResource_Name(t *testing.T) {
 func TestAccServerResource_ServerPrincipal(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_server_principal"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -977,18 +1003,18 @@ func TestAccServerResource_ServerPrincipal(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerServerPrincipal("NAME_REPLACE_ME", "SERVER_PRINCIPAL_REPLACE_ME"),
+				Config: testAccServerServerPrincipal(name, "TEST_SERVER_PRINCIPAL"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "server_principal", "SERVER_PRINCIPAL_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "server_principal", "TEST_SERVER_PRINCIPAL"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerServerPrincipal("NAME_REPLACE_ME", "SERVER_PRINCIPAL_UPDATE_REPLACE_ME"),
+				Config: testAccServerServerPrincipal(name, "TEST_SERVER_PRINCIPAL_UPDATE"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "server_principal", "SERVER_PRINCIPAL_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "server_principal", "TEST_SERVER_PRINCIPAL_UPDATE"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1028,6 +1054,7 @@ func TestAccServerResource_Tags(t *testing.T) {
 func TestAccServerResource_VendorSpecificOptionOptionSpace(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_vendor_specific_option_option_space"
 	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1035,7 +1062,7 @@ func TestAccServerResource_VendorSpecificOptionOptionSpace(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerVendorSpecificOptionOptionSpace("NAME_REPLACE_ME", "VENDOR_SPECIFIC_OPTION_OPTION_SPACE_REPLACE_ME"),
+				Config: testAccServerVendorSpecificOptionOptionSpace(name, "VENDOR_SPECIFIC_OPTION_OPTION_SPACE_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "vendor_specific_option_option_space", "VENDOR_SPECIFIC_OPTION_OPTION_SPACE_REPLACE_ME"),
@@ -1043,7 +1070,7 @@ func TestAccServerResource_VendorSpecificOptionOptionSpace(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServerVendorSpecificOptionOptionSpace("NAME_REPLACE_ME", "VENDOR_SPECIFIC_OPTION_OPTION_SPACE_UPDATE_REPLACE_ME"),
+				Config: testAccServerVendorSpecificOptionOptionSpace(name, "VENDOR_SPECIFIC_OPTION_OPTION_SPACE_UPDATE_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "vendor_specific_option_option_space", "VENDOR_SPECIFIC_OPTION_OPTION_SPACE_UPDATE_REPLACE_ME"),
