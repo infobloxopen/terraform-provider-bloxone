@@ -25,15 +25,18 @@ func TestAccDelegationResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccDelegationBasicConfig("test.123.", "123."),
+				Config: testAccDelegationBasicConfig(),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDelegationExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "fqdn", "test.123."),
 					resource.TestCheckResourceAttr(resourceName, "delegation_servers.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "delegation_servers.0.address", "12.0.0.0"),
+					resource.TestCheckResourceAttr(resourceName, "delegation_servers.0.fqdn", "ns1.com."),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "protocol_fqdn"),
 					resource.TestCheckResourceAttrSet(resourceName, "parent"),
+					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_dns_auth_zone.test", "id"),
 					// Test fields with default value
 					resource.TestCheckResourceAttr(resourceName, "disabled", "false"),
 				),
@@ -53,7 +56,7 @@ func TestAccDelegationResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckDelegationDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDelegationBasicConfig("test.123.", "123."),
+				Config: testAccDelegationBasicConfig(),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDelegationExists(context.Background(), resourceName, &v),
 					testAccCheckDelegationDisappears(context.Background(), &v),
@@ -74,18 +77,18 @@ func TestAccDelegationResource_Comment(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccDelegationComment("test.123.", "COMMENT_REPLACE_ME", "123."),
+				Config: testAccDelegationComment("Delegation zone is created by Terraform"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDelegationExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "comment", "Delegation zone is created by Terraform"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccDelegationComment("test.123.", "COMMENT_UPDATE_REPLACE_ME", "123."),
+				Config: testAccDelegationComment("Delegation zone was created by Terraform"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDelegationExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "comment", "Delegation zone was created by Terraform"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -103,7 +106,7 @@ func TestAccDelegationResource_DelegationServers(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccDelegationDelegationServers("test.123.", "123.", "12.0.0.0", "ns1.com."),
+				Config: testAccDelegationDelegationServers("12.0.0.0", "ns1.com."),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDelegationExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "delegation_servers.#", "1"),
@@ -111,7 +114,7 @@ func TestAccDelegationResource_DelegationServers(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccDelegationDelegationServers("test.123.", "123.", "12.0.0.1", "ns2.com."),
+				Config: testAccDelegationDelegationServers("12.0.0.1", "ns2.com."),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDelegationExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "delegation_servers.#", "1"),
@@ -153,7 +156,7 @@ func TestAccDelegationResource_Disabled(t *testing.T) {
 
 func TestAccDelegationResource_Fqdn(t *testing.T) {
 	var resourceName = "bloxone_dns_delegation.test_fqdn"
-	var v dns_config.ConfigDelegation
+	var v1, v2 dns_config.ConfigDelegation
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -161,17 +164,18 @@ func TestAccDelegationResource_Fqdn(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccDelegationFqdn("test.123.", "123."),
+				Config: testAccDelegationFqdn("test.123."),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDelegationExists(context.Background(), resourceName, &v),
+					testAccCheckDelegationExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "fqdn", "test.123."),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccDelegationFqdn("test1.123.", "123."),
+				Config: testAccDelegationFqdn("test1.123."),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDelegationExists(context.Background(), resourceName, &v),
+					testAccCheckDelegationDestroy(context.Background(), &v1),
+					testAccCheckDelegationExists(context.Background(), resourceName, &v2),
 					resource.TestCheckResourceAttr(resourceName, "fqdn", "test1.123."),
 				),
 			},
@@ -190,7 +194,7 @@ func TestAccDelegationResource_Tags(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccDelegationTags("test.123.", "123.", map[string]string{
+				Config: testAccDelegationTags(map[string]string{
 					"tag1": "value1",
 					"tag2": "value2",
 				}),
@@ -202,7 +206,7 @@ func TestAccDelegationResource_Tags(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccDelegationTags("test.123.", "123.", map[string]string{
+				Config: testAccDelegationTags(map[string]string{
 					"tag2": "value2changed",
 					"tag3": "value3",
 				}),
@@ -219,7 +223,7 @@ func TestAccDelegationResource_Tags(t *testing.T) {
 
 func TestAccDelegationResource_View(t *testing.T) {
 	var resourceName = "bloxone_dns_delegation.test_view"
-	var v dns_config.ConfigDelegation
+	var v1, v2 dns_config.ConfigDelegation
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -227,17 +231,18 @@ func TestAccDelegationResource_View(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccDelegationView("test.123.", "123.", "bloxone_dns_view.test"),
+				Config: testAccDelegationView("bloxone_dns_view.test"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDelegationExists(context.Background(), resourceName, &v),
+					testAccCheckDelegationExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttrPair(resourceName, "view", "bloxone_dns_view.test", "id"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccDelegationView("test.123.", "123.", "bloxone_dns_view.test1"),
+				Config: testAccDelegationView("bloxone_dns_view.test1"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDelegationExists(context.Background(), resourceName, &v),
+					testAccCheckDelegationDestroy(context.Background(), &v1),
+					testAccCheckDelegationExists(context.Background(), resourceName, &v2),
 					resource.TestCheckResourceAttrPair(resourceName, "view", "bloxone_dns_view.test1", "id"),
 				),
 			},
@@ -300,25 +305,25 @@ func testAccCheckDelegationDisappears(ctx context.Context, v *dns_config.ConfigD
 	}
 }
 
-func testAccViewAndAuthZone(authFqdn string) string {
-	return fmt.Sprintf(`
+func testAccViewAndAuthZone() string {
+	return `
 	resource "bloxone_dns_view" "test" {
-     name = "example-view"
-    }
+		name = "example-view"
+	}
 
-	resource "bloxone_dns_auth_zone" test{
-     fqdn = %q
-     primary_type = "cloud"
-     view = bloxone_dns_view.test.id
-     depends_on = [bloxone_dns_view.test]
-	}`, authFqdn)
+	resource "bloxone_dns_auth_zone" test {
+		fqdn = "123."
+		primary_type = "cloud"
+		view = bloxone_dns_view.test.id
+		depends_on = [bloxone_dns_view.test]
+	}`
 }
 
-func testAccDelegationBasicConfig(fqdn, authFqdn string) string {
+func testAccDelegationBasicConfig() string {
 	// TODO: create basic resource with required fields
-	config := fmt.Sprintf(`
+	config := `
 resource "bloxone_dns_delegation" "test" {
-    fqdn = %q
+    fqdn = "test.123."
     delegation_servers = [{
 		address = "12.0.0.0"
 		fqdn = "ns1.com."
@@ -326,14 +331,14 @@ resource "bloxone_dns_delegation" "test" {
     view = bloxone_dns_view.test.id
     depends_on = [bloxone_dns_view.test, bloxone_dns_auth_zone.test]
 }
-`, fqdn)
-	return strings.Join([]string{testAccViewAndAuthZone(authFqdn), config}, "")
+`
+	return strings.Join([]string{testAccViewAndAuthZone(), config}, "")
 }
 
-func testAccDelegationComment(fqdn, comment, authFqdn string) string {
+func testAccDelegationComment(comment string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dns_delegation" "test_comment" {
-    fqdn = %q
+    fqdn = "test.123."
     comment = %q
     delegation_servers = [{
 		address = "12.0.0.0"
@@ -342,16 +347,16 @@ resource "bloxone_dns_delegation" "test_comment" {
     view = bloxone_dns_view.test.id
     depends_on = [bloxone_dns_view.test, bloxone_dns_auth_zone.test]
 }
-`, fqdn, comment)
-	return strings.Join([]string{testAccViewAndAuthZone(authFqdn), config}, "")
+`, comment)
+	return strings.Join([]string{testAccViewAndAuthZone(), config}, "")
 }
 
 // venkat
-func testAccDelegationDelegationServers(fqdn, authFqdn string, delegationServersAddrs, delegationServersFqdn string) string {
+func testAccDelegationDelegationServers(delegationServersAddrs, delegationServersFqdn string) string {
 
 	config := fmt.Sprintf(`
 resource "bloxone_dns_delegation" "test_delegation_servers" {
-    fqdn = %q
+    fqdn = "test.123."
     delegation_servers = [{
 		"address": %q
 		"fqdn": %q
@@ -359,8 +364,8 @@ resource "bloxone_dns_delegation" "test_delegation_servers" {
     view = bloxone_dns_view.test.id
     depends_on = [bloxone_dns_view.test, bloxone_dns_auth_zone.test]
 }
-`, fqdn, delegationServersAddrs, delegationServersFqdn)
-	return strings.Join([]string{testAccViewAndAuthZone(authFqdn), config}, "")
+`, delegationServersAddrs, delegationServersFqdn)
+	return strings.Join([]string{testAccViewAndAuthZone(), config}, "")
 }
 
 func testAccDelegationDisabled(fqdn, disabled, authFqdn string) string {
@@ -376,10 +381,10 @@ resource "bloxone_dns_delegation" "test_disabled" {
     depends_on = [bloxone_dns_view.test, bloxone_dns_auth_zone.test]
 }
 `, fqdn, disabled)
-	return strings.Join([]string{testAccViewAndAuthZone(authFqdn), config}, "")
+	return strings.Join([]string{testAccViewAndAuthZone(), config}, "")
 }
 
-func testAccDelegationFqdn(fqdn, authFqdn string) string {
+func testAccDelegationFqdn(fqdn string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dns_delegation" "test_fqdn" {
     fqdn = %q
@@ -392,10 +397,10 @@ resource "bloxone_dns_delegation" "test_fqdn" {
 }
 `, fqdn)
 
-	return strings.Join([]string{testAccViewAndAuthZone(authFqdn), config}, "")
+	return strings.Join([]string{testAccViewAndAuthZone(), config}, "")
 }
 
-func testAccDelegationTags(fqdn, authFqdn string, tags map[string]string) string {
+func testAccDelegationTags(tags map[string]string) string {
 	tagsStr := "{\n"
 	for k, v := range tags {
 		tagsStr += fmt.Sprintf(`
@@ -405,7 +410,7 @@ func testAccDelegationTags(fqdn, authFqdn string, tags map[string]string) string
 	tagsStr += "\t}"
 	config := fmt.Sprintf(`
 resource "bloxone_dns_delegation" "test_tags" {
-    fqdn = %q
+    fqdn = "test.123."
     tags = %s
     delegation_servers = [{
 		address = "12.0.0.0"
@@ -414,11 +419,11 @@ resource "bloxone_dns_delegation" "test_tags" {
     view = bloxone_dns_view.test.id
     depends_on = [bloxone_dns_view.test, bloxone_dns_auth_zone.test]
 }
-`, fqdn, tagsStr)
-	return strings.Join([]string{testAccViewAndAuthZone(authFqdn), config}, "")
+`, tagsStr)
+	return strings.Join([]string{testAccViewAndAuthZone(), config}, "")
 }
 
-func testAccDelegationView(fqdn, authFqdn, view string) string {
+func testAccDelegationView(view string) string {
 	return fmt.Sprintf(`
 	resource "bloxone_dns_view" "test" {
      name = "example-view"
@@ -429,12 +434,12 @@ func testAccDelegationView(fqdn, authFqdn, view string) string {
     }
 
 	resource "bloxone_dns_auth_zone" test {
-     fqdn = %q
+     fqdn = "123."
      primary_type = "cloud"
      view = %s.id
 	}
 resource "bloxone_dns_delegation" "test_view" {
-    fqdn = %q
+    fqdn = "test.123."
     view = %s.id
     delegation_servers = [{
 		address = "12.0.0.0"
@@ -442,5 +447,5 @@ resource "bloxone_dns_delegation" "test_view" {
   	}]
     depends_on = [bloxone_dns_view.test, bloxone_dns_auth_zone.test]
 }
-`, authFqdn, view, fqdn, view)
+`, view, view)
 }

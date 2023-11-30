@@ -839,7 +839,7 @@ func testAccAuthZoneTags(fqdn string, primaryType string, tags map[string]string
 resource "bloxone_dns_auth_zone" "test_tags" {
     fqdn = %q
     primary_type = %q
-    tags = %q
+    tags = %s
 }
 `, fqdn, primaryType, tagsStr)
 }
