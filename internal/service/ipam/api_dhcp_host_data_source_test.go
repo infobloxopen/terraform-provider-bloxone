@@ -46,7 +46,7 @@ func TestAccDhcpHostDataSource_TagFilters(t *testing.T) {
 					testAccCheckDhcpHostExists(context.Background(), dataSourceName, &v),
 					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
 					resource.TestCheckResourceAttr(dataSourceName, "results.0.name", "TF_TEST_HOST_01"),
-					resource.TestCheckResourceAttr(dataSourceName, "results.0.tags.location", "site1"),
+					resource.TestCheckResourceAttr(dataSourceName, "results.0.tags.used_for", "tf_acc_test"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "results.0.id"),
 				),
 			},
@@ -93,7 +93,7 @@ func testAccDhcpHostDataSourceConfigTagFilters(tagValue string) string {
 	return fmt.Sprintf(`
 data "bloxone_dhcp_hosts" "test_tag" {
   tag_filters = {
-	location = %q
+	used_for = %q
   }
 }
 `, tagValue)

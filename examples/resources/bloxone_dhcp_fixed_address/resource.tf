@@ -27,20 +27,6 @@ resource "bloxone_ipam_subnet" "example" {
   }
 }
 
-resource "bloxone_ipam_range" "example" {
-  start = "192.168.1.15"
-  end   = "192.168.1.30"
-  space = bloxone_ipam_ip_space.example.id
-
-  # Other optional fields
-  name    = "example"
-  comment = "Example Range created by the terraform provider"
-  tags = {
-    location = "site1"
-  }
-  depends_on = [bloxone_ipam_subnet.example]
-}
-
 resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
   name        = "example_fixed_address"
   address     = "192.168.1.1"

@@ -13,4 +13,4 @@ data "bloxone_dhcp_fixed_addresses" "example_by_tag" {
 }
 
 # Get all fixed address
-data "bloxone_dhcp_fixed_addresses" "dhcp_fixed_address_all" {}
+data "bloxone_dhcp_fixed_addresses" "example_all" {}
