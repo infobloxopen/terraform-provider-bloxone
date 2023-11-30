@@ -13,30 +13,30 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &ViewResource{}
-var _ resource.ResourceWithImportState = &ViewResource{}
+var _ resource.Resource = &ForwardNsgResource{}
+var _ resource.ResourceWithImportState = &ForwardNsgResource{}
 
-func NewViewResource() resource.Resource {
-	return &ViewResource{}
+func NewForwardNsgResource() resource.Resource {
+	return &ForwardNsgResource{}
 }
 
-// ViewResource defines the resource implementation.
-type ViewResource struct {
+// ForwardNsgResource defines the resource implementation.
+type ForwardNsgResource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (r *ViewResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "dns_view"
+func (r *ForwardNsgResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "dns_forward_nsg"
 }
 
-func (r *ViewResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *ForwardNsgResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: `Named collection of DNS View settings.`,
-		Attributes:          ConfigViewResourceSchemaAttributes,
+		MarkdownDescription: "The dns/forward_nsg object represents a Forward DNS Server Group for forward zones.",
+		Attributes:          ConfigForwardNSGResourceSchemaAttributes,
 	}
 }
 
-func (r *ViewResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *ForwardNsgResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -56,8 +56,8 @@ func (r *ViewResource) Configure(ctx context.Context, req resource.ConfigureRequ
 	r.client = client
 }
 
-func (r *ViewResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data ConfigViewModel
+func (r *ForwardNsgResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data ConfigForwardNSGModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -67,12 +67,12 @@ func (r *ViewResource) Create(ctx context.Context, req resource.CreateRequest, r
 	}
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
-		ViewAPI.
-		ViewCreate(ctx).
+		ForwardNsgAPI.
+		ForwardNsgCreate(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create View, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create ForwardNsg, got error: %s", err))
 		return
 	}
 
@@ -83,8 +83,8 @@ func (r *ViewResource) Create(ctx context.Context, req resource.CreateRequest, r
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *ViewResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data ConfigViewModel
+func (r *ForwardNsgResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data ConfigForwardNSGModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -94,15 +94,15 @@ func (r *ViewResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	}
 
 	apiRes, httpRes, err := r.client.DNSConfigurationAPI.
-		ViewAPI.
-		ViewRead(ctx, data.Id.ValueString()).
+		ForwardNsgAPI.
+		ForwardNsgRead(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			resp.State.RemoveResource(ctx)
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read View, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read ForwardNsg, got error: %s", err))
 		return
 	}
 
@@ -113,8 +113,8 @@ func (r *ViewResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *ViewResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data ConfigViewModel
+func (r *ForwardNsgResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var data ConfigForwardNSGModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -124,12 +124,12 @@ func (r *ViewResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	}
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
-		ViewAPI.
-		ViewUpdate(ctx, data.Id.ValueString()).
+		ForwardNsgAPI.
+		ForwardNsgUpdate(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update View, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update ForwardNsg, got error: %s", err))
 		return
 	}
 
@@ -140,8 +140,8 @@ func (r *ViewResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *ViewResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data ConfigViewModel
+func (r *ForwardNsgResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data ConfigForwardNSGModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -151,18 +151,18 @@ func (r *ViewResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 	}
 
 	httpRes, err := r.client.DNSConfigurationAPI.
-		ViewAPI.
-		ViewDelete(ctx, data.Id.ValueString()).
+		ForwardNsgAPI.
+		ForwardNsgDelete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete View, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete ForwardNsg, got error: %s", err))
 		return
 	}
 }
 
-func (r *ViewResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *ForwardNsgResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

@@ -13,30 +13,30 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &ViewResource{}
-var _ resource.ResourceWithImportState = &ViewResource{}
+var _ resource.Resource = &DelegationResource{}
+var _ resource.ResourceWithImportState = &DelegationResource{}
 
-func NewViewResource() resource.Resource {
-	return &ViewResource{}
+func NewDelegationResource() resource.Resource {
+	return &DelegationResource{}
 }
 
-// ViewResource defines the resource implementation.
-type ViewResource struct {
+// DelegationResource defines the resource implementation.
+type DelegationResource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (r *ViewResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "dns_view"
+func (r *DelegationResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "dns_delegation"
 }
 
-func (r *ViewResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *DelegationResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: `Named collection of DNS View settings.`,
-		Attributes:          ConfigViewResourceSchemaAttributes,
+		MarkdownDescription: `This object (dns/delegation) represents a zone delegation.`,
+		Attributes:          ConfigDelegationResourceSchemaAttributes,
 	}
 }
 
-func (r *ViewResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *DelegationResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -56,8 +56,8 @@ func (r *ViewResource) Configure(ctx context.Context, req resource.ConfigureRequ
 	r.client = client
 }
 
-func (r *ViewResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data ConfigViewModel
+func (r *DelegationResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data ConfigDelegationModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -67,12 +67,12 @@ func (r *ViewResource) Create(ctx context.Context, req resource.CreateRequest, r
 	}
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
-		ViewAPI.
-		ViewCreate(ctx).
-		Body(*data.Expand(ctx, &resp.Diagnostics)).
+		DelegationAPI.
+		DelegationCreate(ctx).
+		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create View, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Delegation, got error: %s", err))
 		return
 	}
 
@@ -83,8 +83,8 @@ func (r *ViewResource) Create(ctx context.Context, req resource.CreateRequest, r
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *ViewResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data ConfigViewModel
+func (r *DelegationResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data ConfigDelegationModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -94,15 +94,15 @@ func (r *ViewResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	}
 
 	apiRes, httpRes, err := r.client.DNSConfigurationAPI.
-		ViewAPI.
-		ViewRead(ctx, data.Id.ValueString()).
+		DelegationAPI.
+		DelegationRead(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			resp.State.RemoveResource(ctx)
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read View, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Delegation, got error: %s", err))
 		return
 	}
 
@@ -113,8 +113,8 @@ func (r *ViewResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *ViewResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data ConfigViewModel
+func (r *DelegationResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var data ConfigDelegationModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -124,12 +124,12 @@ func (r *ViewResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	}
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
-		ViewAPI.
-		ViewUpdate(ctx, data.Id.ValueString()).
-		Body(*data.Expand(ctx, &resp.Diagnostics)).
+		DelegationAPI.
+		DelegationUpdate(ctx, data.Id.ValueString()).
+		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update View, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Delegation, got error: %s", err))
 		return
 	}
 
@@ -140,8 +140,8 @@ func (r *ViewResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *ViewResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data ConfigViewModel
+func (r *DelegationResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data ConfigDelegationModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -151,18 +151,18 @@ func (r *ViewResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 	}
 
 	httpRes, err := r.client.DNSConfigurationAPI.
-		ViewAPI.
-		ViewDelete(ctx, data.Id.ValueString()).
+		DelegationAPI.
+		DelegationDelete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete View, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete Delegation, got error: %s", err))
 		return
 	}
 }
 
-func (r *ViewResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *DelegationResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

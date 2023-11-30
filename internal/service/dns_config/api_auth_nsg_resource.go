@@ -13,30 +13,30 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &ViewResource{}
-var _ resource.ResourceWithImportState = &ViewResource{}
+var _ resource.Resource = &AuthNsgResource{}
+var _ resource.ResourceWithImportState = &AuthNsgResource{}
 
-func NewViewResource() resource.Resource {
-	return &ViewResource{}
+func NewAuthNsgResource() resource.Resource {
+	return &AuthNsgResource{}
 }
 
-// ViewResource defines the resource implementation.
-type ViewResource struct {
+// AuthNsgResource defines the resource implementation.
+type AuthNsgResource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (r *ViewResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "dns_view"
+func (r *AuthNsgResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "dns_auth_nsg"
 }
 
-func (r *ViewResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *AuthNsgResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: `Named collection of DNS View settings.`,
-		Attributes:          ConfigViewResourceSchemaAttributes,
+		MarkdownDescription: `The dns/auth_nsg object represents an Authoritative DNS Server Group for authoritative zones.`,
+		Attributes:          ConfigAuthNSGResourceSchemaAttributes,
 	}
 }
 
-func (r *ViewResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *AuthNsgResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -56,8 +56,8 @@ func (r *ViewResource) Configure(ctx context.Context, req resource.ConfigureRequ
 	r.client = client
 }
 
-func (r *ViewResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data ConfigViewModel
+func (r *AuthNsgResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data ConfigAuthNSGModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -67,12 +67,12 @@ func (r *ViewResource) Create(ctx context.Context, req resource.CreateRequest, r
 	}
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
-		ViewAPI.
-		ViewCreate(ctx).
+		AuthNsgAPI.
+		AuthNsgCreate(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create View, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create AuthNsg, got error: %s", err))
 		return
 	}
 
@@ -83,8 +83,8 @@ func (r *ViewResource) Create(ctx context.Context, req resource.CreateRequest, r
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *ViewResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data ConfigViewModel
+func (r *AuthNsgResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data ConfigAuthNSGModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -94,15 +94,15 @@ func (r *ViewResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	}
 
 	apiRes, httpRes, err := r.client.DNSConfigurationAPI.
-		ViewAPI.
-		ViewRead(ctx, data.Id.ValueString()).
+		AuthNsgAPI.
+		AuthNsgRead(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			resp.State.RemoveResource(ctx)
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read View, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read AuthNsg, got error: %s", err))
 		return
 	}
 
@@ -113,8 +113,8 @@ func (r *ViewResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *ViewResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data ConfigViewModel
+func (r *AuthNsgResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var data ConfigAuthNSGModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -124,12 +124,12 @@ func (r *ViewResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	}
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
-		ViewAPI.
-		ViewUpdate(ctx, data.Id.ValueString()).
+		AuthNsgAPI.
+		AuthNsgUpdate(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update View, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update AuthNsg, got error: %s", err))
 		return
 	}
 
@@ -140,8 +140,8 @@ func (r *ViewResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *ViewResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data ConfigViewModel
+func (r *AuthNsgResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data ConfigAuthNSGModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -151,18 +151,18 @@ func (r *ViewResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 	}
 
 	httpRes, err := r.client.DNSConfigurationAPI.
-		ViewAPI.
-		ViewDelete(ctx, data.Id.ValueString()).
+		AuthNsgAPI.
+		AuthNsgDelete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete View, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete AuthNsg, got error: %s", err))
 		return
 	}
 }
 
-func (r *ViewResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *AuthNsgResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
