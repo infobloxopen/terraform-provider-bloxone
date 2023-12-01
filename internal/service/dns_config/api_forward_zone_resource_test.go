@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -214,6 +215,64 @@ func TestAccForwardZoneResource_ForwardOnly(t *testing.T) {
 	})
 }
 
+func TestAccForwardZoneResource_Hosts(t *testing.T) {
+	var resourceName = "bloxone_dns_forward_zone.test_hosts"
+	var v dns_config.ConfigForwardZone
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccForwardZoneHosts("tf-acc-test.com."),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-acc-test.com."),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccForwardZoneHosts("tf-acc-test.com."),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-acc-test.com."),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccForwardZoneResource_InternalForwarders(t *testing.T) {
+	var resourceName = "bloxone_dns_forward_zone.test_internal_forwarders"
+	var v dns_config.ConfigForwardZone
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccForwardZoneInternalForwarders("tf-acc-test.com."),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-acc-test.com."),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccForwardZoneInternalForwarders("tf-acc-test.com."),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-acc-test.com."),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccForwardZoneResource_Nsgs(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_nsgs"
 	var v dns_config.ConfigForwardZone
@@ -410,6 +469,35 @@ resource "bloxone_dns_forward_zone" "test_forward_only" {
     forward_only = %q
 }
 `, fqdn, forwardOnly)
+}
+func testAccBaseWithHost() string {
+	return fmt.Sprintf(`
+data "bloxone_dns_hosts" "all_hosts" {
+	filters = {
+		name = "TF_TEST_HOST_01"
+}
+}
+`)
+}
+
+func testAccForwardZoneHosts(fqdn string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dns_forward_zone" "test_hosts" {
+    fqdn = %q
+    hosts = [data.bloxone_dns_hosts.all_hosts.results.0.id]
+}
+`, fqdn)
+	return strings.Join([]string{testAccBaseWithHost(), config}, "")
+}
+
+func testAccForwardZoneInternalForwarders(fqdn string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dns_forward_zone" "test_internal_forwarders" {
+    fqdn = %q
+    internal_forwarders = [data.bloxone_dns_hosts.all_hosts.results.0.id]
+}
+`, fqdn)
+	return strings.Join([]string{testAccBaseWithHost(), config}, "")
 }
 
 func testAccForwardZoneNsgs(fqdn, nsgs string) string {
