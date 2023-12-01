@@ -15,6 +15,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_mgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_provision"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/ipam"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/keys"
 )
 
 // Ensure BloxOneProvider satisfies various provider interfaces.
@@ -96,6 +97,8 @@ func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resou
 
 		infra_mgmt.NewHostsResource,
 		infra_mgmt.NewServicesResource,
+
+		keys.NewTsigResource,
 	}
 }
 
@@ -121,6 +124,8 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 
 		infra_mgmt.NewHostsDataSource,
 		infra_mgmt.NewServicesDataSource,
+
+		keys.NewTsigDataSource,
 	}
 }
 
