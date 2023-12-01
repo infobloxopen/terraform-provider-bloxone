@@ -41,7 +41,7 @@ func TestAccDhcpHostDataSource_TagFilters(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDhcpHostDataSourceConfigTagFilters("site1"),
+				Config: testAccDhcpHostDataSourceConfigTagFilters("tf_acc_test"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDhcpHostExists(context.Background(), dataSourceName, &v),
 					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),

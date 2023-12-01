@@ -35,7 +35,6 @@ func TestAccFixedAddressResource_basic(t *testing.T) {
 				Config: testAccFixedAddressBasicConfig("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
-					// TODO: check and validate these
 					resource.TestCheckResourceAttr(resourceName, "address", "10.0.0.10"),
 					resource.TestCheckResourceAttr(resourceName, "match_type", "mac"),
 					resource.TestCheckResourceAttr(resourceName, "match_value", "aa:aa:aa:aa:aa:aa"),
@@ -43,7 +42,6 @@ func TestAccFixedAddressResource_basic(t *testing.T) {
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
-					//resource.TestCheckResourceAttrSet(resourceName, "inheritance_assigned_hosts"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
 					// Test fields with default value
 				),
@@ -317,18 +315,74 @@ func TestAccFixedAddressResource_MatchType(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFixedAddressMatchType("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa"),
+				Config: testAccFixedAddressMatchType("10.0.0.10", "client_hex", "aa"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_type", "client_hex"),
+				),
+			},
+			{
+				Config: testAccFixedAddressMatchType("10.0.0.11", "client_text", "clienttext"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_type", "client_text"),
+				),
+			},
+			{
+				Config: testAccFixedAddressMatchType("10.0.0.12", "mac", "aa:aa:aa:aa:aa:aa"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_type", "mac"),
 				),
 			},
+			{
+				Config: testAccFixedAddressMatchType("10.0.0.13", "relay_hex", "aa"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_type", "relay_hex"),
+				),
+			},
+			{
+				Config: testAccFixedAddressMatchType("10.0.0.14", "relay_text", "relaytext"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_type", "relay_text"),
+				),
+			},
 			// Update and Read
 			{
-				Config: testAccFixedAddressMatchType("10.0.0.10", "client_text", "abcd"),
+				Config: testAccFixedAddressMatchType("10.0.0.10", "client_text", "client_text"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_type", "client_text"),
+				),
+			},
+			{
+				Config: testAccFixedAddressMatchType("10.0.0.11", "mac", "aa:aa:aa:aa:aa:aa"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_type", "mac"),
+				),
+			},
+			{
+				Config: testAccFixedAddressMatchType("10.0.0.12", "relay_hex", "aa"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_type", "relay_hex"),
+				),
+			},
+			{
+				Config: testAccFixedAddressMatchType("10.0.0.13", "relay_text", "relaytext"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_type", "relay_text"),
+				),
+			},
+			{
+				Config: testAccFixedAddressMatchType("10.0.0.14", "client_hex", "aa"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_type", "client_hex"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -346,18 +400,74 @@ func TestAccFixedAddressResource_MatchValue(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFixedAddressMatchValue("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa"),
+				Config: testAccFixedAddressMatchValue("10.0.0.10", "client_hex", "aa"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_value", "aa"),
+				),
+			},
+			{
+				Config: testAccFixedAddressMatchValue("10.0.0.11", "client_text", "clienttext"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_value", "clienttext"),
+				),
+			},
+			{
+				Config: testAccFixedAddressMatchValue("10.0.0.12", "mac", "aa:aa:aa:aa:aa:aa"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_value", "aa:aa:aa:aa:aa:aa"),
 				),
 			},
-			// Update and Read
 			{
-				Config: testAccFixedAddressMatchValue("10.0.0.10", "mac", "bb:aa:aa:aa:aa:aa"),
+				Config: testAccFixedAddressMatchValue("10.0.0.13", "relay_hex", "aa"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "match_value", "bb:aa:aa:aa:aa:aa"),
+					resource.TestCheckResourceAttr(resourceName, "match_value", "aa"),
+				),
+			},
+			{
+				Config: testAccFixedAddressMatchValue("10.0.0.14", "relay_text", "relaytext"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_value", "relaytext"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccFixedAddressMatchValue("10.0.0.10", "client_hex", "bb"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_value", "bb"),
+				),
+			},
+			{
+				Config: testAccFixedAddressMatchValue("10.0.0.11", "client_text", "clienttextupdate"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_value", "clienttextupdate"),
+				),
+			},
+			{
+				Config: testAccFixedAddressMatchValue("10.0.0.12", "mac", "bb:bb:bb:bb:bb:bb"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_value", "bb:bb:bb:bb:bb:bb"),
+				),
+			},
+			{
+				Config: testAccFixedAddressMatchValue("10.0.0.13", "relay_hex", "bb"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_value", "bb"),
+				),
+			},
+			{
+				Config: testAccFixedAddressMatchValue("10.0.0.14", "relay_text", "relaytextupdate"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_value", "relaytextupdate"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase

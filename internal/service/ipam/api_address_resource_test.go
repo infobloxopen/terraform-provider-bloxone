@@ -449,7 +449,7 @@ func testAccBaseWithIPSpaceAndSubnet() string {
 	return fmt.Sprintf(`
 data "bloxone_dhcp_hosts" "dhcp_host_by_tag" {
   tag_filters = {
-    location = "site1"
+    used_for = "tf_acc_test"
   }
 }
 resource "bloxone_ipam_ip_space" "test" {
