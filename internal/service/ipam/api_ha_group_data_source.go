@@ -11,6 +11,7 @@ import (
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
@@ -27,7 +28,7 @@ type HaGroupDataSource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (d *HaGroupDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *HaGroupDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + "ipam_ha_groups"
 }
 
@@ -44,7 +45,7 @@ func (m *IpamsvcHAGroupModelWithFilter) FlattenResults(ctx context.Context, from
 	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcHAGroupAttrTypes, diags, FlattenIpamsvcHAGroup)
 }
 
-func (d *HaGroupDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *HaGroupDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "",
 		Attributes: map[string]schema.Attribute{
@@ -68,7 +69,7 @@ func (d *HaGroupDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 	}
 }
 
-func (d *HaGroupDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (d *HaGroupDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
