@@ -37,7 +37,7 @@ data "bloxone_dns_forward_zones" "example_all" {}
 ### Optional
 
 - `filters` (Map of String) Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
-- `tag_filters` (Map of String) Tag Filters are used to filter by tags return a more specific list of results. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
+- `tag_filters` (Map of String) Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
 
 ### Read-Only
 
@@ -56,7 +56,6 @@ Optional:
 - `hosts` (List of String) The resource identifier.
 - `internal_forwarders` (List of String) The resource identifier.
 - `nsgs` (List of String) The resource identifier.
-- `parent` (String) The resource identifier.
 - `tags` (Map of String) Tagging specifics.
 - `view` (String) The resource identifier.
 
@@ -66,6 +65,7 @@ Read-Only:
 - `id` (String) The resource identifier.
 - `mapped_subnet` (String) Reverse zone network address in the following format: "ip-address/cidr". Defaults to empty.
 - `mapping` (String) Read-only. Zone mapping type. Allowed values:  * _forward_,  * _ipv4_reverse_.  * _ipv6_reverse_.  Defaults to _forward_.
+- `parent` (String) The resource identifier.
 - `protocol_fqdn` (String) Zone FQDN in punycode.
 - `updated_at` (String) The timestamp when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `warnings` (Attributes List) The list of a forward zone warnings. (see [below for nested schema](#nestedatt--results--warnings))

@@ -22,6 +22,7 @@ import (
 
 func TestAccForwardZoneResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test"
+	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
 	resource.Test(t, resource.TestCase{
@@ -30,10 +31,10 @@ func TestAccForwardZoneResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardZoneBasicConfig("tf-acc-test.com."),
+				Config: testAccForwardZoneBasicConfig(fqdn),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-acc-test.com."),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
@@ -50,6 +51,7 @@ func TestAccForwardZoneResource_basic(t *testing.T) {
 
 func TestAccForwardZoneResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dns_forward_zone.test"
+	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
 	resource.Test(t, resource.TestCase{
@@ -58,7 +60,7 @@ func TestAccForwardZoneResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckForwardZoneDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccForwardZoneBasicConfig("tf-acc-test.com."),
+				Config: testAccForwardZoneBasicConfig(fqdn),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
 					testAccCheckForwardZoneDisappears(context.Background(), &v),
@@ -71,6 +73,7 @@ func TestAccForwardZoneResource_disappears(t *testing.T) {
 
 func TestAccForwardZoneResource_FQDN(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test"
+	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v1 dns_config.ConfigForwardZone
 	var v2 dns_config.ConfigForwardZone
 
@@ -80,10 +83,10 @@ func TestAccForwardZoneResource_FQDN(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardZoneBasicConfig("tf-acc-test.com."),
+				Config: testAccForwardZoneBasicConfig(fqdn),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v1),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-acc-test.com."),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn),
 				),
 			},
 			// Update and Read
@@ -102,6 +105,7 @@ func TestAccForwardZoneResource_FQDN(t *testing.T) {
 
 func TestAccForwardZoneResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_comment"
+	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
 	resource.Test(t, resource.TestCase{
@@ -110,7 +114,7 @@ func TestAccForwardZoneResource_Comment(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardZoneComment("tf-acc-test.com.", "test comment"),
+				Config: testAccForwardZoneComment(fqdn, "test comment"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "test comment"),
@@ -118,7 +122,7 @@ func TestAccForwardZoneResource_Comment(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccForwardZoneComment("tf-acc-test.com.", "test comment update"),
+				Config: testAccForwardZoneComment(fqdn, "test comment update"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "test comment update"),
@@ -131,6 +135,7 @@ func TestAccForwardZoneResource_Comment(t *testing.T) {
 
 func TestAccForwardZoneResource_Disabled(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_disabled"
+	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
 	resource.Test(t, resource.TestCase{
@@ -139,7 +144,7 @@ func TestAccForwardZoneResource_Disabled(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardZoneDisabled("tf-acc-test.com.", "true"),
+				Config: testAccForwardZoneDisabled(fqdn, "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "disabled", "true"),
@@ -147,7 +152,7 @@ func TestAccForwardZoneResource_Disabled(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccForwardZoneDisabled("tf-acc-test.com.", "false"),
+				Config: testAccForwardZoneDisabled(fqdn, "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "disabled", "false"),
@@ -160,6 +165,7 @@ func TestAccForwardZoneResource_Disabled(t *testing.T) {
 
 func TestAccForwardZoneResource_ExternalForwarders(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_external_forwarders"
+	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
 	resource.Test(t, resource.TestCase{
@@ -168,7 +174,7 @@ func TestAccForwardZoneResource_ExternalForwarders(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardZoneExternalForwarders("tf-acc-test.com.", "192.168.10.10", "tf-infoblox-test.com."),
+				Config: testAccForwardZoneExternalForwarders(fqdn, "192.168.10.10", "tf-infoblox-test.com."),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "external_forwarders.0.address", "192.168.10.10"),
@@ -177,7 +183,7 @@ func TestAccForwardZoneResource_ExternalForwarders(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccForwardZoneExternalForwarders("tf-acc-test.com.", "192.168.11.11", "tf-infoblox.com."),
+				Config: testAccForwardZoneExternalForwarders(fqdn, "192.168.11.11", "tf-infoblox.com."),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "external_forwarders.0.address", "192.168.11.11"),
@@ -191,6 +197,7 @@ func TestAccForwardZoneResource_ExternalForwarders(t *testing.T) {
 
 func TestAccForwardZoneResource_ForwardOnly(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_forward_only"
+	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -198,14 +205,14 @@ func TestAccForwardZoneResource_ForwardOnly(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardZoneForwardOnly("tf-acc-test.com.", "false"),
+				Config: testAccForwardZoneForwardOnly(fqdn, "false"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "forward_only", "false"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccForwardZoneForwardOnly("tf-acc-test.com.", "true"),
+				Config: testAccForwardZoneForwardOnly(fqdn, "true"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "forward_only", "true"),
 				),
@@ -217,6 +224,7 @@ func TestAccForwardZoneResource_ForwardOnly(t *testing.T) {
 
 func TestAccForwardZoneResource_Hosts(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_hosts"
+	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
 	resource.Test(t, resource.TestCase{
@@ -225,18 +233,20 @@ func TestAccForwardZoneResource_Hosts(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardZoneHosts("tf-acc-test.com."),
+				Config: testAccForwardZoneHosts(fqdn),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-acc-test.com."),
+					resource.TestCheckResourceAttr(resourceName, "hosts.#", "1"),
+					resource.TestCheckResourceAttrPair(resourceName, "hosts.0", "data.bloxone_dns_hosts.test_host_01", "results.0.id"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccForwardZoneHosts("tf-acc-test.com."),
+				Config: testAccForwardZoneHosts(fqdn),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-acc-test.com."),
+					resource.TestCheckResourceAttr(resourceName, "hosts.#", "1"),
+					resource.TestCheckResourceAttrPair(resourceName, "hosts.0", "data.bloxone_dns_hosts.test_host_01", "results.0.id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -246,6 +256,7 @@ func TestAccForwardZoneResource_Hosts(t *testing.T) {
 
 func TestAccForwardZoneResource_InternalForwarders(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_internal_forwarders"
+	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
 	resource.Test(t, resource.TestCase{
@@ -254,18 +265,20 @@ func TestAccForwardZoneResource_InternalForwarders(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardZoneInternalForwarders("tf-acc-test.com."),
+				Config: testAccForwardZoneInternalForwarders(fqdn),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-acc-test.com."),
+					resource.TestCheckResourceAttr(resourceName, "internal_forwarders.#", "1"),
+					resource.TestCheckResourceAttrPair(resourceName, "internal_forwarders.0", "data.bloxone_dns_hosts.test_host_01", "results.0.id"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccForwardZoneInternalForwarders("tf-acc-test.com."),
+				Config: testAccForwardZoneInternalForwarders(fqdn),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-acc-test.com."),
+					resource.TestCheckResourceAttr(resourceName, "internal_forwarders.#", "1"),
+					resource.TestCheckResourceAttrPair(resourceName, "internal_forwarders.0", "data.bloxone_dns_hosts.test_host_01", "results.0.id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -275,6 +288,7 @@ func TestAccForwardZoneResource_InternalForwarders(t *testing.T) {
 
 func TestAccForwardZoneResource_Nsgs(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_nsgs"
+	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
 	resource.Test(t, resource.TestCase{
@@ -283,7 +297,7 @@ func TestAccForwardZoneResource_Nsgs(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardZoneNsgs("tf-acc-test.com.", "bloxone_dns_forward_nsg.one"),
+				Config: testAccForwardZoneNsgs(fqdn, "bloxone_dns_forward_nsg.one"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "nsgs.0", "bloxone_dns_forward_nsg.one", "id"),
@@ -291,7 +305,7 @@ func TestAccForwardZoneResource_Nsgs(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccForwardZoneNsgs("tf-acc-test.com.", "bloxone_dns_forward_nsg.two"),
+				Config: testAccForwardZoneNsgs(fqdn, "bloxone_dns_forward_nsg.two"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "nsgs.0", "bloxone_dns_forward_nsg.two", "id"),
@@ -304,6 +318,7 @@ func TestAccForwardZoneResource_Nsgs(t *testing.T) {
 
 func TestAccForwardZoneResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_tags"
+	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -311,7 +326,7 @@ func TestAccForwardZoneResource_Tags(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardZoneTags("tf-acc-test.com.", map[string]string{
+				Config: testAccForwardZoneTags(fqdn, map[string]string{
 					"tag1": "value1",
 					"tag2": "value2",
 				}),
@@ -322,7 +337,7 @@ func TestAccForwardZoneResource_Tags(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccForwardZoneTags("tf-acc-test.com.", map[string]string{
+				Config: testAccForwardZoneTags(fqdn, map[string]string{
 					"tag2": "value2changed",
 					"tag3": "value3",
 				}),
@@ -338,6 +353,7 @@ func TestAccForwardZoneResource_Tags(t *testing.T) {
 
 func TestAccForwardZoneResource_View(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_view"
+	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v1 dns_config.ConfigForwardZone
 	var v2 dns_config.ConfigForwardZone
 
@@ -347,7 +363,7 @@ func TestAccForwardZoneResource_View(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardZoneView("tf-acc-test.com.", "bloxone_dns_view.one"),
+				Config: testAccForwardZoneView(fqdn, "bloxone_dns_view.one"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttrPair(resourceName, "view", "bloxone_dns_view.one", "id"),
@@ -355,7 +371,7 @@ func TestAccForwardZoneResource_View(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccForwardZoneView("tf-acc-test.com.", "bloxone_dns_view.two"),
+				Config: testAccForwardZoneView(fqdn, "bloxone_dns_view.two"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneDestroy(context.Background(), &v1),
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v2),
@@ -422,7 +438,6 @@ func testAccCheckForwardZoneDisappears(ctx context.Context, v *dns_config.Config
 }
 
 func testAccForwardZoneBasicConfig(fqdn string) string {
-	// TODO: create basic resource with required fields
 	return fmt.Sprintf(`
 resource "bloxone_dns_forward_zone" "test" {
     fqdn = %q
@@ -473,11 +488,11 @@ resource "bloxone_dns_forward_zone" "test_forward_only" {
 
 func testAccBaseWithHost() string {
 	return `
-	data "bloxone_dns_hosts" "all_hosts" {
-		filters = {
-			name = "TF_TEST_HOST_01"
+data "bloxone_dns_hosts" "test_host_01" {
+	filters = {
+		name = "TF_TEST_HOST_01"
 	}
-	}
+}
 	`
 }
 
@@ -485,7 +500,7 @@ func testAccForwardZoneHosts(fqdn string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dns_forward_zone" "test_hosts" {
     fqdn = %q
-    hosts = [data.bloxone_dns_hosts.all_hosts.results.0.id]
+    hosts = [data.bloxone_dns_hosts.test_host_01.results.0.id]
 }
 `, fqdn)
 	return strings.Join([]string{testAccBaseWithHost(), config}, "")
@@ -495,7 +510,7 @@ func testAccForwardZoneInternalForwarders(fqdn string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dns_forward_zone" "test_internal_forwarders" {
     fqdn = %q
-    internal_forwarders = [data.bloxone_dns_hosts.all_hosts.results.0.id]
+    internal_forwarders = [data.bloxone_dns_hosts.test_host_01.results.0.id]
 }
 `, fqdn)
 	return strings.Join([]string{testAccBaseWithHost(), config}, "")
@@ -513,9 +528,9 @@ resource "bloxone_dns_forward_nsg" "two"{
 
 resource "bloxone_dns_forward_zone" "test_nsgs" {
 	fqdn = %q
-    nsgs = [%s.id]
+	nsgs = [%s.id]
 }
-`, acctest.RandomNameWithPrefix("auth-nsg"), acctest.RandomNameWithPrefix("auth-nsg"), fqdn, nsgs)
+`, acctest.RandomNameWithPrefix("fw-nsg"), acctest.RandomNameWithPrefix("fw-nsg"), fqdn, nsgs)
 }
 
 func testAccForwardZoneTags(fqdn string, tags map[string]string) string {
@@ -547,7 +562,7 @@ resource "bloxone_dns_view" "two" {
 
 resource "bloxone_dns_forward_zone" "test_view" {
 	fqdn = %q
-    view = %s.id
+	view = %s.id
 }
 `, acctest.RandomNameWithPrefix("view"), acctest.RandomNameWithPrefix("view"), fqdn, view)
 }
