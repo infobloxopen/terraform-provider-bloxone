@@ -149,7 +149,6 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The name of the fixed address. May contain 1 to 256 characters. Can include UTF-8.",
 	},
 	"parent": schema.StringAttribute{
-		Optional:            false,
 		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
