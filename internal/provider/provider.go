@@ -107,6 +107,8 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		ipam.NewAddressBlockDataSource,
 		ipam.NewAddressDataSource,
 		ipam.NewRangeDataSource,
+		ipam.NewIpamNextAvailableIPDataSource,
+		ipam.NewNextAvailableSubnetDataSource,
 
 		dns_config.NewViewDataSource,
 		dns_config.NewAuthNsgDataSource,
