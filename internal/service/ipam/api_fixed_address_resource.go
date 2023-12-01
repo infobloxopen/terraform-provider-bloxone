@@ -12,11 +12,6 @@ import (
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 )
 
-/*
-TODO:
-// Add unit tests for DHCP config profiles
-*/
-
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &FixedAddressResource{}
 var _ resource.ResourceWithImportState = &FixedAddressResource{}

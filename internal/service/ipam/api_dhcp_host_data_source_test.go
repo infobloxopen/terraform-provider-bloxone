@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
+
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
@@ -41,12 +42,12 @@ func TestAccDhcpHostDataSource_TagFilters(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDhcpHostDataSourceConfigTagFilters("tf_acc_test"),
+				Config: testAccDhcpHostDataSourceConfigTagFilters("Terraform Acceptance Testing"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDhcpHostExists(context.Background(), dataSourceName, &v),
 					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
 					resource.TestCheckResourceAttr(dataSourceName, "results.0.name", "TF_TEST_HOST_01"),
-					resource.TestCheckResourceAttr(dataSourceName, "results.0.tags.used_for", "tf_acc_test"),
+					resource.TestCheckResourceAttr(dataSourceName, "results.0.tags.used_for", "Terraform Acceptance Testing"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "results.0.id"),
 				),
 			},
