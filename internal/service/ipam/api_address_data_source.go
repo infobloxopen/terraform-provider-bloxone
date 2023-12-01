@@ -44,7 +44,7 @@ func (m *IpamsvcAddressModelWithFilter) FlattenResults(ctx context.Context, from
 	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcAddressAttrTypes, diags, FlattenIpamsvcAddress)
 }
 
-func (d *AddressDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *AddressDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "",
 		Attributes: map[string]schema.Attribute{

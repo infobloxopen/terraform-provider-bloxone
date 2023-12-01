@@ -32,6 +32,7 @@ testacc-cover.out
 .terraform/
 terraform.tfplan
 terraform.tfstate
+.terraform.lock.hcl
 *.backup
 
 /terraform-provider-bloxone
