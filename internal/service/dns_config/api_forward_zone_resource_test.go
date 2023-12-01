@@ -489,11 +489,11 @@ resource "bloxone_dns_forward_zone" "test_forward_only" {
 func testAccBaseWithHost() string {
 	return `
 data "bloxone_dns_hosts" "test_host_01" {
-	filters = {
-		name = "TF_TEST_HOST_01"
-	}
+    filters = {
+        name = "TF_TEST_HOST_01"
+    }
 }
-	`
+    `
 }
 
 func testAccForwardZoneHosts(fqdn string) string {
