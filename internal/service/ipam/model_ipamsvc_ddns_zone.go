@@ -2,6 +2,7 @@ package ipam
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -39,10 +40,13 @@ var IpamsvcDDNSZoneAttrTypes = map[string]attr.Type{
 var IpamsvcDDNSZoneResourceSchemaAttributes = map[string]schema.Attribute{
 	"fqdn": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `Zone FQDN.  If _zone_ is defined, the _fqdn_ field must be empty.`,
 	},
 	"gss_tsig_enabled": schema.BoolAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: `_gss_tsig_enabled_ enables/disables GSS-TSIG signed dynamic updates.  Defaults to _false_.`,
 	},
 	"nameservers": schema.ListNestedAttribute{
@@ -54,6 +58,8 @@ var IpamsvcDDNSZoneResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"tsig_enabled": schema.BoolAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: `Indicates if TSIG key should be used for the update.  Defaults to _false_.`,
 	},
 	"tsig_key": schema.SingleNestedAttribute{
@@ -61,7 +67,7 @@ var IpamsvcDDNSZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:   true,
 	},
 	"view": schema.StringAttribute{
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"view_name": schema.StringAttribute{
@@ -91,13 +97,13 @@ func (m *IpamsvcDDNSZoneModel) Expand(ctx context.Context, diags *diag.Diagnosti
 		return nil
 	}
 	to := &ipam.IpamsvcDDNSZone{
-		Fqdn:           m.Fqdn.ValueStringPointer(),
-		GssTsigEnabled: m.GssTsigEnabled.ValueBoolPointer(),
+		Fqdn:           flex.ExpandStringPointer(m.Fqdn),
+		GssTsigEnabled: flex.ExpandBoolPointer(m.GssTsigEnabled),
 		Nameservers:    flex.ExpandFrameworkListNestedBlock(ctx, m.Nameservers, diags, ExpandIpamsvcNameserver),
-		TsigEnabled:    m.TsigEnabled.ValueBoolPointer(),
+		TsigEnabled:    flex.ExpandBoolPointer(m.TsigEnabled),
 		TsigKey:        ExpandIpamsvcTSIGKey(ctx, m.TsigKey, diags),
-		View:           m.View.ValueStringPointer(),
-		Zone:           m.Zone.ValueString(),
+		View:           flex.ExpandStringPointer(m.View),
+		Zone:           flex.ExpandString(m.Zone),
 	}
 	return to
 }

@@ -12,8 +12,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
+
+//TODO: add tests
+// The following require additional resource/data source objects to be supported.
+// - dhcp_server.client_principal
+// - dhcp_server.Inheritance_sources
+// - dhcp_Server.Kerberos_kdc
+// - dhcp_server.Kerberos_keys
+// - dhcp_server.Kerberos_rekey_interval
+// - dhcp_server.Kerberos_retry_interval
+// - dhcp_server.Kerberos_tkey_lifetime
+// - dhcp_server.Kerberos_tkey_protocol
+// - dhcp_server.Vendor_specific_option_option_space
+// - dhcp_server.Dhcp_options., both v4 & v6
 
 func TestAccServerResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test"
@@ -431,25 +445,28 @@ func TestAccServerResource_DdnsZones(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_zones"
 	var v ipam.IpamsvcServer
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
+	var zoneFQDN = acctest.RandomNameWithPrefix("auth-zone") + "."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerDdnsZones(name, "DDNS_ZONES_REPLACE_ME"),
+				Config: testAccServerDdnsZones(name, zoneFQDN),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_zones", "DDNS_ZONES_REPLACE_ME"),
+					resource.TestCheckResourceAttrPair(resourceName, "auth_zone", "bloxone_dns_auth_zone.test_zone", "id"),
 				),
+				ImportStatePersist: true,
 			},
 			// Update and Read
 			{
-				Config: testAccServerDdnsZones(name, "DDNS_ZONES_UPDATE_REPLACE_ME"),
+				Config: testAccServerDdnsZones(name, zoneFQDN),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_zones", "DDNS_ZONES_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttrPair(resourceName, "auth_zone", "bloxone_dns_auth_zone.test_zone", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -479,64 +496,6 @@ func TestAccServerResource_DhcpConfig(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_config", "DHCP_CONFIG_UPDATE_REPLACE_ME"),
-				),
-			},
-			// Delete testing automatically occurs in TestCase
-		},
-	})
-}
-
-func TestAccServerResource_DhcpOptions(t *testing.T) {
-	var resourceName = "bloxone_dhcp_server.test_dhcp_options"
-	var v ipam.IpamsvcServer
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// Create and Read
-			{
-				Config: testAccServerDhcpOptions("NAME_REPLACE_ME", "DHCP_OPTIONS_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "dhcp_options", "DHCP_OPTIONS_REPLACE_ME"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccServerDhcpOptions("NAME_REPLACE_ME", "DHCP_OPTIONS_UPDATE_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "dhcp_options", "DHCP_OPTIONS_UPDATE_REPLACE_ME"),
-				),
-			},
-			// Delete testing automatically occurs in TestCase
-		},
-	})
-}
-
-func TestAccServerResource_DhcpOptionsV6(t *testing.T) {
-	var resourceName = "bloxone_dhcp_server.test_dhcp_options_v6"
-	var v ipam.IpamsvcServer
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// Create and Read
-			{
-				Config: testAccServerDhcpOptionsV6("NAME_REPLACE_ME", "DHCP_OPTIONS_V6_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6", "DHCP_OPTIONS_V6_REPLACE_ME"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccServerDhcpOptionsV6("NAME_REPLACE_ME", "DHCP_OPTIONS_V6_UPDATE_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6", "DHCP_OPTIONS_V6_UPDATE_REPLACE_ME"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1252,13 +1211,20 @@ resource "bloxone_dhcp_server" "test_ddns_use_conflict_resolution" {
 `, name, ddnsUseConflictResolution)
 }
 
-func testAccServerDdnsZones(name string, ddnsZones string) string {
+func testAccServerDdnsZones(name string, zoneFQDN string) string {
 	return fmt.Sprintf(`
+resource "bloxone_dns_auth_zone" "test_zone" {
+	fqdn = %q
+	primary_type = "cloud"
+}
 resource "bloxone_dhcp_server" "test_ddns_zones" {
     name = %q
-    ddns_zones = %q
+    ddns_zones = [{
+		zone = bloxone_dns_auth_zone.test_zone.id
+	}]
+	depends_on = [bloxone_dns_auth_zone.test_zone]
 }
-`, name, ddnsZones)
+`, zoneFQDN, name)
 }
 
 func testAccServerDhcpConfig(name string, dhcpConfig string) string {
@@ -1435,9 +1401,9 @@ func testAccServerTags(name string, tags string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dhcp_server" "test_tags" {
     name = %q
-    tags = %q
+    tags = %s
 }
-`, name, tags)
+`, name, tagsStr)
 }
 
 func testAccServerVendorSpecificOptionOptionSpace(name string, vendorSpecificOptionOptionSpace string) string {

@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
@@ -22,7 +23,7 @@ func TestAccServerDataSource_Filters(t *testing.T) {
 		CheckDestroy:             testAccCheckServerDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccServerDataSourceConfigFilters("NAME_REPLACE_ME"),
+				Config: testAccServerDataSourceConfigFilters("TEST-DHCP-SERVER"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckServerExists(context.Background(), resourceName, &v),
@@ -43,7 +44,7 @@ func TestAccServerDataSource_TagFilters(t *testing.T) {
 		CheckDestroy:             testAccCheckServerDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccServerDataSourceConfigTagFilters("NAME_REPLACE_ME", "value1"),
+				Config: testAccServerDataSourceConfigTagFilters("TEST-DHCP-SERVER", "value1"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckServerExists(context.Background(), resourceName, &v),
