@@ -84,6 +84,7 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"dhcp_host": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 	"dhcp_options": schema.ListNestedAttribute{
