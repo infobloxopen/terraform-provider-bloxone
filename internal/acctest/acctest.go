@@ -25,6 +25,9 @@ var (
 	ProtoV6ProviderFactories = map[string]func() (tfprotov6.ProviderServer, error){
 		"bloxone": providerserver.NewProtocol6WithError(provider.New("test", "none")()),
 	}
+
+	Host01 = "TF_TEST_HOST_01"
+	Host02 = "TF_TEST_HOST_02"
 )
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyz"
@@ -63,4 +66,27 @@ func PreCheck(t *testing.T) {
 	if err != nil {
 		t.Fatal("Cannot create bloxone client")
 	}
+}
+
+// TestAccDhcpHosts creates a Terraform datasource config that allows you to filter by Hostname
+// If the hosts aren't specified the constants `Host01` and `Host02` are used as host names.
+func TestAccDhcpHosts(host1, host2 string) string {
+	if host1 == "" {
+		host1 = Host01
+	}
+	if host2 == "" {
+		host2 = Host02
+	}
+	return fmt.Sprintf(`
+data "bloxone_dhcp_hosts" "test_01" {
+	filters = {
+		name = %q
+	}
+}
+
+data "bloxone_dhcp_hosts" "test_02" {
+	filters = {
+		name = %q
+	}
+}`, host1, host2)
 }

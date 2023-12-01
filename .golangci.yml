@@ -1,0 +1,24 @@
+# This file contains all available configuration options
+# with their default values.
+run:
+  deadline: 10m
+
+# all available settings of specific linters
+linters-settings:
+  goimports:
+    # put imports beginning with prefix after 3rd-party packages;
+    # it's a comma-separated list of prefixes
+    local-prefixes: "github.com/infobloxopen/bloxone-go-client,github.com/infobloxopen/terraform-provider-bloxone"
+  misspell:
+    # Correct spellings using locale preferences for US or UK.
+    # Default is to use a neutral variety of English.
+    # Setting locale to US will correct the British spelling of 'colour' to 'color'.
+    locale: US
+    #ignore-words:
+    #  - someword
+
+issues:
+  # Maximum issues count per one linter. Set to 0 to disable. Default is 50.
+  max-issues-per-linter: 0
+  # Maximum count of issues with the same text. Set to 0 to disable. Default is 3.
+  max-same-issues: 0
