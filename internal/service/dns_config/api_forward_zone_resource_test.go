@@ -470,14 +470,15 @@ resource "bloxone_dns_forward_zone" "test_forward_only" {
 }
 `, fqdn, forwardOnly)
 }
+
 func testAccBaseWithHost() string {
-	return fmt.Sprint(`
-data "bloxone_dns_hosts" "all_hosts" {
-	filters = {
-		name = "TF_TEST_HOST_01"
-}
-}
-`)
+	return `
+	data "bloxone_dns_hosts" "all_hosts" {
+		filters = {
+			name = "TF_TEST_HOST_01"
+	}
+	}
+	`
 }
 
 func testAccForwardZoneHosts(fqdn string) string {
