@@ -3,12 +3,10 @@ package dns_config
 import (
 	"context"
 	"fmt"
-	"net/http"
-	"time"
-
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"net/http"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 )
@@ -162,8 +160,6 @@ func (r *ViewResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete View, got error: %s", err))
 		return
 	}
-	// Wait for the deletion to complete
-	time.Sleep(2 * time.Second)
 }
 
 func (r *ViewResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
