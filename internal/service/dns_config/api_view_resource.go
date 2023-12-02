@@ -3,10 +3,11 @@ package dns_config
 import (
 	"context"
 	"fmt"
+	"net/http"
+
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"net/http"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 )

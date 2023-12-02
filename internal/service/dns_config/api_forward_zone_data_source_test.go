@@ -57,8 +57,6 @@ func TestAccForwardZoneDataSource_TagFilters(t *testing.T) {
 	})
 }
 
-// below all TestAcc functions
-
 func testAccCheckForwardZoneResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
 	return []resource.TestCheckFunc{
 		resource.TestCheckResourceAttrPair(resourceName, "comment", dataSourceName, "results.0.comment"),

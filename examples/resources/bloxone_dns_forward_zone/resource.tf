@@ -7,7 +7,7 @@ resource "bloxone_dns_forward_zone" "example" {
 
   # Other optional fields
   name    = "example_forward_zone"
-  comment = "Example of an Forward Zone"
+  comment = "Example of a Forward Zone"
   tags = {
     site = "Test Site"
   }

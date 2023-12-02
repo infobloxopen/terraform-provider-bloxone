@@ -12,5 +12,5 @@ data "bloxone_dns_forward_zones" "example_by_tag" {
   }
 }
 
-# Get all auth zones
+# Get all forward zones
 data "bloxone_dns_forward_zones" "example_all" {}
