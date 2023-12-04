@@ -1,0 +1,13 @@
+resource "bloxone_dhcp_server" "example" {
+  name = "example_dhcp_server"
+}
+
+resource "bloxone_dhcp_server" "example" {
+  name = "example_dhcp_server"
+
+  #Other Optional Fields
+  comment = "dhcp server"
+  tags = {
+    site = "Test Site"
+  }
+}

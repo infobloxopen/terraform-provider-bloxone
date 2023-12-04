@@ -457,16 +457,17 @@ func TestAccServerResource_DdnsZones(t *testing.T) {
 				Config: testAccServerDdnsZones(name, zoneFQDN),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttrPair(resourceName, "auth_zone", "bloxone_dns_auth_zone.test_zone", "id"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_zones.#", "1"),
+					resource.TestCheckResourceAttrPair(resourceName, "ddns_zones.0.zone", "bloxone_dns_auth_zone.test_zone", "id"),
 				),
-				ImportStatePersist: true,
 			},
 			// Update and Read
 			{
 				Config: testAccServerDdnsZones(name, zoneFQDN),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttrPair(resourceName, "auth_zone", "bloxone_dns_auth_zone.test_zone", "id"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_zones.#", "1"),
+					resource.TestCheckResourceAttrPair(resourceName, "ddns_zones.0.zone", "bloxone_dns_auth_zone.test_zone", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
