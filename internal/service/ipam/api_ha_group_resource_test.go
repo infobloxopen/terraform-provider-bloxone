@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 	"testing"
-	
+
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/infobloxopen/bloxone-go-client/ipam"
@@ -305,7 +305,7 @@ resource "bloxone_ipam_ha_group" "test" {
 }
 `, role1, role2, name, mode)
 
-	return strings.Join([]string{acctest.TestAccDhcpHosts("", ""), config}, "")
+	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupComment(role1, role2, name, mode, comment string) string {
@@ -327,7 +327,7 @@ resource "bloxone_ipam_ha_group" "test_comment" {
 }
 `, role1, role2, name, mode, comment)
 
-	return strings.Join([]string{acctest.TestAccDhcpHosts("", ""), config}, "")
+	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupHosts(host1, role1, host2, role2, name, mode string) string {
@@ -347,7 +347,7 @@ resource "bloxone_ipam_ha_group" "test_hosts" {
 	mode = %q
 }
 `, host1, role1, host2, role2, name, mode)
-	return strings.Join([]string{acctest.TestAccDhcpHosts("", ""), config}, "")
+	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupMode(role1, role2, name, mode string) string {
@@ -367,7 +367,7 @@ resource "bloxone_ipam_ha_group" "test_mode" {
 	mode = %q
 }
 `, role1, role2, name, mode)
-	return strings.Join([]string{acctest.TestAccDhcpHosts("", ""), config}, "")
+	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupName(role1, role2, name, mode string) string {
@@ -387,7 +387,7 @@ resource "bloxone_ipam_ha_group" "test_name" {
 	mode = %q
 }
 `, role1, role2, name, mode)
-	return strings.Join([]string{acctest.TestAccDhcpHosts("", ""), config}, "")
+	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupTags(role1, role2, name, mode string, tags map[string]string) string {
@@ -416,5 +416,5 @@ resource "bloxone_ipam_ha_group" "test_tags" {
 }
 `, role1, role2, name, mode, tagsStr)
 
-	return strings.Join([]string{acctest.TestAccDhcpHosts("", ""), config}, "")
+	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
 }

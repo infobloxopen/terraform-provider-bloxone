@@ -95,7 +95,7 @@ data "bloxone_ipam_ha_groups" "test" {
   }
   depends_on = [bloxone_ipam_ha_group.test]
 }`, name, name)
-	return strings.Join([]string{acctest.TestAccDhcpHosts("", ""), config}, "")
+	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupDataSourceConfigTagFilters(name, tagValue string) string {
@@ -124,5 +124,5 @@ data "bloxone_ipam_ha_groups" "test" {
   }
 }`, name, tagValue)
 
-	return strings.Join([]string{acctest.TestAccDhcpHosts("", ""), config}, "")
+	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -68,25 +69,23 @@ func PreCheck(t *testing.T) {
 	}
 }
 
-// TestAccDhcpHosts creates a Terraform datasource config that allows you to filter by Hostname
-// If the hosts aren't specified the constants `Host01` and `Host02` are used as host names.
-func TestAccDhcpHosts(host1, host2 string) string {
-	if host1 == "" {
-		host1 = Host01
+// TestAccBaseConfig_DhcpHosts creates a Terraform datasource config that allows you to filter by Hostname for 2 hosts
+func TestAccBaseConfig_DhcpHosts() string {
+	config := fmt.Sprintf(`
+data "bloxone_dhcp_hosts" "test_02" {
+	filters = {
+		name = %q
 	}
-	if host2 == "" {
-		host2 = Host02
-	}
+}`, Host02)
+	return strings.Join([]string{TestAccBaseConfig_DhcpHost(), config}, "")
+}
+
+// TestAccBaseConfig_DhcpHost creates a Terraform datasource config that allows you to filter by Hostname for a single host
+func TestAccBaseConfig_DhcpHost() string {
 	return fmt.Sprintf(`
 data "bloxone_dhcp_hosts" "test_01" {
 	filters = {
 		name = %q
 	}
-}
-
-data "bloxone_dhcp_hosts" "test_02" {
-	filters = {
-		name = %q
-	}
-}`, host1, host2)
+}`, Host01)
 }
