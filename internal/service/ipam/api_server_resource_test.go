@@ -858,15 +858,6 @@ resource "bloxone_dhcp_server" "test" {
 `, name)
 }
 
-func testAccServerClientPrincipal(name string, clientPrincipal string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dhcp_server" "test_client_principal" {
-    name = %q
-    client_principal = %q
-}
-`, name, clientPrincipal)
-}
-
 func testAccServerComment(name string, comment string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dhcp_server" "test_comment" {
@@ -1000,24 +991,6 @@ resource "bloxone_dhcp_server" "test_dhcp_config" {
 `, name, allowUnknown, allowUnknownV6, ignoreClientUid, leaseTime, leaseTimeV6)
 }
 
-func testAccServerDhcpOptions(name string, dhcpOptions string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dhcp_server" "test_dhcp_options" {
-    name = %q
-    dhcp_options = %q
-}
-`, name, dhcpOptions)
-}
-
-func testAccServerDhcpOptionsV6(name string, dhcpOptionsV6 string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dhcp_server" "test_dhcp_options_v6" {
-    name = %q
-    dhcp_options_v6 = %q
-}
-`, name, dhcpOptionsV6)
-}
-
 func testAccServerGssTsigFallback(name string, gssTsigFallback string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dhcp_server" "test_gss_tsig_fallback" {
@@ -1081,69 +1054,6 @@ resource "bloxone_dhcp_server" "test_hostname_rewrite_regex" {
 `, name, hostnameRewriteRegex)
 }
 
-func testAccServerInheritanceSources(name string, inheritanceSources string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dhcp_server" "test_inheritance_sources" {
-    name = %q
-    inheritance_sources = %q
-}
-`, name, inheritanceSources)
-}
-
-func testAccServerKerberosKdc(name string, kerberosKdc string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dhcp_server" "test_kerberos_kdc" {
-    name = %q
-    kerberos_kdc = %q
-}
-`, name, kerberosKdc)
-}
-
-func testAccServerKerberosKeys(name string, kerberosKeys string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dhcp_server" "test_kerberos_keys" {
-    name = %q
-    kerberos_keys = %q
-}
-`, name, kerberosKeys)
-}
-
-func testAccServerKerberosRekeyInterval(name string, kerberosRekeyInterval string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dhcp_server" "test_kerberos_rekey_interval" {
-    name = %q
-    kerberos_rekey_interval = %q
-}
-`, name, kerberosRekeyInterval)
-}
-
-func testAccServerKerberosRetryInterval(name string, kerberosRetryInterval string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dhcp_server" "test_kerberos_retry_interval" {
-    name = %q
-    kerberos_retry_interval = %q
-}
-`, name, kerberosRetryInterval)
-}
-
-func testAccServerKerberosTkeyLifetime(name string, kerberosTkeyLifetime string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dhcp_server" "test_kerberos_tkey_lifetime" {
-    name = %q
-    kerberos_tkey_lifetime = %q
-}
-`, name, kerberosTkeyLifetime)
-}
-
-func testAccServerKerberosTkeyProtocol(name string, kerberosTkeyProtocol string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dhcp_server" "test_kerberos_tkey_protocol" {
-    name = %q
-    kerberos_tkey_protocol = %q
-}
-`, name, kerberosTkeyProtocol)
-}
-
 func testAccServerName(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dhcp_server" "test_name" {
@@ -1176,13 +1086,4 @@ resource "bloxone_dhcp_server" "test_tags" {
     tags = %s
 }
 `, name, tagsStr)
-}
-
-func testAccServerVendorSpecificOptionOptionSpace(name string, vendorSpecificOptionOptionSpace string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dhcp_server" "test_vendor_specific_option_option_space" {
-    name = %q
-    vendor_specific_option_option_space = %q
-}
-`, name, vendorSpecificOptionOptionSpace)
 }
