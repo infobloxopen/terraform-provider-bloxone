@@ -2,6 +2,7 @@ package ipam
 
 import (
 	"context"
+	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -376,6 +377,7 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The resource identifier for the address block where the next available subnet should be generated",
 		Validators: []validator.String{
 			stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
+			stringvalidator.RegexMatches(regexp.MustCompile(`^ipam/address_block/[0-9a-f-].*$`), "Should be the resource identifier of an address block."),
 		},
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
@@ -454,8 +456,8 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.IpamsvcSubn
 	}
 	m.Address = flex.FlattenStringPointer(from.Address)
 	m.AsmConfig = FlattenIpamsvcASMConfig(ctx, from.AsmConfig, diags)
-	m.AsmScopeFlag = flex.FlattenInt64(int64(*from.AsmScopeFlag))
-	m.Cidr = flex.FlattenInt64(int64(*from.Cidr))
+	m.AsmScopeFlag = flex.FlattenInt64Pointer(from.AsmScopeFlag)
+	m.Cidr = flex.FlattenInt64Pointer(from.Cidr)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.DdnsClientUpdate = flex.FlattenStringPointer(from.DdnsClientUpdate)
@@ -487,8 +489,8 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.IpamsvcSubn
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Parent = flex.FlattenStringPointer(from.Parent)
 	m.Protocol = flex.FlattenStringPointer(from.Protocol)
-	m.RebindTime = flex.FlattenInt64(int64(*from.RebindTime))
-	m.RenewTime = flex.FlattenInt64(int64(*from.RenewTime))
+	m.RebindTime = flex.FlattenInt64Pointer(from.RebindTime)
+	m.RenewTime = flex.FlattenInt64Pointer(from.RenewTime)
 	m.Space = flex.FlattenStringPointer(from.Space)
 	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Threshold = FlattenIpamsvcUtilizationThreshold(ctx, from.Threshold, diags)

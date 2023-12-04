@@ -11,10 +11,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_data"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_mgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_provision"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/ipam"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/keys"
 )
 
 // Ensure BloxOneProvider satisfies various provider interfaces.
@@ -79,8 +81,19 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		ipam.NewIpamHostResource,
 		ipam.NewIpSpaceResource,
 		ipam.NewSubnetResource,
+		ipam.NewAddressBlockResource,
+		ipam.NewAddressResource,
+		ipam.NewRangeResource,
+		ipam.NewFixedAddressResource,
+
+		dns_config.NewViewResource,
+		dns_config.NewAuthNsgResource,
+		dns_config.NewAuthZoneResource,
+		dns_config.NewForwardNsgResource,
+		dns_config.NewDelegationResource,
 
 		dns_data.NewRecordResource,
 
@@ -88,13 +101,28 @@ func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resou
 
 		infra_mgmt.NewHostsResource,
 		infra_mgmt.NewServicesResource,
+
+		keys.NewTsigResource,
 	}
 }
 
 func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		ipam.NewDhcpHostDataSource,
+		ipam.NewIpamHostDataSource,
 		ipam.NewIpSpaceDataSource,
 		ipam.NewSubnetDataSource,
+		ipam.NewAddressBlockDataSource,
+		ipam.NewAddressDataSource,
+		ipam.NewRangeDataSource,
+		ipam.NewFixedAddressDataSource,
+
+		dns_config.NewViewDataSource,
+		dns_config.NewAuthNsgDataSource,
+		dns_config.NewHostDataSource,
+		dns_config.NewAuthZoneDataSource,
+		dns_config.NewForwardNsgDataSource,
+		dns_config.NewDelegationDataSource,
 
 		dns_data.NewRecordDataSource,
 
@@ -102,6 +130,8 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 
 		infra_mgmt.NewHostsDataSource,
 		infra_mgmt.NewServicesDataSource,
+
+		keys.NewTsigDataSource,
 	}
 }
 

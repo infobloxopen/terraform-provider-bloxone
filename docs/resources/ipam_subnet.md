@@ -3,12 +3,12 @@
 page_title: "bloxone_ipam_subnet Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  The Subnet object represents a set of addresses from which addresses are assigned to network equipment interfaces.
 ---
 
 # bloxone_ipam_subnet (Resource)
 
-
+The Subnet object represents a set of addresses from which addresses are assigned to network equipment interfaces.
 
 ## Example Usage
 
@@ -33,11 +33,11 @@ resource "bloxone_ipam_subnet" "example" {
   name    = "example_subnet"
   comment = "Subnet for test site"
   tags = {
-    site : "Test Site"
+    site = "Test Site"
   }
 }
 
-# Next available address
+# Next available subnet
 resource "bloxone_ipam_subnet" "example_nas" {
   next_available_id = bloxone_ipam_address_block.example.id
   cidr              = 24

@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
@@ -28,8 +29,12 @@ var (
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyz"
 
+func init() {
+	rand.Seed(time.Now().UTC().UnixNano())
+}
+
 // RandomNameWithPrefix generates a random name with the given prefix.
-// This is used in the acceptance tests where an unique name is required for the resource.
+// This is used in the acceptance tests where a unique name is required for the resource.
 func RandomNameWithPrefix(prefix string) string {
 	b := make([]byte, 6)
 	for i := range b {
