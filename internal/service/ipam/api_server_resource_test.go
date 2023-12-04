@@ -200,10 +200,10 @@ func TestAccServerResource_DdnsDomain(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServerDdnsDomain(name, "test_update.com."),
+				Config: testAccServerDdnsDomain(name, "test-update.com."),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "test_update.com."),
+					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "test-update.com."),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
