@@ -49,6 +49,16 @@ func TestAccServerResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
 					// Test fields with default value
+					resource.TestCheckResourceAttr(resourceName, "ddns_client_update", "client"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_conflict_resolution_mode", "check_with_dhcid"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_generate_name", "false"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_generated_prefix", "myhost"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_send_updates", "true"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_update_on_renew", "false"),
+					resource.TestCheckResourceAttr(resourceName, "ddns_use_conflict_resolution", "true"),
+					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_char", "-"),
+					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_enabled", "false"),
+					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_regex", "[^a-zA-Z0-9_.]"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -182,18 +192,18 @@ func TestAccServerResource_DdnsDomain(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerDdnsDomain(name, "Test.com."),
+				Config: testAccServerDdnsDomain(name, "test.com."),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "Test.com."),
+					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "test.com."),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerDdnsDomain(name, "Test_update.com."),
+				Config: testAccServerDdnsDomain(name, "test_update.com."),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "Test_update.com."),
+					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "test_update.com."),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -528,18 +538,18 @@ func TestAccServerResource_HeaderOptionFilename(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerHeaderOptionFilename(name, "TEST_HEADER_OPTION_FILENAME"),
+				Config: testAccServerHeaderOptionFilename(name, "HEADER_OPTION.txt"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "TEST_HEADER_OPTION_FILENAME"),
+					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "HEADER_OPTION.txt"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerHeaderOptionFilename(name, "TEST_HEADER_OPTION_FILENAME_UPDATE"),
+				Config: testAccServerHeaderOptionFilename(name, "HEADER_OPTION_UPDATE.txt"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "TEST_HEADER_OPTION_FILENAME_UPDATE"),
+					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "HEADER_OPTION_UPDATE.txt"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -588,18 +598,18 @@ func TestAccServerResource_HeaderOptionServerName(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerHeaderOptionServerName(name, "TEST_HEADER_OPTION_SERVER_NAME"),
+				Config: testAccServerHeaderOptionServerName(name, "test-server-1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "TEST_HEADER_OPTION_SERVER_NAME"),
+					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "test-server-1"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerHeaderOptionServerName(name, "TEST_HEADER_OPTION_SERVER_NAME_UPDATE"),
+				Config: testAccServerHeaderOptionServerName(name, "test-server-2"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "TEST_HEADER_OPTION_SERVER_NAME_UPDATE"),
+					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "test-server-2"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -738,18 +748,18 @@ func TestAccServerResource_ServerPrincipal(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerServerPrincipal(name, "TEST_SERVER_PRINCIPAL"),
+				Config: testAccServerServerPrincipal(name, "test.com"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "server_principal", "TEST_SERVER_PRINCIPAL"),
+					resource.TestCheckResourceAttr(resourceName, "server_principal", "test.com"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccServerServerPrincipal(name, "TEST_SERVER_PRINCIPAL_UPDATE"),
+				Config: testAccServerServerPrincipal(name, "test-update.com"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "server_principal", "TEST_SERVER_PRINCIPAL_UPDATE"),
+					resource.TestCheckResourceAttr(resourceName, "server_principal", "test-update.com"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -952,9 +962,9 @@ resource "bloxone_dhcp_server" "test_ddns_update_on_renew" {
 func testAccServerDdnsUseConflictResolution(name string, ddnsUseConflictResolution bool, ddnsConflictResolutionMode string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dhcp_server" "test_ddns_use_conflict_resolution" {
-    name = %q
+	name = %q
 	ddns_use_conflict_resolution = %t
-    ddns_conflict_resolution_mode = %q
+	ddns_conflict_resolution_mode = %q
 }
 `, name, ddnsUseConflictResolution, ddnsConflictResolutionMode)
 }
@@ -966,8 +976,8 @@ resource "bloxone_dns_auth_zone" "test_zone" {
 	primary_type = "cloud"
 }
 resource "bloxone_dhcp_server" "test_ddns_zones" {
-    name = %q
-    ddns_zones = [{
+	name = %q
+	ddns_zones = [{
 		zone = bloxone_dns_auth_zone.test_zone.id
 	}]
 	depends_on = [bloxone_dns_auth_zone.test_zone]

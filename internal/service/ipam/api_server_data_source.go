@@ -29,7 +29,7 @@ type ServerDataSource struct {
 }
 
 func (d *ServerDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "dhcp_server"
+	resp.TypeName = req.ProviderTypeName + "_" + "dhcp_servers"
 }
 
 type IpamsvcServerModelWithFilter struct {

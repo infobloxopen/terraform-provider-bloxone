@@ -105,7 +105,7 @@ resource "bloxone_dhcp_server" "test" {
   name = %q
 }
 
-data "bloxone_dhcp_server" "test" {
+data "bloxone_dhcp_servers" "test" {
   filters = {
 	name = bloxone_dhcp_server.test.name
   }
@@ -122,7 +122,7 @@ resource "bloxone_dhcp_server" "test" {
   }
 }
 
-data "bloxone_dhcp_server" "test" {
+data "bloxone_dhcp_servers" "test" {
   tag_filters = {
 	tag1 = bloxone_dhcp_server.test.tags.tag1
   }
