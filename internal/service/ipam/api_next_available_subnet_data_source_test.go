@@ -38,7 +38,7 @@ func TestDataSourceNextAvailableSubnet(t *testing.T) {
 			{
 				Config: testAccDataSourceNextAvailableSubnet(3, 27),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "ip_count", dataSourceName, "results.#"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "subnet_count", dataSourceName, "results.#"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "results.0.address"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "results.1.address"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "results.2.address"),
@@ -77,7 +77,7 @@ func testAccDataSourceNextAvailableSubnet(count, cidr int) string {
 	data "bloxone_ipam_next_available_subnets" "test" {
 		id = bloxone_ipam_address_block.test.id
 		cidr = %d
-		ip_count = %d
+		subnet_count = %d
 	}`, cidr, count)
 	}
 

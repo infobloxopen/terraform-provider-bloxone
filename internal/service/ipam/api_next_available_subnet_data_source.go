@@ -37,7 +37,7 @@ type IpamsvcNextAvailableSubnetModel struct {
 	Comment  types.String `tfsdk:"comment"`
 	Name     types.String `tfsdk:"name"`
 	DhcpHost types.String `tfsdk:"dhcp_host"`
-	Count    types.Int64  `tfsdk:"ip_count"`
+	Count    types.Int64  `tfsdk:"subnet_count"`
 	Results  types.List   `tfsdk:"results"`
 }
 
@@ -79,7 +79,7 @@ func (d *NextAvailableSubnetDataSource) Schema(ctx context.Context, req datasour
 				Optional:            true,
 				MarkdownDescription: `Reference of OnPrem Host associated with the next available subnets to be created.`,
 			},
-			"ip_count": schema.Int64Attribute{
+			"subnet_count": schema.Int64Attribute{
 				Optional:            true,
 				MarkdownDescription: `Number of subnets to generate. Default 1 if not set.`,
 			},

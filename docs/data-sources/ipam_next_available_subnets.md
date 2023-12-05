@@ -42,8 +42,8 @@ data "bloxone_ipam_next_available_subnets" "example_tf_subs" {
 
 - `comment` (String) Comment of next available subnets.
 - `dhcp_host` (String) Reference of OnPrem Host associated with the next available subnets to be created.
-- `ip_count` (Number) Number of subnets to generate. Default 1 if not set.
 - `name` (String) Name of next available subnets.
+- `subnet_count` (Number) Number of subnets to generate. Default 1 if not set.
 
 ### Read-Only
 
