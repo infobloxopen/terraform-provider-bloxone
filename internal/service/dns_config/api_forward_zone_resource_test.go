@@ -233,20 +233,20 @@ func TestAccForwardZoneResource_Hosts(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardZoneHosts(fqdn),
+				Config: testAccForwardZoneHosts(fqdn, "one"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hosts.#", "1"),
-					resource.TestCheckResourceAttrPair(resourceName, "hosts.0", "data.bloxone_dns_hosts.test_host_01", "results.0.id"),
+					resource.TestCheckResourceAttrPair(resourceName, "hosts.0", "data.bloxone_dns_hosts.one", "results.0.id"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccForwardZoneHosts(fqdn),
+				Config: testAccForwardZoneHosts(fqdn, "two"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hosts.#", "1"),
-					resource.TestCheckResourceAttrPair(resourceName, "hosts.0", "data.bloxone_dns_hosts.test_host_01", "results.0.id"),
+					resource.TestCheckResourceAttrPair(resourceName, "hosts.0", "data.bloxone_dns_hosts.two", "results.0.id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -265,20 +265,20 @@ func TestAccForwardZoneResource_InternalForwarders(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardZoneInternalForwarders(fqdn),
+				Config: testAccForwardZoneInternalForwarders(fqdn, "one"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "internal_forwarders.#", "1"),
-					resource.TestCheckResourceAttrPair(resourceName, "internal_forwarders.0", "data.bloxone_dns_hosts.test_host_01", "results.0.id"),
+					resource.TestCheckResourceAttrPair(resourceName, "internal_forwarders.0", "data.bloxone_dns_hosts.one", "results.0.id"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccForwardZoneInternalForwarders(fqdn),
+				Config: testAccForwardZoneInternalForwarders(fqdn, "two"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "internal_forwarders.#", "1"),
-					resource.TestCheckResourceAttrPair(resourceName, "internal_forwarders.0", "data.bloxone_dns_hosts.test_host_01", "results.0.id"),
+					resource.TestCheckResourceAttrPair(resourceName, "internal_forwarders.0", "data.bloxone_dns_hosts.two", "results.0.id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -488,31 +488,36 @@ resource "bloxone_dns_forward_zone" "test_forward_only" {
 
 func testAccBaseWithHost() string {
 	return `
-data "bloxone_dns_hosts" "test_host_01" {
+data "bloxone_dns_hosts" "one" {
     filters = {
         name = "TF_TEST_HOST_01"
+    }
+}
+data "bloxone_dns_hosts" "two" {
+    filters = {
+        name = "TF_TEST_HOST_02"
     }
 }
     `
 }
 
-func testAccForwardZoneHosts(fqdn string) string {
+func testAccForwardZoneHosts(fqdn, host string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dns_forward_zone" "test_hosts" {
     fqdn = %q
-    hosts = [data.bloxone_dns_hosts.test_host_01.results.0.id]
+    hosts = [data.bloxone_dns_hosts.%s.results.0.id]
 }
-`, fqdn)
+`, fqdn, host)
 	return strings.Join([]string{testAccBaseWithHost(), config}, "")
 }
 
-func testAccForwardZoneInternalForwarders(fqdn string) string {
+func testAccForwardZoneInternalForwarders(fqdn, host string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dns_forward_zone" "test_internal_forwarders" {
     fqdn = %q
-    internal_forwarders = [data.bloxone_dns_hosts.test_host_01.results.0.id]
+    internal_forwarders = [data.bloxone_dns_hosts.%s.results.0.id]
 }
-`, fqdn)
+`, fqdn, host)
 	return strings.Join([]string{testAccBaseWithHost(), config}, "")
 }
 
