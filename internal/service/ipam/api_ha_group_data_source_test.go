@@ -2,7 +2,6 @@ package ipam_test
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 	"testing"
@@ -87,7 +86,7 @@ func testAccCheckHaGroupResourceAttrPair(resourceName, dataSourceName string, co
 			resource.TestCheckResourceAttrWith(dataSourceName, "results.0.status", func(value string) error {
 				status := []string{"ok", "failure", "degraded", "intermediate", "unreachable", "unknown"}
 				if !slices.Contains(status, value) {
-					return errors.New("status not valid")
+					return fmt.Errorf("status not valid")
 				}
 				return nil
 			}),
@@ -208,7 +207,7 @@ func testAccCheckHAState(state string) error {
 		"updates-interrupted", "unknown"}
 
 	if !slices.Contains(states, state) {
-		return errors.New(fmt.Sprintf("state not valid, value is %s", state))
+		return fmt.Errorf("state not valid, value is %s", state)
 	}
 	return nil
 }
