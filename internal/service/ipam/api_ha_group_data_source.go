@@ -29,13 +29,14 @@ type HaGroupDataSource struct {
 }
 
 func (d *HaGroupDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "ipam_ha_groups"
+	resp.TypeName = req.ProviderTypeName + "_" + "dhcp_ha_groups"
 }
 
 type IpamsvcHAGroupModelWithFilter struct {
-	Filters    types.Map  `tfsdk:"filters"`
-	TagFilters types.Map  `tfsdk:"tag_filters"`
-	Results    types.List `tfsdk:"results"`
+	Filters      types.Map  `tfsdk:"filters"`
+	TagFilters   types.Map  `tfsdk:"tag_filters"`
+	CollectStats types.Bool `tfsdk:"collect_stats"`
+	Results      types.List `tfsdk:"results"`
 }
 
 func (m *IpamsvcHAGroupModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamsvcHAGroup, diags *diag.Diagnostics) {
@@ -57,6 +58,10 @@ func (d *HaGroupDataSource) Schema(_ context.Context, _ datasource.SchemaRequest
 			"tag_filters": schema.MapAttribute{
 				Description: "Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
 				ElementType: types.StringType,
+				Optional:    true,
+			},
+			"collect_stats": schema.BoolAttribute{
+				Description: "collect_stats gets the HA group stats(state, status, heartbeat) if set to true. Defaults to false",
 				Optional:    true,
 			},
 			"results": schema.ListNestedAttribute{
@@ -92,7 +97,7 @@ func (d *HaGroupDataSource) Configure(_ context.Context, req datasource.Configur
 func (d *HaGroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data IpamsvcHAGroupModelWithFilter
 
-	// Read Terraform prsior state data into the model
+	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
@@ -104,6 +109,7 @@ func (d *HaGroupDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		HaGroupList(ctx).
 		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+		CollectStats(data.CollectStats.ValueBool()).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read HaGroup, got error: %s", err))

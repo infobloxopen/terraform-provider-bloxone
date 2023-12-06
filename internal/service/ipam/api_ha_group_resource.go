@@ -26,7 +26,7 @@ type HaGroupResource struct {
 }
 
 func (r *HaGroupResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "ipam_ha_group"
+	resp.TypeName = req.ProviderTypeName + "_" + "dhcp_ha_group"
 }
 
 func (r *HaGroupResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

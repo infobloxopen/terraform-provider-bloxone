@@ -1,20 +1,16 @@
 data "bloxone_ipam_dhcp_hosts" "example_host_1" {
   filter = {
-    name = "TF_TEST_HOST_01"
+    name = "Your Host name"
   }
 }
 
 data "bloxone_ipam_dhcp_hosts" "example_host_2" {
   filter = {
-    name = "TF_TEST_HOST_02"
+    name = "Your host name"
   }
 }
 
-resource "bloxone_ipam_ha_group" "example" {
-  name = "example_ha_group"
-}
-
-resource "bloxone_ipam_ha_group" "example_tags" {
+resource "bloxone_dhcp_ha_group" "example_tags" {
   name = "example_ha_group_tags"
   mode = "active-active"
   hosts = [

@@ -38,6 +38,7 @@ var IpamsvcHAGroupHostAttrTypes = map[string]attr.Type{
 var IpamsvcHAGroupHostResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
 		Computed:            true,
+		Optional:            true,
 		MarkdownDescription: "The address on which this host listens.",
 	},
 	"heartbeats": schema.ListNestedAttribute{

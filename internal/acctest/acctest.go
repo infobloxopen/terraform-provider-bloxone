@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
-	"strings"
 	"testing"
 	"time"
 
@@ -26,9 +25,6 @@ var (
 	ProtoV6ProviderFactories = map[string]func() (tfprotov6.ProviderServer, error){
 		"bloxone": providerserver.NewProtocol6WithError(provider.New("test", "none")()),
 	}
-
-	Host01 = "TF_TEST_HOST_01"
-	Host02 = "TF_TEST_HOST_02"
 )
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyz"
@@ -69,23 +65,12 @@ func PreCheck(t *testing.T) {
 	}
 }
 
-// TestAccBaseConfig_DhcpHosts creates a Terraform datasource config that allows you to filter by Hostname for 2 hosts
+// TestAccBaseConfig_DhcpHosts creates a Terraform datasource config that allows you to filter by tags
 func TestAccBaseConfig_DhcpHosts() string {
-	config := fmt.Sprintf(`
-data "bloxone_dhcp_hosts" "test_02" {
-	filters = {
-		name = %q
+	return `
+data "bloxone_dhcp_hosts" "test" {
+	tag_filters = {
+		used_for = "Terraform Provider Acceptance Tests"
 	}
-}`, Host02)
-	return strings.Join([]string{TestAccBaseConfig_DhcpHost(), config}, "")
-}
-
-// TestAccBaseConfig_DhcpHost creates a Terraform datasource config that allows you to filter by Hostname for a single host
-func TestAccBaseConfig_DhcpHost() string {
-	return fmt.Sprintf(`
-data "bloxone_dhcp_hosts" "test_01" {
-	filters = {
-		name = %q
-	}
-}`, Host01)
+}`
 }

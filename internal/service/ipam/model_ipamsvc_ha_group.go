@@ -56,7 +56,7 @@ var IpamsvcHAGroupResourceSchemaAttributes = map[string]schema.Attribute{
 	"comment": schema.StringAttribute{
 		Optional: true,
 		Validators: []validator.String{
-			stringvalidator.LengthBetween(1, 1024),
+			stringvalidator.LengthBetween(0, 1024),
 		},
 		MarkdownDescription: "The description for the HA group. May contain 0 to 1024 characters. Can include UTF-8.",
 	},

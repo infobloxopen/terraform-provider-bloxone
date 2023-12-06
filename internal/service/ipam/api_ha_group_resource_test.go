@@ -15,7 +15,7 @@ import (
 )
 
 func TestAccHaGroupResource_basic(t *testing.T) {
-	var resourceName = "bloxone_ipam_ha_group.test"
+	var resourceName = "bloxone_dhcp_ha_group.test"
 	var v ipam.IpamsvcHAGroup
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -44,7 +44,7 @@ func TestAccHaGroupResource_basic(t *testing.T) {
 }
 
 func TestAccHaGroupResource_disappears(t *testing.T) {
-	resourceName := "bloxone_ipam_ha_group.test"
+	resourceName := "bloxone_dhcp_ha_group.test"
 	var v ipam.IpamsvcHAGroup
 
 	resource.Test(t, resource.TestCase{
@@ -65,7 +65,7 @@ func TestAccHaGroupResource_disappears(t *testing.T) {
 }
 
 func TestAccHaGroupResource_Comment(t *testing.T) {
-	var resourceName = "bloxone_ipam_ha_group.test_comment"
+	var resourceName = "bloxone_dhcp_ha_group.test_comment"
 	var v ipam.IpamsvcHAGroup
 	name := acctest.RandomNameWithPrefix("test-ha")
 	resource.Test(t, resource.TestCase{
@@ -95,11 +95,10 @@ func TestAccHaGroupResource_Comment(t *testing.T) {
 
 func TestAccHaGroupResource_Hosts(t *testing.T) {
 	var (
-		v               ipam.IpamsvcHAGroup
-		resourceName    = "bloxone_ipam_ha_group.test_hosts"
-		name            = acctest.RandomNameWithPrefix("test-ha")
-		dataSourceHost1 = "data.bloxone_dhcp_hosts.test_01"
-		dataSourceHost2 = "data.bloxone_dhcp_hosts.test_02"
+		v              ipam.IpamsvcHAGroup
+		resourceName   = "bloxone_dhcp_ha_group.test_hosts"
+		name           = acctest.RandomNameWithPrefix("test-ha")
+		dataSourceHost = "data.bloxone_dhcp_hosts.test"
 	)
 
 	resource.Test(t, resource.TestCase{
@@ -108,26 +107,34 @@ func TestAccHaGroupResource_Hosts(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccHaGroupHosts(dataSourceHost1, "active", dataSourceHost2, "passive", name, "active-passive"),
+				Config: testAccHaGroupHosts("data.bloxone_dhcp_hosts.test.results.0.id", "active", "data.bloxone_dhcp_hosts.test.results.1.id", "passive", name, "active-passive"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckHaGroupExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hosts.#", "2"),
-					resource.TestCheckResourceAttrPair(resourceName, "hosts.0.host", dataSourceHost1, "results.0.id"),
+					resource.TestCheckResourceAttrPair(resourceName, "hosts.0.host", dataSourceHost, "results.0.id"),
 					resource.TestCheckResourceAttr(resourceName, "hosts.0.role", "active"),
-					resource.TestCheckResourceAttrPair(resourceName, "hosts.1.host", dataSourceHost2, "results.0.id"),
+					resource.TestCheckResourceAttrSet(resourceName, "hosts.0.address"),
+					resource.TestCheckResourceAttrSet(resourceName, "hosts.0.port"),
+					resource.TestCheckResourceAttrPair(resourceName, "hosts.1.host", dataSourceHost, "results.1.id"),
 					resource.TestCheckResourceAttr(resourceName, "hosts.1.role", "passive"),
+					resource.TestCheckResourceAttrSet(resourceName, "hosts.1.address"),
+					resource.TestCheckResourceAttrSet(resourceName, "hosts.1.port"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccHaGroupHosts(dataSourceHost2, "active", dataSourceHost1, "passive", name, "active-passive"),
+				Config: testAccHaGroupHosts("data.bloxone_dhcp_hosts.test.results.1.id", "active", "data.bloxone_dhcp_hosts.test.results.0.id", "passive", name, "active-passive"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckHaGroupExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hosts.#", "2"),
-					resource.TestCheckResourceAttrPair(resourceName, "hosts.0.host", dataSourceHost2, "results.0.id"),
+					resource.TestCheckResourceAttrPair(resourceName, "hosts.0.host", dataSourceHost, "results.1.id"),
 					resource.TestCheckResourceAttr(resourceName, "hosts.0.role", "active"),
-					resource.TestCheckResourceAttrPair(resourceName, "hosts.1.host", dataSourceHost1, "results.0.id"),
+					resource.TestCheckResourceAttrSet(resourceName, "hosts.0.address"),
+					resource.TestCheckResourceAttrSet(resourceName, "hosts.0.port"),
+					resource.TestCheckResourceAttrPair(resourceName, "hosts.1.host", dataSourceHost, "results.0.id"),
 					resource.TestCheckResourceAttr(resourceName, "hosts.1.role", "passive"),
+					resource.TestCheckResourceAttrSet(resourceName, "hosts.1.address"),
+					resource.TestCheckResourceAttrSet(resourceName, "hosts.1.port"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -136,7 +143,7 @@ func TestAccHaGroupResource_Hosts(t *testing.T) {
 }
 
 func TestAccHaGroupResource_Mode(t *testing.T) {
-	var resourceName = "bloxone_ipam_ha_group.test_mode"
+	var resourceName = "bloxone_dhcp_ha_group.test_mode"
 	var v ipam.IpamsvcHAGroup
 	name := acctest.RandomNameWithPrefix("test-ha")
 	resource.Test(t, resource.TestCase{
@@ -165,7 +172,7 @@ func TestAccHaGroupResource_Mode(t *testing.T) {
 }
 
 func TestAccHaGroupResource_Name(t *testing.T) {
-	var resourceName = "bloxone_ipam_ha_group.test_name"
+	var resourceName = "bloxone_dhcp_ha_group.test_name"
 	var v ipam.IpamsvcHAGroup
 	name := acctest.RandomNameWithPrefix("test-ha")
 	updateName := acctest.RandomNameWithPrefix("test-ha-new")
@@ -195,7 +202,7 @@ func TestAccHaGroupResource_Name(t *testing.T) {
 }
 
 func TestAccHaGroupResource_Tags(t *testing.T) {
-	var resourceName = "bloxone_ipam_ha_group.test_tags"
+	var resourceName = "bloxone_dhcp_ha_group.test_tags"
 	var v ipam.IpamsvcHAGroup
 	name := acctest.RandomNameWithPrefix("test-ha")
 
@@ -287,37 +294,35 @@ func testAccCheckHaGroupDisappears(ctx context.Context, v *ipam.IpamsvcHAGroup) 
 }
 
 func testAccHaGroupBasicConfig(role1, role2, name, mode string) string {
-	// TODO: create basic resource with required fields
 	config := fmt.Sprintf(`
-resource "bloxone_ipam_ha_group" "test" {
+resource "bloxone_dhcp_ha_group" "test" {
 	hosts = [
 		{
-			host = data.bloxone_dhcp_hosts.test_01.results.0.id
+			host = data.bloxone_dhcp_hosts.test.results.0.id
 			role = %q
 		},
 		{
-			host = data.bloxone_dhcp_hosts.test_02.results.0.id
+			host = data.bloxone_dhcp_hosts.test.results.1.id
 			role = %q
 		}
 	]
 	name = %q
 	mode = %q
-}
-`, role1, role2, name, mode)
+}`, role1, role2, name, mode)
 
 	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupComment(role1, role2, name, mode, comment string) string {
 	config := fmt.Sprintf(`
-resource "bloxone_ipam_ha_group" "test_comment" {
+resource "bloxone_dhcp_ha_group" "test_comment" {
 	hosts = [
 		{
-			host = data.bloxone_dhcp_hosts.test_01.results.0.id
+			host = data.bloxone_dhcp_hosts.test.results.0.id
 			role = %q
 		},
 		{
-			host = data.bloxone_dhcp_hosts.test_02.results.0.id
+			host = data.bloxone_dhcp_hosts.test.results.1.id
 			role = %q
 		}
 	]
@@ -332,14 +337,14 @@ resource "bloxone_ipam_ha_group" "test_comment" {
 
 func testAccHaGroupHosts(host1, role1, host2, role2, name, mode string) string {
 	config := fmt.Sprintf(`
-resource "bloxone_ipam_ha_group" "test_hosts" {
+resource "bloxone_dhcp_ha_group" "test_hosts" {
 	hosts = [
 		{
-			host = %s.results.0.id
+			host = %s
 			role = %q
 		},
 		{
-			host = %s.results.0.id
+			host = %s
 			role = %q
 		}
 	]
@@ -352,14 +357,14 @@ resource "bloxone_ipam_ha_group" "test_hosts" {
 
 func testAccHaGroupMode(role1, role2, name, mode string) string {
 	config := fmt.Sprintf(`
-resource "bloxone_ipam_ha_group" "test_mode" {
+resource "bloxone_dhcp_ha_group" "test_mode" {
 	hosts = [
 		{
-			host = data.bloxone_dhcp_hosts.test_01.results.0.id
+			host = data.bloxone_dhcp_hosts.test.results.0.id
 			role = %q
 		},
 		{
-			host = data.bloxone_dhcp_hosts.test_02.results.0.id
+			host = data.bloxone_dhcp_hosts.test.results.1.id
 			role = %q
 		}
 	]
@@ -372,14 +377,14 @@ resource "bloxone_ipam_ha_group" "test_mode" {
 
 func testAccHaGroupName(role1, role2, name, mode string) string {
 	config := fmt.Sprintf(`
-resource "bloxone_ipam_ha_group" "test_name" {
+resource "bloxone_dhcp_ha_group" "test_name" {
 	hosts = [
 		{
-			host = data.bloxone_dhcp_hosts.test_01.results.0.id
+			host = data.bloxone_dhcp_hosts.test.results.0.id
 			role = %q
 		},
 		{
-			host = data.bloxone_dhcp_hosts.test_02.results.0.id
+			host = data.bloxone_dhcp_hosts.test.results.1.id
 			role = %q
 		}
 	]
@@ -399,14 +404,14 @@ func testAccHaGroupTags(role1, role2, name, mode string, tags map[string]string)
 	}
 	tagsStr += "\t}"
 	config := fmt.Sprintf(`
-resource "bloxone_ipam_ha_group" "test_tags" {
+resource "bloxone_dhcp_ha_group" "test_tags" {
     hosts = [
 		{
-			host = data.bloxone_dhcp_hosts.test_01.results.0.id
+			host = data.bloxone_dhcp_hosts.test.results.0.id
 			role = %q
 		},
 		{
-			host = data.bloxone_dhcp_hosts.test_02.results.0.id
+			host = data.bloxone_dhcp_hosts.test.results.1.id
 			role = %q
 		}
 	]
