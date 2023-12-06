@@ -57,6 +57,7 @@ Required:
 Optional:
 
 - `anycast_config_id` (String) The resource identifier.
+- `collect_stats` (Boolean) collect_stats gets the HA group stats(state, status, heartbeat) if set to true. Defaults to false
 - `comment` (String) The description for the HA group. May contain 0 to 1024 characters. Can include UTF-8.
 - `tags` (Map of String) The tags for the HA group.
 

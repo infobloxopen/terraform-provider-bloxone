@@ -96,6 +96,7 @@ func (r *HaGroupResource) Read(ctx context.Context, req resource.ReadRequest, re
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		HaGroupAPI.
 		HaGroupRead(ctx, data.Id.ValueString()).
+		CollectStats(data.CollectStats.ValueBool()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

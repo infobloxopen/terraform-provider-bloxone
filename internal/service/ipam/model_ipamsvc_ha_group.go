@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -32,6 +33,7 @@ type IpamsvcHAGroupModel struct {
 	Status          types.String      `tfsdk:"status"`
 	Tags            types.Map         `tfsdk:"tags"`
 	UpdatedAt       timetypes.RFC3339 `tfsdk:"updated_at"`
+	CollectStats    types.Bool        `tfsdk:"collect_stats"`
 }
 
 var IpamsvcHAGroupAttrTypes = map[string]attr.Type{
@@ -46,6 +48,7 @@ var IpamsvcHAGroupAttrTypes = map[string]attr.Type{
 	"status":            types.StringType,
 	"tags":              types.MapType{ElemType: types.StringType},
 	"updated_at":        timetypes.RFC3339Type{},
+	"collect_stats":     types.BoolType,
 }
 
 var IpamsvcHAGroupResourceSchemaAttributes = map[string]schema.Attribute{
@@ -110,6 +113,12 @@ var IpamsvcHAGroupResourceSchemaAttributes = map[string]schema.Attribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
 		MarkdownDescription: "Time when the object has been updated. Equals to _created_at_ if not updated after creation.",
+	},
+	"collect_stats": schema.BoolAttribute{
+		Computed:    true,
+		Optional:    true,
+		Description: "collect_stats gets the HA group stats(state, status, heartbeat) if set to true. Defaults to false",
+		Default:     booldefault.StaticBool(false),
 	},
 }
 
