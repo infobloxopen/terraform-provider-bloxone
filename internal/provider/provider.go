@@ -87,6 +87,7 @@ func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resou
 		ipam.NewAddressResource,
 		ipam.NewRangeResource,
 		ipam.NewFixedAddressResource,
+		ipam.NewServerResource,
 
 		dns_config.NewViewResource,
 		dns_config.NewAuthNsgResource,
@@ -114,6 +115,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		ipam.NewAddressDataSource,
 		ipam.NewRangeDataSource,
 		ipam.NewFixedAddressDataSource,
+		ipam.NewServerDataSource,
 
 		dns_config.NewViewDataSource,
 		dns_config.NewAuthNsgDataSource,
