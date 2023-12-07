@@ -95,7 +95,20 @@ func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resou
 		dns_config.NewForwardNsgResource,
 		dns_config.NewDelegationResource,
 
-		dns_data.NewRecordResource,
+		dns_data.NewRecordAResource,
+		dns_data.NewRecordAAAAResource,
+		dns_data.NewRecordCNAMEResource,
+		dns_data.NewRecordDNAMEResource,
+		dns_data.NewRecordMXResource,
+		dns_data.NewRecordNSResource,
+		dns_data.NewRecordPTRResource,
+		dns_data.NewRecordSRVResource,
+		dns_data.NewRecordTXTResource,
+		dns_data.NewRecordNAPTRResource,
+		dns_data.NewRecordHTTPSResource,
+		dns_data.NewRecordSVCBResource,
+		dns_data.NewRecordCAAResource,
+		dns_data.NewRecordGenericResource,
 
 		infra_provision.NewUIJoinTokenResource,
 
@@ -124,7 +137,20 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		dns_config.NewForwardNsgDataSource,
 		dns_config.NewDelegationDataSource,
 
-		dns_data.NewRecordDataSource,
+		dns_data.NewRecordADataSource,
+		dns_data.NewRecordAAAADataSource,
+		dns_data.NewRecordCNAMEDataSource,
+		dns_data.NewRecordDNAMEDataSource,
+		dns_data.NewRecordMXDataSource,
+		dns_data.NewRecordNSDataSource,
+		dns_data.NewRecordPTRDataSource,
+		dns_data.NewRecordSRVDataSource,
+		dns_data.NewRecordTXTDataSource,
+		dns_data.NewRecordNAPTRDataSource,
+		dns_data.NewRecordHTTPSDataSource,
+		dns_data.NewRecordSVCBDataSource,
+		dns_data.NewRecordCAADataSource,
+		dns_data.NewRecordGenericDataSource,
 
 		infra_provision.NewUIJoinTokenDataSource,
 

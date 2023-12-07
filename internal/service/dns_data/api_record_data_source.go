@@ -18,30 +18,26 @@ import (
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ datasource.DataSource = &RecordDataSource{}
 
-func NewRecordDataSource() datasource.DataSource {
-	return &RecordDataSource{}
+func newRecordDataSource(impl recordDataSourceImplementor) datasource.DataSource {
+	return &RecordDataSource{
+		impl: impl,
+	}
 }
 
 // RecordDataSource defines the data source implementation.
 type RecordDataSource struct {
 	client *bloxoneclient.APIClient
+	impl   recordDataSourceImplementor
 }
 
 func (d *RecordDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "dns_records"
+	resp.TypeName = req.ProviderTypeName + "_" + d.impl.dataSourceName()
 }
 
 type DataRecordModelWithFilter struct {
 	Filters    types.Map  `tfsdk:"filters"`
 	TagFilters types.Map  `tfsdk:"tag_filters"`
 	Results    types.List `tfsdk:"results"`
-}
-
-func (m *DataRecordModelWithFilter) FlattenResults(ctx context.Context, from []dns_data.DataRecord, diags *diag.Diagnostics) {
-	if len(from) == 0 {
-		return
-	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, DataRecordAttrTypes, diags, FlattenDataRecord)
 }
 
 func (d *RecordDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -54,13 +50,13 @@ func (d *RecordDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Optional:    true,
 			},
 			"tag_filters": schema.MapAttribute{
-				Description: "Tag Filters are used to filter by tags return a more specific list of results. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
+				Description: "Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
 				ElementType: types.StringType,
 				Optional:    true,
 			},
 			"results": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
-					Attributes: utils.DataSourceAttributeMap(DataRecordResourceSchemaAttributes, &resp.Diagnostics),
+					Attributes: utils.DataSourceAttributeMap(d.impl.schemaAttributes(), &resp.Diagnostics),
 				},
 				Computed: true,
 			},
@@ -98,10 +94,19 @@ func (d *RecordDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
+	filters := flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)
+	// Add type filter by default
+	if d.impl.recordType() != "Generic" {
+		if len(filters) > 0 {
+			filters = filters + " and "
+		}
+		filters = filters + "type=='" + d.impl.recordType() + "'"
+	}
+
 	apiRes, _, err := d.client.DNSDataAPI.
 		RecordAPI.
 		RecordList(ctx).
-		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
+		Filter(filters).
 		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -109,8 +114,22 @@ func (d *RecordDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	data.FlattenResults(ctx, apiRes.GetResults(), &resp.Diagnostics)
+	if len(apiRes.GetResults()) == 0 {
+		return
+	}
+	data.Results = flex.FlattenFrameworkListNestedBlock(ctx, apiRes.GetResults(), d.impl.attributeTypes(), &resp.Diagnostics, d.FlattenDataRecord)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+}
+
+func (d *RecordDataSource) FlattenDataRecord(ctx context.Context, from *dns_data.DataRecord, diags *diag.Diagnostics) types.Object {
+	if from == nil {
+		return types.ObjectNull(d.impl.attributeTypes())
+	}
+	m := dataRecordModel{}
+	m.Flatten(ctx, from, diags, d.impl)
+	t, ds := types.ObjectValueFrom(ctx, d.impl.attributeTypes(), m)
+	diags.Append(ds...)
+	return t
 }
