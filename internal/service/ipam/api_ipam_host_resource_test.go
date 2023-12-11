@@ -343,7 +343,7 @@ resource "bloxone_ipam_host" "test_address_naip" {
 }
 
 func testAccMultipleIPSpaceAndSubnet() string {
-	return fmt.Sprintf(`
+	return `
 	resource "bloxone_ipam_ip_space" "test" {
 		name = "test"
 	}
@@ -368,5 +368,5 @@ func testAccMultipleIPSpaceAndSubnet() string {
 		cidr = 24
 		space = bloxone_ipam_ip_space.test2.id
 	}
-`)
+`
 }
