@@ -95,6 +95,7 @@ func FlattenFrameworkListNestedBlock[T any, U any](ctx context.Context, data []T
 	})
 
 	tfList, d := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: attrTypes}, tfData)
+
 	diags.Append(d...)
 	return tfList
 }

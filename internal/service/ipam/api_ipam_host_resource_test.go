@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -14,7 +15,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-//TODO:add tests
+// TODO:add tests
 // The following require additional resource/data source objects to be supported.
 // - auto_generate_records
 // - addresses
@@ -138,6 +139,71 @@ func TestAccIpamHostResource_Tags(t *testing.T) {
 	})
 }
 
+func TestAccIpamHostResource_Addresses(t *testing.T) {
+	var (
+		resourceName     = "bloxone_ipam_host.test_address"
+		resourceNameNaip = "bloxone_ipam_host.test_address_naip"
+		spaceResource    = "bloxone_ipam_ip_space.test"
+		spaceResource1   = "bloxone_ipam_ip_space.test1"
+		spaceResource2   = "bloxone_ipam_ip_space.test2"
+		name             = acctest.RandomNameWithPrefix("ipam_host")
+		nameNaip         = acctest.RandomNameWithPrefix("ipam_host_naip")
+		v                ipam.IpamsvcIpamHost
+	)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read NaIP example
+			{
+				Config: testAccIpamHostAddressesNAIP(nameNaip),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpamHostExists(context.Background(), resourceNameNaip, &v),
+					resource.TestCheckResourceAttr(resourceNameNaip, "addresses.#", "1"),
+					resource.TestCheckResourceAttr(resourceNameNaip, "addresses.0.address", "10.0.0.1"),
+					resource.TestCheckResourceAttrPair(spaceResource, "id", resourceNameNaip, "addresses.0.space"),
+				),
+			},
+			{
+				Config: testAccIpamHostAddressesNAIPMultipleAddress(nameNaip),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpamHostExists(context.Background(), resourceNameNaip, &v),
+					resource.TestCheckResourceAttr(resourceNameNaip, "addresses.#", "3"),
+					resource.TestCheckResourceAttr(resourceNameNaip, "addresses.0.address", "10.0.0.1"),
+					resource.TestCheckResourceAttrPair(spaceResource, "id", resourceNameNaip, "addresses.0.space"),
+					resource.TestCheckResourceAttr(resourceNameNaip, "addresses.1.address", "192.168.1.1"),
+					resource.TestCheckResourceAttrPair(spaceResource1, "id", resourceNameNaip, "addresses.1.space"),
+					resource.TestCheckResourceAttr(resourceNameNaip, "addresses.2.address", "10.0.0.1"),
+					resource.TestCheckResourceAttrPair(spaceResource2, "id", resourceNameNaip, "addresses.2.space"),
+				),
+			},
+			// Create and Read
+			{
+				Config: testAccIpamHostAddresses(name, "10.0.0.1"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpamHostExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "addresses.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "addresses.0.address", "10.0.0.1"),
+					resource.TestCheckResourceAttrPair(spaceResource, "id", resourceName, "addresses.0.space"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccIpamHostAddresses(name, "10.0.0.2"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpamHostExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "addresses.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "addresses.0.address", "10.0.0.2"),
+					resource.TestCheckResourceAttrPair(spaceResource, "id", resourceName, "addresses.0.space"),
+				),
+			},
+
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func testAccCheckIpamHostExists(ctx context.Context, resourceName string, v *ipam.IpamsvcIpamHost) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
@@ -224,4 +290,83 @@ resource "bloxone_ipam_host" "test_tags" {
     tags = %s
 }
 `, name, tagsStr)
+}
+
+func testAccIpamHostAddresses(name, address string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_host" "test_address" {
+    name = %q
+    addresses = [
+		{
+			address = %q
+			space = bloxone_ipam_ip_space.test.id
+		}
+	]
+	depends_on = [bloxone_ipam_subnet.test]
+}
+`, name, address)
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+}
+
+func testAccIpamHostAddressesNAIP(name string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_host" "test_address_naip" {
+    name = %q
+	addresses = [
+		{
+			next_available_id = bloxone_ipam_subnet.test.id
+		}
+	]
+}
+`, name)
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+}
+
+func testAccIpamHostAddressesNAIPMultipleAddress(name string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_host" "test_address_naip" {
+    name = %q
+	addresses = [
+		{
+			next_available_id = bloxone_ipam_subnet.test.id
+		},
+		{
+			next_available_id = bloxone_ipam_subnet.test1.id
+		},
+		{
+			next_available_id = bloxone_ipam_subnet.test2.id
+		}
+	]
+}
+`, name)
+	return strings.Join([]string{testAccMultipleIPSpaceAndSubnet(), config}, "")
+}
+
+func testAccMultipleIPSpaceAndSubnet() string {
+	return fmt.Sprintf(`
+	resource "bloxone_ipam_ip_space" "test" {
+		name = "test"
+	}
+	resource "bloxone_ipam_subnet" "test" {
+		address = "10.0.0.0"
+		cidr = 24
+		space = bloxone_ipam_ip_space.test.id
+	}
+	resource "bloxone_ipam_ip_space" "test1" {
+		name = "test1"
+	}
+	resource "bloxone_ipam_subnet" "test1" {
+		address = "192.168.1.0"
+		cidr = 24
+		space = bloxone_ipam_ip_space.test1.id
+	}
+	resource "bloxone_ipam_ip_space" "test2" {
+		name = "test2"
+	}
+	resource "bloxone_ipam_subnet" "test2" {
+		address = "10.0.0.0"
+		cidr = 24
+		space = bloxone_ipam_ip_space.test2.id
+	}
+`)
 }

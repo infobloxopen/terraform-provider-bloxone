@@ -13,9 +13,40 @@ The IpamHost object (ipam/host) represents any network connected equipment that 
 ## Example Usage
 
 ```terraform
+resource "bloxone_ipam_ip_space" "example" {
+  name = "example"
+}
+
+resource "bloxone_ipam_subnet" "example" {
+  address = "10.0.0.0"
+  cidr    = 24
+  space   = bloxone_ipam_ip_space.example.id
+}
+
+// Passing a static address for the IPAM Host
 resource "bloxone_ipam_host" "example" {
   name = "example_ipam_host"
+  addresses = [
+    {
+      address = "10.0.0.1"
+      space   = bloxone_ipam_ip_space.example.id
+    }
+  ]
+  #Other Optional Fields
+  comment = "IPAM Host"
+  tags = {
+    site = "Test Site"
+  }
+}
 
+// Dynamically getting the IPAM Host address using Next Available IP
+resource "bloxone_ipam_host" "example_naip" {
+  name = "example_ipam_host_naip"
+  addresses = [
+    {
+      next_available_id = bloxone_ipam_subnet.example.id
+    }
+  ]
   #Other Optional Fields
   comment = "IPAM Host"
   tags = {
@@ -48,11 +79,15 @@ resource "bloxone_ipam_host" "example" {
 <a id="nestedatt--addresses"></a>
 ### Nested Schema for `addresses`
 
-Required:
+Optional:
 
 - `address` (String) Field usage depends on the operation:  * For read operation, _address_ of the _Address_ corresponding to the _ref_ resource.  * For write operation, _address_ to be created if the _Address_ does not exist. Required if _ref_ is not set on write:     * If the _Address_ already exists and is already pointing to the right _Host_, the operation proceeds.     * If the _Address_ already exists and is pointing to a different _Host, the operation must abort.     * If the _Address_ already exists and is not pointing to any _Host_, it is linked to the _Host_.
-- `ref` (String) The resource identifier.
+- `next_available_id` (String) The resource identifier for the network container where the next available address should be generated for the host
 - `space` (String) The resource identifier.
+
+Read-Only:
+
+- `ref` (String) The resource identifier.
 
 
 <a id="nestedatt--host_names"></a>

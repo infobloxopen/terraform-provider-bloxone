@@ -273,7 +273,7 @@ github.com/huandu/xstrings
 # github.com/imdario/mergo v0.3.15
 ## explicit; go 1.13
 github.com/imdario/mergo
-# github.com/infobloxopen/bloxone-go-client v0.0.0-20231130172827-48119d9218de
+# github.com/infobloxopen/bloxone-go-client v0.0.0-20231207212052-dd2d2e16deea
 ## explicit; go 1.19
 github.com/infobloxopen/bloxone-go-client/client
 github.com/infobloxopen/bloxone-go-client/dns_config

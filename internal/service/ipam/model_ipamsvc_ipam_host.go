@@ -2,7 +2,9 @@ package ipam
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 
@@ -47,7 +49,10 @@ var IpamsvcIpamHostResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: IpamsvcHostAddressResourceSchemaAttributes,
 		},
-		Optional:            true,
+		Optional: true,
+		PlanModifiers: []planmodifier.List{
+			listplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: `The list of all addresses associated with the IPAM host, which may be in different IP spaces.`,
 	},
 	"auto_generate_records": schema.BoolAttribute{
@@ -140,7 +145,15 @@ func (m *IpamsvcIpamHostModel) Flatten(ctx context.Context, from *ipam.IpamsvcIp
 	if m == nil {
 		*m = IpamsvcIpamHostModel{}
 	}
-	m.Addresses = flex.FlattenFrameworkListNestedBlock(ctx, from.Addresses, IpamsvcHostAddressAttrTypes, diags, FlattenIpamsvcHostAddress)
+
+	i := &[]IpamsvcHostAddressModel{}
+	if !m.Addresses.IsUnknown() && !m.Addresses.IsNull() {
+		lv, diag := m.Addresses.ToListValue(ctx)
+		diags.Append(diag...)
+		diags.Append(lv.ElementsAs(ctx, i, false)...)
+	}
+
+	m.Addresses = FlattenIpamsvcHostAddress(ctx, from.Addresses, diags, *i)
 	m.AutoGenerateRecords = types.BoolPointerValue(from.AutoGenerateRecords)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
@@ -149,5 +162,4 @@ func (m *IpamsvcIpamHostModel) Flatten(ctx context.Context, from *ipam.IpamsvcIp
 	m.Name = flex.FlattenString(from.Name)
 	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
-
 }

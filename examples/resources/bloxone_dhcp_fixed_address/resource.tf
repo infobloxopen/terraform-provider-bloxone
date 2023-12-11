@@ -39,3 +39,17 @@ resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
   }
   depends_on = [bloxone_ipam_subnet.example]
 }
+
+// Address using Next available IP
+resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
+  name              = "example_fixed_address"
+  next_available_id = bloxone_ipam_subnet.example.id
+  ip_space          = bloxone_ipam_ip_space.example.id
+  match_type        = "mac"
+  match_value       = "00:00:00:00:00:00"
+  comment           = "Example Fixed Address created by the terraform provider"
+  tags = {
+    location : "site1"
+  }
+  depends_on = [bloxone_ipam_subnet.example]
+}
