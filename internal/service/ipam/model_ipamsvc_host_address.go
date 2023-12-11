@@ -3,7 +3,7 @@ package ipam
 import (
 	"context"
 	"regexp"
-
+	
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -15,9 +15,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
-
+	
 	"github.com/infobloxopen/bloxone-go-client/ipam"
-
+	
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -90,7 +90,7 @@ func (m *IpamsvcHostAddressModel) Expand(_ context.Context, _ *diag.Diagnostics)
 		return nil
 	}
 	to := &ipam.IpamsvcHostAddress{}
-
+	
 	if !m.NextAvailableId.IsNull() && !m.NextAvailableId.IsUnknown() {
 		naip := flex.ExpandString(m.NextAvailableId) + "/nextavailableip"
 		to.Ref = &naip
@@ -105,7 +105,7 @@ func FlattenIpamsvcHostAddress(ctx context.Context, from []ipam.IpamsvcHostAddre
 	if len(from) == 0 {
 		return types.ListNull(types.ObjectType{AttrTypes: IpamsvcHostAddressAttrTypes})
 	}
-
+	
 	tfData := ApplyToAll(from, data, func(t ipam.IpamsvcHostAddress, e IpamsvcHostAddressModel) types.Object {
 		m := IpamsvcHostAddressModel{}
 		m.Flatten(ctx, &t, diags)
@@ -114,10 +114,10 @@ func FlattenIpamsvcHostAddress(ctx context.Context, from []ipam.IpamsvcHostAddre
 		diags.Append(d...)
 		return o
 	})
-
+	
 	tfList, d := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: IpamsvcHostAddressAttrTypes}, tfData)
 	diags.Append(d...)
-
+	
 	return tfList
 }
 
@@ -125,35 +125,35 @@ func (m *IpamsvcHostAddressModel) Flatten(_ context.Context, from *ipam.IpamsvcH
 	if from == nil {
 		return
 	}
-
+	
 	if m == nil {
 		*m = IpamsvcHostAddressModel{}
 	}
-
+	
 	m.Address = flex.FlattenStringPointer(from.Address)
 	m.Ref = flex.FlattenStringPointer(from.Ref)
 	m.Space = flex.FlattenStringPointer(from.Space)
-
+	
 }
 
 func (m *IpamsvcHostAddressModel) FromTerraform5Value(val tftypes.Value) error {
 	if m == nil {
 		return nil
 	}
-
+	
 	v := map[string]tftypes.Value{}
 	err := val.As(&v)
 	if err != nil {
 		return err
 	}
-
+	
 	if !m.Address.IsNull() && !m.Address.IsUnknown() {
 		err = v["address"].As(&m.Address)
 		if err != nil {
 			return err
 		}
 	}
-
+	
 	if !m.Ref.IsNull() && !m.Ref.IsUnknown() {
 		err = v["ref"].As(&m.Ref)
 		if err != nil {
@@ -166,7 +166,7 @@ func (m *IpamsvcHostAddressModel) FromTerraform5Value(val tftypes.Value) error {
 			return err
 		}
 	}
-
+	
 	if !m.NextAvailableId.IsNull() && !m.NextAvailableId.IsUnknown() {
 		err = v["next_available_id"].As(&m.NextAvailableId)
 		if err != nil {
@@ -176,10 +176,11 @@ func (m *IpamsvcHostAddressModel) FromTerraform5Value(val tftypes.Value) error {
 	return nil
 }
 
-// ApplyToAll is a modified returns a new slice containing the results of applying the function `f` to each element of the original slice of Ipam Host address and Ipam host address model.
+// ApplyToAll is returns a new slice containing the results of applying the function `f` to each element of the original slice of Ipam Host address and Ipam host address model.
+// It is an extension of the ApplyToAll package found in the flex package
 func ApplyToAll(from []ipam.IpamsvcHostAddress, d []IpamsvcHostAddressModel, f func(t ipam.IpamsvcHostAddress, e IpamsvcHostAddressModel) types.Object) []types.Object {
 	v := make([]types.Object, len(from))
-
+	
 	for i, ha := range from {
 		if i <= len(d)-1 {
 			v[i] = f(ha, d[i])
@@ -187,6 +188,6 @@ func ApplyToAll(from []ipam.IpamsvcHostAddress, d []IpamsvcHostAddressModel, f f
 			v[i] = f(ha, IpamsvcHostAddressModel{})
 		}
 	}
-
+	
 	return v
 }
