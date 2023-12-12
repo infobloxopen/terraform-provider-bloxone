@@ -707,7 +707,6 @@ func TestAccServerResource_LameTtl(t *testing.T) {
 	})
 }
 
-// issue
 func TestAccServerResource_LogQueryResponse(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_log_query_response"
 	var v dns_config.ConfigServer
@@ -952,7 +951,6 @@ func TestAccServerResource_QueryAcl(t *testing.T) {
 	})
 }
 
-// todo
 func TestAccServerResource_QueryPort(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_query_port"
 	var v dns_config.ConfigServer
@@ -1046,7 +1044,6 @@ func TestAccServerResource_RecursionEnabled(t *testing.T) {
 	})
 }
 
-// todo
 func TestAccServerResource_RecursiveClients(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_recursive_clients"
 	var v dns_config.ConfigServer
@@ -1268,7 +1265,6 @@ func TestAccServerResource_Tags(t *testing.T) {
 	})
 }
 
-// issue
 func TestAccServerResource_TransferAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_transfer_acl"
 	var v dns_config.ConfigServer
