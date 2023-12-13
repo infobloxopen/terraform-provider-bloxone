@@ -87,19 +87,6 @@ func testAccCheckKerberosExists(ctx context.Context, dataSourceName string, v *k
 
 // below all TestAcc functions
 
-func testAccCheckKerberosResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
-	return []resource.TestCheckFunc{
-		resource.TestCheckResourceAttrPair(resourceName, "algorithm", dataSourceName, "results.0.algorithm"),
-		resource.TestCheckResourceAttrPair(resourceName, "comment", dataSourceName, "results.0.comment"),
-		resource.TestCheckResourceAttrPair(resourceName, "domain", dataSourceName, "results.0.domain"),
-		resource.TestCheckResourceAttrPair(resourceName, "id", dataSourceName, "results.0.id"),
-		resource.TestCheckResourceAttrPair(resourceName, "principal", dataSourceName, "results.0.principal"),
-		resource.TestCheckResourceAttrPair(resourceName, "tags", dataSourceName, "results.0.tags"),
-		resource.TestCheckResourceAttrPair(resourceName, "uploaded_at", dataSourceName, "results.0.uploaded_at"),
-		resource.TestCheckResourceAttrPair(resourceName, "version", dataSourceName, "results.0.version"),
-	}
-}
-
 func testAccKerberosDataSourceConfigFilters(principal string) string {
 	return fmt.Sprintf(`
 data "bloxone_keys_kerberoses" "test" {
