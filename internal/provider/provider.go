@@ -133,6 +133,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		infra_mgmt.NewServicesDataSource,
 
 		keys.NewTsigDataSource,
+		keys.NewKerberosDataSource,
 	}
 }
 
