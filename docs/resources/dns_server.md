@@ -3,20 +3,16 @@
 page_title: "bloxone_dns_server Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  A DNS Config Profile is a named configuration profile that can be shared for specified list of hosts.
 ---
 
 # bloxone_dns_server (Resource)
 
-
+A DNS Config Profile is a named configuration profile that can be shared for specified list of hosts.
 
 ## Example Usage
 
 ```terraform
-resource "bloxone_dns_server" "example_all_server" {
-  name = "example_dns_sever"
-}
-
 resource "bloxone_dns_server" "example_server" {
   name = "example_dns_server"
 

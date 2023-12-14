@@ -5,9 +5,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
 
@@ -39,18 +38,6 @@ var ConfigDisplayViewResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
-}
-
-func ExpandConfigDisplayView(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigDisplayView {
-	if o.IsNull() || o.IsUnknown() {
-		return nil
-	}
-	var m ConfigDisplayViewModel
-	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
-	if diags.HasError() {
-		return nil
-	}
-	return m.Expand(ctx, diags)
 }
 
 func (m *ConfigDisplayViewModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigDisplayView {

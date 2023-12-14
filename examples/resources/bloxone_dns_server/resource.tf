@@ -1,8 +1,4 @@
 
-resource "bloxone_dns_server" "example_all_server" {
-  name = "example_dns_sever"
-}
-
 resource "bloxone_dns_server" "example_server" {
   name = "example_dns_server"
 
