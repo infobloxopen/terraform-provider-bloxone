@@ -7,7 +7,7 @@ resource "bloxone_dns_view" "example" {
   name = "example_dns_view"
 
   # Other Optional fields
-  comment  = "An example view"
+  comment   = "An example view"
   ip_spaces = [bloxone_ipam_ip_space.example.id]
   tags = {
     site = "Test Site"
