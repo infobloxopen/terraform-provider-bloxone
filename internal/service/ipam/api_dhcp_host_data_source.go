@@ -90,6 +90,9 @@ func (d *DhcpHostDataSource) Configure(ctx context.Context, req datasource.Confi
 
 func (d *DhcpHostDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data IpamsvcHostModelWithFilter
+	var offset int32 = 0
+	var limit int32 = 1000
+	var allResults []ipam.IpamsvcHost
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -98,18 +101,30 @@ func (d *DhcpHostDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	apiRes, _, err := d.client.IPAddressManagementAPI.
-		DhcpHostAPI.
-		DhcpHostList(ctx).
-		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
-		Execute()
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read DhcpHost, got error: %s", err))
-		return
+	for {
+		apiRes, _, err := d.client.IPAddressManagementAPI.
+			DhcpHostAPI.
+			DhcpHostList(ctx).
+			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
+			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+			Offset(offset).
+			Limit(limit).
+			Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read FixedAddress, got error: %s", err))
+			return
+		}
+
+		allResults = append(allResults, apiRes.GetResults()...)
+
+		if len(apiRes.GetResults()) < int(limit) {
+			break
+		}
+
+		offset += limit
 	}
 
-	data.FlattenResults(ctx, apiRes.GetResults(), &resp.Diagnostics)
+	data.FlattenResults(ctx, allResults, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

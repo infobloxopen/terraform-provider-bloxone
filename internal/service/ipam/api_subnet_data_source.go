@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -54,7 +53,7 @@ func (d *SubnetDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Optional:    true,
 			},
 			"tag_filters": schema.MapAttribute{
-				Description: "Tag Filters are used to filter by tags return a more specific list of results. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
+				Description: "Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
 				ElementType: types.StringType,
 				Optional:    true,
 			},
@@ -90,6 +89,9 @@ func (d *SubnetDataSource) Configure(ctx context.Context, req datasource.Configu
 
 func (d *SubnetDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data IpamsvcSubnetModelWithFilter
+	var offset int32 = 0
+	var limit int32 = 1000
+	var allResults []ipam.IpamsvcSubnet
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -98,18 +100,30 @@ func (d *SubnetDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	apiRes, _, err := d.client.IPAddressManagementAPI.
-		SubnetAPI.
-		SubnetList(ctx).
-		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
-		Execute()
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Subnet, got error: %s", err))
-		return
+	for {
+		apiRes, _, err := d.client.IPAddressManagementAPI.
+			SubnetAPI.
+			SubnetList(ctx).
+			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
+			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+			Offset(offset).
+			Limit(limit).
+			Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Subnet, got error: %s", err))
+			return
+		}
+
+		allResults = append(allResults, apiRes.GetResults()...)
+
+		if len(apiRes.GetResults()) < int(limit) {
+			break
+		}
+
+		offset += limit
 	}
 
-	data.FlattenResults(ctx, apiRes.GetResults(), &resp.Diagnostics)
+	data.FlattenResults(ctx, allResults, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

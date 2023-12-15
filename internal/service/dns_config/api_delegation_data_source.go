@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -90,6 +89,9 @@ func (d *DelegationDataSource) Configure(ctx context.Context, req datasource.Con
 
 func (d *DelegationDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data ConfigDelegationModelWithFilter
+	var offset int32 = 0
+	var limit int32 = 1000
+	var allResults []dns_config.ConfigDelegation
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -98,18 +100,30 @@ func (d *DelegationDataSource) Read(ctx context.Context, req datasource.ReadRequ
 		return
 	}
 
-	apiRes, _, err := d.client.DNSConfigurationAPI.
-		DelegationAPI.
-		DelegationList(ctx).
-		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
-		Execute()
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Delegation, got error: %s", err))
-		return
+	for {
+		apiRes, _, err := d.client.DNSConfigurationAPI.
+			DelegationAPI.
+			DelegationList(ctx).
+			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
+			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+			Offset(offset).
+			Limit(limit).
+			Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Delegation, got error: %s", err))
+			return
+		}
+
+		allResults = append(allResults, apiRes.GetResults()...)
+
+		if len(apiRes.GetResults()) < int(limit) {
+			break
+		}
+
+		offset += limit
 	}
 
-	data.FlattenResults(ctx, apiRes.GetResults(), &resp.Diagnostics)
+	data.FlattenResults(ctx, allResults, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
