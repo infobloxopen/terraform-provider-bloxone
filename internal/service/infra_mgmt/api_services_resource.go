@@ -2,12 +2,15 @@ package infra_mgmt
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 )
@@ -32,7 +35,7 @@ func (r *ServicesResource) Metadata(ctx context.Context, req resource.MetadataRe
 func (r *ServicesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "",
-		Attributes:          InfraServiceResourceSchemaAttributes,
+		Attributes:          InfraServiceResourceSchemaAttributesWithTimeouts(ctx),
 	}
 }
 
@@ -57,7 +60,7 @@ func (r *ServicesResource) Configure(ctx context.Context, req resource.Configure
 }
 
 func (r *ServicesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data InfraServiceModel
+	var data InfraServiceModelWithTimeouts
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -79,12 +82,26 @@ func (r *ServicesResource) Create(ctx context.Context, req resource.CreateReques
 	res := apiRes.GetResult()
 	data.Flatten(ctx, &res, &resp.Diagnostics)
 
+	if data.DesiredState.ValueString() == "start" {
+		err = r.waitServiceStarted(ctx, data.Name.ValueString(), 20*time.Minute)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("waiting for service to be started, got error: %s", err))
+			return
+		}
+	} else if data.DesiredState.ValueString() == "stop" {
+		err = r.waitServiceStopped(ctx, data.Name.ValueString(), 20*time.Minute)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("waiting for service to be stopped, got error: %s", err))
+			return
+		}
+	}
+
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
 func (r *ServicesResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data InfraServiceModel
+	var data InfraServiceModelWithTimeouts
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -114,7 +131,7 @@ func (r *ServicesResource) Read(ctx context.Context, req resource.ReadRequest, r
 }
 
 func (r *ServicesResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data InfraServiceModel
+	var data InfraServiceModelWithTimeouts
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -136,12 +153,26 @@ func (r *ServicesResource) Update(ctx context.Context, req resource.UpdateReques
 	res := apiRes.GetResult()
 	data.Flatten(ctx, &res, &resp.Diagnostics)
 
+	if data.DesiredState.ValueString() == "start" {
+		err = r.waitServiceStarted(ctx, data.Name.ValueString(), 20*time.Minute)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("waiting for service to be started, got error: %s", err))
+			return
+		}
+	} else if data.DesiredState.ValueString() == "stop" {
+		err = r.waitServiceStopped(ctx, data.Name.ValueString(), 20*time.Minute)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("waiting for service to be stopped, got error: %s", err))
+			return
+		}
+	}
+
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
 func (r *ServicesResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data InfraServiceModel
+	var data InfraServiceModelWithTimeouts
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -165,4 +196,52 @@ func (r *ServicesResource) Delete(ctx context.Context, req resource.DeleteReques
 
 func (r *ServicesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+}
+
+func (r *ServicesResource) waitServiceStarted(ctx context.Context, name string, timeout time.Duration) error {
+	scf := retry.StateChangeConf{
+		Pending: []string{"starting"},
+		Target:  []string{"started"},
+		Refresh: r.stateRefreshFunc(name),
+		Timeout: timeout,
+	}
+	_, err := scf.WaitForStateContext(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *ServicesResource) waitServiceStopped(ctx context.Context, name string, timeout time.Duration) error {
+	scf := retry.StateChangeConf{
+		Pending: []string{"stopping"},
+		Target:  []string{"stopped"},
+		Refresh: r.stateRefreshFunc(name),
+		Timeout: timeout,
+	}
+	_, err := scf.WaitForStateContext(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *ServicesResource) stateRefreshFunc(name string) retry.StateRefreshFunc {
+	return func() (result interface{}, state string, err error) {
+		apiRes, _, err := r.client.InfraManagementAPI.
+			DetailAPI.DetailList_1(context.Background()).
+			Filter(fmt.Sprintf("name=='%s'", name)).
+			Execute()
+		if err != nil {
+			return
+		}
+		if len(apiRes.GetResults()) != 0 {
+			return nil, "", errors.New("not found")
+		}
+		serviceDetail := apiRes.GetResults()[0]
+		if serviceDetail.CompositeState == nil {
+			return nil, "", errors.New("state not known")
+		}
+		return serviceDetail, *serviceDetail.CompositeState, nil
+	}
 }

@@ -4,12 +4,20 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
+)
+
+const (
+	// AuthZoneOperationTimeout is the maximum amount of time to wait for eventual consistency
+	AuthZoneOperationTimeout = 2 * time.Minute
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -145,20 +153,28 @@ func (r *AuthZoneResource) Delete(ctx context.Context, req resource.DeleteReques
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
-
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	httpRes, err := r.client.DNSConfigurationAPI.
-		AuthZoneAPI.
-		AuthZoneDelete(ctx, data.Id.ValueString()).
-		Execute()
-	if err != nil {
-		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
-			return
+	err := retry.RetryContext(ctx, AuthZoneOperationTimeout, func() *retry.RetryError {
+		httpRes, err := r.client.DNSConfigurationAPI.
+			AuthZoneAPI.
+			AuthZoneDelete(ctx, data.Id.ValueString()).
+			Execute()
+		if err != nil {
+			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
+				return nil
+			}
+			if strings.Contains(err.Error(), "object is referenced by a 'Zone' object") {
+				return retry.RetryableError(err)
+			}
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete AuthZone, got error: %s", err))
+			return retry.NonRetryableError(err)
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete AuthZone, got error: %s", err))
+		return nil
+	})
+	if err != nil {
 		return
 	}
 }

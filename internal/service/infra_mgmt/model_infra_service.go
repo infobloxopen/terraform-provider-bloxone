@@ -3,6 +3,7 @@ package infra_mgmt
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -107,7 +108,7 @@ var InfraServiceResourceSchemaAttributes = map[string]schema.Attribute{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 		},
 		Validators: []validator.String{
-			stringvalidator.OneOf("authn", "anycast", "cdc", "dhcp", " dns", "dfp", "orpheus", "msad", "ntp", "bgp", "rip", "ospf"),
+			stringvalidator.OneOf("authn", "anycast", "cdc", "dhcp", "dns", "dfp", "orpheus", "msad", "ntp", "bgp", "rip", "ospf"),
 		},
 	},
 	"tags": schema.MapAttribute{
@@ -181,4 +182,70 @@ func (m *InfraServiceModel) Flatten(ctx context.Context, from *infra_mgmt.InfraS
 	m.ServiceType = flex.FlattenString(from.ServiceType)
 	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
+}
+
+// InfraServiceModelWithTimeouts is a helper model that also contains the timeouts for the InfraServiceModel.
+// The plugin framework does not deal well with embedded structs, so have to duplicate the fields and Flatten/Expand functions here from InfraServiceModel.
+// https://github.com/hashicorp/terraform-plugin-framework/issues/242
+type InfraServiceModelWithTimeouts struct {
+	Configs         types.List        `tfsdk:"configs"`
+	CreatedAt       timetypes.RFC3339 `tfsdk:"created_at"`
+	Description     types.String      `tfsdk:"description"`
+	DesiredState    types.String      `tfsdk:"desired_state"`
+	DesiredVersion  types.String      `tfsdk:"desired_version"`
+	Id              types.String      `tfsdk:"id"`
+	InterfaceLabels types.List        `tfsdk:"interface_labels"`
+	Name            types.String      `tfsdk:"name"`
+	PoolId          types.String      `tfsdk:"pool_id"`
+	ServiceType     types.String      `tfsdk:"service_type"`
+	Tags            types.Map         `tfsdk:"tags"`
+	UpdatedAt       timetypes.RFC3339 `tfsdk:"updated_at"`
+	Timeouts        timeouts.Value    `tfsdk:"timeouts"`
+}
+
+func (m *InfraServiceModelWithTimeouts) Expand(ctx context.Context, diags *diag.Diagnostics) *infra_mgmt.InfraService {
+	if m == nil {
+		return nil
+	}
+	to := &infra_mgmt.InfraService{
+		Description:     flex.ExpandStringPointer(m.Description),
+		DesiredState:    flex.ExpandStringPointer(m.DesiredState),
+		DesiredVersion:  flex.ExpandStringPointer(m.DesiredVersion),
+		InterfaceLabels: flex.ExpandFrameworkListString(ctx, m.InterfaceLabels, diags),
+		Name:            flex.ExpandString(m.Name),
+		PoolId:          flex.ExpandString(m.PoolId),
+		ServiceType:     flex.ExpandString(m.ServiceType),
+		Tags:            flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
+	}
+	return to
+}
+
+func (m *InfraServiceModelWithTimeouts) Flatten(ctx context.Context, from *infra_mgmt.InfraService, diags *diag.Diagnostics) {
+	if from == nil {
+		return
+	}
+	if m == nil {
+		*m = InfraServiceModelWithTimeouts{}
+	}
+	m.Configs = flex.FlattenFrameworkListNestedBlock(ctx, from.Configs, InfraServiceHostConfigAttrTypes, diags, FlattenInfraServiceHostConfig)
+	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
+	m.Description = flex.FlattenStringPointer(from.Description)
+	m.DesiredState = flex.FlattenStringPointer(from.DesiredState)
+	m.DesiredVersion = flex.FlattenStringPointer(from.DesiredVersion)
+	m.Id = flex.FlattenStringPointer(from.Id)
+	m.InterfaceLabels = flex.FlattenFrameworkListString(ctx, from.InterfaceLabels, diags)
+	m.Name = flex.FlattenString(from.Name)
+	m.PoolId = flex.FlattenString(from.PoolId)
+	m.ServiceType = flex.FlattenString(from.ServiceType)
+	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
+}
+
+func InfraServiceResourceSchemaAttributesWithTimeouts(ctx context.Context) map[string]schema.Attribute {
+	attributes := InfraServiceResourceSchemaAttributes
+	attributes["timeouts"] = timeouts.Attributes(ctx, timeouts.Opts{
+		Create: true,
+		Update: true,
+	})
+	return attributes
 }
