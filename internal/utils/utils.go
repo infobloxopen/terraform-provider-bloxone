@@ -7,7 +7,7 @@ import (
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
 
-const limit int32 = 1000
+const ReadPageSizeLimit int32 = 1000
 
 // Ptr is a helper routine that returns a pointer to given value.
 func Ptr[T any](t T) *T {
@@ -210,15 +210,15 @@ func ReadWithPages[T any](read func(offset, limit int32) ([]T, error)) ([]T, err
 	var offset int32 = 0
 
 	for {
-		results, err := read(offset, limit)
+		results, err := read(offset, ReadPageSizeLimit)
 		if err != nil {
 			return nil, err
 		}
 		allResults = append(allResults, results...)
-		if len(results) < int(limit) {
+		if len(results) < int(ReadPageSizeLimit) {
 			break
 		}
-		offset += limit
+		offset += ReadPageSizeLimit
 	}
 
 	return allResults, nil
