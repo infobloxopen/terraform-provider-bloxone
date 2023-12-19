@@ -7,6 +7,8 @@ import (
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
 
+const limit int32 = 1000
+
 // Ptr is a helper routine that returns a pointer to given value.
 func Ptr[T any](t T) *T {
 	return &t
@@ -206,7 +208,6 @@ func DataSourceAttribute(name string, val resourceschema.Attribute, diags *diag.
 func ReadWithPages[T any](read func(offset, limit int32) ([]T, error)) ([]T, error) {
 	var allResults []T
 	var offset int32 = 0
-	const limit int32 = 1000
 
 	for {
 		results, err := read(offset, limit)
