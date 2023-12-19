@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -89,9 +90,6 @@ func (d *IpamHostDataSource) Configure(ctx context.Context, req datasource.Confi
 
 func (d *IpamHostDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data IpamsvcIpamHostModelWithFilter
-	var offset int32 = 0
-	var limit int32 = 1000
-	var allResults []ipam.IpamsvcIpamHost
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -100,7 +98,7 @@ func (d *IpamHostDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	for {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IpamsvcIpamHost, error) {
 		apiRes, _, err := d.client.IPAddressManagementAPI.
 			IpamHostAPI.
 			IpamHostList(ctx).
@@ -111,16 +109,12 @@ func (d *IpamHostDataSource) Read(ctx context.Context, req datasource.ReadReques
 			Execute()
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read IpamHost, got error: %s", err))
-			return
+			return nil, err
 		}
-
-		allResults = append(allResults, apiRes.GetResults()...)
-
-		if len(apiRes.GetResults()) < int(limit) {
-			break
-		}
-
-		offset += limit
+		return apiRes.GetResults(), nil
+	})
+	if err != nil {
+		return
 	}
 
 	data.FlattenResults(ctx, allResults, &resp.Diagnostics)

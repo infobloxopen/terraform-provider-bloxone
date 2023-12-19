@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -202,4 +201,24 @@ func DataSourceAttribute(name string, val resourceschema.Attribute, diags *diag.
 	diags.AddError("Provider error",
 		fmt.Sprintf("Failed to convert schema attribute of type '%T' for '%s'", val, name))
 	return nil
+}
+
+func ReadWithPages[T any](read func(offset, limit int32) ([]T, error)) ([]T, error) {
+	var allResults []T
+	var offset int32 = 0
+	const limit int32 = 1000
+
+	for {
+		results, err := read(offset, limit)
+		if err != nil {
+			return nil, err
+		}
+		allResults = append(allResults, results...)
+		if len(results) < int(limit) {
+			break
+		}
+		offset += limit
+	}
+
+	return allResults, nil
 }

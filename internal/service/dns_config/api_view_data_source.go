@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -89,9 +90,6 @@ func (d *ViewDataSource) Configure(ctx context.Context, req datasource.Configure
 
 func (d *ViewDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data ConfigViewModelWithFilter
-	var offset int32 = 0
-	var limit int32 = 1000
-	var allResults []dns_config.ConfigView
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -100,7 +98,7 @@ func (d *ViewDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 		return
 	}
 
-	for {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]dns_config.ConfigView, error) {
 		apiRes, _, err := d.client.DNSConfigurationAPI.
 			ViewAPI.
 			ViewList(ctx).
@@ -111,16 +109,12 @@ func (d *ViewDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 			Execute()
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read View, got error: %s", err))
-			return
+			return nil, err
 		}
-
-		allResults = append(allResults, apiRes.GetResults()...)
-
-		if len(apiRes.GetResults()) < int(limit) {
-			break
-		}
-
-		offset += limit
+		return apiRes.GetResults(), nil
+	})
+	if err != nil {
+		return
 	}
 
 	data.FlattenResults(ctx, allResults, &resp.Diagnostics)

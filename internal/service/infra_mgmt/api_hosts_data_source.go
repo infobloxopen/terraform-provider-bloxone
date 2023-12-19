@@ -88,9 +88,6 @@ func (d *HostsDataSource) Configure(ctx context.Context, req datasource.Configur
 
 func (d *HostsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data InfraHostModelWithFilter
-	var offset int32 = 0
-	var limit int32 = 1000
-	var allResults []infra_mgmt.InfraHost
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -99,7 +96,7 @@ func (d *HostsDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		return
 	}
 
-	for {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]infra_mgmt.InfraHost, error) {
 		apiRes, _, err := d.client.InfraManagementAPI.
 			HostsAPI.
 			HostsList(ctx).
@@ -109,17 +106,13 @@ func (d *HostsDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 			Limit(limit).
 			Execute()
 		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read UIJoinToken, got error: %s", err))
-			return
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read InfraHost, got error: %s", err))
+			return nil, err
 		}
-
-		allResults = append(allResults, apiRes.GetResults()...)
-
-		if len(apiRes.GetResults()) < int(limit) {
-			break
-		}
-
-		offset += limit
+		return apiRes.GetResults(), nil
+	})
+	if err != nil {
+		return
 	}
 
 	data.FlattenResults(ctx, allResults, &resp.Diagnostics)
