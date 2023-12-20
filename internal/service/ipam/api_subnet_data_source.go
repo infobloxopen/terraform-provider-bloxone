@@ -54,7 +54,7 @@ func (d *SubnetDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Optional:    true,
 			},
 			"tag_filters": schema.MapAttribute{
-				Description: "Tag Filters are used to filter by tags return a more specific list of results. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
+				Description: "Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
 				ElementType: types.StringType,
 				Optional:    true,
 			},
@@ -98,18 +98,26 @@ func (d *SubnetDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	apiRes, _, err := d.client.IPAddressManagementAPI.
-		SubnetAPI.
-		SubnetList(ctx).
-		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
-		Execute()
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IpamsvcSubnet, error) {
+		apiRes, _, err := d.client.IPAddressManagementAPI.
+			SubnetAPI.
+			SubnetList(ctx).
+			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
+			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+			Offset(offset).
+			Limit(limit).
+			Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Subnet, got error: %s", err))
+			return nil, err
+		}
+		return apiRes.GetResults(), nil
+	})
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Subnet, got error: %s", err))
 		return
 	}
 
-	data.FlattenResults(ctx, apiRes.GetResults(), &resp.Diagnostics)
+	data.FlattenResults(ctx, allResults, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

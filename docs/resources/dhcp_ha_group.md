@@ -13,14 +13,14 @@ The HAGroup object represents on-prem hosts that can serve the same leases for H
 ## Example Usage
 
 ```terraform
-data "bloxone_ipam_dhcp_hosts" "example_host_1" {
-  filter = {
+data "bloxone_dhcp_hosts" "example_host_1" {
+  filters = {
     name = "Your Host name"
   }
 }
 
-data "bloxone_ipam_dhcp_hosts" "example_host_2" {
-  filter = {
+data "bloxone_dhcp_hosts" "example_host_2" {
+  filters = {
     name = "Your host name"
   }
 }
@@ -30,11 +30,11 @@ resource "bloxone_dhcp_ha_group" "example_tags" {
   mode = "active-active"
   hosts = [
     {
-      host = data.bloxone_ipam_dhcp_hosts.example_host_1.results.0.id,
+      host = data.bloxone_dhcp_hosts.example_host_1.results.0.id,
       role = "active"
     },
     {
-      host = data.bloxone_ipam_dhcp_hosts.example_host_2.results.0.id,
+      host = data.bloxone_dhcp_hosts.example_host_2.results.0.id,
       role = "active"
     }
   ]

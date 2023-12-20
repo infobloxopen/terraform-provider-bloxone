@@ -11,7 +11,6 @@ import (
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/ipam"
-
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
@@ -99,18 +98,26 @@ func (d *ServerDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	apiRes, _, err := d.client.IPAddressManagementAPI.
-		ServerAPI.
-		ServerList(ctx).
-		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
-		Execute()
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IpamsvcServer, error) {
+		apiRes, _, err := d.client.IPAddressManagementAPI.
+			ServerAPI.
+			ServerList(ctx).
+			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
+			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+			Offset(offset).
+			Limit(limit).
+			Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Server, got error: %s", err))
+			return nil, err
+		}
+		return apiRes.GetResults(), nil
+	})
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Server, got error: %s", err))
 		return
 	}
 
-	data.FlattenResults(ctx, apiRes.GetResults(), &resp.Diagnostics)
+	data.FlattenResults(ctx, allResults, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

@@ -27,7 +27,7 @@ type ForwardNsgDataSource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (d *ForwardNsgDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *ForwardNsgDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + "dns_forward_nsgs"
 }
 
@@ -44,7 +44,7 @@ func (m *ConfigForwardNSGModelWithFilter) FlattenResults(ctx context.Context, fr
 	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigForwardNSGAttrTypes, diags, FlattenConfigForwardNSG)
 }
 
-func (d *ForwardNsgDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *ForwardNsgDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "",
 		Attributes: map[string]schema.Attribute{
@@ -68,7 +68,7 @@ func (d *ForwardNsgDataSource) Schema(_ context.Context, _ datasource.SchemaRequ
 	}
 }
 
-func (d *ForwardNsgDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (d *ForwardNsgDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -98,18 +98,26 @@ func (d *ForwardNsgDataSource) Read(ctx context.Context, req datasource.ReadRequ
 		return
 	}
 
-	apiRes, _, err := d.client.DNSConfigurationAPI.
-		ForwardNsgAPI.
-		ForwardNsgList(ctx).
-		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
-		Execute()
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]dns_config.ConfigForwardNSG, error) {
+		apiRes, _, err := d.client.DNSConfigurationAPI.
+			ForwardNsgAPI.
+			ForwardNsgList(ctx).
+			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
+			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+			Offset(offset).
+			Limit(limit).
+			Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read ForwardNsg, got error: %s", err))
+			return nil, err
+		}
+		return apiRes.GetResults(), nil
+	})
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read ForwardNsg, got error: %s", err))
 		return
 	}
 
-	data.FlattenResults(ctx, apiRes.GetResults(), &resp.Diagnostics)
+	data.FlattenResults(ctx, allResults, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
