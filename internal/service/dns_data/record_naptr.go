@@ -149,3 +149,7 @@ func (r recordNAPTRResource) resourceName() string {
 func (r recordNAPTRResource) dataSourceName() string {
 	return "dns_naptr_records"
 }
+
+func (r recordNAPTRResource) description() string {
+	return "Represents a DNS NAPTR resource record in an authoritative zone."
+}

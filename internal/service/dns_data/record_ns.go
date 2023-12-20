@@ -96,3 +96,7 @@ func (r recordNSResource) resourceName() string {
 func (r recordNSResource) dataSourceName() string {
 	return "dns_ns_records"
 }
+
+func (r recordNSResource) description() string {
+	return "Represents a DNS NS resource record in an authoritative zone."
+}

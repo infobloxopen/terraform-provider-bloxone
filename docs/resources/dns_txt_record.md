@@ -3,12 +3,12 @@
 page_title: "bloxone_dns_txt_record Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  Represents a DNS TXT resource record in an authoritative DNS zone.
 ---
 
 # bloxone_dns_txt_record (Resource)
 
-
+Represents a DNS TXT resource record in an authoritative DNS zone.
 
 ## Example Usage
 

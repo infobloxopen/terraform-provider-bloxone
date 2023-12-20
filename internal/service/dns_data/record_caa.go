@@ -142,3 +142,7 @@ func (r recordCAAResource) resourceName() string {
 func (r recordCAAResource) dataSourceName() string {
 	return "dns_caa_records"
 }
+
+func (r recordCAAResource) description() string {
+	return "Represents a DNS CAA resource record in an authoritative zone."
+}

@@ -3,12 +3,12 @@
 page_title: "bloxone_dns_mx_record Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  Represents a DNS MX resource record in an authoritative zone.
 ---
 
 # bloxone_dns_mx_record (Resource)
 
-
+Represents a DNS MX resource record in an authoritative zone.
 
 ## Example Usage
 

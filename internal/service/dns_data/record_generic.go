@@ -20,6 +20,8 @@ import (
 var _ recordResourceImplementor = &recordGenericResource{}
 var _ recordDataSourceImplementor = &recordGenericResource{}
 
+var validateGenericType = stringvalidator.NoneOfCaseInsensitive("A", "AAAA", "CAA", "CNAME", "DNAME", "MX", "NAPTR", "NS", "PTR", "SRV", "TXT", "HTTPS", "SVCB")
+
 type genericRecordModel struct {
 	SubFields types.List `tfsdk:"subfields"`
 }
@@ -123,7 +125,7 @@ func (r recordGenericResource) schemaAttributes() map[string]schema.Attribute {
 		Required:            true,
 		MarkdownDescription: "The DNS resource record type specified in the textual mnemonic format or in the “TYPEnnn” format where “nnn” indicates the numeric type value.",
 		Validators: []validator.String{
-			stringvalidator.NoneOf("A", "AAAA", "CAA", "CNAME", "DNAME", "MX", "NAPTR", "NS", "PTR", "SRV", "TXT", "HTTPS", "SVCB"),
+			validateGenericType,
 		},
 	}
 	schemaAttrs["rdata"] = schema.SingleNestedAttribute{
@@ -166,4 +168,8 @@ func (r recordGenericResource) resourceName() string {
 
 func (r recordGenericResource) dataSourceName() string {
 	return "dns_records"
+}
+
+func (r recordGenericResource) description() string {
+	return "Represents a DNS resource record in an authoritative zone."
 }

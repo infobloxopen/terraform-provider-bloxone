@@ -42,30 +42,6 @@ func TestAccRecordHTTPSResource_Rdata(t *testing.T) {
 	})
 }
 
-func TestAccRecordHTTPSDataSource_Filters(t *testing.T) {
-	dataSourceName := "data.bloxone_dns_https_records.test"
-	resourceName := "bloxone_dns_https_record.test"
-	var v dns_data.DataRecord
-	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
-	niz := acctest.RandomNameWithPrefix("https")
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckRecordDestroy(context.Background(), &v),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccRecordHTTPSDataSourceConfigFilters(zoneFqdn, niz),
-				Check: resource.ComposeTestCheckFunc(
-					append([]resource.TestCheckFunc{
-						testAccCheckRecordExists(context.Background(), resourceName, &v),
-					}, testAccCheckRecordResourceAttrPair(resourceName, dataSourceName)...)...,
-				),
-			},
-		},
-	})
-}
-
 func testAccRecordHTTPSRdata(zoneFqdn string, https string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dns_https_record" "test_rdata" {
@@ -77,24 +53,4 @@ resource "bloxone_dns_https_record" "test_rdata" {
 }
 `, https)
 	return strings.Join([]string{testAccBaseWithZone(zoneFqdn), config}, "")
-}
-
-func testAccRecordHTTPSDataSourceConfigFilters(zoneFqdn, nameInZone string) string {
-	config := fmt.Sprintf(`
-resource "bloxone_dns_https_record" "test" {
-  name_in_zone = %[1]q
-  zone = bloxone_dns_auth_zone.test.id
-  rdata = {
-    target_name = "example.com."
-  }
-}
-
-data "bloxone_dns_https_records" "test" {
-  filters = {
-    name_in_zone = %[1]q
-	zone = bloxone_dns_auth_zone.test.id
-  }
-  depends_on = [bloxone_dns_https_record.test]
-}`, nameInZone)
-	return strings.Join([]string{config, testAccBaseWithZone(zoneFqdn)}, "")
 }

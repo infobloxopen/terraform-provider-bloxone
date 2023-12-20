@@ -96,3 +96,7 @@ func (r recordSVCBResource) resourceName() string {
 func (r recordSVCBResource) dataSourceName() string {
 	return "dns_svcb_records"
 }
+
+func (r recordSVCBResource) description() string {
+	return "Represents a DNS SVCB resource record in an authoritative zone."
+}

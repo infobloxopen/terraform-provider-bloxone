@@ -96,3 +96,7 @@ func (r recordPTRResource) resourceName() string {
 func (r recordPTRResource) dataSourceName() string {
 	return "dns_ptr_records"
 }
+
+func (r recordPTRResource) description() string {
+	return "Represents a DNS PTR resource record in an authoritative zone."
+}

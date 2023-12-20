@@ -3,12 +3,12 @@
 page_title: "bloxone_dns_caa_record Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  Represents a DNS CAA resource record in an authoritative zone.
 ---
 
 # bloxone_dns_caa_record (Resource)
 
-
+Represents a DNS CAA resource record in an authoritative zone.
 
 ## Example Usage
 

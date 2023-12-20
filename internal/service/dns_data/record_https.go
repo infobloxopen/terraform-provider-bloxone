@@ -15,6 +15,7 @@ import (
 )
 
 var _ recordResourceImplementor = &recordHTTPSResource{}
+var _ recordDataSourceImplementor = &recordHTTPSResource{}
 
 type httpsRecordModel struct {
 	TargetName types.String `tfsdk:"target_name"`
@@ -94,4 +95,8 @@ func (r recordHTTPSResource) resourceName() string {
 
 func (r recordHTTPSResource) dataSourceName() string {
 	return "dns_https_records"
+}
+
+func (r recordHTTPSResource) description() string {
+	return "Represents a DNS HTTPS resource record in an authoritative zone."
 }

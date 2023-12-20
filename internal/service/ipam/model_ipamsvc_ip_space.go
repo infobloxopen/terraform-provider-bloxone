@@ -189,7 +189,7 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 			"allow_unknown_v6":          types.BoolValue(true),
 			"filters":                   types.ListNull(types.StringType),
 			"filters_v6":                types.ListNull(types.StringType),
-			"ignore_client_uid":         types.BoolValue(true),
+			"ignore_client_uid":         types.BoolValue(false),
 			"ignore_list":               types.ListNull(types.ObjectType{AttrTypes: IpamsvcIgnoreItemAttrTypes}),
 			"lease_time":                types.Int64Value(3600),
 			"lease_time_v6":             types.Int64Value(3600),

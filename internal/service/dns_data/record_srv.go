@@ -125,3 +125,7 @@ func (r recordSRVResource) resourceName() string {
 func (r recordSRVResource) dataSourceName() string {
 	return "dns_srv_records"
 }
+
+func (r recordSRVResource) description() string {
+	return "Represents a DNS SRV resource record in an authoritative zone."
+}

@@ -105,3 +105,7 @@ func (r recordMXResource) resourceName() string {
 func (r recordMXResource) dataSourceName() string {
 	return "dns_mx_records"
 }
+
+func (r recordMXResource) description() string {
+	return "Represents a DNS MX resource record in an authoritative zone."
+}

@@ -96,3 +96,7 @@ func (r recordTXTResource) resourceName() string {
 func (r recordTXTResource) dataSourceName() string {
 	return "dns_txt_records"
 }
+
+func (r recordTXTResource) description() string {
+	return "Represents a DNS TXT resource record in an authoritative DNS zone."
+}

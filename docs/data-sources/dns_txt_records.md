@@ -3,12 +3,12 @@
 page_title: "bloxone_dns_txt_records Data Source - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  Represents a DNS TXT resource record in an authoritative DNS zone.
 ---
 
 # bloxone_dns_txt_records (Data Source)
 
-
+Represents a DNS TXT resource record in an authoritative DNS zone.
 
 ## Example Usage
 
@@ -42,6 +42,7 @@ data "bloxone_dns_txt_records" "example_all" {}
 ### Read-Only
 
 - `results` (Attributes List) (see [below for nested schema](#nestedatt--results))
+- `type` (String) The DNS resource record type specified in the textual mnemonic format or in the “TYPEnnn” format where “nnn” indicates the numeric type value.
 
 <a id="nestedatt--results"></a>
 ### Nested Schema for `results`
