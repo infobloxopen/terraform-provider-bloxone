@@ -146,14 +146,9 @@ func (m *IpamsvcIpamHostModel) Flatten(ctx context.Context, from *ipam.IpamsvcIp
 		*m = IpamsvcIpamHostModel{}
 	}
 
-	i := &[]IpamsvcHostAddressModel{}
-	if !m.Addresses.IsUnknown() && !m.Addresses.IsNull() {
-		lv, diag := m.Addresses.ToListValue(ctx)
-		diags.Append(diag...)
-		diags.Append(lv.ElementsAs(ctx, i, false)...)
-	}
+	var i []IpamsvcHostAddressModel
 
-	m.Addresses = FlattenIpamsvcHostAddress(ctx, from.Addresses, diags, *i)
+	m.Addresses = flex.FlattenFrameworkListsNestedBlock(ctx, from.Addresses, flex.ExpandList(ctx, m.Addresses, i, diags), IpamsvcHostAddressAttrTypes, diags, FlattenIpamsvcHostAddress)
 	m.AutoGenerateRecords = types.BoolPointerValue(from.AutoGenerateRecords)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
