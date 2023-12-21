@@ -50,7 +50,7 @@ resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
   match_value = "00:00:00:00:00:00"
   comment     = "Example Fixed Address created by the terraform provider"
   tags = {
-    location : "site1"
+    location = "site1"
   }
   depends_on = [bloxone_ipam_subnet.example]
 }
