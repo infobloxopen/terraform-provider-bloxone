@@ -36,12 +36,12 @@ type BloxOneProviderModel struct {
 	APIKey types.String `tfsdk:"api_key"`
 }
 
-func (p *BloxOneProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+func (p *BloxOneProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
 	resp.TypeName = "bloxone"
 	resp.Version = p.version
 }
 
-func (p *BloxOneProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+func (p *BloxOneProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"csp_url": schema.StringAttribute{
@@ -78,7 +78,7 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 	resp.ResourceData = client
 }
 
-func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resource {
+func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		ipam.NewIpamHostResource,
 		ipam.NewIpSpaceResource,
@@ -88,6 +88,7 @@ func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resou
 		ipam.NewRangeResource,
 		ipam.NewFixedAddressResource,
 		ipam.NewServerResource,
+		ipam.NewHaGroupResource,
 
 		dns_config.NewViewResource,
 		dns_config.NewAuthNsgResource,
@@ -95,6 +96,7 @@ func (p *BloxOneProvider) Resources(ctx context.Context) []func() resource.Resou
 		dns_config.NewAuthZoneResource,
 		dns_config.NewForwardNsgResource,
 		dns_config.NewDelegationResource,
+		dns_config.NewServerResource,
 
 		infra_provision.NewUIJoinTokenResource,
 
@@ -116,6 +118,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		ipam.NewRangeDataSource,
 		ipam.NewFixedAddressDataSource,
 		ipam.NewServerDataSource,
+		ipam.NewHaGroupDataSource,
 
 		dns_config.NewViewDataSource,
 		dns_config.NewAuthNsgDataSource,
@@ -124,6 +127,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		dns_config.NewAuthZoneDataSource,
 		dns_config.NewForwardNsgDataSource,
 		dns_config.NewDelegationDataSource,
+		dns_config.NewServerDataSource,
 
 		infra_provision.NewUIJoinTokenDataSource,
 
@@ -131,6 +135,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		infra_mgmt.NewServicesDataSource,
 
 		keys.NewTsigDataSource,
+		keys.NewKerberosDataSource,
 	}
 }
 

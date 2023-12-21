@@ -21,8 +21,8 @@ resource "bloxone_dns_view" "example" {
   name = "example_dns_view"
 
   # Other Optional fields
-  comment  = "An example view"
-  ip_space = bloxone_ipam_ip_space.example.id
+  comment   = "An example view"
+  ip_spaces = [bloxone_ipam_ip_space.example.id]
   tags = {
     site = "Test Site"
   }
@@ -33,7 +33,7 @@ resource "bloxone_dns_view" "example" {
       address = "192.168.10.10"
     }
   ]
-  default_ttl = 800
+  lame_ttl = 80
 
 }
 ```
