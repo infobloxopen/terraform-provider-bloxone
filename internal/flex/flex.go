@@ -106,7 +106,7 @@ func FlattenFrameworkListsNestedBlock[T any, U any, V any](ctx context.Context, 
 		return types.ListNull(types.ObjectType{AttrTypes: attrTypes})
 	}
 
-	tfData := ApplyToAllMultiSlice(data, model, func(t T, u U) V {
+	tfData := ApplyToAllMultiSlice(data, model, diags, func(t T, u U) V {
 		return f(ctx, &t, &u, diags)
 	})
 
@@ -198,15 +198,14 @@ func ApplyToAll[T, U any](s []T, f func(T) U) []U {
 }
 
 // ApplyToAllMultiSlice returns a new slice containing the results of applying the function `f` to each element of the original slice `s` and `u`.
-func ApplyToAllMultiSlice[T, U, V any](s []T, u []U, f func(T, U) V) []V {
+func ApplyToAllMultiSlice[T, U, V any](s []T, u []U, d *diag.Diagnostics, f func(T, U) V) []V {
 	v := make([]V, len(s))
 	if len(s) != len(u) {
-		return v
+		d.Append(diag.NewErrorDiagnostic("the input arrays are not of equal length", fmt.Sprintf("Expected the length of the response returned from API to be same as '%T'", u)))
+		return nil
 	}
 	for i, e := range s {
-		if i <= len(u)-1 {
-			v[i] = f(e, u[i])
-		}
+		v[i] = f(e, u[i])
 	}
 
 	return v
