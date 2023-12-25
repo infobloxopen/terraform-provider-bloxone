@@ -12,7 +12,7 @@ resource "bloxone_dns_auth_nsg" "example" {
   ]
   external_secondaries = [
     {
-      address = "12.10.2.1",
+      address = "12.10.2.2",
       fqdn    = "ext.primary.com."
     }
   ]
