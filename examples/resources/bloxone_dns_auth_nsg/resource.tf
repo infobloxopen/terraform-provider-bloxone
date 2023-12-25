@@ -20,3 +20,4 @@ resource "bloxone_dns_auth_nsg" "example" {
     site = "Test Site"
   }
 }
+
