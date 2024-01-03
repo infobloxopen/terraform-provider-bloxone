@@ -2,14 +2,18 @@ package ipam
 
 import (
 	"context"
+	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -38,6 +42,7 @@ type IpamsvcFixedAddressModel struct {
 	Parent                    types.String      `tfsdk:"parent"`
 	Tags                      types.Map         `tfsdk:"tags"`
 	UpdatedAt                 timetypes.RFC3339 `tfsdk:"updated_at"`
+	NextAvailableId           types.String      `tfsdk:"next_available_id"`
 }
 
 var IpamsvcFixedAddressAttrTypes = map[string]attr.Type{
@@ -61,11 +66,19 @@ var IpamsvcFixedAddressAttrTypes = map[string]attr.Type{
 	"parent":                       types.StringType,
 	"tags":                         types.MapType{ElemType: types.StringType},
 	"updated_at":                   timetypes.RFC3339Type{},
+	"next_available_id":            types.StringType,
 }
 
 var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
-		Required:            true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.String{
+			stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
+		},
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "The reserved address.",
 	},
 	"comment": schema.StringAttribute{
@@ -162,6 +175,18 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "Time when the object has been updated. Equals to _created_at_ if not updated after creation.",
 	},
+	"next_available_id": schema.StringAttribute{
+		Optional:            true,
+		MarkdownDescription: "The resource identifier for the address block where the next available fixed address should be generated",
+		Validators: []validator.String{
+			stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
+			stringvalidator.RegexMatches(regexp.MustCompile(`^ipam/(subnet|range)/[0-9a-f-].*$`), "Should be the resource identifier of an subnet or range."),
+		},
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+			stringplanmodifier.UseStateForUnknown(),
+		},
+	},
 }
 
 func ExpandIpamsvcFixedAddress(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcFixedAddress {
@@ -181,7 +206,6 @@ func (m *IpamsvcFixedAddressModel) Expand(ctx context.Context, diags *diag.Diagn
 		return nil
 	}
 	to := &ipam.IpamsvcFixedAddress{
-		Address:                   flex.ExpandString(m.Address),
 		Comment:                   flex.ExpandStringPointer(m.Comment),
 		DhcpOptions:               flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
 		DisableDhcp:               flex.ExpandBoolPointer(m.DisableDhcp),
@@ -198,6 +222,11 @@ func (m *IpamsvcFixedAddressModel) Expand(ctx context.Context, diags *diag.Diagn
 		Parent:                    flex.ExpandStringPointer(m.Parent),
 		Tags:                      flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
+	to.Address = flex.ExpandString(m.Address)
+	if !m.NextAvailableId.IsNull() && !m.NextAvailableId.IsUnknown() {
+		to.Address = flex.ExpandString(m.NextAvailableId) + "/nextavailableip"
+	}
+
 	return to
 }
 

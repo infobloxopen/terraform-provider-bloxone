@@ -15,6 +15,7 @@ import (
 )
 
 type FrameworkElementFlExFunc[T any, U any] func(context.Context, T, *diag.Diagnostics) U
+type FrameworkElementFlExFuncExt[T any, U any, V any] func(context.Context, T, U, *diag.Diagnostics) V
 
 func FlattenString(s string) types.String {
 	if s == "" {
@@ -95,6 +96,22 @@ func FlattenFrameworkListNestedBlock[T any, U any](ctx context.Context, data []T
 	})
 
 	tfList, d := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: attrTypes}, tfData)
+
+	diags.Append(d...)
+	return tfList
+}
+
+func FlattenFrameworkListsNestedBlock[T any, U any, V any](ctx context.Context, data []T, model []U, attrTypes map[string]attr.Type, diags *diag.Diagnostics, f FrameworkElementFlExFuncExt[*T, *U, V]) types.List {
+	if len(data) == 0 || len(model) == 0 {
+		return types.ListNull(types.ObjectType{AttrTypes: attrTypes})
+	}
+
+	tfData := ApplyToAllMultiSlice(data, model, diags, func(t T, u U) V {
+		return f(ctx, &t, &u, diags)
+	})
+
+	tfList, d := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: attrTypes}, tfData)
+
 	diags.Append(d...)
 	return tfList
 }
@@ -180,6 +197,20 @@ func ApplyToAll[T, U any](s []T, f func(T) U) []U {
 	return v
 }
 
+// ApplyToAllMultiSlice returns a new slice containing the results of applying the function `f` to each element of the original slice `s` and `u`.
+func ApplyToAllMultiSlice[T, U, V any](s []T, u []U, d *diag.Diagnostics, f func(T, U) V) []V {
+	v := make([]V, len(s))
+	if len(s) != len(u) {
+		d.Append(diag.NewErrorDiagnostic("the input arrays are not of equal length", fmt.Sprintf("Expected the length of the response returned from API to be same as '%T'", u)))
+		return nil
+	}
+	for i, e := range s {
+		v[i] = f(e, u[i])
+	}
+
+	return v
+}
+
 func ExpandString(v types.String) string {
 	return v.ValueString()
 }
@@ -233,4 +264,14 @@ func ExpandBoolPointer(v types.Bool) *bool {
 		return nil
 	}
 	return v.ValueBoolPointer()
+}
+
+func ExpandList[U any](ctx context.Context, tfList types.List, u U, diags *diag.Diagnostics) U {
+	if tfList.IsNull() || tfList.IsUnknown() {
+		return u
+	}
+	lv, diag := tfList.ToListValue(ctx)
+	diags.Append(diag...)
+	diags.Append(lv.ElementsAs(ctx, &u, false)...)
+	return u
 }

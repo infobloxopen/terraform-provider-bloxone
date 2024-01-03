@@ -65,7 +65,6 @@ func (r *IpamHostResource) Create(ctx context.Context, req resource.CreateReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		IpamHostAPI.
 		IpamHostCreate(ctx).
@@ -79,6 +78,7 @@ func (r *IpamHostResource) Create(ctx context.Context, req resource.CreateReques
 	res := apiRes.GetResult()
 	data.Flatten(ctx, &res, &resp.Diagnostics)
 
+	// Append next_available_id value to the addresses as it would be null when Response is flattened
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }

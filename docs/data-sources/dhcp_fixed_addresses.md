@@ -48,12 +48,12 @@ data "bloxone_dhcp_fixed_addresses" "example_all" {}
 
 Required:
 
-- `address` (String) The reserved address.
 - `match_type` (String) Indicates how to match the client:  * _mac_: match the client MAC address for both IPv4 and IPv6,  * _client_text_ or _client_hex_: match the client identifier for IPv4 only,  * _relay_text_ or _relay_hex_: match the circuit ID or remote ID in the DHCP relay agent option (82) for IPv4 only,  * _duid_: match the DHCP unique identifier, currently match only for IPv6 protocol.
 - `match_value` (String) The value to match.
 
 Optional:
 
+- `address` (String) The reserved address.
 - `comment` (String) The description for the fixed address. May contain 0 to 1024 characters. Can include UTF-8.
 - `dhcp_options` (Attributes List) The list of DHCP options. May be either a specific option or a group of options. (see [below for nested schema](#nestedatt--results--dhcp_options))
 - `disable_dhcp` (Boolean) Optional. _true_ to disable object. The fixed address is converted to an exclusion when generating configuration.  Defaults to _false_.
@@ -65,6 +65,7 @@ Optional:
 - `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources))
 - `ip_space` (String) The resource identifier.
 - `name` (String) The name of the fixed address. May contain 1 to 256 characters. Can include UTF-8.
+- `next_available_id` (String) The resource identifier for the address block where the next available fixed address should be generated
 - `tags` (Map of String) The tags for the fixed address in JSON format.
 
 Read-Only:
