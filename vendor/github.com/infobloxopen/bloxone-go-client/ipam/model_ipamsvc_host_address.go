@@ -20,22 +20,19 @@ var _ MappedNullable = &IpamsvcHostAddress{}
 // IpamsvcHostAddress The __HostAddress__ object represents addresses associated with a Host object.
 type IpamsvcHostAddress struct {
 	// Field usage depends on the operation:  * For read operation, _address_ of the _Address_ corresponding to the _ref_ resource.  * For write operation, _address_ to be created if the _Address_ does not exist. Required if _ref_ is not set on write:     * If the _Address_ already exists and is already pointing to the right _Host_, the operation proceeds.     * If the _Address_ already exists and is pointing to a different _Host, the operation must abort.     * If the _Address_ already exists and is not pointing to any _Host_, it is linked to the _Host_.
-	Address string `json:"address"`
+	Address *string `json:"address,omitempty"`
 	// The resource identifier.
-	Ref string `json:"ref"`
+	Ref *string `json:"ref,omitempty"`
 	// The resource identifier.
-	Space string `json:"space"`
+	Space *string `json:"space,omitempty"`
 }
 
 // NewIpamsvcHostAddress instantiates a new IpamsvcHostAddress object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewIpamsvcHostAddress(address string, ref string, space string) *IpamsvcHostAddress {
+func NewIpamsvcHostAddress() *IpamsvcHostAddress {
 	this := IpamsvcHostAddress{}
-	this.Address = address
-	this.Ref = ref
-	this.Space = space
 	return &this
 }
 
@@ -47,76 +44,100 @@ func NewIpamsvcHostAddressWithDefaults() *IpamsvcHostAddress {
 	return &this
 }
 
-// GetAddress returns the Address field value
+// GetAddress returns the Address field value if set, zero value otherwise.
 func (o *IpamsvcHostAddress) GetAddress() string {
-	if o == nil {
+	if o == nil || IsNil(o.Address) {
 		var ret string
 		return ret
 	}
-
-	return o.Address
+	return *o.Address
 }
 
-// GetAddressOk returns a tuple with the Address field value
+// GetAddressOk returns a tuple with the Address field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IpamsvcHostAddress) GetAddressOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Address) {
 		return nil, false
 	}
-	return &o.Address, true
+	return o.Address, true
 }
 
-// SetAddress sets field value
+// HasAddress returns a boolean if a field has been set.
+func (o *IpamsvcHostAddress) HasAddress() bool {
+	if o != nil && !IsNil(o.Address) {
+		return true
+	}
+
+	return false
+}
+
+// SetAddress gets a reference to the given string and assigns it to the Address field.
 func (o *IpamsvcHostAddress) SetAddress(v string) {
-	o.Address = v
+	o.Address = &v
 }
 
-// GetRef returns the Ref field value
+// GetRef returns the Ref field value if set, zero value otherwise.
 func (o *IpamsvcHostAddress) GetRef() string {
-	if o == nil {
+	if o == nil || IsNil(o.Ref) {
 		var ret string
 		return ret
 	}
-
-	return o.Ref
+	return *o.Ref
 }
 
-// GetRefOk returns a tuple with the Ref field value
+// GetRefOk returns a tuple with the Ref field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IpamsvcHostAddress) GetRefOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Ref) {
 		return nil, false
 	}
-	return &o.Ref, true
+	return o.Ref, true
 }
 
-// SetRef sets field value
+// HasRef returns a boolean if a field has been set.
+func (o *IpamsvcHostAddress) HasRef() bool {
+	if o != nil && !IsNil(o.Ref) {
+		return true
+	}
+
+	return false
+}
+
+// SetRef gets a reference to the given string and assigns it to the Ref field.
 func (o *IpamsvcHostAddress) SetRef(v string) {
-	o.Ref = v
+	o.Ref = &v
 }
 
-// GetSpace returns the Space field value
+// GetSpace returns the Space field value if set, zero value otherwise.
 func (o *IpamsvcHostAddress) GetSpace() string {
-	if o == nil {
+	if o == nil || IsNil(o.Space) {
 		var ret string
 		return ret
 	}
-
-	return o.Space
+	return *o.Space
 }
 
-// GetSpaceOk returns a tuple with the Space field value
+// GetSpaceOk returns a tuple with the Space field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IpamsvcHostAddress) GetSpaceOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Space) {
 		return nil, false
 	}
-	return &o.Space, true
+	return o.Space, true
 }
 
-// SetSpace sets field value
+// HasSpace returns a boolean if a field has been set.
+func (o *IpamsvcHostAddress) HasSpace() bool {
+	if o != nil && !IsNil(o.Space) {
+		return true
+	}
+
+	return false
+}
+
+// SetSpace gets a reference to the given string and assigns it to the Space field.
 func (o *IpamsvcHostAddress) SetSpace(v string) {
-	o.Space = v
+	o.Space = &v
 }
 
 func (o IpamsvcHostAddress) MarshalJSON() ([]byte, error) {
@@ -129,9 +150,15 @@ func (o IpamsvcHostAddress) MarshalJSON() ([]byte, error) {
 
 func (o IpamsvcHostAddress) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["address"] = o.Address
-	toSerialize["ref"] = o.Ref
-	toSerialize["space"] = o.Space
+	if !IsNil(o.Address) {
+		toSerialize["address"] = o.Address
+	}
+	if !IsNil(o.Ref) {
+		toSerialize["ref"] = o.Ref
+	}
+	if !IsNil(o.Space) {
+		toSerialize["space"] = o.Space
+	}
 	return toSerialize, nil
 }
 
