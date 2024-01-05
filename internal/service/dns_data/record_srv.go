@@ -69,10 +69,10 @@ func (r recordSRVResource) flattenRData(_ context.Context, from map[string]inter
 		return types.ObjectNull(srvRecordAttrTypes)
 	}
 	t, d := types.ObjectValue(srvRecordAttrTypes, map[string]attr.Value{
-		"port":     flattenRDataFieldInt64(from["port"], diags),
-		"priority": flattenRDataFieldInt64(from["priority"], diags),
+		"port":     flattenRDataFieldInt64(from["port"], true, diags),
+		"priority": flattenRDataFieldInt64(from["priority"], true, diags),
 		"target":   flattenRDataFieldString(from["target"], diags),
-		"weight":   flattenRDataFieldInt64(from["weight"], diags),
+		"weight":   flattenRDataFieldInt64(from["weight"], true, diags),
 	})
 	diags.Append(d...)
 	return t

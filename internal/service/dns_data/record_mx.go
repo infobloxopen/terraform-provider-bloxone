@@ -60,7 +60,7 @@ func (r recordMXResource) flattenRData(_ context.Context, from map[string]interf
 	}
 	t, d := types.ObjectValue(mxRecordAttrTypes, map[string]attr.Value{
 		"exchange":   flattenRDataFieldString(from["exchange"], diags),
-		"preference": flattenRDataFieldInt64(from["preference"], diags),
+		"preference": flattenRDataFieldInt64(from["preference"], true, diags),
 	})
 	diags.Append(d...)
 	return t
