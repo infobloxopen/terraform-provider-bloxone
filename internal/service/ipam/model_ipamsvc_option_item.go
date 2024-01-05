@@ -3,9 +3,12 @@ package ipam
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -30,19 +33,31 @@ var IpamsvcOptionItemAttrTypes = map[string]attr.Type{
 
 var IpamsvcOptionItemResourceSchemaAttributes = map[string]schema.Attribute{
 	"group": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		Validators: []validator.String{
+			stringvalidator.ExactlyOneOf(path.MatchRelative().AtParent().AtName("option_code")),
+		},
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"option_code": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		Validators: []validator.String{
+			stringvalidator.ExactlyOneOf(path.MatchRelative().AtParent().AtName("group")),
+		},
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"option_value": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		Validators: []validator.String{
+			stringvalidator.AlsoRequires(path.MatchRelative().AtParent().AtName("option_code")),
+		},
 		MarkdownDescription: `The option value.`,
 	},
 	"type": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		Validators: []validator.String{
+			stringvalidator.OneOf("group", "option"),
+		},
 		MarkdownDescription: `The type of item.  Valid values are: * _group_ * _option_`,
 	},
 }
