@@ -19,5 +19,4 @@ resource "bloxone_dhcp_option_code" "option_code_with_options" {
   # Other optional fields
   array   = true
   comment = "Option code example"
-
 }
