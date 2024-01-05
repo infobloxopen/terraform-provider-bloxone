@@ -25,4 +25,4 @@ testacc:
 gen:
 	go generate
 
-.PHONY: default build install test testacc gen
+.PHONY: default test testacc gen
