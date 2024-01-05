@@ -229,13 +229,13 @@ func (r *ServicesResource) waitServiceStopped(ctx context.Context, name string, 
 func (r *ServicesResource) stateRefreshFunc(name string) retry.StateRefreshFunc {
 	return func() (result interface{}, state string, err error) {
 		apiRes, _, err := r.client.InfraManagementAPI.
-			DetailAPI.DetailList_1(context.Background()).
+			DetailAPI.DetailServicesList(context.Background()).
 			Filter(fmt.Sprintf("name=='%s'", name)).
 			Execute()
 		if err != nil {
 			return
 		}
-		if len(apiRes.GetResults()) != 0 {
+		if len(apiRes.GetResults()) == 0 {
 			return nil, "", errors.New("not found")
 		}
 		serviceDetail := apiRes.GetResults()[0]
