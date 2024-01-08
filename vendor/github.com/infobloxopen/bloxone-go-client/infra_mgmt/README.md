@@ -126,8 +126,8 @@ All URIs are relative to *http://csp.infoblox.com/api/infra/v1*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*DetailAPI* | [**DetailList**](docs/DetailAPI.md#detaillist) | **Get** /detail_hosts | List all the Hosts along with its associated Services (applications).
-*DetailAPI* | [**DetailList_0**](docs/DetailAPI.md#detaillist_0) | **Get** /detail_services | List all the Services (applications) along with its associated Hosts.
+*DetailAPI* | [**DetailHostsList**](docs/DetailAPI.md#detailhostslist) | **Get** /detail_hosts | List all the Hosts along with its associated Services (applications).
+*DetailAPI* | [**DetailServicesList**](docs/DetailAPI.md#detailserviceslist) | **Get** /detail_services | List all the Services (applications) along with its associated Hosts.
 *HostsAPI* | [**HostsAssignTags**](docs/HostsAPI.md#hostsassigntags) | **Post** /hosts/assign_tags | Assign tags for list of hosts.
 *HostsAPI* | [**HostsCreate**](docs/HostsAPI.md#hostscreate) | **Post** /hosts | Create a Host resource.
 *HostsAPI* | [**HostsDelete**](docs/HostsAPI.md#hostsdelete) | **Delete** /hosts/{id} | Delete a Host resource.
