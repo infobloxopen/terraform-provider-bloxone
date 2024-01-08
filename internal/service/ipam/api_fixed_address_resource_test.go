@@ -17,9 +17,8 @@ import (
 
 /*
 TODO:
-// Add unit test for dhcp_options
-// Add unit test for NextAvailableIP
-// Add unit tests for inheritance
+ - Add unit test for dhcp_options
+ - Add unit tests for inheritance
 */
 
 func TestAccFixedAddressResource_basic(t *testing.T) {
@@ -94,6 +93,14 @@ func TestAccFixedAddressResource_Address(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "address", "10.0.0.11"),
+				),
+			},
+			// Next available IP test
+			{
+				Config: testAccFixedAddressAddressNAIP("mac", "cc:cc:cc:cc:cc:cc"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "address", "10.0.0.1"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -519,6 +526,19 @@ resource "bloxone_dhcp_fixed_address" "test_address" {
     depends_on = [bloxone_ipam_subnet.test]
 }
 `, address, matchType, matchValue)
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+}
+
+func testAccFixedAddressAddressNAIP(matchType string, matchValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_fixed_address" "test_address" {
+    ip_space = bloxone_ipam_ip_space.test.id
+    next_available_id = bloxone_ipam_subnet.test.id
+    match_type = %q
+    match_value = %q
+    depends_on = [bloxone_ipam_subnet.test]
+}
+`, matchType, matchValue)
 	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }
 
