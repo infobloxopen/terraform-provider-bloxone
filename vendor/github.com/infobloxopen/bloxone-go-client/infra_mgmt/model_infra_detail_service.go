@@ -34,8 +34,6 @@ type InfraDetailService struct {
 	DesiredState *string `json:"desired_state,omitempty"`
 	// The desired version of the Service.
 	DesiredVersion *string `json:"desired_version,omitempty"`
-	// Configuration for the interfaces through which this Service can send outgoing traffic.
-	Destinations map[string]interface{} `json:"destinations,omitempty"`
 	// List of Hosts on which this Service is deployed.
 	Hosts []InfraDetailServiceHost `json:"hosts,omitempty"`
 	// The resource identifier.
@@ -48,8 +46,6 @@ type InfraDetailService struct {
 	Pool *InfraPoolInfo `json:"pool,omitempty"`
 	// The type of the Service deployed on the Host (`dns`, `cdc`, etc.).
 	ServiceType *string `json:"service_type,omitempty"`
-	// Configuration for the interfaces through which this Service can take incoming traffic.
-	SourceInterfaces map[string]interface{} `json:"source_interfaces,omitempty"`
 	// Tags associated with this Service.
 	Tags map[string]interface{} `json:"tags,omitempty"`
 	// Timestamp of the latest update on Service.
@@ -297,38 +293,6 @@ func (o *InfraDetailService) SetDesiredVersion(v string) {
 	o.DesiredVersion = &v
 }
 
-// GetDestinations returns the Destinations field value if set, zero value otherwise.
-func (o *InfraDetailService) GetDestinations() map[string]interface{} {
-	if o == nil || IsNil(o.Destinations) {
-		var ret map[string]interface{}
-		return ret
-	}
-	return o.Destinations
-}
-
-// GetDestinationsOk returns a tuple with the Destinations field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *InfraDetailService) GetDestinationsOk() (map[string]interface{}, bool) {
-	if o == nil || IsNil(o.Destinations) {
-		return map[string]interface{}{}, false
-	}
-	return o.Destinations, true
-}
-
-// HasDestinations returns a boolean if a field has been set.
-func (o *InfraDetailService) HasDestinations() bool {
-	if o != nil && !IsNil(o.Destinations) {
-		return true
-	}
-
-	return false
-}
-
-// SetDestinations gets a reference to the given map[string]interface{} and assigns it to the Destinations field.
-func (o *InfraDetailService) SetDestinations(v map[string]interface{}) {
-	o.Destinations = v
-}
-
 // GetHosts returns the Hosts field value if set, zero value otherwise.
 func (o *InfraDetailService) GetHosts() []InfraDetailServiceHost {
 	if o == nil || IsNil(o.Hosts) {
@@ -553,38 +517,6 @@ func (o *InfraDetailService) SetServiceType(v string) {
 	o.ServiceType = &v
 }
 
-// GetSourceInterfaces returns the SourceInterfaces field value if set, zero value otherwise.
-func (o *InfraDetailService) GetSourceInterfaces() map[string]interface{} {
-	if o == nil || IsNil(o.SourceInterfaces) {
-		var ret map[string]interface{}
-		return ret
-	}
-	return o.SourceInterfaces
-}
-
-// GetSourceInterfacesOk returns a tuple with the SourceInterfaces field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *InfraDetailService) GetSourceInterfacesOk() (map[string]interface{}, bool) {
-	if o == nil || IsNil(o.SourceInterfaces) {
-		return map[string]interface{}{}, false
-	}
-	return o.SourceInterfaces, true
-}
-
-// HasSourceInterfaces returns a boolean if a field has been set.
-func (o *InfraDetailService) HasSourceInterfaces() bool {
-	if o != nil && !IsNil(o.SourceInterfaces) {
-		return true
-	}
-
-	return false
-}
-
-// SetSourceInterfaces gets a reference to the given map[string]interface{} and assigns it to the SourceInterfaces field.
-func (o *InfraDetailService) SetSourceInterfaces(v map[string]interface{}) {
-	o.SourceInterfaces = v
-}
-
 // GetTags returns the Tags field value if set, zero value otherwise.
 func (o *InfraDetailService) GetTags() map[string]interface{} {
 	if o == nil || IsNil(o.Tags) {
@@ -680,9 +612,6 @@ func (o InfraDetailService) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DesiredVersion) {
 		toSerialize["desired_version"] = o.DesiredVersion
 	}
-	if !IsNil(o.Destinations) {
-		toSerialize["destinations"] = o.Destinations
-	}
 	if !IsNil(o.Hosts) {
 		toSerialize["hosts"] = o.Hosts
 	}
@@ -703,9 +632,6 @@ func (o InfraDetailService) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ServiceType) {
 		toSerialize["service_type"] = o.ServiceType
-	}
-	if !IsNil(o.SourceInterfaces) {
-		toSerialize["source_interfaces"] = o.SourceInterfaces
 	}
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags

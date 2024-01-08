@@ -2,11 +2,17 @@ package infra_mgmt
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"time"
+
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
+
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/infra_mgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -30,9 +36,11 @@ func (d *HostsDataSource) Metadata(ctx context.Context, req datasource.MetadataR
 }
 
 type InfraHostModelWithFilter struct {
-	Filters    types.Map  `tfsdk:"filters"`
-	TagFilters types.Map  `tfsdk:"tag_filters"`
-	Results    types.List `tfsdk:"results"`
+	Filters         types.Map      `tfsdk:"filters"`
+	TagFilters      types.Map      `tfsdk:"tag_filters"`
+	Results         types.List     `tfsdk:"results"`
+	RetryIfNotFound types.Bool     `tfsdk:"retry_if_not_found"`
+	Timeouts        timeouts.Value `tfsdk:"timeouts"`
 }
 
 func (m *InfraHostModelWithFilter) FlattenResults(ctx context.Context, from []infra_mgmt.InfraHost, diags *diag.Diagnostics) {
@@ -62,6 +70,13 @@ func (d *HostsDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				},
 				Computed: true,
 			},
+			"retry_if_not_found": schema.BoolAttribute{
+				Optional:            true,
+				MarkdownDescription: "If set to `true`, the data source will retry until a matching host is found, or until the Read Timeout expires.",
+			},
+			"timeouts": timeouts.Attributes(ctx, timeouts.Opts{
+				Read: true,
+			}),
 		},
 	}
 }
@@ -91,31 +106,45 @@ func (d *HostsDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
-
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]infra_mgmt.InfraHost, error) {
-		apiRes, _, err := d.client.InfraManagementAPI.
-			HostsAPI.
-			HostsList(ctx).
-			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
-			Offset(offset).
-			Limit(limit).
-			Execute()
+	readTimeout, diags := data.Timeouts.Read(ctx, 20*time.Minute)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
+	}
+
+	err := retry.RetryContext(ctx, readTimeout, func() *retry.RetryError {
+		allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]infra_mgmt.InfraHost, error) {
+			apiRes, _, err := d.client.InfraManagementAPI.
+				HostsAPI.
+				HostsList(ctx).
+				Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
+				Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+				Execute()
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read InfraHost, got error: %s", err))
+				return nil, err
+			}
+			return apiRes.GetResults(), nil
+		})
 		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read InfraHost, got error: %s", err))
-			return nil, err
+			return retry.NonRetryableError(err)
 		}
-		return apiRes.GetResults(), nil
+
+		if len(allResults) == 0 {
+			if data.RetryIfNotFound.ValueBool() {
+				return retry.RetryableError(errors.New("no matching hosts found; will retry"))
+			}
+			return nil
+		}
+		data.FlattenResults(ctx, allResults, &resp.Diagnostics)
+		return nil
 	})
 	if err != nil {
 		return
 	}
-
-	data.FlattenResults(ctx, allResults, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

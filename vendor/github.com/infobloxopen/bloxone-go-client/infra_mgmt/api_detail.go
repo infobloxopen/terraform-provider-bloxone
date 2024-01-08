@@ -23,34 +23,34 @@ import (
 type DetailAPI interface {
 
 	/*
-		DetailList List all the Hosts along with its associated Services (applications).
+		DetailHostsList List all the Hosts along with its associated Services (applications).
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiDetailListRequest
+		@return ApiDetailHostsListRequest
 	*/
-	DetailList(ctx context.Context) ApiDetailListRequest
+	DetailHostsList(ctx context.Context) ApiDetailHostsListRequest
 
-	// DetailListExecute executes the request
+	// DetailHostsListExecute executes the request
 	//  @return InfraListDetailHostsResponse
-	DetailListExecute(r ApiDetailListRequest) (*InfraListDetailHostsResponse, *http.Response, error)
+	DetailHostsListExecute(r ApiDetailHostsListRequest) (*InfraListDetailHostsResponse, *http.Response, error)
 
 	/*
-		DetailList_0 List all the Services (applications) along with its associated Hosts.
+		DetailServicesList List all the Services (applications) along with its associated Hosts.
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiDetailList_0Request
+		@return ApiDetailServicesListRequest
 	*/
-	DetailList_1(ctx context.Context) ApiDetailList_0Request
+	DetailServicesList(ctx context.Context) ApiDetailServicesListRequest
 
-	// DetailList_1Execute executes the request
+	// DetailServicesListExecute executes the request
 	//  @return InfraListDetailServicesResponse
-	DetailList_1Execute(r ApiDetailList_0Request) (*InfraListDetailServicesResponse, *http.Response, error)
+	DetailServicesListExecute(r ApiDetailServicesListRequest) (*InfraListDetailServicesResponse, *http.Response, error)
 }
 
 // DetailAPIService DetailAPI service
 type DetailAPIService internal.Service
 
-type ApiDetailListRequest struct {
+type ApiDetailHostsListRequest struct {
 	ctx        context.Context
 	ApiService DetailAPI
 	filter     *string
@@ -64,65 +64,65 @@ type ApiDetailListRequest struct {
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;. The following operators are commonly used in filter expressions:  |  Op   |  Description               |  |  --   |  -----------               |  |  &#x3D;&#x3D;   |  Equal                     |  |  !&#x3D;   |  Not Equal                 |  |  &gt;    |  Greater Than              |  |   &gt;&#x3D;  |  Greater Than or Equal To  |  |  &lt;    |  Less Than                 |  |  &lt;&#x3D;   |  Less Than or Equal To     |  |  and  |  Logical AND               |  |  ~    |  Matches Regex             |  |  !~   |  Does Not Match Regex      |  |  or   |  Logical OR                |  |  not  |  Logical NOT               |  |  ()   |  Groupping Operators       |
-func (r ApiDetailListRequest) Filter(filter string) ApiDetailListRequest {
+func (r ApiDetailHostsListRequest) Filter(filter string) ApiDetailHostsListRequest {
 	r.filter = &filter
 	return r
 }
 
 // A collection of response resources can be sorted by their JSON tags. For a &#39;flat&#39; resource, the tag name is straightforward. If sorting is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, its value is assumed to be null.)  Specify this parameter as a comma-separated list of JSON tag names. The sort direction can be specified by a suffix separated by whitespace before the tag name. The suffix &#39;asc&#39; sorts the data in ascending order. The suffix &#39;desc&#39; sorts the data in descending order. If no suffix is specified the data is sorted in ascending order.
-func (r ApiDetailListRequest) OrderBy(orderBy string) ApiDetailListRequest {
+func (r ApiDetailHostsListRequest) OrderBy(orderBy string) ApiDetailHostsListRequest {
 	r.orderBy = &orderBy
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiDetailListRequest) Offset(offset int32) ApiDetailListRequest {
+func (r ApiDetailHostsListRequest) Offset(offset int32) ApiDetailHostsListRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiDetailListRequest) Limit(limit int32) ApiDetailListRequest {
+func (r ApiDetailHostsListRequest) Limit(limit int32) ApiDetailHostsListRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiDetailListRequest) PageToken(pageToken string) ApiDetailListRequest {
+func (r ApiDetailHostsListRequest) PageToken(pageToken string) ApiDetailHostsListRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiDetailListRequest) Fields(fields string) ApiDetailListRequest {
+func (r ApiDetailHostsListRequest) Fields(fields string) ApiDetailHostsListRequest {
 	r.fields = &fields
 	return r
 }
 
 // This parameter is used for filtering by tags.
-func (r ApiDetailListRequest) Tfilter(tfilter string) ApiDetailListRequest {
+func (r ApiDetailHostsListRequest) Tfilter(tfilter string) ApiDetailHostsListRequest {
 	r.tfilter = &tfilter
 	return r
 }
 
 // This parameter is used for sorting by tags.
-func (r ApiDetailListRequest) TorderBy(torderBy string) ApiDetailListRequest {
+func (r ApiDetailHostsListRequest) TorderBy(torderBy string) ApiDetailHostsListRequest {
 	r.torderBy = &torderBy
 	return r
 }
 
-func (r ApiDetailListRequest) Execute() (*InfraListDetailHostsResponse, *http.Response, error) {
-	return r.ApiService.DetailListExecute(r)
+func (r ApiDetailHostsListRequest) Execute() (*InfraListDetailHostsResponse, *http.Response, error) {
+	return r.ApiService.DetailHostsListExecute(r)
 }
 
 /*
-DetailList List all the Hosts along with its associated Services (applications).
+DetailHostsList List all the Hosts along with its associated Services (applications).
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiDetailListRequest
+	@return ApiDetailHostsListRequest
 */
-func (a *DetailAPIService) DetailList(ctx context.Context) ApiDetailListRequest {
-	return ApiDetailListRequest{
+func (a *DetailAPIService) DetailHostsList(ctx context.Context) ApiDetailHostsListRequest {
+	return ApiDetailHostsListRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -131,7 +131,7 @@ func (a *DetailAPIService) DetailList(ctx context.Context) ApiDetailListRequest 
 // Execute executes the request
 //
 //	@return InfraListDetailHostsResponse
-func (a *DetailAPIService) DetailListExecute(r ApiDetailListRequest) (*InfraListDetailHostsResponse, *http.Response, error) {
+func (a *DetailAPIService) DetailHostsListExecute(r ApiDetailHostsListRequest) (*InfraListDetailHostsResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -139,7 +139,7 @@ func (a *DetailAPIService) DetailListExecute(r ApiDetailListRequest) (*InfraList
 		localVarReturnValue *InfraListDetailHostsResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "DetailAPIService.DetailList")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "DetailAPIService.DetailHostsList")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -236,7 +236,7 @@ func (a *DetailAPIService) DetailListExecute(r ApiDetailListRequest) (*InfraList
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiDetailList_0Request struct {
+type ApiDetailServicesListRequest struct {
 	ctx        context.Context
 	ApiService DetailAPI
 	filter     *string
@@ -250,65 +250,65 @@ type ApiDetailList_0Request struct {
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;. The following operators are commonly used in filter expressions:  |  Op   |  Description               |  |  --   |  -----------               |  |  &#x3D;&#x3D;   |  Equal                     |  |  !&#x3D;   |  Not Equal                 |  |  &gt;    |  Greater Than              |  |   &gt;&#x3D;  |  Greater Than or Equal To  |  |  &lt;    |  Less Than                 |  |  &lt;&#x3D;   |  Less Than or Equal To     |  |  and  |  Logical AND               |  |  ~    |  Matches Regex             |  |  !~   |  Does Not Match Regex      |  |  or   |  Logical OR                |  |  not  |  Logical NOT               |  |  ()   |  Groupping Operators       |
-func (r ApiDetailList_0Request) Filter(filter string) ApiDetailList_0Request {
+func (r ApiDetailServicesListRequest) Filter(filter string) ApiDetailServicesListRequest {
 	r.filter = &filter
 	return r
 }
 
 // A collection of response resources can be sorted by their JSON tags. For a &#39;flat&#39; resource, the tag name is straightforward. If sorting is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, its value is assumed to be null.)  Specify this parameter as a comma-separated list of JSON tag names. The sort direction can be specified by a suffix separated by whitespace before the tag name. The suffix &#39;asc&#39; sorts the data in ascending order. The suffix &#39;desc&#39; sorts the data in descending order. If no suffix is specified the data is sorted in ascending order.
-func (r ApiDetailList_0Request) OrderBy(orderBy string) ApiDetailList_0Request {
+func (r ApiDetailServicesListRequest) OrderBy(orderBy string) ApiDetailServicesListRequest {
 	r.orderBy = &orderBy
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiDetailList_0Request) Offset(offset int32) ApiDetailList_0Request {
+func (r ApiDetailServicesListRequest) Offset(offset int32) ApiDetailServicesListRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiDetailList_0Request) Limit(limit int32) ApiDetailList_0Request {
+func (r ApiDetailServicesListRequest) Limit(limit int32) ApiDetailServicesListRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiDetailList_0Request) PageToken(pageToken string) ApiDetailList_0Request {
+func (r ApiDetailServicesListRequest) PageToken(pageToken string) ApiDetailServicesListRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiDetailList_0Request) Fields(fields string) ApiDetailList_0Request {
+func (r ApiDetailServicesListRequest) Fields(fields string) ApiDetailServicesListRequest {
 	r.fields = &fields
 	return r
 }
 
 // This parameter is used for filtering by tags.
-func (r ApiDetailList_0Request) Tfilter(tfilter string) ApiDetailList_0Request {
+func (r ApiDetailServicesListRequest) Tfilter(tfilter string) ApiDetailServicesListRequest {
 	r.tfilter = &tfilter
 	return r
 }
 
 // This parameter is used for sorting by tags.
-func (r ApiDetailList_0Request) TorderBy(torderBy string) ApiDetailList_0Request {
+func (r ApiDetailServicesListRequest) TorderBy(torderBy string) ApiDetailServicesListRequest {
 	r.torderBy = &torderBy
 	return r
 }
 
-func (r ApiDetailList_0Request) Execute() (*InfraListDetailServicesResponse, *http.Response, error) {
-	return r.ApiService.DetailList_1Execute(r)
+func (r ApiDetailServicesListRequest) Execute() (*InfraListDetailServicesResponse, *http.Response, error) {
+	return r.ApiService.DetailServicesListExecute(r)
 }
 
 /*
-DetailList_0 List all the Services (applications) along with its associated Hosts.
+DetailServicesList List all the Services (applications) along with its associated Hosts.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiDetailList_0Request
+	@return ApiDetailServicesListRequest
 */
-func (a *DetailAPIService) DetailList_1(ctx context.Context) ApiDetailList_0Request {
-	return ApiDetailList_0Request{
+func (a *DetailAPIService) DetailServicesList(ctx context.Context) ApiDetailServicesListRequest {
+	return ApiDetailServicesListRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -317,7 +317,7 @@ func (a *DetailAPIService) DetailList_1(ctx context.Context) ApiDetailList_0Requ
 // Execute executes the request
 //
 //	@return InfraListDetailServicesResponse
-func (a *DetailAPIService) DetailList_1Execute(r ApiDetailList_0Request) (*InfraListDetailServicesResponse, *http.Response, error) {
+func (a *DetailAPIService) DetailServicesListExecute(r ApiDetailServicesListRequest) (*InfraListDetailServicesResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -325,7 +325,7 @@ func (a *DetailAPIService) DetailList_1Execute(r ApiDetailList_0Request) (*Infra
 		localVarReturnValue *InfraListDetailServicesResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "DetailAPIService.DetailList_1")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "DetailAPIService.DetailServicesList")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
