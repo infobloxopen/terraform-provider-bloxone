@@ -351,7 +351,6 @@ resource "bloxone_dns_delegation" "test_comment" {
 	return strings.Join([]string{testAccViewAndAuthZone(), config}, "")
 }
 
-// venkat
 func testAccDelegationDelegationServers(delegationServersAddrs, delegationServersFqdn string) string {
 
 	config := fmt.Sprintf(`

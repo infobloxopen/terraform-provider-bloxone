@@ -93,6 +93,7 @@ var ConfigDelegationResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"view": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 		},
