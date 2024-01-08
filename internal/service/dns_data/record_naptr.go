@@ -81,8 +81,8 @@ func (r recordNAPTRResource) flattenRData(_ context.Context, from map[string]int
 	}
 	t, d := types.ObjectValue(naptrRecordAttrTypes, map[string]attr.Value{
 		"flags":       flattenRDataFieldString(from["flags"], diags),
-		"order":       flattenRDataFieldInt64(from["order"], diags),
-		"preference":  flattenRDataFieldInt64(from["preference"], diags),
+		"order":       flattenRDataFieldInt64(from["order"], true, diags),
+		"preference":  flattenRDataFieldInt64(from["preference"], true, diags),
 		"regexp":      flattenRDataFieldString(from["regexp"], diags),
 		"replacement": flattenRDataFieldString(from["replacement"], diags),
 		"services":    flattenRDataFieldString(from["services"], diags),

@@ -26,6 +26,7 @@ func TestAccRecordCAAResource_Rdata(t *testing.T) {
 				Config: testAccRecordCAARdata(zoneFqdn, "issue", "ca.example.com"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRecordExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "rdata.flags", "0"),
 					resource.TestCheckResourceAttr(resourceName, "rdata.tag", "issue"),
 					resource.TestCheckResourceAttr(resourceName, "rdata.value", "ca.example.com"),
 				),
@@ -35,6 +36,7 @@ func TestAccRecordCAAResource_Rdata(t *testing.T) {
 				Config: testAccRecordCAARdata(zoneFqdn, "issuewild", "*.example.com"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRecordExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "rdata.flags", "0"),
 					resource.TestCheckResourceAttr(resourceName, "rdata.tag", "issuewild"),
 					resource.TestCheckResourceAttr(resourceName, "rdata.value", "*.example.com"),
 				),
@@ -45,6 +47,16 @@ func TestAccRecordCAAResource_Rdata(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRecordExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "rdata.flags", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rdata.tag", "issuewild"),
+					resource.TestCheckResourceAttr(resourceName, "rdata.value", "*.example.com"),
+				),
+			},
+			// Update with flag as 0
+			{
+				Config: testAccRecordCAARdataWithFlags(zoneFqdn, 0, "issuewild", "*.example.com"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckRecordExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "rdata.flags", "0"),
 					resource.TestCheckResourceAttr(resourceName, "rdata.tag", "issuewild"),
 					resource.TestCheckResourceAttr(resourceName, "rdata.value", "*.example.com"),
 				),
