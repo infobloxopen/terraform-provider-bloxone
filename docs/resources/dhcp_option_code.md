@@ -3,12 +3,12 @@
 page_title: "bloxone_dhcp_option_code Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  The OptionCode object defines a DHCP option code.
 ---
 
 # bloxone_dhcp_option_code (Resource)
 
-
+The OptionCode object defines a DHCP option code.
 
 ## Example Usage
 

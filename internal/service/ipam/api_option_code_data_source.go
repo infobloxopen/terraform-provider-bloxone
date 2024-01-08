@@ -32,9 +32,8 @@ func (d *OptionCodeDataSource) Metadata(ctx context.Context, req datasource.Meta
 }
 
 type IpamsvcOptionCodeModelWithFilter struct {
-	Filters    types.Map  `tfsdk:"filters"`
-	TagFilters types.Map  `tfsdk:"tag_filters"`
-	Results    types.List `tfsdk:"results"`
+	Filters types.Map  `tfsdk:"filters"`
+	Results types.List `tfsdk:"results"`
 }
 
 func (m *IpamsvcOptionCodeModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamsvcOptionCode, diags *diag.Diagnostics) {
@@ -50,11 +49,6 @@ func (d *OptionCodeDataSource) Schema(ctx context.Context, req datasource.Schema
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
-				ElementType: types.StringType,
-				Optional:    true,
-			},
-			"tag_filters": schema.MapAttribute{
-				Description: "Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
 				ElementType: types.StringType,
 				Optional:    true,
 			},

@@ -1,4 +1,4 @@
-# Get DHCP Option group filtered by an attribute
+# Get DHCP Option groups filtered by an attribute
 data "bloxone_dhcp_option_groups" "example_by_name" {
   filters = {
     name = "example-group"

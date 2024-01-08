@@ -136,18 +136,18 @@ func TestAccOptionCodeResource_Comment(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionCodeComment("234", "basic_opt_code", "boolean", "boolean option code typ"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "comment", "boolean option code typ"),
-				),
-			},
-			// Update and Read
-			{
 				Config: testAccOptionCodeComment("234", "basic_opt_code", "boolean", "boolean option code type"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "boolean option code type"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccOptionCodeComment("234", "basic_opt_code", "boolean", "boolean option code type update"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "comment", "boolean option code type update"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase

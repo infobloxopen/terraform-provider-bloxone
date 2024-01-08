@@ -83,18 +83,6 @@ var IpamsvcOptionSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-/*func ExpandIpamsvcOptionSpace(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcOptionSpace {
-	if o.IsNull() || o.IsUnknown() {
-		return nil
-	}
-	var m IpamsvcOptionSpaceModel
-	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
-	if diags.HasError() {
-		return nil
-	}
-	return m.Expand(ctx, diags)
-}*/
-
 func (m *IpamsvcOptionSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcOptionSpace {
 	if m == nil {
 		return nil

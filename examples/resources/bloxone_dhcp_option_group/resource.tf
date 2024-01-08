@@ -22,7 +22,7 @@ resource "bloxone_dhcp_option_group" "example_with_options" {
   # Other Optional Fields
   dhcp_options = [
     {
-      type         = "boolean"
+      type         = "option"
       option_code  = bloxone_dhcp_option_code.option_code.id
       option_value = "true"
     }

@@ -1,4 +1,4 @@
-# Get DHCP Option space filtered by an attribute
+# Get DHCP Option spaces filtered by an attribute
 data "bloxone_dhcp_option_spaces" "example_by_name" {
   filters = {
     name = "example-space"

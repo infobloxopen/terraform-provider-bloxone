@@ -1,4 +1,4 @@
-# Get DHCP Option code filtered by an attribute
+# Get DHCP Option codes filtered by an attribute
 data "bloxone_dhcp_option_codes" "example_by_name" {
   filters = {
     name = "example-code"

@@ -92,19 +92,6 @@ var IpamsvcOptionGroupResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-/*
-func ExpandIpamsvcOptionGroup(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcOptionGroup {
-	if o.IsNull() || o.IsUnknown() {
-		return nil
-	}
-	var m IpamsvcOptionGroupModel
-	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
-	if diags.HasError() {
-		return nil
-	}
-	return m.Expand(ctx, diags)
-}*/
-
 func (m *IpamsvcOptionGroupModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcOptionGroup {
 	if m == nil {
 		return nil

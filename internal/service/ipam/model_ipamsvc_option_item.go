@@ -35,14 +35,14 @@ var IpamsvcOptionItemResourceSchemaAttributes = map[string]schema.Attribute{
 	"group": schema.StringAttribute{
 		Optional: true,
 		Validators: []validator.String{
-			stringvalidator.ExactlyOneOf(path.MatchRelative().AtParent().AtName("option_code")),
+			stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("option_code")),
 		},
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"option_code": schema.StringAttribute{
 		Optional: true,
 		Validators: []validator.String{
-			stringvalidator.ExactlyOneOf(path.MatchRelative().AtParent().AtName("group")),
+			stringvalidator.ConflictsWith(path.MatchRelative().AtParent().AtName("group")),
 		},
 		MarkdownDescription: `The resource identifier.`,
 	},
