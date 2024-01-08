@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -64,7 +65,6 @@ func (r *ServicesResource) Create(ctx context.Context, req resource.CreateReques
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
-
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -82,19 +82,13 @@ func (r *ServicesResource) Create(ctx context.Context, req resource.CreateReques
 	res := apiRes.GetResult()
 	data.Flatten(ctx, &res, &resp.Diagnostics)
 
-	if data.DesiredState.ValueString() == "start" {
-		err = r.waitServiceStarted(ctx, data.Name.ValueString(), 20*time.Minute)
-		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("waiting for service to be started, got error: %s", err))
-			return
-		}
-	} else if data.DesiredState.ValueString() == "stop" {
-		err = r.waitServiceStopped(ctx, data.Name.ValueString(), 20*time.Minute)
-		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("waiting for service to be stopped, got error: %s", err))
-			return
-		}
+	createTimeout, diags := data.Timeouts.Create(ctx, 20*time.Minute)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
 	}
+
+	r.waitServiceStartStop(ctx, data.Name.ValueString(), data.DesiredState.ValueString(), createTimeout, &resp.Diagnostics)
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -153,19 +147,13 @@ func (r *ServicesResource) Update(ctx context.Context, req resource.UpdateReques
 	res := apiRes.GetResult()
 	data.Flatten(ctx, &res, &resp.Diagnostics)
 
-	if data.DesiredState.ValueString() == "start" {
-		err = r.waitServiceStarted(ctx, data.Name.ValueString(), 20*time.Minute)
-		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("waiting for service to be started, got error: %s", err))
-			return
-		}
-	} else if data.DesiredState.ValueString() == "stop" {
-		err = r.waitServiceStopped(ctx, data.Name.ValueString(), 20*time.Minute)
-		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("waiting for service to be stopped, got error: %s", err))
-			return
-		}
+	updateTimeout, diags := data.Timeouts.Update(ctx, 20*time.Minute)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
 	}
+
+	r.waitServiceStartStop(ctx, data.Name.ValueString(), data.DesiredState.ValueString(), updateTimeout, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -196,6 +184,22 @@ func (r *ServicesResource) Delete(ctx context.Context, req resource.DeleteReques
 
 func (r *ServicesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+}
+
+func (r *ServicesResource) waitServiceStartStop(ctx context.Context, name, desiredState string, timeout time.Duration, diags *diag.Diagnostics) {
+	if desiredState == "start" {
+		err := r.waitServiceStarted(ctx, name, timeout)
+		if err != nil {
+			diags.AddError("Client Error", fmt.Sprintf("waiting for service to be started, got error: %s", err))
+			return
+		}
+	} else if desiredState == "stop" {
+		err := r.waitServiceStopped(ctx, name, timeout)
+		if err != nil {
+			diags.AddError("Client Error", fmt.Sprintf("waiting for service to be stopped, got error: %s", err))
+			return
+		}
+	}
 }
 
 func (r *ServicesResource) waitServiceStarted(ctx context.Context, name string, timeout time.Duration) error {
