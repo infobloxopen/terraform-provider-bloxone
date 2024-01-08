@@ -85,17 +85,17 @@ Read-Only:
 <a id="nestedatt--results--external_primaries--tsig_key"></a>
 ### Nested Schema for `results.external_primaries.tsig_key`
 
-Optional:
+Required:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
-- `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
-- `name` (String) TSIG key name, FQDN.
-- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
+- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 
 
@@ -120,17 +120,17 @@ Read-Only:
 <a id="nestedatt--results--external_secondaries--tsig_key"></a>
 ### Nested Schema for `results.external_secondaries.tsig_key`
 
-Optional:
+Required:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
-- `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
-- `name` (String) TSIG key name, FQDN.
-- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
+- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 
 

@@ -3,12 +3,9 @@ package dns_config
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -37,56 +34,29 @@ var ConfigTSIGKeyAttrTypes = map[string]attr.Type{
 
 var ConfigTSIGKeyResourceSchemaAttributes = map[string]schema.Attribute{
 	"algorithm": schema.StringAttribute{
-		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: `TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.`,
-		Validators: []validator.String{
-			stringvalidator.AlsoRequires(
-				path.MatchRelative().AtParent().AtName("name"),
-				path.MatchRelative().AtParent().AtName("secret")),
-		},
 	},
 	"comment": schema.StringAttribute{
-		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: `Comment for TSIG key.`,
 	},
 	"key": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		Validators: []validator.String{
-			stringvalidator.ConflictsWith(
-				path.MatchRelative().AtParent().AtName("name"),
-				path.MatchRelative().AtParent().AtName("algorithm"),
-				path.MatchRelative().AtParent().AtName("secret")),
-		},
+		Required:            true,
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"name": schema.StringAttribute{
-		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: `TSIG key name, FQDN.`,
-		Validators: []validator.String{
-			stringvalidator.AlsoRequires(
-				path.MatchRelative().AtParent().AtName("algorithm"),
-				path.MatchRelative().AtParent().AtName("secret")),
-		},
 	},
 	"protocol_name": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: `TSIG key name in punycode.`,
 	},
 	"secret": schema.StringAttribute{
-		Optional:            true,
 		Computed:            true,
 		Sensitive:           true,
 		MarkdownDescription: `TSIG key secret, base64 string.`,
-		Validators: []validator.String{
-			stringvalidator.AlsoRequires(
-				path.MatchRelative().AtParent().AtName("name"),
-				path.MatchRelative().AtParent().AtName("algorithm"),
-			),
-		},
 	},
 }
 
@@ -107,11 +77,7 @@ func (m *ConfigTSIGKeyModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		return nil
 	}
 	to := &dns_config.ConfigTSIGKey{
-		Algorithm: flex.ExpandStringPointer(m.Algorithm),
-		Comment:   flex.ExpandStringPointer(m.Comment),
-		Key:       flex.ExpandStringPointer(m.Key),
-		Name:      flex.ExpandStringPointer(m.Name),
-		Secret:    flex.ExpandStringPointer(m.Secret),
+		Key: flex.ExpandStringPointer(m.Key),
 	}
 	return to
 }
