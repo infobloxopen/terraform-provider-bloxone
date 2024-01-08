@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -67,7 +68,7 @@ func (r recordCAAResource) flattenRData(_ context.Context, from map[string]inter
 	}
 
 	t, d := types.ObjectValue(caaRecordAttrTypes, map[string]attr.Value{
-		"flags": flattenRDataFieldInt64(from["flags"], diags),
+		"flags": flattenRDataFieldInt64(from["flags"], false, diags),
 		"tag":   flattenRDataFieldString(from["tag"], diags),
 		"value": flattenRDataFieldString(from["value"], diags),
 	})
@@ -75,7 +76,7 @@ func (r recordCAAResource) flattenRData(_ context.Context, from map[string]inter
 	return t
 }
 
-func flattenRDataFieldInt64(val interface{}, diags *diag.Diagnostics) basetypes.Int64Value {
+func flattenRDataFieldInt64(val interface{}, zeroAsNull bool, diags *diag.Diagnostics) basetypes.Int64Value {
 	if val == nil {
 		return types.Int64Null()
 	}
@@ -84,7 +85,10 @@ func flattenRDataFieldInt64(val interface{}, diags *diag.Diagnostics) basetypes.
 		return types.Int64Null()
 	}
 
-	return flex.FlattenInt64(int64(val.(float64)))
+	if zeroAsNull {
+		return flex.FlattenInt64(int64(val.(float64)))
+	}
+	return types.Int64Value(int64(val.(float64)))
 }
 
 func flattenRDataFieldString(val interface{}, diags *diag.Diagnostics) basetypes.StringValue {
@@ -115,6 +119,8 @@ func (r recordCAAResource) schemaAttributes() map[string]schema.Attribute {
 		Attributes: map[string]schema.Attribute{
 			"flags": schema.Int64Attribute{
 				Optional:            true,
+				Computed:            true,
+				Default:             int64default.StaticInt64(0),
 				MarkdownDescription: "An unsigned 8-bit integer which specifies the CAA record flags. RFC 6844 defines one (highest) bit in flag octet, remaining bits are deferred for future use. This bit is referenced as Critical. When the bit is set (flag value == 128), issuers must not issue certificates in case CAA records contain unknown property tags.",
 			},
 			"tag": schema.StringAttribute{
