@@ -2,6 +2,7 @@ package dns_config
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -31,6 +32,8 @@ var Inheritance2InheritedBoolAttrTypes = map[string]attr.Type{
 var Inheritance2InheritedBoolResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString("inherit"),
 		MarkdownDescription: `The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.`,
 	},
 	"display_name": schema.StringAttribute{
@@ -38,7 +41,7 @@ var Inheritance2InheritedBoolResourceSchemaAttributes = map[string]schema.Attrib
 		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.BoolAttribute{

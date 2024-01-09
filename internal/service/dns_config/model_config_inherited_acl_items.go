@@ -2,6 +2,7 @@ package dns_config
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -31,6 +32,8 @@ var ConfigInheritedACLItemsAttrTypes = map[string]attr.Type{
 var ConfigInheritedACLItemsResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString("inherit"),
 		MarkdownDescription: `Optional. Inheritance setting for a field. Defaults to _inherit_.`,
 	},
 	"display_name": schema.StringAttribute{
@@ -38,7 +41,7 @@ var ConfigInheritedACLItemsResourceSchemaAttributes = map[string]schema.Attribut
 		MarkdownDescription: `Human-readable display name for the object referred to by _source_.`,
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.ListNestedAttribute{

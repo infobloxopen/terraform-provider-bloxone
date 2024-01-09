@@ -302,6 +302,72 @@ func TestAccAuthZoneResource_GssTsigEnabled(t *testing.T) {
 	})
 }
 
+func TestAccAuthZoneResource_InheritanceSources(t *testing.T) {
+	var resourceName = "bloxone_dns_auth_zone.test_inheritance_sources"
+	var v dns_config.ConfigAuthZone
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAuthZoneInheritanceSources("tf-acc-test.com.", "cloud", "inherit"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.gss_tsig_enabled.action", "inherit"),
+				),
+				//ExpectNonEmptyPlan: true,
+			},
+			// Update and Read
+			{
+				Config: testAccAuthZoneInheritanceSources("tf-acc-test.com.", "cloud", "override"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.gss_tsig_enabled.action", "override"),
+				),
+				//ExpectNonEmptyPlan: true,
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func testAccAuthZoneInheritanceSources(fqdn, primaryType, action string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_auth_zone" "test_inheritance_sources" {
+    fqdn = %[1]q
+    primary_type = %[2]q
+	inheritance_sources = { 
+		gss_tsig_enabled = {
+			action = %[3]q
+		}
+		notify = {
+			action = %[3]q
+		}
+		transfer_acl = {
+			action = %[3]q
+		}
+		useforwardersforsubzones = {
+			action = %[3]q
+		}
+	}
+	gss_tsig_enabled = true
+	notify = true
+	transfer_acl = [
+		{
+			access = "allow"
+			element = "ip"
+			address = "192.168.11.11"
+		}
+	]
+	use_forwarders_for_subzones = true
+		
+
+}
+`, fqdn, primaryType, action)
+}
+
 func TestAccAuthZoneResource_InitialSoaSerial(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_initial_soa_serial"
 	var v1 dns_config.ConfigAuthZone

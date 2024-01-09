@@ -2,6 +2,7 @@ package dns_config
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -31,6 +32,8 @@ var ConfigInheritedZoneAuthorityMNameBlockAttrTypes = map[string]attr.Type{
 var ConfigInheritedZoneAuthorityMNameBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString("inherit"),
 		MarkdownDescription: `Defaults to _inherit_.`,
 	},
 	"display_name": schema.StringAttribute{
