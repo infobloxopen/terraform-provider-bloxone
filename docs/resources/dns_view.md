@@ -21,8 +21,8 @@ resource "bloxone_dns_view" "example" {
   name = "example_dns_view"
 
   # Other Optional fields
-  comment  = "An example view"
-  ip_space = bloxone_ipam_ip_space.example.id
+  comment   = "An example view"
+  ip_spaces = [bloxone_ipam_ip_space.example.id]
   tags = {
     site = "Test Site"
   }
@@ -33,7 +33,7 @@ resource "bloxone_dns_view" "example" {
       address = "192.168.10.10"
     }
   ]
-  default_ttl = 800
+  lame_ttl = 80
 
 }
 ```
@@ -167,17 +167,17 @@ Optional:
 <a id="nestedatt--filter_aaaa_acl--tsig_key"></a>
 ### Nested Schema for `filter_aaaa_acl.tsig_key`
 
-Optional:
+Required:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
-- `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
-- `name` (String) TSIG key name, FQDN.
-- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
+- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 
 
@@ -424,17 +424,17 @@ Optional:
 <a id="nestedatt--inheritance_sources--filter_aaaa_acl--value--tsig_key"></a>
 ### Nested Schema for `inheritance_sources.filter_aaaa_acl.value.tsig_key`
 
-Optional:
+Required:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
-- `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
-- `name` (String) TSIG key name, FQDN.
-- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
+- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 
 
@@ -632,17 +632,17 @@ Optional:
 <a id="nestedatt--inheritance_sources--query_acl--value--tsig_key"></a>
 ### Nested Schema for `inheritance_sources.query_acl.value.tsig_key`
 
-Optional:
+Required:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
-- `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
-- `name` (String) TSIG key name, FQDN.
-- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
+- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 
 
@@ -677,17 +677,17 @@ Optional:
 <a id="nestedatt--inheritance_sources--recursion_acl--value--tsig_key"></a>
 ### Nested Schema for `inheritance_sources.recursion_acl.value.tsig_key`
 
-Optional:
+Required:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
-- `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
-- `name` (String) TSIG key name, FQDN.
-- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
+- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 
 
@@ -778,17 +778,17 @@ Optional:
 <a id="nestedatt--inheritance_sources--transfer_acl--value--tsig_key"></a>
 ### Nested Schema for `inheritance_sources.transfer_acl.value.tsig_key`
 
-Optional:
+Required:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
-- `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
-- `name` (String) TSIG key name, FQDN.
-- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
+- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 
 
@@ -823,17 +823,17 @@ Optional:
 <a id="nestedatt--inheritance_sources--update_acl--value--tsig_key"></a>
 ### Nested Schema for `inheritance_sources.update_acl.value.tsig_key`
 
-Optional:
+Required:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
-- `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
-- `name` (String) TSIG key name, FQDN.
-- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
+- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 
 
@@ -1010,17 +1010,17 @@ Optional:
 <a id="nestedatt--match_clients_acl--tsig_key"></a>
 ### Nested Schema for `match_clients_acl.tsig_key`
 
-Optional:
+Required:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
-- `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
-- `name` (String) TSIG key name, FQDN.
-- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
+- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 
 
@@ -1041,17 +1041,17 @@ Optional:
 <a id="nestedatt--match_destinations_acl--tsig_key"></a>
 ### Nested Schema for `match_destinations_acl.tsig_key`
 
-Optional:
+Required:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
-- `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
-- `name` (String) TSIG key name, FQDN.
-- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
+- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 
 
@@ -1072,17 +1072,17 @@ Optional:
 <a id="nestedatt--query_acl--tsig_key"></a>
 ### Nested Schema for `query_acl.tsig_key`
 
-Optional:
+Required:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
-- `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
-- `name` (String) TSIG key name, FQDN.
-- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
+- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 
 
@@ -1103,17 +1103,17 @@ Optional:
 <a id="nestedatt--recursion_acl--tsig_key"></a>
 ### Nested Schema for `recursion_acl.tsig_key`
 
-Optional:
+Required:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
-- `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
-- `name` (String) TSIG key name, FQDN.
-- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
+- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 
 
@@ -1148,17 +1148,17 @@ Optional:
 <a id="nestedatt--transfer_acl--tsig_key"></a>
 ### Nested Schema for `transfer_acl.tsig_key`
 
-Optional:
+Required:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
-- `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
-- `name` (String) TSIG key name, FQDN.
-- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
+- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 
 
@@ -1179,17 +1179,17 @@ Optional:
 <a id="nestedatt--update_acl--tsig_key"></a>
 ### Nested Schema for `update_acl.tsig_key`
 
-Optional:
+Required:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
-- `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
-- `name` (String) TSIG key name, FQDN.
-- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 Read-Only:
 
+- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
 
 
 
