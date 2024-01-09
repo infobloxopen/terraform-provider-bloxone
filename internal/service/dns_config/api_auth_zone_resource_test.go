@@ -333,41 +333,6 @@ func TestAccAuthZoneResource_InheritanceSources(t *testing.T) {
 	})
 }
 
-func testAccAuthZoneInheritanceSources(fqdn, primaryType, action string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_auth_zone" "test_inheritance_sources" {
-    fqdn = %[1]q
-    primary_type = %[2]q
-	inheritance_sources = { 
-		gss_tsig_enabled = {
-			action = %[3]q
-		}
-		notify = {
-			action = %[3]q
-		}
-		transfer_acl = {
-			action = %[3]q
-		}
-		useforwardersforsubzones = {
-			action = %[3]q
-		}
-	}
-	gss_tsig_enabled = true
-	notify = true
-	transfer_acl = [
-		{
-			access = "allow"
-			element = "ip"
-			address = "192.168.11.11"
-		}
-	]
-	use_forwarders_for_subzones = true
-		
-
-}
-`, fqdn, primaryType, action)
-}
-
 func TestAccAuthZoneResource_InitialSoaSerial(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_initial_soa_serial"
 	var v1 dns_config.ConfigAuthZone
@@ -821,6 +786,41 @@ resource "bloxone_dns_auth_zone" "test_gss_tsig_enabled" {
     gss_tsig_enabled = %q
 }
 `, fqdn, primaryType, gssTsigEnabled)
+}
+
+func testAccAuthZoneInheritanceSources(fqdn, primaryType, action string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_auth_zone" "test_inheritance_sources" {
+    fqdn = %[1]q
+    primary_type = %[2]q
+	inheritance_sources = { 
+		gss_tsig_enabled = {
+			action = %[3]q
+		}
+		notify = {
+			action = %[3]q
+		}
+		transfer_acl = {
+			action = %[3]q
+		}
+		useforwardersforsubzones = {
+			action = %[3]q
+		}
+	}
+	gss_tsig_enabled = true
+	notify = true
+	transfer_acl = [
+		{
+			access = "allow"
+			element = "ip"
+			address = "192.168.11.11"
+		}
+	]
+	use_forwarders_for_subzones = true
+		
+
+}
+`, fqdn, primaryType, action)
 }
 
 func testAccAuthZoneInitialSoaSerial(fqdn string, primaryType string, initialSoaSerial int64) string {

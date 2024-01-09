@@ -2,7 +2,6 @@ package dns_config
 
 import (
 	"context"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -33,23 +32,22 @@ var ConfigInheritedACLItemsResourceSchemaAttributes = map[string]schema.Attribut
 	"action": schema.StringAttribute{
 		Optional:            true,
 		Computed:            true,
-		Default:             stringdefault.StaticString("inherit"),
 		MarkdownDescription: `Optional. Inheritance setting for a field. Defaults to _inherit_.`,
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `Human-readable display name for the object referred to by _source_.`,
+		MarkdownDescription: "Human-readable display name for the object referred to by _source_.",
 	},
 	"source": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `The resource identifier.`,
+		MarkdownDescription: "The resource identifier.",
 	},
 	"value": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigACLItemResourceSchemaAttributes,
 		},
 		Computed:            true,
-		MarkdownDescription: `Inherited value.`,
+		MarkdownDescription: "Inherited value.",
 	},
 }
 
@@ -71,7 +69,6 @@ func (m *ConfigInheritedACLItemsModel) Expand(ctx context.Context, diags *diag.D
 	}
 	to := &dns_config.ConfigInheritedACLItems{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
 	}
 	return to
 }

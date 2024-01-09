@@ -2,11 +2,11 @@ package dns_config
 
 import (
 	"context"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -38,15 +38,15 @@ var Inheritance2InheritedUInt32ResourceSchemaAttributes = map[string]schema.Attr
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
+		MarkdownDescription: "The human-readable display name for the object referred to by _source_.",
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `The resource identifier.`,
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
 	},
 	"value": schema.Int64Attribute{
 		Computed:            true,
-		MarkdownDescription: `The inherited value.`,
+		MarkdownDescription: "The inherited value.",
 	},
 }
 
@@ -68,7 +68,6 @@ func (m *Inheritance2InheritedUInt32Model) Expand(ctx context.Context, diags *di
 	}
 	to := &dns_config.Inheritance2InheritedUInt32{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
 	}
 	return to
 }
@@ -94,5 +93,5 @@ func (m *Inheritance2InheritedUInt32Model) Flatten(ctx context.Context, from *dn
 	m.Action = flex.FlattenStringPointer(from.Action)
 	m.DisplayName = flex.FlattenStringPointer(from.DisplayName)
 	m.Source = flex.FlattenStringPointer(from.Source)
-	m.Value = flex.FlattenInt64(int64(*from.Value))
+	m.Value = flex.FlattenInt64Pointer(from.Value)
 }

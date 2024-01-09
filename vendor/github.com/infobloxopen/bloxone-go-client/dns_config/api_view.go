@@ -476,6 +476,7 @@ type ApiViewListRequest struct {
 	orderBy    *string
 	tfilter    *string
 	torderBy   *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
@@ -523,6 +524,12 @@ func (r ApiViewListRequest) Tfilter(tfilter string) ApiViewListRequest {
 // This parameter is used for sorting by tags.
 func (r ApiViewListRequest) TorderBy(torderBy string) ApiViewListRequest {
 	r.torderBy = &torderBy
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.
+func (r ApiViewListRequest) Inherit(inherit string) ApiViewListRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -592,6 +599,9 @@ func (a *ViewAPIService) ViewListExecute(r ApiViewListRequest) (*ConfigListViewR
 	if r.torderBy != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_torder_by", r.torderBy, "")
 	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -659,11 +669,18 @@ type ApiViewReadRequest struct {
 	ApiService ViewAPI
 	id         string
 	fields     *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
 func (r ApiViewReadRequest) Fields(fields string) ApiViewReadRequest {
 	r.fields = &fields
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.
+func (r ApiViewReadRequest) Inherit(inherit string) ApiViewReadRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -714,6 +731,9 @@ func (a *ViewAPIService) ViewReadExecute(r ApiViewReadRequest) (*ConfigReadViewR
 
 	if r.fields != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_fields", r.fields, "")
+	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}

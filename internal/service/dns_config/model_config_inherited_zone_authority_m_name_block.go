@@ -2,11 +2,11 @@ package dns_config
 
 import (
 	"context"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -38,11 +38,11 @@ var ConfigInheritedZoneAuthorityMNameBlockResourceSchemaAttributes = map[string]
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `Human-readable display name for the object referred to by _source_.`,
+		MarkdownDescription: "Human-readable display name for the object referred to by _source_.",
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `The resource identifier.`,
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
 	},
 	"value": schema.SingleNestedAttribute{
 		Attributes: ConfigZoneAuthorityMNameBlockResourceSchemaAttributes,
@@ -68,7 +68,6 @@ func (m *ConfigInheritedZoneAuthorityMNameBlockModel) Expand(ctx context.Context
 	}
 	to := &dns_config.ConfigInheritedZoneAuthorityMNameBlock{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
 		Value:  ExpandConfigZoneAuthorityMNameBlock(ctx, m.Value, diags),
 	}
 	return to

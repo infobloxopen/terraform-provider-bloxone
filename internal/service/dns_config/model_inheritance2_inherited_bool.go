@@ -2,11 +2,11 @@ package dns_config
 
 import (
 	"context"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -38,15 +38,15 @@ var Inheritance2InheritedBoolResourceSchemaAttributes = map[string]schema.Attrib
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
+		MarkdownDescription: "The human-readable display name for the object referred to by _source_.",
 	},
 	"source": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `The resource identifier.`,
+		MarkdownDescription: "The resource identifier.",
 	},
 	"value": schema.BoolAttribute{
 		Computed:            true,
-		MarkdownDescription: `The inherited value.`,
+		MarkdownDescription: "The inherited value.",
 	},
 }
 
@@ -68,7 +68,6 @@ func (m *Inheritance2InheritedBoolModel) Expand(ctx context.Context, diags *diag
 	}
 	to := &dns_config.Inheritance2InheritedBool{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
 	}
 	return to
 }
