@@ -43,13 +43,13 @@ data "bloxone_next_available_ips" "example_next_ip_ab_default_count" {
 }
 
 data "bloxone_next_available_ips" "example_next_ip_sub" {
-  id    = data.bloxone_ipam_subnets.example_by_attribute.results.0.id
-  count = 5
+  id       = data.bloxone_ipam_subnets.example_by_attribute.results.0.id
+  ip_count = 5
 }
 
 data "bloxone_next_available_ips" "example_next_ip_range" {
-  id    = data.bloxone_ipam_ranges.example_by_attribute.results.0.id
-  count = 5
+  id       = data.bloxone_ipam_ranges.example_by_attribute.results.0.id
+  ip_count = 5
 }
 ```
 

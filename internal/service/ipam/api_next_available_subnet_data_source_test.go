@@ -32,7 +32,6 @@ func TestDataSourceNextAvailableSubnet(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "results.0"),
-					// resource.TestCheckResourceAttrPair(dataSourceName, "cidr", dataSourceName, "results.0.cidr"),
 				),
 			},
 			{
@@ -42,9 +41,6 @@ func TestDataSourceNextAvailableSubnet(t *testing.T) {
 					resource.TestCheckResourceAttrSet(dataSourceName, "results.0"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "results.1"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "results.2"),
-					/*resource.TestCheckResourceAttrPair(dataSourceName, "cidr", dataSourceName, "results.0.cidr"),
-					resource.TestCheckResourceAttrPair(dataSourceName, "cidr", dataSourceName, "results.1.cidr"),
-					resource.TestCheckResourceAttrPair(dataSourceName, "cidr", dataSourceName, "results.2.cidr"),*/
 				),
 			},
 		},
