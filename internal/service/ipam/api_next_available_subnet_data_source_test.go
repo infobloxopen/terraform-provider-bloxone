@@ -31,20 +31,20 @@ func TestDataSourceNextAvailableSubnet(t *testing.T) {
 				Config: testAccDataSourceNextAvailableSubnet(1, 26),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
-					resource.TestCheckResourceAttrSet(dataSourceName, "results.0.address"),
-					resource.TestCheckResourceAttrPair(dataSourceName, "cidr", dataSourceName, "results.0.cidr"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.0"),
+					// resource.TestCheckResourceAttrPair(dataSourceName, "cidr", dataSourceName, "results.0.cidr"),
 				),
 			},
 			{
 				Config: testAccDataSourceNextAvailableSubnet(3, 27),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "subnet_count", dataSourceName, "results.#"),
-					resource.TestCheckResourceAttrSet(dataSourceName, "results.0.address"),
-					resource.TestCheckResourceAttrSet(dataSourceName, "results.1.address"),
-					resource.TestCheckResourceAttrSet(dataSourceName, "results.2.address"),
-					resource.TestCheckResourceAttrPair(dataSourceName, "cidr", dataSourceName, "results.0.cidr"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.0"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.1"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.2"),
+					/*resource.TestCheckResourceAttrPair(dataSourceName, "cidr", dataSourceName, "results.0.cidr"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "cidr", dataSourceName, "results.1.cidr"),
-					resource.TestCheckResourceAttrPair(dataSourceName, "cidr", dataSourceName, "results.2.cidr"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "cidr", dataSourceName, "results.2.cidr"),*/
 				),
 			},
 		},

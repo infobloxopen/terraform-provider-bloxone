@@ -12,12 +12,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/ipam"
-
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -43,7 +40,12 @@ func (m *IpamsvcNextAvailableIPModel) FlattenResults(ctx context.Context, from [
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcAddressAttrTypes, diags, FlattenIpamsvcAddress)
+	var listOfAddress []string
+
+	for _, address := range from {
+		listOfAddress = append(listOfAddress, address.Address)
+	}
+	m.Results = flex.FlattenFrameworkListString(ctx, listOfAddress, diags)
 }
 
 func (d *NextAvailableIPDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
@@ -90,11 +92,10 @@ func (d *NextAvailableIPDataSource) Schema(_ context.Context, _ datasource.Schem
 				Optional:            true,
 				MarkdownDescription: `The number of IP addresses requested. Defaults to 1.`,
 			},
-			"results": schema.ListNestedAttribute{
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: utils.DataSourceAttributeMap(IpamsvcAddressResourceSchemaAttributes, &resp.Diagnostics),
-				},
-				Computed: true,
+			"results": schema.ListAttribute{
+				ElementType:         types.StringType,
+				Computed:            true,
+				MarkdownDescription: "List of Next available IP address in the specified resource",
 			},
 		},
 	}

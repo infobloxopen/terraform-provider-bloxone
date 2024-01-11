@@ -16,7 +16,6 @@ import (
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -45,7 +44,12 @@ func (m *IpamsvcNextAvailableSubnetModel) FlattenResults(ctx context.Context, fr
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcSubnetAttrTypes, diags, FlattenIpamsvcSubnet)
+	var listOfAddress []string
+
+	for _, address := range from {
+		listOfAddress = append(listOfAddress, types.StringValue(*address.Address).String())
+	}
+	m.Results = flex.FlattenFrameworkListString(ctx, listOfAddress, diags)
 }
 
 func (d *NextAvailableSubnetDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -83,11 +87,10 @@ func (d *NextAvailableSubnetDataSource) Schema(ctx context.Context, req datasour
 				Optional:            true,
 				MarkdownDescription: `Number of subnets to generate. Default 1 if not set.`,
 			},
-			"results": schema.ListNestedAttribute{
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: utils.DataSourceAttributeMap(IpamsvcSubnetResourceSchemaAttributes, &resp.Diagnostics),
-				},
-				Computed: true,
+			"results": schema.ListAttribute{
+				ElementType:         types.StringType,
+				Computed:            true,
+				MarkdownDescription: "List of Next available Subnet address in the specified resource",
 			},
 		},
 	}
