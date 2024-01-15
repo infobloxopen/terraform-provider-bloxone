@@ -411,10 +411,17 @@ type ApiHostUpdateRequest struct {
 	ApiService HostAPI
 	id         string
 	body       *ConfigHost
+	inherit    *string
 }
 
 func (r ApiHostUpdateRequest) Body(body ConfigHost) ApiHostUpdateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.
+func (r ApiHostUpdateRequest) Inherit(inherit string) ApiHostUpdateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -466,6 +473,9 @@ func (a *HostAPIService) HostUpdateExecute(r ApiHostUpdateRequest) (*ConfigUpdat
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 

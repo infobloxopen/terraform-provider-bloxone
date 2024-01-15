@@ -677,6 +677,72 @@ func TestAccServerResource_GssTsigEnabled(t *testing.T) {
 	})
 }
 
+func TestAccServerResource_InheritanceSources(t *testing.T) {
+	var resourceName = "bloxone_dns_server.test_inheritance_sources"
+	var v dns_config.ConfigServer
+	var name = acctest.RandomNameWithPrefix("dns-server")
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccServerInheritanceSources(name, "inherit"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.gss_tsig_enabled.action", "inherit"),
+				),
+				ExpectNonEmptyPlan: true,
+			},
+			// Update and Read
+			{
+				Config: testAccServerInheritanceSources(name, "override"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.gss_tsig_enabled.action", "override"),
+				),
+				ExpectNonEmptyPlan: true,
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func testAccServerInheritanceSources(name, action string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_server" "test_inheritance_sources" {
+    name = %[1]q
+	inheritance_sources = { 
+		gss_tsig_enabled = {
+			action = %[2]q
+		}
+		notify = {
+			action = %[2]q
+		}
+		transfer_acl = {
+			action = %[2]q
+		}
+		useforwardersforsubzones = {
+			action = %[2]q
+		}
+	}
+	gss_tsig_enabled = true
+	notify = true
+	transfer_acl = [
+		{
+			access = "allow"
+			element = "ip"
+			address = "192.168.11.11"
+		}
+	]
+	use_forwarders_for_subzones = true
+		
+
+}
+`, name, action)
+}
+
 func TestAccServerResource_LameTtl(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_lame_ttl"
 	var v dns_config.ConfigServer

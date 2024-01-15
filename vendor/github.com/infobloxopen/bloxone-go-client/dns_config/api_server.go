@@ -108,10 +108,17 @@ type ApiServerCreateRequest struct {
 	ctx        context.Context
 	ApiService ServerAPI
 	body       *ConfigServer
+	inherit    *string
 }
 
 func (r ApiServerCreateRequest) Body(body ConfigServer) ApiServerCreateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.
+func (r ApiServerCreateRequest) Inherit(inherit string) ApiServerCreateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -160,6 +167,9 @@ func (a *ServerAPIService) ServerCreateExecute(r ApiServerCreateRequest) (*Confi
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -665,10 +675,17 @@ type ApiServerUpdateRequest struct {
 	ApiService ServerAPI
 	id         string
 	body       *ConfigServer
+	inherit    *string
 }
 
 func (r ApiServerUpdateRequest) Body(body ConfigServer) ApiServerUpdateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.
+func (r ApiServerUpdateRequest) Inherit(inherit string) ApiServerUpdateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -720,6 +737,9 @@ func (a *ServerAPIService) ServerUpdateExecute(r ApiServerUpdateRequest) (*Confi
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 

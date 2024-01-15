@@ -82,6 +82,7 @@ func (r *RecordResource) Create(ctx context.Context, req resource.CreateRequest,
 			RecordAPI.
 			RecordCreate(ctx).
 			Body(*data.Expand(ctx, &resp.Diagnostics, true, r.impl)).
+			Inherit("full").
 			Execute()
 		if err != nil {
 			if strings.Contains(err.Error(), "not found") {
@@ -117,6 +118,7 @@ func (r *RecordResource) Read(ctx context.Context, req resource.ReadRequest, res
 	apiRes, httpRes, err := r.client.DNSDataAPI.
 		RecordAPI.
 		RecordRead(ctx, data.Id.ValueString()).
+		Inherit("full").
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -148,6 +150,7 @@ func (r *RecordResource) Update(ctx context.Context, req resource.UpdateRequest,
 			RecordAPI.
 			RecordUpdate(ctx, data.Id.ValueString()).
 			Body(*data.Expand(ctx, &resp.Diagnostics, false, r.impl)).
+			Inherit("full").
 			Execute()
 		if err != nil {
 			if strings.Contains(err.Error(), "record not found") {

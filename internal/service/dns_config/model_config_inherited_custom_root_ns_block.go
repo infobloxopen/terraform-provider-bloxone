@@ -31,15 +31,16 @@ var ConfigInheritedCustomRootNSBlockAttrTypes = map[string]attr.Type{
 var ConfigInheritedCustomRootNSBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
 		Optional:            true,
-		MarkdownDescription: `Defaults to _inherit_.`,
+		Computed:            true,
+		MarkdownDescription: "Defaults to _inherit_.",
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `Human-readable display name for the object referred to by _source_.`,
+		MarkdownDescription: "Human-readable display name for the object referred to by _source_.",
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `The resource identifier.`,
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
 	},
 	"value": schema.SingleNestedAttribute{
 		Attributes: ConfigCustomRootNSBlockResourceSchemaAttributes,
@@ -65,7 +66,6 @@ func (m *ConfigInheritedCustomRootNSBlockModel) Expand(ctx context.Context, diag
 	}
 	to := &dns_config.ConfigInheritedCustomRootNSBlock{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
 		Value:  ExpandConfigCustomRootNSBlock(ctx, m.Value, diags),
 	}
 	return to

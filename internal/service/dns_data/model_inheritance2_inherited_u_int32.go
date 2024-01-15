@@ -38,7 +38,7 @@ var Inheritance2InheritedUInt32ResourceSchemaAttributes = map[string]schema.Attr
 		MarkdownDescription: "The human-readable display name for the object referred to by _source_.",
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 	"value": schema.Int64Attribute{
@@ -65,7 +65,6 @@ func (m *Inheritance2InheritedUInt32Model) Expand(ctx context.Context, diags *di
 	}
 	to := &dns_data.Inheritance2InheritedUInt32{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
 	}
 	return to
 }

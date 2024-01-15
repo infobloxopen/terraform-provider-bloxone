@@ -31,6 +31,7 @@ var ConfigInheritedDNSSECValidationBlockAttrTypes = map[string]attr.Type{
 var ConfigInheritedDNSSECValidationBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `Defaults to _inherit_.`,
 	},
 	"display_name": schema.StringAttribute{
@@ -38,8 +39,8 @@ var ConfigInheritedDNSSECValidationBlockResourceSchemaAttributes = map[string]sc
 		MarkdownDescription: `Human-readable display name for the object referred to by _source_.`,
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `The resource identifier.`,
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
 	},
 	"value": schema.SingleNestedAttribute{
 		Attributes: ConfigDNSSECValidationBlockResourceSchemaAttributes,
@@ -65,7 +66,6 @@ func (m *ConfigInheritedDNSSECValidationBlockModel) Expand(ctx context.Context, 
 	}
 	to := &dns_config.ConfigInheritedDNSSECValidationBlock{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
 		Value:  ExpandConfigDNSSECValidationBlock(ctx, m.Value, diags),
 	}
 	return to

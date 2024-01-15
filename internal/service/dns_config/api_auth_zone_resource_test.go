@@ -317,7 +317,7 @@ func TestAccAuthZoneResource_InheritanceSources(t *testing.T) {
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.gss_tsig_enabled.action", "inherit"),
 				),
-				//ExpectNonEmptyPlan: true,
+				ExpectNonEmptyPlan: true,
 			},
 			// Update and Read
 			{
@@ -326,7 +326,7 @@ func TestAccAuthZoneResource_InheritanceSources(t *testing.T) {
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.gss_tsig_enabled.action", "override"),
 				),
-				//ExpectNonEmptyPlan: true,
+				ExpectNonEmptyPlan: true,
 			},
 			// Delete testing automatically occurs in TestCase
 		},

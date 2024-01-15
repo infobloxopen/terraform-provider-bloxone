@@ -245,10 +245,17 @@ type ApiViewCreateRequest struct {
 	ctx        context.Context
 	ApiService ViewAPI
 	body       *ConfigView
+	inherit    *string
 }
 
 func (r ApiViewCreateRequest) Body(body ConfigView) ApiViewCreateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.
+func (r ApiViewCreateRequest) Inherit(inherit string) ApiViewCreateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -297,6 +304,9 @@ func (a *ViewAPIService) ViewCreateExecute(r ApiViewCreateRequest) (*ConfigCreat
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -802,10 +812,17 @@ type ApiViewUpdateRequest struct {
 	ApiService ViewAPI
 	id         string
 	body       *ConfigView
+	inherit    *string
 }
 
 func (r ApiViewUpdateRequest) Body(body ConfigView) ApiViewUpdateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.
+func (r ApiViewUpdateRequest) Inherit(inherit string) ApiViewUpdateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -857,6 +874,9 @@ func (a *ViewAPIService) ViewUpdateExecute(r ApiViewUpdateRequest) (*ConfigUpdat
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 

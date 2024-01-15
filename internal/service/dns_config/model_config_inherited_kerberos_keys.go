@@ -39,8 +39,8 @@ var ConfigInheritedKerberosKeysResourceSchemaAttributes = map[string]schema.Attr
 		MarkdownDescription: `Human-readable display name for the object referred to by _source_.`,
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `The resource identifier.`,
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
 	},
 	"value": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
@@ -69,7 +69,6 @@ func (m *ConfigInheritedKerberosKeysModel) Expand(ctx context.Context, diags *di
 	}
 	to := &dns_config.ConfigInheritedKerberosKeys{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
 	}
 	return to
 }
