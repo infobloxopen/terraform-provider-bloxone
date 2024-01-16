@@ -51,76 +51,78 @@ var InfraServiceAttrTypes = map[string]attr.Type{
 	"updated_at":       timetypes.RFC3339Type{},
 }
 
-var InfraServiceResourceSchemaAttributes = map[string]schema.Attribute{
-	"configs": schema.ListNestedAttribute{
-		NestedObject: schema.NestedAttributeObject{
-			Attributes: InfraServiceHostConfigResourceSchemaAttributes,
+func InfraServiceResourceSchemaAttributes() map[string]schema.Attribute {
+	return map[string]schema.Attribute{
+		"configs": schema.ListNestedAttribute{
+			NestedObject: schema.NestedAttributeObject{
+				Attributes: InfraServiceHostConfigResourceSchemaAttributes,
+			},
+			Computed:            true,
+			MarkdownDescription: "List of Host-specific configurations of this Service.",
 		},
-		Computed:            true,
-		MarkdownDescription: "List of Host-specific configurations of this Service.",
-	},
-	"created_at": schema.StringAttribute{
-		CustomType:          timetypes.RFC3339Type{},
-		Computed:            true,
-		MarkdownDescription: "Timestamp of creation of Service.",
-	},
-	"description": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: "The description of the Service (optional).",
-	},
-	"desired_state": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
-		Default:             stringdefault.StaticString("stop"),
-		MarkdownDescription: "The desired state of the Service. Should either be `\"start\"` or `\"stop\"`.",
-		Validators: []validator.String{
-			stringvalidator.OneOf("start", "stop"),
+		"created_at": schema.StringAttribute{
+			CustomType:          timetypes.RFC3339Type{},
+			Computed:            true,
+			MarkdownDescription: "Timestamp of creation of Service.",
 		},
-	},
-	"desired_version": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: "The desired version of the Service.",
-	},
-	"id": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "The resource identifier.",
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
+		"description": schema.StringAttribute{
+			Optional:            true,
+			MarkdownDescription: "The description of the Service (optional).",
 		},
-	},
-	"interface_labels": schema.ListAttribute{
-		ElementType:         types.StringType,
-		Optional:            true,
-		MarkdownDescription: "List of interfaces on which this Service can operate. Note: The list can contain custom interface labels (Example: `[\"WAN\",\"LAN\",\"label1\",\"label2\"]`)",
-	},
-	"name": schema.StringAttribute{
-		Required:            true,
-		MarkdownDescription: "The name of the Service (unique).",
-	},
-	"pool_id": schema.StringAttribute{
-		Required:            true,
-		MarkdownDescription: "The resource identifier.",
-	},
-	"service_type": schema.StringAttribute{
-		Required:            true,
-		MarkdownDescription: "The type of the Service deployed on the Host (`dns`, `cdc`, etc.). The following is a list of the different Services and their string types (the string types are to be used with the APIs for the `service_type` field):\n\n  | Service name | Service type | \n  | ------ | ------ | \n  | Access Authentication | authn | \n  | Anycast | anycast | \n  | Data Connector | cdc | \n  | DHCP | dhcp | \n  | DNS | dns | \n  | DNS Forwarding Proxy | dfp | \n  | NIOS Grid Connector | orpheus | \n  | MS AD Sync | msad | \n  | NTP | ntp | \n  | BGP | bgp | \n  | RIP | rip | \n  | OSPF | ospf | \n",
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
+		"desired_state": schema.StringAttribute{
+			Optional:            true,
+			Computed:            true,
+			Default:             stringdefault.StaticString("stop"),
+			MarkdownDescription: "The desired state of the Service. Should either be `\"start\"` or `\"stop\"`.",
+			Validators: []validator.String{
+				stringvalidator.OneOf("start", "stop"),
+			},
 		},
-		Validators: []validator.String{
-			stringvalidator.OneOf("authn", "anycast", "cdc", "dhcp", "dns", "dfp", "orpheus", "msad", "ntp", "bgp", "rip", "ospf"),
+		"desired_version": schema.StringAttribute{
+			Optional:            true,
+			MarkdownDescription: "The desired version of the Service.",
 		},
-	},
-	"tags": schema.MapAttribute{
-		ElementType:         types.StringType,
-		Optional:            true,
-		MarkdownDescription: "Tags associated with this Service.",
-	},
-	"updated_at": schema.StringAttribute{
-		CustomType:          timetypes.RFC3339Type{},
-		Computed:            true,
-		MarkdownDescription: "Timestamp of the latest update on Service.",
-	},
+		"id": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "The resource identifier.",
+			PlanModifiers: []planmodifier.String{
+				stringplanmodifier.UseStateForUnknown(),
+			},
+		},
+		"interface_labels": schema.ListAttribute{
+			ElementType:         types.StringType,
+			Optional:            true,
+			MarkdownDescription: "List of interfaces on which this Service can operate. Note: The list can contain custom interface labels (Example: `[\"WAN\",\"LAN\",\"label1\",\"label2\"]`)",
+		},
+		"name": schema.StringAttribute{
+			Required:            true,
+			MarkdownDescription: "The name of the Service (unique).",
+		},
+		"pool_id": schema.StringAttribute{
+			Required:            true,
+			MarkdownDescription: "The resource identifier.",
+		},
+		"service_type": schema.StringAttribute{
+			Required:            true,
+			MarkdownDescription: "The type of the Service deployed on the Host (`dns`, `cdc`, etc.). The following is a list of the different Services and their string types (the string types are to be used with the APIs for the `service_type` field):\n\n  | Service name | Service type | \n  | ------ | ------ | \n  | Access Authentication | authn | \n  | Anycast | anycast | \n  | Data Connector | cdc | \n  | DHCP | dhcp | \n  | DNS | dns | \n  | DNS Forwarding Proxy | dfp | \n  | NIOS Grid Connector | orpheus | \n  | MS AD Sync | msad | \n  | NTP | ntp | \n  | BGP | bgp | \n  | RIP | rip | \n  | OSPF | ospf | \n",
+			PlanModifiers: []planmodifier.String{
+				stringplanmodifier.RequiresReplaceIfConfigured(),
+			},
+			Validators: []validator.String{
+				stringvalidator.OneOf("authn", "anycast", "cdc", "dhcp", "dns", "dfp", "orpheus", "msad", "ntp", "bgp", "rip", "ospf"),
+			},
+		},
+		"tags": schema.MapAttribute{
+			ElementType:         types.StringType,
+			Optional:            true,
+			MarkdownDescription: "Tags associated with this Service.",
+		},
+		"updated_at": schema.StringAttribute{
+			CustomType:          timetypes.RFC3339Type{},
+			Computed:            true,
+			MarkdownDescription: "Timestamp of the latest update on Service.",
+		},
+	}
 }
 
 func ExpandInfraService(ctx context.Context, o types.Object, diags *diag.Diagnostics) *infra_mgmt.InfraService {
@@ -242,7 +244,7 @@ func (m *InfraServiceModelWithTimeouts) Flatten(ctx context.Context, from *infra
 }
 
 func InfraServiceResourceSchemaAttributesWithTimeouts(ctx context.Context) map[string]schema.Attribute {
-	attributes := InfraServiceResourceSchemaAttributes
+	attributes := InfraServiceResourceSchemaAttributes()
 	attributes["timeouts"] = timeouts.Attributes(ctx, timeouts.Opts{
 		Create: true,
 		Update: true,

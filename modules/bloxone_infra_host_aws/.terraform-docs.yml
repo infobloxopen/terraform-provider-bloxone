@@ -1,0 +1,12 @@
+formatter: "markdown table"
+
+header-from: main.tf
+
+sections:
+  hide:
+    - modules
+
+output:
+  file: "README.md"
+  mode: inject
+
