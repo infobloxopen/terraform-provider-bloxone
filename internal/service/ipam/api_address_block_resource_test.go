@@ -10,6 +10,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/framework"
 
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
@@ -728,18 +729,29 @@ func TestAccAddressBlockResource_Tags(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockTags("192.168.0.0", "16", map[string]string{"location": "NA"}),
+				Config: testAccAddressBlockTags("192.168.0.0", "16", map[string]string{}),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "tags.location", "NA"),
+					framework.VerifyTagsAll(resourceName, map[string]string{})...,
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockTags("192.168.0.0", "16", map[string]string{"location": "CA"}),
+				PreConfig: func() {
+					testAccCheckAddressBlockExists(context.Background(), resourceName, &v)
+				},
+				Config: testAccAddressBlockTags("192.168.0.0", "16", map[string]string{"automation": "terraform", "location": "NA"}),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "tags.location", "CA"),
+					framework.VerifyTagsAll(resourceName, map[string]string{"automation": "terraform", "location": "NA"})...,
+				),
+			},
+			// Update and Read
+			{
+				PreConfig: func() {
+					testAccCheckAddressBlockExists(context.Background(), resourceName, &v)
+				},
+				Config: testAccAddressBlockTags("192.168.0.0", "16", map[string]string{"automation": "terraform", "location": "CA"}),
+				Check: resource.ComposeTestCheckFunc(
+					framework.VerifyTagsAll(resourceName, map[string]string{"automation": "terraform", "location": "CA"})...,
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1072,13 +1084,18 @@ resource "bloxone_ipam_address_block" "test_space" {
 }
 
 func testAccAddressBlockTags(address, cidr string, tags map[string]string) string {
-	tagsStr := "{\n"
-	for k, v := range tags {
-		tagsStr += fmt.Sprintf(`
+	tagsStr := ""
+	if len(tags) == 0 {
+		tagsStr = "{}"
+	} else {
+		tagsStr = "{\n"
+		for k, v := range tags {
+			tagsStr += fmt.Sprintf(`
 		%s = %q
 `, k, v)
+		}
+		tagsStr += "\t}"
 	}
-	tagsStr += "\t}"
 
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_tags" {

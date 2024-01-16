@@ -9,6 +9,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/framework"
+
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 )
 
@@ -23,6 +25,7 @@ func NewAddressBlockResource() resource.Resource {
 // AddressBlockResource defines the resource implementation.
 type AddressBlockResource struct {
 	client *bloxoneclient.APIClient
+	framework.ResourceWithConfigure
 }
 
 func (r *AddressBlockResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -166,4 +169,8 @@ func (r *AddressBlockResource) Delete(ctx context.Context, req resource.DeleteRe
 
 func (r *AddressBlockResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+}
+
+func (r *AddressBlockResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+	r.SetTagsAll(ctx, req, resp)
 }
