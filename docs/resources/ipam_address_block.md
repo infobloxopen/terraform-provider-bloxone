@@ -13,27 +13,27 @@ The AddressBlock object allows a uniform representation of the address space seg
 ## Example Usage
 
 ```terraform
-resource "bloxone_ip_space" "example" {
-  name = "example_ip_space"
+resource "bloxone_ipam_ip_space" "example" {
+  name = "example_ip_space_tag_testing"
   tags = {
     location = "site1"
   }
 }
 
-resource "bloxone_address_block" "example" {
+resource "bloxone_ipam_address_block" "example" {
   address = "192.168.1.0"
   cidr    = 24
-  name    = "example_address_block"
-  space   = bloxone_ip_space.example.id
+  name    = "example_address_block_tag_testing"
+  space   = bloxone_ipam_ip_space.example.id
 }
 
-resource "bloxone_address_block" "example_tags" {
+resource "bloxone_ipam_address_block" "example_tags" {
   address = "10.0.0.0"
   cidr    = 8
-  space   = bloxone_ip_space.example.id
+  space   = bloxone_ipam_ip_space.example.id
 
   # Other optional fields
-  name    = "example_address_block_tags"
+  name    = "example_address_block__tag_testing_tags"
   comment = "Example address block with tags created by the terraform provider"
   tags = {
     location = "site1"
@@ -86,6 +86,7 @@ resource "bloxone_address_block" "example_tags" {
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
 - `protocol` (String) The type of protocol of address block (_ip4_ or _ip6_).
+- `tags_all` (Map of String) The tags for the address block in JSON format including default tags.
 - `threshold` (Attributes) (see [below for nested schema](#nestedatt--threshold))
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `usage` (List of String) The usage is a combination of indicators, each tracking a specific associated use. Listed below are usage indicators with their meaning:  usage indicator        | description  ---------------------- | --------------------------------  _IPAM_                 |  AddressBlock is managed in BloxOne DDI.  _DISCOVERED_           |  AddressBlock is discovered by some network discovery probe like Network Insight or NetMRI in NIOS.

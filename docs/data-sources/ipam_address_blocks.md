@@ -88,6 +88,7 @@ Read-Only:
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
 - `protocol` (String) The type of protocol of address block (_ip4_ or _ip6_).
+- `tags_all` (Map of String) The tags for the address block in JSON format including default tags.
 - `threshold` (Attributes) (see [below for nested schema](#nestedatt--results--threshold))
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `usage` (List of String) The usage is a combination of indicators, each tracking a specific associated use. Listed below are usage indicators with their meaning:  usage indicator        | description  ---------------------- | --------------------------------  _IPAM_                 |  AddressBlock is managed in BloxOne DDI.  _DISCOVERED_           |  AddressBlock is discovered by some network discovery probe like Network Insight or NetMRI in NIOS.

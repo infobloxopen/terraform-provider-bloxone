@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    bloxone = {
-      source  = "infobloxopen/bloxone"
-    }
-  }
-}
-
 resource "bloxone_ipam_ip_space" "example" {
   name = "example_ip_space_tag_testing"
   tags = {
