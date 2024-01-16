@@ -833,13 +833,6 @@ func TestAccViewResource_IpSpaces(t *testing.T) {
 					resource.TestCheckResourceAttrPair(resourceName, "ip_spaces.0", "bloxone_ipam_ip_space.test_space", "id"),
 				),
 			},
-			// Custom Destroy step - Delete Views First to Delete IP Spaces
-			{
-				Config: testAccViewIpSpacesDestroyViews(ipSpaceName2),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckViewDestroy(context.Background(), &v),
-				),
-			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
@@ -1856,14 +1849,6 @@ resource "bloxone_dns_view" "test_ip_spaces" {
 ]
 }
 `, ipSpaceName, viewName)
-}
-
-func testAccViewIpSpacesDestroyViews(ipSpaceName string) string {
-	return fmt.Sprintf(`
-resource "bloxone_ipam_ip_space" "test_space" {
-	name = %q
-}
-`, ipSpaceName)
 }
 
 func testAccViewLameTtl(name string, lameTtl int64) string {

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -165,8 +164,6 @@ func (r *ServerResource) Delete(ctx context.Context, req resource.DeleteRequest,
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete Server, got error: %s", err))
 		return
 	}
-	// waits for the deletion
-	time.Sleep(2 * time.Second)
 }
 
 func (r *ServerResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
