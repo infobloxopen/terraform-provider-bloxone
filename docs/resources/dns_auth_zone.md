@@ -196,7 +196,7 @@ Read-Only:
 
 Read-Only:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_.
+- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
 - `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
@@ -235,7 +235,7 @@ Read-Only:
 
 Read-Only:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_.
+- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
 - `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
@@ -274,7 +274,7 @@ Read-Only:
 
 Read-Only:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_.
+- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
 - `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
@@ -460,11 +460,11 @@ Required:
 
 Required:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_.
 - `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
 
 Optional:
 
+- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--query_acl--tsig_key))
@@ -491,11 +491,11 @@ Read-Only:
 
 Required:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_.
 - `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
 
 Optional:
 
+- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--transfer_acl--tsig_key))
@@ -522,11 +522,11 @@ Read-Only:
 
 Required:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_.
 - `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
 
 Optional:
 
+- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--update_acl--tsig_key))
