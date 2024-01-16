@@ -134,9 +134,9 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.

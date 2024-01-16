@@ -2,6 +2,7 @@ package dns_config
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -11,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -288,6 +290,10 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 	"inheritance_sources": schema.SingleNestedAttribute{
 		Attributes: ConfigViewInheritanceResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
+		PlanModifiers: []planmodifier.Object{
+			objectplanmodifier.UseStateForUnknown(),
+		},
 	},
 	"ip_spaces": schema.ListAttribute{
 		ElementType: types.StringType,

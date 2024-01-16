@@ -38,34 +38,42 @@ var ConfigInheritedZoneAuthorityResourceSchemaAttributes = map[string]schema.Att
 	"default_ttl": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"expire": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"mname_block": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedZoneAuthorityMNameBlockResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"negative_ttl": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"protocol_rname": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedStringResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"refresh": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"retry": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"rname": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedStringResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 }
 

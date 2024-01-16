@@ -138,25 +138,25 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value))
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value))
 
 <a id="nestedatt--inheritance_sources--dhcp_options--value--value"></a>
-### Nested Schema for `inheritance_sources.dhcp_options.value.display_name`
+### Nested Schema for `inheritance_sources.dhcp_options.value.value`
 
-Optional:
+Read-Only:
 
-- `option` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--display_name--option))
+- `option` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value--option))
 - `overriding_group` (String) The resource identifier.
 
-<a id="nestedatt--inheritance_sources--dhcp_options--value--display_name--option"></a>
-### Nested Schema for `inheritance_sources.dhcp_options.value.display_name.option`
+<a id="nestedatt--inheritance_sources--dhcp_options--value--value--option"></a>
+### Nested Schema for `inheritance_sources.dhcp_options.value.value.option`
 
-Optional:
+Read-Only:
 
 - `group` (String) The resource identifier.
 - `option_code` (String) The resource identifier.
@@ -173,11 +173,11 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (String) The inherited value.
 
 
@@ -187,11 +187,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (String) The inherited value.
 
 
@@ -201,11 +201,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (String) The inherited value.
 
 

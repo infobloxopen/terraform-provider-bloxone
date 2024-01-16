@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -31,22 +32,23 @@ var ConfigInheritedACLItemsAttrTypes = map[string]attr.Type{
 var ConfigInheritedACLItemsResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `Optional. Inheritance setting for a field. Defaults to _inherit_.`,
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `Human-readable display name for the object referred to by _source_.`,
+		MarkdownDescription: "Human-readable display name for the object referred to by _source_.",
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `The resource identifier.`,
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
 	},
 	"value": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
-			Attributes: ConfigACLItemResourceSchemaAttributes,
+			Attributes: utils.ToComputedAttributeMap(ConfigACLItemResourceSchemaAttributes),
 		},
 		Computed:            true,
-		MarkdownDescription: `Inherited value.`,
+		MarkdownDescription: "Inherited value.",
 	},
 }
 
@@ -68,7 +70,6 @@ func (m *ConfigInheritedACLItemsModel) Expand(ctx context.Context, diags *diag.D
 	}
 	to := &dns_config.ConfigInheritedACLItems{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
 	}
 	return to
 }

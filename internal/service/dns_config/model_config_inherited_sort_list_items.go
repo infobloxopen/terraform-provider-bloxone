@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -31,6 +32,7 @@ var ConfigInheritedSortListItemsAttrTypes = map[string]attr.Type{
 var ConfigInheritedSortListItemsResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `Optional. Inheritance setting for a field. Defaults to _inherit_.`,
 	},
 	"display_name": schema.StringAttribute{
@@ -38,12 +40,12 @@ var ConfigInheritedSortListItemsResourceSchemaAttributes = map[string]schema.Att
 		MarkdownDescription: `Human-readable display name for the object referred to by _source_.`,
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
-			Attributes: ConfigSortListItemResourceSchemaAttributes,
+			Attributes: utils.ToComputedAttributeMap(ConfigSortListItemResourceSchemaAttributes),
 		},
 		Computed:            true,
 		MarkdownDescription: `Inherited value.`,
@@ -68,7 +70,6 @@ func (m *ConfigInheritedSortListItemsModel) Expand(ctx context.Context, diags *d
 	}
 	to := &dns_config.ConfigInheritedSortListItems{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
 	}
 	return to
 }

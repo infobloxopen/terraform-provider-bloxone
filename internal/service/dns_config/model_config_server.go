@@ -9,6 +9,7 @@ import (
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -265,6 +266,10 @@ var ConfigServerResourceSchemaAttributes = map[string]schema.Attribute{
 	"inheritance_sources": schema.SingleNestedAttribute{
 		Attributes: ConfigServerInheritanceResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
+		PlanModifiers: []planmodifier.Object{
+			objectplanmodifier.UseStateForUnknown(),
+		},
 	},
 	"kerberos_keys": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{

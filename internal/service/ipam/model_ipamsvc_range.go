@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -141,6 +142,9 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 		Attributes: IpamsvcDHCPOptionsInheritanceResourceSchemaAttributes,
 		Optional:   true,
 		Computed:   true,
+		PlanModifiers: []planmodifier.Object{
+			objectplanmodifier.UseStateForUnknown(),
+		},
 	},
 	"name": schema.StringAttribute{
 		Optional: true,

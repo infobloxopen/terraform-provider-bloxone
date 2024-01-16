@@ -24,6 +24,7 @@ var ConfigInheritedDtcConfigResourceSchemaAttributes = map[string]schema.Attribu
 	"default_ttl": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 }
 

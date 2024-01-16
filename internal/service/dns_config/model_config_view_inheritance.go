@@ -74,106 +74,132 @@ var ConfigViewInheritanceResourceSchemaAttributes = map[string]schema.Attribute{
 	"add_edns_option_in_outgoing_query": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"custom_root_ns_block": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedCustomRootNSBlockResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"dnssec_validation_block": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedDNSSECValidationBlockResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"dtc_config": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedDtcConfigResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"ecs_block": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedECSBlockResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"edns_udp_size": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"filter_aaaa_acl": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedACLItemsResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"filter_aaaa_on_v4": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedStringResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"forwarders_block": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedForwardersBlockResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"gss_tsig_enabled": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"lame_ttl": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"match_recursive_only": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"max_cache_ttl": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"max_negative_ttl": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"max_udp_size": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"minimal_responses": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"notify": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"query_acl": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedACLItemsResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"recursion_acl": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedACLItemsResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"recursion_enabled": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"sort_list": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedSortListItemsResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"synthesize_address_records_from_https": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"transfer_acl": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedACLItemsResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"update_acl": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedACLItemsResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"use_forwarders_for_subzones": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"zone_authority": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedZoneAuthorityResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 }
 

@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -31,6 +32,7 @@ var IpamsvcInheritedAsmGrowthBlockAttrTypes = map[string]attr.Type{
 var IpamsvcInheritedAsmGrowthBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.`,
 	},
 	"display_name": schema.StringAttribute{
@@ -38,12 +40,12 @@ var IpamsvcInheritedAsmGrowthBlockResourceSchemaAttributes = map[string]schema.A
 		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.SingleNestedAttribute{
-		Attributes: IpamsvcAsmGrowthBlockResourceSchemaAttributes,
-		Optional:   true,
+		Attributes: utils.ToComputedAttributeMap(IpamsvcAsmGrowthBlockResourceSchemaAttributes),
+		Computed:   true,
 	},
 }
 
@@ -65,8 +67,6 @@ func (m *IpamsvcInheritedAsmGrowthBlockModel) Expand(ctx context.Context, diags 
 	}
 	to := &ipam.IpamsvcInheritedAsmGrowthBlock{
 		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
-		Value:  ExpandIpamsvcAsmGrowthBlock(ctx, m.Value, diags),
 	}
 	return to
 }
