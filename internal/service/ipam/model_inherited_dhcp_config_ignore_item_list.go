@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -30,24 +31,24 @@ var InheritedDHCPConfigIgnoreItemListAttrTypes = map[string]attr.Type{
 
 var InheritedDHCPConfigIgnoreItemListResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
-		Computed:            true,
 		Optional:            true,
-		MarkdownDescription: "The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.",
+		Computed:            true,
+		MarkdownDescription: `The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.`,
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The human-readable display name for the object referred to by _source_.",
+		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
 	},
 	"source": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
-			Attributes: IpamsvcIgnoreItemResourceSchemaAttributes,
+			Attributes: utils.ToComputedAttributeMap(IpamsvcIgnoreItemResourceSchemaAttributes),
 		},
 		Computed:            true,
-		MarkdownDescription: "The inherited value.",
+		MarkdownDescription: `The inherited value.`,
 	},
 }
 
@@ -67,7 +68,9 @@ func (m *InheritedDHCPConfigIgnoreItemListModel) Expand(ctx context.Context, dia
 	if m == nil {
 		return nil
 	}
-	to := &ipam.InheritedDHCPConfigIgnoreItemList{}
+	to := &ipam.InheritedDHCPConfigIgnoreItemList{
+		Action: m.Action.ValueStringPointer(),
+	}
 	return to
 }
 

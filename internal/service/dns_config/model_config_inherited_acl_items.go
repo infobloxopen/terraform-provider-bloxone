@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -44,7 +45,7 @@ var ConfigInheritedACLItemsResourceSchemaAttributes = map[string]schema.Attribut
 	},
 	"value": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
-			Attributes: ConfigACLItemResourceSchemaAttributes,
+			Attributes: utils.ToComputedAttributeMap(ConfigACLItemResourceSchemaAttributes),
 		},
 		Computed:            true,
 		MarkdownDescription: "Inherited value.",

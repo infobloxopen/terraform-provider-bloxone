@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -30,21 +31,21 @@ var IpamsvcInheritedDHCPOptionAttrTypes = map[string]attr.Type{
 
 var IpamsvcInheritedDHCPOptionResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
-		Computed:            true,
 		Optional:            true,
-		MarkdownDescription: "The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.",
+		Computed:            true,
+		MarkdownDescription: `The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.`,
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The human-readable display name for the object referred to by _source_.",
+		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
 	},
 	"source": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.SingleNestedAttribute{
-		Attributes: IpamsvcInheritedDHCPOptionItemResourceSchemaAttributes,
-		Optional:   true,
+		Attributes: utils.ToComputedAttributeMap(IpamsvcInheritedDHCPOptionItemResourceSchemaAttributes),
+		Computed:   true,
 	},
 }
 
@@ -65,7 +66,7 @@ func (m *IpamsvcInheritedDHCPOptionModel) Expand(ctx context.Context, diags *dia
 		return nil
 	}
 	to := &ipam.IpamsvcInheritedDHCPOption{
-		Value: ExpandIpamsvcInheritedDHCPOptionItem(ctx, m.Value, diags),
+		Action: m.Action.ValueStringPointer(),
 	}
 	return to
 }

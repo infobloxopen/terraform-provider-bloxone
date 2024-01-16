@@ -207,17 +207,17 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--ddns_block--value))
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--ddns_block--value))
 
 <a id="nestedatt--inheritance_sources--ddns_block--value"></a>
 ### Nested Schema for `inheritance_sources.ddns_block.value`
 
-Optional:
+Read-Only:
 
 - `client_principal` (String) The Kerberos principal name. It uses the typical Kerberos notation: <SERVICE-NAME>/<server-domain-name>@<REALM>.  Defaults to empty.
 - `ddns_domain` (String) The domain name for DDNS.
@@ -236,27 +236,21 @@ Optional:
 <a id="nestedatt--inheritance_sources--ddns_block--value--ddns_zones"></a>
 ### Nested Schema for `inheritance_sources.ddns_block.value.server_principal`
 
-Required:
-
-- `zone` (String) The resource identifier.
-
-Optional:
+Read-Only:
 
 - `fqdn` (String) Zone FQDN.  If _zone_ is defined, the _fqdn_ field must be empty.
 - `gss_tsig_enabled` (Boolean) _gss_tsig_enabled_ enables/disables GSS-TSIG signed dynamic updates.  Defaults to _false_.
 - `nameservers` (Attributes List) The Nameservers in the zone.  Each nameserver IP should be unique across the list of nameservers. (see [below for nested schema](#nestedatt--inheritance_sources--ddns_block--value--server_principal--nameservers))
 - `tsig_enabled` (Boolean) Indicates if TSIG key should be used for the update.  Defaults to _false_.
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--ddns_block--value--server_principal--tsig_key))
-
-Read-Only:
-
 - `view` (String) The resource identifier.
 - `view_name` (String) The name of the view.
+- `zone` (String) The resource identifier.
 
 <a id="nestedatt--inheritance_sources--ddns_block--value--server_principal--nameservers"></a>
 ### Nested Schema for `inheritance_sources.ddns_block.value.server_principal.nameservers`
 
-Optional:
+Read-Only:
 
 - `client_principal` (String) The Kerberos principal name. It uses the typical Kerberos notation: <SERVICE-NAME>/<server-domain-name>@<REALM>.  Defaults to empty.
 - `gss_tsig_fallback` (Boolean) The behavior when GSS-TSIG should be used (a matching external DNS server is configured) but no GSS-TSIG key is available. If configured to _false_ (the default) this DNS server is skipped, if configured to _true_ the DNS server is ignored and the DNS update is sent with the configured DHCP-DDNS protection e.g. TSIG key or without any protection when none was configured.  Defaults to _false_.
@@ -271,34 +265,25 @@ Optional:
 <a id="nestedatt--inheritance_sources--ddns_block--value--server_principal--tsig_key"></a>
 ### Nested Schema for `inheritance_sources.ddns_block.value.server_principal.tsig_key`
 
-Required:
-
-- `key` (String) The resource identifier.
-
-Optional:
+Read-Only:
 
 - `algorithm` (String) TSIG key algorithm.  Valid values are:  * _hmac_sha256_  * _hmac_sha1_  * _hmac_sha224_  * _hmac_sha384_  * _hmac_sha512_
 - `comment` (String) The description for the TSIG key. May contain 0 to 1024 characters. Can include UTF-8.
+- `key` (String) The resource identifier.
 - `name` (String) The TSIG key name, FQDN.
-- `secret` (String) The TSIG key secret, base64 string.
-
-Read-Only:
-
 - `protocol_name` (String) The TSIG key name in punycode.
+- `secret` (String) The TSIG key secret, base64 string.
 
 
 
 <a id="nestedatt--inheritance_sources--ddns_block--value--kerberos_keys"></a>
 ### Nested Schema for `inheritance_sources.ddns_block.value.server_principal`
 
-Required:
-
-- `key` (String) The resource identifier.
-
 Read-Only:
 
 - `algorithm` (String) Encryption algorithm of the key in accordance with RFC 3961.
 - `domain` (String) Kerberos realm of the principal.
+- `key` (String) The resource identifier.
 - `principal` (String) Kerberos principal associated with key.
 - `uploaded_at` (String) Upload time for the key.
 - `version` (Number) The version number (KVNO) of the key.
@@ -312,11 +297,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (String) The inherited value.
 
 
@@ -326,11 +311,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (String) The inherited value.
 
 
@@ -340,17 +325,17 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--ddns_hostname_block--value))
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--ddns_hostname_block--value))
 
 <a id="nestedatt--inheritance_sources--ddns_hostname_block--value"></a>
 ### Nested Schema for `inheritance_sources.ddns_hostname_block.value`
 
-Optional:
+Read-Only:
 
 - `ddns_generate_name` (Boolean) Indicates if DDNS should generate a hostname when not supplied by the client.
 - `ddns_generated_prefix` (String) The prefix used in the generation of an FQDN.
@@ -363,11 +348,11 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
 
 
@@ -377,11 +362,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Boolean) The inherited value.
 
 
@@ -391,11 +376,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Boolean) The inherited value.
 
 
@@ -421,11 +406,11 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
 
 
@@ -435,11 +420,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
 
 
@@ -449,11 +434,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Boolean) The inherited value.
 
 
@@ -463,11 +448,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Boolean) The inherited value.
 
 
@@ -477,12 +462,12 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (List of String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (List of String) The resource identifier.
 
 
 <a id="nestedatt--inheritance_sources--dhcp_config--filters_v6"></a>
@@ -491,12 +476,12 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (List of String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (List of String) The resource identifier.
 
 
 <a id="nestedatt--inheritance_sources--dhcp_config--ignore_client_uid"></a>
@@ -505,11 +490,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Boolean) The inherited value.
 
 
@@ -519,17 +504,17 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Attributes List) The inherited value. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--ignore_list--value))
 
 <a id="nestedatt--inheritance_sources--dhcp_config--ignore_list--value"></a>
 ### Nested Schema for `inheritance_sources.dhcp_config.ignore_list.value`
 
-Required:
+Read-Only:
 
 - `type` (String) Type of ignore matching: client to ignore by client identifier (client hex or client text) or hardware to ignore by hardware identifier (MAC address). It can have one of the following values:  * _client_hex_,  * _client_text_,  * _hardware_.
 - `value` (String) Value to match.
@@ -542,11 +527,11 @@ Required:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
 
 
@@ -556,11 +541,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
 
 
@@ -579,25 +564,25 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value))
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value))
 
 <a id="nestedatt--inheritance_sources--dhcp_options--value--value"></a>
-### Nested Schema for `inheritance_sources.dhcp_options.value.display_name`
+### Nested Schema for `inheritance_sources.dhcp_options.value.value`
 
-Optional:
+Read-Only:
 
-- `option` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--display_name--option))
+- `option` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value--option))
 - `overriding_group` (String) The resource identifier.
 
-<a id="nestedatt--inheritance_sources--dhcp_options--value--display_name--option"></a>
-### Nested Schema for `inheritance_sources.dhcp_options.value.display_name.option`
+<a id="nestedatt--inheritance_sources--dhcp_options--value--value--option"></a>
+### Nested Schema for `inheritance_sources.dhcp_options.value.value.option`
 
-Optional:
+Read-Only:
 
 - `group` (String) The resource identifier.
 - `option_code` (String) The resource identifier.
@@ -622,25 +607,25 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options_v6--value--value))
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options_v6--value--value))
 
 <a id="nestedatt--inheritance_sources--dhcp_options_v6--value--value"></a>
-### Nested Schema for `inheritance_sources.dhcp_options_v6.value.display_name`
+### Nested Schema for `inheritance_sources.dhcp_options_v6.value.value`
 
-Optional:
+Read-Only:
 
-- `option` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options_v6--value--display_name--option))
+- `option` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options_v6--value--value--option))
 - `overriding_group` (String) The resource identifier.
 
-<a id="nestedatt--inheritance_sources--dhcp_options_v6--value--display_name--option"></a>
-### Nested Schema for `inheritance_sources.dhcp_options_v6.value.display_name.option`
+<a id="nestedatt--inheritance_sources--dhcp_options_v6--value--value--option"></a>
+### Nested Schema for `inheritance_sources.dhcp_options_v6.value.value.option`
 
-Optional:
+Read-Only:
 
 - `group` (String) The resource identifier.
 - `option_code` (String) The resource identifier.
@@ -657,11 +642,11 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (String) The inherited value.
 
 
@@ -671,11 +656,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (String) The inherited value.
 
 
@@ -685,11 +670,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (String) The inherited value.
 
 
@@ -699,17 +684,17 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--hostname_rewrite_block--value))
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--hostname_rewrite_block--value))
 
 <a id="nestedatt--inheritance_sources--hostname_rewrite_block--value"></a>
 ### Nested Schema for `inheritance_sources.hostname_rewrite_block.value`
 
-Optional:
+Read-Only:
 
 - `hostname_rewrite_char` (String) The inheritance configuration for _hostname_rewrite_char_ field.
 - `hostname_rewrite_enabled` (Boolean) The inheritance configuration for _hostname_rewrite_enabled_ field.
@@ -723,12 +708,12 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (String) The resource identifier.
 
 
 

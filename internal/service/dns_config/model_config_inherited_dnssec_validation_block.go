@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -40,11 +41,11 @@ var ConfigInheritedDNSSECValidationBlockResourceSchemaAttributes = map[string]sc
 	},
 	"source": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.SingleNestedAttribute{
-		Attributes: ConfigDNSSECValidationBlockResourceSchemaAttributes,
-		Optional:   true,
+		Attributes: utils.ToComputedAttributeMap(ConfigDNSSECValidationBlockResourceSchemaAttributes),
+		Computed:   true,
 	},
 }
 
@@ -66,7 +67,6 @@ func (m *ConfigInheritedDNSSECValidationBlockModel) Expand(ctx context.Context, 
 	}
 	to := &dns_config.ConfigInheritedDNSSECValidationBlock{
 		Action: flex.ExpandStringPointer(m.Action),
-		Value:  ExpandConfigDNSSECValidationBlock(ctx, m.Value, diags),
 	}
 	return to
 }

@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/ipam"
-
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -26,16 +25,17 @@ var IpamsvcInheritedDHCPOptionListAttrTypes = map[string]attr.Type{
 
 var IpamsvcInheritedDHCPOptionListResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
-		Computed:            true,
 		Optional:            true,
-		MarkdownDescription: "The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.",
+		Computed:            true,
+		MarkdownDescription: `The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.`,
 	},
 	"value": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: IpamsvcInheritedDHCPOptionResourceSchemaAttributes,
 		},
 		Optional:            true,
-		MarkdownDescription: "The inherited DHCP option values.",
+		Computed:            true,
+		MarkdownDescription: `The inherited DHCP option values.`,
 	},
 }
 
@@ -56,7 +56,8 @@ func (m *IpamsvcInheritedDHCPOptionListModel) Expand(ctx context.Context, diags 
 		return nil
 	}
 	to := &ipam.IpamsvcInheritedDHCPOptionList{
-		Value: flex.ExpandFrameworkListNestedBlock(ctx, m.Value, diags, ExpandIpamsvcInheritedDHCPOption),
+		Action: m.Action.ValueStringPointer(),
+		Value:  flex.ExpandFrameworkListNestedBlock(ctx, m.Value, diags, ExpandIpamsvcInheritedDHCPOption),
 	}
 	return to
 }

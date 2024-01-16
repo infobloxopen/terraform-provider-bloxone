@@ -36,15 +36,15 @@ var Inheritance2InheritedBoolResourceSchemaAttributes = map[string]schema.Attrib
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The human-readable display name for the object referred to by _source_.",
+		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
 	},
 	"source": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.BoolAttribute{
 		Computed:            true,
-		MarkdownDescription: "The inherited value.",
+		MarkdownDescription: `The inherited value.`,
 	},
 }
 

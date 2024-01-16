@@ -25,6 +25,7 @@ var ConfigHostInheritanceResourceSchemaAttributes = map[string]schema.Attribute{
 	"kerberos_keys": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedKerberosKeysResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 }
 

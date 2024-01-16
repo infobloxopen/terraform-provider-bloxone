@@ -36,15 +36,15 @@ var Inheritance2InheritedUInt32ResourceSchemaAttributes = map[string]schema.Attr
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The human-readable display name for the object referred to by _source_.",
+		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
 	},
 	"source": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.Int64Attribute{
 		Computed:            true,
-		MarkdownDescription: "The inherited value.",
+		MarkdownDescription: `The inherited value.`,
 	},
 }
 
@@ -91,5 +91,5 @@ func (m *Inheritance2InheritedUInt32Model) Flatten(ctx context.Context, from *dn
 	m.Action = flex.FlattenStringPointer(from.Action)
 	m.DisplayName = flex.FlattenStringPointer(from.DisplayName)
 	m.Source = flex.FlattenStringPointer(from.Source)
-	m.Value = flex.FlattenInt64Pointer(from.Value)
+	m.Value = flex.FlattenInt64(int64(*from.Value))
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -32,19 +33,19 @@ var ConfigInheritedCustomRootNSBlockResourceSchemaAttributes = map[string]schema
 	"action": schema.StringAttribute{
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Defaults to _inherit_.",
+		MarkdownDescription: `Defaults to _inherit_.`,
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "Human-readable display name for the object referred to by _source_.",
+		MarkdownDescription: `Human-readable display name for the object referred to by _source_.`,
 	},
 	"source": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.SingleNestedAttribute{
-		Attributes: ConfigCustomRootNSBlockResourceSchemaAttributes,
-		Optional:   true,
+		Attributes: utils.ToComputedAttributeMap(ConfigCustomRootNSBlockResourceSchemaAttributes),
+		Computed:   true,
 	},
 }
 
@@ -66,7 +67,6 @@ func (m *ConfigInheritedCustomRootNSBlockModel) Expand(ctx context.Context, diag
 	}
 	to := &dns_config.ConfigInheritedCustomRootNSBlock{
 		Action: flex.ExpandStringPointer(m.Action),
-		Value:  ExpandConfigCustomRootNSBlock(ctx, m.Value, diags),
 	}
 	return to
 }

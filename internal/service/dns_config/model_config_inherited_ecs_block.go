@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -40,11 +41,11 @@ var ConfigInheritedECSBlockResourceSchemaAttributes = map[string]schema.Attribut
 	},
 	"source": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.SingleNestedAttribute{
-		Attributes: ConfigECSBlockResourceSchemaAttributes,
-		Optional:   true,
+		Attributes: utils.ToComputedAttributeMap(ConfigECSBlockResourceSchemaAttributes),
+		Computed:   true,
 	},
 }
 
@@ -66,7 +67,6 @@ func (m *ConfigInheritedECSBlockModel) Expand(ctx context.Context, diags *diag.D
 	}
 	to := &dns_config.ConfigInheritedECSBlock{
 		Action: flex.ExpandStringPointer(m.Action),
-		Value:  ExpandConfigECSBlock(ctx, m.Value, diags),
 	}
 	return to
 }

@@ -24,6 +24,7 @@ var DataRecordInheritanceResourceSchemaAttributes = map[string]schema.Attribute{
 	"ttl": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 }
 

@@ -30,18 +30,22 @@ var IpamsvcFixedAddressInheritanceResourceSchemaAttributes = map[string]schema.A
 	"dhcp_options": schema.SingleNestedAttribute{
 		Attributes: IpamsvcInheritedDHCPOptionListResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"header_option_filename": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedStringResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"header_option_server_address": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedStringResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"header_option_server_name": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedStringResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 }
 

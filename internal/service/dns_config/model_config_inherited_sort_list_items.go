@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -40,11 +41,11 @@ var ConfigInheritedSortListItemsResourceSchemaAttributes = map[string]schema.Att
 	},
 	"source": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
-			Attributes: ConfigSortListItemResourceSchemaAttributes,
+			Attributes: utils.ToComputedAttributeMap(ConfigSortListItemResourceSchemaAttributes),
 		},
 		Computed:            true,
 		MarkdownDescription: `Inherited value.`,

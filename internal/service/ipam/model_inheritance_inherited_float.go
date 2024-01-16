@@ -30,21 +30,21 @@ var InheritanceInheritedFloatAttrTypes = map[string]attr.Type{
 
 var InheritanceInheritedFloatResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
-		Computed:            true,
 		Optional:            true,
-		MarkdownDescription: "The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.",
+		Computed:            true,
+		MarkdownDescription: `The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.`,
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The human-readable display name for the object referred to by _source_.",
+		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
 	},
 	"source": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.Float64Attribute{
 		Computed:            true,
-		MarkdownDescription: "The inherited value.",
+		MarkdownDescription: `The inherited value.`,
 	},
 }
 
@@ -64,7 +64,9 @@ func (m *InheritanceInheritedFloatModel) Expand(ctx context.Context, diags *diag
 	if m == nil {
 		return nil
 	}
-	to := &ipam.InheritanceInheritedFloat{}
+	to := &ipam.InheritanceInheritedFloat{
+		Action: m.Action.ValueStringPointer(),
+	}
 	return to
 }
 

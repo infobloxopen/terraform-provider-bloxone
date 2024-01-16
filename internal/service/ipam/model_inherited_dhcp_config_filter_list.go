@@ -30,22 +30,22 @@ var InheritedDHCPConfigFilterListAttrTypes = map[string]attr.Type{
 
 var InheritedDHCPConfigFilterListResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
-		Computed:            true,
 		Optional:            true,
-		MarkdownDescription: "The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.",
+		Computed:            true,
+		MarkdownDescription: `The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.`,
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The human-readable display name for the object referred to by _source_.",
+		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
 	},
 	"source": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.ListAttribute{
 		ElementType:         types.StringType,
-		Optional:            true,
-		MarkdownDescription: "The resource identifier.",
+		Computed:            true,
+		MarkdownDescription: `The resource identifier.`,
 	},
 }
 
@@ -66,7 +66,7 @@ func (m *InheritedDHCPConfigFilterListModel) Expand(ctx context.Context, diags *
 		return nil
 	}
 	to := &ipam.InheritedDHCPConfigFilterList{
-		Value: flex.ExpandFrameworkListString(ctx, m.Value, diags),
+		Action: m.Action.ValueStringPointer(),
 	}
 	return to
 }
