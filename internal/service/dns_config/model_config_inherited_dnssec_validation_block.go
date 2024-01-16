@@ -67,8 +67,6 @@ func (m *ConfigInheritedDNSSECValidationBlockModel) Expand(ctx context.Context, 
 	}
 	to := &dns_config.ConfigInheritedDNSSECValidationBlock{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
-		Value:  ExpandConfigDNSSECValidationBlock(ctx, m.Value, diags),
 	}
 	return to
 }

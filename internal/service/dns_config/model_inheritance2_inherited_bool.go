@@ -66,7 +66,6 @@ func (m *Inheritance2InheritedBoolModel) Expand(ctx context.Context, diags *diag
 	}
 	to := &dns_config.Inheritance2InheritedBool{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
 	}
 	return to
 }

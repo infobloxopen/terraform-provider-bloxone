@@ -66,7 +66,6 @@ func (m *InheritanceInheritedUInt32Model) Expand(ctx context.Context, diags *dia
 	}
 	to := &ipam.InheritanceInheritedUInt32{
 		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
 	}
 	return to
 }

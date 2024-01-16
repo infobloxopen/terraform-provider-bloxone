@@ -67,8 +67,6 @@ func (m *IpamsvcInheritedDDNSHostnameBlockModel) Expand(ctx context.Context, dia
 	}
 	to := &ipam.IpamsvcInheritedDDNSHostnameBlock{
 		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
-		Value:  ExpandIpamsvcDDNSHostnameBlock(ctx, m.Value, diags),
 	}
 	return to
 }

@@ -67,8 +67,6 @@ func (m *ConfigInheritedECSBlockModel) Expand(ctx context.Context, diags *diag.D
 	}
 	to := &dns_config.ConfigInheritedECSBlock{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
-		Value:  ExpandConfigECSBlock(ctx, m.Value, diags),
 	}
 	return to
 }

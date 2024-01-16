@@ -70,7 +70,6 @@ func (m *InheritedDHCPConfigIgnoreItemListModel) Expand(ctx context.Context, dia
 	}
 	to := &ipam.InheritedDHCPConfigIgnoreItemList{
 		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
 	}
 	return to
 }

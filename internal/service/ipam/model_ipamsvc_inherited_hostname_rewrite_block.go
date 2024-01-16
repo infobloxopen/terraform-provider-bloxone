@@ -67,8 +67,6 @@ func (m *IpamsvcInheritedHostnameRewriteBlockModel) Expand(ctx context.Context, 
 	}
 	to := &ipam.IpamsvcInheritedHostnameRewriteBlock{
 		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
-		Value:  ExpandIpamsvcHostnameRewriteBlock(ctx, m.Value, diags),
 	}
 	return to
 }

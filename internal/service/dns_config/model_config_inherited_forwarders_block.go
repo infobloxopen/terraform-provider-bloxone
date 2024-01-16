@@ -67,8 +67,6 @@ func (m *ConfigInheritedForwardersBlockModel) Expand(ctx context.Context, diags 
 	}
 	to := &dns_config.ConfigInheritedForwardersBlock{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
-		Value:  ExpandConfigForwardersBlock(ctx, m.Value, diags),
 	}
 	return to
 }

@@ -67,8 +67,6 @@ func (m *IpamsvcInheritedDDNSBlockModel) Expand(ctx context.Context, diags *diag
 	}
 	to := &ipam.IpamsvcInheritedDDNSBlock{
 		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
-		Value:  ExpandIpamsvcDDNSBlock(ctx, m.Value, diags),
 	}
 	return to
 }

@@ -66,7 +66,6 @@ func (m *Inheritance2InheritedUInt32Model) Expand(ctx context.Context, diags *di
 	}
 	to := &dns_data.Inheritance2InheritedUInt32{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
 	}
 	return to
 }

@@ -70,7 +70,6 @@ func (m *ConfigInheritedKerberosKeysModel) Expand(ctx context.Context, diags *di
 	}
 	to := &dns_config.ConfigInheritedKerberosKeys{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
 	}
 	return to
 }

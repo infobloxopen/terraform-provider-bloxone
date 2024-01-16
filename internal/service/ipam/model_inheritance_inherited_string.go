@@ -66,7 +66,6 @@ func (m *InheritanceInheritedStringModel) Expand(ctx context.Context, diags *dia
 	}
 	to := &ipam.InheritanceInheritedString{
 		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
 	}
 	return to
 }

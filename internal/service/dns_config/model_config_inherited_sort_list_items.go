@@ -70,7 +70,6 @@ func (m *ConfigInheritedSortListItemsModel) Expand(ctx context.Context, diags *d
 	}
 	to := &dns_config.ConfigInheritedSortListItems{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
 	}
 	return to
 }

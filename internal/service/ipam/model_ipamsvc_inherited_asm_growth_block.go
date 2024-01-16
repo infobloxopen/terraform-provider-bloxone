@@ -67,8 +67,6 @@ func (m *IpamsvcInheritedAsmGrowthBlockModel) Expand(ctx context.Context, diags 
 	}
 	to := &ipam.IpamsvcInheritedAsmGrowthBlock{
 		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
-		Value:  ExpandIpamsvcAsmGrowthBlock(ctx, m.Value, diags),
 	}
 	return to
 }

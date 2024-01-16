@@ -66,7 +66,6 @@ func (m *InheritanceInheritedBoolModel) Expand(ctx context.Context, diags *diag.
 	}
 	to := &ipam.InheritanceInheritedBool{
 		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
 	}
 	return to
 }

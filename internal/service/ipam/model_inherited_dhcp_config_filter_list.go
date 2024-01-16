@@ -67,8 +67,6 @@ func (m *InheritedDHCPConfigFilterListModel) Expand(ctx context.Context, diags *
 	}
 	to := &ipam.InheritedDHCPConfigFilterList{
 		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
-		Value:  flex.ExpandFrameworkListString(ctx, m.Value, diags),
 	}
 	return to
 }

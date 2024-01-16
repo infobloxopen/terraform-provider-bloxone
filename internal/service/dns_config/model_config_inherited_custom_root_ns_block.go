@@ -67,8 +67,6 @@ func (m *ConfigInheritedCustomRootNSBlockModel) Expand(ctx context.Context, diag
 	}
 	to := &dns_config.ConfigInheritedCustomRootNSBlock{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
-		Value:  ExpandConfigCustomRootNSBlock(ctx, m.Value, diags),
 	}
 	return to
 }

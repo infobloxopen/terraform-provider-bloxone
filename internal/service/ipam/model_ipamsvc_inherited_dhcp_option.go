@@ -67,8 +67,6 @@ func (m *IpamsvcInheritedDHCPOptionModel) Expand(ctx context.Context, diags *dia
 	}
 	to := &ipam.IpamsvcInheritedDHCPOption{
 		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
-		Value:  ExpandIpamsvcInheritedDHCPOptionItem(ctx, m.Value, diags),
 	}
 	return to
 }

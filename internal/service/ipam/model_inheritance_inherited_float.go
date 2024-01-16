@@ -66,7 +66,6 @@ func (m *InheritanceInheritedFloatModel) Expand(ctx context.Context, diags *diag
 	}
 	to := &ipam.InheritanceInheritedFloat{
 		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
 	}
 	return to
 }
