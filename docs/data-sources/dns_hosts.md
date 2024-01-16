@@ -93,24 +93,21 @@ Optional:
 Optional:
 
 - `action` (String) Optional. Inheritance setting for a field. Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) Human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Attributes List) Inherited value. (see [below for nested schema](#nestedatt--results--inheritance_sources--kerberos_keys--value))
 
 <a id="nestedatt--results--inheritance_sources--kerberos_keys--value"></a>
 ### Nested Schema for `results.inheritance_sources.kerberos_keys.value`
 
-Required:
-
-- `key` (String) The resource identifier.
-
 Read-Only:
 
 - `algorithm` (String) Encryption algorithm of the key in accordance with RFC 3961.
 - `domain` (String) Kerberos realm of the principal.
+- `key` (String) The resource identifier.
 - `principal` (String) Kerberos principal associated with key.
 - `uploaded_at` (String) Upload time for the key.
 - `version` (Number) The version number (KVNO) of the key.

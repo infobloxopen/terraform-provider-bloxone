@@ -1,10 +1,13 @@
 package utils
 
 import (
+	"context"
 	"fmt"
+
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 const ReadPageSizeLimit int32 = 1000
@@ -222,4 +225,100 @@ func ReadWithPages[T any](read func(offset, limit int32) ([]T, error)) ([]T, err
 	}
 
 	return allResults, nil
+}
+
+// ToComputedAttributeMap converts a map of resource schema attributes to schema attributes with all fields set to "computed".
+func ToComputedAttributeMap(r map[string]resourceschema.Attribute) map[string]resourceschema.Attribute {
+	d := map[string]resourceschema.Attribute{}
+	for k, v := range r {
+		d[k] = ToComputedAttribute(k, v)
+	}
+	return d
+}
+
+// ToComputedNestedAttributeObject converts a resource schema nested attribute object to nested attribute object with all fields set to "computed".
+func ToComputedNestedAttributeObject(r resourceschema.NestedAttributeObject) resourceschema.NestedAttributeObject {
+	return resourceschema.NestedAttributeObject{
+		Attributes: ToComputedAttributeMap(r.Attributes),
+		CustomType: r.CustomType,
+		Validators: r.Validators,
+	}
+}
+
+// ToComputedAttribute converts a resource schema attribute having all attributes set to "computed".
+func ToComputedAttribute(name string, val resourceschema.Attribute) resourceschema.Attribute {
+	switch a := val.(type) {
+	case resourceschema.StringAttribute:
+		a.Required = false
+		a.Optional = false
+		a.Computed = true
+		return a
+	case resourceschema.BoolAttribute:
+		a.Required = false
+		a.Optional = false
+		a.Computed = true
+		return a
+	case resourceschema.Int64Attribute:
+		a.Required = false
+		a.Optional = false
+		a.Computed = true
+		return a
+	case resourceschema.Float64Attribute:
+		a.Required = false
+		a.Optional = false
+		a.Computed = true
+		return a
+	case resourceschema.NumberAttribute:
+		a.Required = false
+		a.Optional = false
+		a.Computed = true
+		return a
+	case resourceschema.ObjectAttribute:
+		a.Required = false
+		a.Optional = false
+		a.Computed = true
+		return a
+	case resourceschema.ListAttribute:
+		a.Required = false
+		a.Optional = false
+		a.Computed = true
+		return a
+	case resourceschema.ListNestedAttribute:
+		a.NestedObject = ToComputedNestedAttributeObject(a.NestedObject)
+		a.Required = false
+		a.Optional = false
+		a.Computed = true
+		return a
+	case resourceschema.MapAttribute:
+		a.Required = false
+		a.Optional = false
+		a.Computed = true
+		return a
+	case resourceschema.MapNestedAttribute:
+		a.NestedObject = ToComputedNestedAttributeObject(a.NestedObject)
+		a.Required = false
+		a.Optional = false
+		a.Computed = true
+		return a
+	case resourceschema.SetAttribute:
+		a.Required = false
+		a.Optional = false
+		a.Computed = true
+		return a
+	case resourceschema.SetNestedAttribute:
+		a.NestedObject = ToComputedNestedAttributeObject(a.NestedObject)
+		a.Required = false
+		a.Optional = false
+		a.Computed = true
+		return a
+	case resourceschema.SingleNestedAttribute:
+		a.Attributes = ToComputedAttributeMap(a.Attributes)
+		a.Required = false
+		a.Optional = false
+		a.Computed = true
+		return a
+	}
+
+	tflog.Error(context.Background(), fmt.Sprintf("Failed to convert schema attribute of type '%T' for '%s'", val, name))
+	return nil
 }

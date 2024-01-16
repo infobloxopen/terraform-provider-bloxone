@@ -199,17 +199,17 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--asm_config--min_unused--value))
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--asm_config--min_unused--value))
 
 <a id="nestedatt--results--inheritance_sources--asm_config--min_unused--value"></a>
 ### Nested Schema for `results.inheritance_sources.asm_config.min_unused.value`
 
-Optional:
+Read-Only:
 
 - `enable` (Boolean) Indicates whether Automated Scope Management is enabled or not.
 - `enable_notification` (Boolean) Indicates whether sending notifications to the users is enabled or not.
@@ -223,17 +223,17 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--asm_config--min_unused--value))
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--asm_config--min_unused--value))
 
 <a id="nestedatt--results--inheritance_sources--asm_config--min_unused--value"></a>
 ### Nested Schema for `results.inheritance_sources.asm_config.min_unused.value`
 
-Optional:
+Read-Only:
 
 - `growth_factor` (Number) Either the number or percentage of addresses to grow by.
 - `growth_type` (String) The type of factor to use: _percent_ or _count_.
@@ -246,11 +246,11 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
 
 
@@ -260,11 +260,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
 
 
@@ -274,11 +274,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
 
 
@@ -288,11 +288,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
 
 
@@ -302,11 +302,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
 
 
@@ -317,11 +317,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (String) The inherited value.
 
 
@@ -331,11 +331,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (String) The inherited value.
 
 
@@ -345,11 +345,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Boolean) The inherited value.
 
 
@@ -359,17 +359,17 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--ddns_hostname_block--value))
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--ddns_hostname_block--value))
 
 <a id="nestedatt--results--inheritance_sources--ddns_hostname_block--value"></a>
-### Nested Schema for `results.inheritance_sources.ddns_hostname_block.display_name`
+### Nested Schema for `results.inheritance_sources.ddns_hostname_block.value`
 
-Optional:
+Read-Only:
 
 - `ddns_generate_name` (Boolean) Indicates if DDNS should generate a hostname when not supplied by the client.
 - `ddns_generated_prefix` (String) The prefix used in the generation of an FQDN.
@@ -382,11 +382,11 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
 
 
@@ -396,17 +396,17 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--ddns_update_block--value))
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--ddns_update_block--value))
 
 <a id="nestedatt--results--inheritance_sources--ddns_update_block--value"></a>
-### Nested Schema for `results.inheritance_sources.ddns_update_block.display_name`
+### Nested Schema for `results.inheritance_sources.ddns_update_block.value`
 
-Optional:
+Read-Only:
 
 - `ddns_domain` (String) The domain name for DDNS.
 - `ddns_send_updates` (Boolean) Determines if DDNS updates are enabled at this level.
@@ -419,11 +419,11 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Boolean) The inherited value.
 
 
@@ -433,11 +433,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Boolean) The inherited value.
 
 
@@ -463,11 +463,11 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
 
 
@@ -477,11 +477,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
 
 
@@ -491,11 +491,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Boolean) The inherited value.
 
 
@@ -505,11 +505,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Boolean) The inherited value.
 
 
@@ -519,12 +519,12 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (List of String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (List of String) The resource identifier.
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--filters_v6"></a>
@@ -533,12 +533,12 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (List of String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (List of String) The resource identifier.
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--ignore_client_uid"></a>
@@ -547,11 +547,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Boolean) The inherited value.
 
 
@@ -561,17 +561,17 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Attributes List) The inherited value. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--lease_time_v6--value))
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--lease_time_v6--value"></a>
 ### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6.value`
 
-Required:
+Read-Only:
 
 - `type` (String) Type of ignore matching: client to ignore by client identifier (client hex or client text) or hardware to ignore by hardware identifier (MAC address). It can have one of the following values:  * _client_hex_,  * _client_text_,  * _hardware_.
 - `value` (String) Value to match.
@@ -584,11 +584,11 @@ Required:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
 
 
@@ -598,11 +598,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
 
 
@@ -621,17 +621,17 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_options--value--value))
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_options--value--value))
 
 <a id="nestedatt--results--inheritance_sources--dhcp_options--value--value"></a>
 ### Nested Schema for `results.inheritance_sources.dhcp_options.value.value`
 
-Optional:
+Read-Only:
 
 - `option` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_options--value--value--option))
 - `overriding_group` (String) The resource identifier.
@@ -639,7 +639,7 @@ Optional:
 <a id="nestedatt--results--inheritance_sources--dhcp_options--value--value--option"></a>
 ### Nested Schema for `results.inheritance_sources.dhcp_options.value.value.overriding_group`
 
-Optional:
+Read-Only:
 
 - `group` (String) The resource identifier.
 - `option_code` (String) The resource identifier.
@@ -656,11 +656,11 @@ Optional:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (String) The inherited value.
 
 
@@ -670,11 +670,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (String) The inherited value.
 
 
@@ -684,11 +684,11 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
 - `value` (String) The inherited value.
 
 
@@ -698,17 +698,17 @@ Read-Only:
 Optional:
 
 - `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-- `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--hostname_rewrite_block--value))
 
 Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--hostname_rewrite_block--value))
 
 <a id="nestedatt--results--inheritance_sources--hostname_rewrite_block--value"></a>
-### Nested Schema for `results.inheritance_sources.hostname_rewrite_block.display_name`
+### Nested Schema for `results.inheritance_sources.hostname_rewrite_block.value`
 
-Optional:
+Read-Only:
 
 - `hostname_rewrite_char` (String) The inheritance configuration for _hostname_rewrite_char_ field.
 - `hostname_rewrite_enabled` (Boolean) The inheritance configuration for _hostname_rewrite_enabled_ field.

@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -31,19 +32,20 @@ var ConfigInheritedZoneAuthorityMNameBlockAttrTypes = map[string]attr.Type{
 var ConfigInheritedZoneAuthorityMNameBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `Defaults to _inherit_.`,
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `Human-readable display name for the object referred to by _source_.`,
+		MarkdownDescription: "Human-readable display name for the object referred to by _source_.",
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `The resource identifier.`,
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
 	},
 	"value": schema.SingleNestedAttribute{
-		Attributes: ConfigZoneAuthorityMNameBlockResourceSchemaAttributes,
-		Optional:   true,
+		Attributes: utils.ToComputedAttributeMap(ConfigZoneAuthorityMNameBlockResourceSchemaAttributes),
+		Computed:   true,
 	},
 }
 
@@ -65,8 +67,6 @@ func (m *ConfigInheritedZoneAuthorityMNameBlockModel) Expand(ctx context.Context
 	}
 	to := &dns_config.ConfigInheritedZoneAuthorityMNameBlock{
 		Action: flex.ExpandStringPointer(m.Action),
-		Source: flex.ExpandStringPointer(m.Source),
-		Value:  ExpandConfigZoneAuthorityMNameBlock(ctx, m.Value, diags),
 	}
 	return to
 }

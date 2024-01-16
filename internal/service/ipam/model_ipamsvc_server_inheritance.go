@@ -52,62 +52,77 @@ var IpamsvcServerInheritanceResourceSchemaAttributes = map[string]schema.Attribu
 	"ddns_block": schema.SingleNestedAttribute{
 		Attributes: IpamsvcInheritedDDNSBlockResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"ddns_client_update": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedStringResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"ddns_conflict_resolution_mode": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedStringResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"ddns_hostname_block": schema.SingleNestedAttribute{
 		Attributes: IpamsvcInheritedDDNSHostnameBlockResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"ddns_ttl_percent": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedFloatResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"ddns_update_on_renew": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"ddns_use_conflict_resolution": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"dhcp_config": schema.SingleNestedAttribute{
 		Attributes: IpamsvcInheritedDHCPConfigResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"dhcp_options": schema.SingleNestedAttribute{
 		Attributes: IpamsvcInheritedDHCPOptionListResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"dhcp_options_v6": schema.SingleNestedAttribute{
 		Attributes: IpamsvcInheritedDHCPOptionListResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"header_option_filename": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedStringResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"header_option_server_address": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedStringResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"header_option_server_name": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedStringResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"hostname_rewrite_block": schema.SingleNestedAttribute{
 		Attributes: IpamsvcInheritedHostnameRewriteBlockResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"vendor_specific_option_option_space": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedIdentifierResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 }
 

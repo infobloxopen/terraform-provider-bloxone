@@ -36,30 +36,37 @@ var IpamsvcInheritedASMConfigResourceSchemaAttributes = map[string]schema.Attrib
 	"asm_enable_block": schema.SingleNestedAttribute{
 		Attributes: IpamsvcInheritedAsmEnableBlockResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"asm_growth_block": schema.SingleNestedAttribute{
 		Attributes: IpamsvcInheritedAsmGrowthBlockResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"asm_threshold": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"forecast_period": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"history": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"min_total": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"min_unused": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 }
 
