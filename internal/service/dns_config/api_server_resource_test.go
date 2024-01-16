@@ -709,40 +709,6 @@ func TestAccServerResource_InheritanceSources(t *testing.T) {
 	})
 }
 
-func testAccServerInheritanceSources(name, action string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_server" "test_inheritance_sources" {
-    name = %[1]q
-	inheritance_sources = { 
-		gss_tsig_enabled = {
-			action = %[2]q
-		}
-		notify = {
-			action = %[2]q
-		}
-		transfer_acl = {
-			action = %[2]q
-		}
-		useforwardersforsubzones = {
-			action = %[2]q
-		}
-	}
-	gss_tsig_enabled = true
-	notify = true
-	transfer_acl = [
-		{
-			access = "allow"
-			element = "ip"
-			address = "192.168.11.11"
-		}
-	]
-	use_forwarders_for_subzones = true
-		
-
-}
-`, name, action)
-}
-
 func TestAccServerResource_LameTtl(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_lame_ttl"
 	var v dns_config.ConfigServer
@@ -1758,6 +1724,40 @@ resource "bloxone_dns_server" "test_gss_tsig_enabled" {
     gss_tsig_enabled = %q
 }
 `, name, gssTsigEnabled)
+}
+
+func testAccServerInheritanceSources(name, action string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_server" "test_inheritance_sources" {
+    name = %[1]q
+	inheritance_sources = { 
+		gss_tsig_enabled = {
+			action = %[2]q
+		}
+		notify = {
+			action = %[2]q
+		}
+		transfer_acl = {
+			action = %[2]q
+		}
+		useforwardersforsubzones = {
+			action = %[2]q
+		}
+	}
+	gss_tsig_enabled = true
+	notify = true
+	transfer_acl = [
+		{
+			access = "allow"
+			element = "ip"
+			address = "192.168.11.11"
+		}
+	]
+	use_forwarders_for_subzones = true
+		
+
+}
+`, name, action)
 }
 
 func testAccServerLameTtl(name string, lameTtl int64) string {

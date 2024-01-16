@@ -30,20 +30,21 @@ var InheritanceInheritedIdentifierAttrTypes = map[string]attr.Type{
 
 var InheritanceInheritedIdentifierResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
+		Computed:            true,
 		Optional:            true,
-		MarkdownDescription: `The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.`,
+		MarkdownDescription: "The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.",
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
+		MarkdownDescription: "The human-readable display name for the object referred to by _source_.",
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `The resource identifier.`,
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
 	},
 	"value": schema.StringAttribute{
 		Optional:            true,
-		MarkdownDescription: `The resource identifier.`,
+		MarkdownDescription: "The resource identifier.",
 	},
 }
 
@@ -64,9 +65,7 @@ func (m *InheritanceInheritedIdentifierModel) Expand(ctx context.Context, diags 
 		return nil
 	}
 	to := &ipam.InheritanceInheritedIdentifier{
-		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
-		Value:  m.Value.ValueStringPointer(),
+		Value: flex.ExpandStringPointer(m.Value),
 	}
 	return to
 }

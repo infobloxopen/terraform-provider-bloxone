@@ -30,20 +30,21 @@ var InheritanceInheritedUInt32AttrTypes = map[string]attr.Type{
 
 var InheritanceInheritedUInt32ResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
+		Computed:            true,
 		Optional:            true,
-		MarkdownDescription: `The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.`,
+		MarkdownDescription: "The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.",
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
+		MarkdownDescription: "The human-readable display name for the object referred to by _source_.",
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `The resource identifier.`,
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
 	},
 	"value": schema.Int64Attribute{
 		Computed:            true,
-		MarkdownDescription: `The inherited value.`,
+		MarkdownDescription: "The inherited value.",
 	},
 }
 
@@ -63,10 +64,7 @@ func (m *InheritanceInheritedUInt32Model) Expand(ctx context.Context, diags *dia
 	if m == nil {
 		return nil
 	}
-	to := &ipam.InheritanceInheritedUInt32{
-		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
-	}
+	to := &ipam.InheritanceInheritedUInt32{}
 	return to
 }
 
@@ -91,5 +89,5 @@ func (m *InheritanceInheritedUInt32Model) Flatten(ctx context.Context, from *ipa
 	m.Action = flex.FlattenStringPointer(from.Action)
 	m.DisplayName = flex.FlattenStringPointer(from.DisplayName)
 	m.Source = flex.FlattenStringPointer(from.Source)
-	m.Value = flex.FlattenInt64(int64(*from.Value))
+	m.Value = flex.FlattenInt64Pointer(from.Value)
 }

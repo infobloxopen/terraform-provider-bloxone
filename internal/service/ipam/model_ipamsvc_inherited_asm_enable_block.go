@@ -30,16 +30,17 @@ var IpamsvcInheritedAsmEnableBlockAttrTypes = map[string]attr.Type{
 
 var IpamsvcInheritedAsmEnableBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
+		Computed:            true,
 		Optional:            true,
-		MarkdownDescription: `The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.`,
+		MarkdownDescription: "The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.",
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
+		MarkdownDescription: "The human-readable display name for the object referred to by _source_.",
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `The resource identifier.`,
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
 	},
 	"value": schema.SingleNestedAttribute{
 		Attributes: IpamsvcAsmEnableBlockResourceSchemaAttributes,
@@ -64,9 +65,7 @@ func (m *IpamsvcInheritedAsmEnableBlockModel) Expand(ctx context.Context, diags 
 		return nil
 	}
 	to := &ipam.IpamsvcInheritedAsmEnableBlock{
-		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
-		Value:  ExpandIpamsvcAsmEnableBlock(ctx, m.Value, diags),
+		Value: ExpandIpamsvcAsmEnableBlock(ctx, m.Value, diags),
 	}
 	return to
 }

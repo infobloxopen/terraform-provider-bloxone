@@ -804,40 +804,6 @@ func TestAccViewResource_InheritanceSources(t *testing.T) {
 	})
 }
 
-func testAccViewInheritanceSources(name, action string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_view" "test_inheritance_sources" {
-    name = %[1]q
-	inheritance_sources = { 
-		gss_tsig_enabled = {
-			action = %[2]q
-		}
-		notify = {
-			action = %[2]q
-		}
-		transfer_acl = {
-			action = %[2]q
-		}
-		useforwardersforsubzones = {
-			action = %[2]q
-		}
-	}
-	gss_tsig_enabled = true
-	notify = true
-	transfer_acl = [
-		{
-			access = "allow"
-			element = "ip"
-			address = "192.168.11.11"
-		}
-	]
-	use_forwarders_for_subzones = true
-		
-
-}
-`, name, action)
-}
-
 func TestAccViewResource_IpSpaces(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_ip_spaces"
 	var name = acctest.RandomNameWithPrefix("view")
@@ -1842,6 +1808,40 @@ resource "bloxone_dns_view" "test_gss_tsig_enabled" {
     gss_tsig_enabled = %q
 }
 `, name, gssTsigEnabled)
+}
+
+func testAccViewInheritanceSources(name, action string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_view" "test_inheritance_sources" {
+    name = %[1]q
+	inheritance_sources = { 
+		gss_tsig_enabled = {
+			action = %[2]q
+		}
+		notify = {
+			action = %[2]q
+		}
+		transfer_acl = {
+			action = %[2]q
+		}
+		useforwardersforsubzones = {
+			action = %[2]q
+		}
+	}
+	gss_tsig_enabled = true
+	notify = true
+	transfer_acl = [
+		{
+			access = "allow"
+			element = "ip"
+			address = "192.168.11.11"
+		}
+	]
+	use_forwarders_for_subzones = true
+		
+
+}
+`, name, action)
 }
 
 func testAccViewIpSpaces(ipSpaceName, viewName string) string {

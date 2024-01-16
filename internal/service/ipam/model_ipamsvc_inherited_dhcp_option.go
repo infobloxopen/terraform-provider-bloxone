@@ -30,16 +30,17 @@ var IpamsvcInheritedDHCPOptionAttrTypes = map[string]attr.Type{
 
 var IpamsvcInheritedDHCPOptionResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
+		Computed:            true,
 		Optional:            true,
-		MarkdownDescription: `The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.`,
+		MarkdownDescription: "The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.",
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
+		MarkdownDescription: "The human-readable display name for the object referred to by _source_.",
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `The resource identifier.`,
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
 	},
 	"value": schema.SingleNestedAttribute{
 		Attributes: IpamsvcInheritedDHCPOptionItemResourceSchemaAttributes,
@@ -64,9 +65,7 @@ func (m *IpamsvcInheritedDHCPOptionModel) Expand(ctx context.Context, diags *dia
 		return nil
 	}
 	to := &ipam.IpamsvcInheritedDHCPOption{
-		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
-		Value:  ExpandIpamsvcInheritedDHCPOptionItem(ctx, m.Value, diags),
+		Value: ExpandIpamsvcInheritedDHCPOptionItem(ctx, m.Value, diags),
 	}
 	return to
 }

@@ -30,20 +30,21 @@ var InheritanceInheritedBoolAttrTypes = map[string]attr.Type{
 
 var InheritanceInheritedBoolResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
+		Computed:            true,
 		Optional:            true,
-		MarkdownDescription: `The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.`,
+		MarkdownDescription: "The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.",
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
+		MarkdownDescription: "The human-readable display name for the object referred to by _source_.",
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `The resource identifier.`,
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
 	},
 	"value": schema.BoolAttribute{
 		Computed:            true,
-		MarkdownDescription: `The inherited value.`,
+		MarkdownDescription: "The inherited value.",
 	},
 }
 
@@ -63,10 +64,7 @@ func (m *InheritanceInheritedBoolModel) Expand(ctx context.Context, diags *diag.
 	if m == nil {
 		return nil
 	}
-	to := &ipam.InheritanceInheritedBool{
-		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
-	}
+	to := &ipam.InheritanceInheritedBool{}
 	return to
 }
 
