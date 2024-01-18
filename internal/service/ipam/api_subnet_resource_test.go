@@ -1314,6 +1314,7 @@ resource "bloxone_ipam_subnet" "test_inheritance_sources" {
 		ddns_update_on_renew = {
 			action = %[3]q
 		}
+		//dhcp_option
 		ddns_use_conflict_resolution = {
 			action = %[3]q
 		}
