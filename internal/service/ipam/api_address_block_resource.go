@@ -71,6 +71,7 @@ func (r *AddressBlockResource) Create(ctx context.Context, req resource.CreateRe
 		AddressBlockAPI.
 		AddressBlockCreate(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
+		Inherit("full").
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create AddressBlock, got error: %s", err))
@@ -97,6 +98,7 @@ func (r *AddressBlockResource) Read(ctx context.Context, req resource.ReadReques
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		AddressBlockAPI.
 		AddressBlockRead(ctx, data.Id.ValueString()).
+		Inherit("full").
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -128,6 +130,7 @@ func (r *AddressBlockResource) Update(ctx context.Context, req resource.UpdateRe
 		AddressBlockAPI.
 		AddressBlockUpdate(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
+		Inherit("full").
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update AddressBlock, got error: %s", err))

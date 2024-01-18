@@ -72,6 +72,7 @@ func (r *RangeResource) Create(ctx context.Context, req resource.CreateRequest, 
 		RangeAPI.
 		RangeCreate(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
+		Inherit("full").
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Range, got error: %s", err))
@@ -98,6 +99,7 @@ func (r *RangeResource) Read(ctx context.Context, req resource.ReadRequest, resp
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		RangeAPI.
 		RangeRead(ctx, data.Id.ValueString()).
+		Inherit("full").
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -129,6 +131,7 @@ func (r *RangeResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		RangeAPI.
 		RangeUpdate(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
+		Inherit("full").
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Range, got error: %s", err))
