@@ -32,8 +32,8 @@ var ConfigACLItemAttrTypes = map[string]attr.Type{
 
 var ConfigACLItemResourceSchemaAttributes = map[string]schema.Attribute{
 	"access": schema.StringAttribute{
-		Required:            true,
-		MarkdownDescription: `Access permission for _element_.  Allowed values:  * _allow_,  * _deny_.`,
+		Optional:            true,
+		MarkdownDescription: `Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.`,
 	},
 	"acl": schema.StringAttribute{
 		Optional:            true,
