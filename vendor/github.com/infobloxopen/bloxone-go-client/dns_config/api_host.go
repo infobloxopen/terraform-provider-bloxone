@@ -136,7 +136,7 @@ func (r ApiHostListRequest) TorderBy(torderBy string) ApiHostListRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiHostListRequest) Inherit(inherit string) ApiHostListRequest {
 	r.inherit = &inherit
 	return r
@@ -287,7 +287,7 @@ func (r ApiHostReadRequest) Fields(fields string) ApiHostReadRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiHostReadRequest) Inherit(inherit string) ApiHostReadRequest {
 	r.inherit = &inherit
 	return r
@@ -419,7 +419,7 @@ func (r ApiHostUpdateRequest) Body(body ConfigHost) ApiHostUpdateRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiHostUpdateRequest) Inherit(inherit string) ApiHostUpdateRequest {
 	r.inherit = &inherit
 	return r

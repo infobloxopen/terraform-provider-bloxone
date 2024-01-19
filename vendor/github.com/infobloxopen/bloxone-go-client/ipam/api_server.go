@@ -116,7 +116,7 @@ func (r ApiServerCreateRequest) Body(body IpamsvcServer) ApiServerCreateRequest 
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiServerCreateRequest) Inherit(inherit string) ApiServerCreateRequest {
 	r.inherit = &inherit
 	return r
@@ -400,7 +400,7 @@ func (r ApiServerListRequest) Tfilter(tfilter string) ApiServerListRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiServerListRequest) Inherit(inherit string) ApiServerListRequest {
 	r.inherit = &inherit
 	return r
@@ -551,7 +551,7 @@ func (r ApiServerReadRequest) Fields(fields string) ApiServerReadRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiServerReadRequest) Inherit(inherit string) ApiServerReadRequest {
 	r.inherit = &inherit
 	return r
@@ -683,7 +683,7 @@ func (r ApiServerUpdateRequest) Body(body IpamsvcServer) ApiServerUpdateRequest 
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiServerUpdateRequest) Inherit(inherit string) ApiServerUpdateRequest {
 	r.inherit = &inherit
 	return r

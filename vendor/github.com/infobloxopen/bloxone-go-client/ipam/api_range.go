@@ -148,7 +148,7 @@ func (r ApiRangeCreateRequest) Body(body IpamsvcRange) ApiRangeCreateRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiRangeCreateRequest) Inherit(inherit string) ApiRangeCreateRequest {
 	r.inherit = &inherit
 	return r
@@ -571,7 +571,7 @@ func (r ApiRangeListRequest) Tfilter(tfilter string) ApiRangeListRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiRangeListRequest) Inherit(inherit string) ApiRangeListRequest {
 	r.inherit = &inherit
 	return r
@@ -855,7 +855,7 @@ func (r ApiRangeReadRequest) Fields(fields string) ApiRangeReadRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiRangeReadRequest) Inherit(inherit string) ApiRangeReadRequest {
 	r.inherit = &inherit
 	return r
@@ -987,7 +987,7 @@ func (r ApiRangeUpdateRequest) Body(body IpamsvcRange) ApiRangeUpdateRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiRangeUpdateRequest) Inherit(inherit string) ApiRangeUpdateRequest {
 	r.inherit = &inherit
 	return r

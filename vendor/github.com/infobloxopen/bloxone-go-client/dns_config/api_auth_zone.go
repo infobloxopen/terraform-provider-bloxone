@@ -251,7 +251,7 @@ func (r ApiAuthZoneCreateRequest) Body(body ConfigAuthZone) ApiAuthZoneCreateReq
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiAuthZoneCreateRequest) Inherit(inherit string) ApiAuthZoneCreateRequest {
 	r.inherit = &inherit
 	return r
@@ -535,7 +535,7 @@ func (r ApiAuthZoneListRequest) TorderBy(torderBy string) ApiAuthZoneListRequest
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiAuthZoneListRequest) Inherit(inherit string) ApiAuthZoneListRequest {
 	r.inherit = &inherit
 	return r
@@ -686,7 +686,7 @@ func (r ApiAuthZoneReadRequest) Fields(fields string) ApiAuthZoneReadRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiAuthZoneReadRequest) Inherit(inherit string) ApiAuthZoneReadRequest {
 	r.inherit = &inherit
 	return r
@@ -818,7 +818,7 @@ func (r ApiAuthZoneUpdateRequest) Body(body ConfigAuthZone) ApiAuthZoneUpdateReq
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiAuthZoneUpdateRequest) Inherit(inherit string) ApiAuthZoneUpdateRequest {
 	r.inherit = &inherit
 	return r

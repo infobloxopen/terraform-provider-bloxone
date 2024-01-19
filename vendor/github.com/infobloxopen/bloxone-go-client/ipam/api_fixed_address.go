@@ -116,7 +116,7 @@ func (r ApiFixedAddressCreateRequest) Body(body IpamsvcFixedAddress) ApiFixedAdd
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiFixedAddressCreateRequest) Inherit(inherit string) ApiFixedAddressCreateRequest {
 	r.inherit = &inherit
 	return r
@@ -400,7 +400,7 @@ func (r ApiFixedAddressListRequest) Tfilter(tfilter string) ApiFixedAddressListR
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiFixedAddressListRequest) Inherit(inherit string) ApiFixedAddressListRequest {
 	r.inherit = &inherit
 	return r
@@ -551,7 +551,7 @@ func (r ApiFixedAddressReadRequest) Fields(fields string) ApiFixedAddressReadReq
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiFixedAddressReadRequest) Inherit(inherit string) ApiFixedAddressReadRequest {
 	r.inherit = &inherit
 	return r
@@ -683,7 +683,7 @@ func (r ApiFixedAddressUpdateRequest) Body(body IpamsvcFixedAddress) ApiFixedAdd
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiFixedAddressUpdateRequest) Inherit(inherit string) ApiFixedAddressUpdateRequest {
 	r.inherit = &inherit
 	return r

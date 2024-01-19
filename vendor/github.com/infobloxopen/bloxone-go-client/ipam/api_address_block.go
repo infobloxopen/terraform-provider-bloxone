@@ -352,7 +352,7 @@ func (r ApiAddressBlockCreateRequest) Body(body IpamsvcAddressBlock) ApiAddressB
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiAddressBlockCreateRequest) Inherit(inherit string) ApiAddressBlockCreateRequest {
 	r.inherit = &inherit
 	return r
@@ -1099,7 +1099,7 @@ func (r ApiAddressBlockListRequest) Tfilter(tfilter string) ApiAddressBlockListR
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiAddressBlockListRequest) Inherit(inherit string) ApiAddressBlockListRequest {
 	r.inherit = &inherit
 	return r
@@ -1699,7 +1699,7 @@ func (r ApiAddressBlockReadRequest) Fields(fields string) ApiAddressBlockReadReq
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiAddressBlockReadRequest) Inherit(inherit string) ApiAddressBlockReadRequest {
 	r.inherit = &inherit
 	return r
@@ -1831,7 +1831,7 @@ func (r ApiAddressBlockUpdateRequest) Body(body IpamsvcAddressBlock) ApiAddressB
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiAddressBlockUpdateRequest) Inherit(inherit string) ApiAddressBlockUpdateRequest {
 	r.inherit = &inherit
 	return r

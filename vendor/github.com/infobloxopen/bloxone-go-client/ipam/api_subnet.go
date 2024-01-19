@@ -288,7 +288,7 @@ func (r ApiSubnetCreateRequest) Body(body IpamsvcSubnet) ApiSubnetCreateRequest 
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiSubnetCreateRequest) Inherit(inherit string) ApiSubnetCreateRequest {
 	r.inherit = &inherit
 	return r
@@ -711,7 +711,7 @@ func (r ApiSubnetListRequest) Tfilter(tfilter string) ApiSubnetListRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiSubnetListRequest) Inherit(inherit string) ApiSubnetListRequest {
 	r.inherit = &inherit
 	return r
@@ -995,7 +995,7 @@ func (r ApiSubnetReadRequest) Fields(fields string) ApiSubnetReadRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiSubnetReadRequest) Inherit(inherit string) ApiSubnetReadRequest {
 	r.inherit = &inherit
 	return r
@@ -1127,7 +1127,7 @@ func (r ApiSubnetUpdateRequest) Body(body IpamsvcSubnet) ApiSubnetUpdateRequest 
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiSubnetUpdateRequest) Inherit(inherit string) ApiSubnetUpdateRequest {
 	r.inherit = &inherit
 	return r

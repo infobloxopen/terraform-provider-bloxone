@@ -253,7 +253,7 @@ func (r ApiViewCreateRequest) Body(body ConfigView) ApiViewCreateRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiViewCreateRequest) Inherit(inherit string) ApiViewCreateRequest {
 	r.inherit = &inherit
 	return r
@@ -537,7 +537,7 @@ func (r ApiViewListRequest) TorderBy(torderBy string) ApiViewListRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiViewListRequest) Inherit(inherit string) ApiViewListRequest {
 	r.inherit = &inherit
 	return r
@@ -688,7 +688,7 @@ func (r ApiViewReadRequest) Fields(fields string) ApiViewReadRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiViewReadRequest) Inherit(inherit string) ApiViewReadRequest {
 	r.inherit = &inherit
 	return r
@@ -820,7 +820,7 @@ func (r ApiViewUpdateRequest) Body(body ConfigView) ApiViewUpdateRequest {
 	return r
 }
 
-// This parameter is used for getting inheritance_sources.
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
 func (r ApiViewUpdateRequest) Inherit(inherit string) ApiViewUpdateRequest {
 	r.inherit = &inherit
 	return r
