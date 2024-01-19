@@ -22,7 +22,6 @@ import (
 // - dhcp_config.ignore_items
 // - dhcp_host
 // - dhcp_options
-// - inheritance_sources - Currently inheritance sources is always nil
 // - next_available_id
 
 func TestAccSubnetResource_basic(t *testing.T) {

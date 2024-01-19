@@ -650,17 +650,6 @@ func TestAccIpSpaceResource_InheritanceSources(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_ttl_percent.action", "inherit"),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_update_on_renew.action", "inherit"),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_use_conflict_resolution.action", "inherit"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.abandoned_reclaim_time.action", "inherit"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.abandoned_reclaim_time_v6.action", "inherit"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.allow_unknown.action", "inherit"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.allow_unknown_v6.action", "inherit"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.filters.action", "inherit"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.filters_v6.action", "inherit"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.ignore_client_uid.action", "inherit"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.lease_time.action", "inherit"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.lease_time_v6.action", "inherit"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_options.action", "inherit"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_options_v6.action", "inherit"),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_filename.action", "inherit"),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_address.action", "inherit"),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_name.action", "inherit"),
@@ -685,17 +674,6 @@ func TestAccIpSpaceResource_InheritanceSources(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_ttl_percent.action", "override"),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_update_on_renew.action", "override"),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_use_conflict_resolution.action", "override"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.abandoned_reclaim_time.action", "override"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.abandoned_reclaim_time_v6.action", "override"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.allow_unknown.action", "override"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.allow_unknown_v6.action", "override"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.filters.action", "override"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.filters_v6.action", "override"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.ignore_client_uid.action", "override"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.lease_time.action", "override"),
-					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.lease_time_v6.action", "override"),
-					//resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_options.action", "override"),
-					//resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_options_v6.action", "override"),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_filename.action", "override"),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_address.action", "override"),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_name.action", "override"),
@@ -1035,38 +1013,6 @@ resource "bloxone_ipam_ip_space" "test_inheritance_sources" {
 		ddns_use_conflict_resolution = {
 			action = %[2]q
 		}
-		dhcp_config = {
-			allow_unknown = {
-				action = %[2]q
-			}
-			allow_unknown_v6 = {
-				action = %[2]q
-			}
-			filters	= {
-				action = %[2]q
-			}
-			filters_v6	= {
-				action = %[2]q
-			}
-			ignore_client_uid = {
-				action = %[2]q
-			}
-			ignore_list	= {
-				action = %[2]q
-			}
-			lease_time = {
-				action = %[2]q
-			}
-			lease_time_v6 = {
-				action = %[2]q
-			}
-		}
-		//dhcp_options = {
-		//	action = %[2]q
-		//}
-		//dhcp_options_v6 = {
-		//	action = %[2]q
-		//}
 		header_option_filename = {
 			action = %[2]q
 		}

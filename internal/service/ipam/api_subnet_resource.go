@@ -70,7 +70,7 @@ func (r *SubnetResource) Create(ctx context.Context, req resource.CreateRequest,
 		SubnetAPI.
 		SubnetCreate(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
-		Inherit("full").
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Subnet, got error: %s", err))
@@ -97,7 +97,7 @@ func (r *SubnetResource) Read(ctx context.Context, req resource.ReadRequest, res
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		SubnetAPI.
 		SubnetRead(ctx, data.Id.ValueString()).
-		Inherit("full").
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -129,7 +129,7 @@ func (r *SubnetResource) Update(ctx context.Context, req resource.UpdateRequest,
 		SubnetAPI.
 		SubnetUpdate(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
-		Inherit("full").
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Subnet, got error: %s", err))
