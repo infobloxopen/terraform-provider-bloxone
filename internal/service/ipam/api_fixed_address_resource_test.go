@@ -383,7 +383,7 @@ func TestAccFixedAddressResource_MatchType_And_MatchValue(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFixedAddressMatchTypeAndMactchValue("10.0.0.10", "client_hex", "aa"),
+				Config: testAccFixedAddressMatchTypeAndMatchValue("10.0.0.10", "client_hex", "aa"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_type", "client_hex"),
@@ -392,7 +392,7 @@ func TestAccFixedAddressResource_MatchType_And_MatchValue(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFixedAddressMatchTypeAndMactchValue("10.0.0.10", "client_hex", "bb"),
+				Config: testAccFixedAddressMatchTypeAndMatchValue("10.0.0.10", "client_hex", "bb"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_type", "client_hex"),
@@ -400,7 +400,7 @@ func TestAccFixedAddressResource_MatchType_And_MatchValue(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccFixedAddressMatchTypeAndMactchValue("10.0.0.10", "client_text", "clienttext"),
+				Config: testAccFixedAddressMatchTypeAndMatchValue("10.0.0.10", "client_text", "clienttext"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_type", "client_text"),
@@ -408,7 +408,7 @@ func TestAccFixedAddressResource_MatchType_And_MatchValue(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccFixedAddressMatchTypeAndMactchValue("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa"),
+				Config: testAccFixedAddressMatchTypeAndMatchValue("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_type", "mac"),
@@ -416,7 +416,7 @@ func TestAccFixedAddressResource_MatchType_And_MatchValue(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccFixedAddressMatchTypeAndMactchValue("10.0.0.10", "relay_hex", "aa"),
+				Config: testAccFixedAddressMatchTypeAndMatchValue("10.0.0.10", "relay_hex", "aa"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_type", "relay_hex"),
@@ -424,7 +424,7 @@ func TestAccFixedAddressResource_MatchType_And_MatchValue(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccFixedAddressMatchTypeAndMactchValue("10.0.0.10", "relay_text", "relaytext"),
+				Config: testAccFixedAddressMatchTypeAndMatchValue("10.0.0.10", "relay_text", "relaytext"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_type", "relay_text"),
@@ -432,7 +432,7 @@ func TestAccFixedAddressResource_MatchType_And_MatchValue(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccFixedAddressMatchTypeAndMactchValue("10.0.0.10", "client_hex", "aa"),
+				Config: testAccFixedAddressMatchTypeAndMatchValue("10.0.0.10", "client_hex", "aa"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_type", "client_hex"),
@@ -706,7 +706,7 @@ resource "bloxone_dhcp_fixed_address" "test_ip_space" {
 	return strings.Join([]string{testAccBaseWithTwoIPSpace(), config}, "")
 }
 
-func testAccFixedAddressMatchTypeAndMactchValue(address string, matchType string, matchValue string) string {
+func testAccFixedAddressMatchTypeAndMatchValue(address string, matchType string, matchValue string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_fixed_address" "test_match_type" {
     ip_space = bloxone_ipam_ip_space.test.id
