@@ -280,10 +280,17 @@ type ApiSubnetCreateRequest struct {
 	ctx        context.Context
 	ApiService SubnetAPI
 	body       *IpamsvcSubnet
+	inherit    *string
 }
 
 func (r ApiSubnetCreateRequest) Body(body IpamsvcSubnet) ApiSubnetCreateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiSubnetCreateRequest) Inherit(inherit string) ApiSubnetCreateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -332,6 +339,9 @@ func (a *SubnetAPIService) SubnetCreateExecute(r ApiSubnetCreateRequest) (*Ipams
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -650,6 +660,7 @@ type ApiSubnetListRequest struct {
 	orderBy    *string
 	torderBy   *string
 	tfilter    *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
@@ -697,6 +708,12 @@ func (r ApiSubnetListRequest) TorderBy(torderBy string) ApiSubnetListRequest {
 // This parameter is used for filtering by tags.
 func (r ApiSubnetListRequest) Tfilter(tfilter string) ApiSubnetListRequest {
 	r.tfilter = &tfilter
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiSubnetListRequest) Inherit(inherit string) ApiSubnetListRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -765,6 +782,9 @@ func (a *SubnetAPIService) SubnetListExecute(r ApiSubnetListRequest) (*IpamsvcLi
 	}
 	if r.tfilter != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_tfilter", r.tfilter, "")
+	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -966,11 +986,18 @@ type ApiSubnetReadRequest struct {
 	ApiService SubnetAPI
 	id         string
 	fields     *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
 func (r ApiSubnetReadRequest) Fields(fields string) ApiSubnetReadRequest {
 	r.fields = &fields
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiSubnetReadRequest) Inherit(inherit string) ApiSubnetReadRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -1021,6 +1048,9 @@ func (a *SubnetAPIService) SubnetReadExecute(r ApiSubnetReadRequest) (*IpamsvcRe
 
 	if r.fields != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_fields", r.fields, "")
+	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1089,10 +1119,17 @@ type ApiSubnetUpdateRequest struct {
 	ApiService SubnetAPI
 	id         string
 	body       *IpamsvcSubnet
+	inherit    *string
 }
 
 func (r ApiSubnetUpdateRequest) Body(body IpamsvcSubnet) ApiSubnetUpdateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiSubnetUpdateRequest) Inherit(inherit string) ApiSubnetUpdateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -1144,6 +1181,9 @@ func (a *SubnetAPIService) SubnetUpdateExecute(r ApiSubnetUpdateRequest) (*Ipams
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 

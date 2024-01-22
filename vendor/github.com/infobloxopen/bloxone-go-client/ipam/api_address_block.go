@@ -344,10 +344,17 @@ type ApiAddressBlockCreateRequest struct {
 	ctx        context.Context
 	ApiService AddressBlockAPI
 	body       *IpamsvcAddressBlock
+	inherit    *string
 }
 
 func (r ApiAddressBlockCreateRequest) Body(body IpamsvcAddressBlock) ApiAddressBlockCreateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiAddressBlockCreateRequest) Inherit(inherit string) ApiAddressBlockCreateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -396,6 +403,9 @@ func (a *AddressBlockAPIService) AddressBlockCreateExecute(r ApiAddressBlockCrea
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -1038,6 +1048,7 @@ type ApiAddressBlockListRequest struct {
 	orderBy    *string
 	torderBy   *string
 	tfilter    *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
@@ -1085,6 +1096,12 @@ func (r ApiAddressBlockListRequest) TorderBy(torderBy string) ApiAddressBlockLis
 // This parameter is used for filtering by tags.
 func (r ApiAddressBlockListRequest) Tfilter(tfilter string) ApiAddressBlockListRequest {
 	r.tfilter = &tfilter
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiAddressBlockListRequest) Inherit(inherit string) ApiAddressBlockListRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -1153,6 +1170,9 @@ func (a *AddressBlockAPIService) AddressBlockListExecute(r ApiAddressBlockListRe
 	}
 	if r.tfilter != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_tfilter", r.tfilter, "")
+	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1670,11 +1690,18 @@ type ApiAddressBlockReadRequest struct {
 	ApiService AddressBlockAPI
 	id         string
 	fields     *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
 func (r ApiAddressBlockReadRequest) Fields(fields string) ApiAddressBlockReadRequest {
 	r.fields = &fields
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiAddressBlockReadRequest) Inherit(inherit string) ApiAddressBlockReadRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -1725,6 +1752,9 @@ func (a *AddressBlockAPIService) AddressBlockReadExecute(r ApiAddressBlockReadRe
 
 	if r.fields != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_fields", r.fields, "")
+	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1793,10 +1823,17 @@ type ApiAddressBlockUpdateRequest struct {
 	ApiService AddressBlockAPI
 	id         string
 	body       *IpamsvcAddressBlock
+	inherit    *string
 }
 
 func (r ApiAddressBlockUpdateRequest) Body(body IpamsvcAddressBlock) ApiAddressBlockUpdateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiAddressBlockUpdateRequest) Inherit(inherit string) ApiAddressBlockUpdateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -1848,6 +1885,9 @@ func (a *AddressBlockAPIService) AddressBlockUpdateExecute(r ApiAddressBlockUpda
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 

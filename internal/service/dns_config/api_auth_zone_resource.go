@@ -24,6 +24,8 @@ const (
 var _ resource.Resource = &AuthZoneResource{}
 var _ resource.ResourceWithImportState = &AuthZoneResource{}
 
+var inheritanceType = "full"
+
 func NewAuthZoneResource() resource.Resource {
 	return &AuthZoneResource{}
 }
@@ -78,6 +80,7 @@ func (r *AuthZoneResource) Create(ctx context.Context, req resource.CreateReques
 		AuthZoneAPI.
 		AuthZoneCreate(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create AuthZone, got error: %s", err))
@@ -104,6 +107,7 @@ func (r *AuthZoneResource) Read(ctx context.Context, req resource.ReadRequest, r
 	apiRes, httpRes, err := r.client.DNSConfigurationAPI.
 		AuthZoneAPI.
 		AuthZoneRead(ctx, data.Id.ValueString()).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -135,6 +139,7 @@ func (r *AuthZoneResource) Update(ctx context.Context, req resource.UpdateReques
 		AuthZoneAPI.
 		AuthZoneUpdate(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update AuthZone, got error: %s", err))

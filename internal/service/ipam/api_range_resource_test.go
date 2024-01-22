@@ -20,7 +20,6 @@ import (
 // - dhcp_host
 // - dhcp_options
 // - filters
-// - inheritance_sources - Currently inheritance sources is always nil
 
 func TestAccRangeResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test"
@@ -186,6 +185,35 @@ func TestAccRangeResource_ExclusionRanges(t *testing.T) {
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "exclusion_ranges.0.start", "10.0.0.14"),
 					resource.TestCheckResourceAttr(resourceName, "exclusion_ranges.0.end", "10.0.0.16"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccRangeResource_InheritanceSources(t *testing.T) {
+	var resourceName = "bloxone_ipam_range.test_inheritance_sources"
+	var v ipam.IpamsvcRange
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccRangeInheritanceSources("10.0.0.8", "10.0.0.20", "inherit"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckRangeExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_options.action", "inherit"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccRangeInheritanceSources("10.0.0.8", "10.0.0.20", "block"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckRangeExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_options.action", "block"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -434,6 +462,29 @@ resource "bloxone_ipam_range" "test_exclusion_ranges" {
     depends_on = [bloxone_ipam_subnet.test]
 }
 `, start, end, exclusionEnd, exclusionStart)
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+}
+
+func testAccRangeInheritanceSources(start, end, action string) string {
+	config := fmt.Sprintf(`
+
+data "bloxone_dhcp_option_codes" "example_by_name" {
+  filters = {
+    name = "time-offset"
+  }
+}
+resource "bloxone_ipam_range" "test_inheritance_sources" {
+    start = %[1]q
+    end = %[2]q
+    space = bloxone_ipam_ip_space.test.id
+	inheritance_sources = {
+		dhcp_options ={
+			action = %[3]q
+		}
+	}
+	depends_on = [bloxone_ipam_subnet.test]
+}
+`, start, end, action)
 	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }
 

@@ -70,6 +70,7 @@ func (r *ViewResource) Create(ctx context.Context, req resource.CreateRequest, r
 		ViewAPI.
 		ViewCreate(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create View, got error: %s", err))
@@ -96,6 +97,7 @@ func (r *ViewResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	apiRes, httpRes, err := r.client.DNSConfigurationAPI.
 		ViewAPI.
 		ViewRead(ctx, data.Id.ValueString()).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -127,6 +129,7 @@ func (r *ViewResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		ViewAPI.
 		ViewUpdate(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update View, got error: %s", err))

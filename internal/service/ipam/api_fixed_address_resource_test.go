@@ -18,7 +18,6 @@ import (
 /*
 TODO:
  - Add unit test for dhcp_options
- - Add unit tests for inheritance
 */
 
 func TestAccFixedAddressResource_basic(t *testing.T) {
@@ -280,6 +279,68 @@ func TestAccFixedAddressResource_Hostname(t *testing.T) {
 			// Delete testing automatically occurs in TestCase
 		},
 	})
+}
+
+func TestAccFixedAddressResource_InheritanceSources(t *testing.T) {
+	var resourceName = "bloxone_dhcp_fixed_address.test_inheritance_sources"
+	var v ipam.IpamsvcFixedAddress
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccFixedAddressInheritanceSources("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", "inherit"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_filename.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_address.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_name.action", "inherit"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccFixedAddressInheritanceSources("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", "override"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_filename.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_address.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_name.action", "override"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func testAccFixedAddressInheritanceSources(address string, matchType string, matchValue, action string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_fixed_address" "test_inheritance_sources" {
+	ip_space = bloxone_ipam_ip_space.test.id
+	address = %[1]q
+	match_type = %[2]q
+	match_value = %[3]q
+	inheritance_sources = {
+		header_option_filename = {
+			action = %[4]q
+		}
+		header_option_server_address = {
+			action = %[4]q
+		}
+		header_option_server_name = {
+			action = %[4]q
+		}
+	}
+	header_option_filename = "header_option_filename"
+	header_option_server_address = "10.0.0.12"
+	header_option_server_name = "header_option_server_name"
+	depends_on = [bloxone_ipam_subnet.test]
+		
+
+}
+`, address, matchType, matchValue, action)
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }
 
 func TestAccFixedAddressResource_IpSpace(t *testing.T) {

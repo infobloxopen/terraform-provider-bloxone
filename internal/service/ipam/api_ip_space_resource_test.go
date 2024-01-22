@@ -26,6 +26,7 @@ import (
 func TestAccIpSpaceResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test"
 	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -33,11 +34,11 @@ func TestAccIpSpaceResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceBasicConfig("ip_space_name"),
+				Config: testAccIpSpaceBasicConfig(name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					// TODO: check and validate these
-					resource.TestCheckResourceAttr(resourceName, "name", "ip_space_name"),
+					resource.TestCheckResourceAttr(resourceName, "name", name),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
@@ -63,6 +64,7 @@ func TestAccIpSpaceResource_basic(t *testing.T) {
 func TestAccIpSpaceResource_disappears(t *testing.T) {
 	resourceName := "bloxone_ipam_ip_space.test"
 	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -70,7 +72,7 @@ func TestAccIpSpaceResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckIpSpaceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccIpSpaceBasicConfig("ip_space_name"),
+				Config: testAccIpSpaceBasicConfig(name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					testAccCheckIpSpaceDisappears(context.Background(), &v),
@@ -83,6 +85,8 @@ func TestAccIpSpaceResource_disappears(t *testing.T) {
 
 func TestAccIpSpaceResource_AsmConfig(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_asm_config"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -90,8 +94,9 @@ func TestAccIpSpaceResource_AsmConfig(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceAsmConfig("ip_space_name", 70, true, true, 12, 40, "count", 40, 30, 30, "2020-01-10T10:11:22Z"),
+				Config: testAccIpSpaceAsmConfig(name, 70, true, true, 12, 40, "count", 40, 30, 30, "2020-01-10T10:11:22Z"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "asm_config.asm_threshold", "70"),
 					resource.TestCheckResourceAttr(resourceName, "asm_config.enable", "true"),
 					resource.TestCheckResourceAttr(resourceName, "asm_config.enable_notification", "true"),
@@ -105,8 +110,9 @@ func TestAccIpSpaceResource_AsmConfig(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceAsmConfig("ip_space_name", 80, false, false, 10, 50, "percent", 50, 10, 10, "2021-01-10T10:11:22Z"),
+				Config: testAccIpSpaceAsmConfig(name, 80, false, false, 10, 50, "percent", 50, 10, 10, "2021-01-10T10:11:22Z"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "asm_config.asm_threshold", "80"),
 					resource.TestCheckResourceAttr(resourceName, "asm_config.enable", "false"),
 					resource.TestCheckResourceAttr(resourceName, "asm_config.enable_notification", "false"),
@@ -126,6 +132,8 @@ func TestAccIpSpaceResource_AsmConfig(t *testing.T) {
 
 func TestAccIpSpaceResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_comment"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -133,15 +141,17 @@ func TestAccIpSpaceResource_Comment(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceComment("ip_space_name", "some comment"),
+				Config: testAccIpSpaceComment(name, "some comment"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "some comment"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceComment("ip_space_name", "updated comment"),
+				Config: testAccIpSpaceComment(name, "updated comment"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "updated comment"),
 				),
 			},
@@ -152,6 +162,8 @@ func TestAccIpSpaceResource_Comment(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsClientUpdate(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_client_update"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -159,15 +171,17 @@ func TestAccIpSpaceResource_DdnsClientUpdate(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceDdnsClientUpdate("ip_space_name", "server"),
+				Config: testAccIpSpaceDdnsClientUpdate(name, "server"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_client_update", "server"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceDdnsClientUpdate("ip_space_name", "over_client_update"),
+				Config: testAccIpSpaceDdnsClientUpdate(name, "over_client_update"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_client_update", "over_client_update"),
 				),
 			},
@@ -178,6 +192,8 @@ func TestAccIpSpaceResource_DdnsClientUpdate(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsConflictResolutionMode(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_conflict_resolution_mode"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -185,16 +201,18 @@ func TestAccIpSpaceResource_DdnsConflictResolutionMode(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceDdnsConflictResolutionMode("ip_space_name", false, "check_exists_with_dhcid"),
+				Config: testAccIpSpaceDdnsConflictResolutionMode(name, false, "check_exists_with_dhcid"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_use_conflict_resolution", "false"),
 					resource.TestCheckResourceAttr(resourceName, "ddns_conflict_resolution_mode", "check_exists_with_dhcid"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceDdnsConflictResolutionMode("ip_space_name", true, "check_with_dhcid"),
+				Config: testAccIpSpaceDdnsConflictResolutionMode(name, true, "check_with_dhcid"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_use_conflict_resolution", "true"),
 					resource.TestCheckResourceAttr(resourceName, "ddns_conflict_resolution_mode", "check_with_dhcid"),
 				),
@@ -206,6 +224,8 @@ func TestAccIpSpaceResource_DdnsConflictResolutionMode(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsDomain(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_domain"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -213,15 +233,17 @@ func TestAccIpSpaceResource_DdnsDomain(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceDdnsDomain("ip_space_name", "abc"),
+				Config: testAccIpSpaceDdnsDomain(name, "abc"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "abc"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceDdnsDomain("ip_space_name", "xyz"),
+				Config: testAccIpSpaceDdnsDomain(name, "xyz"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "xyz"),
 				),
 			},
@@ -232,6 +254,8 @@ func TestAccIpSpaceResource_DdnsDomain(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsGenerateName(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_generate_name"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -239,15 +263,17 @@ func TestAccIpSpaceResource_DdnsGenerateName(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceDdnsGenerateName("ip_space_name", true),
+				Config: testAccIpSpaceDdnsGenerateName(name, true),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_generate_name", "true"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceDdnsGenerateName("ip_space_name", false),
+				Config: testAccIpSpaceDdnsGenerateName(name, false),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_generate_name", "false"),
 				),
 			},
@@ -258,6 +284,8 @@ func TestAccIpSpaceResource_DdnsGenerateName(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsGeneratedPrefix(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_generated_prefix"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -265,15 +293,17 @@ func TestAccIpSpaceResource_DdnsGeneratedPrefix(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceDdnsGeneratedPrefix("ip_space_name", "host-prefix"),
+				Config: testAccIpSpaceDdnsGeneratedPrefix(name, "host-prefix"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_generated_prefix", "host-prefix"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceDdnsGeneratedPrefix("ip_space_name", "host-another-prefix"),
+				Config: testAccIpSpaceDdnsGeneratedPrefix(name, "host-another-prefix"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_generated_prefix", "host-another-prefix"),
 				),
 			},
@@ -284,6 +314,8 @@ func TestAccIpSpaceResource_DdnsGeneratedPrefix(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsSendUpdates(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_send_updates"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -291,15 +323,17 @@ func TestAccIpSpaceResource_DdnsSendUpdates(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceDdnsSendUpdates("ip_space_name", true),
+				Config: testAccIpSpaceDdnsSendUpdates(name, true),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_send_updates", "true"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceDdnsSendUpdates("ip_space_name", false),
+				Config: testAccIpSpaceDdnsSendUpdates(name, false),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_send_updates", "false"),
 				),
 			},
@@ -310,6 +344,8 @@ func TestAccIpSpaceResource_DdnsSendUpdates(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsTtlPercent(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_ttl_percent"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -317,15 +353,17 @@ func TestAccIpSpaceResource_DdnsTtlPercent(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceDdnsTtlPercent("ip_space_name", "20"),
+				Config: testAccIpSpaceDdnsTtlPercent(name, "20"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_ttl_percent", "20"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceDdnsTtlPercent("ip_space_name", "40"),
+				Config: testAccIpSpaceDdnsTtlPercent(name, "40"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_ttl_percent", "40"),
 				),
 			},
@@ -336,6 +374,8 @@ func TestAccIpSpaceResource_DdnsTtlPercent(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsUpdateOnRenew(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_update_on_renew"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -343,15 +383,17 @@ func TestAccIpSpaceResource_DdnsUpdateOnRenew(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceDdnsUpdateOnRenew("ip_space_name", true),
+				Config: testAccIpSpaceDdnsUpdateOnRenew(name, true),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_update_on_renew", "true"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceDdnsUpdateOnRenew("ip_space_name", false),
+				Config: testAccIpSpaceDdnsUpdateOnRenew(name, false),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_update_on_renew", "false"),
 				),
 			},
@@ -362,6 +404,8 @@ func TestAccIpSpaceResource_DdnsUpdateOnRenew(t *testing.T) {
 
 func TestAccIpSpaceResource_DhcpConfig(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_dhcp_config"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -369,8 +413,9 @@ func TestAccIpSpaceResource_DhcpConfig(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceDhcpConfig("ip_space_name", 1000, 2000, true, true, true, 50, 60),
+				Config: testAccIpSpaceDhcpConfig(name, 1000, 2000, true, true, true, 50, 60),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_config.abandoned_reclaim_time", "1000"),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_config.abandoned_reclaim_time_v6", "2000"),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_config.allow_unknown", "true"),
@@ -382,8 +427,9 @@ func TestAccIpSpaceResource_DhcpConfig(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceDhcpConfig("ip_space_name", 1500, 2500, false, false, false, 55, 65),
+				Config: testAccIpSpaceDhcpConfig(name, 1500, 2500, false, false, false, 55, 65),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_config.abandoned_reclaim_time", "1500"),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_config.abandoned_reclaim_time_v6", "2500"),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_config.allow_unknown", "false"),
@@ -400,6 +446,8 @@ func TestAccIpSpaceResource_DhcpConfig(t *testing.T) {
 
 func TestAccIpSpaceResource_HeaderOptionFilename(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_header_option_filename"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -407,15 +455,17 @@ func TestAccIpSpaceResource_HeaderOptionFilename(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceHeaderOptionFilename("ip_space_name", "HEADER_OPTION_FILEip_space_name"),
+				Config: testAccIpSpaceHeaderOptionFilename(name, "HEADER_OPTION_FILEip_space_name"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "HEADER_OPTION_FILEip_space_name"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceHeaderOptionFilename("ip_space_name", "HEADER_OPTION_FILENAME_UPDATE_REPLACE_ME"),
+				Config: testAccIpSpaceHeaderOptionFilename(name, "HEADER_OPTION_FILENAME_UPDATE_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "HEADER_OPTION_FILENAME_UPDATE_REPLACE_ME"),
 				),
 			},
@@ -426,6 +476,8 @@ func TestAccIpSpaceResource_HeaderOptionFilename(t *testing.T) {
 
 func TestAccIpSpaceResource_HeaderOptionServerAddress(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_header_option_server_address"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -433,15 +485,17 @@ func TestAccIpSpaceResource_HeaderOptionServerAddress(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceHeaderOptionServerAddress("ip_space_name", "10.0.0.0"),
+				Config: testAccIpSpaceHeaderOptionServerAddress(name, "10.0.0.0"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_server_address", "10.0.0.0"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceHeaderOptionServerAddress("ip_space_name", "12.0.0.0"),
+				Config: testAccIpSpaceHeaderOptionServerAddress(name, "12.0.0.0"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_server_address", "12.0.0.0"),
 				),
 			},
@@ -452,6 +506,8 @@ func TestAccIpSpaceResource_HeaderOptionServerAddress(t *testing.T) {
 
 func TestAccIpSpaceResource_HeaderOptionServerName(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_header_option_server_name"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -459,15 +515,17 @@ func TestAccIpSpaceResource_HeaderOptionServerName(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceHeaderOptionServerName("ip_space_name", "HEADER_OPTION_SERVER_ip_space_name"),
+				Config: testAccIpSpaceHeaderOptionServerName(name, "HEADER_OPTION_SERVER_ip_space_name"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "HEADER_OPTION_SERVER_ip_space_name"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceHeaderOptionServerName("ip_space_name", "HEADER_OPTION_SERVER_NAME_UPDATE_REPLACE_ME"),
+				Config: testAccIpSpaceHeaderOptionServerName(name, "HEADER_OPTION_SERVER_NAME_UPDATE_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "HEADER_OPTION_SERVER_NAME_UPDATE_REPLACE_ME"),
 				),
 			},
@@ -478,6 +536,8 @@ func TestAccIpSpaceResource_HeaderOptionServerName(t *testing.T) {
 
 func TestAccIpSpaceResource_HostnameRewriteChar(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_hostname_rewrite_char"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -485,15 +545,17 @@ func TestAccIpSpaceResource_HostnameRewriteChar(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceHostnameRewriteChar("ip_space_name", "+"),
+				Config: testAccIpSpaceHostnameRewriteChar(name, "+"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_char", "+"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceHostnameRewriteChar("ip_space_name", "/"),
+				Config: testAccIpSpaceHostnameRewriteChar(name, "/"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_char", "/"),
 				),
 			},
@@ -504,6 +566,8 @@ func TestAccIpSpaceResource_HostnameRewriteChar(t *testing.T) {
 
 func TestAccIpSpaceResource_HostnameRewriteEnabled(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_hostname_rewrite_enabled"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -511,15 +575,17 @@ func TestAccIpSpaceResource_HostnameRewriteEnabled(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceHostnameRewriteEnabled("ip_space_name", true),
+				Config: testAccIpSpaceHostnameRewriteEnabled(name, true),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_enabled", "true"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceHostnameRewriteEnabled("ip_space_name", false),
+				Config: testAccIpSpaceHostnameRewriteEnabled(name, false),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_enabled", "false"),
 				),
 			},
@@ -530,6 +596,8 @@ func TestAccIpSpaceResource_HostnameRewriteEnabled(t *testing.T) {
 
 func TestAccIpSpaceResource_HostnameRewriteRegex(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_hostname_rewrite_regex"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -537,16 +605,80 @@ func TestAccIpSpaceResource_HostnameRewriteRegex(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceHostnameRewriteRegex("ip_space_name", "[^a-z]"),
+				Config: testAccIpSpaceHostnameRewriteRegex(name, "[^a-z]"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_regex", "[^a-z]"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceHostnameRewriteRegex("ip_space_name", "[^0-9]"),
+				Config: testAccIpSpaceHostnameRewriteRegex(name, "[^0-9]"),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_regex", "[^0-9]"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccIpSpaceResource_InheritanceSources(t *testing.T) {
+	var resourceName = "bloxone_ipam_ip_space.test_inheritance_sources"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccIpSpaceInheritanceSources(name, "inherit"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_enable_block.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_growth_block.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_threshold.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.forecast_period.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.history.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.min_total.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.min_unused.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_client_update.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_conflict_resolution_mode.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_ttl_percent.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_update_on_renew.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_use_conflict_resolution.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_filename.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_address.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_name.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.hostname_rewrite_block.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.vendor_specific_option_option_space.action", "inherit"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccIpSpaceInheritanceSources(name, "override"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_enable_block.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_growth_block.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_threshold.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.forecast_period.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.history.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.min_total.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.min_unused.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_client_update.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_conflict_resolution_mode.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_ttl_percent.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_update_on_renew.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_use_conflict_resolution.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_filename.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_address.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_name.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.hostname_rewrite_block.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.vendor_specific_option_option_space.action", "override"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -556,6 +688,8 @@ func TestAccIpSpaceResource_HostnameRewriteRegex(t *testing.T) {
 
 func TestAccIpSpaceResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_tags"
+	var v ipam.IpamsvcIPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -563,22 +697,24 @@ func TestAccIpSpaceResource_Tags(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceTags("ip_space_name", map[string]string{
+				Config: testAccIpSpaceTags(name, map[string]string{
 					"tag1": "value1",
 					"tag2": "value2",
 				}),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceTags("ip_space_name", map[string]string{
+				Config: testAccIpSpaceTags(name, map[string]string{
 					"tag2": "value2changed",
 					"tag3": "value3",
 				}),
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2changed"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag3", "value3"),
 				),
@@ -825,6 +961,77 @@ resource "bloxone_ipam_ip_space" "test_hostname_rewrite_regex" {
     hostname_rewrite_regex = %q
 }
 `, name, hostnameRewriteRegex)
+}
+
+func testAccIpSpaceInheritanceSources(name, action string) string {
+	return fmt.Sprintf(`
+resource "bloxone_ipam_ip_space" "test_inheritance_sources" {
+	name = %[1]q
+	inheritance_sources = {
+		asm_config = {
+			action = %[2]q
+			asm_enable_block = {
+				action = %[2]q
+			}
+			asm_growth_block = {
+				action = %[2]q
+			}
+			asm_threshold = {
+				action = %[2]q
+			}
+			forecast_period = {
+				action = %[2]q
+			}
+			history = {
+				action = %[2]q
+			}
+			min_total = {
+				action = %[2]q
+			}
+			min_unused = {
+				action = %[2]q
+			}
+		}
+		ddns_client_update = {
+			action = %[2]q
+		}
+		ddns_conflict_resolution_mode = {
+			action = %[2]q
+		}
+		ddns_enabled = {
+			action = "inherit"
+		}
+		ddns_hostname_block = {
+			action = %[2]q
+		}
+		ddns_ttl_percent = {
+			action = %[2]q
+		}
+		ddns_update_on_renew = {
+			action = %[2]q
+		}
+		ddns_use_conflict_resolution = {
+			action = %[2]q
+		}
+		header_option_filename = {
+			action = %[2]q
+		}
+		header_option_server_address = {
+			action = %[2]q
+		}
+		header_option_server_name = {
+			action = %[2]q
+		}
+		hostname_rewrite_block = {
+			action = %[2]q
+		}
+		vendor_specific_option_option_space	= {
+			action = %[2]q
+		}
+	}
+
+}
+`, name, action)
 }
 
 func testAccIpSpaceTags(name string, tags map[string]string) string {

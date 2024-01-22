@@ -243,10 +243,17 @@ type ApiAuthZoneCreateRequest struct {
 	ctx        context.Context
 	ApiService AuthZoneAPI
 	body       *ConfigAuthZone
+	inherit    *string
 }
 
 func (r ApiAuthZoneCreateRequest) Body(body ConfigAuthZone) ApiAuthZoneCreateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiAuthZoneCreateRequest) Inherit(inherit string) ApiAuthZoneCreateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -295,6 +302,9 @@ func (a *AuthZoneAPIService) AuthZoneCreateExecute(r ApiAuthZoneCreateRequest) (
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -474,6 +484,7 @@ type ApiAuthZoneListRequest struct {
 	orderBy    *string
 	tfilter    *string
 	torderBy   *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
@@ -521,6 +532,12 @@ func (r ApiAuthZoneListRequest) Tfilter(tfilter string) ApiAuthZoneListRequest {
 // This parameter is used for sorting by tags.
 func (r ApiAuthZoneListRequest) TorderBy(torderBy string) ApiAuthZoneListRequest {
 	r.torderBy = &torderBy
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiAuthZoneListRequest) Inherit(inherit string) ApiAuthZoneListRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -590,6 +607,9 @@ func (a *AuthZoneAPIService) AuthZoneListExecute(r ApiAuthZoneListRequest) (*Con
 	if r.torderBy != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_torder_by", r.torderBy, "")
 	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -657,11 +677,18 @@ type ApiAuthZoneReadRequest struct {
 	ApiService AuthZoneAPI
 	id         string
 	fields     *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
 func (r ApiAuthZoneReadRequest) Fields(fields string) ApiAuthZoneReadRequest {
 	r.fields = &fields
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiAuthZoneReadRequest) Inherit(inherit string) ApiAuthZoneReadRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -712,6 +739,9 @@ func (a *AuthZoneAPIService) AuthZoneReadExecute(r ApiAuthZoneReadRequest) (*Con
 
 	if r.fields != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_fields", r.fields, "")
+	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -780,10 +810,17 @@ type ApiAuthZoneUpdateRequest struct {
 	ApiService AuthZoneAPI
 	id         string
 	body       *ConfigAuthZone
+	inherit    *string
 }
 
 func (r ApiAuthZoneUpdateRequest) Body(body ConfigAuthZone) ApiAuthZoneUpdateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiAuthZoneUpdateRequest) Inherit(inherit string) ApiAuthZoneUpdateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -835,6 +872,9 @@ func (a *AuthZoneAPIService) AuthZoneUpdateExecute(r ApiAuthZoneUpdateRequest) (
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
