@@ -1,7 +1,7 @@
 /*
 DNS Configuration API
 
-The DNS application is a BloxOne DDI service that provides cloud-based DNS configuration with on-prem host serving DNS protocol. It is part of the full-featured BloxOne DDI solution that enables customers the ability to deploy large numbers of protocol servers in the delivery of DNS and DHCP throughout their enterprise network.
+The DNS application is a BloxOne DDI service that provides cloud-based DNS configuration with on-prem host serving DNS protocol. It is part of the full-featured BloxOne DDI solution that enables customers the ability to deploy large numbers of protocol servers in the delivery of DNS and DHCP throughout their enterprise network.   
 
 API version: v1
 */
@@ -11,7 +11,7 @@ API version: v1
 package dns_config
 
 import (
-	"github.com/infobloxopen/bloxone-go-client/internal"
+    "github.com/infobloxopen/bloxone-go-client/internal"
 )
 
 var ServiceBasePath = "/api/ddi/v1"
@@ -19,30 +19,30 @@ var ServiceBasePath = "/api/ddi/v1"
 // APIClient manages communication with the DNS Configuration API API vv1
 // In most cases there should be only one, shared, APIClient.
 type APIClient struct {
-	*internal.APIClient
+    *internal.APIClient
 
 	// API Services
-	AclAPI               AclAPI
-	AuthNsgAPI           AuthNsgAPI
-	AuthZoneAPI          AuthZoneAPI
-	CacheFlushAPI        CacheFlushAPI
+	AclAPI AclAPI
+	AuthNsgAPI AuthNsgAPI
+	AuthZoneAPI AuthZoneAPI
+	CacheFlushAPI CacheFlushAPI
 	ConvertDomainNameAPI ConvertDomainNameAPI
-	ConvertRnameAPI      ConvertRnameAPI
-	DelegationAPI        DelegationAPI
-	ForwardNsgAPI        ForwardNsgAPI
-	ForwardZoneAPI       ForwardZoneAPI
-	GlobalAPI            GlobalAPI
-	HostAPI              HostAPI
-	LbdnAPI              LbdnAPI
-	ServerAPI            ServerAPI
-	ViewAPI              ViewAPI
+	ConvertRnameAPI ConvertRnameAPI
+	DelegationAPI DelegationAPI
+	ForwardNsgAPI ForwardNsgAPI
+	ForwardZoneAPI ForwardZoneAPI
+	GlobalAPI GlobalAPI
+	HostAPI HostAPI
+	LbdnAPI LbdnAPI
+	ServerAPI ServerAPI
+	ViewAPI ViewAPI
 }
 
 // NewAPIClient creates a new API client. Requires a userAgent string describing your application.
 // optionally a custom http.Client to allow for advanced features such as caching.
 func NewAPIClient(cfg *internal.Configuration) *APIClient {
 	c := &APIClient{}
-	c.APIClient = internal.NewAPIClient(cfg)
+    c.APIClient = internal.NewAPIClient(cfg)
 
 	// API Services
 	c.AclAPI = (*AclAPIService)(&c.Common)

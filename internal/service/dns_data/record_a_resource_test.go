@@ -121,6 +121,36 @@ func TestAccRecordAResource_Disabled(t *testing.T) {
 	})
 }
 
+func TestAccRecordAResource_InheritanceSources(t *testing.T) {
+	var resourceName = "bloxone_dns_a_record.test_inheritance_sources"
+	var v dns_data.DataRecord
+	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccRecordInheritanceSources(zoneFqdn, "10.0.0.1", "inherit"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckRecordExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ttl.action", "inherit"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccRecordInheritanceSources(zoneFqdn, "10.0.0.1", "override"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckRecordExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ttl.action", "override"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccRecordAResource_NameInZone(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_name_in_zone"
 	var v dns_data.DataRecord
@@ -394,6 +424,23 @@ resource "bloxone_dns_a_record" "test_disabled" {
 	disabled = %t
 }
 `, address, disabled)
+	return strings.Join([]string{testAccBaseWithZone(zoneFqdn), config}, "")
+}
+
+func testAccRecordInheritanceSources(zoneFqdn string, address string, action string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dns_a_record" "test_inheritance_sources" {
+	rdata = {
+		"address" = %[1]q
+	}
+	zone = bloxone_dns_auth_zone.test.id
+	inheritance_sources = {
+		ttl	 =	{
+			action = %[2]q
+		}
+	}
+}
+`, address, action)
 	return strings.Join([]string{testAccBaseWithZone(zoneFqdn), config}, "")
 }
 

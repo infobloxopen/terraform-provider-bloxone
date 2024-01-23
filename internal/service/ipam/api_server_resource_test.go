@@ -707,6 +707,70 @@ func TestAccServerResource_HostnameRewriteRegex(t *testing.T) {
 	})
 }
 
+func TestAccServerResource_InheritanceSources(t *testing.T) {
+	var resourceName = "bloxone_dhcp_server.test_inheritance_sources"
+	var v ipam.IpamsvcServer
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccServerInheritanceSources(name, "inherit"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_block.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_client_update.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_conflict_resolution_mode.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_hostname_block.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_ttl_percent.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_update_on_renew.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_use_conflict_resolution.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.allow_unknown.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.allow_unknown_v6.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.filters.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.filters_v6.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.ignore_client_uid.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.lease_time.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.lease_time_v6.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_filename.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_address.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_name.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.hostname_rewrite_block.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.vendor_specific_option_option_space.action", "inherit"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccServerInheritanceSources(name, "override"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_client_update.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_conflict_resolution_mode.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_ttl_percent.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_update_on_renew.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_use_conflict_resolution.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.allow_unknown.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.allow_unknown_v6.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.filters.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.filters_v6.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.ignore_client_uid.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.lease_time.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.lease_time_v6.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_filename.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_address.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_name.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.hostname_rewrite_block.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.vendor_specific_option_option_space.action", "override"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccServerResource_Name(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_name"
 	var v ipam.IpamsvcServer
@@ -1062,6 +1126,79 @@ resource "bloxone_dhcp_server" "test_hostname_rewrite_regex" {
     hostname_rewrite_regex = %q
 }
 `, name, hostnameRewriteRegex)
+}
+
+func testAccServerInheritanceSources(name, action string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dhcp_server" "test_inheritance_sources" {
+	name = %[1]q
+	inheritance_sources = {
+		ddns_block = {
+			action = %[2]q
+		}
+		ddns_client_update = {
+			action = %[2]q
+		}
+		ddns_conflict_resolution_mode = {
+			action = %[2]q
+		}
+		ddns_hostname_block = {
+			action = %[2]q
+		}
+		ddns_ttl_percent = {
+			action = %[2]q
+		}
+		ddns_update_on_renew = {
+			action = %[2]q
+		}
+		ddns_use_conflict_resolution = {
+			action = %[2]q
+		}
+		dhcp_config = {
+			allow_unknown = {
+				action = %[2]q
+			}
+			allow_unknown_v6 = {
+				action = %[2]q
+			}
+			filters	= {
+				action = %[2]q
+			}
+			filters_v6	= {
+				action = %[2]q
+			}
+			ignore_client_uid = {
+				action = %[2]q
+			}
+			ignore_list	= {
+				action = %[2]q
+			}
+			lease_time = {
+				action = %[2]q
+			}
+			lease_time_v6 = {
+				action = %[2]q
+			}
+		}
+		header_option_filename = {
+			action = %[2]q
+		}
+		header_option_server_address = {
+			action = %[2]q
+		}
+		header_option_server_name = {
+			action = %[2]q
+		}
+		hostname_rewrite_block = {
+			action = %[2]q
+		}
+		vendor_specific_option_option_space = {
+			action = %[2]q
+		}
+	}
+
+}
+`, name, action)
 }
 
 func testAccServerName(name string) string {

@@ -12,7 +12,6 @@ package ipam
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 )
 
@@ -62,8 +61,6 @@ type IpamsvcRange struct {
 	Utilization   *IpamsvcUtilization   `json:"utilization,omitempty"`
 	UtilizationV6 *IpamsvcUtilizationV6 `json:"utilization_v6,omitempty"`
 }
-
-type _IpamsvcRange IpamsvcRange
 
 // NewIpamsvcRange instantiates a new IpamsvcRange object
 // This constructor will assign default values to properties that have it defined,
@@ -845,42 +842,6 @@ func (o IpamsvcRange) ToMap() (map[string]interface{}, error) {
 		toSerialize["utilization_v6"] = o.UtilizationV6
 	}
 	return toSerialize, nil
-}
-
-func (o *IpamsvcRange) UnmarshalJSON(bytes []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"end",
-		"start",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(bytes, &allProperties)
-
-	if err != nil {
-		return err
-	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
-	varIpamsvcRange := _IpamsvcRange{}
-
-	err = json.Unmarshal(bytes, &varIpamsvcRange)
-
-	if err != nil {
-		return err
-	}
-
-	*o = IpamsvcRange(varIpamsvcRange)
-
-	return err
 }
 
 type NullableIpamsvcRange struct {

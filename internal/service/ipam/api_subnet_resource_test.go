@@ -22,7 +22,6 @@ import (
 // - dhcp_config.ignore_items
 // - dhcp_host
 // - dhcp_options
-// - inheritance_sources - Currently inheritance sources is always nil
 // - next_available_id
 
 func TestAccSubnetResource_basic(t *testing.T) {
@@ -730,6 +729,84 @@ func TestAccSubnetResource_HostnameRewriteRegex(t *testing.T) {
 	})
 }
 
+func TestAccSubnetResource_InheritanceSources(t *testing.T) {
+	var resourceName = "bloxone_ipam_subnet.test_inheritance_sources"
+	var v ipam.IpamsvcSubnet
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccSubnetInheritanceSources("10.0.0.0", 24, "inherit"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSubnetExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_enable_block.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_growth_block.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_threshold.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.forecast_period.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.history.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.min_total.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.min_unused.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_client_update.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_conflict_resolution_mode.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_enabled.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_hostname_block.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_ttl_percent.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_update_block.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_update_on_renew.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_use_conflict_resolution.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.allow_unknown.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.allow_unknown_v6.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.filters.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.filters_v6.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.ignore_client_uid.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.lease_time.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.lease_time_v6.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_filename.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_address.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_name.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.hostname_rewrite_block.action", "inherit"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccSubnetInheritanceSources("10.0.0.0", 24, "override"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSubnetExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_enable_block.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_growth_block.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_threshold.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.forecast_period.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.history.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.min_total.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.min_unused.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_client_update.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_conflict_resolution_mode.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_hostname_block.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_ttl_percent.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_update_block.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_update_on_renew.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ddns_use_conflict_resolution.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.allow_unknown.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.allow_unknown_v6.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.filters.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.filters_v6.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.ignore_client_uid.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.lease_time.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_config.lease_time_v6.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_filename.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_address.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.header_option_server_name.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.hostname_rewrite_block.action", "override"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccSubnetResource_Name(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_name"
 	var v ipam.IpamsvcSubnet
@@ -1154,6 +1231,106 @@ resource "bloxone_ipam_subnet" "test_hostname_rewrite_regex" {
     hostname_rewrite_regex = %q
 }
 `, address, cidr, hostnameRewriteRegex)
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+}
+
+func testAccSubnetInheritanceSources(address string, cidr int, action string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_subnet" "test_inheritance_sources" {
+    address = %[1]q
+    cidr = %[2]d
+    space = bloxone_ipam_ip_space.test.id
+	inheritance_sources = {
+		asm_config = {
+			action = %[3]q
+			asm_enable_block = {
+				action = %[3]q
+			}
+			asm_growth_block = {
+				action = %[3]q
+			}
+			asm_threshold = {
+				action = %[3]q
+			}
+			forecast_period = {
+				action = %[3]q
+			}
+			history = {
+				action = %[3]q
+			}
+			min_total = {
+				action = %[3]q
+			}
+			min_unused = {
+				action = %[3]q
+			}
+		}
+		dhcp_config = {
+			allow_unknown = {
+				action = %[3]q
+			}
+			allow_unknown_v6 = {
+				action = %[3]q
+			}
+			filters	= {
+				action = %[3]q
+			}
+			filters_v6	= {
+				action = %[3]q
+			}
+			ignore_client_uid = {
+				action = %[3]q
+			}
+			ignore_list	= {
+				action = %[3]q
+			}
+			lease_time = {
+				action = %[3]q
+			}
+			lease_time_v6 = {
+				action = %[3]q
+			}
+		}
+		ddns_client_update = {
+			action = %[3]q
+		}
+		ddns_conflict_resolution_mode = {
+			action = %[3]q
+		}
+		ddns_enabled = {
+			action = "inherit"
+		}
+		ddns_hostname_block = {
+			action = %[3]q
+		}
+		ddns_ttl_percent = {
+			action = %[3]q
+		}
+		ddns_update_block = {
+			action = %[3]q
+		}
+		ddns_update_on_renew = {
+			action = %[3]q
+		}
+		//dhcp_option
+		ddns_use_conflict_resolution = {
+			action = %[3]q
+		}
+		header_option_filename = {
+			action = %[3]q
+		}
+		header_option_server_address = {
+			action = %[3]q
+		}
+		header_option_server_name = {
+			action = %[3]q
+		}
+		hostname_rewrite_block = {
+			action = %[3]q
+		}
+	}
+}
+`, address, cidr, action)
 	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
