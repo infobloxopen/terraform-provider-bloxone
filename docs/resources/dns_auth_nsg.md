@@ -32,7 +32,7 @@ resource "bloxone_dns_auth_nsg" "example" {
     }
   ]
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 }
 ```
@@ -85,7 +85,14 @@ Required:
 
 Read-Only:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) Comment for TSIG key.
 - `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
@@ -120,7 +127,14 @@ Required:
 
 Read-Only:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) Comment for TSIG key.
 - `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.

@@ -31,9 +31,12 @@ var IpamsvcInheritedDHCPOptionAttrTypes = map[string]attr.Type{
 
 var IpamsvcInheritedDHCPOptionResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
-		MarkdownDescription: `The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.`,
+		Optional: true,
+		Computed: true,
+		MarkdownDescription: "The inheritance setting. Valid values are:\n" +
+			"  * _inherit_: Use the inherited value.\n" +
+			"  * _block_: Don't use the inherited value.\n\n" +
+			"  Defaults to _inherit_.",
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,

@@ -89,7 +89,9 @@ Optional:
 - `group` (String) The resource identifier.
 - `option_code` (String) The resource identifier.
 - `option_value` (String) The option value.
-- `type` (String) The type of item.  Valid values are: * _group_ * _option_
+- `type` (String) The type of item. Valid values are:
+  * _group_
+  * _option_
 
 
 <a id="nestedatt--exclusion_ranges"></a>
@@ -130,7 +132,11 @@ Optional:
 
 Optional:
 
-- `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.
+- `action` (String) The inheritance setting. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _block_: Don't use the inherited value.
+
+  Defaults to _inherit_.
 - `value` (Attributes List) The inherited DHCP option values. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value))
 
 <a id="nestedatt--inheritance_sources--dhcp_options--value"></a>
@@ -138,7 +144,11 @@ Optional:
 
 Optional:
 
-- `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.
+- `action` (String) The inheritance setting. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _block_: Don't use the inherited value.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -162,7 +172,9 @@ Read-Only:
 - `group` (String) The resource identifier.
 - `option_code` (String) The resource identifier.
 - `option_value` (String) The option value.
-- `type` (String) The type of item.  Valid values are: * _group_ * _option_
+- `type` (String) The type of item. Valid values are:
+  * _group_
+  * _option_
 
 
 

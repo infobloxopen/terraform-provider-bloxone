@@ -34,8 +34,14 @@ var ConfigTSIGKeyAttrTypes = map[string]attr.Type{
 
 var ConfigTSIGKeyResourceSchemaAttributes = map[string]schema.Attribute{
 	"algorithm": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: `TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.`,
+		Computed: true,
+		MarkdownDescription: "TSIG key algorithm.\n\n" +
+			"  Possible values:\n" +
+			"  * _hmac_sha256_\n" +
+			"  * _hmac_sha1_\n" +
+			"  * _hmac_sha224_\n" +
+			"  * _hmac_sha384_\n" +
+			"  * _hmac_sha512_\n",
 	},
 	"comment": schema.StringAttribute{
 		Computed:            true,

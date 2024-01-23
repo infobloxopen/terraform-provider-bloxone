@@ -134,8 +134,27 @@ func (r recordGenericResource) schemaAttributes() map[string]schema.Attribute {
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"type": schema.StringAttribute{
-							Required:            true,
-							MarkdownDescription: "Following types are supported:\n8BIT: Unsigned 8-bit integer.\n16BIT: Unsigned 16-bit integer.\n32BIT: Unsigned 32-bit integer.\nIPV6: IPv6 address. For example, \"abcd:123::abcd\".\nIPV4: IPv4 address. For example, “1.1.1.1\".\nDomainName: Domain name (absolute or relative).\nTEXT: ASCII text.\nBASE64: Base64 encoded binary data.\nHEX: Hex encoded binary data.\nPRESENTATION: Presentation is a standard textual form of record data, as shown in a standard master zone file.\n\nFor example, an IPSEC RDATA could be specified using the PRESENTATION type field whose value is “10 1 2 192.0.2.38 AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ==\", instead of a sequence of the following subfields:\n8BIT: value=10\n8BIT: value=1\n8BIT: value=2\nIPV4: value=\"192.0.2.38”\nBASE64 (without length_kind sub-subfield): value=\"AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ==”\nIf type is PRESENTATION, only one struct subfield can be specified.",
+							Required: true,
+							MarkdownDescription: "Following types are supported:\n" +
+								"  * _8BIT_: Unsigned 8-bit integer.\n" +
+								"  * _16BIT_: Unsigned 16-bit integer.\n" +
+								"  * _32BIT_: Unsigned 32-bit integer.\n" +
+								"  * _IPV6_: IPv6 address. For example, \"abcd:123::abcd\".\n" +
+								"  * _IPV4_: IPv4 address. For example, \"1.1.1.1\".\n" +
+								"  * _DomainName_: Domain name (absolute or relative).\n" +
+								"  * _TEXT_: ASCII text.\n" +
+								"  * _BASE64_: Base64 encoded binary data.\n" +
+								"  * _HEX_: Hex encoded binary data.\n" +
+								"  * _PRESENTATION_: Presentation is a standard textual form of record data, as shown in a standard master zone file.\n\n" +
+								"    For example, an IPSEC RDATA could be specified using the _PRESENTATION_ type field whose `value` is `10 1 2 192.0.2.38 AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ==`, instead of a sequence of the following subfields:\n\n" +
+								"    ```\n" +
+								"    8BIT: value=10\n" +
+								"    8BIT: value=1\n" +
+								"    8BIT: value=2\n" +
+								"    IPV4: value=\"192.0.2.38\"\n" +
+								"    BASE64 (without length_kind sub-subfield): value=\"AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ==\"\n" +
+								"    ```\n" +
+								"    If type is _PRESENTATION_, only one struct subfield can be specified.",
 						},
 						"length_kind": schema.StringAttribute{
 							Optional:            true,

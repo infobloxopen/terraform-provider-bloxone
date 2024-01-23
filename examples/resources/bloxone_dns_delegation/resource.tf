@@ -3,13 +3,13 @@ resource "bloxone_dns_view" "example" {
 }
 
 resource "bloxone_dns_auth_zone" "example" {
-  fqdn         = "test-auth.com."
+  fqdn         = "domain.com."
   primary_type = "cloud"
   view         = bloxone_dns_view.example.id
 }
 
 resource "bloxone_dns_delegation" "example" {
-  fqdn = "abc.test-auth.com."
+  fqdn = "del.domain.com."
   delegation_servers = [{
     address = "12.0.0.0"
     fqdn    = "ns1.com."
@@ -19,7 +19,7 @@ resource "bloxone_dns_delegation" "example" {
   view    = bloxone_dns_view.example.id
   comment = "Delegation zone created through Terraform"
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
   disabled = true
 

@@ -99,5 +99,5 @@ func (r recordAAAAResource) dataSourceName() string {
 }
 
 func (r recordAAAAResource) description() string {
-	return "Represents a DNS A resource record in an authoritative zone."
+	return "Represents a DNS AAAA resource record in an authoritative zone."
 }

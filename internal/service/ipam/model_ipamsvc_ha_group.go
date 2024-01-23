@@ -91,7 +91,10 @@ var IpamsvcHAGroupResourceSchemaAttributes = map[string]schema.Attribute{
 		Validators: []validator.String{
 			stringvalidator.OneOf("active-active", "active-passive", "advanced-active-passive", "anycast"),
 		},
-		MarkdownDescription: "The mode of the HA group.  Valid values are: * _active-active_: Both on-prem hosts remain active. * _active-passive_: One on-prem host remains active and one remains passive. When the active on-prem host is down, the passive on-prem host takes over. * _advanced-active-passive_: One on-prem host may be part of multiple HA groups. When the active on-prem host is down, the passive on-prem host takes over.",
+		MarkdownDescription: "The mode of the HA group. Valid values are:\n" +
+			"  * _active-active_: Both on-prem hosts remain active.\n" +
+			"  * _active-passive_: One on-prem host remains active and one remains passive. When the active on-prem host is down, the passive on-prem host takes over.\n" +
+			"  * _advanced-active-passive_: One on-prem host may be part of multiple HA groups. When the active on-prem host is down, the passive on-prem host takes over.",
 	},
 	"name": schema.StringAttribute{
 		Required: true,

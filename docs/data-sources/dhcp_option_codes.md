@@ -50,7 +50,19 @@ Required:
 - `code` (Number) The option code.
 - `name` (String) The name of the option code. Must contain 1 to 256 characters. Can include UTF-8.
 - `option_space` (String) The resource identifier.
-- `type` (String) The option type for the option code.  Valid values are: * _address4_ * _address6_ * _boolean_ * _empty_ * _fqdn_ * _int8_ * _int16_ * _int32_ * _text_ * _uint8_ * _uint16_ * _uint32_
+- `type` (String) The option type for the option code. Valid values are:
+  * _address4_
+  * _address6_
+  * _boolean_
+  * _empty_
+  * _fqdn_
+  * _int8_
+  * _int16_
+  * _int32_
+  * _text_
+  * _uint8_
+  * _uint16_
+  * _uint32_
 
 Optional:
 
@@ -61,5 +73,11 @@ Read-Only:
 
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
-- `source` (String) The source for the option code.  Valid values are:  * _dhcp_server_  * _reserved_  * _blox_one_ddi_  * _customer_  Defaults to _customer_.
+- `source` (String) The source for the option code. Valid values are:
+  * _dhcp_server_
+  * _reserved_
+  * _blox_one_ddi_
+  * _customer_
+
+  Defaults to _customer_.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.

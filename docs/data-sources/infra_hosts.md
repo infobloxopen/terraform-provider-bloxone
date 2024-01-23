@@ -73,7 +73,27 @@ Optional:
 Read-Only:
 
 - `configs` (Attributes List) The list of Host-specific configurations for each Service deployed on this Host. (see [below for nested schema](#nestedatt--results--configs))
-- `connectivity_monitor` (Map of String) Represents the connectivity monitor properties of a Host, to enable/disable connectivity monitoring for redundant network interfaces.  The "endpoint_type" is: - `"csp"` for enabling monitoring - `""` for disabling monitoring (default)  Note: Currently, all fields except "endpoint_type" are read-only, and will be overridden to default values in case they are edited.  Example: ``` {   "connectivity_monitor": {     "cost":1000000,     "endpoint_type":"csp",     "endpoint":"http://csp.infoblox.com",     "interval":15,     "failure_threshold":1,     "success_threshold":2   } } ```
+- `connectivity_monitor` (Map of String) Represents the connectivity monitor properties of a Host, to enable/disable connectivity monitoring for redundant network interfaces.
+
+  The "endpoint_type" is:
+  - `"csp"` for enabling monitoring
+  - `""` for disabling monitoring (default)
+
+  Note: Currently, all fields except "endpoint_type" are read-only, and will be overridden to default values in case they are edited.
+
+  Example:
+  ```
+{
+    "connectivity_monitor": {
+      "cost":1000000,
+      "endpoint_type":"csp",
+      "endpoint":"http://csp.infoblox.com",
+      "interval":15,
+      "failure_threshold":1,
+      "success_threshold":2
+    }
+  }
+```
 - `created_at` (String) The timestamp of creation of Host.
 - `created_by` (String) The creator of the Host (internal use only).
 - `host_subtype` (String) The sub-type of a specific Host type.  Example: For Host type BloxOne Appliance, sub-type could be "B105" or "VEP1425"

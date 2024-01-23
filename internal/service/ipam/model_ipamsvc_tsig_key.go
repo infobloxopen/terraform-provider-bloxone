@@ -34,8 +34,14 @@ var IpamsvcTSIGKeyAttrTypes = map[string]attr.Type{
 
 var IpamsvcTSIGKeyResourceSchemaAttributes = map[string]schema.Attribute{
 	"algorithm": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `TSIG key algorithm.  Valid values are:  * _hmac_sha256_  * _hmac_sha1_  * _hmac_sha224_  * _hmac_sha384_  * _hmac_sha512_`,
+		Optional: true,
+		MarkdownDescription: "TSIG key algorithm.\n\n" +
+			"  Valid values are:\n" +
+			"  * _hmac_sha1_\n" +
+			"  * _hmac_sha224_\n" +
+			"  * _hmac_sha256_\n" +
+			"  * _hmac_sha384_\n" +
+			"  * _hmac_sha512_\n",
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,

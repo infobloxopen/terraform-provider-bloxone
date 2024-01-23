@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -43,7 +44,12 @@ var IpamsvcHostAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 		},
-		MarkdownDescription: `Field usage depends on the operation:  * For read operation, _address_ of the _Address_ corresponding to the _ref_ resource.  * For write operation, _address_ to be created if the _Address_ does not exist. Required if _ref_ is not set on write:     * If the _Address_ already exists and is already pointing to the right _Host_, the operation proceeds.     * If the _Address_ already exists and is pointing to a different _Host, the operation must abort.     * If the _Address_ already exists and is not pointing to any _Host_, it is linked to the _Host_.`,
+		MarkdownDescription: "Field usage depends on the operation:\n" +
+			"  * For read operation, _address_ of the _Address_ corresponding to the _ref_ resource.\n" +
+			"  * For write operation, _address_ to be created if the _Address_ does not exist. Required if _ref_ is not set on write:\n" +
+			"    * If the _Address_ already exists and is already pointing to the right _Host_, the operation proceeds.\n" +
+			"    * If the _Address_ already exists and is pointing to a different _Host, the operation must abort.\n" +
+			"    * If the _Address_ already exists and is not pointing to any _Host_, it is linked to the _Host_.\n",
 	},
 	"ref": schema.StringAttribute{
 		Computed:            true,

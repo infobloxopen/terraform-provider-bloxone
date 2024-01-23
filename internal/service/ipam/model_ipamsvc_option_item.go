@@ -58,7 +58,9 @@ var IpamsvcOptionItemResourceSchemaAttributes = map[string]schema.Attribute{
 		Validators: []validator.String{
 			stringvalidator.OneOf("group", "option"),
 		},
-		MarkdownDescription: `The type of item.  Valid values are: * _group_ * _option_`,
+		MarkdownDescription: "The type of item. Valid values are:\n" +
+			"  * _group_\n" +
+			"  * _option_\n",
 	},
 }
 

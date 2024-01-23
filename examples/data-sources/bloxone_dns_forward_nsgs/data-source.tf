@@ -8,7 +8,7 @@ data "bloxone_dns_forward_nsgs" "example_by_attribute" {
 # Get Forward NSGs filtered by tag
 data "bloxone_dns_forward_nsgs" "example_by_tag" {
   tag_filters = {
-    site = "Test Site"
+    site = "Site A"
   }
 }
 

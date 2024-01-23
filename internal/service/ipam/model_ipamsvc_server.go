@@ -107,7 +107,7 @@ var IpamsvcServerAttrTypes = map[string]attr.Type{
 var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 	"client_principal": schema.StringAttribute{
 		Optional:            true,
-		MarkdownDescription: "The Kerberos principal name. It uses the typical Kerberos notation: <SERVICE-NAME>/<server-domain-name>@<REALM>.  Defaults to empty.",
+		MarkdownDescription: "The Kerberos principal name. It uses the typical Kerberos notation: `<SERVICE-NAME>/<server-domain-name>@<REALM>`. Defaults to empty.",
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
@@ -119,32 +119,43 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Time when the object has been created.",
 	},
 	"ddns_client_update": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
-		Default:             stringdefault.StaticString("client"),
-		MarkdownDescription: "Controls who does the DDNS updates.  Valid values are: * _client_: DHCP server updates DNS if requested by client. * _server_: DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _ignore_: DHCP server always updates DNS, even if the client says not to. * _over_client_update_: Same as _server_. DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _over_no_update_: DHCP server updates DNS even if the client requests that no updates be done. If the client requests to do the update, DHCP server allows it.  Defaults to _client_.",
+		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString("client"),
+		MarkdownDescription: "Controls who does the DDNS updates. Valid values are:\n" +
+			"  * _client_: DHCP server updates DNS if requested by client.\n" +
+			"  * _server_: DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates.\n" +
+			"  * _ignore_: DHCP server always updates DNS, even if the client says not to.\n" +
+			"  * _over_client_update_: Same as _server_. DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates.\n" +
+			"  * _over_no_update_: DHCP server updates DNS even if the client requests that no updates be done. If the client requests to do the update, DHCP server allows it.\n\n" +
+			"  Defaults to _client_.",
 		Validators: []validator.String{
 			stringvalidator.OneOf("client", "server", "ignore", "over_client_update", "over_no_update"),
 		},
 	},
 	"ddns_conflict_resolution_mode": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
-		Default:             stringdefault.StaticString("check_with_dhcid"),
-		MarkdownDescription: `The mode used for resolving conflicts while performing DDNS updates.  Valid values are: * _check_with_dhcid_: It includes adding a DHCID record and checking that record via conflict detection as per RFC 4703. * _no_check_with_dhcid_: This will ignore conflict detection but add a DHCID record when creating/updating an entry. * _check_exists_with_dhcid_: This will check if there is an existing DHCID record but does not verify the value of the record matches the update. This will also update the DHCID record for the entry. * _no_check_without_dhcid_: This ignores conflict detection and will not add a DHCID record when creating/updating a DDNS entry.  Defaults to _check_with_dhcid_.`,
+		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString("check_with_dhcid"),
+		MarkdownDescription: "The mode used for resolving conflicts while performing DDNS updates. Valid values are:\n" +
+			"  * _check_with_dhcid_: It includes adding a DHCID record and checking that record via conflict detection as per RFC 4703.\n" +
+			"  * _no_check_with_dhcid_: This will ignore conflict detection but add a DHCID record when creating/updating an entry.\n" +
+			"  * _check_exists_with_dhcid_: This will check if there is an existing DHCID record but does not verify the value of the record matches the update. This will also update the DHCID record for the entry.\n" +
+			"  * _no_check_without_dhcid_: This ignores conflict detection and will not add a DHCID record when creating/updating a DDNS entry.\n\n" +
+			"  Defaults to _check_with_dhcid_.",
 		Validators: []validator.String{
 			stringvalidator.OneOf("check_with_dhcid", "no_check_with_dhcid", "check_exists_with_dhcid"),
 		},
 	},
 	"ddns_domain": schema.StringAttribute{
 		Optional:            true,
-		MarkdownDescription: "The domain suffix for DDNS updates. FQDN, may be empty.  Required if _ddns_enabled_ is true.  Defaults to empty.",
+		MarkdownDescription: "The domain suffix for DDNS updates. FQDN, may be empty. Required if _ddns_enabled_ is true.  Defaults to empty.",
 	},
 	"ddns_enabled": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
 		Default:             booldefault.StaticBool(false),
-		MarkdownDescription: "Indicates if DDNS updates should be performed for leases. All other _ddns_*_ configuration is ignored when this flag is unset.  At a minimum, _ddns_domain_ and _ddns_zones_ must be configured to enable DDNS.  Defaults to _false_.",
+		MarkdownDescription: "Indicates if DDNS updates should be performed for leases. All other _ddns_*_ configuration is ignored when this flag is unset. At a minimum, _ddns_domain_ and _ddns_zones_ must be configured to enable DDNS. Defaults to _false_.",
 	},
 	"ddns_generate_name": schema.BoolAttribute{
 		Optional:            true,
@@ -156,7 +167,7 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		Computed:            true,
 		Default:             stringdefault.StaticString("myhost"),
-		MarkdownDescription: `The prefix used in the generation of an FQDN.  When generating a name, DHCP server will construct the name in the format: [ddns-generated-prefix]-[address-text].[ddns-qualifying-suffix]. where address-text is simply the lease IP address converted to a hyphenated string.  Defaults to \"myhost\".`,
+		MarkdownDescription: `The prefix used in the generation of an FQDN.  When generating a name, DHCP server will construct the name in the format: [ddns-generated-prefix]-[address-text].[ddns-qualifying-suffix]. where address-text is simply the lease IP address converted to a hyphenated string. Defaults to \"myhost\".`,
 	},
 	"ddns_send_updates": schema.BoolAttribute{
 		Optional:            true,
@@ -212,14 +223,14 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: IpamsvcOptionItemResourceSchemaAttributes,
 		},
 		Optional:            true,
-		MarkdownDescription: "The list of DHCP options or group of options for IPv4. An option list is ordered and may include both option groups and specific options. Multiple occurences of the same option or group is not an error. The last occurence of an option in the list will be used.  Error if the graph of referenced groups contains cycles.  Defaults to empty list.",
+		MarkdownDescription: "The list of DHCP options or group of options for IPv4. An option list is ordered and may include both option groups and specific options. Multiple occurrences of the same option or group is not an error. The last occurrence of an option in the list will be used. Error if the graph of referenced groups contains cycles. Defaults to empty list.",
 	},
 	"dhcp_options_v6": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: IpamsvcOptionItemResourceSchemaAttributes,
 		},
 		Optional:            true,
-		MarkdownDescription: "The list of DHCP options or group of options for IPv6. An option list is ordered and may include both option groups and specific options. Multiple occurences of the same option or group is not an error. The last occurence of an option in the list will be used.  Error if the graph of referenced groups contains cycles.  Defaults to empty list.",
+		MarkdownDescription: "The list of DHCP options or group of options for IPv6. An option list is ordered and may include both option groups and specific options. Multiple occurrences of the same option or group is not an error. The last occurrence of an option in the list will be used. Error if the graph of referenced groups contains cycles. Defaults to empty list.",
 	},
 	"gss_tsig_fallback": schema.BoolAttribute{
 		Optional:            true,

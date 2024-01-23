@@ -155,8 +155,12 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 	},
 	"match_type": schema.StringAttribute{
-		Required:            true,
-		MarkdownDescription: "Indicates how to match the client:  * _mac_: match the client MAC address for both IPv4 and IPv6,  * _client_text_ or _client_hex_: match the client identifier for IPv4 only,  * _relay_text_ or _relay_hex_: match the circuit ID or remote ID in the DHCP relay agent option (82) for IPv4 only,  * _duid_: match the DHCP unique identifier, currently match only for IPv6 protocol.",
+		Required: true,
+		MarkdownDescription: "Indicates how to match the client:\n" +
+			"  * _mac_: match the client MAC address for both IPv4 and IPv6\n" +
+			"  * _client_text_ or _client_hex_: match the client identifier for IPv4 only\n" +
+			"  * _relay_text_ or _relay_hex_: match the circuit ID or remote ID in the DHCP relay agent option (82) for IPv4 only\n" +
+			"  * _duid_: match the DHCP unique identifier, currently match only for IPv6 protocol",
 	},
 	"match_value": schema.StringAttribute{
 		Required:            true,

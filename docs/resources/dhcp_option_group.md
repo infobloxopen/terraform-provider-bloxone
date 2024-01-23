@@ -44,7 +44,7 @@ resource "bloxone_dhcp_option_group" "example_with_options" {
   ]
   comment = "dhcp option group"
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 }
 ```
@@ -77,4 +77,6 @@ Optional:
 - `group` (String) The resource identifier.
 - `option_code` (String) The resource identifier.
 - `option_value` (String) The option value.
-- `type` (String) The type of item.  Valid values are: * _group_ * _option_
+- `type` (String) The type of item. Valid values are:
+  * _group_
+  * _option_

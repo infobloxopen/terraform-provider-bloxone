@@ -5,6 +5,6 @@ resource "bloxone_dns_auth_zone" "example" {
   # Other optional fields
   comment = "Example of an Authoritative Zone"
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 }

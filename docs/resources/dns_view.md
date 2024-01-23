@@ -24,7 +24,7 @@ resource "bloxone_dns_view" "example" {
   comment   = "An example view"
   ip_spaces = [bloxone_ipam_ip_space.example.id]
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
   match_clients_acl = [
     {
@@ -64,7 +64,12 @@ resource "bloxone_dns_view" "example" {
 - `ecs_zones` (Attributes List) Optional. List of zones where ECS queries may be sent.  Error if empty while _ecs_enabled_ is _true_. Error if there are duplicate FQDNs in the list.  Defaults to empty. (see [below for nested schema](#nestedatt--ecs_zones))
 - `edns_udp_size` (Number) Optional. _edns_udp_size_ represents the edns UDP size. The size a querying DNS server advertises to the DNS server it’s sending a query to.  Defaults to 1232 bytes.
 - `filter_aaaa_acl` (Attributes List) Optional. Specifies a list of client addresses for which AAAA filtering is to be applied.  Defaults to _empty_. (see [below for nested schema](#nestedatt--filter_aaaa_acl))
-- `filter_aaaa_on_v4` (String) _filter_aaaa_on_v4_ allows named to omit some IPv6 addresses when responding to IPv4 clients.  Allowed values: * _yes_, * _no_, * _break_dnssec_.  Defaults to _no_
+- `filter_aaaa_on_v4` (String) _filter_aaaa_on_v4_ allows named to omit some IPv6 addresses when responding to IPv4 clients. Allowed values:
+  * _yes_
+  * _no_
+  * _break_dnssec_
+
+  Defaults to _no_
 - `forwarders` (Attributes List) Optional. List of forwarders.  Error if empty while _forwarders_only_ or _use_root_forwarders_for_local_resolution_with_b1td_ is _true_. Error if there are items in the list with duplicate addresses.  Defaults to empty. (see [below for nested schema](#nestedatt--forwarders))
 - `forwarders_only` (Boolean) Optional. _true_ to only forward.  Defaults to _false_.
 - `gss_tsig_enabled` (Boolean) _gss_tsig_enabled_ enables/disables GSS-TSIG signed dynamic updates.  Defaults to _false_.
@@ -142,7 +147,9 @@ Optional:
 
 Required:
 
-- `access` (String) Access control for zone.  Allowed values: * _allow_, * _deny_.
+- `access` (String) Access control for zone. Allowed values:
+ * _allow_
+ * _deny_
 - `fqdn` (String) Zone FQDN.
 
 Read-Only:
@@ -155,11 +162,23 @@ Read-Only:
 
 Required:
 
-- `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 
 Optional:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
+- `access` (String) Access permission for _element_.
+
+  Allowed values:
+  * _allow_
+  * _deny_
+
+  Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--filter_aaaa_acl--tsig_key))
@@ -173,7 +192,14 @@ Required:
 
 Read-Only:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) Comment for TSIG key.
 - `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
@@ -231,7 +257,11 @@ Optional:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -322,7 +352,12 @@ Optional:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -361,7 +396,9 @@ Read-Only:
 
 Read-Only:
 
-- `access` (String) Access control for zone.  Allowed values: * _allow_, * _deny_.
+- `access` (String) Access control for zone. Allowed values:
+ * _allow_
+ * _deny_
 - `fqdn` (String) Zone FQDN.
 - `protocol_fqdn` (String) Zone FQDN in punycode.
 
@@ -373,7 +410,12 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -400,10 +442,22 @@ Read-Only:
 
 Read-Only:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
+- `access` (String) Access permission for _element_.
+
+  Allowed values:
+  * _allow_
+  * _deny_
+
+  Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
-- `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--filter_aaaa_acl--value--tsig_key))
 
 <a id="nestedatt--inheritance_sources--filter_aaaa_acl--value--tsig_key"></a>
@@ -411,7 +465,14 @@ Read-Only:
 
 Read-Only:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
 - `name` (String) TSIG key name, FQDN.
@@ -426,7 +487,12 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -474,7 +540,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -488,7 +558,12 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -502,7 +577,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -516,7 +595,12 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -530,7 +614,12 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -544,7 +633,12 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -558,7 +652,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -572,7 +670,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -599,10 +701,22 @@ Read-Only:
 
 Read-Only:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
+- `access` (String) Access permission for _element_.
+
+  Allowed values:
+  * _allow_
+  * _deny_
+
+  Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
-- `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--query_acl--value--tsig_key))
 
 <a id="nestedatt--inheritance_sources--query_acl--value--tsig_key"></a>
@@ -610,7 +724,14 @@ Read-Only:
 
 Read-Only:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
 - `name` (String) TSIG key name, FQDN.
@@ -638,10 +759,22 @@ Read-Only:
 
 Read-Only:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
+- `access` (String) Access permission for _element_.
+
+  Allowed values:
+  * _allow_
+  * _deny_
+
+  Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
-- `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--recursion_acl--value--tsig_key))
 
 <a id="nestedatt--inheritance_sources--recursion_acl--value--tsig_key"></a>
@@ -649,7 +782,14 @@ Read-Only:
 
 Read-Only:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
 - `name` (String) TSIG key name, FQDN.
@@ -664,7 +804,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -692,7 +836,12 @@ Read-Only:
 Read-Only:
 
 - `acl` (String) The resource identifier.
-- `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
 - `prioritized_networks` (List of String) Optional. The prioritized networks. If empty, the value of _source_ or networks from _acl_ is used.
 - `source` (String) Must be empty if _element_ is not _ip_.
 
@@ -703,7 +852,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -730,10 +883,22 @@ Read-Only:
 
 Read-Only:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
+- `access` (String) Access permission for _element_.
+
+  Allowed values:
+  * _allow_
+  * _deny_
+
+  Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
-- `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--transfer_acl--value--tsig_key))
 
 <a id="nestedatt--inheritance_sources--transfer_acl--value--tsig_key"></a>
@@ -741,7 +906,14 @@ Read-Only:
 
 Read-Only:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
 - `name` (String) TSIG key name, FQDN.
@@ -769,10 +941,22 @@ Read-Only:
 
 Read-Only:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
+- `access` (String) Access permission for _element_.
+
+  Allowed values:
+  * _allow_
+  * _deny_
+
+  Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
-- `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--update_acl--value--tsig_key))
 
 <a id="nestedatt--inheritance_sources--update_acl--value--tsig_key"></a>
@@ -780,7 +964,14 @@ Read-Only:
 
 Read-Only:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) Comment for TSIG key.
 - `key` (String) The resource identifier.
 - `name` (String) TSIG key name, FQDN.
@@ -795,7 +986,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -823,7 +1018,12 @@ Optional:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -837,7 +1037,12 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -875,7 +1080,12 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -889,7 +1099,12 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -903,7 +1118,12 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -917,7 +1137,12 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -931,7 +1156,12 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -947,11 +1177,23 @@ Read-Only:
 
 Required:
 
-- `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 
 Optional:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
+- `access` (String) Access permission for _element_.
+
+  Allowed values:
+  * _allow_
+  * _deny_
+
+  Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--match_clients_acl--tsig_key))
@@ -965,7 +1207,14 @@ Required:
 
 Read-Only:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) Comment for TSIG key.
 - `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
@@ -978,11 +1227,23 @@ Read-Only:
 
 Required:
 
-- `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 
 Optional:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
+- `access` (String) Access permission for _element_.
+
+  Allowed values:
+  * _allow_
+  * _deny_
+
+  Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--match_destinations_acl--tsig_key))
@@ -996,7 +1257,14 @@ Required:
 
 Read-Only:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) Comment for TSIG key.
 - `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
@@ -1009,11 +1277,23 @@ Read-Only:
 
 Required:
 
-- `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 
 Optional:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
+- `access` (String) Access permission for _element_.
+
+  Allowed values:
+  * _allow_
+  * _deny_
+
+  Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--query_acl--tsig_key))
@@ -1027,7 +1307,14 @@ Required:
 
 Read-Only:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) Comment for TSIG key.
 - `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
@@ -1040,11 +1327,23 @@ Read-Only:
 
 Required:
 
-- `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 
 Optional:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
+- `access` (String) Access permission for _element_.
+
+  Allowed values:
+  * _allow_
+  * _deny_
+
+  Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--recursion_acl--tsig_key))
@@ -1058,7 +1357,14 @@ Required:
 
 Read-Only:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) Comment for TSIG key.
 - `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
@@ -1071,7 +1377,12 @@ Read-Only:
 
 Required:
 
-- `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
 
 Optional:
 
@@ -1085,11 +1396,23 @@ Optional:
 
 Required:
 
-- `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 
 Optional:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
+- `access` (String) Access permission for _element_.
+
+  Allowed values:
+  * _allow_
+  * _deny_
+
+  Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--transfer_acl--tsig_key))
@@ -1103,7 +1426,14 @@ Required:
 
 Read-Only:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) Comment for TSIG key.
 - `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.
@@ -1116,11 +1446,23 @@ Read-Only:
 
 Required:
 
-- `element` (String) Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 
 Optional:
 
-- `access` (String) Access permission for _element_.  Allowed values:  * _allow_,  * _deny_. Must be empty if _element_ is _acl_.
+- `access` (String) Access permission for _element_.
+
+  Allowed values:
+  * _allow_
+  * _deny_
+
+  Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--update_acl--tsig_key))
@@ -1134,7 +1476,14 @@ Required:
 
 Read-Only:
 
-- `algorithm` (String) TSIG key algorithm.  Possible values:  * _hmac_sha256_,  * _hmac_sha1_,  * _hmac_sha224_,  * _hmac_sha384_,  * _hmac_sha512_.
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) Comment for TSIG key.
 - `name` (String) TSIG key name, FQDN.
 - `protocol_name` (String) TSIG key name in punycode.

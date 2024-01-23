@@ -10,7 +10,7 @@ resource "bloxone_dns_view" "example" {
   comment   = "An example view"
   ip_spaces = [bloxone_ipam_ip_space.example.id]
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
   match_clients_acl = [
     {
