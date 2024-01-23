@@ -32,8 +32,7 @@
  * 
  */
 
-resource "random_uuid" "this" {
-}
+resource "random_uuid" "this" {}
 
 locals {
   join_token = var.join_token == null ? bloxone_infra_join_token.this[0].join_token : var.join_token.join_token
