@@ -2,7 +2,7 @@
 
 data "bloxone_dns_delegations" "example_by_attribute" {
   filters = {
-    fqdn = "tf-acc-Site A.com."
+    fqdn = "domain.com."
   }
 }
 
