@@ -14,6 +14,6 @@ resource "bloxone_infra_service" "example" {
   desired_version = "3.5.0"
   desired_state   = "start"
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 }

@@ -28,8 +28,10 @@ var ConfigECSZoneAttrTypes = map[string]attr.Type{
 
 var ConfigECSZoneResourceSchemaAttributes = map[string]schema.Attribute{
 	"access": schema.StringAttribute{
-		Required:            true,
-		MarkdownDescription: `Access control for zone.  Allowed values: * _allow_, * _deny_.`,
+		Required: true,
+		MarkdownDescription: "Access control for zone. Allowed values:\n" +
+			" * _allow_\n" +
+			" * _deny_",
 	},
 	"fqdn": schema.StringAttribute{
 		Required:            true,

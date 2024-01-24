@@ -52,22 +52,35 @@ Required:
 
 Optional:
 
-- `client_principal` (String) The Kerberos principal name. It uses the typical Kerberos notation: <SERVICE-NAME>/<server-domain-name>@<REALM>.  Defaults to empty.
+- `client_principal` (String) The Kerberos principal name. It uses the typical Kerberos notation: `<SERVICE-NAME>/<server-domain-name>@<REALM>`. Defaults to empty.
 - `comment` (String) The description for the DHCP Config Profile. May contain 0 to 1024 characters. Can include UTF-8.
-- `ddns_client_update` (String) Controls who does the DDNS updates.  Valid values are: * _client_: DHCP server updates DNS if requested by client. * _server_: DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _ignore_: DHCP server always updates DNS, even if the client says not to. * _over_client_update_: Same as _server_. DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _over_no_update_: DHCP server updates DNS even if the client requests that no updates be done. If the client requests to do the update, DHCP server allows it.  Defaults to _client_.
-- `ddns_conflict_resolution_mode` (String) The mode used for resolving conflicts while performing DDNS updates.  Valid values are: * _check_with_dhcid_: It includes adding a DHCID record and checking that record via conflict detection as per RFC 4703. * _no_check_with_dhcid_: This will ignore conflict detection but add a DHCID record when creating/updating an entry. * _check_exists_with_dhcid_: This will check if there is an existing DHCID record but does not verify the value of the record matches the update. This will also update the DHCID record for the entry. * _no_check_without_dhcid_: This ignores conflict detection and will not add a DHCID record when creating/updating a DDNS entry.  Defaults to _check_with_dhcid_.
-- `ddns_domain` (String) The domain suffix for DDNS updates. FQDN, may be empty.  Required if _ddns_enabled_ is true.  Defaults to empty.
-- `ddns_enabled` (Boolean) Indicates if DDNS updates should be performed for leases. All other _ddns_*_ configuration is ignored when this flag is unset.  At a minimum, _ddns_domain_ and _ddns_zones_ must be configured to enable DDNS.  Defaults to _false_.
+- `ddns_client_update` (String) Controls who does the DDNS updates. Valid values are:
+  * _client_: DHCP server updates DNS if requested by client.
+  * _server_: DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates.
+  * _ignore_: DHCP server always updates DNS, even if the client says not to.
+  * _over_client_update_: Same as _server_. DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates.
+  * _over_no_update_: DHCP server updates DNS even if the client requests that no updates be done. If the client requests to do the update, DHCP server allows it.
+
+  Defaults to _client_.
+- `ddns_conflict_resolution_mode` (String) The mode used for resolving conflicts while performing DDNS updates. Valid values are:
+  * _check_with_dhcid_: It includes adding a DHCID record and checking that record via conflict detection as per RFC 4703.
+  * _no_check_with_dhcid_: This will ignore conflict detection but add a DHCID record when creating/updating an entry.
+  * _check_exists_with_dhcid_: This will check if there is an existing DHCID record but does not verify the value of the record matches the update. This will also update the DHCID record for the entry.
+  * _no_check_without_dhcid_: This ignores conflict detection and will not add a DHCID record when creating/updating a DDNS entry.
+
+  Defaults to _check_with_dhcid_.
+- `ddns_domain` (String) The domain suffix for DDNS updates. FQDN, may be empty. Required if _ddns_enabled_ is true.  Defaults to empty.
+- `ddns_enabled` (Boolean) Indicates if DDNS updates should be performed for leases. All other _ddns_*_ configuration is ignored when this flag is unset. At a minimum, _ddns_domain_ and _ddns_zones_ must be configured to enable DDNS. Defaults to _false_.
 - `ddns_generate_name` (Boolean) Indicates if DDNS should generate a hostname when not supplied by the client.  Defaults to _false_.
-- `ddns_generated_prefix` (String) The prefix used in the generation of an FQDN.  When generating a name, DHCP server will construct the name in the format: [ddns-generated-prefix]-[address-text].[ddns-qualifying-suffix]. where address-text is simply the lease IP address converted to a hyphenated string.  Defaults to \"myhost\".
+- `ddns_generated_prefix` (String) The prefix used in the generation of an FQDN.  When generating a name, DHCP server will construct the name in the format: [ddns-generated-prefix]-[address-text].[ddns-qualifying-suffix]. where address-text is simply the lease IP address converted to a hyphenated string. Defaults to \"myhost\".
 - `ddns_send_updates` (Boolean) Determines if DDNS updates are enabled at the IP space level. Defaults to _true_.
 - `ddns_ttl_percent` (Number) DDNS TTL value - to be calculated as a simple percentage of the lease's lifetime, using the parameter's value as the percentage. It is specified as a percentage (e.g. 25, 75). Defaults to unspecified.
 - `ddns_update_on_renew` (Boolean) Instructs the DHCP server to always update the DNS information when a lease is renewed even if its DNS information has not changed.  Defaults to _false_.
 - `ddns_use_conflict_resolution` (Boolean) When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.
 - `ddns_zones` (Attributes List) The DNS zones that DDNS updates can be sent to. There is no resolver fallback. The target zone must be explicitly configured for the update to be performed.  Updates are sent to the closest enclosing zone.  Error if _ddns_enabled_ is _true_ and the _ddns_domain_ does not have a corresponding entry in _ddns_zones_.  Error if there are items with duplicate zone in the list.  Defaults to empty list. (see [below for nested schema](#nestedatt--results--ddns_zones))
 - `dhcp_config` (Attributes) (see [below for nested schema](#nestedatt--results--dhcp_config))
-- `dhcp_options` (Attributes List) The list of DHCP options or group of options for IPv4. An option list is ordered and may include both option groups and specific options. Multiple occurences of the same option or group is not an error. The last occurence of an option in the list will be used.  Error if the graph of referenced groups contains cycles.  Defaults to empty list. (see [below for nested schema](#nestedatt--results--dhcp_options))
-- `dhcp_options_v6` (Attributes List) The list of DHCP options or group of options for IPv6. An option list is ordered and may include both option groups and specific options. Multiple occurences of the same option or group is not an error. The last occurence of an option in the list will be used.  Error if the graph of referenced groups contains cycles.  Defaults to empty list. (see [below for nested schema](#nestedatt--results--dhcp_options_v6))
+- `dhcp_options` (Attributes List) The list of DHCP options or group of options for IPv4. An option list is ordered and may include both option groups and specific options. Multiple occurrences of the same option or group is not an error. The last occurrence of an option in the list will be used. Error if the graph of referenced groups contains cycles. Defaults to empty list. (see [below for nested schema](#nestedatt--results--dhcp_options))
+- `dhcp_options_v6` (Attributes List) The list of DHCP options or group of options for IPv6. An option list is ordered and may include both option groups and specific options. Multiple occurrences of the same option or group is not an error. The last occurrence of an option in the list will be used. Error if the graph of referenced groups contains cycles. Defaults to empty list. (see [below for nested schema](#nestedatt--results--dhcp_options_v6))
 - `gss_tsig_fallback` (Boolean) The behavior when GSS-TSIG should be used (a matching external DNS server is configured) but no GSS-TSIG key is available. If configured to _false_ (the default) this DNS server is skipped, if configured to _true_ the DNS server is ignored and the DNS update is sent with the configured DHCP-DDNS protection e.g. TSIG key or without any protection when none was configured.  Defaults to _false_.
 - `header_option_filename` (String) The configuration for header option filename field.
 - `header_option_server_address` (String) The configuration for header option server address field.
@@ -136,7 +149,14 @@ Required:
 
 Optional:
 
-- `algorithm` (String) TSIG key algorithm.  Valid values are:  * _hmac_sha256_  * _hmac_sha1_  * _hmac_sha224_  * _hmac_sha384_  * _hmac_sha512_
+- `algorithm` (String) TSIG key algorithm.
+
+  Valid values are:
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha256_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) The description for the TSIG key. May contain 0 to 1024 characters. Can include UTF-8.
 - `name` (String) The TSIG key name, FQDN.
 - `secret` (String) The TSIG key secret, base64 string.
@@ -168,7 +188,10 @@ Optional:
 
 Required:
 
-- `type` (String) Type of ignore matching: client to ignore by client identifier (client hex or client text) or hardware to ignore by hardware identifier (MAC address). It can have one of the following values:  * _client_hex_,  * _client_text_,  * _hardware_.
+- `type` (String) Type of ignore matching: client to ignore by client identifier (client hex or client text) or hardware to ignore by hardware identifier (MAC address). It can have one of the following values:
+  * _client_hex_
+  * _client_text_
+  * _hardware_
 - `value` (String) Value to match.
 
 
@@ -181,7 +204,9 @@ Optional:
 - `group` (String) The resource identifier.
 - `option_code` (String) The resource identifier.
 - `option_value` (String) The option value.
-- `type` (String) The type of item.  Valid values are: * _group_ * _option_
+- `type` (String) The type of item. Valid values are:
+  * _group_
+  * _option_
 
 
 <a id="nestedatt--results--dhcp_options_v6"></a>
@@ -192,7 +217,9 @@ Optional:
 - `group` (String) The resource identifier.
 - `option_code` (String) The resource identifier.
 - `option_value` (String) The option value.
-- `type` (String) The type of item.  Valid values are: * _group_ * _option_
+- `type` (String) The type of item. Valid values are:
+  * _group_
+  * _option_
 
 
 <a id="nestedatt--results--inheritance_sources"></a>
@@ -221,7 +248,11 @@ Optional:
 
 Optional:
 
-- `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -282,7 +313,14 @@ Read-Only:
 
 Read-Only:
 
-- `algorithm` (String) TSIG key algorithm.  Valid values are:  * _hmac_sha256_  * _hmac_sha1_  * _hmac_sha224_  * _hmac_sha384_  * _hmac_sha512_
+- `algorithm` (String) TSIG key algorithm.
+
+  Valid values are:
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha256_
+  * _hmac_sha384_
+  * _hmac_sha512_
 - `comment` (String) The description for the TSIG key. May contain 0 to 1024 characters. Can include UTF-8.
 - `key` (String) The resource identifier.
 - `name` (String) The TSIG key name, FQDN.
@@ -311,7 +349,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -325,7 +367,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -339,7 +385,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -362,7 +412,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -376,7 +430,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -390,7 +448,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -420,7 +482,11 @@ Optional:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -434,7 +500,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -448,7 +518,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -462,7 +536,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -476,7 +554,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -490,7 +572,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -504,7 +590,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -518,7 +608,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -531,7 +625,10 @@ Read-Only:
 
 Read-Only:
 
-- `type` (String) Type of ignore matching: client to ignore by client identifier (client hex or client text) or hardware to ignore by hardware identifier (MAC address). It can have one of the following values:  * _client_hex_,  * _client_text_,  * _hardware_.
+- `type` (String) Type of ignore matching: client to ignore by client identifier (client hex or client text) or hardware to ignore by hardware identifier (MAC address). It can have one of the following values:
+  * _client_hex_
+  * _client_text_
+  * _hardware_
 - `value` (String) Value to match.
 
 
@@ -541,7 +638,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -555,7 +656,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -570,7 +675,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.
+- `action` (String) The inheritance setting. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _block_: Don't use the inherited value.
+
+  Defaults to _inherit_.
 - `value` (Attributes List) The inherited DHCP option values. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_options--value))
 
 <a id="nestedatt--results--inheritance_sources--dhcp_options--value"></a>
@@ -578,7 +687,11 @@ Optional:
 
 Optional:
 
-- `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.
+- `action` (String) The inheritance setting. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _block_: Don't use the inherited value.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -602,7 +715,9 @@ Read-Only:
 - `group` (String) The resource identifier.
 - `option_code` (String) The resource identifier.
 - `option_value` (String) The option value.
-- `type` (String) The type of item.  Valid values are: * _group_ * _option_
+- `type` (String) The type of item. Valid values are:
+  * _group_
+  * _option_
 
 
 
@@ -613,7 +728,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.
+- `action` (String) The inheritance setting. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _block_: Don't use the inherited value.
+
+  Defaults to _inherit_.
 - `value` (Attributes List) The inherited DHCP option values. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_options_v6--value))
 
 <a id="nestedatt--results--inheritance_sources--dhcp_options_v6--value"></a>
@@ -621,7 +740,11 @@ Optional:
 
 Optional:
 
-- `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.
+- `action` (String) The inheritance setting. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _block_: Don't use the inherited value.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -645,7 +768,9 @@ Read-Only:
 - `group` (String) The resource identifier.
 - `option_code` (String) The resource identifier.
 - `option_value` (String) The option value.
-- `type` (String) The type of item.  Valid values are: * _group_ * _option_
+- `type` (String) The type of item. Valid values are:
+  * _group_
+  * _option_
 
 
 
@@ -656,7 +781,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -670,7 +799,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -684,7 +817,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -698,7 +835,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 
@@ -722,7 +863,11 @@ Read-Only:
 
 Optional:
 
-- `action` (String) The inheritance setting for a field.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
 
 Read-Only:
 

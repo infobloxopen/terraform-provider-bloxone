@@ -148,14 +148,25 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Time when the object has been created.",
 	},
 	"ddns_client_update": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
-		MarkdownDescription: "Controls who does the DDNS updates.  Valid values are: * _client_: DHCP server updates DNS if requested by client. * _server_: DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _ignore_: DHCP server always updates DNS, even if the client says not to. * _over_client_update_: Same as _server_. DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _over_no_update_: DHCP server updates DNS even if the client requests that no updates be done. If the client requests to do the update, DHCP server allows it.  Defaults to _client_.",
+		Optional: true,
+		Computed: true,
+		MarkdownDescription: "Controls who does the DDNS updates. Valid values are:\n" +
+			"  * _client_: DHCP server updates DNS if requested by client.\n" +
+			"  * _server_: DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates.\n" +
+			"  * _ignore_: DHCP server always updates DNS, even if the client says not to.\n" +
+			"  * _over_client_update_: Same as _server_. DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates.\n" +
+			"  * _over_no_update_: DHCP server updates DNS even if the client requests that no updates be done. If the client requests to do the update, DHCP server allows it.\n" +
+			"  Defaults to _client_.\n",
 	},
 	"ddns_conflict_resolution_mode": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
-		MarkdownDescription: "The mode used for resolving conflicts while performing DDNS updates.  Valid values are: * _check_with_dhcid_: It includes adding a DHCID record and checking that record via conflict detection as per RFC 4703. * _no_check_with_dhcid_: This will ignore conflict detection but add a DHCID record when creating/updating an entry. * _check_exists_with_dhcid_: This will check if there is an existing DHCID record but does not verify the value of the record matches the update. This will also update the DHCID record for the entry. * _no_check_without_dhcid_: This ignores conflict detection and will not add a DHCID record when creating/updating a DDNS entry.  Defaults to _check_with_dhcid_.",
+		Optional: true,
+		Computed: true,
+		MarkdownDescription: "The mode used for resolving conflicts while performing DDNS updates. Valid values are:\n\n" +
+			"  * _check_with_dhcid_: It includes adding a DHCID record and checking that record via conflict detection as per RFC 4703.\n" +
+			"  * _no_check_with_dhcid_: This will ignore conflict detection but add a DHCID record when creating/updating an entry.\n" +
+			"  * _check_exists_with_dhcid_: This will check if there is an existing DHCID record but does not verify the value of the record matches the update. This will also update the DHCID record for the entry.\n" +
+			"  * _no_check_without_dhcid_: This ignores conflict detection and will not add a DHCID record when creating/updating a DDNS entry.\n" +
+			"  Defaults to _check_with_dhcid_.",
 	},
 	"ddns_domain": schema.StringAttribute{
 		Optional:            true,
@@ -319,9 +330,14 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Time when the object has been updated. Equals to _created_at_ if not updated after creation.",
 	},
 	"usage": schema.ListAttribute{
-		ElementType:         types.StringType,
-		Computed:            true,
-		MarkdownDescription: "The usage is a combination of indicators, each tracking a specific associated use. Listed below are usage indicators with their meaning:  usage indicator        | description  ---------------------- | --------------------------------  _IPAM_                 |  AddressBlock is managed in BloxOne DDI.  _DISCOVERED_           |  AddressBlock is discovered by some network discovery probe like Network Insight or NetMRI in NIOS.",
+		ElementType: types.StringType,
+		Computed:    true,
+		MarkdownDescription: "The usage is a combination of indicators, each tracking a specific associated use. Listed below are usage indicators with their meaning:\n\n" +
+			"  | usage indicator        | description                                                                                         |\n" +
+			"  |------------------------|-----------------------------------------------------------------------------------------------------|\n" +
+			"  | _IPAM_                 |  AddressBlock is managed in BloxOne DDI.                                                            |\n" +
+			"  | _DISCOVERED_           |  AddressBlock is discovered by some network discovery probe like Network Insight or NetMRI in NIOS. |\n" +
+			"  <br>",
 	},
 	"utilization": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationResourceSchemaAttributes,

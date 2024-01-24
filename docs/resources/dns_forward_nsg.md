@@ -25,7 +25,7 @@ resource "bloxone_dns_forward_nsg" "example" {
     },
   ]
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 }
 ```

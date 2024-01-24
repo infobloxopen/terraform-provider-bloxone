@@ -8,7 +8,7 @@ data "bloxone_dns_servers" "example_by_attribute" {
 # Get DNS Servers filtered by tag
 data "bloxone_dns_servers" "example_by_tag" {
   tag_filters = {
-    site = "Test Site"
+    site = "Site A"
   }
 }
 

@@ -31,9 +31,12 @@ var IpamsvcInheritedDDNSHostnameBlockAttrTypes = map[string]attr.Type{
 
 var IpamsvcInheritedDDNSHostnameBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
-		MarkdownDescription: `The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.`,
+		Optional: true,
+		Computed: true,
+		MarkdownDescription: "The inheritance setting. Valid values are:\n" +
+			"  * _inherit_: Use the inherited value.\n" +
+			"  * _override_: Use the value set in the object.\n\n" +
+			"  Defaults to _inherit_.",
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,

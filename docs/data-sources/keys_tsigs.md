@@ -52,7 +52,16 @@ Required:
 
 Optional:
 
-- `algorithm` (String) The TSIG key algorithm.  Valid values are: * _hmac_sha1_ * _hmac_sha224_ * _hmac_sha256_ * _hmac_sha384_ * _hmac_sha512_  Defaults to _hmac_sha256_.
+- `algorithm` (String) TSIG key algorithm.
+
+  Valid values are:
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha256_
+  * _hmac_sha384_
+  * _hmac_sha512_
+
+  Defaults to _hmac_sha256_.
 - `comment` (String) The description for the TSIG key. May contain 0 to 1024 characters. Can include UTF-8.
 - `secret` (String, Sensitive) The TSIG key secret as a Base64 encoded string.
 - `tags` (Map of String) The tags for the TSIG key in JSON format.

@@ -20,7 +20,7 @@ resource "bloxone_ipam_host" "example" {
   #Other Optional Fields
   comment = "IPAM Host"
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 }
 
@@ -35,6 +35,6 @@ resource "bloxone_ipam_host" "example_naip" {
   #Other Optional Fields
   comment = "IPAM Host"
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 }

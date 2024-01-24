@@ -41,7 +41,7 @@ resource "bloxone_ipam_address" "example" {
   space   = bloxone_ipam_ip_space.example.id
 
   # Other optional fields
-  comment = "reservation for test site"
+  comment = "reservation for Site A"
   names = [
     {
       name = "bby-1"
@@ -49,19 +49,19 @@ resource "bloxone_ipam_address" "example" {
     }
   ]
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 
   depends_on = [bloxone_ipam_subnet.example]
 }
 
 # Next available address in subnet
-resource "bloxone_ipam_address" "example_nas" {
+resource "bloxone_ipam_address" "example_na_s" {
   next_available_id = bloxone_ipam_subnet.example.id
   space             = bloxone_ipam_ip_space.example.id
 
   # Other optional fields
-  comment = "reservation for test site"
+  comment = "reservation for Site A"
   names = [
     {
       name = "bby-1"
@@ -69,7 +69,7 @@ resource "bloxone_ipam_address" "example_nas" {
     }
   ]
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 }
 
@@ -79,7 +79,7 @@ resource "bloxone_ipam_address" "example_na_ab" {
   space             = bloxone_ipam_ip_space.example.id
 
   # Other optional fields
-  comment = "reservation for test site"
+  comment = "reservation for Site A"
   names = [
     {
       name = "bby-1"
@@ -87,7 +87,7 @@ resource "bloxone_ipam_address" "example_na_ab" {
     }
   ]
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 }
 
@@ -97,7 +97,7 @@ resource "bloxone_ipam_address" "example_na_rng" {
   space             = bloxone_ipam_ip_space.example.id
 
   # Other optional fields
-  comment = "reservation for test site"
+  comment = "reservation for Site A"
   names = [
     {
       name = "bby-1"
@@ -105,7 +105,7 @@ resource "bloxone_ipam_address" "example_na_rng" {
     }
   ]
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 }
 ```
@@ -141,7 +141,21 @@ resource "bloxone_ipam_address" "example_na_rng" {
 - `range` (String) The resource identifier.
 - `state` (String) The state of the address (_used_ or _free_).
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
-- `usage` (List of String) The usage is a combination of indicators, each tracking a specific associated use. Listed below are usage indicators with their meaning:  usage indicator        | description  ---------------------- | --------------------------------  _IPAM_                 |  Address was created by the IPAM component.  _IPAM_, _RESERVED_     |  Address was created by the API call _ipam/address_ or _ipam/host_.  _IPAM_, _NETWORK_      |  Address was automatically created by the IPAM component and is the network address of the parent subnet.  _IPAM_, _BROADCAST_    |  Address was automatically created by the IPAM component and is the broadcast address of the parent subnet.  _DHCP_                 |  Address was created by the DHCP component.  _DHCP_, _FIXEDADDRESS_ |  Address was created by the API call _dhcp/fixed_address_.  _DHCP_, _LEASED_       |  An active lease for that address was issued by a DHCP server.  _DHCP_, _DISABLED_     |  Address is disabled.  _DNS_                  |  Address is used by one or more DNS records.  _DISCOVERED_           |  Address is discovered by some network discovery probe like Network Insight or NetMRI in NIOS.
+- `usage` (List of String) The usage is a combination of indicators, each tracking a specific associated use. Listed below are usage indicators with their meaning:
+
+  | usage indicator        | description                                                                                                 |
+  |------------------------|-------------------------------------------------------------------------------------------------------------|
+  | _IPAM_                 |  Address was created by the IPAM component.                                                                 |
+  | _IPAM_, _RESERVED_     |  Address was created by the API call _ipam/address_ or _ipam/host_.                                         |
+  | _IPAM_, _NETWORK_      |  Address was automatically created by the IPAM component and is the network address of the parent subnet.   |
+  | _IPAM_, _BROADCAST_    |  Address was automatically created by the IPAM component and is the broadcast address of the parent subnet. |
+  | _DHCP_                 |  Address was created by the DHCP component.                                                                 |
+  | _DHCP_, _FIXEDADDRESS_ |  Address was created by the API call _dhcp/fixed_address_.                                                  |
+  | _DHCP_, _LEASED_       |  An active lease for that address was issued by a DHCP server.                                              |
+  | _DHCP_, _DISABLED_     |  Address is disabled.                                                                                       |
+  | _DNS_                  |  Address is used by one or more DNS records.                                                                |
+  | _DISCOVERED_           |  Address is discovered by some network discovery probe like Network Insight or NetMRI in NIOS.              |
+  <br>
 
 <a id="nestedatt--names"></a>
 ### Nested Schema for `names`

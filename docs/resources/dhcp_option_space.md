@@ -24,7 +24,7 @@ resource "bloxone_dhcp_option_space" "example_with_options" {
   #Other Optional Fields
   comment = "dhcp option space"
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 }
 ```

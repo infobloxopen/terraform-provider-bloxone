@@ -52,20 +52,21 @@ Required:
 - `pool_id` (String) The resource identifier.
 - `service_type` (String) The type of the Service deployed on the Host (`dns`, `cdc`, etc.). The following is a list of the different Services and their string types (the string types are to be used with the APIs for the `service_type` field):
 
-  | Service name | Service type | 
-  | ------ | ------ | 
-  | Access Authentication | authn | 
-  | Anycast | anycast | 
-  | Data Connector | cdc | 
-  | DHCP | dhcp | 
-  | DNS | dns | 
-  | DNS Forwarding Proxy | dfp | 
-  | NIOS Grid Connector | orpheus | 
-  | MS AD Sync | msad | 
-  | NTP | ntp | 
-  | BGP | bgp | 
-  | RIP | rip | 
-  | OSPF | ospf |
+  | Service name          | Service type | 
+  | --------------------- | ------------ | 
+  | Access Authentication | authn        | 
+  | Anycast               | anycast      | 
+  | Data Connector        | cdc          | 
+  | DHCP                  | dhcp         | 
+  | DNS                   | dns          | 
+  | DNS Forwarding Proxy  | dfp          | 
+  | NIOS Grid Connector   | orpheus      | 
+  | MS AD Sync            | msad         | 
+  | NTP                   | ntp          | 
+  | BGP                   | bgp          | 
+  | RIP                   | rip          | 
+  | OSPF                  | ospf         | 
+  <br>
 
 Optional:
 

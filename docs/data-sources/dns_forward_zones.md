@@ -16,7 +16,7 @@ description: |-
 # Get forward zones filtered by an attribute
 data "bloxone_dns_forward_zones" "example_by_attribute" {
   filters = {
-    fqdn = "tf-acc-test.com."
+    fqdn = "domain.com."
   }
 }
 

@@ -3,12 +3,12 @@ resource "bloxone_dns_view" "example_view" {
 }
 
 resource "bloxone_dns_forward_zone" "example" {
-  fqdn = "tf-acc-test.com."
+  fqdn = "domain.com."
 
   # Other optional fields
   comment = "Example of a Forward Zone"
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
   view = bloxone_dns_view.example_view.id
 }

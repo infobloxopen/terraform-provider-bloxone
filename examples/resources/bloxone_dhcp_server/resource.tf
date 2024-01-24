@@ -8,6 +8,6 @@ resource "bloxone_dhcp_server" "example_with_options" {
   #Other Optional Fields
   comment = "dhcp server"
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 }

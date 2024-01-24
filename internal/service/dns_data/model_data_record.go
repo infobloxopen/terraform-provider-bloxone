@@ -159,9 +159,20 @@ func recordCommonSchema() map[string]schema.Attribute {
 			},
 		},
 		"options": schema.MapAttribute{
-			ElementType:         types.StringType,
-			Optional:            true,
-			MarkdownDescription: "The DNS resource record type-specific non-protocol options.  Valid value for _A_ (Address) and _AAAA_ (IPv6 Address) records:  Option     | Description -----------|----------------------------------------- create_ptr | A boolean flag which can be set to _true_ for POST operation to automatically create the corresponding PTR record. check_rmz  | A boolean flag which can be set to _true_ for POST operation to check the existence of reverse zone for creating the corresponding PTR record. Only applicable if the _create_ptr_ option is set to _true_.   Valid value for _PTR_ (Pointer) records:  Option     | Description -----------|---------------------------------------- address    | For GET operation it contains the IPv4 or IPv6 address represented by the PTR record.<br><br>For POST and PATCH operations it can be used to create/update a PTR record based on the IP address it represents. In this case, in addition to the _address_ in the options field, need to specify the _view_ field. |",
+			ElementType: types.StringType,
+			Optional:    true,
+			Computed:    true,
+			MarkdownDescription: "The DNS resource record type-specific non-protocol options.\n\n" +
+				"  Valid value for _A_ (Address) and _AAAA_ (IPv6 Address) records:\n\n" +
+				"  | Option     | Description                                                                                                                                                                                                 |\n" +
+				"  |------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n" +
+				"  | create_ptr | A boolean flag which can be set to _true_ for POST operation to automatically create the corresponding PTR record.                                                                                          |\n" +
+				"  | check_rmz  | A boolean flag which can be set to _true_ for POST operation to check the existence of reverse zone for creating the corresponding PTR record. Only applicable if the _create_ptr_ option is set to _true_. |\n\n" +
+				"  Valid value for _PTR_ (Pointer) records:\n\n" +
+				"  | Option     | Description                                                                                                                                                                                                                                                                                                       |\n" +
+				"  |------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n" +
+				"  | address    | For GET operation it contains the IPv4 or IPv6 address represented by the PTR record.<br><br>For POST and PATCH operations it can be used to create/update a PTR record based on the IP address it represents. In this case, in addition to the _address_ in the options field, need to specify the _view_ field. |\n" +
+				"  <br>",
 		},
 		"provider_metadata": schema.MapAttribute{
 			ElementType:         types.StringType,
@@ -169,13 +180,32 @@ func recordCommonSchema() map[string]schema.Attribute {
 			MarkdownDescription: "external DNS provider metadata.",
 		},
 		"source": schema.ListAttribute{
-			ElementType:         types.StringType,
-			Computed:            true,
-			MarkdownDescription: "Source indicator                    | Description ------------------------------------|-------------------------------- _STATIC_                            |  Record was created manually by API call to _dns/record_. Valid for all record types except _SOA_. _SYSTEM_                            |  Record was created automatically based on name server assignment. Valid for _SOA_, _NS_, _A_, _AAAA_, and _PTR_ record types. _DYNAMIC_                           |  Record was created dynamically by performing dynamic update. Valid for all record types except _SOA_. _DELEGATED_                         |  Record was created automatically based on delegation servers assignment. Always extends the _SYSTEM_ bit. Valid for _NS_, _A_, _AAAA_, and _PTR_ record types. _DTC_                               |  Record was created automatically based on the DTC configuration. Always extends the _SYSTEM_ bit. Valid only for _IBMETA_ record type with _LBDN_ subtype. _STATIC_, _SYSTEM_                  |  Record was created manually by API call but it is obfuscated by record generated based on name server assignment. _DYNAMIC_, _SYSTEM_                 |  Record was created dynamically by DDNS but it is obfuscated by record generated based on name server assignment. _DELEGATED_, _SYSTEM_               |  Record was created automatically based on delegation servers assignment. _SYSTEM_ will always accompany _DELEGATED_. _DTC_, _SYSTEM_                     |  Record was created automatically based on the DTC configuration. _SYSTEM_ will always accompany _DTC_. _STATIC_, _SYSTEM_, _DELEGATED_     |  Record was created manually by API call but it is obfuscated by record generated based on name server assignment as a result of creating a delegation. _DYNAMIC_, _SYSTEM_, _DELEGATED_    |  Record was created dynamically by DDNS but it is obfuscated by record generated based on name server assignment as a result of creating a delegation.",
+			ElementType: types.StringType,
+			Computed:    true,
+			MarkdownDescription: "Valid values are: \n\n" +
+				"  | Source indicator                    | Description                                                                                                                                                     |\n" +
+				"  |-------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|\n" +
+				"  | _STATIC_                            | Record was created manually by API call to _dns/record_. Valid for all record types except _SOA_.                                                               |\n" +
+				"  | _SYSTEM_                            | Record was created automatically based on name server assignment. Valid for _SOA_, _NS_, _A_, _AAAA_, and _PTR_ record types.                                   |\n" +
+				"  | _DYNAMIC_                           | Record was created dynamically by performing dynamic update. Valid for all record types except _SOA_.                                                           |\n" +
+				"  | _DELEGATED_                         | Record was created automatically based on delegation servers assignment. Always extends the _SYSTEM_ bit. Valid for _NS_, _A_, _AAAA_, and _PTR_ record types.  |\n" +
+				"  | _DTC_                               | Record was created automatically based on the DTC configuration. Always extends the _SYSTEM_ bit. Valid only for _IBMETA_ record type with _LBDN_ subtype.      |\n" +
+				"  | _STATIC_, _SYSTEM_                  | Record was created manually by API call but it is obfuscated by record generated based on name server assignment.                                               |\n" +
+				"  | _DYNAMIC_, _SYSTEM_                 | Record was created dynamically by DDNS but it is obfuscated by record generated based on name server assignment.                                                |\n" +
+				"  | _DELEGATED_, _SYSTEM_               | Record was created automatically based on delegation servers assignment. _SYSTEM_ will always accompany _DELEGATED_.                                            |\n" +
+				"  | _DTC_, _SYSTEM_                     | Record was created automatically based on the DTC configuration. _SYSTEM_ will always accompany _DTC_.                                                          |\n" +
+				"  | _STATIC_, _SYSTEM_, _DELEGATED_     | Record was created manually by API call but it is obfuscated by record generated based on name server assignment as a result of creating a delegation.          |\n" +
+				"  | _DYNAMIC_, _SYSTEM_, _DELEGATED_    | Record was created dynamically by DDNS but it is obfuscated by record generated based on name server assignment as a result of creating a delegation.           |\n" +
+				"  <br>",
 		},
 		"subtype": schema.StringAttribute{
-			Computed:            true,
-			MarkdownDescription: "The DNS resource record subtype specified in the textual mnemonic format. Valid only in case _type_ is _IBMETA_.  Value | Numeric Type | Description ------|--------------|--------------------------------------------- | 0            | Default value LBDN  | 1            | LBDN record",
+			Computed: true,
+			MarkdownDescription: "The DNS resource record subtype specified in the textual mnemonic format. Valid only in case _type_ is _IBMETA_.\n\n" +
+				"  | Value | Numeric Type | Description   |\n" +
+				"  |-------|--------------|---------------|\n" +
+				"  |       | 0            | Default value |\n" +
+				"  | LBDN  | 1            | LBDN record   |\n" +
+				"  <br>",
 		},
 		"tags": schema.MapAttribute{
 			ElementType:         types.StringType,

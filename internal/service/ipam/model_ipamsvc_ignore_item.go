@@ -26,8 +26,11 @@ var IpamsvcIgnoreItemAttrTypes = map[string]attr.Type{
 
 var IpamsvcIgnoreItemResourceSchemaAttributes = map[string]schema.Attribute{
 	"type": schema.StringAttribute{
-		Required:            true,
-		MarkdownDescription: `Type of ignore matching: client to ignore by client identifier (client hex or client text) or hardware to ignore by hardware identifier (MAC address). It can have one of the following values:  * _client_hex_,  * _client_text_,  * _hardware_.`,
+		Required: true,
+		MarkdownDescription: "Type of ignore matching: client to ignore by client identifier (client hex or client text) or hardware to ignore by hardware identifier (MAC address). It can have one of the following values:\n" +
+			"  * _client_hex_\n" +
+			"  * _client_text_\n" +
+			"  * _hardware_",
 	},
 	"value": schema.StringAttribute{
 		Required:            true,

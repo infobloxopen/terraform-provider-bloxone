@@ -1,7 +1,7 @@
 # Get auth zones filtered by an attribute
 data "bloxone_dns_auth_zones" "example_by_attribute" {
   filters = {
-    fqdn         = "tf-acc-test.com."
+    fqdn         = "domain.com."
     primary_type = "cloud"
   }
 }

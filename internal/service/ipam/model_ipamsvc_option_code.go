@@ -88,15 +88,32 @@ var IpamsvcOptionCodeResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The resource identifier.",
 	},
 	"source": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "The source for the option code.  Valid values are:  * _dhcp_server_  * _reserved_  * _blox_one_ddi_  * _customer_  Defaults to _customer_.",
+		Computed: true,
+		MarkdownDescription: "The source for the option code. Valid values are:\n" +
+			"  * _dhcp_server_\n" +
+			"  * _reserved_\n" +
+			"  * _blox_one_ddi_\n" +
+			"  * _customer_\n\n" +
+			"  Defaults to _customer_.",
 	},
 	"type": schema.StringAttribute{
 		Required: true,
 		Validators: []validator.String{
 			stringvalidator.OneOf("address4", "address6", "boolean", "empty", "fqdn", "int8", "int16", "int32", "text", "uint8", "uint16", "uint32"),
 		},
-		MarkdownDescription: "The option type for the option code.  Valid values are: * _address4_ * _address6_ * _boolean_ * _empty_ * _fqdn_ * _int8_ * _int16_ * _int32_ * _text_ * _uint8_ * _uint16_ * _uint32_",
+		MarkdownDescription: "The option type for the option code. Valid values are:\n" +
+			"  * _address4_\n" +
+			"  * _address6_\n" +
+			"  * _boolean_\n" +
+			"  * _empty_\n" +
+			"  * _fqdn_\n" +
+			"  * _int8_\n" +
+			"  * _int16_\n" +
+			"  * _int32_\n" +
+			"  * _text_\n" +
+			"  * _uint8_\n" +
+			"  * _uint16_\n" +
+			"  * _uint32_",
 	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},

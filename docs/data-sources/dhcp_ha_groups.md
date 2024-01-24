@@ -51,7 +51,10 @@ data "bloxone_dhcp_ha_groups" "example_all" {}
 Required:
 
 - `hosts` (Attributes List) The list of hosts. (see [below for nested schema](#nestedatt--results--hosts))
-- `mode` (String) The mode of the HA group.  Valid values are: * _active-active_: Both on-prem hosts remain active. * _active-passive_: One on-prem host remains active and one remains passive. When the active on-prem host is down, the passive on-prem host takes over. * _advanced-active-passive_: One on-prem host may be part of multiple HA groups. When the active on-prem host is down, the passive on-prem host takes over.
+- `mode` (String) The mode of the HA group. Valid values are:
+  * _active-active_: Both on-prem hosts remain active.
+  * _active-passive_: One on-prem host remains active and one remains passive. When the active on-prem host is down, the passive on-prem host takes over.
+  * _advanced-active-passive_: One on-prem host may be part of multiple HA groups. When the active on-prem host is down, the passive on-prem host takes over.
 - `name` (String) The name of the HA group. Must contain 1 to 256 characters. Can include UTF-8.
 
 Optional:
