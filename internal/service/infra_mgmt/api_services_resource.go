@@ -204,7 +204,7 @@ func (r *ServicesResource) waitServiceStartStop(ctx context.Context, name, desir
 
 func (r *ServicesResource) waitServiceStarted(ctx context.Context, name string, timeout time.Duration) error {
 	scf := retry.StateChangeConf{
-		Pending: []string{"starting"},
+		Pending: []string{"starting", "error"}, // The service can be in a temporary error state, but is expected to recover.
 		Target:  []string{"started"},
 		Refresh: r.stateRefreshFunc(name),
 		Timeout: timeout,
