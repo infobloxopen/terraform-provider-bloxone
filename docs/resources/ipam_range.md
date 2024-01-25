@@ -43,6 +43,12 @@ resource "bloxone_ipam_range" "example" {
   tags = {
     location = "site1"
   }
+  exclusion_ranges = [
+    {
+      start = "192.168.1.17"
+      end   = "192.168.1.20"
+    }
+  ]
   depends_on = [bloxone_ipam_subnet.example]
 }
 ```
