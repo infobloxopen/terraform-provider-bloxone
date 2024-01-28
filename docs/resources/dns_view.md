@@ -70,7 +70,7 @@ resource "bloxone_dns_view" "example" {
   zone_authority = {
     default_ttl       = 28800
     expire            = 2419200
-    mname             = "ns.b1ddi.example.com"
+    mname             = "ns.example.com"
     negative_ttl      = 900
     refresh           = 10800
     retry             = 3600
