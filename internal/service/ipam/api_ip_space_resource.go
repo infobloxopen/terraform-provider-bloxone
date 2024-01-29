@@ -39,7 +39,7 @@ func (r *IpSpaceResource) Metadata(ctx context.Context, req resource.MetadataReq
 
 func (r *IpSpaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The IPSpace object represents an entire address space.",
+		MarkdownDescription: "Manages an IP Space.\n\nThe IP Space object represents an entire address space.",
 		Attributes:          IpamsvcIPSpaceResourceSchemaAttributes,
 	}
 }

@@ -32,7 +32,7 @@ func (r *TsigResource) Metadata(ctx context.Context, req resource.MetadataReques
 
 func (r *TsigResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "A TSIGKey object represents a TSIG key.",
+		MarkdownDescription: "Manages a TSIG Key.",
 		Attributes:          KeysTSIGKeyResourceSchemaAttributes,
 	}
 }

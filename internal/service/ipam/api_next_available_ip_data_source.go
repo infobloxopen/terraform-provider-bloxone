@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -73,7 +74,7 @@ func (d *NextAvailableIPDataSource) Metadata(_ context.Context, req datasource.M
 
 func (d *NextAvailableIPDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: ``,
+		MarkdownDescription: "Retrieves the next available IP addresses in the specified resource. The resource can be an address block, subnet or range.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Required:            true,
@@ -95,7 +96,7 @@ func (d *NextAvailableIPDataSource) Schema(_ context.Context, _ datasource.Schem
 			"results": schema.ListAttribute{
 				ElementType:         types.StringType,
 				Computed:            true,
-				MarkdownDescription: "List of Next available IP address in the specified resource",
+				MarkdownDescription: "List of next available IP addresses in the specified resource",
 			},
 		},
 	}
