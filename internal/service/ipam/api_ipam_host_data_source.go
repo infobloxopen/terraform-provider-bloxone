@@ -46,7 +46,7 @@ func (m *IpamsvcIpamHostModelWithFilter) FlattenResults(ctx context.Context, fro
 
 func (d *IpamHostDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Retrieves information about existing IPAM Hosts.\n\nThe IPAM host object represents any network connected equipment that is assigned one or more IP Addresses.",
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",

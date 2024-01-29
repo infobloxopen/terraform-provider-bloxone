@@ -97,7 +97,3 @@ func (r recordCNAMEResource) resourceName() string {
 func (r recordCNAMEResource) dataSourceName() string {
 	return "dns_cname_records"
 }
-
-func (r recordCNAMEResource) description() string {
-	return "Represents a DNS CNAME resource record in an authoritative zone."
-}

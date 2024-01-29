@@ -33,7 +33,7 @@ func (r *AddressBlockResource) Metadata(_ context.Context, req resource.Metadata
 
 func (r *AddressBlockResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The AddressBlock object allows a uniform representation of the address space segmentation, " +
+		MarkdownDescription: "Manages an Address Block.\n\nThe Address Block object allows a uniform representation of the address space segmentation, " +
 			"supporting functions such as administrative grouping, routing aggregation, delegation etc.",
 		Attributes: IpamsvcAddressBlockResourceSchemaAttributes,
 	}

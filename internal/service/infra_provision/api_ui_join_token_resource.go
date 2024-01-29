@@ -33,7 +33,7 @@ func (r *UIJoinTokenResource) Metadata(ctx context.Context, req resource.Metadat
 
 func (r *UIJoinTokenResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: ``,
+		MarkdownDescription: "Manages a Host Activation Join Token.\n\nA join token is random character string which is used for instant validation of new hosts.",
 		Attributes:          HostactivationJoinTokenResourceSchemaAttributes,
 	}
 }

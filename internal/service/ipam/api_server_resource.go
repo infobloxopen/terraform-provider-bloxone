@@ -31,7 +31,7 @@ func (r *ServerResource) Metadata(ctx context.Context, req resource.MetadataRequ
 
 func (r *ServerResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages a DHCP Config Profile.\n\nA Server (DHCP Config Profile) is a named configuration profile that can be shared for specified list of hosts.",
 		Attributes:          IpamsvcServerResourceSchemaAttributes,
 	}
 }

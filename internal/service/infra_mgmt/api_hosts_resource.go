@@ -31,7 +31,7 @@ func (r *HostsResource) Metadata(ctx context.Context, req resource.MetadataReque
 
 func (r *HostsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages an Infrastructure Host.",
 		Attributes:          InfraHostResourceSchemaAttributes,
 	}
 }

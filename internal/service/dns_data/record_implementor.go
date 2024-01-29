@@ -15,7 +15,6 @@ type recordModelCommon interface {
 	schemaAttributes() map[string]schema.Attribute
 	attributeTypes() map[string]attr.Type
 	recordType() string
-	description() string
 }
 
 type recordResourceImplementor interface {
