@@ -31,7 +31,7 @@ func (r *ForwardNsgResource) Metadata(ctx context.Context, req resource.Metadata
 
 func (r *ForwardNsgResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The dns/forward_nsg object represents a Forward DNS Server Group for forward zones.",
+		MarkdownDescription: "Manages a Forward DNS Server Group for forward zones.",
 		Attributes:          ConfigForwardNSGResourceSchemaAttributes,
 	}
 }

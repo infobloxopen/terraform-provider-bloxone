@@ -45,11 +45,15 @@ type DataRecordModelWithFilter struct {
 }
 
 func (d *RecordDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+	desc := fmt.Sprintf("Retrieves information about existing DNS %s resource records.", d.impl.recordType())
 	var typeValidator []validator.String
 	if d.impl.recordType() == "Generic" {
 		typeValidator = []validator.String{
 			validateGenericType,
 		}
+		desc = "Retrieves information about existing DNS resource records. The record type is specified with the `type` attribute.\n\n" +
+			"For the following record types, use the terraform data source for the corresponding resource type, e.g. `bloxone_dns_a_record` - " +
+			"_A_, _AAAA_, _CAA_, _CNAME_, _DNAME_, _MX_, _NAPTR_, _NS_, _PTR_, _SRV_, _TXT_, _HTTPS_, _SVCB_"
 	}
 
 	attributes := map[string]schema.Attribute{
@@ -81,7 +85,7 @@ func (d *RecordDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 	}
 
 	resp.Schema = schema.Schema{
-		MarkdownDescription: d.impl.description(),
+		MarkdownDescription: desc,
 		Attributes:          attributes,
 	}
 }

@@ -58,7 +58,7 @@ func (d *NextAvailableSubnetDataSource) Metadata(_ context.Context, req datasour
 
 func (d *NextAvailableSubnetDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Retrieves the next available subnets in the specified address block.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Required:            true,

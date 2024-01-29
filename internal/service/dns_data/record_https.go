@@ -96,7 +96,3 @@ func (r recordHTTPSResource) resourceName() string {
 func (r recordHTTPSResource) dataSourceName() string {
 	return "dns_https_records"
 }
-
-func (r recordHTTPSResource) description() string {
-	return "Represents a DNS HTTPS resource record in an authoritative zone."
-}

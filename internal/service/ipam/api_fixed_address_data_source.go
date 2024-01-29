@@ -46,7 +46,7 @@ func (m *IpamsvcFixedAddressModelWithFilter) FlattenResults(ctx context.Context,
 
 func (d *FixedAddressDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Retrieves information about existing Fixed Addresses.\n\nThe Fixed Address object reserves an address for a specific client. It must have a _match_type_ and a valid corresponding _match_value_ so that it can match that client.",
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",

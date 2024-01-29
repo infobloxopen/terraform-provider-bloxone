@@ -46,7 +46,9 @@ func (m *IpamsvcRangeModelWithFilter) FlattenResults(ctx context.Context, from [
 
 func (d *RangeDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Retrieves information about existing DHCP Ranges.\n\nA Range object represents a set of contiguous IP addresses in the same IP space with no gap, " +
+			"expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. " +
+			"The start and end values are not required to align with CIDR boundaries.",
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",

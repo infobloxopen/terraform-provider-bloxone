@@ -31,7 +31,7 @@ func (r *ForwardZoneResource) Metadata(ctx context.Context, req resource.Metadat
 
 func (r *ForwardZoneResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: `This object (dns/forward_zone) represents a forwarding zone`,
+		MarkdownDescription: "Manages a forwarding zone",
 		Attributes:          ConfigForwardZoneResourceSchemaAttributes,
 	}
 }

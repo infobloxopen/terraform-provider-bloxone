@@ -35,7 +35,7 @@ func (r *ServicesResource) Metadata(ctx context.Context, req resource.MetadataRe
 
 func (r *ServicesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages an Infrastructure Service (a.k.a BloxOne Applications).",
 		Attributes:          InfraServiceResourceSchemaAttributesWithTimeouts(ctx),
 	}
 }
