@@ -188,7 +188,3 @@ func (r recordGenericResource) resourceName() string {
 func (r recordGenericResource) dataSourceName() string {
 	return "dns_records"
 }
-
-func (r recordGenericResource) description() string {
-	return "Represents a DNS resource record in an authoritative zone."
-}

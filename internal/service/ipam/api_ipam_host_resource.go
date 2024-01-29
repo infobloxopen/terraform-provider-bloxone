@@ -31,7 +31,7 @@ func (r *IpamHostResource) Metadata(ctx context.Context, req resource.MetadataRe
 
 func (r *IpamHostResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The IpamHost object (ipam/host) represents any network connected equipment that is assigned one or more IP Addresses.",
+		MarkdownDescription: "Manages an IPAM Host.\n\nThe IPAM host object represents any network connected equipment that is assigned one or more IP Addresses.",
 		Attributes:          IpamsvcIpamHostResourceSchemaAttributes,
 	}
 }

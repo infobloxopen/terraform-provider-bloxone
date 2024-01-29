@@ -31,7 +31,7 @@ func (r *DelegationResource) Metadata(ctx context.Context, req resource.Metadata
 
 func (r *DelegationResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: `This object (dns/delegation) represents a zone delegation.`,
+		MarkdownDescription: `Manages a zone delegation.`,
 		Attributes:          ConfigDelegationResourceSchemaAttributes,
 	}
 }
