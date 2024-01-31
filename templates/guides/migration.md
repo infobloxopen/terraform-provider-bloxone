@@ -14,13 +14,13 @@ The BloxOne provider replaces the [B1DDI provider](https://registry.terraform.io
 ## Backup
 
 Before making changes to your state, it's a good idea to back up your state file. Any state modification commands made using the CLI will automatically create a backup. 
-If you prefer to manually back up your state file, you can copy your `terraform.tfstate` file to a backup directory.
+If you prefer to manually back up your state file, you can copy your `terraform.tfstate` file to a backup locatiohn.
 
 Having a backup ensures that you have a snapshot of your infrastructure's state at a specific moment, allowing you to revert or refer to it if necessary.
 
 ## Add new provider
 
-Add the new provider to your configuration. For example:
+You will need the new provider to be added to your configuration. For example:
 
 ```terraform 
 terraform {
@@ -79,21 +79,30 @@ If your configuration was already in use, you will need to replace the provider 
 It is recommended that you start fresh and re apply your configuration to a new state file.
 
 If you want to preserve your state, you will have to move the resources to the new provider with the new name. 
-To do this you will have to remove the old resource from state, and import the new resource into state. For example:
+To do this you will have to remove the old resource from state, and import the new resource into state. 
 
-```terraform
-terraform state rm b1ddi_ip_space.example
-terraform import bloxone_ipam_ip_space.example ipam/ip_space/5f26be86-abef-11ee-babd-a2f371a672c6
-```
-> NOTE: do not run `terraform plan` until you have moved all resources to the new provider in the state file.
+-> Do not run `terraform plan` until you have moved all resources to the new provider in the state file.
 
-The `terraform import` command requires the resource ID.
-You can use the `terraform show` command to get the IDs of all resources in your state file. For example:
+To import the new resource, you will need the ID of all existing resource. You can use the `terraform show` command to get the IDs of all resources in your state file. For example:
 
+#### Get Resource IDs
 ```shell
 terraform show -json | jq -c '.values.root_module.resources[] | {"resource":.address, "id":.values.id}'
 ```
----
+
+#### Remove old resource from state
+To remove the old resource from state, you can use the `terraform state rm` command. For example:
+
+```shell
+terraform state rm b1ddi_ip_space.example
+```
+
+#### Import new resource into state
+To import the new resource into state, you can use the `terraform import` command. For example:
+
+```shell
+terraform import bloxone_ipam_ip_space.example ipam/ip_space/5f26be86-abef-11ee-babd-a2f371a672c6
+```
 If you are using Terraform v1.5.0 or later, you can also use the [import block](https://developer.hashicorp.com/terraform/language/import) in your configuration to import the resource into state. For example:
 
 ```terraform 
@@ -103,7 +112,7 @@ import {
 }
 ```
 
-## Plan and apply
+## Plan and Apply
 
 Once you have replaced all the resources in your configuration and state, you can run `terraform plan` to see what changes will be made to your infrastructure.
 There should be no changes to your infrastructure if you have replaced all the resources correctly.
