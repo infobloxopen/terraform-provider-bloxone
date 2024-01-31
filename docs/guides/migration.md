@@ -53,7 +53,7 @@ The resource types have changed in the new provider. The following table shows t
 | b1ddi_dns_auth_nsg    | bloxone_dns_auth_nsg       |
 | b1ddi_dns_record      | bloxone_dns_record*        |
 
-> NOTE: The _b1ddi_dns_record_ in the B1DDDI provider used to be a single resource type that could be used to create any type of DNS record. 
+> NOTE: The _b1ddi_dns_record_ in the B1DDI provider used to be a single resource type that could be used to create any type of DNS record. 
 > In the BloxOne provider, this has been split into multiple resource types, one for each record type. 
 > For example, _b1ddi_dns_record_ is now _bloxone_dns_a_record_, _bloxone_dns_aaaa_record_, _bloxone_dns_caa_record_, etc. 
 > 
