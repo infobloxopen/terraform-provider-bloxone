@@ -14,7 +14,7 @@ The BloxOne provider replaces the [B1DDI provider](https://registry.terraform.io
 ## Backup
 
 Before making changes to your state, it's a good idea to back up your state file. Any state modification commands made using the CLI will automatically create a backup. 
-If you prefer to manually back up your state file, you can copy your `terraform.tfstate` file to a backup locatiohn.
+If you prefer to manually back up your state file, you can copy your `terraform.tfstate` file to a backup location.
 
 Having a backup ensures that you have a snapshot of your infrastructure's state at a specific moment, allowing you to revert or refer to it if necessary.
 
