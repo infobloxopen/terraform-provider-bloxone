@@ -1,54 +1,54 @@
 package ipam_test
 
 import (
-    "fmt"
-    "regexp"
-    "strings"
-    "testing"
+	"fmt"
+	"regexp"
+	"strings"
+	"testing"
 
-    "github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-    "github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestDataSourceNextAvailableSubnet(t *testing.T) {
-    dataSourceName := "data.bloxone_ipam_next_available_subnets.test"
+	dataSourceName := "data.bloxone_ipam_next_available_subnets.test"
 
-    resource.Test(t, resource.TestCase{
-        PreCheck:                 func() { acctest.PreCheck(t) },
-        ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-        Steps: []resource.TestStep{
-            {
-                Config: `
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: `
 					data "bloxone_ipam_next_available_subnets" "test" {
 						id = "/test/address_block/123455678"
 						cidr = 25
 					}	
 				`,
-                ExpectError: regexp.MustCompile("invalid resource ID specified"),
-            },
-            {
-                Config: testAccDataSourceNextAvailableSubnet(1, 26),
-                Check: resource.ComposeAggregateTestCheckFunc(
-                    resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
-                    resource.TestCheckResourceAttrSet(dataSourceName, "results.0"),
-                ),
-            },
-            {
-                Config: testAccDataSourceNextAvailableSubnet(3, 27),
-                Check: resource.ComposeAggregateTestCheckFunc(
-                    resource.TestCheckResourceAttrPair(dataSourceName, "subnet_count", dataSourceName, "results.#"),
-                    resource.TestCheckResourceAttrSet(dataSourceName, "results.0"),
-                    resource.TestCheckResourceAttrSet(dataSourceName, "results.1"),
-                    resource.TestCheckResourceAttrSet(dataSourceName, "results.2"),
-                ),
-            },
-        },
-    })
+				ExpectError: regexp.MustCompile("invalid resource ID specified"),
+			},
+			{
+				Config: testAccDataSourceNextAvailableSubnet(1, 26),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.0"),
+				),
+			},
+			{
+				Config: testAccDataSourceNextAvailableSubnet(3, 27),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttrPair(dataSourceName, "subnet_count", dataSourceName, "results.#"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.0"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.1"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.2"),
+				),
+			},
+		},
+	})
 }
 
 func testAccDataSourceNextAvailableSubnetBaseConfig() string {
-    return fmt.Sprintf(`
+	return fmt.Sprintf(`
 	resource "bloxone_ipam_ip_space" "test" {
 		name = %q
 	}
@@ -61,21 +61,21 @@ func testAccDataSourceNextAvailableSubnetBaseConfig() string {
 `, acctest.RandomNameWithPrefix("nextAvailableIPSpace"), acctest.RandomNameWithPrefix("nextAvailableAB"))
 }
 func testAccDataSourceNextAvailableSubnet(count, cidr int) string {
-    var config string
-    if count == 1 {
-        config = fmt.Sprintf(`
+	var config string
+	if count == 1 {
+		config = fmt.Sprintf(`
 	data "bloxone_ipam_next_available_subnets" "test" {
 		id = bloxone_ipam_address_block.test.id
 		cidr = %d
 	}`, cidr)
-    } else {
-        config = fmt.Sprintf(`
+	} else {
+		config = fmt.Sprintf(`
 	data "bloxone_ipam_next_available_subnets" "test" {
 		id = bloxone_ipam_address_block.test.id
 		cidr = %d
 		subnet_count = %d
 	}`, cidr, count)
-    }
+	}
 
-    return strings.Join([]string{testAccDataSourceNextAvailableSubnetBaseConfig(), config}, "")
+	return strings.Join([]string{testAccDataSourceNextAvailableSubnetBaseConfig(), config}, "")
 }

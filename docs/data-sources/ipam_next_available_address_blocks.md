@@ -42,9 +42,7 @@ data "bloxone_ipam_next_available_address_blocks" "example_next_available_ab_def
 ### Optional
 
 - `address_block_count` (Number) Number of address blocks to generate. Default 1 if not set.
-- `comment` (String) Comment of next available address blocks.
-- `name` (String) Name of next available address blocks.
 
 ### Read-Only
 
-- `results` (List of String) List of Next available Subnet address in the specified resource
+- `results` (List of String) List of next available address block's addresses in the specified resource.
