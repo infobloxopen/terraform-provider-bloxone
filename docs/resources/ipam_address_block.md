@@ -69,7 +69,49 @@ resource "bloxone_ipam_address_block" "example_tags" {
         value = "333964392D4769302F31"
       }
     ]
+  }
+}
 
+# Next available address block
+resource "bloxone_ipam_address_block" "example_na_ab" {
+  next_available_id = bloxone_ipam_address_block.example.id
+  cidr              = 26
+  space             = bloxone_ipam_ip_space.example.id
+
+  # Other optional fields
+  name    = "example_address_block_tags"
+  comment = "Example address block with tags created by the terraform provider"
+  tags = {
+    location = "site1"
+  }
+  asm_config = {
+    asm_threshold       = 90
+    enable              = "true"
+    enable_notification = "true"
+    forecast_period     = 10
+    growth_factor       = 10
+    growth_type         = "percent"
+    history             = 30
+    min_total           = 2
+    min_unused          = 10
+    reenable_date       = "2024-01-24T10:10:00+00:00"
+  }
+  dhcp_config = {
+    allow_unknown = true
+    ignore_list = [
+      {
+        type  = "hardware"
+        value = "aa:bb:cc:dd:ee:ff"
+      },
+      {
+        type  = "client_text"
+        value = "001d.a18b.36d0"
+      },
+      {
+        type  = "client_hex"
+        value = "333964392D4769302F31"
+      }
+    ]
   }
 }
 ```
@@ -79,12 +121,12 @@ resource "bloxone_ipam_address_block" "example_tags" {
 
 ### Required
 
-- `address` (String) The address field in form 'a.b.c.d'.
 - `cidr` (Number) The CIDR of the address block. This is required, if _address_ does not specify it in its input.
 - `space` (String) The resource identifier.
 
 ### Optional
 
+- `address` (String) The address field in form 'a.b.c.d'.
 - `asm_config` (Attributes) (see [below for nested schema](#nestedatt--asm_config))
 - `comment` (String) The description for the address block. May contain 0 to 1024 characters. Can include UTF-8.
 - `ddns_client_update` (String) Controls who does the DDNS updates. Valid values are:
@@ -122,7 +164,7 @@ resource "bloxone_ipam_address_block" "example_tags" {
 - `inheritance_parent` (String) The resource identifier.
 - `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources))
 - `name` (String) The name of the address block. May contain 1 to 256 characters. Can include UTF-8.
-- `parent` (String) The resource identifier.
+- `next_available_id` (String) The resource identifier for the address block where the next available address block should be generated
 - `tags` (Map of String) The tags for the address block in JSON format.
 
 ### Read-Only
@@ -130,6 +172,7 @@ resource "bloxone_ipam_address_block" "example_tags" {
 - `asm_scope_flag` (Number) Incremented by 1 if the IP address usage limits for automated scope management are exceeded for any subnets in the address block.
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
+- `parent` (String) The resource identifier.
 - `protocol` (String) The type of protocol of address block (_ip4_ or _ip6_).
 - `threshold` (Attributes) (see [below for nested schema](#nestedatt--threshold))
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
