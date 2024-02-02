@@ -811,6 +811,44 @@ func TestAccAddressBlockResource_Tags(t *testing.T) {
 	})
 }
 
+func TestAccAddressBlockResource_NextAvailable_AddressBlock(t *testing.T) {
+	var resourceName = "bloxone_ipam_address_block.test_next_available"
+	var v1 ipam.IpamsvcAddressBlock
+	var v2 ipam.IpamsvcAddressBlock
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAddressBlockNextAvailableInAB("10.0.0.0", 24, 26),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressBlockExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_ipam_address_block.test", "id"),
+					resource.TestCheckResourceAttr(resourceName, "address", "10.0.0.0"),
+					resource.TestCheckResourceAttr(resourceName, "cidr", "26"),
+					resource.TestCheckResourceAttrSet(resourceName, "id"),
+				),
+			},
+			// Update and Read
+			// Update of next_available_id will destroy existing resource and create a new resource
+			{
+				Config: testAccAddressBlockNextAvailableInAB("12.0.0.0", 8, 16),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressBlockDestroy(context.Background(), &v1),
+					testAccCheckAddressBlockExists(context.Background(), resourceName, &v2),
+					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_ipam_address_block.test", "id"),
+					resource.TestCheckResourceAttr(resourceName, "address", "12.0.0.0"),
+					resource.TestCheckResourceAttr(resourceName, "cidr", "16"),
+					resource.TestCheckResourceAttrSet(resourceName, "id"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func testAccCheckAddressBlockExists(ctx context.Context, resourceName string, v *ipam.IpamsvcAddressBlock) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
@@ -1226,5 +1264,23 @@ resource "bloxone_ipam_address_block" "test_tags" {
     tags = %s
 }
 `, address, cidr, tagsStr)
+	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+}
+
+func testAccAddressBlockNextAvailableInAB(address string, cidr, wantedCidr int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test" {
+    address = %q
+    cidr = %d
+    space = bloxone_ipam_ip_space.test.id
+}
+
+resource "bloxone_ipam_address_block" "test_next_available" {
+    next_available_id = bloxone_ipam_address_block.test.id
+    cidr = %d 
+    space = bloxone_ipam_ip_space.test.id
+    depends_on = [bloxone_ipam_address_block.test]
+}
+`, address, cidr, wantedCidr)
 	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }

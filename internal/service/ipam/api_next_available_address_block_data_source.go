@@ -19,25 +19,25 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ datasource.DataSource = &NextAvailableSubnetDataSource{}
+var _ datasource.DataSource = &NextAvailableAddressBlockDataSource{}
 
-func NewNextAvailableSubnetDataSource() datasource.DataSource {
-	return &NextAvailableSubnetDataSource{}
+func NewNextAvailableAddressBlockDataSource() datasource.DataSource {
+	return &NextAvailableAddressBlockDataSource{}
 }
 
-// NextAvailableSubnetDataSource defines the data source implementation.
-type NextAvailableSubnetDataSource struct {
+// NextAvailableAddressBlockDataSource defines the data source implementation.
+type NextAvailableAddressBlockDataSource struct {
 	client *bloxoneclient.APIClient
 }
 
-type IpamsvcNextAvailableSubnetModel struct {
+type IpamsvcNextAvailableAddressBlockModel struct {
 	Id      types.String `tfsdk:"id"`
 	Cidr    types.Int64  `tfsdk:"cidr"`
-	Count   types.Int64  `tfsdk:"subnet_count"`
+	Count   types.Int64  `tfsdk:"address_block_count"`
 	Results types.List   `tfsdk:"results"`
 }
 
-func (m *IpamsvcNextAvailableSubnetModel) FlattenResults(ctx context.Context, from []ipam.IpamsvcSubnet, diags *diag.Diagnostics) {
+func (m *IpamsvcNextAvailableAddressBlockModel) FlattenResults(ctx context.Context, from []ipam.IpamsvcAddressBlock, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -49,13 +49,13 @@ func (m *IpamsvcNextAvailableSubnetModel) FlattenResults(ctx context.Context, fr
 	m.Results = flex.FlattenFrameworkListString(ctx, listOfAddress, diags)
 }
 
-func (d *NextAvailableSubnetDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "ipam_next_available_subnets"
+func (d *NextAvailableAddressBlockDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "ipam_next_available_address_blocks"
 }
 
-func (d *NextAvailableSubnetDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *NextAvailableAddressBlockDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Retrieves the next available subnets in the specified address block.",
+		MarkdownDescription: "Retrieves the next available address blocks in the specified address block.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Required:            true,
@@ -66,22 +66,22 @@ func (d *NextAvailableSubnetDataSource) Schema(ctx context.Context, req datasour
 			},
 			"cidr": schema.Int64Attribute{
 				Required:            true,
-				MarkdownDescription: `The cidr value of subnets to be created.`,
+				MarkdownDescription: `The cidr value of address blocks to be created.`,
 			},
-			"subnet_count": schema.Int64Attribute{
+			"address_block_count": schema.Int64Attribute{
 				Optional:            true,
-				MarkdownDescription: `Number of subnets to generate. Default 1 if not set.`,
+				MarkdownDescription: `Number of address blocks to generate. Default 1 if not set.`,
 			},
 			"results": schema.ListAttribute{
 				ElementType:         types.StringType,
 				Computed:            true,
-				MarkdownDescription: "List of Next available Subnet address in the specified resource",
+				MarkdownDescription: "List of next available address block's addresses in the specified resource.",
 			},
 		},
 	}
 }
 
-func (d *NextAvailableSubnetDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (d *NextAvailableAddressBlockDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -100,8 +100,8 @@ func (d *NextAvailableSubnetDataSource) Configure(_ context.Context, req datasou
 	d.client = client
 }
 
-func (d *NextAvailableSubnetDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data IpamsvcNextAvailableSubnetModel
+func (d *NextAvailableAddressBlockDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data IpamsvcNextAvailableAddressBlockModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -112,12 +112,12 @@ func (d *NextAvailableSubnetDataSource) Read(ctx context.Context, req datasource
 
 	apiRes, _, err := d.client.IPAddressManagementAPI.
 		AddressBlockAPI.
-		AddressBlockListNextAvailableSubnet(ctx, data.Id.ValueString()).
+		AddressBlockListNextAvailableAB(ctx, data.Id.ValueString()).
 		Cidr(int32(data.Cidr.ValueInt64())).
 		Count(int32(data.Count.ValueInt64())).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read AddressBlock Next Available Subnet API, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read AddressBlock Next Available Address Block API, got error: %s", err))
 		return
 	}
 
