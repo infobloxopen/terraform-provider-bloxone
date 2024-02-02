@@ -94,7 +94,7 @@ Optional:
 - `inheritance_parent` (String) The resource identifier.
 - `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources))
 - `name` (String) The name of the address block. May contain 1 to 256 characters. Can include UTF-8.
-- `next_available_id` (String) The resource identifier for the address block where the next available address block should be generated
+- `next_available_id` (String) The resource identifier for the address block where the next available address block should be generated.
 - `tags` (Map of String) The tags for the address block in JSON format.
 
 Read-Only:
