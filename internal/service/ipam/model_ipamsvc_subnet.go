@@ -2,6 +2,7 @@ package ipam
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
@@ -257,6 +258,9 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional:            true,
 		MarkdownDescription: "The DHCP options of the subnet. This can either be a specific option or a group of options.",
+		PlanModifiers: []planmodifier.List{
+			listplanmodifier.RequiresReplaceIfConfigured(),
+		},
 	},
 	"dhcp_utilization": schema.SingleNestedAttribute{
 		Attributes: IpamsvcDHCPUtilizationResourceSchemaAttributes,
