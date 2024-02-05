@@ -428,8 +428,6 @@ func TestAccSubnetResource_DhcpOptions(t *testing.T) {
 					testAccCheckSubnetDestroy(context.Background(), &v1),
 					testAccCheckSubnetExists(context.Background(), resourceName, &v2),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
-					//resource.TestCheckResourceAttr(resourceName, "dhcp_options.0.option_value", "false"),
-					//resource.TestCheckResourceAttrPair(resourceName, "dhcp_options.0.option_code", "bloxone_dhcp_option_code.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
