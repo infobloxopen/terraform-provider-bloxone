@@ -148,7 +148,6 @@ func TestAccServerResource_DdnsClientUpdate(t *testing.T) {
 	})
 }
 
-// issue
 func TestAccServerResource_DdnsConflictResolutionMode(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_conflict_resolution_mode"
 	var v ipam.IpamsvcServer
@@ -391,7 +390,6 @@ func TestAccServerResource_DdnsUpdateOnRenew(t *testing.T) {
 	})
 }
 
-// issue
 func TestAccServerResource_DdnsUseConflictResolution(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_use_conflict_resolution"
 	var v ipam.IpamsvcServer
@@ -424,7 +422,6 @@ func TestAccServerResource_DdnsUseConflictResolution(t *testing.T) {
 	})
 }
 
-// list
 func TestAccServerResource_DdnsZones(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_zones"
 	var v ipam.IpamsvcServer

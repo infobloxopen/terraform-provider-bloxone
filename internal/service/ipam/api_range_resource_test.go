@@ -134,7 +134,7 @@ func TestAccRangeResource_DisableDhcp(t *testing.T) {
 
 func TestAccRangeResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_dhcp_options"
-	var v ipam.IpamsvcRange
+	var v1, v2 ipam.IpamsvcRange
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -144,7 +144,7 @@ func TestAccRangeResource_DhcpOptions(t *testing.T) {
 			{
 				Config: testAccRangeDhcpOptionsOption("10.0.0.10", "10.0.0.20", "option", "true"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRangeExists(context.Background(), resourceName, &v),
+					testAccCheckRangeExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.0.option_value", "true"),
 					resource.TestCheckResourceAttrPair(resourceName, "dhcp_options.0.option_code", "bloxone_dhcp_option_code.test", "id"),
@@ -154,7 +154,8 @@ func TestAccRangeResource_DhcpOptions(t *testing.T) {
 			{
 				Config: testAccRangeDhcpOptionsGroup("10.0.0.10", "10.0.0.20", "group"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRangeExists(context.Background(), resourceName, &v),
+					testAccCheckRangeDestroy(context.Background(), &v1),
+					testAccCheckRangeExists(context.Background(), resourceName, &v2),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
 				),
 			},
