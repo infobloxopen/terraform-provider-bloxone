@@ -27,11 +27,11 @@ resource "bloxone_dns_auth_zone" "example" {
     },
     {
       element = "acl"
-      acl = bloxone_dns_acl.test.id
+      acl     = bloxone_dns_acl.test.id
     },
     {
       element = "tsig_key"
-      access = "deny"
+      access  = "deny"
       tsig_key = {
         key = bloxone_keys_tsig.test.id
       }
@@ -49,11 +49,11 @@ resource "bloxone_dns_auth_zone" "example" {
     },
     {
       element = "acl"
-      acl = bloxone_dns_acl.test.id
+      acl     = bloxone_dns_acl.test.id
     },
     {
       element = "tsig_key"
-      access = "deny"
+      access  = "deny"
       tsig_key = {
         key = bloxone_keys_tsig.test.id
       }
@@ -71,11 +71,11 @@ resource "bloxone_dns_auth_zone" "example" {
     },
     {
       element = "acl"
-      acl = bloxone_dns_acl.test.id
+      acl     = bloxone_dns_acl.test.id
     },
     {
       element = "tsig_key"
-      access = "deny"
+      access  = "deny"
       tsig_key = {
         key = bloxone_keys_tsig.test.id
       }

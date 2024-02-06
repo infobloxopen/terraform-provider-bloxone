@@ -17,9 +17,6 @@ import (
 
 //TODO: add tests
 // The following require additional resource/data source objects to be supported.
-// - inheritance_sources
-// - ACL Type - TSIG Key
-// - ACL Type - ACL
 // - zone_authority : Mname and rname provide inconsistent result after apply
 
 func TestAccViewResource_basic(t *testing.T) {
@@ -623,7 +620,7 @@ func TestAccViewResource_FilterAaaaAcl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewAclIP("filter_aaaa_acl", name, "allow", "192.168.10.10"),
+				Config: testAccAclIP("view", "filter_aaaa_acl", name, "allow", "192.168.10.10"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.access", "allow"),
@@ -633,11 +630,28 @@ func TestAccViewResource_FilterAaaaAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccViewAclAny("filter_aaaa_acl", name, "deny"),
+				Config: testAccAclAny("view", "filter_aaaa_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("view", "filter_aaaa_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "acl"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("view", "filter_aaaa_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "tsig_key"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -927,7 +941,7 @@ func TestAccViewResource_MatchClientsAcl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewAclIP("match_clients_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("view", "match_clients_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_clients_acl.0.access", "allow"),
@@ -937,11 +951,28 @@ func TestAccViewResource_MatchClientsAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccViewAclAny("match_clients_acl", name, "deny"),
+				Config: testAccAclAny("view", "match_clients_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_clients_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "match_clients_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("view", "match_clients_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_clients_acl.0.element", "acl"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("view", "match_clients_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_clients_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "match_clients_acl.0.element", "tsig_key"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -960,7 +991,7 @@ func TestAccViewResource_MatchDestinationsAcl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewAclIP("match_destinations_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("view", "match_destinations_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_destinations_acl.0.access", "allow"),
@@ -970,11 +1001,28 @@ func TestAccViewResource_MatchDestinationsAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccViewAclAny("match_destinations_acl", name, "deny"),
+				Config: testAccAclAny("view", "match_destinations_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_destinations_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "match_destinations_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("view", "match_destinations_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_destinations_acl.0.element", "acl"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("view", "match_destinations_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_destinations_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "match_destinations_acl.0.element", "tsig_key"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1173,7 +1221,7 @@ func TestAccViewResource_QueryAcl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewAclIP("query_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("view", "query_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "allow"),
@@ -1183,11 +1231,28 @@ func TestAccViewResource_QueryAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccViewAclAny("query_acl", name, "deny"),
+				Config: testAccAclAny("view", "query_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("view", "query_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "acl"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("view", "query_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "tsig_key"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1206,7 +1271,7 @@ func TestAccViewResource_RecursionAcl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewAclIP("recursion_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("view", "recursion_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.access", "allow"),
@@ -1216,11 +1281,28 @@ func TestAccViewResource_RecursionAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccViewAclAny("recursion_acl", name, "deny"),
+				Config: testAccAclAny("view", "recursion_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("view", "recursion_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.element", "acl"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("view", "recursion_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.element", "tsig_key"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1369,7 +1451,7 @@ func TestAccViewResource_TransferAcl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewAclIP("transfer_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("view", "transfer_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "allow"),
@@ -1379,11 +1461,28 @@ func TestAccViewResource_TransferAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccViewAclAny("transfer_acl", name, "deny"),
+				Config: testAccAclAny("view", "transfer_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("view", "transfer_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "acl"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("view", "transfer_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "tsig_key"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1402,7 +1501,7 @@ func TestAccViewResource_UpdateAcl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewAclIP("update_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("view", "update_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "allow"),
@@ -1412,11 +1511,28 @@ func TestAccViewResource_UpdateAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccViewAclAny("update_acl", name, "deny"),
+				Config: testAccAclAny("view", "update_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("view", "update_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "acl"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("view", "update_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "tsig_key"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1966,35 +2082,6 @@ resource "bloxone_dns_view" "test_lame_ttl" {
     lame_ttl = %d
 }
 `, name, lameTtl)
-}
-
-func testAccViewAclIP(aclFieldName, name, access, address string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_view" "test_%[1]s" {
-    name = %[2]q
-    %[1]s = [
-		{
-			access = %[3]q
-			element = "ip"
-			address = %[4]q
-		}
-]
-}
-`, aclFieldName, name, access, address)
-}
-
-func testAccViewAclAny(aclFieldName, name, access string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_view" "test_%[1]s" {
-    name = %[2]q
-    %[1]s = [
-		{
-			access = %[3]q
-			element = "any"
-		}
-]
-}
-`, aclFieldName, name, access)
 }
 
 func testAccViewMatchRecursiveOnly(name, matchRecursiveOnly string) string {

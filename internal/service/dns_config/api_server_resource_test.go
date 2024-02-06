@@ -17,7 +17,6 @@ import (
 
 //TODO: add tests
 // The following require additional resource/data source objects to be supported.
-// - inheritance_sources
 // - Kerberos_keys
 
 func TestAccServerResource_basic(t *testing.T) {
@@ -34,7 +33,6 @@ func TestAccServerResource_basic(t *testing.T) {
 				Config: testAccServerBasicConfig(name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					// TODO: check and validate these
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
@@ -528,7 +526,7 @@ func TestAccServerResource_FilterAaaaAcl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerAclIP("filter_aaaa_acl", name, "allow", "192.168.10.10"),
+				Config: testAccAclIP("server", "filter_aaaa_acl", name, "allow", "192.168.10.10"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.access", "allow"),
@@ -538,11 +536,28 @@ func TestAccServerResource_FilterAaaaAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServerAclAny("filter_aaaa_acl", name, "deny"),
+				Config: testAccAclAny("server", "filter_aaaa_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("server", "filter_aaaa_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "acl"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("server", "filter_aaaa_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "tsig_key"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1007,7 +1022,7 @@ func TestAccServerResource_QueryAcl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerAclIP("query_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("server", "query_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "allow"),
@@ -1017,11 +1032,28 @@ func TestAccServerResource_QueryAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServerAclAny("query_acl", name, "deny"),
+				Config: testAccAclAny("server", "query_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("server", "query_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "acl"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("server", "query_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "tsig_key"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1070,7 +1102,7 @@ func TestAccServerResource_RecursionAcl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerAclIP("recursion_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("server", "recursion_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.access", "allow"),
@@ -1080,11 +1112,28 @@ func TestAccServerResource_RecursionAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServerAclAny("recursion_acl", name, "deny"),
+				Config: testAccAclAny("server", "recursion_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("server", "recursion_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.element", "acl"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("server", "recursion_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.element", "tsig_key"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1354,7 +1403,7 @@ func TestAccServerResource_TransferAcl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerAclIP("transfer_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("server", "transfer_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "allow"),
@@ -1364,11 +1413,28 @@ func TestAccServerResource_TransferAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServerAclAny("transfer_acl", name, "deny"),
+				Config: testAccAclAny("server", "transfer_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("server", "transfer_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "acl"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("server", "transfer_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "tsig_key"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1387,7 +1453,7 @@ func TestAccServerResource_UpdateAcl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerAclIP("update_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("server", "update_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "allow"),
@@ -1397,11 +1463,28 @@ func TestAccServerResource_UpdateAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServerAclAny("update_acl", name, "deny"),
+				Config: testAccAclAny("server", "update_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("server", "update_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "acl"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("server", "update_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "tsig_key"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1936,35 +2019,6 @@ resource "bloxone_dns_server" "test_query_port" {
     query_port = %q
 }
 `, name, queryPort)
-}
-
-func testAccServerAclIP(aclFieldName, name, access, address string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_server" "test_%[1]s" {
-    name = %[2]q
-    %[1]s = [
-		{
-			access = %[3]q
-			element = "ip"
-			address = %[4]q
-		}
-]
-}
-`, aclFieldName, name, access, address)
-}
-
-func testAccServerAclAny(aclFieldName, name, access string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_server" "test_%[1]s" {
-    name = %[2]q
-    %[1]s = [
-		{
-			access = %[3]q
-			element = "any"
-		}
-]
-}
-`, aclFieldName, name, access)
 }
 
 func testAccServerRecursionEnabled(name string, recursionEnabled string) string {

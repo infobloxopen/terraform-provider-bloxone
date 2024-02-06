@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -17,17 +18,14 @@ import (
 
 //TODO: add tests
 // The following require additional resource/data source objects to be supported.
-// - inheritance_sources
-// - ACL Type - TSIG Key
-// - ACL Type - ACL
 // - internal_secondaries
 // - nsgs
 // - zone_authority : Mname and rname provide inconsistent results after apply
-// - view
 
 func TestAccAuthZoneResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -35,10 +33,10 @@ func TestAccAuthZoneResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneBasicConfig("tf-acc-test.com.", "cloud"),
+				Config: testAccAuthZoneBasicConfig(fqdn, "cloud"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-acc-test.com."),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn),
 					resource.TestCheckResourceAttr(resourceName, "primary_type", "cloud"),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
@@ -62,6 +60,7 @@ func TestAccAuthZoneResource_basic(t *testing.T) {
 func TestAccAuthZoneResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dns_auth_zone.test"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -69,7 +68,7 @@ func TestAccAuthZoneResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckAuthZoneDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAuthZoneBasicConfig("tf-acc-test.com.", "cloud"),
+				Config: testAccAuthZoneBasicConfig(fqdn, "cloud"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					testAccCheckAuthZoneDisappears(context.Background(), &v),
@@ -84,6 +83,7 @@ func TestAccAuthZoneResource_FQDN(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test"
 	var v1 dns_config.ConfigAuthZone
 	var v2 dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -91,10 +91,10 @@ func TestAccAuthZoneResource_FQDN(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneBasicConfig("tf-acc-test.com.", "cloud"),
+				Config: testAccAuthZoneBasicConfig(fqdn, "cloud"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v1),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-acc-test.com."),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn),
 					resource.TestCheckResourceAttr(resourceName, "primary_type", "cloud"),
 				),
 			},
@@ -117,6 +117,7 @@ func TestAccAuthZoneResource_PrimaryType(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test"
 	var v1 dns_config.ConfigAuthZone
 	var v2 dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -124,20 +125,20 @@ func TestAccAuthZoneResource_PrimaryType(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneBasicConfig("tf-acc-test.com.", "cloud"),
+				Config: testAccAuthZoneBasicConfig(fqdn, "cloud"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v1),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-acc-test.com."),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn),
 					resource.TestCheckResourceAttr(resourceName, "primary_type", "cloud"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneBasicConfig("tf-acc-test.com.", "external"),
+				Config: testAccAuthZoneBasicConfig(fqdn, "external"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneDestroy(context.Background(), &v1),
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v2),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-acc-test.com."),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn),
 					resource.TestCheckResourceAttr(resourceName, "primary_type", "external"),
 				),
 			},
@@ -149,6 +150,7 @@ func TestAccAuthZoneResource_PrimaryType(t *testing.T) {
 func TestAccAuthZoneResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_comment"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -156,7 +158,7 @@ func TestAccAuthZoneResource_Comment(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneComment("tf-acc-test.com.", "cloud", "test comment"),
+				Config: testAccAuthZoneComment(fqdn, "cloud", "test comment"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "test comment"),
@@ -164,7 +166,7 @@ func TestAccAuthZoneResource_Comment(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneComment("tf-acc-test.com.", "cloud", "test comment update"),
+				Config: testAccAuthZoneComment(fqdn, "cloud", "test comment update"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "test comment update"),
@@ -178,6 +180,7 @@ func TestAccAuthZoneResource_Comment(t *testing.T) {
 func TestAccAuthZoneResource_Disabled(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_disabled"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -185,7 +188,7 @@ func TestAccAuthZoneResource_Disabled(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneDisabled("tf-acc-test.com.", "cloud", "false"),
+				Config: testAccAuthZoneDisabled(fqdn, "cloud", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "disabled", "false"),
@@ -193,7 +196,7 @@ func TestAccAuthZoneResource_Disabled(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneDisabled("tf-acc-test.com.", "cloud", "true"),
+				Config: testAccAuthZoneDisabled(fqdn, "cloud", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "disabled", "true"),
@@ -207,6 +210,7 @@ func TestAccAuthZoneResource_Disabled(t *testing.T) {
 func TestAccAuthZoneResource_ExternalPrimaries(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_external_primaries"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -214,7 +218,7 @@ func TestAccAuthZoneResource_ExternalPrimaries(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneExternalPrimaries("tf-acc-test.com.", "external", "tf-infoblox-test.com.", "192.168.10.10", "primary"),
+				Config: testAccAuthZoneExternalPrimaries(fqdn, "external", "tf-infoblox-test.com.", "192.168.10.10", "primary"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "external_primaries.0.fqdn", "tf-infoblox-test.com."),
@@ -224,7 +228,7 @@ func TestAccAuthZoneResource_ExternalPrimaries(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneExternalPrimaries("tf-acc-test.com.", "external", "tf-infoblox.com.", "192.168.11.11", "primary"),
+				Config: testAccAuthZoneExternalPrimaries(fqdn, "external", "tf-infoblox.com.", "192.168.11.11", "primary"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "external_primaries.0.fqdn", "tf-infoblox.com."),
@@ -234,7 +238,7 @@ func TestAccAuthZoneResource_ExternalPrimaries(t *testing.T) {
 			},
 			// Update and Read : External Primaries Type - nsg
 			{
-				Config:      testAccAuthZoneExternalPrimaries("tf-acc-test.com.", "external", "tf-infoblox-test.com.", "192.168.10.10", "nsg"),
+				Config:      testAccAuthZoneExternalPrimaries(fqdn, "external", "tf-infoblox-test.com.", "192.168.10.10", "nsg"),
 				ExpectError: regexp.MustCompile("External primary type should be 'primary'"),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -245,6 +249,7 @@ func TestAccAuthZoneResource_ExternalPrimaries(t *testing.T) {
 func TestAccAuthZoneResource_ExternalSecondaries(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_external_secondaries"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -252,7 +257,7 @@ func TestAccAuthZoneResource_ExternalSecondaries(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneExternalSecondaries("tf-acc-test.com.", "external", "tf-infoblox-test.com.", "192.168.10.10"),
+				Config: testAccAuthZoneExternalSecondaries(fqdn, "external", "tf-infoblox-test.com.", "192.168.10.10"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "external_secondaries.0.fqdn", "tf-infoblox-test.com."),
@@ -261,7 +266,7 @@ func TestAccAuthZoneResource_ExternalSecondaries(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneExternalSecondaries("tf-acc-test.com.", "external", "tf-infoblox.com.", "192.168.11.11"),
+				Config: testAccAuthZoneExternalSecondaries(fqdn, "external", "tf-infoblox.com.", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "external_secondaries.0.fqdn", "tf-infoblox.com."),
@@ -276,6 +281,7 @@ func TestAccAuthZoneResource_ExternalSecondaries(t *testing.T) {
 func TestAccAuthZoneResource_GssTsigEnabled(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_gss_tsig_enabled"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -283,7 +289,7 @@ func TestAccAuthZoneResource_GssTsigEnabled(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneGssTsigEnabled("tf-acc-test.com.", "cloud", "false"),
+				Config: testAccAuthZoneGssTsigEnabled(fqdn, "cloud", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "gss_tsig_enabled", "false"),
@@ -291,7 +297,7 @@ func TestAccAuthZoneResource_GssTsigEnabled(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneGssTsigEnabled("tf-acc-test.com.", "cloud", "true"),
+				Config: testAccAuthZoneGssTsigEnabled(fqdn, "cloud", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "gss_tsig_enabled", "true"),
@@ -305,6 +311,7 @@ func TestAccAuthZoneResource_GssTsigEnabled(t *testing.T) {
 func TestAccAuthZoneResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_inheritance_sources"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -312,7 +319,7 @@ func TestAccAuthZoneResource_InheritanceSources(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneInheritanceSources("tf-acc-test.com.", "cloud", "inherit"),
+				Config: testAccAuthZoneInheritanceSources(fqdn, "cloud", "inherit"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.gss_tsig_enabled.action", "inherit"),
@@ -320,7 +327,7 @@ func TestAccAuthZoneResource_InheritanceSources(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneInheritanceSources("tf-acc-test.com.", "cloud", "override"),
+				Config: testAccAuthZoneInheritanceSources(fqdn, "cloud", "override"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.gss_tsig_enabled.action", "override"),
@@ -335,6 +342,7 @@ func TestAccAuthZoneResource_InitialSoaSerial(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_initial_soa_serial"
 	var v1 dns_config.ConfigAuthZone
 	var v2 dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -342,7 +350,7 @@ func TestAccAuthZoneResource_InitialSoaSerial(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneInitialSoaSerial("tf-acc-test.com.", "cloud", 1),
+				Config: testAccAuthZoneInitialSoaSerial(fqdn, "cloud", 1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "initial_soa_serial", "1"),
@@ -350,7 +358,7 @@ func TestAccAuthZoneResource_InitialSoaSerial(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneInitialSoaSerial("tf-acc-test.com.", "cloud", 2),
+				Config: testAccAuthZoneInitialSoaSerial(fqdn, "cloud", 2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneDestroy(context.Background(), &v1),
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v2),
@@ -365,6 +373,7 @@ func TestAccAuthZoneResource_InitialSoaSerial(t *testing.T) {
 func TestAccAuthZoneResource_Notify(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_notify"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -372,7 +381,7 @@ func TestAccAuthZoneResource_Notify(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneNotify("tf-acc-test.com.", "cloud", "false"),
+				Config: testAccAuthZoneNotify(fqdn, "cloud", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "notify", "false"),
@@ -380,7 +389,7 @@ func TestAccAuthZoneResource_Notify(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneNotify("tf-acc-test.com.", "cloud", "true"),
+				Config: testAccAuthZoneNotify(fqdn, "cloud", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "notify", "true"),
@@ -394,6 +403,7 @@ func TestAccAuthZoneResource_Notify(t *testing.T) {
 func TestAccAuthZoneResource_Nsgs(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_nsgs"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -401,7 +411,7 @@ func TestAccAuthZoneResource_Nsgs(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneNsgs("tf-acc-test.com.", "cloud", "bloxone_dns_auth_nsg.one"),
+				Config: testAccAuthZoneNsgs(fqdn, "cloud", "bloxone_dns_auth_nsg.one"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "nsgs.0", "bloxone_dns_auth_nsg.one", "id"),
@@ -409,7 +419,7 @@ func TestAccAuthZoneResource_Nsgs(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneNsgs("tf-acc-test.com.", "cloud", "bloxone_dns_auth_nsg.two"),
+				Config: testAccAuthZoneNsgs(fqdn, "cloud", "bloxone_dns_auth_nsg.two"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "nsgs.0", "bloxone_dns_auth_nsg.two", "id"),
@@ -423,6 +433,7 @@ func TestAccAuthZoneResource_Nsgs(t *testing.T) {
 func TestAccAuthZoneResource_QueryAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_query_acl"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -430,7 +441,7 @@ func TestAccAuthZoneResource_QueryAcl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneAclIP("tf-acc-test.com.", "cloud", "query_acl", "allow", "192.168.11.11"),
+				Config: testAccAuthZoneAclIP(fqdn, "cloud", "query_acl", "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "allow"),
@@ -439,11 +450,28 @@ func TestAccAuthZoneResource_QueryAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneAclAny("tf-acc-test.com.", "cloud", "query_acl", "deny"),
+				Config: testAccAuthZoneAclAny(fqdn, "cloud", "query_acl", "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAuthZoneAclAcl(fqdn, "cloud", "query_acl"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "acl"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAuthZoneAclTsigKey(fqdn, "cloud", "query_acl", "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "tsig_key"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -454,6 +482,7 @@ func TestAccAuthZoneResource_QueryAcl(t *testing.T) {
 func TestAccAuthZoneResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_tags"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -461,7 +490,7 @@ func TestAccAuthZoneResource_Tags(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneTags("tf-acc-test.com.", "cloud", map[string]string{
+				Config: testAccAuthZoneTags(fqdn, "cloud", map[string]string{
 					"tag1": "value1",
 					"tag2": "value2",
 				}),
@@ -473,7 +502,7 @@ func TestAccAuthZoneResource_Tags(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneTags("tf-acc-test.com.", "cloud", map[string]string{
+				Config: testAccAuthZoneTags(fqdn, "cloud", map[string]string{
 					"tag2": "value2changed",
 					"tag3": "value3",
 				}),
@@ -491,6 +520,7 @@ func TestAccAuthZoneResource_Tags(t *testing.T) {
 func TestAccAuthZoneResource_TransferAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_transfer_acl"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -498,7 +528,7 @@ func TestAccAuthZoneResource_TransferAcl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneAclIP("tf-acc-test.com.", "cloud", "transfer_acl", "allow", "192.168.11.11"),
+				Config: testAccAuthZoneAclIP(fqdn, "cloud", "transfer_acl", "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "allow"),
@@ -507,11 +537,28 @@ func TestAccAuthZoneResource_TransferAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneAclAny("tf-acc-test.com.", "cloud", "transfer_acl", "deny"),
+				Config: testAccAuthZoneAclAny(fqdn, "cloud", "transfer_acl", "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAuthZoneAclAcl(fqdn, "cloud", "transfer_acl"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "acl"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAuthZoneAclTsigKey(fqdn, "cloud", "transfer_acl", "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "tsig_key"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -522,6 +569,7 @@ func TestAccAuthZoneResource_TransferAcl(t *testing.T) {
 func TestAccAuthZoneResource_UpdateAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_update_acl"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -529,7 +577,7 @@ func TestAccAuthZoneResource_UpdateAcl(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneAclIP("tf-acc-test.com.", "cloud", "update_acl", "allow", "192.168.11.11"),
+				Config: testAccAuthZoneAclIP(fqdn, "cloud", "update_acl", "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "allow"),
@@ -538,11 +586,28 @@ func TestAccAuthZoneResource_UpdateAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneAclAny("tf-acc-test.com.", "cloud", "update_acl", "deny"),
+				Config: testAccAuthZoneAclAny(fqdn, "cloud", "update_acl", "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAuthZoneAclAcl(fqdn, "cloud", "update_acl"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "acl"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAuthZoneAclTsigKey(fqdn, "cloud", "update_acl", "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "tsig_key"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -553,6 +618,7 @@ func TestAccAuthZoneResource_UpdateAcl(t *testing.T) {
 func TestAccAuthZoneResource_UseForwardersForSubzones(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_use_forwarders_for_subzones"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -560,7 +626,7 @@ func TestAccAuthZoneResource_UseForwardersForSubzones(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneUseForwardersForSubzones("tf-acc-test.com.", "cloud", "true"),
+				Config: testAccAuthZoneUseForwardersForSubzones(fqdn, "cloud", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "use_forwarders_for_subzones", "true"),
@@ -568,7 +634,7 @@ func TestAccAuthZoneResource_UseForwardersForSubzones(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneUseForwardersForSubzones("tf-acc-test.com.", "cloud", "false"),
+				Config: testAccAuthZoneUseForwardersForSubzones(fqdn, "cloud", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "use_forwarders_for_subzones", "false"),
@@ -583,6 +649,7 @@ func TestAccAuthZoneResource_View(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_view"
 	var v1 dns_config.ConfigAuthZone
 	var v2 dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -590,7 +657,7 @@ func TestAccAuthZoneResource_View(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneView("tf-acc-test.com.", "cloud", "bloxone_dns_view.one"),
+				Config: testAccAuthZoneView(fqdn, "cloud", "bloxone_dns_view.one"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttrPair(resourceName, "view", "bloxone_dns_view.one", "id"),
@@ -598,7 +665,7 @@ func TestAccAuthZoneResource_View(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneView("tf-acc-test.com.", "cloud", "bloxone_dns_view.two"),
+				Config: testAccAuthZoneView(fqdn, "cloud", "bloxone_dns_view.two"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneDestroy(context.Background(), &v1),
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v2),
@@ -614,6 +681,7 @@ func TestAccAuthZoneResource_ZoneAuthority(t *testing.T) {
 	t.Skipf("Mname and rname provide incosistent result after apply")
 	var resourceName = "bloxone_dns_auth_zone.test_zone_authority"
 	var v dns_config.ConfigAuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -621,7 +689,7 @@ func TestAccAuthZoneResource_ZoneAuthority(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneZoneAuthority("tf-acc-test.com.", "cloud", 28800, 2419200, "ns.b1ddi", 900,
+				Config: testAccAuthZoneZoneAuthority(fqdn, "cloud", 28800, 2419200, "ns.b1ddi", 900,
 					10800, 3600, "hostmaster", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
@@ -639,7 +707,7 @@ func TestAccAuthZoneResource_ZoneAuthority(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneZoneAuthority("tf-acc-test.com.", "cloud", 30000, 2519200, "ns.b1ddi", 800, 11800, 3700, "hostmaster", "false"),
+				Config: testAccAuthZoneZoneAuthority(fqdn, "cloud", 30000, 2519200, "ns.b1ddi", 800, 11800, 3700, "hostmaster", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "zone_authority.default_ttl", "30000"),
@@ -713,8 +781,74 @@ func testAccCheckAuthZoneDisappears(ctx context.Context, v *dns_config.ConfigAut
 	}
 }
 
+func testAccAuthZoneAclAcl(fqdn, primaryType, aclFieldName string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dns_auth_zone" "test_%[3]s" {
+	fqdn = %[1]q
+    primary_type = %[2]q
+    %[3]s = [
+		{
+			element = "acl"
+			acl = bloxone_dns_acl.test.id
+		}
+]
+}
+`, fqdn, primaryType, aclFieldName)
+	return strings.Join([]string{testAccAclBasicConfig(acctest.RandomNameWithPrefix("acl")), config}, "")
+}
+
+func testAccAuthZoneAclAny(fqdn, primaryType, aclFieldName, access string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_auth_zone" "test_%[3]s" {
+	fqdn = %[1]q
+    primary_type = %[2]q
+    %[3]s = [
+		{
+			access = %[4]q
+			element = "any"
+		}
+]
+}
+`, fqdn, primaryType, aclFieldName, access)
+}
+
+func testAccAuthZoneAclIP(fqdn, primaryType, aclFieldName, access, address string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_auth_zone" "test_%[3]s" {
+	fqdn = %[1]q
+    primary_type = %[2]q
+    %[3]s = [
+		{
+			access = %[4]q
+			element = "ip"
+			address = %[5]q
+		}
+]
+}
+`, fqdn, primaryType, aclFieldName, access, address)
+}
+
+func testAccAuthZoneAclTsigKey(fqdn, primaryType, aclFieldName, access string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dns_auth_zone" "test_%[3]s" {
+    fqdn = %[1]q
+    primary_type = %[2]q
+    %[3]s = [
+		{
+			element = "tsig_key"
+			access = %[4]q
+			tsig_key = {
+				key = bloxone_keys_tsig.test.id
+			}
+		}
+]
+}
+`, fqdn, primaryType, aclFieldName, access)
+	return strings.Join([]string{testAccBaseWithTsigAndAcl("tsig-"+fqdn, "acl-"+fqdn), config}, "")
+
+}
+
 func testAccAuthZoneBasicConfig(fqdn, primaryType string) string {
-	// TODO: create basic resource with required fields
 	return fmt.Sprintf(`
 resource "bloxone_dns_auth_zone" "test" {
     fqdn = %q
@@ -857,37 +991,6 @@ resource "bloxone_dns_auth_zone" "test_nsgs" {
     nsgs = [%s.id]
 }
 `, acctest.RandomNameWithPrefix("auth-nsg"), acctest.RandomNameWithPrefix("auth-nsg"), fqdn, primaryType, nsgs)
-}
-
-func testAccAuthZoneAclIP(fqdn, primaryType, aclFieldName, access, address string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_auth_zone" "test_%[3]s" {
-	fqdn = %[1]q
-    primary_type = %[2]q
-    %[3]s = [
-		{
-			access = %[4]q
-			element = "ip"
-			address = %[5]q
-		}
-]
-}
-`, fqdn, primaryType, aclFieldName, access, address)
-}
-
-func testAccAuthZoneAclAny(fqdn, primaryType, aclFieldName, access string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_auth_zone" "test_%[3]s" {
-	fqdn = %[1]q
-    primary_type = %[2]q
-    %[3]s = [
-		{
-			access = %[4]q
-			element = "any"
-		}
-]
-}
-`, fqdn, primaryType, aclFieldName, access)
 }
 
 func testAccAuthZoneTags(fqdn string, primaryType string, tags map[string]string) string {
