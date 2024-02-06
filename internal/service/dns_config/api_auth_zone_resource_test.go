@@ -784,7 +784,7 @@ func testAccCheckAuthZoneDisappears(ctx context.Context, v *dns_config.ConfigAut
 func testAccAuthZoneAclAcl(fqdn, primaryType, aclFieldName string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dns_auth_zone" "test_%[3]s" {
-	fqdn = %[1]q
+    fqdn = %[1]q
     primary_type = %[2]q
     %[3]s = [
 		{
@@ -800,7 +800,7 @@ resource "bloxone_dns_auth_zone" "test_%[3]s" {
 func testAccAuthZoneAclAny(fqdn, primaryType, aclFieldName, access string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_auth_zone" "test_%[3]s" {
-	fqdn = %[1]q
+    fqdn = %[1]q
     primary_type = %[2]q
     %[3]s = [
 		{
@@ -815,7 +815,7 @@ resource "bloxone_dns_auth_zone" "test_%[3]s" {
 func testAccAuthZoneAclIP(fqdn, primaryType, aclFieldName, access, address string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_auth_zone" "test_%[3]s" {
-	fqdn = %[1]q
+    fqdn = %[1]q
     primary_type = %[2]q
     %[3]s = [
 		{
