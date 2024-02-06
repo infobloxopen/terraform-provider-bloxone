@@ -2,6 +2,7 @@ package ipam
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
@@ -97,6 +98,9 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional:            true,
 		MarkdownDescription: "The list of DHCP options. May be either a specific option or a group of options.",
+		PlanModifiers: []planmodifier.List{
+			listplanmodifier.RequiresReplaceIfConfigured(),
+		},
 	},
 	"disable_dhcp": schema.BoolAttribute{
 		Optional:            true,

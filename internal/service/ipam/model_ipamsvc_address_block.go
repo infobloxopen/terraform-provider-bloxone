@@ -2,6 +2,7 @@ package ipam
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -228,6 +229,9 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional:            true,
 		MarkdownDescription: "The list of DHCP options for the address block. May be either a specific option or a group of options.",
+		PlanModifiers: []planmodifier.List{
+			listplanmodifier.RequiresReplaceIfConfigured(),
+		},
 	},
 	"dhcp_utilization": schema.SingleNestedAttribute{
 		Attributes: IpamsvcDHCPUtilizationResourceSchemaAttributes,
