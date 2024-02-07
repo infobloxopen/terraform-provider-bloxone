@@ -463,6 +463,7 @@ func TestAccAuthZoneResource_QueryAcl(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "query_acl.0.acl", "bloxone_dns_acl.test", "id"),
 				),
 			},
 			//Update and Read
@@ -472,6 +473,7 @@ func TestAccAuthZoneResource_QueryAcl(t *testing.T) {
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "query_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -550,6 +552,7 @@ func TestAccAuthZoneResource_TransferAcl(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "transfer_acl.0.acl", "bloxone_dns_acl.test", "id"),
 				),
 			},
 			//Update and Read
@@ -559,6 +562,7 @@ func TestAccAuthZoneResource_TransferAcl(t *testing.T) {
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "transfer_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -599,6 +603,7 @@ func TestAccAuthZoneResource_UpdateAcl(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "update_acl.0.acl", "bloxone_dns_acl.test", "id"),
 				),
 			},
 			//Update and Read
@@ -608,6 +613,7 @@ func TestAccAuthZoneResource_UpdateAcl(t *testing.T) {
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "update_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -844,7 +850,7 @@ resource "bloxone_dns_auth_zone" "test_%[3]s" {
 ]
 }
 `, fqdn, primaryType, aclFieldName, access)
-	return strings.Join([]string{testAccBaseWithTsigAndAcl("tsig-"+fqdn, "acl-"+fqdn), config}, "")
+	return strings.Join([]string{testAccBaseWithTsigAndAcl("tsig-"+acctest.RandomNameWithPrefix("auth-zone"), "acl-"+fqdn), config}, "")
 
 }
 

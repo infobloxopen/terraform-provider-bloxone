@@ -3,24 +3,16 @@
 page_title: "bloxone_dns_acl Resource - terraform-provider-bloxone"
 subcategory: "DNS"
 description: |-
-  Manages an Access Control List (ACL).
+  Manages a named Access Control List (ACL).
 ---
 
 # bloxone_dns_acl (Resource)
 
-Manages an Access Control List (ACL).
+Manages a named Access Control List (ACL).
 
 ## Example Usage
 
 ```terraform
-resource "bloxone_keys_tsig" "test" {
-  name = "test-tsig."
-}
-
-resource "bloxone_dns_acl" "test_acl" {
-  name = "test-acl"
-}
-
 resource "bloxone_dns_acl" "example_acl" {
   name = "example_dns_acl"
 
@@ -35,21 +27,6 @@ resource "bloxone_dns_acl" "example_acl" {
       element = "ip"
       address = "192.168.1.1"
     },
-    {
-      access  = "deny"
-      element = "any"
-    },
-    {
-      element = "acl"
-      acl     = bloxone_dns_acl.test_acl.id
-    },
-    {
-      element = "tsig_key"
-      access  = "deny"
-      tsig_key = {
-        key = bloxone_keys_tsig.test.id
-      }
-    }
   ]
 }
 ```

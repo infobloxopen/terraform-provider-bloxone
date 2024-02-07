@@ -549,6 +549,7 @@ func TestAccServerResource_FilterAaaaAcl(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "filter_aaaa_acl.0.acl", "bloxone_dns_acl.test", "id"),
 				),
 			},
 			//Update and Read
@@ -558,6 +559,7 @@ func TestAccServerResource_FilterAaaaAcl(t *testing.T) {
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "filter_aaaa_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1045,6 +1047,7 @@ func TestAccServerResource_QueryAcl(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "query_acl.0.acl", "bloxone_dns_acl.test", "id"),
 				),
 			},
 			//Update and Read
@@ -1054,6 +1057,7 @@ func TestAccServerResource_QueryAcl(t *testing.T) {
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "query_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1125,6 +1129,7 @@ func TestAccServerResource_RecursionAcl(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "recursion_acl.0.acl", "bloxone_dns_acl.test", "id"),
 				),
 			},
 			//Update and Read
@@ -1134,6 +1139,7 @@ func TestAccServerResource_RecursionAcl(t *testing.T) {
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "recursion_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1426,6 +1432,7 @@ func TestAccServerResource_TransferAcl(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "transfer_acl.0.acl", "bloxone_dns_acl.test", "id"),
 				),
 			},
 			//Update and Read
@@ -1435,6 +1442,7 @@ func TestAccServerResource_TransferAcl(t *testing.T) {
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "transfer_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1476,6 +1484,7 @@ func TestAccServerResource_UpdateAcl(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "update_acl.0.acl", "bloxone_dns_acl.test", "id"),
 				),
 			},
 			//Update and Read
@@ -1485,6 +1494,7 @@ func TestAccServerResource_UpdateAcl(t *testing.T) {
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "update_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase

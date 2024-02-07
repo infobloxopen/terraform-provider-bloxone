@@ -123,6 +123,7 @@ func TestAccAclResource_List(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAclExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "list.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "list.0.acl", "bloxone_dns_acl.test", "id"),
 				),
 			},
 			//Update and Read
@@ -132,6 +133,7 @@ func TestAccAclResource_List(t *testing.T) {
 					testAccCheckAclExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "list.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "list.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "list.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			//Delete testing automatically occurs in TestCase

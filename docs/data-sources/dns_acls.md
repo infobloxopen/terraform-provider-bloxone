@@ -3,12 +3,12 @@
 page_title: "bloxone_dns_acls Data Source - terraform-provider-bloxone"
 subcategory: "DNS"
 description: |-
-  Retrieves information about existing Authoritative DNS ACLs.
+  Retrieves information about existing named Access Control Lists.
 ---
 
 # bloxone_dns_acls (Data Source)
 
-Retrieves information about existing Authoritative DNS ACLs.
+Retrieves information about existing named Access Control Lists.
 
 ## Example Usage
 
