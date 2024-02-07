@@ -495,7 +495,7 @@ func TestAccAddressBlockResource_DhcpOptions(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockDhcpOptionOptions("192.168.0.0", "16", "option", "true"),
+				Config: testAccAddressBlockDhcpOptionOption("192.168.0.0", "16", "option", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
@@ -505,7 +505,7 @@ func TestAccAddressBlockResource_DhcpOptions(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockDhcpOptionsGroups("192.168.0.0", "16", "group"),
+				Config: testAccAddressBlockDhcpOptionsGroup("192.168.0.0", "16", "group"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockDestroy(context.Background(), &v1),
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v2),
@@ -981,7 +981,7 @@ resource "bloxone_ipam_address_block" "test_ddns_domain" {
 	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
 }
 
-func testAccAddressBlockDhcpOptionOptions(name string, cidr string, type_, optValue string) string {
+func testAccAddressBlockDhcpOptionOption(name string, cidr string, type_, optValue string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_dhcp_options" {
     address = %q
@@ -999,7 +999,7 @@ resource "bloxone_ipam_address_block" "test_dhcp_options" {
 	return strings.Join([]string{testAccBaseWithIPSpace(), testAccOptionCodeBasicConfig("234", "test_dhcp_option_code", "boolean"), config}, "")
 }
 
-func testAccAddressBlockDhcpOptionsGroups(name string, cidr string, type_ string) string {
+func testAccAddressBlockDhcpOptionsGroup(name string, cidr string, type_ string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_dhcp_options" {
     address = %q

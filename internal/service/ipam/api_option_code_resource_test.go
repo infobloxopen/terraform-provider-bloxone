@@ -311,6 +311,19 @@ resource "bloxone_dhcp_option_code" "test" {
 	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip4"), config}, "")
 }
 
+func testAccOptionCodeBasicConfigV6(code, name, type_ string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_option_code" "test" {
+    code = %q
+    name = %q
+    option_space = bloxone_dhcp_option_space.test.id
+    type = %q
+}
+`, code, name, type_)
+
+	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip6"), config}, "")
+}
+
 func testAccOptionCodeArray(code, name, type_, array string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_option_code" "test_array" {

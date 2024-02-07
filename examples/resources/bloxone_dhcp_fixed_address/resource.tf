@@ -51,5 +51,13 @@ resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
   tags = {
     location : "site1"
   }
+  dhcp_options = [
+    {
+      description  = "Option 1"
+      option_code  = "234"
+      option_value = "true"
+      type         = "boolean"
+    }
+  ]
   depends_on = [bloxone_ipam_subnet.example]
 }

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -203,6 +204,70 @@ func TestAccServerResource_DdnsDomain(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "test-update.com."),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccServerResource_DhcpOptions(t *testing.T) {
+	var resourceName = "bloxone_dhcp_server.test_dhcp_options"
+	var v1, v2 ipam.IpamsvcServer
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccServerDhcpOptionsOption("server_dhcp_options", "option", "true"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.0.option_value", "true"),
+					resource.TestCheckResourceAttrPair(resourceName, "dhcp_options.0.option_code", "bloxone_dhcp_option_code.test", "id"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccServerDhcpOptionsGroup("server_dhcp_options", "group"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerDestroy(context.Background(), &v1),
+					testAccCheckServerExists(context.Background(), resourceName, &v2),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccServerResource_DhcpOptionsV6(t *testing.T) {
+	var resourceName = "bloxone_dhcp_server.test_dhcp_options"
+	var v1, v2 ipam.IpamsvcServer
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccServerDhcpOptionsOptionV6("server_dhcp_options", "option", "true"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6.0.option_value", "true"),
+					resource.TestCheckResourceAttrPair(resourceName, "dhcp_options_v6.0.option_code", "bloxone_dhcp_option_code.test", "id"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccServerDhcpOptionsGroupV6("server_dhcp_options", "group"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerDestroy(context.Background(), &v1),
+					testAccCheckServerExists(context.Background(), resourceName, &v2),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6.#", "1"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -964,6 +1029,68 @@ resource "bloxone_dhcp_server" "test_ddns_domain" {
     ddns_domain = %q
 }
 `, name, ddnsDomain)
+}
+
+func testAccServerDhcpOptionsOption(name string, type_, optValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_server" "test_dhcp_options" {
+    name = %q
+    dhcp_options = [
+      {
+       type = %q
+       option_code = bloxone_dhcp_option_code.test.id
+       option_value = %q
+      }
+    ]
+}
+`, name, type_, optValue)
+	return strings.Join([]string{testAccOptionCodeBasicConfig("234", "test_dhcp_option_code", "boolean"), config}, "")
+}
+
+func testAccServerDhcpOptionsGroup(name string, type_ string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_server" "test_dhcp_options" {
+    name = %q
+    dhcp_options = [
+      {
+       type = %q
+       group = bloxone_dhcp_option_group.test.id
+      }
+    ]
+}
+`, name, type_)
+	return strings.Join([]string{testAccOptionGroupBasicConfig("option_group_test", "ip4"), config}, "")
+}
+
+func testAccServerDhcpOptionsOptionV6(name string, type_, optValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_server" "test_dhcp_options" {
+    name = %q
+    dhcp_options_v6 = [
+      {
+       type = %q
+       option_code = bloxone_dhcp_option_code.test.id
+       option_value = %q
+      }
+    ]
+}
+`, name, type_, optValue)
+	return strings.Join([]string{testAccOptionCodeBasicConfigV6("234", "test_dhcp_option_code", "boolean"), config}, "")
+}
+
+func testAccServerDhcpOptionsGroupV6(name string, type_ string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_server" "test_dhcp_options" {
+    name = %q
+    dhcp_options_v6 = [
+      {
+       type = %q
+       group = bloxone_dhcp_option_group.test.id
+      }
+    ]
+}
+`, name, type_)
+	return strings.Join([]string{testAccOptionGroupBasicConfig("option_group_test", "ip6"), config}, "")
 }
 
 func testAccServerDdnsEnabled(name string, ddnsEnabled string) string {

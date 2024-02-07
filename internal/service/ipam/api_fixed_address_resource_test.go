@@ -175,7 +175,7 @@ func TestAccFixedAddressResource_DhcpOptions(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFixedAddressDhcpOptionsOptions("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", "Fixed_address_dhcp_option", "option", "true"),
+				Config: testAccFixedAddressDhcpOptionsOption("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", "Fixed_address_dhcp_option", "option", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
@@ -185,7 +185,7 @@ func TestAccFixedAddressResource_DhcpOptions(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFixedAddressDhcpOptionsGroups("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", "Fixed_address_dhcp_option", "group"),
+				Config: testAccFixedAddressDhcpOptionsGroup("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", "Fixed_address_dhcp_option", "group"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFixedAddressDestroy(context.Background(), &v1),
 					testAccCheckFixedAddressExists(context.Background(), resourceName, &v2),
@@ -663,7 +663,7 @@ resource "bloxone_dhcp_fixed_address" "test_disable_dhcp" {
 	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
 }
 
-func testAccFixedAddressDhcpOptionsOptions(address string, matchType string, matchValue string, name, type_, optValue string) string {
+func testAccFixedAddressDhcpOptionsOption(address string, matchType string, matchValue string, name, type_, optValue string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_fixed_address" "test_dhcp_options" {
     ip_space = bloxone_ipam_ip_space.test.id
@@ -684,7 +684,7 @@ resource "bloxone_dhcp_fixed_address" "test_dhcp_options" {
 	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), testAccOptionCodeBasicConfig("234", "test_dhcp_option_code", "boolean"), config}, "")
 }
 
-func testAccFixedAddressDhcpOptionsGroups(address string, matchType string, matchValue string, name, type_ string) string {
+func testAccFixedAddressDhcpOptionsGroup(address string, matchType string, matchValue string, name, type_ string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_fixed_address" "test_dhcp_options" {
     ip_space = bloxone_ipam_ip_space.test.id

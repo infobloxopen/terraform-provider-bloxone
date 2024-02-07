@@ -34,4 +34,13 @@ resource "bloxone_ipam_subnet" "example_na_s" {
   tags = {
     site = "Site A"
   }
+  #dhcp options
+  dhcp_options = [
+    {
+      description  = "Option 1"
+      option_code  = "234"
+      option_value = "true"
+      type         = "boolean"
+    }
+  ]
 }

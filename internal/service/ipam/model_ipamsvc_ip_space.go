@@ -224,6 +224,9 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional:            true,
 		MarkdownDescription: `The list of IPv6 DHCP options for IP space. May be either a specific option or a group of options.`,
+		PlanModifiers: []planmodifier.List{
+			listplanmodifier.RequiresReplaceIfConfigured(),
+		},
 	},
 	"header_option_filename": schema.StringAttribute{
 		Optional:            true,

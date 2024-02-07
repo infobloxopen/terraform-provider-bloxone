@@ -333,7 +333,7 @@ func TestAccIpSpaceResource_DhcpOptions(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceDhcpOptionsGroups("ipspace_dhcp_options_test", "group"),
+				Config: testAccIpSpaceDhcpOptionsGroup("ipspace_dhcp_options_test", "group"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpSpaceDestroy(context.Background(), &v1),
 					testAccCheckIpSpaceExists(context.Background(), resourceName, &v2),
@@ -345,34 +345,37 @@ func TestAccIpSpaceResource_DhcpOptions(t *testing.T) {
 	})
 }
 
-//func TestAccIpSpaceResource_DhcpOptionsV6(t *testing.T) {
-//	var resourceName = "bloxone_ipam_ip_space.test_dhcp_options_v6"
-//	var v ipam.IpamsvcIPSpace
-//
-//	resource.Test(t, resource.TestCase{
-//		PreCheck:                 func() { acctest.PreCheck(t) },
-//		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-//		Steps: []resource.TestStep{
-//			// Create and Read
-//			{
-//				Config: testAccIpSpaceDhcpOptionsV6("NAME_REPLACE_ME", "DHCP_OPTIONS_V6_REPLACE_ME"),
-//				Check: resource.ComposeTestCheckFunc(
-//					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
-//					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6", "DHCP_OPTIONS_V6_REPLACE_ME"),
-//				),
-//			},
-//			// Update and Read
-//			{
-//				Config: testAccIpSpaceDhcpOptionsV6("NAME_REPLACE_ME", "DHCP_OPTIONS_V6_UPDATE_REPLACE_ME"),
-//				Check: resource.ComposeTestCheckFunc(
-//					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
-//					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6", "DHCP_OPTIONS_V6_UPDATE_REPLACE_ME"),
-//				),
-//			},
-//			// Delete testing automatically occurs in TestCase
-//		},
-//	})
-//}
+func TestAccIpSpaceResource_DhcpOptionsV6(t *testing.T) {
+	var resourceName = "bloxone_ipam_ip_space.test_dhcp_options_v6"
+	var v1, v2 ipam.IpamsvcIPSpace
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccIpSpaceDhcpOptionsOptionV6("ipspace_dhcp_options_test", "option", "true"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6.0.option_value", "true"),
+					resource.TestCheckResourceAttrPair(resourceName, "dhcp_options_v6.0.option_code", "bloxone_dhcp_option_code.test", "id"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccIpSpaceDhcpOptionsGroupV6("ipspace_dhcp_options_test", "group"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceDestroy(context.Background(), &v1),
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v2),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6.#", "1"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
 
 func TestAccIpSpaceResource_DdnsSendUpdates(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_send_updates"
@@ -988,7 +991,7 @@ resource "bloxone_ipam_ip_space" "test_dhcp_options" {
 
 }
 
-func testAccIpSpaceDhcpOptionsGroups(name string, type_ string) string {
+func testAccIpSpaceDhcpOptionsGroup(name string, type_ string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_dhcp_options" {
     name = %q
@@ -1004,35 +1007,36 @@ resource "bloxone_ipam_ip_space" "test_dhcp_options" {
 
 }
 
-//func testAccIpSpaceDhcpOptionsOptionV6(name string, dhcpOptionsV6 string) string {
-//	config := fmt.Sprintf(`
-//resource "bloxone_ipam_ip_space" "test_dhcp_options_v6" {
-//    name = %q
-//    dhcp_options = [
-//      {
-//       type = %q
-//       option_code = bloxone_dhcp_option_code.test.id
-//       option_value = %q
-//      }
-//    ]
-//}
-//`, name, dhcpOptionsV6)
-//	return strings.Join([]string{testAccOptionCodeBasicConfig("234", "test_dhcp_option_code", "boolean"), config}, "")
-//}
-//
-//func testAccIpSpaceDhcpOptionsGroupsV6(name string, dhcpOptionsV6 string) string {
-//	return fmt.Sprintf(`
-//resource "bloxone_ipam_ip_space" "test_dhcp_options_v6" {
-//    name = %q
-//    dhcp_options = [
-//      {
-//       type = %q
-//       group = bloxone_dhcp_option_group.test.id
-//      }
-//    ]
-//}
-//`, name, dhcpOptionsV6)
-//}
+func testAccIpSpaceDhcpOptionsOptionV6(name string, type_, optValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_ip_space" "test_dhcp_options_v6" {
+   name = %q
+   dhcp_options_v6 = [
+     {
+      type = %q
+      option_code = bloxone_dhcp_option_code.test.id
+      option_value = %q
+     }
+   ]
+}
+`, name, type_, optValue)
+	return strings.Join([]string{testAccOptionCodeBasicConfigV6("234", "test_dhcp_option_code", "boolean"), config}, "")
+}
+
+func testAccIpSpaceDhcpOptionsGroupV6(name string, type_ string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_ip_space" "test_dhcp_options_v6" {
+   name = %q
+   dhcp_options_v6 = [
+     {
+      type = %q
+      group = bloxone_dhcp_option_group.test.id
+     }
+   ]
+}
+`, name, type_)
+	return strings.Join([]string{testAccOptionGroupBasicConfig("option_group_test", "ip6"), config}, "")
+}
 
 func testAccIpSpaceHeaderOptionFilename(name, headerOptionFilename string) string {
 	return fmt.Sprintf(`
