@@ -41,7 +41,7 @@ resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
 }
 
 // Address using Next available IP
-resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
+resource "bloxone_dhcp_fixed_address" "example_fixed_address_na" {
   name              = "example_fixed_address"
   next_available_id = bloxone_ipam_subnet.example.id
   ip_space          = bloxone_ipam_ip_space.example.id

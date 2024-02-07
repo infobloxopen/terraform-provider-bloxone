@@ -48,17 +48,17 @@ func TestDataSourceNextAvailableSubnet(t *testing.T) {
 }
 
 func testAccDataSourceNextAvailableSubnetBaseConfig() string {
-	return `
+	return fmt.Sprintf(`
 	resource "bloxone_ipam_ip_space" "test" {
-		name = "test_ip_space"
+		name = %q
 	}
 	resource "bloxone_ipam_address_block" "test" {
-		name = "test_address_block"
+		name = %q
 		address = "192.168.0.0"
 		cidr = "24"
 		space = bloxone_ipam_ip_space.test.id
 	}
-`
+`, acctest.RandomNameWithPrefix("nextAvailableIPSpace"), acctest.RandomNameWithPrefix("nextAvailableAB"))
 }
 func testAccDataSourceNextAvailableSubnet(count, cidr int) string {
 	var config string

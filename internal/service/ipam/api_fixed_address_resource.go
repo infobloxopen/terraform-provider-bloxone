@@ -31,7 +31,7 @@ func (r *FixedAddressResource) Metadata(ctx context.Context, req resource.Metada
 
 func (r *FixedAddressResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages a Fixed Address.\n\nThe Fixed Address object reserves an address for a specific client. It must have a _match_type_ and a valid corresponding _match_value_ so that it can match that client.",
 		Attributes:          IpamsvcFixedAddressResourceSchemaAttributes,
 	}
 }

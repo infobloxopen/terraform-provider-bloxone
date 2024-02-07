@@ -31,7 +31,7 @@ func (r *OptionCodeResource) Metadata(ctx context.Context, req resource.Metadata
 
 func (r *OptionCodeResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The OptionCode object defines a DHCP option code.",
+		MarkdownDescription: "Manages a DHCP Option Code.",
 		Attributes:          IpamsvcOptionCodeResourceSchemaAttributes,
 	}
 }

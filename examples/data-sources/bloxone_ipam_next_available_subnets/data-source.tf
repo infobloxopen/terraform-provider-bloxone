@@ -9,7 +9,6 @@ data "bloxone_ipam_address_blocks" "example_by_attribute" {
 // cidr = size of subnet
 data "bloxone_ipam_next_available_subnets" "example_tf_subs" {
   id           = data.bloxone_ipam_address_blocks.example_by_attribute.results.0.id
-  name         = "example_subnet"
   cidr         = 29
   subnet_count = 5
 }

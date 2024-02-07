@@ -31,7 +31,7 @@ func (r *HaGroupResource) Metadata(_ context.Context, req resource.MetadataReque
 
 func (r *HaGroupResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: `The HAGroup object represents on-prem hosts that can serve the same leases for HA.`,
+		MarkdownDescription: "Manages an HA Group.\n\nThe HA Group object represents on-prem hosts that can serve the same leases for HA.",
 		Attributes:          IpamsvcHAGroupResourceSchemaAttributes,
 	}
 }
