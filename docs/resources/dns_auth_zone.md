@@ -14,7 +14,18 @@ Manages an authoritative zone.
 
 ```terraform
 resource "bloxone_keys_tsig" "example_tsig" {
-  name = "test-tsig."
+  name = "example_tsig.domain.com."
+}
+
+resource "bloxone_dns_acl" "example_acl" {
+  name = "example_acl"
+  elements = [
+    {
+      access  = "deny"
+      element = "ip"
+      address = "192.168.1.0/24"
+    },
+  ]
 }
 
 resource "bloxone_dns_auth_zone" "example" {
@@ -26,16 +37,15 @@ resource "bloxone_dns_auth_zone" "example" {
   tags = {
     site = "Site A"
   }
-  transfer_acl = [
+  query_acl = [
     {
       access  = "deny"
       element = "ip"
       address = "192.168.1.1"
     },
     {
-      access  = "allow"
-      element = "ip"
-      address = "10.0.0.0/24"
+      element = "acl"
+      acl     = bloxone_dns_acl.example_acl.id
     },
     {
       access  = "allow"
@@ -51,51 +61,16 @@ resource "bloxone_dns_auth_zone" "example" {
   ]
   update_acl = [
     {
-      access  = "deny"
-      element = "ip"
-      address = "192.168.1.1"
-    },
-    {
       access  = "allow"
-      element = "ip"
-      address = "10.0.0.0/24"
-    },
-    {
-      access  = "allow"
-      element = "tsig_key"
-      tsig_key = {
-        key = bloxone_keys_tsig.example_tsig.id
-      }
-    },
-    {
-      access  = "deny"
       element = "any"
     },
   ]
-  query_acl = [
-    {
-      access  = "deny"
-      element = "ip"
-      address = "192.168.1.1"
-    },
+  transfer_acl = [
     {
       access  = "allow"
-      element = "ip"
-      address = "10.0.0.0/24"
-    },
-    {
-      access  = "allow"
-      element = "tsig_key"
-      tsig_key = {
-        key = bloxone_keys_tsig.example_tsig.id
-      }
-    },
-    {
-      access  = "deny"
       element = "any"
     },
   ]
-
 }
 ```
 
