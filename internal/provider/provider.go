@@ -101,6 +101,7 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		dns_config.NewForwardNsgResource,
 		dns_config.NewDelegationResource,
 		dns_config.NewServerResource,
+		dns_config.NewAclResource,
 
 		dns_data.NewRecordAResource,
 		dns_data.NewRecordAAAAResource,
@@ -153,6 +154,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		dns_config.NewForwardNsgDataSource,
 		dns_config.NewDelegationDataSource,
 		dns_config.NewServerDataSource,
+		dns_config.NewAclDataSource,
 
 		dns_data.NewRecordADataSource,
 		dns_data.NewRecordAAAADataSource,
