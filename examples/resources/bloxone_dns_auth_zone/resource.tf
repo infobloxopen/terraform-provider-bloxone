@@ -1,18 +1,3 @@
-terraform {
-  required_providers {
-    bloxone = {
-      source  = "registry.terraform.io/infobloxopen/bloxone"
-      version = "0.0.1"
-      # Other parameters...
-    }
-  }
-}
-
-provider "bloxone" {
-  csp_url = "https://stage.csp.infoblox.com"
-  api_key = "49e506b53774b20427c6db7bf4a68bb846c3dcdb2cc2de786f19a75f29010a8e"
-}
-
 resource "bloxone_keys_tsig" "example_tsig" {
   name = "test-tsig."
 }
