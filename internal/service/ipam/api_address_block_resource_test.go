@@ -836,7 +836,7 @@ func TestAccAddressBlockResource_WithDefaultTags(t *testing.T) {
                 Check: resource.ComposeTestCheckFunc(
                     resource.TestCheckResourceAttr(resourceName, "tags_all.tag1", "value1"),
                     resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2"),
-                    acctest.TestAccBase_DefaultTag(resourceName),
+                    acctest.VerifyDefaultTag(resourceName),
                 ),
             },
             // Update and Read
@@ -851,7 +851,7 @@ func TestAccAddressBlockResource_WithDefaultTags(t *testing.T) {
                 Check: resource.ComposeTestCheckFunc(
                     resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2changed"),
                     resource.TestCheckResourceAttr(resourceName, "tags_all.tag3", "value3"),
-                    acctest.TestAccBase_DefaultTag(resourceName),
+                    acctest.VerifyDefaultTag(resourceName),
                 ),
             },
             // Delete testing automatically occurs in TestCase
