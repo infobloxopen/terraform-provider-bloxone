@@ -85,8 +85,8 @@ provider "bloxone" {
 
 }
 
-// TestAccBaseConfig_DhcpHosts creates a Terraform datasource config that allows you to filter by tags
-func TestAccBaseConfig_DhcpHosts() string {
+// TestAccBase_DhcpHosts creates a Terraform datasource config that allows you to filter by tags
+func TestAccBase_DhcpHosts() string {
     return `
 data "bloxone_dhcp_hosts" "test" {
 	tag_filters = {
