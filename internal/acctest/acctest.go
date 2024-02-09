@@ -70,11 +70,11 @@ func PreCheck(t *testing.T) {
     }
 }
 
-func TestAccDefaultTag(resourceName string) resource.TestCheckFunc {
+func TestAccBase_DefaultTag(resourceName string) resource.TestCheckFunc {
     return resource.TestCheckResourceAttr(resourceName, fmt.Sprintf("tags_all.%s", AccTestDefaultKey), AccTestDefaultValue)
 }
 
-func TestAccBaseProvider_DefaultTags() string {
+func TestAccBase_ProviderWithDefaultTags() string {
     return fmt.Sprintf(` 
 provider "bloxone" {
     default_tags = {
