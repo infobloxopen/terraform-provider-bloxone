@@ -36,30 +36,37 @@ var ConfigAuthZoneInheritanceResourceSchemaAttributes = map[string]schema.Attrib
 	"gss_tsig_enabled": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"notify": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"query_acl": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedACLItemsResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"transfer_acl": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedACLItemsResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"update_acl": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedACLItemsResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"use_forwarders_for_subzones": schema.SingleNestedAttribute{
 		Attributes: Inheritance2InheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"zone_authority": schema.SingleNestedAttribute{
 		Attributes: ConfigInheritedZoneAuthorityResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 }
 

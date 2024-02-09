@@ -22,7 +22,6 @@ import (
 )
 
 type RangeAPI interface {
-
 	/*
 			RangeCreate Create the range.
 
@@ -37,7 +36,6 @@ type RangeAPI interface {
 	// RangeCreateExecute executes the request
 	//  @return IpamsvcCreateRangeResponse
 	RangeCreateExecute(r ApiRangeCreateRequest) (*IpamsvcCreateRangeResponse, *http.Response, error)
-
 	/*
 			RangeCreateNextAvailableIP Allocate the next available IP address.
 
@@ -53,7 +51,6 @@ type RangeAPI interface {
 	// RangeCreateNextAvailableIPExecute executes the request
 	//  @return IpamsvcCreateNextAvailableIPResponse
 	RangeCreateNextAvailableIPExecute(r ApiRangeCreateNextAvailableIPRequest) (*IpamsvcCreateNextAvailableIPResponse, *http.Response, error)
-
 	/*
 			RangeDelete Move the range to the recycle bin.
 
@@ -68,7 +65,6 @@ type RangeAPI interface {
 
 	// RangeDeleteExecute executes the request
 	RangeDeleteExecute(r ApiRangeDeleteRequest) (*http.Response, error)
-
 	/*
 			RangeList Retrieve ranges.
 
@@ -83,7 +79,6 @@ type RangeAPI interface {
 	// RangeListExecute executes the request
 	//  @return IpamsvcListRangeResponse
 	RangeListExecute(r ApiRangeListRequest) (*IpamsvcListRangeResponse, *http.Response, error)
-
 	/*
 			RangeListNextAvailableIP Retrieve the next available IP address.
 
@@ -99,7 +94,6 @@ type RangeAPI interface {
 	// RangeListNextAvailableIPExecute executes the request
 	//  @return IpamsvcNextAvailableIPResponse
 	RangeListNextAvailableIPExecute(r ApiRangeListNextAvailableIPRequest) (*IpamsvcNextAvailableIPResponse, *http.Response, error)
-
 	/*
 			RangeRead Retrieve the range.
 
@@ -115,7 +109,6 @@ type RangeAPI interface {
 	// RangeReadExecute executes the request
 	//  @return IpamsvcReadRangeResponse
 	RangeReadExecute(r ApiRangeReadRequest) (*IpamsvcReadRangeResponse, *http.Response, error)
-
 	/*
 			RangeUpdate Update the range.
 
@@ -140,10 +133,17 @@ type ApiRangeCreateRequest struct {
 	ctx        context.Context
 	ApiService RangeAPI
 	body       *IpamsvcRange
+	inherit    *string
 }
 
 func (r ApiRangeCreateRequest) Body(body IpamsvcRange) ApiRangeCreateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiRangeCreateRequest) Inherit(inherit string) ApiRangeCreateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -192,6 +192,9 @@ func (a *RangeAPIService) RangeCreateExecute(r ApiRangeCreateRequest) (*IpamsvcC
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -208,6 +211,14 @@ func (a *RangeAPIService) RangeCreateExecute(r ApiRangeCreateRequest) (*IpamsvcC
 	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
 	}
 	// body params
 	localVarPostBody = r.body
@@ -252,7 +263,6 @@ func (a *RangeAPIService) RangeCreateExecute(r ApiRangeCreateRequest) (*IpamsvcC
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -391,7 +401,6 @@ func (a *RangeAPIService) RangeCreateNextAvailableIPExecute(r ApiRangeCreateNext
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -510,6 +519,7 @@ type ApiRangeListRequest struct {
 	pageToken  *string
 	torderBy   *string
 	tfilter    *string
+	inherit    *string
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;. The following operators are commonly used in filter expressions:  |  Op   |  Description               |  |  --   |  -----------               |  |  &#x3D;&#x3D;   |  Equal                     |  |  !&#x3D;   |  Not Equal                 |  |  &gt;    |  Greater Than              |  |   &gt;&#x3D;  |  Greater Than or Equal To  |  |  &lt;    |  Less Than                 |  |  &lt;&#x3D;   |  Less Than or Equal To     |  |  and  |  Logical AND               |  |  ~    |  Matches Regex             |  |  !~   |  Does Not Match Regex      |  |  or   |  Logical OR                |  |  not  |  Logical NOT               |  |  ()   |  Groupping Operators       |
@@ -557,6 +567,12 @@ func (r ApiRangeListRequest) TorderBy(torderBy string) ApiRangeListRequest {
 // This parameter is used for filtering by tags.
 func (r ApiRangeListRequest) Tfilter(tfilter string) ApiRangeListRequest {
 	r.tfilter = &tfilter
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiRangeListRequest) Inherit(inherit string) ApiRangeListRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -626,6 +642,9 @@ func (a *RangeAPIService) RangeListExecute(r ApiRangeListRequest) (*IpamsvcListR
 	if r.tfilter != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_tfilter", r.tfilter, "")
 	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -684,7 +703,6 @@ func (a *RangeAPIService) RangeListExecute(r ApiRangeListRequest) (*IpamsvcListR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -817,7 +835,6 @@ func (a *RangeAPIService) RangeListNextAvailableIPExecute(r ApiRangeListNextAvai
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -826,11 +843,18 @@ type ApiRangeReadRequest struct {
 	ApiService RangeAPI
 	id         string
 	fields     *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
 func (r ApiRangeReadRequest) Fields(fields string) ApiRangeReadRequest {
 	r.fields = &fields
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiRangeReadRequest) Inherit(inherit string) ApiRangeReadRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -881,6 +905,9 @@ func (a *RangeAPIService) RangeReadExecute(r ApiRangeReadRequest) (*IpamsvcReadR
 
 	if r.fields != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_fields", r.fields, "")
+	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -940,7 +967,6 @@ func (a *RangeAPIService) RangeReadExecute(r ApiRangeReadRequest) (*IpamsvcReadR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -949,10 +975,17 @@ type ApiRangeUpdateRequest struct {
 	ApiService RangeAPI
 	id         string
 	body       *IpamsvcRange
+	inherit    *string
 }
 
 func (r ApiRangeUpdateRequest) Body(body IpamsvcRange) ApiRangeUpdateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiRangeUpdateRequest) Inherit(inherit string) ApiRangeUpdateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -1004,6 +1037,9 @@ func (a *RangeAPIService) RangeUpdateExecute(r ApiRangeUpdateRequest) (*IpamsvcU
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -1020,6 +1056,14 @@ func (a *RangeAPIService) RangeUpdateExecute(r ApiRangeUpdateRequest) (*IpamsvcU
 	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
 	}
 	// body params
 	localVarPostBody = r.body
@@ -1064,6 +1108,5 @@ func (a *RangeAPIService) RangeUpdateExecute(r ApiRangeUpdateRequest) (*IpamsvcU
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

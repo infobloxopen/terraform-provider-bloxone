@@ -32,8 +32,12 @@ var ConfigACLItemAttrTypes = map[string]attr.Type{
 
 var ConfigACLItemResourceSchemaAttributes = map[string]schema.Attribute{
 	"access": schema.StringAttribute{
-		Required:            true,
-		MarkdownDescription: `Access permission for _element_.  Allowed values:  * _allow_,  * _deny_.`,
+		Optional: true,
+		MarkdownDescription: "Access permission for _element_.\n\n" +
+			"  Allowed values:\n" +
+			"  * _allow_\n" +
+			"  * _deny_\n\n" +
+			"  Must be empty if _element_ is _acl_.",
 	},
 	"acl": schema.StringAttribute{
 		Optional:            true,
@@ -44,8 +48,13 @@ var ConfigACLItemResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.`,
 	},
 	"element": schema.StringAttribute{
-		Required:            true,
-		MarkdownDescription: `Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.`,
+		Required: true,
+		MarkdownDescription: "Type of element.\n\n" +
+			"  Allowed values:\n" +
+			"  * _any_\n" +
+			"  * _ip_\n" +
+			"  * _acl_\n" +
+			"  * _tsig_key_",
 	},
 	"tsig_key": schema.SingleNestedAttribute{
 		Attributes: ConfigTSIGKeyResourceSchemaAttributes,

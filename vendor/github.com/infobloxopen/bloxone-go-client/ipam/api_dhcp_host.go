@@ -22,7 +22,6 @@ import (
 )
 
 type DhcpHostAPI interface {
-
 	/*
 			DhcpHostList Retrieve DHCP hosts.
 
@@ -37,7 +36,6 @@ type DhcpHostAPI interface {
 	// DhcpHostListExecute executes the request
 	//  @return IpamsvcListHostResponse
 	DhcpHostListExecute(r ApiDhcpHostListRequest) (*IpamsvcListHostResponse, *http.Response, error)
-
 	/*
 		DhcpHostListAssociations Retrieve DHCP host associations.
 
@@ -52,7 +50,6 @@ type DhcpHostAPI interface {
 	// DhcpHostListAssociationsExecute executes the request
 	//  @return IpamsvcHostAssociationsResponse
 	DhcpHostListAssociationsExecute(r ApiDhcpHostListAssociationsRequest) (*IpamsvcHostAssociationsResponse, *http.Response, error)
-
 	/*
 			DhcpHostRead Retrieve the DHCP host.
 
@@ -68,7 +65,6 @@ type DhcpHostAPI interface {
 	// DhcpHostReadExecute executes the request
 	//  @return IpamsvcReadHostResponse
 	DhcpHostReadExecute(r ApiDhcpHostReadRequest) (*IpamsvcReadHostResponse, *http.Response, error)
-
 	/*
 			DhcpHostUpdate Update the DHCP hosts.
 
@@ -274,7 +270,6 @@ func (a *DhcpHostAPIService) DhcpHostListExecute(r ApiDhcpHostListRequest) (*Ipa
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -386,7 +381,6 @@ func (a *DhcpHostAPIService) DhcpHostListAssociationsExecute(r ApiDhcpHostListAs
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -509,7 +503,6 @@ func (a *DhcpHostAPIService) DhcpHostReadExecute(r ApiDhcpHostReadRequest) (*Ipa
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -590,6 +583,14 @@ func (a *DhcpHostAPIService) DhcpHostUpdateExecute(r ApiDhcpHostUpdateRequest) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -633,6 +634,5 @@ func (a *DhcpHostAPIService) DhcpHostUpdateExecute(r ApiDhcpHostUpdateRequest) (
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

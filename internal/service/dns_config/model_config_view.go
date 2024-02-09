@@ -2,6 +2,7 @@ package dns_config
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -11,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -254,10 +256,14 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `Optional. Specifies a list of client addresses for which AAAA filtering is to be applied.  Defaults to _empty_.`,
 	},
 	"filter_aaaa_on_v4": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
-		Default:             stringdefault.StaticString("no"),
-		MarkdownDescription: `_filter_aaaa_on_v4_ allows named to omit some IPv6 addresses when responding to IPv4 clients.  Allowed values: * _yes_, * _no_, * _break_dnssec_.  Defaults to _no_`,
+		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString("no"),
+		MarkdownDescription: "_filter_aaaa_on_v4_ allows named to omit some IPv6 addresses when responding to IPv4 clients. Allowed values:\n" +
+			"  * _yes_\n" +
+			"  * _no_\n" +
+			"  * _break_dnssec_\n\n" +
+			"  Defaults to _no_",
 	},
 	"forwarders": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
@@ -288,6 +294,10 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 	"inheritance_sources": schema.SingleNestedAttribute{
 		Attributes: ConfigViewInheritanceResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
+		PlanModifiers: []planmodifier.Object{
+			objectplanmodifier.UseStateForUnknown(),
+		},
 	},
 	"ip_spaces": schema.ListAttribute{
 		ElementType: types.StringType,

@@ -34,8 +34,12 @@ var ConfigSortListItemResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"element": schema.StringAttribute{
-		Required:            true,
-		MarkdownDescription: `Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,`,
+		Required: true,
+		MarkdownDescription: "Type of element.\n\n" +
+			"  Allowed values:\n" +
+			"  * _any_\n" +
+			"  * _ip_\n" +
+			"  * _acl_\n",
 	},
 	"prioritized_networks": schema.ListAttribute{
 		ElementType:         types.StringType,

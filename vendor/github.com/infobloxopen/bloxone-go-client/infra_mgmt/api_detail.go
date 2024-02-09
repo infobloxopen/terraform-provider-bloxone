@@ -21,7 +21,6 @@ import (
 )
 
 type DetailAPI interface {
-
 	/*
 		DetailHostsList List all the Hosts along with its associated Services (applications).
 
@@ -33,7 +32,6 @@ type DetailAPI interface {
 	// DetailHostsListExecute executes the request
 	//  @return InfraListDetailHostsResponse
 	DetailHostsListExecute(r ApiDetailHostsListRequest) (*InfraListDetailHostsResponse, *http.Response, error)
-
 	/*
 		DetailServicesList List all the Services (applications) along with its associated Hosts.
 
@@ -232,7 +230,6 @@ func (a *DetailAPIService) DetailHostsListExecute(r ApiDetailHostsListRequest) (
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -418,6 +415,5 @@ func (a *DetailAPIService) DetailServicesListExecute(r ApiDetailServicesListRequ
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

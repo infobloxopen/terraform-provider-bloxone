@@ -81,9 +81,15 @@ var InfraHostResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The list of Host-specific configurations for each Service deployed on this Host.",
 	},
 	"connectivity_monitor": schema.MapAttribute{
-		ElementType:         types.StringType,
-		Computed:            true,
-		MarkdownDescription: "Represents the connectivity monitor properties of a Host, to enable/disable connectivity monitoring for redundant network interfaces.  The \"endpoint_type\" is: - `\"csp\"` for enabling monitoring - `\"\"` for disabling monitoring (default)  Note: Currently, all fields except \"endpoint_type\" are read-only, and will be overridden to default values in case they are edited.  Example: ``` {   \"connectivity_monitor\": {     \"cost\":1000000,     \"endpoint_type\":\"csp\",     \"endpoint\":\"http://csp.infoblox.com\",     \"interval\":15,     \"failure_threshold\":1,     \"success_threshold\":2   } } ```",
+		ElementType: types.StringType,
+		Computed:    true,
+		MarkdownDescription: "Represents the connectivity monitor properties of a Host, to enable/disable connectivity monitoring for redundant network interfaces.\n\n" +
+			"  The \"endpoint_type\" is:\n" +
+			"  - `\"csp\"` for enabling monitoring\n" +
+			"  - `\"\"` for disabling monitoring (default)\n\n" +
+			"  Note: Currently, all fields except \"endpoint_type\" are read-only, and will be overridden to default values in case they are edited.\n\n" +
+			"  Example:\n" +
+			"  ```\n{\n    \"connectivity_monitor\": {\n      \"cost\":1000000,\n      \"endpoint_type\":\"csp\",\n      \"endpoint\":\"http://csp.infoblox.com\",\n      \"interval\":15,\n      \"failure_threshold\":1,\n      \"success_threshold\":2\n    }\n  }\n```",
 	},
 	"created_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},

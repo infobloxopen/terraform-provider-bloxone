@@ -22,7 +22,6 @@ import (
 )
 
 type LbdnAPI interface {
-
 	/*
 		LbdnCreate Create the __LBDN__ object.
 
@@ -36,7 +35,6 @@ type LbdnAPI interface {
 	// LbdnCreateExecute executes the request
 	//  @return ConfigCreateLBDNResponse
 	LbdnCreateExecute(r ApiLbdnCreateRequest) (*ConfigCreateLBDNResponse, *http.Response, error)
-
 	/*
 		LbdnDelete Delete the __LBDN__ object.
 
@@ -50,7 +48,6 @@ type LbdnAPI interface {
 
 	// LbdnDeleteExecute executes the request
 	LbdnDeleteExecute(r ApiLbdnDeleteRequest) (*http.Response, error)
-
 	/*
 		LbdnList List __LBDN__ objects.
 
@@ -64,7 +61,6 @@ type LbdnAPI interface {
 	// LbdnListExecute executes the request
 	//  @return ConfigListLBDNResponse
 	LbdnListExecute(r ApiLbdnListRequest) (*ConfigListLBDNResponse, *http.Response, error)
-
 	/*
 		LbdnRead Read the __LBDN__ object.
 
@@ -79,7 +75,6 @@ type LbdnAPI interface {
 	// LbdnReadExecute executes the request
 	//  @return ConfigReadLBDNResponse
 	LbdnReadExecute(r ApiLbdnReadRequest) (*ConfigReadLBDNResponse, *http.Response, error)
-
 	/*
 		LbdnUpdate Update the __LBDN__ object.
 
@@ -171,6 +166,14 @@ func (a *LbdnAPIService) LbdnCreateExecute(r ApiLbdnCreateRequest) (*ConfigCreat
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -214,7 +217,6 @@ func (a *LbdnAPIService) LbdnCreateExecute(r ApiLbdnCreateRequest) (*ConfigCreat
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -505,7 +507,6 @@ func (a *LbdnAPIService) LbdnListExecute(r ApiLbdnListRequest) (*ConfigListLBDNR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -627,7 +628,6 @@ func (a *LbdnAPIService) LbdnReadExecute(r ApiLbdnReadRequest) (*ConfigReadLBDNR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -707,6 +707,14 @@ func (a *LbdnAPIService) LbdnUpdateExecute(r ApiLbdnUpdateRequest) (*ConfigUpdat
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -750,6 +758,5 @@ func (a *LbdnAPIService) LbdnUpdateExecute(r ApiLbdnUpdateRequest) (*ConfigUpdat
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

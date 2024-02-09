@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/ipam"
-
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -26,14 +25,19 @@ var IpamsvcInheritedDHCPOptionListAttrTypes = map[string]attr.Type{
 
 var IpamsvcInheritedDHCPOptionListResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.`,
+		Optional: true,
+		Computed: true,
+		MarkdownDescription: "The inheritance setting. Valid values are:\n" +
+			"  * _inherit_: Use the inherited value.\n" +
+			"  * _block_: Don't use the inherited value.\n\n" +
+			"  Defaults to _inherit_.",
 	},
 	"value": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: IpamsvcInheritedDHCPOptionResourceSchemaAttributes,
 		},
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `The inherited DHCP option values.`,
 	},
 }

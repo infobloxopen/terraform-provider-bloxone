@@ -22,7 +22,6 @@ import (
 )
 
 type HardwareFilterAPI interface {
-
 	/*
 			HardwareFilterCreate Create the hardware filter.
 
@@ -37,7 +36,6 @@ type HardwareFilterAPI interface {
 	// HardwareFilterCreateExecute executes the request
 	//  @return IpamsvcCreateHardwareFilterResponse
 	HardwareFilterCreateExecute(r ApiHardwareFilterCreateRequest) (*IpamsvcCreateHardwareFilterResponse, *http.Response, error)
-
 	/*
 			HardwareFilterDelete Move the hardware filter to the recycle bin.
 
@@ -52,7 +50,6 @@ type HardwareFilterAPI interface {
 
 	// HardwareFilterDeleteExecute executes the request
 	HardwareFilterDeleteExecute(r ApiHardwareFilterDeleteRequest) (*http.Response, error)
-
 	/*
 			HardwareFilterList Retrieve hardware filters.
 
@@ -67,7 +64,6 @@ type HardwareFilterAPI interface {
 	// HardwareFilterListExecute executes the request
 	//  @return IpamsvcListHardwareFilterResponse
 	HardwareFilterListExecute(r ApiHardwareFilterListRequest) (*IpamsvcListHardwareFilterResponse, *http.Response, error)
-
 	/*
 			HardwareFilterRead Retrieve the hardware filter.
 
@@ -83,7 +79,6 @@ type HardwareFilterAPI interface {
 	// HardwareFilterReadExecute executes the request
 	//  @return IpamsvcReadHardwareFilterResponse
 	HardwareFilterReadExecute(r ApiHardwareFilterReadRequest) (*IpamsvcReadHardwareFilterResponse, *http.Response, error)
-
 	/*
 			HardwareFilterUpdate Update the hardware filter.
 
@@ -177,6 +172,14 @@ func (a *HardwareFilterAPIService) HardwareFilterCreateExecute(r ApiHardwareFilt
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -220,7 +223,6 @@ func (a *HardwareFilterAPIService) HardwareFilterCreateExecute(r ApiHardwareFilt
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -513,7 +515,6 @@ func (a *HardwareFilterAPIService) HardwareFilterListExecute(r ApiHardwareFilter
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -636,7 +637,6 @@ func (a *HardwareFilterAPIService) HardwareFilterReadExecute(r ApiHardwareFilter
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -717,6 +717,14 @@ func (a *HardwareFilterAPIService) HardwareFilterUpdateExecute(r ApiHardwareFilt
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -760,6 +768,5 @@ func (a *HardwareFilterAPIService) HardwareFilterUpdateExecute(r ApiHardwareFilt
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

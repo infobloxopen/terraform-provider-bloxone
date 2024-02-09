@@ -22,7 +22,6 @@ import (
 )
 
 type SubnetAPI interface {
-
 	/*
 			SubnetCopy Copy the subnet.
 
@@ -38,7 +37,6 @@ type SubnetAPI interface {
 	// SubnetCopyExecute executes the request
 	//  @return IpamsvcCopySubnetResponse
 	SubnetCopyExecute(r ApiSubnetCopyRequest) (*IpamsvcCopySubnetResponse, *http.Response, error)
-
 	/*
 			SubnetCreate Create the subnet.
 
@@ -53,7 +51,6 @@ type SubnetAPI interface {
 	// SubnetCreateExecute executes the request
 	//  @return IpamsvcCreateSubnetResponse
 	SubnetCreateExecute(r ApiSubnetCreateRequest) (*IpamsvcCreateSubnetResponse, *http.Response, error)
-
 	/*
 			SubnetCreateNextAvailableIP Allocate the next available IP address.
 
@@ -69,7 +66,6 @@ type SubnetAPI interface {
 	// SubnetCreateNextAvailableIPExecute executes the request
 	//  @return IpamsvcCreateNextAvailableIPResponse
 	SubnetCreateNextAvailableIPExecute(r ApiSubnetCreateNextAvailableIPRequest) (*IpamsvcCreateNextAvailableIPResponse, *http.Response, error)
-
 	/*
 			SubnetDelete Move the subnet to the recycle bin.
 
@@ -84,7 +80,6 @@ type SubnetAPI interface {
 
 	// SubnetDeleteExecute executes the request
 	SubnetDeleteExecute(r ApiSubnetDeleteRequest) (*http.Response, error)
-
 	/*
 			SubnetList Retrieve subnets.
 
@@ -99,7 +94,6 @@ type SubnetAPI interface {
 	// SubnetListExecute executes the request
 	//  @return IpamsvcListSubnetResponse
 	SubnetListExecute(r ApiSubnetListRequest) (*IpamsvcListSubnetResponse, *http.Response, error)
-
 	/*
 			SubnetListNextAvailableIP Retrieve the next available IP address.
 
@@ -115,7 +109,6 @@ type SubnetAPI interface {
 	// SubnetListNextAvailableIPExecute executes the request
 	//  @return IpamsvcNextAvailableIPResponse
 	SubnetListNextAvailableIPExecute(r ApiSubnetListNextAvailableIPRequest) (*IpamsvcNextAvailableIPResponse, *http.Response, error)
-
 	/*
 			SubnetRead Retrieve the subnet.
 
@@ -131,7 +124,6 @@ type SubnetAPI interface {
 	// SubnetReadExecute executes the request
 	//  @return IpamsvcReadSubnetResponse
 	SubnetReadExecute(r ApiSubnetReadRequest) (*IpamsvcReadSubnetResponse, *http.Response, error)
-
 	/*
 			SubnetUpdate Update the subnet.
 
@@ -272,7 +264,6 @@ func (a *SubnetAPIService) SubnetCopyExecute(r ApiSubnetCopyRequest) (*IpamsvcCo
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -280,10 +271,17 @@ type ApiSubnetCreateRequest struct {
 	ctx        context.Context
 	ApiService SubnetAPI
 	body       *IpamsvcSubnet
+	inherit    *string
 }
 
 func (r ApiSubnetCreateRequest) Body(body IpamsvcSubnet) ApiSubnetCreateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiSubnetCreateRequest) Inherit(inherit string) ApiSubnetCreateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -332,6 +330,9 @@ func (a *SubnetAPIService) SubnetCreateExecute(r ApiSubnetCreateRequest) (*Ipams
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -348,6 +349,14 @@ func (a *SubnetAPIService) SubnetCreateExecute(r ApiSubnetCreateRequest) (*Ipams
 	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
 	}
 	// body params
 	localVarPostBody = r.body
@@ -392,7 +401,6 @@ func (a *SubnetAPIService) SubnetCreateExecute(r ApiSubnetCreateRequest) (*Ipams
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -531,7 +539,6 @@ func (a *SubnetAPIService) SubnetCreateNextAvailableIPExecute(r ApiSubnetCreateN
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -650,6 +657,7 @@ type ApiSubnetListRequest struct {
 	orderBy    *string
 	torderBy   *string
 	tfilter    *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
@@ -697,6 +705,12 @@ func (r ApiSubnetListRequest) TorderBy(torderBy string) ApiSubnetListRequest {
 // This parameter is used for filtering by tags.
 func (r ApiSubnetListRequest) Tfilter(tfilter string) ApiSubnetListRequest {
 	r.tfilter = &tfilter
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiSubnetListRequest) Inherit(inherit string) ApiSubnetListRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -766,6 +780,9 @@ func (a *SubnetAPIService) SubnetListExecute(r ApiSubnetListRequest) (*IpamsvcLi
 	if r.tfilter != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_tfilter", r.tfilter, "")
 	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -824,7 +841,6 @@ func (a *SubnetAPIService) SubnetListExecute(r ApiSubnetListRequest) (*IpamsvcLi
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -957,7 +973,6 @@ func (a *SubnetAPIService) SubnetListNextAvailableIPExecute(r ApiSubnetListNextA
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -966,11 +981,18 @@ type ApiSubnetReadRequest struct {
 	ApiService SubnetAPI
 	id         string
 	fields     *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
 func (r ApiSubnetReadRequest) Fields(fields string) ApiSubnetReadRequest {
 	r.fields = &fields
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiSubnetReadRequest) Inherit(inherit string) ApiSubnetReadRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -1021,6 +1043,9 @@ func (a *SubnetAPIService) SubnetReadExecute(r ApiSubnetReadRequest) (*IpamsvcRe
 
 	if r.fields != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_fields", r.fields, "")
+	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1080,7 +1105,6 @@ func (a *SubnetAPIService) SubnetReadExecute(r ApiSubnetReadRequest) (*IpamsvcRe
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -1089,10 +1113,17 @@ type ApiSubnetUpdateRequest struct {
 	ApiService SubnetAPI
 	id         string
 	body       *IpamsvcSubnet
+	inherit    *string
 }
 
 func (r ApiSubnetUpdateRequest) Body(body IpamsvcSubnet) ApiSubnetUpdateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiSubnetUpdateRequest) Inherit(inherit string) ApiSubnetUpdateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -1144,6 +1175,9 @@ func (a *SubnetAPIService) SubnetUpdateExecute(r ApiSubnetUpdateRequest) (*Ipams
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -1160,6 +1194,14 @@ func (a *SubnetAPIService) SubnetUpdateExecute(r ApiSubnetUpdateRequest) (*Ipams
 	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
 	}
 	// body params
 	localVarPostBody = r.body
@@ -1204,6 +1246,5 @@ func (a *SubnetAPIService) SubnetUpdateExecute(r ApiSubnetUpdateRequest) (*Ipams
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

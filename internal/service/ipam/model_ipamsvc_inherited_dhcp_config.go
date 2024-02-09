@@ -42,42 +42,52 @@ var IpamsvcInheritedDHCPConfigResourceSchemaAttributes = map[string]schema.Attri
 	"abandoned_reclaim_time": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"abandoned_reclaim_time_v6": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"allow_unknown": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"allow_unknown_v6": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"filters": schema.SingleNestedAttribute{
 		Attributes: InheritedDHCPConfigFilterListResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"filters_v6": schema.SingleNestedAttribute{
 		Attributes: InheritedDHCPConfigFilterListResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"ignore_client_uid": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedBoolResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"ignore_list": schema.SingleNestedAttribute{
 		Attributes: InheritedDHCPConfigIgnoreItemListResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"lease_time": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 	"lease_time_v6": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedUInt32ResourceSchemaAttributes,
 		Optional:   true,
+		Computed:   true,
 	},
 }
 

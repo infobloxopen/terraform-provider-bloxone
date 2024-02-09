@@ -44,9 +44,9 @@ func (m *IpamsvcAddressModelWithFilter) FlattenResults(ctx context.Context, from
 	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcAddressAttrTypes, diags, FlattenIpamsvcAddress)
 }
 
-func (d *AddressDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *AddressDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Retrieves information about existing Addresses.\n\nThe Address object represents any single IP address within a given IP space.",
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",

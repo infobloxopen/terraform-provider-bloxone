@@ -22,7 +22,6 @@ import (
 )
 
 type ServerAPI interface {
-
 	/*
 			ServerCreate Create the Server object.
 
@@ -37,7 +36,6 @@ type ServerAPI interface {
 	// ServerCreateExecute executes the request
 	//  @return ConfigCreateServerResponse
 	ServerCreateExecute(r ApiServerCreateRequest) (*ConfigCreateServerResponse, *http.Response, error)
-
 	/*
 			ServerDelete Move the Server object to Recyclebin.
 
@@ -52,7 +50,6 @@ type ServerAPI interface {
 
 	// ServerDeleteExecute executes the request
 	ServerDeleteExecute(r ApiServerDeleteRequest) (*http.Response, error)
-
 	/*
 			ServerList List Server objects.
 
@@ -67,7 +64,6 @@ type ServerAPI interface {
 	// ServerListExecute executes the request
 	//  @return ConfigListServerResponse
 	ServerListExecute(r ApiServerListRequest) (*ConfigListServerResponse, *http.Response, error)
-
 	/*
 			ServerRead Read the Server object.
 
@@ -83,7 +79,6 @@ type ServerAPI interface {
 	// ServerReadExecute executes the request
 	//  @return ConfigReadServerResponse
 	ServerReadExecute(r ApiServerReadRequest) (*ConfigReadServerResponse, *http.Response, error)
-
 	/*
 			ServerUpdate Update the Server object.
 
@@ -108,10 +103,17 @@ type ApiServerCreateRequest struct {
 	ctx        context.Context
 	ApiService ServerAPI
 	body       *ConfigServer
+	inherit    *string
 }
 
 func (r ApiServerCreateRequest) Body(body ConfigServer) ApiServerCreateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiServerCreateRequest) Inherit(inherit string) ApiServerCreateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -160,6 +162,9 @@ func (a *ServerAPIService) ServerCreateExecute(r ApiServerCreateRequest) (*Confi
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -176,6 +181,14 @@ func (a *ServerAPIService) ServerCreateExecute(r ApiServerCreateRequest) (*Confi
 	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
 	}
 	// body params
 	localVarPostBody = r.body
@@ -220,7 +233,6 @@ func (a *ServerAPIService) ServerCreateExecute(r ApiServerCreateRequest) (*Confi
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -339,6 +351,7 @@ type ApiServerListRequest struct {
 	orderBy    *string
 	tfilter    *string
 	torderBy   *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
@@ -386,6 +399,12 @@ func (r ApiServerListRequest) Tfilter(tfilter string) ApiServerListRequest {
 // This parameter is used for sorting by tags.
 func (r ApiServerListRequest) TorderBy(torderBy string) ApiServerListRequest {
 	r.torderBy = &torderBy
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiServerListRequest) Inherit(inherit string) ApiServerListRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -455,6 +474,9 @@ func (a *ServerAPIService) ServerListExecute(r ApiServerListRequest) (*ConfigLis
 	if r.torderBy != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_torder_by", r.torderBy, "")
 	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -513,7 +535,6 @@ func (a *ServerAPIService) ServerListExecute(r ApiServerListRequest) (*ConfigLis
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -522,11 +543,18 @@ type ApiServerReadRequest struct {
 	ApiService ServerAPI
 	id         string
 	fields     *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
 func (r ApiServerReadRequest) Fields(fields string) ApiServerReadRequest {
 	r.fields = &fields
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiServerReadRequest) Inherit(inherit string) ApiServerReadRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -578,6 +606,9 @@ func (a *ServerAPIService) ServerReadExecute(r ApiServerReadRequest) (*ConfigRea
 	if r.fields != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_fields", r.fields, "")
 	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -636,7 +667,6 @@ func (a *ServerAPIService) ServerReadExecute(r ApiServerReadRequest) (*ConfigRea
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -645,10 +675,17 @@ type ApiServerUpdateRequest struct {
 	ApiService ServerAPI
 	id         string
 	body       *ConfigServer
+	inherit    *string
 }
 
 func (r ApiServerUpdateRequest) Body(body ConfigServer) ApiServerUpdateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiServerUpdateRequest) Inherit(inherit string) ApiServerUpdateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -700,6 +737,9 @@ func (a *ServerAPIService) ServerUpdateExecute(r ApiServerUpdateRequest) (*Confi
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -716,6 +756,14 @@ func (a *ServerAPIService) ServerUpdateExecute(r ApiServerUpdateRequest) (*Confi
 	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
 	}
 	// body params
 	localVarPostBody = r.body
@@ -760,6 +808,5 @@ func (a *ServerAPIService) ServerUpdateExecute(r ApiServerUpdateRequest) (*Confi
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

@@ -22,7 +22,6 @@ import (
 )
 
 type AclAPI interface {
-
 	/*
 			AclCreate Create the ACL object.
 
@@ -37,7 +36,6 @@ type AclAPI interface {
 	// AclCreateExecute executes the request
 	//  @return ConfigCreateACLResponse
 	AclCreateExecute(r ApiAclCreateRequest) (*ConfigCreateACLResponse, *http.Response, error)
-
 	/*
 			AclDelete Move the ACL object to Recyclebin.
 
@@ -52,7 +50,6 @@ type AclAPI interface {
 
 	// AclDeleteExecute executes the request
 	AclDeleteExecute(r ApiAclDeleteRequest) (*http.Response, error)
-
 	/*
 			AclList List ACL objects.
 
@@ -67,7 +64,6 @@ type AclAPI interface {
 	// AclListExecute executes the request
 	//  @return ConfigListACLResponse
 	AclListExecute(r ApiAclListRequest) (*ConfigListACLResponse, *http.Response, error)
-
 	/*
 			AclRead Read the ACL object.
 
@@ -83,7 +79,6 @@ type AclAPI interface {
 	// AclReadExecute executes the request
 	//  @return ConfigReadACLResponse
 	AclReadExecute(r ApiAclReadRequest) (*ConfigReadACLResponse, *http.Response, error)
-
 	/*
 			AclUpdate Update the ACL object.
 
@@ -177,6 +172,14 @@ func (a *AclAPIService) AclCreateExecute(r ApiAclCreateRequest) (*ConfigCreateAC
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -220,7 +223,6 @@ func (a *AclAPIService) AclCreateExecute(r ApiAclCreateRequest) (*ConfigCreateAC
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -513,7 +515,6 @@ func (a *AclAPIService) AclListExecute(r ApiAclListRequest) (*ConfigListACLRespo
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -636,7 +637,6 @@ func (a *AclAPIService) AclReadExecute(r ApiAclReadRequest) (*ConfigReadACLRespo
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -717,6 +717,14 @@ func (a *AclAPIService) AclUpdateExecute(r ApiAclUpdateRequest) (*ConfigUpdateAC
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -760,6 +768,5 @@ func (a *AclAPIService) AclUpdateExecute(r ApiAclUpdateRequest) (*ConfigUpdateAC
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

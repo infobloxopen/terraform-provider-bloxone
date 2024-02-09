@@ -185,6 +185,7 @@ github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifie
 github.com/hashicorp/terraform-plugin-framework/resource/schema/listdefault
 github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier
 github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault
+github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier
 github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier
 github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault
 github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier
@@ -279,7 +280,7 @@ github.com/huandu/xstrings
 # github.com/imdario/mergo v0.3.15
 ## explicit; go 1.13
 github.com/imdario/mergo
-# github.com/infobloxopen/bloxone-go-client v0.0.0-20240108204648-9c675776452c
+# github.com/infobloxopen/bloxone-go-client v0.0.0-20240118190703-9e413f8fa13a => github.com/venkat-iblox/bloxone-go-client v0.0.0-20240208212115-f343fb00132e
 ## explicit; go 1.19
 github.com/infobloxopen/bloxone-go-client/client
 github.com/infobloxopen/bloxone-go-client/dns_config
@@ -505,3 +506,4 @@ google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/emptypb
 google.golang.org/protobuf/types/known/timestamppb
+# github.com/infobloxopen/bloxone-go-client => github.com/venkat-iblox/bloxone-go-client v0.0.0-20240208212115-f343fb00132e

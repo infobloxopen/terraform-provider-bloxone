@@ -22,7 +22,6 @@ import (
 )
 
 type RecordAPI interface {
-
 	/*
 			RecordCreate Create the DNS resource record.
 
@@ -37,7 +36,6 @@ type RecordAPI interface {
 	// RecordCreateExecute executes the request
 	//  @return DataCreateRecordResponse
 	RecordCreateExecute(r ApiRecordCreateRequest) (*DataCreateRecordResponse, *http.Response, error)
-
 	/*
 			RecordDelete Move the DNS resource record to recycle bin.
 
@@ -52,7 +50,6 @@ type RecordAPI interface {
 
 	// RecordDeleteExecute executes the request
 	RecordDeleteExecute(r ApiRecordDeleteRequest) (*http.Response, error)
-
 	/*
 			RecordList Retrieve DNS resource records.
 
@@ -67,7 +64,6 @@ type RecordAPI interface {
 	// RecordListExecute executes the request
 	//  @return DataListRecordResponse
 	RecordListExecute(r ApiRecordListRequest) (*DataListRecordResponse, *http.Response, error)
-
 	/*
 			RecordRead Retrieve the DNS resource record.
 
@@ -83,7 +79,6 @@ type RecordAPI interface {
 	// RecordReadExecute executes the request
 	//  @return DataReadRecordResponse
 	RecordReadExecute(r ApiRecordReadRequest) (*DataReadRecordResponse, *http.Response, error)
-
 	/*
 			RecordSOASerialIncrement Increment serial number for the SOA record.
 
@@ -99,7 +94,6 @@ type RecordAPI interface {
 	// RecordSOASerialIncrementExecute executes the request
 	//  @return DataSOASerialIncrementResponse
 	RecordSOASerialIncrementExecute(r ApiRecordSOASerialIncrementRequest) (*DataSOASerialIncrementResponse, *http.Response, error)
-
 	/*
 			RecordUpdate Update the DNS resource record.
 
@@ -124,10 +118,17 @@ type ApiRecordCreateRequest struct {
 	ctx        context.Context
 	ApiService RecordAPI
 	body       *DataRecord
+	inherit    *string
 }
 
 func (r ApiRecordCreateRequest) Body(body DataRecord) ApiRecordCreateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.
+func (r ApiRecordCreateRequest) Inherit(inherit string) ApiRecordCreateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -176,6 +177,9 @@ func (a *RecordAPIService) RecordCreateExecute(r ApiRecordCreateRequest) (*DataC
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -192,6 +196,14 @@ func (a *RecordAPIService) RecordCreateExecute(r ApiRecordCreateRequest) (*DataC
 	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
 	}
 	// body params
 	localVarPostBody = r.body
@@ -236,7 +248,6 @@ func (a *RecordAPIService) RecordCreateExecute(r ApiRecordCreateRequest) (*DataC
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -355,6 +366,7 @@ type ApiRecordListRequest struct {
 	orderBy    *string
 	tfilter    *string
 	torderBy   *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
@@ -402,6 +414,12 @@ func (r ApiRecordListRequest) Tfilter(tfilter string) ApiRecordListRequest {
 // This parameter is used for sorting by tags.
 func (r ApiRecordListRequest) TorderBy(torderBy string) ApiRecordListRequest {
 	r.torderBy = &torderBy
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.
+func (r ApiRecordListRequest) Inherit(inherit string) ApiRecordListRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -471,6 +489,9 @@ func (a *RecordAPIService) RecordListExecute(r ApiRecordListRequest) (*DataListR
 	if r.torderBy != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_torder_by", r.torderBy, "")
 	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -529,7 +550,6 @@ func (a *RecordAPIService) RecordListExecute(r ApiRecordListRequest) (*DataListR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -538,11 +558,18 @@ type ApiRecordReadRequest struct {
 	ApiService RecordAPI
 	id         string
 	fields     *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
 func (r ApiRecordReadRequest) Fields(fields string) ApiRecordReadRequest {
 	r.fields = &fields
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.
+func (r ApiRecordReadRequest) Inherit(inherit string) ApiRecordReadRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -594,6 +621,9 @@ func (a *RecordAPIService) RecordReadExecute(r ApiRecordReadRequest) (*DataReadR
 	if r.fields != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_fields", r.fields, "")
 	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -652,7 +682,6 @@ func (a *RecordAPIService) RecordReadExecute(r ApiRecordReadRequest) (*DataReadR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -776,7 +805,6 @@ func (a *RecordAPIService) RecordSOASerialIncrementExecute(r ApiRecordSOASerialI
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -785,10 +813,17 @@ type ApiRecordUpdateRequest struct {
 	ApiService RecordAPI
 	id         string
 	body       *DataRecord
+	inherit    *string
 }
 
 func (r ApiRecordUpdateRequest) Body(body DataRecord) ApiRecordUpdateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.
+func (r ApiRecordUpdateRequest) Inherit(inherit string) ApiRecordUpdateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -840,6 +875,9 @@ func (a *RecordAPIService) RecordUpdateExecute(r ApiRecordUpdateRequest) (*DataU
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -856,6 +894,14 @@ func (a *RecordAPIService) RecordUpdateExecute(r ApiRecordUpdateRequest) (*DataU
 	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
 	}
 	// body params
 	localVarPostBody = r.body
@@ -900,6 +946,5 @@ func (a *RecordAPIService) RecordUpdateExecute(r ApiRecordUpdateRequest) (*DataU
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

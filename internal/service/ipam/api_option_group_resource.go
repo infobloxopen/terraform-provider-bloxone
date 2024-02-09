@@ -31,7 +31,7 @@ func (r *OptionGroupResource) Metadata(ctx context.Context, req resource.Metadat
 
 func (r *OptionGroupResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages a DHCP Option Group.\n\nThe Option Group object is a named collection of options.",
 		Attributes:          IpamsvcOptionGroupResourceSchemaAttributes,
 	}
 }

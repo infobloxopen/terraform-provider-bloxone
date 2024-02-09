@@ -8,7 +8,7 @@ data "bloxone_dns_views" "example_by_attribute" {
 # Get DNS Views filtered by tag
 data "bloxone_dns_views" "example_by_tag" {
   tag_filters = {
-    site = "Test Site"
+    site = "Site A"
   }
 }
 

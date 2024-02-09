@@ -31,7 +31,7 @@ func (r *RangeResource) Metadata(_ context.Context, req resource.MetadataRequest
 
 func (r *RangeResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "A Range object represents a set of contiguous IP addresses in the same IP space with no gap, " +
+		MarkdownDescription: "Manages a DHCP Range.\n\nA Range object represents a set of contiguous IP addresses in the same IP space with no gap, " +
 			"expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. " +
 			"The start and end values are not required to align with CIDR boundaries.",
 		Attributes: IpamsvcRangeResourceSchemaAttributes,
@@ -72,6 +72,7 @@ func (r *RangeResource) Create(ctx context.Context, req resource.CreateRequest, 
 		RangeAPI.
 		RangeCreate(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Range, got error: %s", err))
@@ -98,6 +99,7 @@ func (r *RangeResource) Read(ctx context.Context, req resource.ReadRequest, resp
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		RangeAPI.
 		RangeRead(ctx, data.Id.ValueString()).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -129,6 +131,7 @@ func (r *RangeResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		RangeAPI.
 		RangeUpdate(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Range, got error: %s", err))

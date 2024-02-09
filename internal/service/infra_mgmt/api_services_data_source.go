@@ -3,10 +3,12 @@ package infra_mgmt
 import (
 	"context"
 	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/infra_mgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -44,7 +46,7 @@ func (m *InfraServiceModelWithFilter) FlattenResults(ctx context.Context, from [
 
 func (d *ServicesDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Retrieves information about existing Infrastructure Services (a.k.a BloxOne Applications).",
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
@@ -58,7 +60,7 @@ func (d *ServicesDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			},
 			"results": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
-					Attributes: utils.DataSourceAttributeMap(InfraServiceResourceSchemaAttributes, &resp.Diagnostics),
+					Attributes: utils.DataSourceAttributeMap(InfraServiceResourceSchemaAttributes(), &resp.Diagnostics),
 				},
 				Computed: true,
 			},

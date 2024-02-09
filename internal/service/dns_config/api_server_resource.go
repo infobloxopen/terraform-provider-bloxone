@@ -31,7 +31,7 @@ func (r *ServerResource) Metadata(ctx context.Context, req resource.MetadataRequ
 
 func (r *ServerResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "A DNS Config Profile is a named configuration profile that can be shared for specified list of hosts.",
+		MarkdownDescription: "Manages a DNS Config Profile.\n\nA Server (DNS Config Profile) is a named configuration profile that can be shared for specified list of hosts.",
 		Attributes:          ConfigServerResourceSchemaAttributes,
 	}
 }
@@ -70,6 +70,7 @@ func (r *ServerResource) Create(ctx context.Context, req resource.CreateRequest,
 		ServerAPI.
 		ServerCreate(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Server, got error: %s", err))
@@ -96,6 +97,7 @@ func (r *ServerResource) Read(ctx context.Context, req resource.ReadRequest, res
 	apiRes, httpRes, err := r.client.DNSConfigurationAPI.
 		ServerAPI.
 		ServerRead(ctx, data.Id.ValueString()).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -127,6 +129,7 @@ func (r *ServerResource) Update(ctx context.Context, req resource.UpdateRequest,
 		ServerAPI.
 		ServerUpdate(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Server, got error: %s", err))

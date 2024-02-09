@@ -39,7 +39,7 @@ func (r *IpSpaceResource) Metadata(ctx context.Context, req resource.MetadataReq
 
 func (r *IpSpaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "The IPSpace object represents an entire address space.",
+		MarkdownDescription: "Manages an IP Space.\n\nThe IP Space object represents an entire address space.",
 		Attributes:          IpamsvcIPSpaceResourceSchemaAttributes,
 	}
 }
@@ -78,6 +78,7 @@ func (r *IpSpaceResource) Create(ctx context.Context, req resource.CreateRequest
 		IpSpaceAPI.
 		IpSpaceCreate(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create IpSpace, got error: %s", err))
@@ -104,6 +105,7 @@ func (r *IpSpaceResource) Read(ctx context.Context, req resource.ReadRequest, re
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		IpSpaceAPI.
 		IpSpaceRead(ctx, data.Id.ValueString()).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -135,6 +137,7 @@ func (r *IpSpaceResource) Update(ctx context.Context, req resource.UpdateRequest
 		IpSpaceAPI.
 		IpSpaceUpdate(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update IpSpace, got error: %s", err))

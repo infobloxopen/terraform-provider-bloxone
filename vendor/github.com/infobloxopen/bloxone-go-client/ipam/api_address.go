@@ -22,7 +22,6 @@ import (
 )
 
 type AddressAPI interface {
-
 	/*
 			AddressCreate Create the IP address.
 
@@ -37,7 +36,6 @@ type AddressAPI interface {
 	// AddressCreateExecute executes the request
 	//  @return IpamsvcCreateAddressResponse
 	AddressCreateExecute(r ApiAddressCreateRequest) (*IpamsvcCreateAddressResponse, *http.Response, error)
-
 	/*
 			AddressDelete Move the IP address to the recycle bin.
 
@@ -52,7 +50,6 @@ type AddressAPI interface {
 
 	// AddressDeleteExecute executes the request
 	AddressDeleteExecute(r ApiAddressDeleteRequest) (*http.Response, error)
-
 	/*
 			AddressList Retrieve IP addresses.
 
@@ -67,7 +64,6 @@ type AddressAPI interface {
 	// AddressListExecute executes the request
 	//  @return IpamsvcListAddressResponse
 	AddressListExecute(r ApiAddressListRequest) (*IpamsvcListAddressResponse, *http.Response, error)
-
 	/*
 			AddressRead Retrieve the IP address.
 
@@ -83,7 +79,6 @@ type AddressAPI interface {
 	// AddressReadExecute executes the request
 	//  @return IpamsvcReadAddressResponse
 	AddressReadExecute(r ApiAddressReadRequest) (*IpamsvcReadAddressResponse, *http.Response, error)
-
 	/*
 			AddressUpdate Update the IP address.
 
@@ -177,6 +172,14 @@ func (a *AddressAPIService) AddressCreateExecute(r ApiAddressCreateRequest) (*Ip
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -220,7 +223,6 @@ func (a *AddressAPIService) AddressCreateExecute(r ApiAddressCreateRequest) (*Ip
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -531,7 +533,6 @@ func (a *AddressAPIService) AddressListExecute(r ApiAddressListRequest) (*Ipamsv
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -654,7 +655,6 @@ func (a *AddressAPIService) AddressReadExecute(r ApiAddressReadRequest) (*Ipamsv
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -735,6 +735,14 @@ func (a *AddressAPIService) AddressUpdateExecute(r ApiAddressUpdateRequest) (*Ip
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -778,6 +786,5 @@ func (a *AddressAPIService) AddressUpdateExecute(r ApiAddressUpdateRequest) (*Ip
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

@@ -772,6 +772,86 @@ func TestAccViewResource_GssTsigEnabled(t *testing.T) {
 	})
 }
 
+func TestAccViewResource_InheritanceSources(t *testing.T) {
+	var resourceName = "bloxone_dns_view.test_inheritance_sources"
+	var v dns_config.ConfigView
+	var name = acctest.RandomNameWithPrefix("view")
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccViewInheritanceSources(name, "inherit"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.add_edns_option_in_outgoing_query.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.custom_root_ns_block.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dnssec_validation_block.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ecs_block.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.filter_aaaa_on_v4.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.forwarders_block.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.gss_tsig_enabled.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.lame_ttl.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.edns_udp_size.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.match_recursive_only.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.max_cache_ttl.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.max_negative_ttl.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.minimal_responses.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.notify.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.recursion_enabled.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.sort_list.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.synthesize_address_records_from_https.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.transfer_acl.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.use_forwarders_for_subzones.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.zone_authority.default_ttl.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.zone_authority.expire.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.zone_authority.mname_block.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.zone_authority.negative_ttl.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.zone_authority.refresh.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.zone_authority.retry.action", "inherit"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.zone_authority.rname.action", "inherit"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccViewInheritanceSources(name, "override"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.add_edns_option_in_outgoing_query.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.custom_root_ns_block.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dnssec_validation_block.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.ecs_block.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.filter_aaaa_on_v4.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.forwarders_block.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.gss_tsig_enabled.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.lame_ttl.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.edns_udp_size.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.match_recursive_only.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.max_cache_ttl.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.max_negative_ttl.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.minimal_responses.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.notify.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.recursion_enabled.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.sort_list.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.synthesize_address_records_from_https.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.transfer_acl.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.use_forwarders_for_subzones.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.zone_authority.default_ttl.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.zone_authority.expire.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.zone_authority.mname_block.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.zone_authority.negative_ttl.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.zone_authority.refresh.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.zone_authority.retry.action", "override"),
+					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.zone_authority.rname.action", "override"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccViewResource_IpSpaces(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_ip_spaces"
 	var name = acctest.RandomNameWithPrefix("view")
@@ -1769,6 +1849,100 @@ resource "bloxone_dns_view" "test_gss_tsig_enabled" {
     gss_tsig_enabled = %q
 }
 `, name, gssTsigEnabled)
+}
+
+func testAccViewInheritanceSources(name, action string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_view" "test_inheritance_sources" {
+    name = %[1]q
+	inheritance_sources = {
+		add_edns_option_in_outgoing_query = {
+			action = %[2]q
+		}
+		custom_root_ns_block = {
+			action = %[2]q
+		}
+		dnssec_validation_block	= {
+			action = %[2]q
+		}
+		ecs_block = {
+			action = %[2]q
+		}
+		edns_udp_size	= {
+			action = %[2]q
+		}
+		filter_aaaa_on_v4 = {
+			action = %[2]q
+		}
+		forwarders_block = {
+			action = %[2]q
+		}
+		gss_tsig_enabled = {
+			action = %[2]q
+		}
+		kerberos_keys	= {
+			action = %[2]q
+		}
+		lame_ttl	= {
+			action = %[2]q
+		}
+		match_recursive_only	= {
+			action = %[2]q
+		}
+		max_cache_ttl	= {
+			action = %[2]q
+		}
+		max_negative_ttl	= {
+			action = %[2]q
+		}
+		minimal_responses	= {
+			action = %[2]q
+		}
+		notify = {
+			action = %[2]q
+		}
+		recursion_enabled = {
+			action = %[2]q
+		}
+		sort_list = {
+			action = %[2]q
+		}
+		synthesize_address_records_from_https = {
+			action = %[2]q
+		}
+		transfer_acl = {
+			action = %[2]q
+		}
+		use_forwarders_for_subzones = {
+			action = %[2]q
+		}
+		zone_authority = {
+			default_ttl	= {
+				action = %[2]q
+			}
+			expire	= {
+				action = %[2]q
+			}
+			mname_block	= {
+				action = %[2]q
+			}
+			negative_ttl	= {
+				action = %[2]q
+			}
+			refresh	= {
+				action = %[2]q
+			}
+			retry	= {
+				action = %[2]q
+			}
+			rname	= {
+				action = %[2]q
+			}
+		}
+	}
+
+}
+`, name, action)
 }
 
 func testAccViewIpSpaces(ipSpaceName, viewName string) string {

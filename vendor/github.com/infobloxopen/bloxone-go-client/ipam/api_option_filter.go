@@ -22,7 +22,6 @@ import (
 )
 
 type OptionFilterAPI interface {
-
 	/*
 			OptionFilterCreate Create the DHCP option filter.
 
@@ -37,7 +36,6 @@ type OptionFilterAPI interface {
 	// OptionFilterCreateExecute executes the request
 	//  @return IpamsvcCreateOptionFilterResponse
 	OptionFilterCreateExecute(r ApiOptionFilterCreateRequest) (*IpamsvcCreateOptionFilterResponse, *http.Response, error)
-
 	/*
 			OptionFilterDelete Move the DHCP option filter to the recycle bin.
 
@@ -52,7 +50,6 @@ type OptionFilterAPI interface {
 
 	// OptionFilterDeleteExecute executes the request
 	OptionFilterDeleteExecute(r ApiOptionFilterDeleteRequest) (*http.Response, error)
-
 	/*
 			OptionFilterList Retrieve DHCP option filters.
 
@@ -67,7 +64,6 @@ type OptionFilterAPI interface {
 	// OptionFilterListExecute executes the request
 	//  @return IpamsvcListOptionFilterResponse
 	OptionFilterListExecute(r ApiOptionFilterListRequest) (*IpamsvcListOptionFilterResponse, *http.Response, error)
-
 	/*
 			OptionFilterRead Retrieve the DHCP option filter.
 
@@ -83,7 +79,6 @@ type OptionFilterAPI interface {
 	// OptionFilterReadExecute executes the request
 	//  @return IpamsvcReadOptionFilterResponse
 	OptionFilterReadExecute(r ApiOptionFilterReadRequest) (*IpamsvcReadOptionFilterResponse, *http.Response, error)
-
 	/*
 			OptionFilterUpdate Update the DHCP option filter.
 
@@ -177,6 +172,14 @@ func (a *OptionFilterAPIService) OptionFilterCreateExecute(r ApiOptionFilterCrea
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -220,7 +223,6 @@ func (a *OptionFilterAPIService) OptionFilterCreateExecute(r ApiOptionFilterCrea
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -513,7 +515,6 @@ func (a *OptionFilterAPIService) OptionFilterListExecute(r ApiOptionFilterListRe
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -636,7 +637,6 @@ func (a *OptionFilterAPIService) OptionFilterReadExecute(r ApiOptionFilterReadRe
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -717,6 +717,14 @@ func (a *OptionFilterAPIService) OptionFilterUpdateExecute(r ApiOptionFilterUpda
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -760,6 +768,5 @@ func (a *OptionFilterAPIService) OptionFilterUpdateExecute(r ApiOptionFilterUpda
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

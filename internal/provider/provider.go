@@ -9,6 +9,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
@@ -33,8 +35,9 @@ type BloxOneProvider struct {
 
 // BloxOneProviderModel describes the provider data model.
 type BloxOneProviderModel struct {
-	CSPUrl types.String `tfsdk:"csp_url"`
-	APIKey types.String `tfsdk:"api_key"`
+	CSPUrl      types.String `tfsdk:"csp_url"`
+	APIKey      types.String `tfsdk:"api_key"`
+	DefaultTags types.Map    `tfsdk:"default_tags"`
 }
 
 func (p *BloxOneProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -53,6 +56,11 @@ func (p *BloxOneProvider) Schema(_ context.Context, _ provider.SchemaRequest, re
 				MarkdownDescription: "API key for accessing the BloxOne API. Can also be configured by using the `BLOXONE_API_KEY` environment variable. https://docs.infoblox.com/space/BloxOneCloud/35430405/Configuring+User+API+Keys",
 				Optional:            true,
 			},
+			"default_tags": schema.MapAttribute{
+				ElementType:         types.StringType,
+				MarkdownDescription: "Default global tags the client can set for all requests.",
+				Optional:            true,
+			},
 		},
 	}
 }
@@ -62,14 +70,17 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
+	dfTags := utils.DefaultTagsHandler(flex.ExpandFrameworkMapString(ctx, data.DefaultTags, &resp.Diagnostics), &resp.Diagnostics)
+
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	client, err := bloxoneclient.NewAPIClient(bloxoneclient.Configuration{
-		ClientName: fmt.Sprintf("terraform/%s#%s", p.version, p.commit),
-		APIKey:     data.APIKey.ValueString(),
-		CSPURL:     data.CSPUrl.ValueString(),
+		ClientName:  fmt.Sprintf("terraform/%s#%s", p.version, p.commit),
+		APIKey:      data.APIKey.ValueString(),
+		CSPURL:      data.CSPUrl.ValueString(),
+		DefaultTags: dfTags,
 	})
 	if err != nil {
 		resp.Diagnostics.AddError("Client error", fmt.Sprintf("Unable to create new API client: %s", err))
@@ -141,6 +152,9 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		ipam.NewOptionCodeDataSource,
 		ipam.NewOptionSpaceDataSource,
 		ipam.NewOptionGroupDataSource,
+		ipam.NewIpamNextAvailableIPDataSource,
+		ipam.NewNextAvailableSubnetDataSource,
+		ipam.NewNextAvailableAddressBlockDataSource,
 
 		dns_config.NewViewDataSource,
 		dns_config.NewAuthNsgDataSource,

@@ -73,6 +73,7 @@ type Configuration struct {
 	Servers          ServerConfigurations
 	OperationServers map[string]ServerConfigurations
 	HTTPClient       *http.Client
+	DefaultTags      map[string]string
 }
 
 // NewConfiguration returns a new Configuration object
@@ -89,6 +90,7 @@ func NewConfiguration() *Configuration {
 			},
 		},
 		OperationServers: map[string]ServerConfigurations{},
+		DefaultTags:      make(map[string]string),
 	}
 	return cfg
 }
@@ -96,6 +98,10 @@ func NewConfiguration() *Configuration {
 // AddDefaultHeader adds a new HTTP header to the default header in the request
 func (c *Configuration) AddDefaultHeader(key string, value string) {
 	c.DefaultHeader[key] = value
+}
+
+func (c *Configuration) GetDefaultTags() map[string]string {
+	return c.DefaultTags
 }
 
 // URL formats template on a index using given variables

@@ -22,7 +22,6 @@ import (
 )
 
 type HostAPI interface {
-
 	/*
 			HostList List DNS Host objects.
 
@@ -37,7 +36,6 @@ type HostAPI interface {
 	// HostListExecute executes the request
 	//  @return ConfigListHostResponse
 	HostListExecute(r ApiHostListRequest) (*ConfigListHostResponse, *http.Response, error)
-
 	/*
 			HostRead Read the DNS Host object.
 
@@ -53,7 +51,6 @@ type HostAPI interface {
 	// HostReadExecute executes the request
 	//  @return ConfigReadHostResponse
 	HostReadExecute(r ApiHostReadRequest) (*ConfigReadHostResponse, *http.Response, error)
-
 	/*
 			HostUpdate Update the DNS Host object.
 
@@ -85,6 +82,7 @@ type ApiHostListRequest struct {
 	orderBy    *string
 	tfilter    *string
 	torderBy   *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
@@ -132,6 +130,12 @@ func (r ApiHostListRequest) Tfilter(tfilter string) ApiHostListRequest {
 // This parameter is used for sorting by tags.
 func (r ApiHostListRequest) TorderBy(torderBy string) ApiHostListRequest {
 	r.torderBy = &torderBy
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiHostListRequest) Inherit(inherit string) ApiHostListRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -201,6 +205,9 @@ func (a *HostAPIService) HostListExecute(r ApiHostListRequest) (*ConfigListHostR
 	if r.torderBy != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_torder_by", r.torderBy, "")
 	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -259,7 +266,6 @@ func (a *HostAPIService) HostListExecute(r ApiHostListRequest) (*ConfigListHostR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -268,11 +274,18 @@ type ApiHostReadRequest struct {
 	ApiService HostAPI
 	id         string
 	fields     *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
 func (r ApiHostReadRequest) Fields(fields string) ApiHostReadRequest {
 	r.fields = &fields
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiHostReadRequest) Inherit(inherit string) ApiHostReadRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -324,6 +337,9 @@ func (a *HostAPIService) HostReadExecute(r ApiHostReadRequest) (*ConfigReadHostR
 	if r.fields != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_fields", r.fields, "")
 	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -382,7 +398,6 @@ func (a *HostAPIService) HostReadExecute(r ApiHostReadRequest) (*ConfigReadHostR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -391,10 +406,17 @@ type ApiHostUpdateRequest struct {
 	ApiService HostAPI
 	id         string
 	body       *ConfigHost
+	inherit    *string
 }
 
 func (r ApiHostUpdateRequest) Body(body ConfigHost) ApiHostUpdateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiHostUpdateRequest) Inherit(inherit string) ApiHostUpdateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -446,6 +468,9 @@ func (a *HostAPIService) HostUpdateExecute(r ApiHostUpdateRequest) (*ConfigUpdat
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -462,6 +487,14 @@ func (a *HostAPIService) HostUpdateExecute(r ApiHostUpdateRequest) (*ConfigUpdat
 	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
 	}
 	// body params
 	localVarPostBody = r.body
@@ -506,6 +539,5 @@ func (a *HostAPIService) HostUpdateExecute(r ApiHostUpdateRequest) (*ConfigUpdat
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

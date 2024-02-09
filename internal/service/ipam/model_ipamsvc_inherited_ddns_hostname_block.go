@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -30,20 +31,24 @@ var IpamsvcInheritedDDNSHostnameBlockAttrTypes = map[string]attr.Type{
 
 var IpamsvcInheritedDDNSHostnameBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.`,
+		Optional: true,
+		Computed: true,
+		MarkdownDescription: "The inheritance setting. Valid values are:\n" +
+			"  * _inherit_: Use the inherited value.\n" +
+			"  * _override_: Use the value set in the object.\n\n" +
+			"  Defaults to _inherit_.",
 	},
 	"display_name": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: `The human-readable display name for the object referred to by _source_.`,
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.SingleNestedAttribute{
-		Attributes: IpamsvcDDNSHostnameBlockResourceSchemaAttributes,
-		Optional:   true,
+		Attributes: utils.ToComputedAttributeMap(IpamsvcDDNSHostnameBlockResourceSchemaAttributes),
+		Computed:   true,
 	},
 }
 
@@ -65,8 +70,6 @@ func (m *IpamsvcInheritedDDNSHostnameBlockModel) Expand(ctx context.Context, dia
 	}
 	to := &ipam.IpamsvcInheritedDDNSHostnameBlock{
 		Action: m.Action.ValueStringPointer(),
-		Source: m.Source.ValueStringPointer(),
-		Value:  ExpandIpamsvcDDNSHostnameBlock(ctx, m.Value, diags),
 	}
 	return to
 }

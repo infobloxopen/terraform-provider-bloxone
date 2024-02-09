@@ -31,7 +31,7 @@ func (r *FixedAddressResource) Metadata(ctx context.Context, req resource.Metada
 
 func (r *FixedAddressResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages a Fixed Address.\n\nThe Fixed Address object reserves an address for a specific client. It must have a _match_type_ and a valid corresponding _match_value_ so that it can match that client.",
 		Attributes:          IpamsvcFixedAddressResourceSchemaAttributes,
 	}
 }
@@ -70,6 +70,7 @@ func (r *FixedAddressResource) Create(ctx context.Context, req resource.CreateRe
 		FixedAddressAPI.
 		FixedAddressCreate(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create FixedAddress, got error: %s", err))
@@ -96,6 +97,7 @@ func (r *FixedAddressResource) Read(ctx context.Context, req resource.ReadReques
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		FixedAddressAPI.
 		FixedAddressRead(ctx, data.Id.ValueString()).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -127,6 +129,7 @@ func (r *FixedAddressResource) Update(ctx context.Context, req resource.UpdateRe
 		FixedAddressAPI.
 		FixedAddressUpdate(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update FixedAddress, got error: %s", err))

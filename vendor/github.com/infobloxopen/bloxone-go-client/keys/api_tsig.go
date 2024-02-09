@@ -22,7 +22,6 @@ import (
 )
 
 type TsigAPI interface {
-
 	/*
 			TsigCreate Create the TSIG key.
 
@@ -37,7 +36,6 @@ type TsigAPI interface {
 	// TsigCreateExecute executes the request
 	//  @return KeysCreateTSIGKeyResponse
 	TsigCreateExecute(r ApiTsigCreateRequest) (*KeysCreateTSIGKeyResponse, *http.Response, error)
-
 	/*
 			TsigDelete Delete the TSIG key.
 
@@ -52,7 +50,6 @@ type TsigAPI interface {
 
 	// TsigDeleteExecute executes the request
 	TsigDeleteExecute(r ApiTsigDeleteRequest) (*http.Response, error)
-
 	/*
 			TsigList Retrieve TSIG keys.
 
@@ -67,7 +64,6 @@ type TsigAPI interface {
 	// TsigListExecute executes the request
 	//  @return KeysListTSIGKeyResponse
 	TsigListExecute(r ApiTsigListRequest) (*KeysListTSIGKeyResponse, *http.Response, error)
-
 	/*
 			TsigRead Retrieve the TSIG key.
 
@@ -83,7 +79,6 @@ type TsigAPI interface {
 	// TsigReadExecute executes the request
 	//  @return KeysReadTSIGKeyResponse
 	TsigReadExecute(r ApiTsigReadRequest) (*KeysReadTSIGKeyResponse, *http.Response, error)
-
 	/*
 			TsigUpdate Update the TSIG key.
 
@@ -177,6 +172,14 @@ func (a *TsigAPIService) TsigCreateExecute(r ApiTsigCreateRequest) (*KeysCreateT
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -220,7 +223,6 @@ func (a *TsigAPIService) TsigCreateExecute(r ApiTsigCreateRequest) (*KeysCreateT
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -513,7 +515,6 @@ func (a *TsigAPIService) TsigListExecute(r ApiTsigListRequest) (*KeysListTSIGKey
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -636,7 +637,6 @@ func (a *TsigAPIService) TsigReadExecute(r ApiTsigReadRequest) (*KeysReadTSIGKey
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -717,6 +717,14 @@ func (a *TsigAPIService) TsigUpdateExecute(r ApiTsigUpdateRequest) (*KeysUpdateT
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -760,6 +768,5 @@ func (a *TsigAPIService) TsigUpdateExecute(r ApiTsigUpdateRequest) (*KeysUpdateT
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

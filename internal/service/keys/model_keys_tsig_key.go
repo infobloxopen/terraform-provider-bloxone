@@ -46,10 +46,17 @@ var KeysTSIGKeyAttrTypes = map[string]attr.Type{
 
 var KeysTSIGKeyResourceSchemaAttributes = map[string]schema.Attribute{
 	"algorithm": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
-		Default:             stringdefault.StaticString("hmac_sha256"),
-		MarkdownDescription: "The TSIG key algorithm.  Valid values are: * _hmac_sha1_ * _hmac_sha224_ * _hmac_sha256_ * _hmac_sha384_ * _hmac_sha512_  Defaults to _hmac_sha256_.",
+		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString("hmac_sha256"),
+		MarkdownDescription: "TSIG key algorithm.\n\n" +
+			"  Valid values are:\n" +
+			"  * _hmac_sha1_\n" +
+			"  * _hmac_sha224_\n" +
+			"  * _hmac_sha256_\n" +
+			"  * _hmac_sha384_\n" +
+			"  * _hmac_sha512_\n\n" +
+			"  Defaults to _hmac_sha256_.",
 		Validators: []validator.String{
 			stringvalidator.OneOf("hmac_sha1", "hmac_sha224", "hmac_sha256", "hmac_sha384", "hmac_sha512"),
 		},

@@ -9,6 +9,6 @@ resource "bloxone_infra_host" "example" {
   description = "An example host"
   ip_space    = bloxone_ipam_ip_space.current.id
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 }

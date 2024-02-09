@@ -25,6 +25,8 @@ const (
 var _ resource.Resource = &RecordResource{}
 var _ resource.ResourceWithImportState = &RecordResource{}
 
+var inheritanceType = "full"
+
 // RecordResource defines the resource implementation.
 type RecordResource struct {
 	client *bloxoneclient.APIClient
@@ -62,8 +64,15 @@ func (r *RecordResource) Metadata(ctx context.Context, req resource.MetadataRequ
 }
 
 func (r *RecordResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+	desc := fmt.Sprintf("Manages a DNS %s resource record in an authoratitive zone.", r.impl.recordType())
+	if r.impl.recordType() == "Generic" {
+		desc = "Manages a DNS resource record in an authoritative zone. The record type is specified with the `type` attribute.\n\n" +
+			"For the following record types, use the terraform resource for the corresponding resource type, e.g. `bloxone_dns_a_record` - " +
+			"_A_, _AAAA_, _CAA_, _CNAME_, _DNAME_, _MX_, _NAPTR_, _NS_, _PTR_, _SRV_, _TXT_, _HTTPS_, _SVCB_"
+	}
+
 	resp.Schema = schema.Schema{
-		MarkdownDescription: r.impl.description(),
+		MarkdownDescription: desc,
 		Attributes:          r.impl.schemaAttributes(),
 	}
 }
@@ -82,6 +91,7 @@ func (r *RecordResource) Create(ctx context.Context, req resource.CreateRequest,
 			RecordAPI.
 			RecordCreate(ctx).
 			Body(*data.Expand(ctx, &resp.Diagnostics, true, r.impl)).
+			Inherit(inheritanceType).
 			Execute()
 		if err != nil {
 			if strings.Contains(err.Error(), "not found") {
@@ -117,6 +127,7 @@ func (r *RecordResource) Read(ctx context.Context, req resource.ReadRequest, res
 	apiRes, httpRes, err := r.client.DNSDataAPI.
 		RecordAPI.
 		RecordRead(ctx, data.Id.ValueString()).
+		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -148,6 +159,7 @@ func (r *RecordResource) Update(ctx context.Context, req resource.UpdateRequest,
 			RecordAPI.
 			RecordUpdate(ctx, data.Id.ValueString()).
 			Body(*data.Expand(ctx, &resp.Diagnostics, false, r.impl)).
+			Inherit(inheritanceType).
 			Execute()
 		if err != nil {
 			if strings.Contains(err.Error(), "record not found") {

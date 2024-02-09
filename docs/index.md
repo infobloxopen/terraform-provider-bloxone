@@ -16,6 +16,9 @@ description: |-
 provider "bloxone" {
   csp_url = "https://csp.infoblox.com"
   api_key = "<BloxOne DDI API Key>"
+  default_tags = {
+    managed_by = "terraform"
+  }
 }
 ```
 
@@ -26,3 +29,4 @@ provider "bloxone" {
 
 - `api_key` (String) API key for accessing the BloxOne API. Can also be configured by using the `BLOXONE_API_KEY` environment variable. https://docs.infoblox.com/space/BloxOneCloud/35430405/Configuring+User+API+Keys
 - `csp_url` (String) URL for BloxOne Cloud Services Portal. Can also be configured using the `BLOXONE_CSP_URL` environment variable.
+- `default_tags` (Map of String) Default global tags the client can set for all requests.

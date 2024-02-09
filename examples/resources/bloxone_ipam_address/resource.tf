@@ -26,7 +26,7 @@ resource "bloxone_ipam_address" "example" {
   space   = bloxone_ipam_ip_space.example.id
 
   # Other optional fields
-  comment = "reservation for test site"
+  comment = "reservation for Site A"
   names = [
     {
       name = "bby-1"
@@ -34,26 +34,62 @@ resource "bloxone_ipam_address" "example" {
     }
   ]
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 
   depends_on = [bloxone_ipam_subnet.example]
 }
 
 # Next available address in subnet
-resource "bloxone_ipam_address" "example_nas" {
+resource "bloxone_ipam_address" "example_na_s" {
   next_available_id = bloxone_ipam_subnet.example.id
   space             = bloxone_ipam_ip_space.example.id
+
+  # Other optional fields
+  comment = "reservation for Site A"
+  names = [
+    {
+      name = "bby-1"
+      type = "user"
+    }
+  ]
+  tags = {
+    site = "Site A"
+  }
 }
 
 # Next available address in address block
 resource "bloxone_ipam_address" "example_na_ab" {
   next_available_id = bloxone_ipam_address_block.example.id
   space             = bloxone_ipam_ip_space.example.id
+
+  # Other optional fields
+  comment = "reservation for Site A"
+  names = [
+    {
+      name = "bby-1"
+      type = "user"
+    }
+  ]
+  tags = {
+    site = "Site A"
+  }
 }
 
 # Next available address in range
 resource "bloxone_ipam_address" "example_na_rng" {
   next_available_id = bloxone_ipam_range.example.id
   space             = bloxone_ipam_ip_space.example.id
+
+  # Other optional fields
+  comment = "reservation for Site A"
+  names = [
+    {
+      name = "bby-1"
+      type = "user"
+    }
+  ]
+  tags = {
+    site = "Site A"
+  }
 }

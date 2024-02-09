@@ -22,7 +22,6 @@ import (
 )
 
 type ViewAPI interface {
-
 	/*
 			ViewBulkCopy Copies the specified __AuthZone__ and __ForwardZone__ objects in the __View__.
 
@@ -38,7 +37,6 @@ type ViewAPI interface {
 	// ViewBulkCopyExecute executes the request
 	//  @return ConfigBulkCopyResponse
 	ViewBulkCopyExecute(r ApiViewBulkCopyRequest) (*ConfigBulkCopyResponse, *http.Response, error)
-
 	/*
 			ViewCreate Create the View object.
 
@@ -53,7 +51,6 @@ type ViewAPI interface {
 	// ViewCreateExecute executes the request
 	//  @return ConfigCreateViewResponse
 	ViewCreateExecute(r ApiViewCreateRequest) (*ConfigCreateViewResponse, *http.Response, error)
-
 	/*
 			ViewDelete Move the View object to Recyclebin.
 
@@ -68,7 +65,6 @@ type ViewAPI interface {
 
 	// ViewDeleteExecute executes the request
 	ViewDeleteExecute(r ApiViewDeleteRequest) (*http.Response, error)
-
 	/*
 			ViewList List View objects.
 
@@ -83,7 +79,6 @@ type ViewAPI interface {
 	// ViewListExecute executes the request
 	//  @return ConfigListViewResponse
 	ViewListExecute(r ApiViewListRequest) (*ConfigListViewResponse, *http.Response, error)
-
 	/*
 			ViewRead Read the View object.
 
@@ -99,7 +94,6 @@ type ViewAPI interface {
 	// ViewReadExecute executes the request
 	//  @return ConfigReadViewResponse
 	ViewReadExecute(r ApiViewReadRequest) (*ConfigReadViewResponse, *http.Response, error)
-
 	/*
 			ViewUpdate Update the View object.
 
@@ -237,7 +231,6 @@ func (a *ViewAPIService) ViewBulkCopyExecute(r ApiViewBulkCopyRequest) (*ConfigB
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -245,10 +238,17 @@ type ApiViewCreateRequest struct {
 	ctx        context.Context
 	ApiService ViewAPI
 	body       *ConfigView
+	inherit    *string
 }
 
 func (r ApiViewCreateRequest) Body(body ConfigView) ApiViewCreateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiViewCreateRequest) Inherit(inherit string) ApiViewCreateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -297,6 +297,9 @@ func (a *ViewAPIService) ViewCreateExecute(r ApiViewCreateRequest) (*ConfigCreat
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -313,6 +316,14 @@ func (a *ViewAPIService) ViewCreateExecute(r ApiViewCreateRequest) (*ConfigCreat
 	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
 	}
 	// body params
 	localVarPostBody = r.body
@@ -357,7 +368,6 @@ func (a *ViewAPIService) ViewCreateExecute(r ApiViewCreateRequest) (*ConfigCreat
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -476,6 +486,7 @@ type ApiViewListRequest struct {
 	orderBy    *string
 	tfilter    *string
 	torderBy   *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
@@ -523,6 +534,12 @@ func (r ApiViewListRequest) Tfilter(tfilter string) ApiViewListRequest {
 // This parameter is used for sorting by tags.
 func (r ApiViewListRequest) TorderBy(torderBy string) ApiViewListRequest {
 	r.torderBy = &torderBy
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiViewListRequest) Inherit(inherit string) ApiViewListRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -592,6 +609,9 @@ func (a *ViewAPIService) ViewListExecute(r ApiViewListRequest) (*ConfigListViewR
 	if r.torderBy != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_torder_by", r.torderBy, "")
 	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -650,7 +670,6 @@ func (a *ViewAPIService) ViewListExecute(r ApiViewListRequest) (*ConfigListViewR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -659,11 +678,18 @@ type ApiViewReadRequest struct {
 	ApiService ViewAPI
 	id         string
 	fields     *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
 func (r ApiViewReadRequest) Fields(fields string) ApiViewReadRequest {
 	r.fields = &fields
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiViewReadRequest) Inherit(inherit string) ApiViewReadRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -715,6 +741,9 @@ func (a *ViewAPIService) ViewReadExecute(r ApiViewReadRequest) (*ConfigReadViewR
 	if r.fields != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_fields", r.fields, "")
 	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -773,7 +802,6 @@ func (a *ViewAPIService) ViewReadExecute(r ApiViewReadRequest) (*ConfigReadViewR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -782,10 +810,17 @@ type ApiViewUpdateRequest struct {
 	ApiService ViewAPI
 	id         string
 	body       *ConfigView
+	inherit    *string
 }
 
 func (r ApiViewUpdateRequest) Body(body ConfigView) ApiViewUpdateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiViewUpdateRequest) Inherit(inherit string) ApiViewUpdateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -837,6 +872,9 @@ func (a *ViewAPIService) ViewUpdateExecute(r ApiViewUpdateRequest) (*ConfigUpdat
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -853,6 +891,14 @@ func (a *ViewAPIService) ViewUpdateExecute(r ApiViewUpdateRequest) (*ConfigUpdat
 	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
 	}
 	// body params
 	localVarPostBody = r.body
@@ -897,6 +943,5 @@ func (a *ViewAPIService) ViewUpdateExecute(r ApiViewUpdateRequest) (*ConfigUpdat
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

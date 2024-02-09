@@ -29,6 +29,6 @@ resource "bloxone_dhcp_option_group" "example_with_options" {
   ]
   comment = "dhcp option group"
   tags = {
-    site = "Test Site"
+    site = "Site A"
   }
 }

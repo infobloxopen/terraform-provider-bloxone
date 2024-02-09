@@ -22,7 +22,6 @@ import (
 )
 
 type IpSpaceAPI interface {
-
 	/*
 			IpSpaceBulkCopy Copy the specified address block and subnets in the IP space.
 
@@ -42,7 +41,6 @@ type IpSpaceAPI interface {
 	// IpSpaceBulkCopyExecute executes the request
 	//  @return IpamsvcBulkCopyIPSpaceResponse
 	IpSpaceBulkCopyExecute(r ApiIpSpaceBulkCopyRequest) (*IpamsvcBulkCopyIPSpaceResponse, *http.Response, error)
-
 	/*
 			IpSpaceCopy Copy the IP space.
 
@@ -58,7 +56,6 @@ type IpSpaceAPI interface {
 	// IpSpaceCopyExecute executes the request
 	//  @return IpamsvcCopyIPSpaceResponse
 	IpSpaceCopyExecute(r ApiIpSpaceCopyRequest) (*IpamsvcCopyIPSpaceResponse, *http.Response, error)
-
 	/*
 			IpSpaceCreate Create the IP space.
 
@@ -73,7 +70,6 @@ type IpSpaceAPI interface {
 	// IpSpaceCreateExecute executes the request
 	//  @return IpamsvcCreateIPSpaceResponse
 	IpSpaceCreateExecute(r ApiIpSpaceCreateRequest) (*IpamsvcCreateIPSpaceResponse, *http.Response, error)
-
 	/*
 			IpSpaceDelete Move the IP space to the recycle bin.
 
@@ -88,7 +84,6 @@ type IpSpaceAPI interface {
 
 	// IpSpaceDeleteExecute executes the request
 	IpSpaceDeleteExecute(r ApiIpSpaceDeleteRequest) (*http.Response, error)
-
 	/*
 			IpSpaceList Retrieve IP spaces.
 
@@ -103,7 +98,6 @@ type IpSpaceAPI interface {
 	// IpSpaceListExecute executes the request
 	//  @return IpamsvcListIPSpaceResponse
 	IpSpaceListExecute(r ApiIpSpaceListRequest) (*IpamsvcListIPSpaceResponse, *http.Response, error)
-
 	/*
 			IpSpaceRead Retrieve the IP space.
 
@@ -119,7 +113,6 @@ type IpSpaceAPI interface {
 	// IpSpaceReadExecute executes the request
 	//  @return IpamsvcReadIPSpaceResponse
 	IpSpaceReadExecute(r ApiIpSpaceReadRequest) (*IpamsvcReadIPSpaceResponse, *http.Response, error)
-
 	/*
 			IpSpaceUpdate Update the IP space.
 
@@ -261,7 +254,6 @@ func (a *IpSpaceAPIService) IpSpaceBulkCopyExecute(r ApiIpSpaceBulkCopyRequest) 
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -385,7 +377,6 @@ func (a *IpSpaceAPIService) IpSpaceCopyExecute(r ApiIpSpaceCopyRequest) (*Ipamsv
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -393,10 +384,17 @@ type ApiIpSpaceCreateRequest struct {
 	ctx        context.Context
 	ApiService IpSpaceAPI
 	body       *IpamsvcIPSpace
+	inherit    *string
 }
 
 func (r ApiIpSpaceCreateRequest) Body(body IpamsvcIPSpace) ApiIpSpaceCreateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiIpSpaceCreateRequest) Inherit(inherit string) ApiIpSpaceCreateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -445,6 +443,9 @@ func (a *IpSpaceAPIService) IpSpaceCreateExecute(r ApiIpSpaceCreateRequest) (*Ip
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -461,6 +462,14 @@ func (a *IpSpaceAPIService) IpSpaceCreateExecute(r ApiIpSpaceCreateRequest) (*Ip
 	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
 	}
 	// body params
 	localVarPostBody = r.body
@@ -505,7 +514,6 @@ func (a *IpSpaceAPIService) IpSpaceCreateExecute(r ApiIpSpaceCreateRequest) (*Ip
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -624,6 +632,7 @@ type ApiIpSpaceListRequest struct {
 	orderBy    *string
 	torderBy   *string
 	tfilter    *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
@@ -671,6 +680,12 @@ func (r ApiIpSpaceListRequest) TorderBy(torderBy string) ApiIpSpaceListRequest {
 // This parameter is used for filtering by tags.
 func (r ApiIpSpaceListRequest) Tfilter(tfilter string) ApiIpSpaceListRequest {
 	r.tfilter = &tfilter
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiIpSpaceListRequest) Inherit(inherit string) ApiIpSpaceListRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -740,6 +755,9 @@ func (a *IpSpaceAPIService) IpSpaceListExecute(r ApiIpSpaceListRequest) (*Ipamsv
 	if r.tfilter != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_tfilter", r.tfilter, "")
 	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -798,7 +816,6 @@ func (a *IpSpaceAPIService) IpSpaceListExecute(r ApiIpSpaceListRequest) (*Ipamsv
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -807,11 +824,18 @@ type ApiIpSpaceReadRequest struct {
 	ApiService IpSpaceAPI
 	id         string
 	fields     *string
+	inherit    *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
 func (r ApiIpSpaceReadRequest) Fields(fields string) ApiIpSpaceReadRequest {
 	r.fields = &fields
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiIpSpaceReadRequest) Inherit(inherit string) ApiIpSpaceReadRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -863,6 +887,9 @@ func (a *IpSpaceAPIService) IpSpaceReadExecute(r ApiIpSpaceReadRequest) (*Ipamsv
 	if r.fields != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_fields", r.fields, "")
 	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -921,7 +948,6 @@ func (a *IpSpaceAPIService) IpSpaceReadExecute(r ApiIpSpaceReadRequest) (*Ipamsv
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -930,10 +956,17 @@ type ApiIpSpaceUpdateRequest struct {
 	ApiService IpSpaceAPI
 	id         string
 	body       *IpamsvcIPSpace
+	inherit    *string
 }
 
 func (r ApiIpSpaceUpdateRequest) Body(body IpamsvcIPSpace) ApiIpSpaceUpdateRequest {
 	r.body = &body
+	return r
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r ApiIpSpaceUpdateRequest) Inherit(inherit string) ApiIpSpaceUpdateRequest {
+	r.inherit = &inherit
 	return r
 }
 
@@ -985,6 +1018,9 @@ func (a *IpSpaceAPIService) IpSpaceUpdateExecute(r ApiIpSpaceUpdateRequest) (*Ip
 		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
 	}
 
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -1001,6 +1037,14 @@ func (a *IpSpaceAPIService) IpSpaceUpdateExecute(r ApiIpSpaceUpdateRequest) (*Ip
 	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.GetDefaultTags() {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
 	}
 	// body params
 	localVarPostBody = r.body
@@ -1045,6 +1089,5 @@ func (a *IpSpaceAPIService) IpSpaceUpdateExecute(r ApiIpSpaceUpdateRequest) (*Ip
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
