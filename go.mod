@@ -77,4 +77,4 @@ require (
 	google.golang.org/protobuf v1.31.0 // indirect
 )
 
-replace github.com/infobloxopen/bloxone-go-client => github.com/venkat-iblox/bloxone-go-client v0.0.0-20240208212115-f343fb00132e
+replace github.com/infobloxopen/bloxone-go-client => github.com/venkat-iblox/bloxone-go-client v0.0.0-20240209010356-79df307436b2

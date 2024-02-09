@@ -172,8 +172,8 @@ github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5
 github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.7.2/go.mod h1:R6va5+xMeoiuVRoj+gSkQ7d3FALtqAAGI1FQKckRals=
 github.com/stretchr/testify v1.8.4 h1:CcVxjf3Q8PM0mHUKJCdn+eZZtm5yQwehR5yeSVQQcUk=
-github.com/venkat-iblox/bloxone-go-client v0.0.0-20240208212115-f343fb00132e h1:2E6vA65KBA3o2mm3qjSW8Zzgpw8P8v/kxixS/HxmM5A=
-github.com/venkat-iblox/bloxone-go-client v0.0.0-20240208212115-f343fb00132e/go.mod h1:kneBd/8Si0u3+WiEGIlVPgYr1d6P7om6pJinEUWOcoE=
+github.com/venkat-iblox/bloxone-go-client v0.0.0-20240209010356-79df307436b2 h1:2/Xs66X5OT0MLn+H3q1BGdiAgoJURqq6D9+UjGgPbhI=
+github.com/venkat-iblox/bloxone-go-client v0.0.0-20240209010356-79df307436b2/go.mod h1:kneBd/8Si0u3+WiEGIlVPgYr1d6P7om6pJinEUWOcoE=
 github.com/vmihailenco/msgpack v3.3.3+incompatible/go.mod h1:fy3FlTQTDXWkZ7Bh6AcGMlsjHatGryHQYUTf1ShIgkk=
 github.com/vmihailenco/msgpack v4.0.4+incompatible h1:dSLoQfGFAo3F6OoNhwUmLwVgaUXK79GlxNBwueZn0xI=
 github.com/vmihailenco/msgpack v4.0.4+incompatible/go.mod h1:fy3FlTQTDXWkZ7Bh6AcGMlsjHatGryHQYUTf1ShIgkk=
