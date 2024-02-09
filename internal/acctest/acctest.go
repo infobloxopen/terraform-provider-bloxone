@@ -74,7 +74,7 @@ func TestAccDefaultTag(resourceName string) resource.TestCheckFunc {
     return resource.TestCheckResourceAttr(resourceName, fmt.Sprintf("tags_all.%s", AccTestDefaultKey), AccTestDefaultValue)
 }
 
-func TestAccBaseProviderWithDefaultTags() string {
+func TestAccBaseProvider_DefaultTags() string {
     return fmt.Sprintf(` 
 provider "bloxone" {
     default_tags = {

@@ -1332,7 +1332,7 @@ resource "bloxone_ipam_address_block" "test_tags" {
     tags = %s
 }
 `, address, cidr, tagsStr)
-    return strings.Join([]string{acctest.TestAccBaseProviderWithDefaultTags(), testAccBaseWithIPSpace(), config}, "")
+    return strings.Join([]string{acctest.TestAccBaseProvider_DefaultTags(), testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockNextAvailableInAB(address string, cidr, wantedCidr int) string {
