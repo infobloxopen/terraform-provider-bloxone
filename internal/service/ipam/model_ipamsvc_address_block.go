@@ -2,10 +2,13 @@ package ipam
 
 import (
 	"context"
+	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
@@ -14,6 +17,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -62,6 +66,7 @@ type IpamsvcAddressBlockModel struct {
 	Usage                      types.List        `tfsdk:"usage"`
 	Utilization                types.Object      `tfsdk:"utilization"`
 	UtilizationV6              types.Object      `tfsdk:"utilization_v6"`
+	NextAvailableId            types.String      `tfsdk:"next_available_id"`
 }
 
 var IpamsvcAddressBlockAttrTypes = map[string]attr.Type{
@@ -104,11 +109,16 @@ var IpamsvcAddressBlockAttrTypes = map[string]attr.Type{
 	"usage":                         types.ListType{ElemType: types.StringType},
 	"utilization":                   types.ObjectType{AttrTypes: IpamsvcUtilizationAttrTypes},
 	"utilization_v6":                types.ObjectType{AttrTypes: IpamsvcUtilizationV6AttrTypes},
+	"next_available_id":             types.StringType,
 }
 
 var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
-		Required: true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.String{
+			stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
+		},
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 		},
@@ -305,7 +315,7 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The name of the address block. May contain 1 to 256 characters. Can include UTF-8.",
 	},
 	"parent": schema.StringAttribute{
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 	"protocol": schema.StringAttribute{
@@ -350,6 +360,18 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"utilization_v6": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationV6ResourceSchemaAttributes,
 		Computed:   true,
+	},
+	"next_available_id": schema.StringAttribute{
+		Optional:            true,
+		MarkdownDescription: "The resource identifier for the address block where the next available address block should be generated.",
+		Validators: []validator.String{
+			stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
+			stringvalidator.RegexMatches(regexp.MustCompile(`^ipam/address_block/[0-9a-f-].*$`), "Should be the resource identifier of an address block."),
+		},
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+			stringplanmodifier.UseStateForUnknown(),
+		},
 	},
 }
 
@@ -404,7 +426,12 @@ func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagn
 	}
 
 	if isCreate {
-		to.Address = flex.ExpandStringPointer(m.Address)
+		if !m.NextAvailableId.IsNull() && !m.NextAvailableId.IsUnknown() {
+			nasId := flex.ExpandString(m.NextAvailableId) + "/nextavailableaddressblock"
+			to.Address = &nasId
+		} else {
+			to.Address = flex.ExpandStringPointer(m.Address)
+		}
 		to.Space = flex.ExpandStringPointer(m.Space)
 	}
 

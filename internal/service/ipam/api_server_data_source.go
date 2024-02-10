@@ -46,7 +46,7 @@ func (m *IpamsvcServerModelWithFilter) FlattenResults(ctx context.Context, from 
 
 func (d *ServerDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Retrieves information about existing DHCP Config Profiles.\n\nA Server (DHCP Config Profile) is a named configuration profile that can be shared for specified list of hosts.",
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
