@@ -487,7 +487,7 @@ func TestAccAddressBlockResource_DhcpConfig(t *testing.T) {
 
 func TestAccAddressBlockResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_dhcp_options"
-	var v1, v2 ipam.IpamsvcAddressBlock
+	var v1 ipam.IpamsvcAddressBlock
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -507,8 +507,7 @@ func TestAccAddressBlockResource_DhcpOptions(t *testing.T) {
 			{
 				Config: testAccAddressBlockDhcpOptionsGroup("192.168.0.0", "16", "group"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAddressBlockDestroy(context.Background(), &v1),
-					testAccCheckAddressBlockExists(context.Background(), resourceName, &v2),
+					testAccCheckAddressBlockExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
 				),
 			},
@@ -996,7 +995,7 @@ resource "bloxone_ipam_address_block" "test_dhcp_options" {
     ]
 }
 `, name, cidr, type_, optValue)
-	return strings.Join([]string{testAccBaseWithIPSpace(), testAccOptionCodeBasicConfig("234", "test_dhcp_option_code", "boolean"), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), testAccOptionBasicConfig(), config}, "")
 }
 
 func testAccAddressBlockDhcpOptionsGroup(name string, cidr string, type_ string) string {
@@ -1013,7 +1012,7 @@ resource "bloxone_ipam_address_block" "test_dhcp_options" {
     ]
 }
 `, name, cidr, type_)
-	return strings.Join([]string{testAccBaseWithIPSpace(), testAccOptionGroupBasicConfig("option_group_test", "ip4"), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), testAccOptionBasicConfig(), config}, "")
 }
 
 func testAccAddressBlockDdnsGenerateName(address string, cidr string, ddnsGenerateName string) string {

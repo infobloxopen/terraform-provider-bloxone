@@ -37,6 +37,13 @@ resource "bloxone_ipam_subnet" "example" {
   }
 }
 
+resource "bloxone_dhcp_option_code" "option_code" {
+  code         = 250
+  name         = "example_option_code"
+  option_space = bloxone_dhcp_option_space.option_space.id
+  type         = "int32"
+}
+
 # Next available subnet
 resource "bloxone_ipam_subnet" "example_na_s" {
   next_available_id = bloxone_ipam_address_block.example.id
@@ -52,10 +59,9 @@ resource "bloxone_ipam_subnet" "example_na_s" {
   #dhcp options
   dhcp_options = [
     {
-      description  = "Option 1"
-      option_code  = "234"
+      option_code  = bloxone_dhcp_option_code.option_code.id
       option_value = "true"
-      type         = "boolean"
+      type         = "option"
     }
   ]
 }

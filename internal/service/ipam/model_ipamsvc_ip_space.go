@@ -9,7 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -214,9 +213,6 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional:            true,
 		MarkdownDescription: `The list of IPv4 DHCP options for IP space. May be either a specific option or a group of options.`,
-		PlanModifiers: []planmodifier.List{
-			listplanmodifier.RequiresReplaceIfConfigured(),
-		},
 	},
 	"dhcp_options_v6": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
@@ -224,9 +220,6 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional:            true,
 		MarkdownDescription: `The list of IPv6 DHCP options for IP space. May be either a specific option or a group of options.`,
-		PlanModifiers: []planmodifier.List{
-			listplanmodifier.RequiresReplaceIfConfigured(),
-		},
 	},
 	"header_option_filename": schema.StringAttribute{
 		Optional:            true,

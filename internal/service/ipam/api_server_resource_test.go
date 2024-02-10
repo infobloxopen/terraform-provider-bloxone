@@ -213,7 +213,7 @@ func TestAccServerResource_DdnsDomain(t *testing.T) {
 
 func TestAccServerResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_dhcp_options"
-	var v1, v2 ipam.IpamsvcServer
+	var v1 ipam.IpamsvcServer
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -233,8 +233,7 @@ func TestAccServerResource_DhcpOptions(t *testing.T) {
 			{
 				Config: testAccServerDhcpOptionsGroup("server_dhcp_options", "group"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckServerDestroy(context.Background(), &v1),
-					testAccCheckServerExists(context.Background(), resourceName, &v2),
+					testAccCheckServerExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
 				),
 			},
@@ -245,7 +244,7 @@ func TestAccServerResource_DhcpOptions(t *testing.T) {
 
 func TestAccServerResource_DhcpOptionsV6(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_dhcp_options"
-	var v1, v2 ipam.IpamsvcServer
+	var v1 ipam.IpamsvcServer
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -265,8 +264,7 @@ func TestAccServerResource_DhcpOptionsV6(t *testing.T) {
 			{
 				Config: testAccServerDhcpOptionsGroupV6("server_dhcp_options", "group"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckServerDestroy(context.Background(), &v1),
-					testAccCheckServerExists(context.Background(), resourceName, &v2),
+					testAccCheckServerExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6.#", "1"),
 				),
 			},
@@ -1044,7 +1042,7 @@ resource "bloxone_dhcp_server" "test_dhcp_options" {
     ]
 }
 `, name, type_, optValue)
-	return strings.Join([]string{testAccOptionCodeBasicConfig("234", "test_dhcp_option_code", "boolean"), config}, "")
+	return strings.Join([]string{testAccOptionBasicConfig(), config}, "")
 }
 
 func testAccServerDhcpOptionsGroup(name string, type_ string) string {
@@ -1059,7 +1057,7 @@ resource "bloxone_dhcp_server" "test_dhcp_options" {
     ]
 }
 `, name, type_)
-	return strings.Join([]string{testAccOptionGroupBasicConfig("option_group_test", "ip4"), config}, "")
+	return strings.Join([]string{testAccOptionBasicConfig(), config}, "")
 }
 
 func testAccServerDhcpOptionsOptionV6(name string, type_, optValue string) string {
@@ -1075,7 +1073,7 @@ resource "bloxone_dhcp_server" "test_dhcp_options" {
     ]
 }
 `, name, type_, optValue)
-	return strings.Join([]string{testAccOptionCodeBasicConfigV6("234", "test_dhcp_option_code", "boolean"), config}, "")
+	return strings.Join([]string{testAccOptionBasicConfigV6(), config}, "")
 }
 
 func testAccServerDhcpOptionsGroupV6(name string, type_ string) string {
@@ -1090,7 +1088,7 @@ resource "bloxone_dhcp_server" "test_dhcp_options" {
     ]
 }
 `, name, type_)
-	return strings.Join([]string{testAccOptionGroupBasicConfig("option_group_test", "ip6"), config}, "")
+	return strings.Join([]string{testAccOptionBasicConfigV6(), config}, "")
 }
 
 func testAccServerDdnsEnabled(name string, ddnsEnabled string) string {

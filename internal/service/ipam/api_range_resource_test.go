@@ -134,7 +134,7 @@ func TestAccRangeResource_DisableDhcp(t *testing.T) {
 
 func TestAccRangeResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_dhcp_options"
-	var v1, v2 ipam.IpamsvcRange
+	var v1 ipam.IpamsvcRange
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -154,8 +154,7 @@ func TestAccRangeResource_DhcpOptions(t *testing.T) {
 			{
 				Config: testAccRangeDhcpOptionsGroup("10.0.0.10", "10.0.0.20", "group"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRangeDestroy(context.Background(), &v1),
-					testAccCheckRangeExists(context.Background(), resourceName, &v2),
+					testAccCheckRangeExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
 				),
 			},
@@ -284,7 +283,7 @@ func TestAccRangeResource_Name(t *testing.T) {
 
 func TestAccRangeResource_Space(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_space"
-	var v1, v2 ipam.IpamsvcRange
+	var v1 ipam.IpamsvcRange
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -302,8 +301,7 @@ func TestAccRangeResource_Space(t *testing.T) {
 			{
 				Config: testAccRangeSpace("10.0.0.8", "10.0.0.20", "bloxone_ipam_ip_space.one"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRangeDestroy(context.Background(), &v1),
-					testAccCheckRangeExists(context.Background(), resourceName, &v2),
+					testAccCheckRangeExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttrPair(resourceName, "space", "bloxone_ipam_ip_space.one", "id"),
 				),
 			},
@@ -484,7 +482,7 @@ resource "bloxone_ipam_range" "test_dhcp_options" {
 }
 `, start, end, type_, optValue)
 
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), testAccOptionCodeBasicConfig("234", "test_dhcp_option_code", "boolean"), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), testAccOptionBasicConfig(), config}, "")
 
 }
 
@@ -504,7 +502,7 @@ resource "bloxone_ipam_range" "test_dhcp_options" {
 }
 `, start, end, type_)
 
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), testAccOptionGroupBasicConfig("option_group_test", "ip4"), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), testAccOptionBasicConfig(), config}, "")
 
 }
 

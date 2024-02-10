@@ -40,6 +40,13 @@ resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
   depends_on = [bloxone_ipam_subnet.example]
 }
 
+resource "bloxone_dhcp_option_code" "option_code" {
+  code         = 250
+  name         = "example_option_code"
+  option_space = bloxone_dhcp_option_space.option_space.id
+  type         = "int32"
+}
+
 // Address using Next available IP
 resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
   name              = "example_fixed_address"
@@ -51,12 +58,12 @@ resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
   tags = {
     location : "site1"
   }
+  //dhcp options
   dhcp_options = [
     {
-      description  = "Option 1"
-      option_code  = "234"
+      option_code  = bloxone_dhcp_option_code.option_code.id
       option_value = "true"
-      type         = "boolean"
+      type         = "option"
     }
   ]
   depends_on = [bloxone_ipam_subnet.example]

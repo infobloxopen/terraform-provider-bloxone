@@ -315,7 +315,7 @@ func TestAccIpSpaceResource_DdnsGeneratedPrefix(t *testing.T) {
 
 func TestAccIpSpaceResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_dhcp_options"
-	var v1, v2 ipam.IpamsvcIPSpace
+	var v1 ipam.IpamsvcIPSpace
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -335,8 +335,7 @@ func TestAccIpSpaceResource_DhcpOptions(t *testing.T) {
 			{
 				Config: testAccIpSpaceDhcpOptionsGroup("ipspace_dhcp_options_test", "group"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIpSpaceDestroy(context.Background(), &v1),
-					testAccCheckIpSpaceExists(context.Background(), resourceName, &v2),
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
 				),
 			},
@@ -347,7 +346,7 @@ func TestAccIpSpaceResource_DhcpOptions(t *testing.T) {
 
 func TestAccIpSpaceResource_DhcpOptionsV6(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_dhcp_options_v6"
-	var v1, v2 ipam.IpamsvcIPSpace
+	var v1 ipam.IpamsvcIPSpace
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -367,8 +366,7 @@ func TestAccIpSpaceResource_DhcpOptionsV6(t *testing.T) {
 			{
 				Config: testAccIpSpaceDhcpOptionsGroupV6("ipspace_dhcp_options_test", "group"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIpSpaceDestroy(context.Background(), &v1),
-					testAccCheckIpSpaceExists(context.Background(), resourceName, &v2),
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6.#", "1"),
 				),
 			},
@@ -987,7 +985,7 @@ resource "bloxone_ipam_ip_space" "test_dhcp_options" {
     ]
 }
 `, name, type_, optValue)
-	return strings.Join([]string{testAccOptionCodeBasicConfig("234", "test_dhcp_option_code", "boolean"), config}, "")
+	return strings.Join([]string{testAccOptionBasicConfig(), config}, "")
 
 }
 
@@ -1003,7 +1001,7 @@ resource "bloxone_ipam_ip_space" "test_dhcp_options" {
     ]
 }
 `, name, type_)
-	return strings.Join([]string{testAccOptionGroupBasicConfig("option_group_test", "ip4"), config}, "")
+	return strings.Join([]string{testAccOptionBasicConfig(), config}, "")
 
 }
 
@@ -1020,7 +1018,7 @@ resource "bloxone_ipam_ip_space" "test_dhcp_options_v6" {
    ]
 }
 `, name, type_, optValue)
-	return strings.Join([]string{testAccOptionCodeBasicConfigV6("234", "test_dhcp_option_code", "boolean"), config}, "")
+	return strings.Join([]string{testAccOptionBasicConfigV6(), config}, "")
 }
 
 func testAccIpSpaceDhcpOptionsGroupV6(name string, type_ string) string {
@@ -1035,7 +1033,7 @@ resource "bloxone_ipam_ip_space" "test_dhcp_options_v6" {
    ]
 }
 `, name, type_)
-	return strings.Join([]string{testAccOptionGroupBasicConfig("option_group_test", "ip6"), config}, "")
+	return strings.Join([]string{testAccOptionBasicConfigV6(), config}, "")
 }
 
 func testAccIpSpaceHeaderOptionFilename(name, headerOptionFilename string) string {
