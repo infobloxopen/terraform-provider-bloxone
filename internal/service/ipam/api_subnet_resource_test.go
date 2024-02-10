@@ -1130,7 +1130,7 @@ resource "bloxone_ipam_subnet" "test_dhcp_options" {
 }
 
 func testAccOptionBasicConfig() string {
-	config := fmt.Sprintf(`
+	config := fmt.Sprint(`
 resource "bloxone_dhcp_option_group" "test" {
     name = "option_group_test"
     protocol = "ip4"
@@ -1147,7 +1147,7 @@ resource "bloxone_dhcp_option_code" "test" {
 }
 
 func testAccOptionBasicConfigV6() string {
-	config := fmt.Sprintf(`
+	config := fmt.Sprint(`
 resource "bloxone_dhcp_option_group" "test" {
     name = "option_group_test"
     protocol = "ip6"
