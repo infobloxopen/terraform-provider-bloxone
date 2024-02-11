@@ -1130,7 +1130,7 @@ resource "bloxone_ipam_subnet" "test_dhcp_options" {
 }
 
 func testAccOptionBasicConfig() string {
-	config := fmt.Sprint(`
+	config := `
 resource "bloxone_dhcp_option_group" "test" {
     name = "option_group_test"
     protocol = "ip4"
@@ -1141,13 +1141,12 @@ resource "bloxone_dhcp_option_code" "test" {
     option_space = bloxone_dhcp_option_space.test.id
     type = "boolean"
 }
-`)
-
+`
 	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip4"), config}, "")
 }
 
 func testAccOptionBasicConfigV6() string {
-	config := fmt.Sprint(`
+	config := `
 resource "bloxone_dhcp_option_group" "test" {
     name = "option_group_test"
     protocol = "ip6"
@@ -1158,8 +1157,7 @@ resource "bloxone_dhcp_option_code" "test" {
     option_space = bloxone_dhcp_option_space.test.id
     type = "text"
 }
-`)
-
+`
 	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip6"), config}, "")
 }
 
