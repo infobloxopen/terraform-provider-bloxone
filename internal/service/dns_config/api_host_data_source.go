@@ -46,7 +46,7 @@ func (m *ConfigHostModelWithFilter) FlattenResults(ctx context.Context, from []d
 
 func (d *HostDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Retrieves information about existing DNS Hosts.\n\nA DNS Host object associates DNS configuration with hosts.",
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
