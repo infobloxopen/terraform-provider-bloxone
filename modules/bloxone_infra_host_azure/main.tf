@@ -31,7 +31,7 @@
  *   }
  *
  *   tags                      = {
- *   location = "office1"
+ *     location = "office1"
  *   }
  *
  *   services = {
@@ -81,8 +81,7 @@ resource "azurerm_virtual_machine" "this" {
   location              = var.location
   resource_group_name   = var.resource_group_name
   network_interface_ids = [azurerm_network_interface.this.id]
-
-  vm_size = var.vm_size
+  vm_size               = var.vm_size
 
   storage_image_reference {
     publisher = "infoblox"
@@ -90,7 +89,6 @@ resource "azurerm_virtual_machine" "this" {
     sku       = "infoblox-bloxone"
     version   = var.vm_os_version
   }
-
 
   delete_os_disk_on_termination    = true
   delete_data_disks_on_termination = true

@@ -31,7 +31,7 @@ module "bloxone_infra_host_azure" {
   }
 
   tags                      = {
-  location = "office1"
+    location = "office1"
   }
 
   services = {
