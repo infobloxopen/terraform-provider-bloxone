@@ -74,9 +74,6 @@ resource "azurerm_network_interface" "this" {
 }
 
 resource "azurerm_virtual_machine" "this" {
-
-  depends_on = [azurerm_network_interface.this]
-
   name                  = var.vm_name
   location              = var.location
   resource_group_name   = var.resource_group_name
@@ -120,6 +117,8 @@ resource "azurerm_virtual_machine" "this" {
     product   = "infoblox-bloxone-34"
     publisher = "infoblox"
   }
+
+  depends_on = [azurerm_network_interface.this]
 }
 
 data "bloxone_infra_hosts" "this" {
@@ -137,9 +136,7 @@ data "bloxone_infra_hosts" "this" {
     }
   }
 
-  depends_on = [
-    azurerm_virtual_machine.this
-  ]
+  depends_on = [azurerm_virtual_machine.this]
 }
 
 resource "bloxone_infra_service" "this" {
