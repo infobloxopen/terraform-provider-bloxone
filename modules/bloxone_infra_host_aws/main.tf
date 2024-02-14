@@ -54,7 +54,7 @@ data "aws_ami" "bloxone" {
   most_recent = true
   filter {
     name   = "name"
-    values = ["Infoblox BloxOne 3.5 BYOL"]
+    values = ["Infoblox BloxOne 3.8.1 BYOL"]
   }
 }
 

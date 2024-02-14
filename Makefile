@@ -24,5 +24,6 @@ testacc:
 
 gen:
 	go generate
+	terraform-docs ./modules/bloxone_infra_host_aws
 
 .PHONY: default test testacc gen
