@@ -8,6 +8,12 @@ resource "bloxone_ipam_address_block" "example" {
   space   = bloxone_ipam_ip_space.example.id
 }
 
+data "bloxone_dhcp_option_codes" "option_code" {
+  filters = {
+    name = "domain-name-servers"
+  }
+}
+
 # Static address
 resource "bloxone_ipam_subnet" "example" {
   address = "10.0.0.0"
@@ -20,13 +26,14 @@ resource "bloxone_ipam_subnet" "example" {
   tags = {
     site = "Site A"
   }
-}
-
-resource "bloxone_dhcp_option_code" "option_code" {
-  code         = 250
-  name         = "example_option_code"
-  option_space = bloxone_dhcp_option_space.option_space.id
-  type         = "int32"
+  //dhcp options
+  dhcp_options = [
+    {
+      option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
+      option_value = "1.1.1.1"
+      type         = "option"
+    }
+  ]
 }
 
 # Next available subnet
@@ -41,12 +48,4 @@ resource "bloxone_ipam_subnet" "example_na_s" {
   tags = {
     site = "Site A"
   }
-  #dhcp options
-  dhcp_options = [
-    {
-      option_code  = bloxone_dhcp_option_code.option_code.id
-      option_value = "true"
-      type         = "option"
-    }
-  ]
 }

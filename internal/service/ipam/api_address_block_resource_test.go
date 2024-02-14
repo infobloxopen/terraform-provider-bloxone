@@ -1033,7 +1033,7 @@ resource "bloxone_ipam_address_block" "test_dhcp_options" {
     ]
 }
 `, name, cidr, type_, optValue)
-	return strings.Join([]string{testAccBaseWithIPSpace(), testAccOptionBasicConfig(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), testAccBaseWithOptionSpaceAndCode(), config}, "")
 }
 
 func testAccAddressBlockDhcpOptionsGroup(name string, cidr string, type_ string) string {
@@ -1050,7 +1050,7 @@ resource "bloxone_ipam_address_block" "test_dhcp_options" {
     ]
 }
 `, name, cidr, type_)
-	return strings.Join([]string{testAccBaseWithIPSpace(), testAccOptionBasicConfig(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), testAccBaseWithOptionSpaceAndCode(), config}, "")
 }
 
 func testAccAddressBlockDdnsGenerateName(address string, cidr string, ddnsGenerateName string) string {

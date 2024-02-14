@@ -45,6 +45,13 @@ resource "bloxone_ipam_subnet" "example" {
   }
 }
 
+data "bloxone_dhcp_option_codes" "option_code" {
+  filters = {
+    name = "domain-name-servers"
+  }
+}
+
+
 resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
   name        = "example_fixed_address"
   address     = "192.168.1.1"
@@ -55,14 +62,15 @@ resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
   tags = {
     location = "site1"
   }
+  //dhcp options
+  dhcp_options = [
+    {
+      option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
+      option_value = "1.1.1.1"
+      type         = "option"
+    }
+  ]
   depends_on = [bloxone_ipam_subnet.example]
-}
-
-resource "bloxone_dhcp_option_code" "option_code" {
-  code         = 250
-  name         = "example_option_code"
-  option_space = bloxone_dhcp_option_space.option_space.id
-  type         = "int32"
 }
 
 // Address using Next available IP
@@ -76,14 +84,6 @@ resource "bloxone_dhcp_fixed_address" "example_fixed_address_na" {
   tags = {
     location : "site1"
   }
-  //dhcp options
-  dhcp_options = [
-    {
-      option_code  = bloxone_dhcp_option_code.option_code.id
-      option_value = "true"
-      type         = "option"
-    }
-  ]
   depends_on = [bloxone_ipam_subnet.example]
 }
 ```

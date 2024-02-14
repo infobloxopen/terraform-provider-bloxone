@@ -6,6 +6,12 @@ resource "bloxone_ipam_ip_space" "example" {
   }
 }
 
+data "bloxone_dhcp_option_codes" "option_code" {
+  filters = {
+    name = "domain-name-servers"
+  }
+}
+
 resource "bloxone_ipam_subnet" "example" {
   name    = "example"
   space   = bloxone_ipam_ip_space.example.id
@@ -15,6 +21,15 @@ resource "bloxone_ipam_subnet" "example" {
   tags = {
     location = "site1"
   }
+
+  //dhcp options
+  dhcp_options = [
+    {
+      option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
+      option_value = "1.1.1.1"
+      type         = "option"
+    }
+  ]
 }
 
 resource "bloxone_ipam_range" "example" {

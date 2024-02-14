@@ -1107,7 +1107,7 @@ resource "bloxone_ipam_subnet" "test_dhcp_options" {
 }
 `, address, cidr, name, type_, optValue)
 
-	return strings.Join([]string{testAccBaseWithIPSpace(), testAccOptionBasicConfig(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), testAccBaseWithOptionSpaceAndCode(), config}, "")
 }
 
 func testAccSubnetDhcpOptionsGroup(address string, cidr int, name, type_ string) string {
@@ -1126,10 +1126,10 @@ resource "bloxone_ipam_subnet" "test_dhcp_options" {
 }
 `, address, cidr, name, type_)
 
-	return strings.Join([]string{testAccBaseWithIPSpace(), testAccOptionBasicConfig(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(), testAccBaseWithOptionSpaceAndCode(), config}, "")
 }
 
-func testAccOptionBasicConfig() string {
+func testAccBaseWithOptionSpaceAndCode() string {
 	config := `
 resource "bloxone_dhcp_option_group" "test" {
     name = "option_group_test"
@@ -1145,7 +1145,7 @@ resource "bloxone_dhcp_option_code" "test" {
 	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip4"), config}, "")
 }
 
-func testAccOptionBasicConfigV6() string {
+func testAccBaseWithV6OptionSpaceAndCode() string {
 	config := `
 resource "bloxone_dhcp_option_group" "test" {
     name = "option_group_test"

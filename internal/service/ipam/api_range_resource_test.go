@@ -482,7 +482,7 @@ resource "bloxone_ipam_range" "test_dhcp_options" {
 }
 `, start, end, type_, optValue)
 
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), testAccOptionBasicConfig(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), testAccBaseWithOptionSpaceAndCode(), config}, "")
 
 }
 
@@ -502,7 +502,7 @@ resource "bloxone_ipam_range" "test_dhcp_options" {
 }
 `, start, end, type_)
 
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), testAccOptionBasicConfig(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), testAccBaseWithOptionSpaceAndCode(), config}, "")
 
 }
 

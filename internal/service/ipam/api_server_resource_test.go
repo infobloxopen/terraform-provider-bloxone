@@ -1042,7 +1042,7 @@ resource "bloxone_dhcp_server" "test_dhcp_options" {
     ]
 }
 `, name, type_, optValue)
-	return strings.Join([]string{testAccOptionBasicConfig(), config}, "")
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode(), config}, "")
 }
 
 func testAccServerDhcpOptionsGroup(name string, type_ string) string {
@@ -1057,7 +1057,7 @@ resource "bloxone_dhcp_server" "test_dhcp_options" {
     ]
 }
 `, name, type_)
-	return strings.Join([]string{testAccOptionBasicConfig(), config}, "")
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode(), config}, "")
 }
 
 func testAccServerDhcpOptionsOptionV6(name string, type_, optValue string) string {
@@ -1073,7 +1073,7 @@ resource "bloxone_dhcp_server" "test_dhcp_options" {
     ]
 }
 `, name, type_, optValue)
-	return strings.Join([]string{testAccOptionBasicConfigV6(), config}, "")
+	return strings.Join([]string{testAccBaseWithV6OptionSpaceAndCode(), config}, "")
 }
 
 func testAccServerDhcpOptionsGroupV6(name string, type_ string) string {
@@ -1088,7 +1088,7 @@ resource "bloxone_dhcp_server" "test_dhcp_options" {
     ]
 }
 `, name, type_)
-	return strings.Join([]string{testAccOptionBasicConfigV6(), config}, "")
+	return strings.Join([]string{testAccBaseWithV6OptionSpaceAndCode(), config}, "")
 }
 
 func testAccServerDdnsEnabled(name string, ddnsEnabled string) string {

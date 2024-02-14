@@ -680,7 +680,7 @@ resource "bloxone_dhcp_fixed_address" "test_dhcp_options" {
     ]
 }
 `, address, matchType, matchValue, name, type_, optValue)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), testAccOptionBasicConfig(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), testAccBaseWithOptionSpaceAndCode(), config}, "")
 }
 
 func testAccFixedAddressDhcpOptionsGroup(address string, matchType string, matchValue string, name, type_ string) string {
@@ -700,7 +700,7 @@ resource "bloxone_dhcp_fixed_address" "test_dhcp_options" {
     ]
 }
 `, address, matchType, matchValue, name, type_)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), testAccOptionBasicConfig(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), testAccBaseWithOptionSpaceAndCode(), config}, "")
 }
 
 func testAccFixedAddressHeaderOptionFilename(address string, matchType string, matchValue string, headerOptionFilename string) string {
