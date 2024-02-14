@@ -11,7 +11,7 @@ This guide provides step-by-step instructions for using the BloxOne Terraform Pr
 
 ## Configuring the Provider
 
-The provider needs to be configured with an API key and the URL of the Infoblox Cloud Services Portal (CSP). The API Key can be obtained from the Infoblox Cloud Services Portal (CSP) by following the steps in the guide - [Configuring User API Keys](https://docs.infoblox.com/space/BloxOneCloud/35430405/Configuring+User+API+Keys).
+The provider needs to be configured with an API key and the URL of the Infoblox Cloud Services Portal (CSP). You can get the API Key from the Infoblox Cloud Services Portal (CSP) by following the steps outlined in this guide - [Configuring User API Keys](https://docs.infoblox.com/space/BloxOneCloud/35430405/Configuring+User+API+Keys).
 
 Create a directory for the Terraform configuration and create a file named `main.tf` with the following content:
 
@@ -20,9 +20,11 @@ terraform {
   required_providers {
     bloxone = {
       source  = "infobloxopen/bloxone"
-      version = "~> 0.1.0"
+      version = ">= 0.1.0"
     }
   }
+  
+  required_version = ">= 1.0.0"
 }
 
 provider "bloxone" {
@@ -45,7 +47,7 @@ terraform init
 ## Configuring Resources
 
 ### IPAM and DHCP Resources
-In this example, we will use the following resources to create an IP space, address block, and subnet.
+In this example, you will use the following resources to create an IP space, address block, and subnet.
 
 - [bloxone_ipam_ip_space](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/ipam_ip_space)
 - [bloxone_ipam_address_block](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/ipam_address_block)
@@ -75,19 +77,19 @@ resource "bloxone_ipam_subnet" "this" {
 
 ````
 
-We can now run `terraform plan` to see what resources will be created.
+You can now run `terraform plan` to see what resources will be created.
 
 ```shell
 terraform plan
 ```
 
-Further, we will create a range and a fixed address reservation within the subnet.
+Further, you will create a range and a fixed address reservation within the subnet.
 
-We will use the following resources to create these
+You will use the following resources to create these
 - [bloxone_ipam_range](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/ipam_range)
 - [bloxone_dhcp_fixed_address](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/dhcp_fixed_address)
 
-We will use the following data sources to get the option codes in the default DHCPv4 option space
+You will use the following data sources to get the option codes in the default DHCPv4 option space
 - [bloxone_dhcp_option_spaces](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/data-sources/dhcp_option_spaces)
 - [bloxone_dhcp_option_codes](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/data-sources/dhcp_option_codes)
 
@@ -153,7 +155,7 @@ resource "bloxone_dhcp_fixed_address" "this" {
 }
 ````
 
-We can now run `terraform plan` to see what resources will be created.
+You can now run `terraform plan` to see what resources will be created.
 
 ```shell
 terraform plan
@@ -161,8 +163,8 @@ terraform plan
 
 ### BloxOne Host on AWS with DHCP service
 
-As a final step, we will also configure a BloxOne Host on AWS with DHCP service. 
-We will use the following module to create these
+As a final step, you will also configure a BloxOne Host on AWS with DHCP service. 
+You will use the following module to create these
 - [bloxone_infra_host_aws](https://github.com/infobloxopen/terraform-provider-bloxone/tree/master/modules/bloxone_infra_host_aws)
 
 The module requires the [AWS terraform provider](https://registry.terraform.io/providers/hashicorp/aws/latest) to be configured.
@@ -204,7 +206,7 @@ module "bloxone_infra_host_aws" {
 }
 ````
 
-We will also modify the subnet resource to assign the BloxOne Host to serve the subnet. To do this, replace the subnet resource with the following code:
+You will also have to modify the subnet resource to assign the BloxOne Host to serve the subnet. To do this, replace the subnet resource with the following code:
 
 ````terraform
 resource "bloxone_ipam_subnet" "this" {
@@ -215,9 +217,9 @@ resource "bloxone_ipam_subnet" "this" {
 }
 ````
 
-Here we have added the `dhcp_host` attribute to the subnet resource and assigned the `legacy_id` of the BloxOne Host to serve the subnet.
+Here, the `dhcp_host` attribute has been added to the subnet resource and assigned the `legacy_id` of the BloxOne Host to serve the subnet.
 
-We can now run `terraform plan` to see what resources will be created.
+You can now run `terraform plan` to see what resources will be created.
 
 ```shell
 terraform plan
