@@ -44,6 +44,7 @@ func (p *BloxOneProvider) Metadata(_ context.Context, _ provider.MetadataRequest
 
 func (p *BloxOneProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		Description: "The BloxOne provider is used to interact with the resources supported by Infoblox BloxOne API.",
 		Attributes: map[string]schema.Attribute{
 			"csp_url": schema.StringAttribute{
 				MarkdownDescription: "URL for BloxOne Cloud Services Portal. Can also be configured using the `BLOXONE_CSP_URL` environment variable.",
