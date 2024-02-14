@@ -124,7 +124,7 @@ resource "bloxone_ipam_range" "this" {
   dhcp_options = [
     {
       option_code  = local.dhcp4_option_code_lookup["domain-name-servers"]
-      option_value = "1.1.1.1"
+      option_value = "10.0.0.1"
       type         = "option"
     },
     {
