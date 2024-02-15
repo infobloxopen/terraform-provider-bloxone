@@ -66,7 +66,7 @@ resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
   dhcp_options = [
     {
       option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
-      option_value = "1.1.1.1"
+      option_value = "10.0.0.1"
       type         = "option"
     }
   ]

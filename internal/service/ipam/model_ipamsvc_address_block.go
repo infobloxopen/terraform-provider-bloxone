@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -239,9 +238,6 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional:            true,
 		MarkdownDescription: "The list of DHCP options for the address block. May be either a specific option or a group of options.",
-		PlanModifiers: []planmodifier.List{
-			listplanmodifier.RequiresReplaceIfConfigured(),
-		},
 	},
 	"dhcp_utilization": schema.SingleNestedAttribute{
 		Attributes: IpamsvcDHCPUtilizationResourceSchemaAttributes,

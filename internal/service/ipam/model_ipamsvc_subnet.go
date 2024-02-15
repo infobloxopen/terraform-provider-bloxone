@@ -2,7 +2,6 @@ package ipam
 
 import (
 	"context"
-
 	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"

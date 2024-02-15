@@ -16,12 +16,6 @@ A Server (DNS Config Profile) is a named configuration profile that can be share
 ## Example Usage
 
 ```terraform
-data "bloxone_dhcp_option_codes" "option_code" {
-  filters = {
-    name = "domain-name-servers"
-  }
-}
-
 resource "bloxone_dns_server" "example_server" {
   name = "example_dns_server"
 
@@ -30,14 +24,6 @@ resource "bloxone_dns_server" "example_server" {
   tags = {
     site = "Site A"
   }
-  //dhcp options
-  dhcp_options = [
-    {
-      option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
-      option_value = "1.1.1.1"
-      type         = "option"
-    }
-  ]
 }
 ```
 

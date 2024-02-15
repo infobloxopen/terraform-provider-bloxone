@@ -39,7 +39,7 @@ resource "bloxone_ipam_address_block" "example" {
   dhcp_options = [
     {
       option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
-      option_value = "1.1.1.1"
+      option_value = "10.0.0.1"
       type         = "option"
     }
   ]
