@@ -53,11 +53,11 @@ The resource types have changed in the new provider. The following table shows t
 | b1ddi_dns_auth_nsg    | bloxone_dns_auth_nsg       |
 | b1ddi_dns_record      | bloxone_dns_record*        |
 
-> NOTE: The _b1ddi_dns_record_ in the B1DDI provider used to be a single resource type that could be used to create any type of DNS record. 
-> In the BloxOne provider, this has been split into multiple resource types, one for each record type. 
-> For example, _b1ddi_dns_record_ is now _bloxone_dns_a_record_, _bloxone_dns_aaaa_record_, _bloxone_dns_caa_record_, etc. 
-> 
-> The _bloxone_dns_record_ is for resource records that are not supported explicitly by the provider. For example, if you want to create a DNS record of type _URI_, you can use _bloxone_dns_record_.
+-> NOTE: The _b1ddi_dns_record_ in the B1DDI provider used to be a single resource type that could be used to create any type of DNS record. 
+In the BloxOne provider, this has been split into multiple resource types, one for each record type. 
+For example, _b1ddi_dns_record_ is now _bloxone_dns_a_record_, _bloxone_dns_aaaa_record_, _bloxone_dns_caa_record_, etc. <br>
+The _bloxone_dns_record_ is for resource records that are not supported explicitly by the provider. 
+For example, if you want to create a DNS record of type _URI_, you can use _bloxone_dns_record_.
 
 To migrate your configuration, you will need to replace the old resource types with the new resource types. For example:
 
@@ -119,39 +119,53 @@ There should be no changes to your infrastructure if you have replaced all the r
 
 In case there are changes, you will need to make the necessary changes to your configuration to match the new provider.
 Some of the changes you may need to make are listed below.
- - **Unsupported block type**: Configuration written as blocks will have to be rewritten as values. For example, if you have a block like this:
-    ```terraform
-    internal_secondaries {
-        host = "dns/host/989a0d20-c030-11ee-a93d-0b6e6ea305e3"
-    }
-    ```
-    you will have to rewrite it with an equal sign :
-    ```terraform
-    internal_secondaries = [ 
-      { 
-        host = "dns/host/989a0d20-c030-11ee-a93d-0b6e6ea305e3"
-      }
-    ]
-    ```
- - **Read Only attributes**: Some attributes are read only in the BloxOne provider. For example, the _type_ attribute in _bloxone_dns_a_record_ is read only. If you have a configuration like this:
-    ```terraform
-    resource "bloxone_dns_a_record" "example" {
-        name = "domain.com"
-        type = "A"
-    }
-    ```
-    you will have to remove _type_ from the config as it is read only.
- - **Default values**: Some default values may have changed in the new provider. For example, the _hostname_rewrite_regex_ attribute in _bloxone_dns_forward_nsg_ has been changed from `[^a-zA-Z0-9.-]` to `[^a-zA-Z0-9_.]`. 
-    If your configuration, like the one below, doesn't specify a value for _hostname_rewrite_regex_:
-    ```terraform
-    resource "bloxone_dns_forward_nsg" "example" {
-        name = "example"
-    }
-    ```
-    you'll need to add a _hostname_rewrite_regex_ value to your configuration. This value should match the existing or old default value, otherwise, the plan will indicate a change.
-    ```terraform
-    resource "bloxone_dns_forward_nsg" "example" {
-        name = "example"
-        hostname_rewrite_regex = "[^a-zA-Z0-9.-]"
-    }
-    ```
+
+#### Unsupported block type
+Configuration written as blocks will have to be rewritten as values. For example, if you have a block like this:
+```terraform
+internal_secondaries {
+    host = "dns/host/989a0d20-c030-11ee-a93d-0b6e6ea305e3"
+}
+```
+you will have to rewrite it with an equal sign :
+```terraform
+internal_secondaries = [ 
+  { 
+    host = "dns/host/989a0d20-c030-11ee-a93d-0b6e6ea305e3"
+  }
+]
+```
+
+#### Read Only attributes
+Some attributes are read only in the BloxOne provider. For example, the _type_ attribute in _bloxone_dns_a_record_ is read only. 
+
+If you have a configuration like this:
+```terraform
+resource "bloxone_dns_a_record" "example" {
+    name = "domain.com"
+    type = "A"
+}
+```
+you will have to remove _type_ from the config as it is read only: 
+```terraform
+resource "bloxone_dns_a_record" "example" {
+    name = "domain.com"
+}
+```
+
+#### Default values
+Some default values may have changed in the new provider. For example, the _hostname_rewrite_regex_ attribute in _bloxone_dns_forward_nsg_ has been changed from `[^a-zA-Z0-9.-]` to `[^a-zA-Z0-9_.]`. 
+
+If your configuration, like the one below, doesn't specify a value for _hostname_rewrite_regex_:
+```terraform
+resource "bloxone_dns_forward_nsg" "example" {
+    name = "example"
+}
+```
+you will need to add a _hostname_rewrite_regex_ value to your configuration. This value should match the existing or old default value, otherwise, the plan will indicate a change.
+```terraform
+resource "bloxone_dns_forward_nsg" "example" {
+    name = "example"
+    hostname_rewrite_regex = "[^a-zA-Z0-9.-]"
+}
+```
