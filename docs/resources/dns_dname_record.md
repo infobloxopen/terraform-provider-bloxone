@@ -3,12 +3,12 @@
 page_title: "bloxone_dns_dname_record Resource - terraform-provider-bloxone"
 subcategory: "DNS"
 description: |-
-  Manages a DNS DNAME resource record in an authoratitive zone.
+  Manages a DNS DNAME resource record in an authoritative zone.
 ---
 
 # bloxone_dns_dname_record (Resource)
 
-Manages a DNS DNAME resource record in an authoratitive zone.
+Manages a DNS DNAME resource record in an authoritative zone.
 
 ## Example Usage
 

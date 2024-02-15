@@ -59,10 +59,10 @@ module "bloxone_infra_host_aws" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_ami"></a> [ami](#input\_ami) | The AMI to use for the BloxOne Host. If not provided, the latest AMI will be used. | <pre>object({<br>    id = string<br>  })</pre> | `null` | no |
+| <a name="input_ami"></a> [ami](#input\_ami) | The AMI to use for the BloxOne Host. If not provided, the latest AMI will be used. | `string` | `null` | no |
 | <a name="input_aws_instance_tags"></a> [aws\_instance\_tags](#input\_aws\_instance\_tags) | The tags to use for the AWS EC2 instance. For tags to use in BloxOne resources, use `tags`. | `map(string)` | `{}` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | The instance type to use for the BloxOne Host. Infoblox recommends you choose an instance type that has minimum resources of 8 CPU and 16 GB of RAM. | `string` | `"c5a.2xlarge"` | no |
-| <a name="input_join_token"></a> [join\_token](#input\_join\_token) | The join token to use for the BloxOne Host. If not provided, a join token will be created. | <pre>object({<br>    join_token = string<br>  })</pre> | `null` | no |
+| <a name="input_join_token"></a> [join\_token](#input\_join\_token) | The join token to use for the BloxOne Host. If not provided, a join token will be created. | `string` | `null` | no |
 | <a name="input_key_name"></a> [key\_name](#input\_key\_name) | The key name to use for EC2 instance. The key must be in the same region as the subnet. | `string` | n/a | yes |
 | <a name="input_services"></a> [services](#input\_services) | The services to provision on the BloxOne Host. The services must be a map of valid service type with values of "start" or "stop". Valid service types are "dhcp" and "dns". | `map(string)` | n/a | yes |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The subnet to use for the EC2 instance. The subnet must be in the same VPC as the security group. | `string` | n/a | yes |
