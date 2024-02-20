@@ -54,7 +54,7 @@ data "aws_ami" "bloxone" {
   most_recent = true
   filter {
     name   = "name"
-    values = [""BloxOne381_MarketPlace-96cf85a8-a940-4dd0-80a5-80ab90fb1d1a"BloxOne381_MarketPlace-96cf85a8-a940-4dd0-80a5-80ab90fb1d1a"]
+    values = ["BloxOne381_MarketPlace-96cf85a8-a940-4dd0-80a5-80ab90fb1d1a"]
   }
 }
 
