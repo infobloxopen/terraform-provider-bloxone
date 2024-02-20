@@ -24,13 +24,13 @@ import (
 type HardwareFilterAPI interface {
 
 	/*
-			HardwareFilterCreate Create the hardware filter.
+		HardwareFilterCreate Create the hardware filter.
 
-			Use this method to create a __HardwareFilter__ object.
-		The __HardwareFilter__ object applies options to clients with matching hardware addresses. It must be configured in the _filters_ list of a scope to be effective.
+		Use this method to create a __HardwareFilter__ object.
+	The __HardwareFilter__ object applies options to clients with matching hardware addresses. It must be configured in the _filters_ list of a scope to be effective.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiHardwareFilterCreateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiHardwareFilterCreateRequest
 	*/
 	HardwareFilterCreate(ctx context.Context) ApiHardwareFilterCreateRequest
 
@@ -39,14 +39,14 @@ type HardwareFilterAPI interface {
 	HardwareFilterCreateExecute(r ApiHardwareFilterCreateRequest) (*IpamsvcCreateHardwareFilterResponse, *http.Response, error)
 
 	/*
-			HardwareFilterDelete Move the hardware filter to the recycle bin.
+		HardwareFilterDelete Move the hardware filter to the recycle bin.
 
-			Use this method to move a __HardwareFilter__ object to the recycle bin.
-		The __HardwareFilter__ object applies options to clients with matching hardware addresses. It must be configured in the _filters_ list of a scope to be effective.
+		Use this method to move a __HardwareFilter__ object to the recycle bin.
+	The __HardwareFilter__ object applies options to clients with matching hardware addresses. It must be configured in the _filters_ list of a scope to be effective.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiHardwareFilterDeleteRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiHardwareFilterDeleteRequest
 	*/
 	HardwareFilterDelete(ctx context.Context, id string) ApiHardwareFilterDeleteRequest
 
@@ -54,13 +54,13 @@ type HardwareFilterAPI interface {
 	HardwareFilterDeleteExecute(r ApiHardwareFilterDeleteRequest) (*http.Response, error)
 
 	/*
-			HardwareFilterList Retrieve hardware filters.
+		HardwareFilterList Retrieve hardware filters.
 
-			Use this method to retrieve __HardwareFilter__ objects.
-		The __HardwareFilter__ object applies options to clients with matching hardware addresses. It must be configured in the _filters_ list of a scope to be effective.
+		Use this method to retrieve __HardwareFilter__ objects.
+	The __HardwareFilter__ object applies options to clients with matching hardware addresses. It must be configured in the _filters_ list of a scope to be effective.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiHardwareFilterListRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiHardwareFilterListRequest
 	*/
 	HardwareFilterList(ctx context.Context) ApiHardwareFilterListRequest
 
@@ -69,14 +69,14 @@ type HardwareFilterAPI interface {
 	HardwareFilterListExecute(r ApiHardwareFilterListRequest) (*IpamsvcListHardwareFilterResponse, *http.Response, error)
 
 	/*
-			HardwareFilterRead Retrieve the hardware filter.
+		HardwareFilterRead Retrieve the hardware filter.
 
-			Use this method to retrieve a __HardwareFilter__ object.
-		The __HardwareFilter__ object applies options to clients with matching hardware addresses. It must be configured in the _filters_ list of a scope to be effective.
+		Use this method to retrieve a __HardwareFilter__ object.
+	The __HardwareFilter__ object applies options to clients with matching hardware addresses. It must be configured in the _filters_ list of a scope to be effective.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiHardwareFilterReadRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiHardwareFilterReadRequest
 	*/
 	HardwareFilterRead(ctx context.Context, id string) ApiHardwareFilterReadRequest
 
@@ -85,14 +85,14 @@ type HardwareFilterAPI interface {
 	HardwareFilterReadExecute(r ApiHardwareFilterReadRequest) (*IpamsvcReadHardwareFilterResponse, *http.Response, error)
 
 	/*
-			HardwareFilterUpdate Update the hardware filter.
+		HardwareFilterUpdate Update the hardware filter.
 
-			Use this method to update a __HardwareFilter__ object.
-		The __HardwareFilter__ object applies options to clients with matching hardware addresses. It must be configured in the _filters_ list of a scope to be effective.
+		Use this method to update a __HardwareFilter__ object.
+	The __HardwareFilter__ object applies options to clients with matching hardware addresses. It must be configured in the _filters_ list of a scope to be effective.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiHardwareFilterUpdateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiHardwareFilterUpdateRequest
 	*/
 	HardwareFilterUpdate(ctx context.Context, id string) ApiHardwareFilterUpdateRequest
 

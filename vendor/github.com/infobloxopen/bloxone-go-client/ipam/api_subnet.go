@@ -24,14 +24,14 @@ import (
 type SubnetAPI interface {
 
 	/*
-			SubnetCopy Copy the subnet.
+		SubnetCopy Copy the subnet.
 
-			Use this method to copy a __Subnet__ object.
-		The __Subnet__ object represents a set of addresses from which addresses are assigned to network equipment interfaces.
+		Use this method to copy a __Subnet__ object.
+	The __Subnet__ object represents a set of addresses from which addresses are assigned to network equipment interfaces.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiSubnetCopyRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiSubnetCopyRequest
 	*/
 	SubnetCopy(ctx context.Context, id string) ApiSubnetCopyRequest
 
@@ -40,13 +40,13 @@ type SubnetAPI interface {
 	SubnetCopyExecute(r ApiSubnetCopyRequest) (*IpamsvcCopySubnetResponse, *http.Response, error)
 
 	/*
-			SubnetCreate Create the subnet.
+		SubnetCreate Create the subnet.
 
-			Use this method to create a __Subnet__ object.
-		The __Subnet__ object represents a set of addresses from which addresses are assigned to network equipment interfaces.
+		Use this method to create a __Subnet__ object.
+	The __Subnet__ object represents a set of addresses from which addresses are assigned to network equipment interfaces.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiSubnetCreateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiSubnetCreateRequest
 	*/
 	SubnetCreate(ctx context.Context) ApiSubnetCreateRequest
 
@@ -55,14 +55,14 @@ type SubnetAPI interface {
 	SubnetCreateExecute(r ApiSubnetCreateRequest) (*IpamsvcCreateSubnetResponse, *http.Response, error)
 
 	/*
-			SubnetCreateNextAvailableIP Allocate the next available IP address.
+		SubnetCreateNextAvailableIP Allocate the next available IP address.
 
-			Use this method to allocate the next available IP address.
-		This allocates one or more __Address__ (_ipam/address_) resource from available addresses, when the IP address is not known prior to allocation.
+		Use this method to allocate the next available IP address.
+	This allocates one or more __Address__ (_ipam/address_) resource from available addresses, when the IP address is not known prior to allocation.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiSubnetCreateNextAvailableIPRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiSubnetCreateNextAvailableIPRequest
 	*/
 	SubnetCreateNextAvailableIP(ctx context.Context, id string) ApiSubnetCreateNextAvailableIPRequest
 
@@ -71,14 +71,14 @@ type SubnetAPI interface {
 	SubnetCreateNextAvailableIPExecute(r ApiSubnetCreateNextAvailableIPRequest) (*IpamsvcCreateNextAvailableIPResponse, *http.Response, error)
 
 	/*
-			SubnetDelete Move the subnet to the recycle bin.
+		SubnetDelete Move the subnet to the recycle bin.
 
-			Use this method to move a __Subnet__ object to the recycle bin.
-		The __Subnet__ object represents a set of addresses from which addresses are assigned to network equipment interfaces.
+		Use this method to move a __Subnet__ object to the recycle bin.
+	The __Subnet__ object represents a set of addresses from which addresses are assigned to network equipment interfaces.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiSubnetDeleteRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiSubnetDeleteRequest
 	*/
 	SubnetDelete(ctx context.Context, id string) ApiSubnetDeleteRequest
 
@@ -86,13 +86,13 @@ type SubnetAPI interface {
 	SubnetDeleteExecute(r ApiSubnetDeleteRequest) (*http.Response, error)
 
 	/*
-			SubnetList Retrieve subnets.
+		SubnetList Retrieve subnets.
 
-			Use this method to retrieve __Subnet__ objects.
-		The __Subnet__ object represents a set of addresses from which addresses are assigned to network equipment interfaces.
+		Use this method to retrieve __Subnet__ objects.
+	The __Subnet__ object represents a set of addresses from which addresses are assigned to network equipment interfaces.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiSubnetListRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiSubnetListRequest
 	*/
 	SubnetList(ctx context.Context) ApiSubnetListRequest
 
@@ -101,14 +101,14 @@ type SubnetAPI interface {
 	SubnetListExecute(r ApiSubnetListRequest) (*IpamsvcListSubnetResponse, *http.Response, error)
 
 	/*
-			SubnetListNextAvailableIP Retrieve the next available IP address.
+		SubnetListNextAvailableIP Retrieve the next available IP address.
 
-			Use this method to retrieve the next available IP address.
-		This returns one or more __Address__ (_ipam/address_) resource from available addresses, when IP address is not known prior to allocation.
+		Use this method to retrieve the next available IP address.
+	This returns one or more __Address__ (_ipam/address_) resource from available addresses, when IP address is not known prior to allocation.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiSubnetListNextAvailableIPRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiSubnetListNextAvailableIPRequest
 	*/
 	SubnetListNextAvailableIP(ctx context.Context, id string) ApiSubnetListNextAvailableIPRequest
 
@@ -117,14 +117,14 @@ type SubnetAPI interface {
 	SubnetListNextAvailableIPExecute(r ApiSubnetListNextAvailableIPRequest) (*IpamsvcNextAvailableIPResponse, *http.Response, error)
 
 	/*
-			SubnetRead Retrieve the subnet.
+		SubnetRead Retrieve the subnet.
 
-			Use this method to retrieve a __Subnet__ object.
-		The __Subnet__ object represents a set of addresses from which addresses are assigned to network equipment interfaces.
+		Use this method to retrieve a __Subnet__ object.
+	The __Subnet__ object represents a set of addresses from which addresses are assigned to network equipment interfaces.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiSubnetReadRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiSubnetReadRequest
 	*/
 	SubnetRead(ctx context.Context, id string) ApiSubnetReadRequest
 
@@ -133,14 +133,14 @@ type SubnetAPI interface {
 	SubnetReadExecute(r ApiSubnetReadRequest) (*IpamsvcReadSubnetResponse, *http.Response, error)
 
 	/*
-			SubnetUpdate Update the subnet.
+		SubnetUpdate Update the subnet.
 
-			Use this method to update a __Subnet__ object.
-		The __Subnet__ object represents a set of addresses from which addresses are assigned to network equipment interfaces.
+		Use this method to update a __Subnet__ object.
+	The __Subnet__ object represents a set of addresses from which addresses are assigned to network equipment interfaces.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiSubnetUpdateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiSubnetUpdateRequest
 	*/
 	SubnetUpdate(ctx context.Context, id string) ApiSubnetUpdateRequest
 

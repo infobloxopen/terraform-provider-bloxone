@@ -666,8 +666,25 @@ func (e GenericOpenAPIError) Model() interface{} {
 	return e.model
 }
 
+// WithError ,WithBody and WithModel functions for generic OpenAPIError
+
+func (e GenericOpenAPIError) WithError(error string) error {
+	e.error = error
+	return e
+}
+
+func (e GenericOpenAPIError) WithBody(body string) error {
+	e.body = []byte(body)
+	return e
+}
+
+func (e GenericOpenAPIError) WithModel(model interface{}) error {
+	e.model = model
+	return e
+}
+
 // format error message using title and detail when model implements rfc7807
-func formatErrorMessage(status string, v interface{}) string {
+func FormatErrorMessage(status string, v interface{}) string {
 	str := ""
 	metaValue := reflect.ValueOf(v).Elem()
 

@@ -24,13 +24,13 @@ import (
 type ServerAPI interface {
 
 	/*
-			ServerCreate Create the Server object.
+		ServerCreate Create the Server object.
 
-			Use this method to create a Server object.
-		A DNS Config Profile is a named configuration profile that can be shared for specified list of hosts.
+		Use this method to create a Server object.
+	A DNS Config Profile is a named configuration profile that can be shared for specified list of hosts.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiServerCreateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiServerCreateRequest
 	*/
 	ServerCreate(ctx context.Context) ApiServerCreateRequest
 
@@ -39,14 +39,14 @@ type ServerAPI interface {
 	ServerCreateExecute(r ApiServerCreateRequest) (*ConfigCreateServerResponse, *http.Response, error)
 
 	/*
-			ServerDelete Move the Server object to Recyclebin.
+		ServerDelete Move the Server object to Recyclebin.
 
-			Use this method to move a Server object to Recyclebin.
-		A DNS Config Profile is a named configuration profile that can be shared for specified list of hosts.
+		Use this method to move a Server object to Recyclebin.
+	A DNS Config Profile is a named configuration profile that can be shared for specified list of hosts.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiServerDeleteRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiServerDeleteRequest
 	*/
 	ServerDelete(ctx context.Context, id string) ApiServerDeleteRequest
 
@@ -54,13 +54,13 @@ type ServerAPI interface {
 	ServerDeleteExecute(r ApiServerDeleteRequest) (*http.Response, error)
 
 	/*
-			ServerList List Server objects.
+		ServerList List Server objects.
 
-			Use this method to list Server objects.
-		A DNS Config Profile is a named configuration profile that can be shared for specified list of hosts.
+		Use this method to list Server objects.
+	A DNS Config Profile is a named configuration profile that can be shared for specified list of hosts.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiServerListRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiServerListRequest
 	*/
 	ServerList(ctx context.Context) ApiServerListRequest
 
@@ -69,14 +69,14 @@ type ServerAPI interface {
 	ServerListExecute(r ApiServerListRequest) (*ConfigListServerResponse, *http.Response, error)
 
 	/*
-			ServerRead Read the Server object.
+		ServerRead Read the Server object.
 
-			Use this method to read a Server object.
-		A DNS Config Profile is a named configuration profile that can be shared for specified list of hosts.
+		Use this method to read a Server object.
+	A DNS Config Profile is a named configuration profile that can be shared for specified list of hosts.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiServerReadRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiServerReadRequest
 	*/
 	ServerRead(ctx context.Context, id string) ApiServerReadRequest
 
@@ -85,14 +85,14 @@ type ServerAPI interface {
 	ServerReadExecute(r ApiServerReadRequest) (*ConfigReadServerResponse, *http.Response, error)
 
 	/*
-			ServerUpdate Update the Server object.
+		ServerUpdate Update the Server object.
 
-			Use this method to update a Server object.
-		A DNS Config Profile is a named configuration profile that can be shared for specified list of hosts.
+		Use this method to update a Server object.
+	A DNS Config Profile is a named configuration profile that can be shared for specified list of hosts.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiServerUpdateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiServerUpdateRequest
 	*/
 	ServerUpdate(ctx context.Context, id string) ApiServerUpdateRequest
 

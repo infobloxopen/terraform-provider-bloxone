@@ -24,13 +24,13 @@ import (
 type HostAPI interface {
 
 	/*
-			HostList List DNS Host objects.
+		HostList List DNS Host objects.
 
-			Use this method to list DNS Host objects.
-		A DNS Host object associates DNS configuration with hosts.
+		Use this method to list DNS Host objects.
+	A DNS Host object associates DNS configuration with hosts.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiHostListRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiHostListRequest
 	*/
 	HostList(ctx context.Context) ApiHostListRequest
 
@@ -39,14 +39,14 @@ type HostAPI interface {
 	HostListExecute(r ApiHostListRequest) (*ConfigListHostResponse, *http.Response, error)
 
 	/*
-			HostRead Read the DNS Host object.
+		HostRead Read the DNS Host object.
 
-			Use this method to read a DNS Host object.
-		A DNS Host object associates DNS configuration with hosts.
+		Use this method to read a DNS Host object.
+	A DNS Host object associates DNS configuration with hosts.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiHostReadRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiHostReadRequest
 	*/
 	HostRead(ctx context.Context, id string) ApiHostReadRequest
 
@@ -55,14 +55,14 @@ type HostAPI interface {
 	HostReadExecute(r ApiHostReadRequest) (*ConfigReadHostResponse, *http.Response, error)
 
 	/*
-			HostUpdate Update the DNS Host object.
+		HostUpdate Update the DNS Host object.
 
-			Use this method to update a DNS Host object.
-		A DNS Host object associates DNS configuration with hosts.
+		Use this method to update a DNS Host object.
+	A DNS Host object associates DNS configuration with hosts.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiHostUpdateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiHostUpdateRequest
 	*/
 	HostUpdate(ctx context.Context, id string) ApiHostUpdateRequest
 

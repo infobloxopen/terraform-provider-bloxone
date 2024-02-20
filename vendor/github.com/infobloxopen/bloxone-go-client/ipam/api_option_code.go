@@ -24,13 +24,13 @@ import (
 type OptionCodeAPI interface {
 
 	/*
-			OptionCodeCreate Create the DHCP option code.
+		OptionCodeCreate Create the DHCP option code.
 
-			Use this method to create an __OptionCode__ object.
-		The __OptionCode__ object defines a DHCP option code.
+		Use this method to create an __OptionCode__ object.
+	The __OptionCode__ object defines a DHCP option code.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiOptionCodeCreateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiOptionCodeCreateRequest
 	*/
 	OptionCodeCreate(ctx context.Context) ApiOptionCodeCreateRequest
 
@@ -39,14 +39,14 @@ type OptionCodeAPI interface {
 	OptionCodeCreateExecute(r ApiOptionCodeCreateRequest) (*IpamsvcCreateOptionCodeResponse, *http.Response, error)
 
 	/*
-			OptionCodeDelete Delete the DHCP option code.
+		OptionCodeDelete Delete the DHCP option code.
 
-			Use this method to delete an __OptionCode__ object.
-		The __OptionCode__ object defines a DHCP option code.
+		Use this method to delete an __OptionCode__ object.
+	The __OptionCode__ object defines a DHCP option code.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiOptionCodeDeleteRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiOptionCodeDeleteRequest
 	*/
 	OptionCodeDelete(ctx context.Context, id string) ApiOptionCodeDeleteRequest
 
@@ -54,13 +54,13 @@ type OptionCodeAPI interface {
 	OptionCodeDeleteExecute(r ApiOptionCodeDeleteRequest) (*http.Response, error)
 
 	/*
-			OptionCodeList Retrieve DHCP option codes.
+		OptionCodeList Retrieve DHCP option codes.
 
-			Use this method to retrieve __OptionCode__ objects.
-		The __OptionCode__ object defines a DHCP option code.
+		Use this method to retrieve __OptionCode__ objects.
+	The __OptionCode__ object defines a DHCP option code.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiOptionCodeListRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiOptionCodeListRequest
 	*/
 	OptionCodeList(ctx context.Context) ApiOptionCodeListRequest
 
@@ -69,14 +69,14 @@ type OptionCodeAPI interface {
 	OptionCodeListExecute(r ApiOptionCodeListRequest) (*IpamsvcListOptionCodeResponse, *http.Response, error)
 
 	/*
-			OptionCodeRead Retrieve the DHCP option code.
+		OptionCodeRead Retrieve the DHCP option code.
 
-			Use this method to retrieve an __OptionCode__ object.
-		The __OptionCode__ object defines a DHCP option code.
+		Use this method to retrieve an __OptionCode__ object.
+	The __OptionCode__ object defines a DHCP option code.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiOptionCodeReadRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiOptionCodeReadRequest
 	*/
 	OptionCodeRead(ctx context.Context, id string) ApiOptionCodeReadRequest
 
@@ -85,14 +85,14 @@ type OptionCodeAPI interface {
 	OptionCodeReadExecute(r ApiOptionCodeReadRequest) (*IpamsvcReadOptionCodeResponse, *http.Response, error)
 
 	/*
-			OptionCodeUpdate Update the DHCP option code.
+		OptionCodeUpdate Update the DHCP option code.
 
-			Use this method to update an __OptionCode__ object.
-		The __OptionCode__ object defines a DHCP option code.
+		Use this method to update an __OptionCode__ object.
+	The __OptionCode__ object defines a DHCP option code.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiOptionCodeUpdateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiOptionCodeUpdateRequest
 	*/
 	OptionCodeUpdate(ctx context.Context, id string) ApiOptionCodeUpdateRequest
 

@@ -24,13 +24,13 @@ import (
 type GlobalAPI interface {
 
 	/*
-			GlobalRead Read the Global configuration object.
+		GlobalRead Read the Global configuration object.
 
-			Use this method to read the Global configuration object.
-		Service operates on Global singleton object that represents parent configuration settings for inheritance.
+		Use this method to read the Global configuration object.
+	Service operates on Global singleton object that represents parent configuration settings for inheritance.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiGlobalReadRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiGlobalReadRequest
 	*/
 	GlobalRead(ctx context.Context) ApiGlobalReadRequest
 
@@ -39,14 +39,14 @@ type GlobalAPI interface {
 	GlobalReadExecute(r ApiGlobalReadRequest) (*ConfigReadGlobalResponse, *http.Response, error)
 
 	/*
-			GlobalRead2 Read the Global configuration object.
+		GlobalRead2 Read the Global configuration object.
 
-			Use this method to read the Global configuration object.
-		Service operates on Global singleton object that represents parent configuration settings for inheritance.
+		Use this method to read the Global configuration object.
+	Service operates on Global singleton object that represents parent configuration settings for inheritance.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiGlobalRead2Request
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiGlobalRead2Request
 	*/
 	GlobalRead2(ctx context.Context, id string) ApiGlobalRead2Request
 
@@ -55,13 +55,13 @@ type GlobalAPI interface {
 	GlobalRead2Execute(r ApiGlobalRead2Request) (*ConfigReadGlobalResponse, *http.Response, error)
 
 	/*
-			GlobalUpdate Update the Global configuration object.
+		GlobalUpdate Update the Global configuration object.
 
-			Use this method to update the Global configuration object.
-		Service operates on Global singleton object that represents parent configuration settings for inheritance.
+		Use this method to update the Global configuration object.
+	Service operates on Global singleton object that represents parent configuration settings for inheritance.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiGlobalUpdateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiGlobalUpdateRequest
 	*/
 	GlobalUpdate(ctx context.Context) ApiGlobalUpdateRequest
 
@@ -70,14 +70,14 @@ type GlobalAPI interface {
 	GlobalUpdateExecute(r ApiGlobalUpdateRequest) (*ConfigUpdateGlobalResponse, *http.Response, error)
 
 	/*
-			GlobalUpdate2 Update the Global configuration object.
+		GlobalUpdate2 Update the Global configuration object.
 
-			Use this method to update the Global configuration object.
-		Service operates on Global singleton object that represents parent configuration settings for inheritance.
+		Use this method to update the Global configuration object.
+	Service operates on Global singleton object that represents parent configuration settings for inheritance.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiGlobalUpdate2Request
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiGlobalUpdate2Request
 	*/
 	GlobalUpdate2(ctx context.Context, id string) ApiGlobalUpdate2Request
 

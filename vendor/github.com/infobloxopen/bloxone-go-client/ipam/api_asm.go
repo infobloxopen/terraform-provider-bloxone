@@ -24,14 +24,14 @@ import (
 type AsmAPI interface {
 
 	/*
-			AsmCreate Update subnet and ranges for Automated Scope Management.
+		AsmCreate Update subnet and ranges for Automated Scope Management.
 
-			Use this method to update the subnet and range for Automated Scope Management.
-		The __ASM__ object generates and returns the suggestions from the ASM suggestion engine and allows for updating the subnet and range.
-		This method attempts to expand the scope by expanding a range or adding a new range and, if necessary, expanding the subnet.
+		Use this method to update the subnet and range for Automated Scope Management.
+	The __ASM__ object generates and returns the suggestions from the ASM suggestion engine and allows for updating the subnet and range.
+	This method attempts to expand the scope by expanding a range or adding a new range and, if necessary, expanding the subnet.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiAsmCreateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiAsmCreateRequest
 	*/
 	AsmCreate(ctx context.Context) ApiAsmCreateRequest
 
@@ -40,13 +40,13 @@ type AsmAPI interface {
 	AsmCreateExecute(r ApiAsmCreateRequest) (*IpamsvcCreateASMResponse, *http.Response, error)
 
 	/*
-			AsmList Retrieve suggested updates for Automated Scope Management.
+		AsmList Retrieve suggested updates for Automated Scope Management.
 
-			Use this method to retrieve __ASM__ objects for Automated Scope Management.
-		The __ASM__ object returns the suggested updates for the subnet from the ASM suggestion engine and allows for updating the subnet and range information.
+		Use this method to retrieve __ASM__ objects for Automated Scope Management.
+	The __ASM__ object returns the suggested updates for the subnet from the ASM suggestion engine and allows for updating the subnet and range information.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiAsmListRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiAsmListRequest
 	*/
 	AsmList(ctx context.Context) ApiAsmListRequest
 
@@ -55,14 +55,14 @@ type AsmAPI interface {
 	AsmListExecute(r ApiAsmListRequest) (*IpamsvcListASMResponse, *http.Response, error)
 
 	/*
-			AsmRead Retrieve the suggested update for Automated Scope Management.
+		AsmRead Retrieve the suggested update for Automated Scope Management.
 
-			Use this method to retrieve an __ASM__ object for Automated Scope Management.
-		The __ASM__ object returns the suggested updates for the subnet from the ASM suggestion engine and allows for updating the subnet and range information.
+		Use this method to retrieve an __ASM__ object for Automated Scope Management.
+	The __ASM__ object returns the suggested updates for the subnet from the ASM suggestion engine and allows for updating the subnet and range information.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiAsmReadRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiAsmReadRequest
 	*/
 	AsmRead(ctx context.Context, id string) ApiAsmReadRequest
 

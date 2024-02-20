@@ -24,13 +24,13 @@ import (
 type OptionSpaceAPI interface {
 
 	/*
-			OptionSpaceCreate Create the DHCP option space.
+		OptionSpaceCreate Create the DHCP option space.
 
-			Use this method to create an __OptionSpace__ object.
-		The __OptionSpace__ object represents a set of DHCP option codes.
+		Use this method to create an __OptionSpace__ object.
+	The __OptionSpace__ object represents a set of DHCP option codes.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiOptionSpaceCreateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiOptionSpaceCreateRequest
 	*/
 	OptionSpaceCreate(ctx context.Context) ApiOptionSpaceCreateRequest
 
@@ -39,14 +39,14 @@ type OptionSpaceAPI interface {
 	OptionSpaceCreateExecute(r ApiOptionSpaceCreateRequest) (*IpamsvcCreateOptionSpaceResponse, *http.Response, error)
 
 	/*
-			OptionSpaceDelete Move the DHCP option space to the recycle bin.
+		OptionSpaceDelete Move the DHCP option space to the recycle bin.
 
-			Use this method to move an __OptionSpace__ object to the recycle bin.
-		The __OptionSpace__ object represents a set of DHCP option codes.
+		Use this method to move an __OptionSpace__ object to the recycle bin.
+	The __OptionSpace__ object represents a set of DHCP option codes.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiOptionSpaceDeleteRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiOptionSpaceDeleteRequest
 	*/
 	OptionSpaceDelete(ctx context.Context, id string) ApiOptionSpaceDeleteRequest
 
@@ -54,13 +54,13 @@ type OptionSpaceAPI interface {
 	OptionSpaceDeleteExecute(r ApiOptionSpaceDeleteRequest) (*http.Response, error)
 
 	/*
-			OptionSpaceList Retrieve DHCP option spaces.
+		OptionSpaceList Retrieve DHCP option spaces.
 
-			Use this method to retrieve __OptionSpace__ objects.
-		The __OptionSpace__ object represents a set of DHCP option codes.
+		Use this method to retrieve __OptionSpace__ objects.
+	The __OptionSpace__ object represents a set of DHCP option codes.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiOptionSpaceListRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiOptionSpaceListRequest
 	*/
 	OptionSpaceList(ctx context.Context) ApiOptionSpaceListRequest
 
@@ -69,14 +69,14 @@ type OptionSpaceAPI interface {
 	OptionSpaceListExecute(r ApiOptionSpaceListRequest) (*IpamsvcListOptionSpaceResponse, *http.Response, error)
 
 	/*
-			OptionSpaceRead Retrieve the DHCP option space.
+		OptionSpaceRead Retrieve the DHCP option space.
 
-			Use this method to retrieve an __OptionSpace__ object.
-		The __OptionSpace__ object represents a set of DHCP option codes.
+		Use this method to retrieve an __OptionSpace__ object.
+	The __OptionSpace__ object represents a set of DHCP option codes.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiOptionSpaceReadRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiOptionSpaceReadRequest
 	*/
 	OptionSpaceRead(ctx context.Context, id string) ApiOptionSpaceReadRequest
 
@@ -85,14 +85,14 @@ type OptionSpaceAPI interface {
 	OptionSpaceReadExecute(r ApiOptionSpaceReadRequest) (*IpamsvcReadOptionSpaceResponse, *http.Response, error)
 
 	/*
-			OptionSpaceUpdate Update the DHCP option space.
+		OptionSpaceUpdate Update the DHCP option space.
 
-			Use this method to update an __OptionSpace__ object.
-		The __OptionSpace__ object represents a set of DHCP option codes.
+		Use this method to update an __OptionSpace__ object.
+	The __OptionSpace__ object represents a set of DHCP option codes.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiOptionSpaceUpdateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiOptionSpaceUpdateRequest
 	*/
 	OptionSpaceUpdate(ctx context.Context, id string) ApiOptionSpaceUpdateRequest
 

@@ -24,13 +24,13 @@ import (
 type TsigAPI interface {
 
 	/*
-			TsigCreate Create the TSIG key.
+		TsigCreate Create the TSIG key.
 
-			Use this method to create a __TSIGKey__ object.
-		A __TSIGKey__ object represents a TSIG key.
+		Use this method to create a __TSIGKey__ object.
+	A __TSIGKey__ object represents a TSIG key.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiTsigCreateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiTsigCreateRequest
 	*/
 	TsigCreate(ctx context.Context) ApiTsigCreateRequest
 
@@ -39,14 +39,14 @@ type TsigAPI interface {
 	TsigCreateExecute(r ApiTsigCreateRequest) (*KeysCreateTSIGKeyResponse, *http.Response, error)
 
 	/*
-			TsigDelete Delete the TSIG key.
+		TsigDelete Delete the TSIG key.
 
-			Use this method to delete a __TSIGKey__ object.
-		A __TSIGKey__ object represents a TSIG key.
+		Use this method to delete a __TSIGKey__ object.
+	A __TSIGKey__ object represents a TSIG key.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiTsigDeleteRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiTsigDeleteRequest
 	*/
 	TsigDelete(ctx context.Context, id string) ApiTsigDeleteRequest
 
@@ -54,13 +54,13 @@ type TsigAPI interface {
 	TsigDeleteExecute(r ApiTsigDeleteRequest) (*http.Response, error)
 
 	/*
-			TsigList Retrieve TSIG keys.
+		TsigList Retrieve TSIG keys.
 
-			Use this method to retrieve __TSIGKey__ objects.
-		A __TSIGKey__ object represents a TSIG key.
+		Use this method to retrieve __TSIGKey__ objects.
+	A __TSIGKey__ object represents a TSIG key.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiTsigListRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiTsigListRequest
 	*/
 	TsigList(ctx context.Context) ApiTsigListRequest
 
@@ -69,14 +69,14 @@ type TsigAPI interface {
 	TsigListExecute(r ApiTsigListRequest) (*KeysListTSIGKeyResponse, *http.Response, error)
 
 	/*
-			TsigRead Retrieve the TSIG key.
+		TsigRead Retrieve the TSIG key.
 
-			Use this method to retrieve a __TSIGKey__ object.
-		A __TSIGKey__ object represents a TSIG key.
+		Use this method to retrieve a __TSIGKey__ object.
+	A __TSIGKey__ object represents a TSIG key.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiTsigReadRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiTsigReadRequest
 	*/
 	TsigRead(ctx context.Context, id string) ApiTsigReadRequest
 
@@ -85,14 +85,14 @@ type TsigAPI interface {
 	TsigReadExecute(r ApiTsigReadRequest) (*KeysReadTSIGKeyResponse, *http.Response, error)
 
 	/*
-			TsigUpdate Update the TSIG key.
+		TsigUpdate Update the TSIG key.
 
-			Use this method to update a __TSIGKey__ object.
-		A __TSIGKey__ object represents a TSIG key.
+		Use this method to update a __TSIGKey__ object.
+	A __TSIGKey__ object represents a TSIG key.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiTsigUpdateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiTsigUpdateRequest
 	*/
 	TsigUpdate(ctx context.Context, id string) ApiTsigUpdateRequest
 

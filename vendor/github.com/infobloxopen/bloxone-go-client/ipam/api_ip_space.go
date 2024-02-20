@@ -24,18 +24,18 @@ import (
 type IpSpaceAPI interface {
 
 	/*
-			IpSpaceBulkCopy Copy the specified address block and subnets in the IP space.
+		IpSpaceBulkCopy Copy the specified address block and subnets in the IP space.
 
-			Use this method to bulk copy __AddressBlock__ and __Subnet__ objects from one __IPSpace__ object to another __IPSpace__ object.
-		The __IPSpace__ object represents an entire address space.
-		The __AddressBlock__ object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
-		The __Subnet__ object represents a set of addresses from which addresses are assigned to network equipment interfaces.
+		Use this method to bulk copy __AddressBlock__ and __Subnet__ objects from one __IPSpace__ object to another __IPSpace__ object.
+	The __IPSpace__ object represents an entire address space.
+	The __AddressBlock__ object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
+	The __Subnet__ object represents a set of addresses from which addresses are assigned to network equipment interfaces.
 
-		The _copy_objects_ specifies the list of objects (_ipam/address_block_ and _ipam/subnet_ only) in the _ipam/ip_space_ object to copy.
-		The _target_ specifies the _ipam/ip_space_ object to which the objects must be copied.
+	The _copy_objects_ specifies the list of objects (_ipam/address_block_ and _ipam/subnet_ only) in the _ipam/ip_space_ object to copy.
+	The _target_ specifies the _ipam/ip_space_ object to which the objects must be copied.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiIpSpaceBulkCopyRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiIpSpaceBulkCopyRequest
 	*/
 	IpSpaceBulkCopy(ctx context.Context) ApiIpSpaceBulkCopyRequest
 
@@ -44,14 +44,14 @@ type IpSpaceAPI interface {
 	IpSpaceBulkCopyExecute(r ApiIpSpaceBulkCopyRequest) (*IpamsvcBulkCopyIPSpaceResponse, *http.Response, error)
 
 	/*
-			IpSpaceCopy Copy the IP space.
+		IpSpaceCopy Copy the IP space.
 
-			Use this method to copy an __IPSpace__ object.
-		The __IPSpace__ object represents an entire address space.
+		Use this method to copy an __IPSpace__ object.
+	The __IPSpace__ object represents an entire address space.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiIpSpaceCopyRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiIpSpaceCopyRequest
 	*/
 	IpSpaceCopy(ctx context.Context, id string) ApiIpSpaceCopyRequest
 
@@ -60,13 +60,13 @@ type IpSpaceAPI interface {
 	IpSpaceCopyExecute(r ApiIpSpaceCopyRequest) (*IpamsvcCopyIPSpaceResponse, *http.Response, error)
 
 	/*
-			IpSpaceCreate Create the IP space.
+		IpSpaceCreate Create the IP space.
 
-			Use this method to create an __IPSpace__ object.
-		The __IPSpace__ object represents an entire address space.
+		Use this method to create an __IPSpace__ object.
+	The __IPSpace__ object represents an entire address space.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiIpSpaceCreateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiIpSpaceCreateRequest
 	*/
 	IpSpaceCreate(ctx context.Context) ApiIpSpaceCreateRequest
 
@@ -75,14 +75,14 @@ type IpSpaceAPI interface {
 	IpSpaceCreateExecute(r ApiIpSpaceCreateRequest) (*IpamsvcCreateIPSpaceResponse, *http.Response, error)
 
 	/*
-			IpSpaceDelete Move the IP space to the recycle bin.
+		IpSpaceDelete Move the IP space to the recycle bin.
 
-			Use this method to move an __IPSpace__ object to the recycle bin.
-		The __IPSpace__ object represents an entire address space.
+		Use this method to move an __IPSpace__ object to the recycle bin.
+	The __IPSpace__ object represents an entire address space.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiIpSpaceDeleteRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiIpSpaceDeleteRequest
 	*/
 	IpSpaceDelete(ctx context.Context, id string) ApiIpSpaceDeleteRequest
 
@@ -90,13 +90,13 @@ type IpSpaceAPI interface {
 	IpSpaceDeleteExecute(r ApiIpSpaceDeleteRequest) (*http.Response, error)
 
 	/*
-			IpSpaceList Retrieve IP spaces.
+		IpSpaceList Retrieve IP spaces.
 
-			Use this method to retrieve __IPSpace__ objects.
-		The __IPSpace__ object represents an entire address space.
+		Use this method to retrieve __IPSpace__ objects.
+	The __IPSpace__ object represents an entire address space.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiIpSpaceListRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiIpSpaceListRequest
 	*/
 	IpSpaceList(ctx context.Context) ApiIpSpaceListRequest
 
@@ -105,14 +105,14 @@ type IpSpaceAPI interface {
 	IpSpaceListExecute(r ApiIpSpaceListRequest) (*IpamsvcListIPSpaceResponse, *http.Response, error)
 
 	/*
-			IpSpaceRead Retrieve the IP space.
+		IpSpaceRead Retrieve the IP space.
 
-			Use this method to retrieve an __IPSpace__ object.
-		The __IPSpace__ object represents an entire address space.
+		Use this method to retrieve an __IPSpace__ object.
+	The __IPSpace__ object represents an entire address space.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiIpSpaceReadRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiIpSpaceReadRequest
 	*/
 	IpSpaceRead(ctx context.Context, id string) ApiIpSpaceReadRequest
 
@@ -121,14 +121,14 @@ type IpSpaceAPI interface {
 	IpSpaceReadExecute(r ApiIpSpaceReadRequest) (*IpamsvcReadIPSpaceResponse, *http.Response, error)
 
 	/*
-			IpSpaceUpdate Update the IP space.
+		IpSpaceUpdate Update the IP space.
 
-			Use this method to update an __IPSpace__ object.
-		The __IPSpace__ object represents an entire address space.
+		Use this method to update an __IPSpace__ object.
+	The __IPSpace__ object represents an entire address space.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiIpSpaceUpdateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiIpSpaceUpdateRequest
 	*/
 	IpSpaceUpdate(ctx context.Context, id string) ApiIpSpaceUpdateRequest
 

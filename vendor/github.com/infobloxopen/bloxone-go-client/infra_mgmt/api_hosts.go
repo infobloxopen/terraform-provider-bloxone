@@ -24,14 +24,14 @@ import (
 type HostsAPI interface {
 
 	/*
-			HostsAssignTags Assign tags for list of hosts.
+		HostsAssignTags Assign tags for list of hosts.
 
-			Validation:
-		- "ids" is required.
-		- "tags" is required.
+		Validation:
+	- "ids" is required.
+	- "tags" is required.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiHostsAssignTagsRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiHostsAssignTagsRequest
 	*/
 	HostsAssignTags(ctx context.Context) ApiHostsAssignTagsRequest
 
@@ -40,13 +40,13 @@ type HostsAPI interface {
 	HostsAssignTagsExecute(r ApiHostsAssignTagsRequest) (map[string]interface{}, *http.Response, error)
 
 	/*
-			HostsCreate Create a Host resource.
+		HostsCreate Create a Host resource.
 
-			Validation:
-		- "display_name" is required and should be unique.
+		Validation:
+	- "display_name" is required and should be unique.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiHostsCreateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiHostsCreateRequest
 	*/
 	HostsCreate(ctx context.Context) ApiHostsCreateRequest
 
@@ -55,14 +55,14 @@ type HostsAPI interface {
 	HostsCreateExecute(r ApiHostsCreateRequest) (*InfraCreateHostResponse, *http.Response, error)
 
 	/*
-			HostsDelete Delete a Host resource.
+		HostsDelete Delete a Host resource.
 
-			Validation:
-		- "id" is required.
+		Validation:
+	- "id" is required.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiHostsDeleteRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiHostsDeleteRequest
 	*/
 	HostsDelete(ctx context.Context, id string) ApiHostsDeleteRequest
 
@@ -97,14 +97,14 @@ type HostsAPI interface {
 	HostsListExecute(r ApiHostsListRequest) (*InfraListHostResponse, *http.Response, error)
 
 	/*
-			HostsRead Get a Host resource.
+		HostsRead Get a Host resource.
 
-			Validation:
-		- "id" is required.
+		Validation:
+	- "id" is required.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiHostsReadRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiHostsReadRequest
 	*/
 	HostsRead(ctx context.Context, id string) ApiHostsReadRequest
 
@@ -127,14 +127,14 @@ type HostsAPI interface {
 	HostsReplaceExecute(r ApiHostsReplaceRequest) (map[string]interface{}, *http.Response, error)
 
 	/*
-			HostsUnassignTags Unassign tag for the list hosts.
+		HostsUnassignTags Unassign tag for the list hosts.
 
-			Validation:
-		- "ids" is required.
-		- "keys" is required.
+		Validation:
+	- "ids" is required.
+	- "keys" is required.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiHostsUnassignTagsRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiHostsUnassignTagsRequest
 	*/
 	HostsUnassignTags(ctx context.Context) ApiHostsUnassignTagsRequest
 
@@ -143,16 +143,16 @@ type HostsAPI interface {
 	HostsUnassignTagsExecute(r ApiHostsUnassignTagsRequest) (map[string]interface{}, *http.Response, error)
 
 	/*
-			HostsUpdate Update a Host resource.
+		HostsUpdate Update a Host resource.
 
-			Validation:
-		- "id" is required.
-		- "display_name" is required and should be unique.
-		- "pool_id" is required.
+		Validation:
+	- "id" is required.
+	- "display_name" is required and should be unique.
+	- "pool_id" is required.
 
-			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@param id An application specific resource identity of a resource
-			@return ApiHostsUpdateRequest
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param id An application specific resource identity of a resource
+		@return ApiHostsUpdateRequest
 	*/
 	HostsUpdate(ctx context.Context, id string) ApiHostsUpdateRequest
 
