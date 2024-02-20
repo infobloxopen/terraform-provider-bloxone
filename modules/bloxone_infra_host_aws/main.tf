@@ -35,8 +35,8 @@
 resource "random_uuid" "this" {}
 
 locals {
-  join_token = var.join_token == null ? bloxone_infra_join_token.this[0].join_token : var.join_token.join_token
-  ami_id     = var.ami == null ? data.aws_ami.bloxone.id : var.ami.id
+  join_token = var.join_token == null ? bloxone_infra_join_token.this[0].join_token : var.join_token
+  ami_id     = var.ami == null ? data.aws_ami.bloxone.id : var.ami
   tags = merge(
     var.tags,
     {
@@ -54,7 +54,7 @@ data "aws_ami" "bloxone" {
   most_recent = true
   filter {
     name   = "name"
-    values = ["Infoblox BloxOne 3.8.1 BYOL"]
+    values = ["BloxOne381_MarketPlace-96cf85a8-a940-4dd0-80a5-80ab90fb1d1a"]
   }
 }
 
