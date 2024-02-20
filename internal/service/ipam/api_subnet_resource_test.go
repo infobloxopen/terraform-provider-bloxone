@@ -403,6 +403,37 @@ func TestAccSubnetResource_DdnsGeneratedPrefix(t *testing.T) {
 	})
 }
 
+func TestAccSubnetResource_DhcpOptions(t *testing.T) {
+	var resourceName = "bloxone_ipam_subnet.test_dhcp_options"
+	var v1 ipam.IpamsvcSubnet
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccSubnetDhcpOptionsOption("10.0.0.0", 24, "option_group_test", "option", "true"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSubnetExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.0.option_value", "true"),
+					resource.TestCheckResourceAttrPair(resourceName, "dhcp_options.0.option_code", "bloxone_dhcp_option_code.test", "id"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccSubnetDhcpOptionsGroup("10.0.0.0", 24, "option_group_test", "group"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSubnetExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccSubnetResource_DdnsSendUpdates(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_send_updates"
 	var v ipam.IpamsvcSubnet
@@ -1057,6 +1088,77 @@ resource "bloxone_ipam_subnet" "test_ddns_conflict_resolution_mode" {
 }
 `, address, cidr, ddnsUseConflictResolution, ddnsConflictResolutionMode)
 	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+}
+
+func testAccSubnetDhcpOptionsOption(address string, cidr int, name, type_, optValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_subnet" "test_dhcp_options" {
+	address = %q
+    cidr = %d
+    space = bloxone_ipam_ip_space.test.id
+    name = %q
+    dhcp_options = [
+      {
+       type = %q
+       option_code = bloxone_dhcp_option_code.test.id
+       option_value = %q
+      }
+    ]
+}
+`, address, cidr, name, type_, optValue)
+
+	return strings.Join([]string{testAccBaseWithIPSpace(), testAccBaseWithOptionSpaceAndCode(), config}, "")
+}
+
+func testAccSubnetDhcpOptionsGroup(address string, cidr int, name, type_ string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_subnet" "test_dhcp_options" {
+	address = %q
+    cidr = %d
+    space = bloxone_ipam_ip_space.test.id
+    name = %q
+    dhcp_options = [
+      {
+       type = %q
+       group = bloxone_dhcp_option_group.test.id
+      }
+    ]
+}
+`, address, cidr, name, type_)
+
+	return strings.Join([]string{testAccBaseWithIPSpace(), testAccBaseWithOptionSpaceAndCode(), config}, "")
+}
+
+func testAccBaseWithOptionSpaceAndCode() string {
+	config := `
+resource "bloxone_dhcp_option_group" "test" {
+    name = "option_group_test"
+    protocol = "ip4"
+}
+resource "bloxone_dhcp_option_code" "test" {
+    code = "234"
+    name = "test_dhcp_option_code"
+    option_space = bloxone_dhcp_option_space.test.id
+    type = "boolean"
+}
+`
+	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip4"), config}, "")
+}
+
+func testAccBaseWithV6OptionSpaceAndCode() string {
+	config := `
+resource "bloxone_dhcp_option_group" "test" {
+    name = "option_group_test"
+    protocol = "ip6"
+}
+resource "bloxone_dhcp_option_code" "test" {
+    code = "59"
+    name = "test_dhcp_option_code"
+    option_space = bloxone_dhcp_option_space.test.id
+    type = "text"
+}
+`
+	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip6"), config}, "")
 }
 
 func testAccSubnetDdnsDomain(address string, cidr int, ddnsDomain string) string {
