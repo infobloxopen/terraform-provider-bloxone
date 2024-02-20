@@ -2,12 +2,16 @@ package ipam
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"time"
 
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/ipam"
@@ -32,9 +36,11 @@ func (d *DhcpHostDataSource) Metadata(ctx context.Context, req datasource.Metada
 }
 
 type IpamsvcHostModelWithFilter struct {
-	Filters    types.Map  `tfsdk:"filters"`
-	TagFilters types.Map  `tfsdk:"tag_filters"`
-	Results    types.List `tfsdk:"results"`
+	Filters         types.Map      `tfsdk:"filters"`
+	TagFilters      types.Map      `tfsdk:"tag_filters"`
+	Results         types.List     `tfsdk:"results"`
+	RetryIfNotFound types.Bool     `tfsdk:"retry_if_not_found"`
+	Timeouts        timeouts.Value `tfsdk:"timeouts"`
 }
 
 func (m *IpamsvcHostModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamsvcHost, diags *diag.Diagnostics) {
@@ -64,6 +70,13 @@ func (d *DhcpHostDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				},
 				Computed: true,
 			},
+			"retry_if_not_found": schema.BoolAttribute{
+				Optional:            true,
+				MarkdownDescription: "If set to `true`, the data source will retry until a matching host is found, or until the Read Timeout expires.",
+			},
+			"timeouts": timeouts.Attributes(ctx, timeouts.Opts{
+				Read: true,
+			}),
 		},
 	}
 }
@@ -98,26 +111,42 @@ func (d *DhcpHostDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IpamsvcHost, error) {
-		apiRes, _, err := d.client.IPAddressManagementAPI.
-			DhcpHostAPI.
-			DhcpHostList(ctx).
-			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
-			Offset(offset).
-			Limit(limit).
-			Execute()
+	readTimeout, diags := data.Timeouts.Read(ctx, 20*time.Minute)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
+	}
+
+	err := retry.RetryContext(ctx, readTimeout, func() *retry.RetryError {
+		allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IpamsvcHost, error) {
+			apiRes, _, err := d.client.IPAddressManagementAPI.
+				DhcpHostAPI.
+				DhcpHostList(ctx).
+				Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
+				Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+				Offset(offset).
+				Limit(limit).
+				Execute()
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read DhcpHost, got error: %s", err))
+				return nil, err
+			}
+			return apiRes.GetResults(), nil
+		})
 		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read DhcpHost, got error: %s", err))
-			return nil, err
+			return retry.NonRetryableError(err)
 		}
-		return apiRes.GetResults(), nil
+		if len(allResults) == 0 {
+			if data.RetryIfNotFound.ValueBool() {
+				return retry.RetryableError(errors.New("no matching hosts found; will retry"))
+			}
+			return nil
+		}
+		data.FlattenResults(ctx, allResults, &resp.Diagnostics)
+		return nil
 	})
 	if err != nil {
 		return
 	}
-
-	data.FlattenResults(ctx, allResults, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
