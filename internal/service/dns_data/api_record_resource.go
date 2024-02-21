@@ -64,7 +64,7 @@ func (r *RecordResource) Metadata(ctx context.Context, req resource.MetadataRequ
 }
 
 func (r *RecordResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
-	desc := fmt.Sprintf("Manages a DNS %s resource record in an authoratitive zone.", r.impl.recordType())
+	desc := fmt.Sprintf("Manages a DNS %s resource record in an authoritative zone.", r.impl.recordType())
 	if r.impl.recordType() == "Generic" {
 		desc = "Manages a DNS resource record in an authoritative zone. The record type is specified with the `type` attribute.\n\n" +
 			"For the following record types, use the terraform resource for the corresponding resource type, e.g. `bloxone_dns_a_record` - " +

@@ -261,8 +261,10 @@ func (m *InfraServiceModelWithTimeouts) Flatten(ctx context.Context, from *infra
 func InfraServiceResourceSchemaAttributesWithTimeouts(ctx context.Context) map[string]schema.Attribute {
 	attributes := InfraServiceResourceSchemaAttributes()
 	attributes["timeouts"] = timeouts.Attributes(ctx, timeouts.Opts{
-		Create: true,
-		Update: true,
+		Create:            true,
+		CreateDescription: "[Duration](https://pkg.go.dev/time#ParseDuration) to wait before being considered a timeout during create operations. Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Default is 20m.",
+		Update:            true,
+		UpdateDescription: "[Duration](https://pkg.go.dev/time#ParseDuration) to wait before being considered a timeout during update operations. Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Default is 20m.",
 	})
 	return attributes
 }

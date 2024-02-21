@@ -80,8 +80,8 @@ resource "bloxone_infra_service" "example" {
 
 Optional:
 
-- `create` (String) A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
-- `update` (String) A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+- `create` (String) [Duration](https://pkg.go.dev/time#ParseDuration) to wait before being considered a timeout during create operations. Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Default is 20m.
+- `update` (String) [Duration](https://pkg.go.dev/time#ParseDuration) to wait before being considered a timeout during update operations. Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Default is 20m.
 
 
 <a id="nestedatt--configs"></a>

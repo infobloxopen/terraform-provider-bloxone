@@ -484,6 +484,37 @@ func TestAccAddressBlockResource_DhcpConfig(t *testing.T) {
     })
 }
 
+func TestAccAddressBlockResource_DhcpOptions(t *testing.T) {
+	var resourceName = "bloxone_ipam_address_block.test_dhcp_options"
+	var v1 ipam.IpamsvcAddressBlock
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAddressBlockDhcpOptionOption("192.168.0.0", "16", "option", "true"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressBlockExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.0.option_value", "true"),
+					resource.TestCheckResourceAttrPair(resourceName, "dhcp_options.0.option_code", "bloxone_dhcp_option_code.test", "id"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAddressBlockDhcpOptionsGroup("192.168.0.0", "16", "group"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressBlockExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccAddressBlockResource_HeaderOptionFilename(t *testing.T) {
     var resourceName = "bloxone_ipam_address_block.test_header_option_filename"
     var v ipam.IpamsvcAddressBlock
@@ -1033,6 +1064,41 @@ resource "bloxone_ipam_address_block" "test_ddns_domain" {
 }
 `, address, cidr, ddnsDomain)
     return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+}
+
+func testAccAddressBlockDhcpOptionOption(name string, cidr string, type_, optValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test_dhcp_options" {
+    address = %q
+    cidr = %q
+    space = bloxone_ipam_ip_space.test.id
+    dhcp_options = [
+      {
+       type = %q
+       option_code = bloxone_dhcp_option_code.test.id
+       option_value = %q
+      }
+    ]
+}
+`, name, cidr, type_, optValue)
+	return strings.Join([]string{testAccBaseWithIPSpace(), testAccBaseWithOptionSpaceAndCode(), config}, "")
+}
+
+func testAccAddressBlockDhcpOptionsGroup(name string, cidr string, type_ string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test_dhcp_options" {
+    address = %q
+    cidr = %q
+    space = bloxone_ipam_ip_space.test.id
+    dhcp_options = [
+      {
+       type = %q
+       group = bloxone_dhcp_option_group.test.id
+      }
+    ]
+}
+`, name, cidr, type_)
+	return strings.Join([]string{testAccBaseWithIPSpace(), testAccBaseWithOptionSpaceAndCode(), config}, "")
 }
 
 func testAccAddressBlockDdnsGenerateName(address string, cidr string, ddnsGenerateName string) string {
