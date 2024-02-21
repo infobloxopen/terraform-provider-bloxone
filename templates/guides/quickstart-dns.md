@@ -72,7 +72,7 @@ You can now run `terraform plan` to see what resources will be created.
 terraform plan
 ```
 
-Further, you will create an A record and a CNAME record within the subnet.
+Further, you will create an A record and a CNAME record within the zone.
 
 You will use the following resources to create these
 - [bloxone_dns_a_record](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/dns_a_record)
@@ -152,7 +152,7 @@ module "bloxone_infra_host_aws" {
 }
 ````
 
-You will need the ID for the DNS host to assign the subnet to the BloxOne Host. 
+You will need the ID for the DNS host to assign the zone to the BloxOne Host. 
 To get the ID, you can use the [bloxone_dns_hosts](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/data-sources/dns_hosts) data source. 
 Add the following code to your main.tf:
 
