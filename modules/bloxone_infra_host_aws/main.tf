@@ -106,5 +106,4 @@ resource "bloxone_infra_service" "this" {
   desired_state = each.value
   tags          = local.tags
   timeouts      = var.timeouts
-
 }
