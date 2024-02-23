@@ -22,7 +22,6 @@ import (
 )
 
 type AsmAPI interface {
-
 	/*
 			AsmCreate Update subnet and ranges for Automated Scope Management.
 
@@ -38,7 +37,6 @@ type AsmAPI interface {
 	// AsmCreateExecute executes the request
 	//  @return IpamsvcCreateASMResponse
 	AsmCreateExecute(r ApiAsmCreateRequest) (*IpamsvcCreateASMResponse, *http.Response, error)
-
 	/*
 			AsmList Retrieve suggested updates for Automated Scope Management.
 
@@ -53,7 +51,6 @@ type AsmAPI interface {
 	// AsmListExecute executes the request
 	//  @return IpamsvcListASMResponse
 	AsmListExecute(r ApiAsmListRequest) (*IpamsvcListASMResponse, *http.Response, error)
-
 	/*
 			AsmRead Retrieve the suggested update for Automated Scope Management.
 
@@ -191,7 +188,6 @@ func (a *AsmAPIService) AsmCreateExecute(r ApiAsmCreateRequest) (*IpamsvcCreateA
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -319,7 +315,6 @@ func (a *AsmAPIService) AsmListExecute(r ApiAsmListRequest) (*IpamsvcListASMResp
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -442,6 +437,5 @@ func (a *AsmAPIService) AsmReadExecute(r ApiAsmReadRequest) (*IpamsvcReadASMResp
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

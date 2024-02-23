@@ -32,7 +32,7 @@ var ConfigForwarderResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `Server IP address.`,
 	},
 	"fqdn": schema.StringAttribute{
-		Required:            true,
+		Optional:            true,
 		MarkdownDescription: `Server FQDN.`,
 	},
 	"protocol_fqdn": schema.StringAttribute{
@@ -59,7 +59,7 @@ func (m *ConfigForwarderModel) Expand(ctx context.Context, diags *diag.Diagnosti
 	}
 	to := &dns_config.ConfigForwarder{
 		Address: flex.ExpandString(m.Address),
-		Fqdn:    flex.ExpandString(m.Fqdn),
+		Fqdn:    flex.ExpandStringPointer(m.Fqdn),
 	}
 	return to
 }
@@ -83,6 +83,6 @@ func (m *ConfigForwarderModel) Flatten(ctx context.Context, from *dns_config.Con
 		*m = ConfigForwarderModel{}
 	}
 	m.Address = flex.FlattenString(from.Address)
-	m.Fqdn = flex.FlattenString(from.Fqdn)
+	m.Fqdn = flex.FlattenStringPointer(from.Fqdn)
 	m.ProtocolFqdn = flex.FlattenStringPointer(from.ProtocolFqdn)
 }

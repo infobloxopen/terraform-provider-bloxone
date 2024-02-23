@@ -22,7 +22,6 @@ import (
 )
 
 type OptionGroupAPI interface {
-
 	/*
 			OptionGroupCreate Create the DHCP option group.
 
@@ -37,7 +36,6 @@ type OptionGroupAPI interface {
 	// OptionGroupCreateExecute executes the request
 	//  @return IpamsvcCreateOptionGroupResponse
 	OptionGroupCreateExecute(r ApiOptionGroupCreateRequest) (*IpamsvcCreateOptionGroupResponse, *http.Response, error)
-
 	/*
 			OptionGroupDelete Move the DHCP option group to the recycle bin.
 
@@ -52,7 +50,6 @@ type OptionGroupAPI interface {
 
 	// OptionGroupDeleteExecute executes the request
 	OptionGroupDeleteExecute(r ApiOptionGroupDeleteRequest) (*http.Response, error)
-
 	/*
 			OptionGroupList Retrieve DHCP option groups.
 
@@ -67,7 +64,6 @@ type OptionGroupAPI interface {
 	// OptionGroupListExecute executes the request
 	//  @return IpamsvcListOptionGroupResponse
 	OptionGroupListExecute(r ApiOptionGroupListRequest) (*IpamsvcListOptionGroupResponse, *http.Response, error)
-
 	/*
 			OptionGroupRead Retrieve the DHCP option group.
 
@@ -83,7 +79,6 @@ type OptionGroupAPI interface {
 	// OptionGroupReadExecute executes the request
 	//  @return IpamsvcReadOptionGroupResponse
 	OptionGroupReadExecute(r ApiOptionGroupReadRequest) (*IpamsvcReadOptionGroupResponse, *http.Response, error)
-
 	/*
 			OptionGroupUpdate Update the DHCP option group.
 
@@ -177,6 +172,14 @@ func (a *OptionGroupAPIService) OptionGroupCreateExecute(r ApiOptionGroupCreateR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -220,7 +223,6 @@ func (a *OptionGroupAPIService) OptionGroupCreateExecute(r ApiOptionGroupCreateR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -513,7 +515,6 @@ func (a *OptionGroupAPIService) OptionGroupListExecute(r ApiOptionGroupListReque
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -636,7 +637,6 @@ func (a *OptionGroupAPIService) OptionGroupReadExecute(r ApiOptionGroupReadReque
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -717,6 +717,14 @@ func (a *OptionGroupAPIService) OptionGroupUpdateExecute(r ApiOptionGroupUpdateR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -760,6 +768,5 @@ func (a *OptionGroupAPIService) OptionGroupUpdateExecute(r ApiOptionGroupUpdateR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
