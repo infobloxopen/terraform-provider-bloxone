@@ -26,19 +26,22 @@ var ConfigForwarderAttrTypes = map[string]attr.Type{
 	"protocol_fqdn": types.StringType,
 }
 
-var ConfigForwarderResourceSchemaAttributes = map[string]schema.Attribute{
-	"address": schema.StringAttribute{
-		Required:            true,
-		MarkdownDescription: `Server IP address.`,
-	},
-	"fqdn": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: `Server FQDN.`,
-	},
-	"protocol_fqdn": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: `Server FQDN in punycode.`,
-	},
+func ConfigForwarderResourceSchemaAttributes(fqdnOptional bool) map[string]schema.Attribute {
+	return map[string]schema.Attribute{
+		"address": schema.StringAttribute{
+			Required:            true,
+			MarkdownDescription: `Server IP address.`,
+		},
+		"fqdn": schema.StringAttribute{
+			Required:            !fqdnOptional,
+			Optional:            fqdnOptional,
+			MarkdownDescription: `Server FQDN.`,
+		},
+		"protocol_fqdn": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: `Server FQDN in punycode.`,
+		},
+	}
 }
 
 func ExpandConfigForwarder(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigForwarder {

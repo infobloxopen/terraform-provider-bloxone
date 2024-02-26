@@ -164,7 +164,7 @@ func TestAccForwardZoneResource_Disabled(t *testing.T) {
 }
 
 func TestAccForwardZoneResource_ExternalForwarders_Address(t *testing.T) {
-	var resourceName = "bloxone_dns_forward_zone.test_external_forwarders"
+	var resourceName = "bloxone_dns_forward_zone.test_external_forwarders_address"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
@@ -194,7 +194,7 @@ func TestAccForwardZoneResource_ExternalForwarders_Address(t *testing.T) {
 }
 
 func TestAccForwardZoneResource_ExternalForwarders_Fqdn(t *testing.T) {
-	var resourceName = "bloxone_dns_forward_zone.test_external_forwarders"
+	var resourceName = "bloxone_dns_forward_zone.test_external_forwarders_fqdn"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
@@ -495,7 +495,7 @@ resource "bloxone_dns_forward_zone" "test_disabled" {
 
 func testAccForwardZoneExternalForwardersAddress(fqdn, address string) string {
 	return fmt.Sprintf(`
-resource "bloxone_dns_forward_zone" "test_external_forwarders" {
+resource "bloxone_dns_forward_zone" "test_external_forwarders_address" {
     fqdn = %q
     external_forwarders = [
 		{
@@ -508,7 +508,7 @@ resource "bloxone_dns_forward_zone" "test_external_forwarders" {
 
 func testAccForwardZoneExternalForwardersFqdn(fqdn, address, externalForwardersFQDN string) string {
 	return fmt.Sprintf(`
-resource "bloxone_dns_forward_zone" "test_external_forwarders" {
+resource "bloxone_dns_forward_zone" "test_external_forwarders_fqdn" {
     fqdn = %q
     external_forwarders = [
 		{
