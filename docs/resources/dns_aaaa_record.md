@@ -3,12 +3,12 @@
 page_title: "bloxone_dns_aaaa_record Resource - terraform-provider-bloxone"
 subcategory: "DNS"
 description: |-
-  Manages a DNS AAAA resource record in an authoratitive zone.
+  Manages a DNS AAAA resource record in an authoritative zone.
 ---
 
 # bloxone_dns_aaaa_record (Resource)
 
-Manages a DNS AAAA resource record in an authoratitive zone.
+Manages a DNS AAAA resource record in an authoritative zone.
 
 ## Example Usage
 
