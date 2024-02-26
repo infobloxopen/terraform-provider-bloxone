@@ -8,8 +8,8 @@ output "host" {
   description = "The `bloxone_infra_host` object for the instance"
 }
 
-output "azurerm_virtual_machine" {
-  value       = azurerm_virtual_machine.this
+output "azurerm_linux_virtual_machine" {
+  value       = azurerm_linux_virtual_machine.this
   description = "The Azure virtual machine object for the instance"
 }
 

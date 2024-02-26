@@ -17,7 +17,7 @@ The service will be named `<service_type>_<host_display_name>`.
 
 ```hcl
 module "bloxone_infra_host_azure" {
-  source = "github.com/infobloxopen/terraform-provider-bloxone/modules/bloxone_infra_host_azure"
+  source = "github.com/infobloxopen/terraform-provider-bloxone//modules/bloxone_infra_host_azure"
 
   vm_name                   = "bloxone-vm"
   location                  = "eastus"
@@ -25,6 +25,9 @@ module "bloxone_infra_host_azure" {
   subnet_id                 = "subnet-id"
   vnet_id                   = "vnet-id"
   vm_network_security_group = "nsg-id"
+
+  source_image_reference_offer = "infoblox-bloxone-34"
+  source_image_reference_version = "3.8.1"
 
   azure_instance_tags       = {
     environment = "dev"
@@ -59,8 +62,8 @@ module "bloxone_infra_host_azure" {
 
 | Name | Type |
 |------|------|
+| [azurerm_linux_virtual_machine.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine) | resource |
 | [azurerm_network_interface.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface) | resource |
-| [azurerm_virtual_machine.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine) | resource |
 | [bloxone_infra_join_token.this](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/infra_join_token) | resource |
 | [bloxone_infra_service.this](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/infra_service) | resource |
 | [random_uuid.this](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/uuid) | resource |
@@ -73,15 +76,22 @@ module "bloxone_infra_host_azure" {
 | <a name="input_azure_instance_tags"></a> [azure\_instance\_tags](#input\_azure\_instance\_tags) | The tags to use for the Azure virtual machine. | `map(string)` | `{}` | no |
 | <a name="input_join_token"></a> [join\_token](#input\_join\_token) | The join token to use for the BloxOne Host. If not provided, a join token will be created. | <pre>object({<br>    join_token = string<br>  })</pre> | `null` | no |
 | <a name="input_location"></a> [location](#input\_location) | The location where the resources will be created | `string` | `"eastus"` | no |
-| <a name="input_managed_disk_type"></a> [managed\_disk\_type](#input\_managed\_disk\_type) | Type of managed disk for the VMs that will be part of this compute group. Allowable values are 'Standard\_LRS' or 'Premium\_LRS'. | `string` | `"Standard_LRS"` | no |
+| <a name="input_os_disk_caching"></a> [os\_disk\_caching](#input\_os\_disk\_caching) | The caching type to use for the OS disk. | `string` | `"ReadWrite"` | no |
+| <a name="input_os_disk_storage_account_type"></a> [os\_disk\_storage\_account\_type](#input\_os\_disk\_storage\_account\_type) | The storage account type to use for the OS disk. | `string` | `"Standard_LRS"` | no |
+| <a name="input_plan_name"></a> [plan\_name](#input\_plan\_name) | The name of the plan to use for the BloxOne Host. | `string` | `"infoblox-bloxone"` | no |
+| <a name="input_plan_product"></a> [plan\_product](#input\_plan\_product) | The product to use for the BloxOne Host. | `string` | `"infoblox-bloxone-34"` | no |
+| <a name="input_plan_publisher"></a> [plan\_publisher](#input\_plan\_publisher) | The publisher to use for the BloxOne Host. | `string` | `"infoblox"` | no |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The name of the resource group in which the resources will be created | `string` | n/a | yes |
 | <a name="input_services"></a> [services](#input\_services) | The services to provision on the BloxOne Host. The services must be a map of valid service type with values of "start" or "stop". Valid service types are "dhcp" and "dns". | `map(string)` | n/a | yes |
+| <a name="input_source_image_reference_offer"></a> [source\_image\_reference\_offer](#input\_source\_image\_reference\_offer) | The offer of the image that you want to deploy | `string` | `"infoblox-bloxone-34"` | no |
+| <a name="input_source_image_reference_publisher"></a> [source\_image\_reference\_publisher](#input\_source\_image\_reference\_publisher) | The publisher of the image that you want to deploy | `string` | `"infoblox"` | no |
+| <a name="input_source_image_reference_sku"></a> [source\_image\_reference\_sku](#input\_source\_image\_reference\_sku) | The sku of the image that you want to deploy | `string` | `"infoblox-bloxone"` | no |
+| <a name="input_source_image_reference_version"></a> [source\_image\_reference\_version](#input\_source\_image\_reference\_version) | The version of the image that you want to deploy. | `string` | `"latest"` | no |
+| <a name="input_ssh_public_key_path"></a> [ssh\_public\_key\_path](#input\_ssh\_public\_key\_path) | The path to the SSH public key to use for the BloxOne Host. | `string` | `"~/.ssh/id_rsa.pub"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | The tags to use for the BloxOne Host. | `map(string)` | `{}` | no |
 | <a name="input_timeouts"></a> [timeouts](#input\_timeouts) | The timeouts to use for the BloxOne Host. The timeout value is a string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). If not provided, the default timeouts will be used. | <pre>object({<br>    create = string<br>    update = string<br>    read   = string<br>  })</pre> | `null` | no |
 | <a name="input_vm_name"></a> [vm\_name](#input\_vm\_name) | The name of the virtual machine | `string` | n/a | yes |
 | <a name="input_vm_network_security_group_name"></a> [vm\_network\_security\_group\_name](#input\_vm\_network\_security\_group\_name) | The name of the network security group that will be created and associated to the BloxOne Host | `string` | n/a | yes |
-| <a name="input_vm_os_offer"></a> [vm\_os\_offer](#input\_vm\_os\_offer) | The name of the offer of the image that you want to deploy | `string` | `"infoblox-bloxone-34"` | no |
-| <a name="input_vm_os_version"></a> [vm\_os\_version](#input\_vm\_os\_version) | The version of the image that you want to deploy. | `string` | `"latest"` | no |
 | <a name="input_vm_size"></a> [vm\_size](#input\_vm\_size) | Size of the Virtual Machine based on Azure sizing | `string` | `"Standard_F4s_v2"` | no |
 | <a name="input_vnet_subnet_id"></a> [vnet\_subnet\_id](#input\_vnet\_subnet\_id) | The subnet id of the virtual network on which the BloxOne Host will be connected | `string` | n/a | yes |
 
@@ -89,8 +99,8 @@ module "bloxone_infra_host_azure" {
 
 | Name | Description |
 |------|-------------|
+| <a name="output_azurerm_linux_virtual_machine"></a> [azurerm\_linux\_virtual\_machine](#output\_azurerm\_linux\_virtual\_machine) | The Azure virtual machine object for the instance |
 | <a name="output_azurerm_network_interface"></a> [azurerm\_network\_interface](#output\_azurerm\_network\_interface) | The Azure network interface object for the instance |
-| <a name="output_azurerm_virtual_machine"></a> [azurerm\_virtual\_machine](#output\_azurerm\_virtual\_machine) | The Azure virtual machine object for the instance |
 | <a name="output_host"></a> [host](#output\_host) | The `bloxone_infra_host` object for the instance |
 | <a name="output_services"></a> [services](#output\_services) | The `bloxone_infra_service` objects for the instance. May be empty if no services were specified. |
 <!-- END_TF_DOCS -->

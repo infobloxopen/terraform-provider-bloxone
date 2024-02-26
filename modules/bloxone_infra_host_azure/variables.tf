@@ -33,26 +33,8 @@ variable "vm_network_security_group_name" {
   type        = string
 }
 
-variable "managed_disk_type" {
-  default     = "Standard_LRS"
-  description = "Type of managed disk for the VMs that will be part of this compute group. Allowable values are 'Standard_LRS' or 'Premium_LRS'."
-  type        = string
-}
-
 variable "vnet_subnet_id" {
   description = "The subnet id of the virtual network on which the BloxOne Host will be connected"
-  type        = string
-}
-
-variable "vm_os_offer" {
-  description = "The name of the offer of the image that you want to deploy"
-  default     = "infoblox-bloxone-34"
-  type        = string
-}
-
-variable "vm_os_version" {
-  description = "The version of the image that you want to deploy."
-  default     = "latest"
   type        = string
 }
 
@@ -66,6 +48,66 @@ variable "azure_instance_tags" {
   description = "The tags to use for the Azure virtual machine."
   type        = map(string)
   default     = {}
+}
+
+variable "os_disk_caching" {
+  description = "The caching type to use for the OS disk."
+  type        = string
+  default     = "ReadWrite"
+}
+
+variable "os_disk_storage_account_type" {
+  description = "The storage account type to use for the OS disk."
+  type        = string
+  default     = "Standard_LRS"
+}
+
+variable "source_image_reference_publisher" {
+  description = "The publisher of the image that you want to deploy"
+  default     = "infoblox"
+  type        = string
+}
+
+variable "source_image_reference_offer" {
+  description = "The offer of the image that you want to deploy"
+  default     = "infoblox-bloxone-34"
+  type        = string
+}
+
+variable "source_image_reference_sku" {
+  description = "The sku of the image that you want to deploy"
+  default     = "infoblox-bloxone"
+  type        = string
+}
+
+variable "source_image_reference_version" {
+  description = "The version of the image that you want to deploy."
+  default     = "latest"
+  type        = string
+}
+
+variable "plan_name" {
+  description = "The name of the plan to use for the BloxOne Host."
+  type        = string
+  default     = "infoblox-bloxone"
+}
+
+variable "plan_product" {
+  description = "The product to use for the BloxOne Host."
+  type        = string
+  default     = "infoblox-bloxone-34"
+}
+
+variable plan_publisher {
+  description = "The publisher to use for the BloxOne Host."
+  type        = string
+  default     = "infoblox"
+}
+
+variable "ssh_public_key_path" {
+  description = "The path to the SSH public key to use for the BloxOne Host."
+  type        = string
+  default =  "~/.ssh/id_rsa.pub"
 }
 
 variable "services" {

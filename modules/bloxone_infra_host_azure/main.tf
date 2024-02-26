@@ -17,7 +17,7 @@
  *
  * ```hcl
  * module "bloxone_infra_host_azure" {
- *   source = "github.com/infobloxopen/terraform-provider-bloxone/modules/bloxone_infra_host_azure"
+ *   source = "github.com/infobloxopen/terraform-provider-bloxone//modules/bloxone_infra_host_azure"
  *
  *   vm_name                   = "bloxone-vm"
  *   location                  = "eastus"
@@ -25,6 +25,9 @@
  *   subnet_id                 = "subnet-id"
  *   vnet_id                   = "vnet-id"
  *   vm_network_security_group = "nsg-id"
+ * 
+ *   source_image_reference_offer = "infoblox-bloxone-34"
+ *   source_image_reference_version = "3.8.1"
  *
  *   azure_instance_tags       = {
  *     environment = "dev"
@@ -73,50 +76,43 @@ resource "azurerm_network_interface" "this" {
   }
 }
 
-resource "azurerm_virtual_machine" "this" {
-  name                  = var.vm_name
-  location              = var.location
-  resource_group_name   = var.resource_group_name
-  network_interface_ids = [azurerm_network_interface.this.id]
-  vm_size               = var.vm_size
+resource "azurerm_linux_virtual_machine" "this" {
+  name                            = var.vm_name
+  location                        = var.location
+  resource_group_name             = var.resource_group_name
+  network_interface_ids           = [azurerm_network_interface.this.id]
+  admin_username                  = "dummyuser"
+  size                            = var.vm_size
+  tags                            = var.azure_instance_tags
 
-  storage_image_reference {
-    publisher = "infoblox"
-    offer     = var.vm_os_offer
-    sku       = "infoblox-bloxone"
-    version   = var.vm_os_version
+  admin_ssh_key {
+    username   = "dummyuser"
+    public_key = file(var.ssh_public_key_path)
+  }
+  
+  os_disk {
+    name                 = "${var.vm_name}-os-disk"
+    caching              = "ReadWrite"
+    storage_account_type = var.os_disk_storage_account_type
   }
 
-  delete_os_disk_on_termination    = true
-  delete_data_disks_on_termination = true
-  tags                             = var.azure_instance_tags
-
-  os_profile_linux_config {
-    disable_password_authentication = false
-  }
-
-  os_profile {
-    computer_name  = var.vm_name
-    admin_username = "dummy"
-    admin_password = "Dummy@123"
-    custom_data    = templatefile("${path.module}/userdata.tftpl", {
-      join_token = local.join_token
-      tags : local.tags
-    })
-  }
-
-  storage_os_disk {
-    name              = "${var.vm_name}-osdisk"
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
+  source_image_reference {
+    publisher = var.source_image_reference_publisher
+    offer     = var.source_image_reference_offer
+    sku       = var.source_image_reference_sku
+    version   = var.source_image_reference_version
   }
 
   plan {
-    name      = "infoblox-bloxone"
-    product   = "infoblox-bloxone-34"
-    publisher = "infoblox"
+    name      = var.plan_name
+    product   = var.plan_product
+    publisher = var.plan_publisher
   }
+
+  custom_data    = base64encode(templatefile("${path.module}/userdata.tftpl", {
+    join_token   = local.join_token
+    tags         = local.tags
+  }))
 
   depends_on = [azurerm_network_interface.this]
 }
@@ -136,7 +132,7 @@ data "bloxone_infra_hosts" "this" {
     }
   }
 
-  depends_on = [azurerm_virtual_machine.this]
+  depends_on = [azurerm_linux_virtual_machine.this]
 }
 
 resource "bloxone_infra_service" "this" {
