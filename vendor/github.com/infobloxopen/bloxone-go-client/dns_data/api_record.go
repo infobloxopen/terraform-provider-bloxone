@@ -22,7 +22,6 @@ import (
 )
 
 type RecordAPI interface {
-
 	/*
 			RecordCreate Create the DNS resource record.
 
@@ -37,7 +36,6 @@ type RecordAPI interface {
 	// RecordCreateExecute executes the request
 	//  @return DataCreateRecordResponse
 	RecordCreateExecute(r ApiRecordCreateRequest) (*DataCreateRecordResponse, *http.Response, error)
-
 	/*
 			RecordDelete Move the DNS resource record to recycle bin.
 
@@ -52,7 +50,6 @@ type RecordAPI interface {
 
 	// RecordDeleteExecute executes the request
 	RecordDeleteExecute(r ApiRecordDeleteRequest) (*http.Response, error)
-
 	/*
 			RecordList Retrieve DNS resource records.
 
@@ -67,7 +64,6 @@ type RecordAPI interface {
 	// RecordListExecute executes the request
 	//  @return DataListRecordResponse
 	RecordListExecute(r ApiRecordListRequest) (*DataListRecordResponse, *http.Response, error)
-
 	/*
 			RecordRead Retrieve the DNS resource record.
 
@@ -83,7 +79,6 @@ type RecordAPI interface {
 	// RecordReadExecute executes the request
 	//  @return DataReadRecordResponse
 	RecordReadExecute(r ApiRecordReadRequest) (*DataReadRecordResponse, *http.Response, error)
-
 	/*
 			RecordSOASerialIncrement Increment serial number for the SOA record.
 
@@ -99,7 +94,6 @@ type RecordAPI interface {
 	// RecordSOASerialIncrementExecute executes the request
 	//  @return DataSOASerialIncrementResponse
 	RecordSOASerialIncrementExecute(r ApiRecordSOASerialIncrementRequest) (*DataSOASerialIncrementResponse, *http.Response, error)
-
 	/*
 			RecordUpdate Update the DNS resource record.
 
@@ -203,6 +197,14 @@ func (a *RecordAPIService) RecordCreateExecute(r ApiRecordCreateRequest) (*DataC
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -246,7 +248,6 @@ func (a *RecordAPIService) RecordCreateExecute(r ApiRecordCreateRequest) (*DataC
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -549,7 +550,6 @@ func (a *RecordAPIService) RecordListExecute(r ApiRecordListRequest) (*DataListR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -682,7 +682,6 @@ func (a *RecordAPIService) RecordReadExecute(r ApiRecordReadRequest) (*DataReadR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -806,7 +805,6 @@ func (a *RecordAPIService) RecordSOASerialIncrementExecute(r ApiRecordSOASerialI
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -897,6 +895,14 @@ func (a *RecordAPIService) RecordUpdateExecute(r ApiRecordUpdateRequest) (*DataU
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -940,6 +946,5 @@ func (a *RecordAPIService) RecordUpdateExecute(r ApiRecordUpdateRequest) (*DataU
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

@@ -22,7 +22,6 @@ import (
 )
 
 type ViewAPI interface {
-
 	/*
 			ViewBulkCopy Copies the specified __AuthZone__ and __ForwardZone__ objects in the __View__.
 
@@ -38,7 +37,6 @@ type ViewAPI interface {
 	// ViewBulkCopyExecute executes the request
 	//  @return ConfigBulkCopyResponse
 	ViewBulkCopyExecute(r ApiViewBulkCopyRequest) (*ConfigBulkCopyResponse, *http.Response, error)
-
 	/*
 			ViewCreate Create the View object.
 
@@ -53,7 +51,6 @@ type ViewAPI interface {
 	// ViewCreateExecute executes the request
 	//  @return ConfigCreateViewResponse
 	ViewCreateExecute(r ApiViewCreateRequest) (*ConfigCreateViewResponse, *http.Response, error)
-
 	/*
 			ViewDelete Move the View object to Recyclebin.
 
@@ -68,7 +65,6 @@ type ViewAPI interface {
 
 	// ViewDeleteExecute executes the request
 	ViewDeleteExecute(r ApiViewDeleteRequest) (*http.Response, error)
-
 	/*
 			ViewList List View objects.
 
@@ -83,7 +79,6 @@ type ViewAPI interface {
 	// ViewListExecute executes the request
 	//  @return ConfigListViewResponse
 	ViewListExecute(r ApiViewListRequest) (*ConfigListViewResponse, *http.Response, error)
-
 	/*
 			ViewRead Read the View object.
 
@@ -99,7 +94,6 @@ type ViewAPI interface {
 	// ViewReadExecute executes the request
 	//  @return ConfigReadViewResponse
 	ViewReadExecute(r ApiViewReadRequest) (*ConfigReadViewResponse, *http.Response, error)
-
 	/*
 			ViewUpdate Update the View object.
 
@@ -237,7 +231,6 @@ func (a *ViewAPIService) ViewBulkCopyExecute(r ApiViewBulkCopyRequest) (*ConfigB
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -324,6 +317,14 @@ func (a *ViewAPIService) ViewCreateExecute(r ApiViewCreateRequest) (*ConfigCreat
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -367,7 +368,6 @@ func (a *ViewAPIService) ViewCreateExecute(r ApiViewCreateRequest) (*ConfigCreat
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -670,7 +670,6 @@ func (a *ViewAPIService) ViewListExecute(r ApiViewListRequest) (*ConfigListViewR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -803,7 +802,6 @@ func (a *ViewAPIService) ViewReadExecute(r ApiViewReadRequest) (*ConfigReadViewR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -894,6 +892,14 @@ func (a *ViewAPIService) ViewUpdateExecute(r ApiViewUpdateRequest) (*ConfigUpdat
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -937,6 +943,5 @@ func (a *ViewAPIService) ViewUpdateExecute(r ApiViewUpdateRequest) (*ConfigUpdat
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

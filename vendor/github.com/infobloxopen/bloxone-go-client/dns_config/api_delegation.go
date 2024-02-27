@@ -22,7 +22,6 @@ import (
 )
 
 type DelegationAPI interface {
-
 	/*
 			DelegationCreate Create the Delegation object.
 
@@ -37,7 +36,6 @@ type DelegationAPI interface {
 	// DelegationCreateExecute executes the request
 	//  @return ConfigCreateDelegationResponse
 	DelegationCreateExecute(r ApiDelegationCreateRequest) (*ConfigCreateDelegationResponse, *http.Response, error)
-
 	/*
 			DelegationDelete Moves the Delegation object to Recyclebin.
 
@@ -52,7 +50,6 @@ type DelegationAPI interface {
 
 	// DelegationDeleteExecute executes the request
 	DelegationDeleteExecute(r ApiDelegationDeleteRequest) (*http.Response, error)
-
 	/*
 			DelegationList List Delegation objects.
 
@@ -67,7 +64,6 @@ type DelegationAPI interface {
 	// DelegationListExecute executes the request
 	//  @return ConfigListDelegationResponse
 	DelegationListExecute(r ApiDelegationListRequest) (*ConfigListDelegationResponse, *http.Response, error)
-
 	/*
 			DelegationRead Read the Delegation object.
 
@@ -83,7 +79,6 @@ type DelegationAPI interface {
 	// DelegationReadExecute executes the request
 	//  @return ConfigReadDelegationResponse
 	DelegationReadExecute(r ApiDelegationReadRequest) (*ConfigReadDelegationResponse, *http.Response, error)
-
 	/*
 			DelegationUpdate Update the Delegation object.
 
@@ -177,6 +172,14 @@ func (a *DelegationAPIService) DelegationCreateExecute(r ApiDelegationCreateRequ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -220,7 +223,6 @@ func (a *DelegationAPIService) DelegationCreateExecute(r ApiDelegationCreateRequ
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -513,7 +515,6 @@ func (a *DelegationAPIService) DelegationListExecute(r ApiDelegationListRequest)
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -636,7 +637,6 @@ func (a *DelegationAPIService) DelegationReadExecute(r ApiDelegationReadRequest)
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -717,6 +717,14 @@ func (a *DelegationAPIService) DelegationUpdateExecute(r ApiDelegationUpdateRequ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -760,6 +768,5 @@ func (a *DelegationAPIService) DelegationUpdateExecute(r ApiDelegationUpdateRequ
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

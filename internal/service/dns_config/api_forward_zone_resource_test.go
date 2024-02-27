@@ -163,8 +163,8 @@ func TestAccForwardZoneResource_Disabled(t *testing.T) {
 	})
 }
 
-func TestAccForwardZoneResource_ExternalForwarders(t *testing.T) {
-	var resourceName = "bloxone_dns_forward_zone.test_external_forwarders"
+func TestAccForwardZoneResource_ExternalForwarders_Address(t *testing.T) {
+	var resourceName = "bloxone_dns_forward_zone.test_external_forwarders_address"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
@@ -174,7 +174,37 @@ func TestAccForwardZoneResource_ExternalForwarders(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardZoneExternalForwarders(fqdn, "192.168.10.10", "tf-infoblox-test.com."),
+				Config: testAccForwardZoneExternalForwardersAddress(fqdn, "192.168.10.10"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "external_forwarders.0.address", "192.168.10.10"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccForwardZoneExternalForwardersAddress(fqdn, "192.168.11.11"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "external_forwarders.0.address", "192.168.11.11"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccForwardZoneResource_ExternalForwarders_Fqdn(t *testing.T) {
+	var resourceName = "bloxone_dns_forward_zone.test_external_forwarders_fqdn"
+	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
+	var v dns_config.ConfigForwardZone
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccForwardZoneExternalForwardersFqdn(fqdn, "192.168.10.10", "tf-infoblox-test.com."),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "external_forwarders.0.address", "192.168.10.10"),
@@ -183,7 +213,7 @@ func TestAccForwardZoneResource_ExternalForwarders(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccForwardZoneExternalForwarders(fqdn, "192.168.11.11", "tf-infoblox.com."),
+				Config: testAccForwardZoneExternalForwardersFqdn(fqdn, "192.168.11.11", "tf-infoblox.com."),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "external_forwarders.0.address", "192.168.11.11"),
@@ -463,16 +493,29 @@ resource "bloxone_dns_forward_zone" "test_disabled" {
 `, fqdn, disabled)
 }
 
-func testAccForwardZoneExternalForwarders(fqdn, address, externalForwardersFQDN string) string {
+func testAccForwardZoneExternalForwardersAddress(fqdn, address string) string {
 	return fmt.Sprintf(`
-resource "bloxone_dns_forward_zone" "test_external_forwarders" {
+resource "bloxone_dns_forward_zone" "test_external_forwarders_address" {
+    fqdn = %q
+    external_forwarders = [
+		{
+			address = %q
+		}
+	]
+}
+`, fqdn, address)
+}
+
+func testAccForwardZoneExternalForwardersFqdn(fqdn, address, externalForwardersFQDN string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_forward_zone" "test_external_forwarders_fqdn" {
     fqdn = %q
     external_forwarders = [
 		{
 			address = %q
 			fqdn = %q
 		}
-]
+	]
 }
 `, fqdn, address, externalForwardersFQDN)
 }
