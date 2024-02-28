@@ -491,7 +491,7 @@ func (a *HostAPIService) HostUpdateExecute(r ApiHostUpdateRequest) (*ConfigUpdat
 	if r.body.Tags == nil {
 		r.body.Tags = make(map[string]interface{})
 	}
-	for k, v := range a.Client.Cfg.GetDefaultTags() {
+	for k, v := range a.Client.Cfg.DefaultTags {
 		if _, ok := r.body.Tags[k]; !ok {
 			r.body.Tags[k] = v
 		}

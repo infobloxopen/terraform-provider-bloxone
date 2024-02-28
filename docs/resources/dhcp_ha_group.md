@@ -18,7 +18,7 @@ The HA Group object represents on-prem hosts that can serve the same leases for 
 ```terraform
 data "bloxone_dhcp_hosts" "example_host_1" {
   filters = {
-    name = "Your Host name"
+    name = "Your host name"
   }
 }
 

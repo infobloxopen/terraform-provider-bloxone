@@ -100,10 +100,6 @@ func (c *Configuration) AddDefaultHeader(key string, value string) {
 	c.DefaultHeader[key] = value
 }
 
-func (c *Configuration) GetDefaultTags() map[string]string {
-	return c.DefaultTags
-}
-
 // URL formats template on a index using given variables
 func (sc ServerConfigurations) URL(index int, variables map[string]string) (string, error) {
 	if index < 0 || len(sc) <= index {

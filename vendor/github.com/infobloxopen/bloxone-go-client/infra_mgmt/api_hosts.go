@@ -232,7 +232,7 @@ func (a *HostsAPIService) HostsAssignTagsExecute(r ApiHostsAssignTagsRequest) (m
 	if r.body.Tags == nil {
 		r.body.Tags = make(map[string]interface{})
 	}
-	for k, v := range a.Client.Cfg.GetDefaultTags() {
+	for k, v := range a.Client.Cfg.DefaultTags {
 		if _, ok := r.body.Tags[k]; !ok {
 			r.body.Tags[k] = v
 		}
@@ -359,7 +359,7 @@ func (a *HostsAPIService) HostsCreateExecute(r ApiHostsCreateRequest) (*InfraCre
 	if r.body.Tags == nil {
 		r.body.Tags = make(map[string]interface{})
 	}
-	for k, v := range a.Client.Cfg.GetDefaultTags() {
+	for k, v := range a.Client.Cfg.DefaultTags {
 		if _, ok := r.body.Tags[k]; !ok {
 			r.body.Tags[k] = v
 		}
@@ -1259,7 +1259,7 @@ func (a *HostsAPIService) HostsUpdateExecute(r ApiHostsUpdateRequest) (*InfraUpd
 	if r.body.Tags == nil {
 		r.body.Tags = make(map[string]interface{})
 	}
-	for k, v := range a.Client.Cfg.GetDefaultTags() {
+	for k, v := range a.Client.Cfg.DefaultTags {
 		if _, ok := r.body.Tags[k]; !ok {
 			r.body.Tags[k] = v
 		}

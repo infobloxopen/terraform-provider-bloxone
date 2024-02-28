@@ -185,7 +185,7 @@ func (a *FixedAddressAPIService) FixedAddressCreateExecute(r ApiFixedAddressCrea
 	if r.body.Tags == nil {
 		r.body.Tags = make(map[string]interface{})
 	}
-	for k, v := range a.Client.Cfg.GetDefaultTags() {
+	for k, v := range a.Client.Cfg.DefaultTags {
 		if _, ok := r.body.Tags[k]; !ok {
 			r.body.Tags[k] = v
 		}
@@ -760,7 +760,7 @@ func (a *FixedAddressAPIService) FixedAddressUpdateExecute(r ApiFixedAddressUpda
 	if r.body.Tags == nil {
 		r.body.Tags = make(map[string]interface{})
 	}
-	for k, v := range a.Client.Cfg.GetDefaultTags() {
+	for k, v := range a.Client.Cfg.DefaultTags {
 		if _, ok := r.body.Tags[k]; !ok {
 			r.body.Tags[k] = v
 		}

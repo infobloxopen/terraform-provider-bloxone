@@ -1,27 +1,12 @@
-
-terraform {
-  required_providers {
-    bloxone = {
-      source  = "infobloxopen/bloxone"
-      version = "0.1.0"
-    }
-  }
-}
-
-provider "bloxone" {
-  csp_url = "https://csp.infoblox.com"
-  api_key = "f77723789095d2a9ca1d8665d78b4fbdaad4783eaaca94ea4474d9177e06babc"
-}
-
 data "bloxone_dhcp_hosts" "example_host_1" {
   filters = {
-    name = "Goutham-HA1"
+    name = "Your host name"
   }
 }
 
 data "bloxone_dhcp_hosts" "example_host_2" {
   filters = {
-    name = "Goutham-HA2"
+    name = "Your host name"
   }
 }
 
