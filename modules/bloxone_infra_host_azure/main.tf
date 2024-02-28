@@ -33,9 +33,6 @@
  *     environment = "dev"
  *   }
  *
- *   // If not provided, a new join token will be created
- *   //join_token                = "existing-join-token"
- *
  *   tags                      = {
  *     location = "office1"
  *   }
