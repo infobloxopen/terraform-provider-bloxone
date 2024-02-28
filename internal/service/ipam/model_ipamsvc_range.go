@@ -242,7 +242,7 @@ func (m *IpamsvcRangeModel) Expand(ctx context.Context, diags *diag.Diagnostics,
 	return to
 }
 
-func FlattenIpamsvcRange(ctx context.Context, from *ipam.IpamsvcRange, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcRangeDataSource(ctx context.Context, from *ipam.IpamsvcRange, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcRangeAttrTypes)
 	}

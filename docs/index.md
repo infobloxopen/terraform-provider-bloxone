@@ -3,12 +3,12 @@
 page_title: "BloxOne Provider"
 subcategory: ""
 description: |-
-  
+  The BloxOne provider is used to interact with the resources supported by Infoblox BloxOne API.
 ---
 
 # BloxOne Provider
 
-
+The BloxOne provider is used to interact with the resources supported by Infoblox BloxOne API.
 
 ## Example Usage
 

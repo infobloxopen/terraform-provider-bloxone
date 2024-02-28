@@ -115,7 +115,6 @@ func (d *AddressBlockDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return apiRes.GetResults(), nil
 	})
 	if err != nil {
-		fmt.Println("err", err)
 		return
 	}
 

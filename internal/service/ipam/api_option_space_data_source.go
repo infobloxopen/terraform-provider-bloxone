@@ -41,7 +41,7 @@ func (m *IpamsvcOptionSpaceModelWithFilter) FlattenResults(ctx context.Context, 
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcOptionSpaceAttrTypes, diags, FlattenIpamsvcOptionSpace)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcOptionSpaceAttrTypes, diags, FlattenIpamsvcOptionSpaceDataSource)
 }
 
 func (d *OptionSpaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

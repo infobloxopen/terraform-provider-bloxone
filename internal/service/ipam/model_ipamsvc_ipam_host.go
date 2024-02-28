@@ -133,7 +133,7 @@ func (m *IpamsvcIpamHostModel) Expand(ctx context.Context, diags *diag.Diagnosti
 	return to
 }
 
-func FlattenIpamsvcIpamHost(ctx context.Context, from *ipam.IpamsvcIpamHost, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcIpamHostDataSource(ctx context.Context, from *ipam.IpamsvcIpamHost, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcIpamHostAttrTypes)
 	}

@@ -114,7 +114,7 @@ func (m *IpamsvcOptionGroupModel) Expand(ctx context.Context, diags *diag.Diagno
 	return to
 }
 
-func FlattenIpamsvcOptionGroup(ctx context.Context, from *ipam.IpamsvcOptionGroup, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcOptionGroupDataSource(ctx context.Context, from *ipam.IpamsvcOptionGroup, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcOptionGroupAttrTypes)
 	}

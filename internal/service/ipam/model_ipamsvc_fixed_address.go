@@ -246,7 +246,7 @@ func (m *IpamsvcFixedAddressModel) Expand(ctx context.Context, diags *diag.Diagn
 	return to
 }
 
-func FlattenIpamsvcFixedAddress(ctx context.Context, from *ipam.IpamsvcFixedAddress, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcFixedAddressDataSource(ctx context.Context, from *ipam.IpamsvcFixedAddress, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcFixedAddressAttrTypes)
 	}

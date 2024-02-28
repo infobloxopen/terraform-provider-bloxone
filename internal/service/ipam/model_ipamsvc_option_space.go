@@ -104,7 +104,7 @@ func (m *IpamsvcOptionSpaceModel) Expand(ctx context.Context, diags *diag.Diagno
 	return to
 }
 
-func FlattenIpamsvcOptionSpace(ctx context.Context, from *ipam.IpamsvcOptionSpace, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcOptionSpaceDataSource(ctx context.Context, from *ipam.IpamsvcOptionSpace, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcOptionSpaceAttrTypes)
 	}

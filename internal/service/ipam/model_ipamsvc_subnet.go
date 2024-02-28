@@ -464,7 +464,7 @@ func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics
 	return to
 }
 
-func FlattenIpamsvcSubnet(ctx context.Context, from *ipam.IpamsvcSubnet, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcSubnetDataSource(ctx context.Context, from *ipam.IpamsvcSubnet, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcSubnetAttrTypes)
 	}

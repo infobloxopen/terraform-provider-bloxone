@@ -159,7 +159,7 @@ func (m *IpamsvcHAGroupModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenIpamsvcHAGroup(ctx context.Context, from *ipam.IpamsvcHAGroup, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcHAGroupDataSource(ctx context.Context, from *ipam.IpamsvcHAGroup, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcHAGroupAttrTypes)
 	}
