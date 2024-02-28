@@ -14,7 +14,6 @@ import (
     "github.com/hashicorp/terraform-plugin-framework/schema/validator"
     "github.com/hashicorp/terraform-plugin-framework/types"
     "github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-
     "github.com/infobloxopen/bloxone-go-client/ipam"
 
     "github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -166,6 +165,7 @@ func FlattenIpamsvcHAGroup(ctx context.Context, from *ipam.IpamsvcHAGroup, diags
     }
     m := IpamsvcHAGroupModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, IpamsvcHAGroupAttrTypes, m)
     diags.Append(d...)
     return t

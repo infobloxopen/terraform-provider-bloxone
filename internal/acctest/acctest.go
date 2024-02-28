@@ -15,6 +15,12 @@ import (
     "github.com/infobloxopen/terraform-provider-bloxone/internal/provider"
 )
 
+const (
+    letterBytes  = "abcdefghijklmnopqrstuvwxyz"
+    defaultKey   = "managed_by"
+    defaultValue = "terraform"
+)
+
 var (
     // BloxOneClient will be used to do verification tests
     BloxOneClient *bloxoneclient.APIClient
@@ -24,14 +30,11 @@ var (
     // CLI command executed to create a provider server to which the CLI can
     // reattach.
     ProtoV6ProviderFactories = map[string]func() (tfprotov6.ProviderServer, error){
-        "bloxone": providerserver.NewProtocol6WithError(provider.New("test", "none")()),
+        "bloxone": providerserver.NewProtocol6WithError(provider.New("test", "test")()),
     }
-)
-
-const (
-    letterBytes         = "abcdefghijklmnopqrstuvwxyz"
-    AccTestDefaultKey   = "managed_by"
-    AccTestDefaultValue = "terraform"
+    ProtoV6ProviderFactoriesWithTags = map[string]func() (tfprotov6.ProviderServer, error){
+        "bloxone": providerserver.NewProtocol6WithError(provider.NewWithTags(map[string]string{defaultKey: defaultValue})()),
+    }
 )
 
 func init() {
@@ -71,19 +74,7 @@ func PreCheck(t *testing.T) {
 }
 
 func VerifyDefaultTag(resourceName string) resource.TestCheckFunc {
-    return resource.TestCheckResourceAttr(resourceName, fmt.Sprintf("tags_all.%s", AccTestDefaultKey), AccTestDefaultValue)
-}
-
-//lintignore:AT004
-func TestAccBase_ProviderWithDefaultTags() string {
-    return fmt.Sprintf(` 
-provider "bloxone" {
-    default_tags = {
-        %s = "%s"
-    }
-}
-`, AccTestDefaultKey, AccTestDefaultValue)
-
+    return resource.TestCheckResourceAttr(resourceName, fmt.Sprintf("tags_all.%s", defaultKey), defaultValue)
 }
 
 // TestAccBase_DhcpHosts creates a Terraform datasource config that allows you to filter by tags

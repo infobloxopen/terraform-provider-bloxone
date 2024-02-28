@@ -786,11 +786,20 @@ func TestAccAddressBlockResource_Tags(t *testing.T) {
     var v ipam.IpamsvcAddressBlock
 
     resource.Test(t, resource.TestCase{
-        PreCheck:                 func() { acctest.PreCheck(t) },
-        ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+        PreCheck: func() { acctest.PreCheck(t) },
+        // ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
         Steps: []resource.TestStep{
             // Create and Read
             {
+                ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactoriesWithTags,
+                Config:                   testAccAddressBlockTags1("192.168.0.0", "16"),
+                Check: resource.ComposeTestCheckFunc(
+                    acctest.VerifyDefaultTag(resourceName),
+                ),
+            },
+            // Create and Read
+            {
+                ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
                 Config: testAccAddressBlockTags("192.168.0.0", "16", map[string]string{
                     "tag1": "value1",
                     "tag2": "value2",
@@ -798,10 +807,14 @@ func TestAccAddressBlockResource_Tags(t *testing.T) {
                 Check: resource.ComposeTestCheckFunc(
                     resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
                     resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
+                    resource.TestCheckResourceAttr(resourceName, "tags_all.tag1", "value1"),
+                    resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2"),
+                    resource.TestCheckNoResourceAttr(resourceName, "tags_all.managed_by"),
                 ),
             },
             // Update and Read
             {
+                ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactoriesWithTags,
                 PreConfig: func() {
                     testAccCheckAddressBlockExists(context.Background(), resourceName, &v)
                 },
@@ -812,43 +825,6 @@ func TestAccAddressBlockResource_Tags(t *testing.T) {
                 Check: resource.ComposeTestCheckFunc(
                     resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2changed"),
                     resource.TestCheckResourceAttr(resourceName, "tags.tag3", "value3"),
-                ),
-            },
-            // Delete testing automatically occurs in TestCase
-        },
-    })
-}
-
-func TestAccAddressBlockResource_WithDefaultTags(t *testing.T) {
-    var resourceName = "bloxone_ipam_address_block.test_tags"
-    var v ipam.IpamsvcAddressBlock
-
-    resource.Test(t, resource.TestCase{
-        PreCheck:                 func() { acctest.PreCheck(t) },
-        ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-        Steps: []resource.TestStep{
-            // Create and Read
-            {
-                Config: testAccAddressBlockWithDefaultTags("192.168.0.0", "16", map[string]string{
-                    "tag1": "value1",
-                    "tag2": "value2",
-                }),
-                Check: resource.ComposeTestCheckFunc(
-                    resource.TestCheckResourceAttr(resourceName, "tags_all.tag1", "value1"),
-                    resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2"),
-                    acctest.VerifyDefaultTag(resourceName),
-                ),
-            },
-            // Update and Read
-            {
-                PreConfig: func() {
-                    testAccCheckAddressBlockExists(context.Background(), resourceName, &v)
-                },
-                Config: testAccAddressBlockWithDefaultTags("192.168.0.0", "16", map[string]string{
-                    "tag2": "value2changed",
-                    "tag3": "value3",
-                }),
-                Check: resource.ComposeTestCheckFunc(
                     resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2changed"),
                     resource.TestCheckResourceAttr(resourceName, "tags_all.tag3", "value3"),
                     acctest.VerifyDefaultTag(resourceName),
@@ -1295,6 +1271,17 @@ resource "bloxone_ipam_address_block" "test_space" {
     return strings.Join([]string{testAccBaseWithTwoIPSpace(), config}, "")
 }
 
+func testAccAddressBlockTags1(address, cidr string) string {
+    config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test_tags" {
+    address = %q
+    cidr = %q
+    space = bloxone_ipam_ip_space.test.id
+}
+`, address, cidr)
+    return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+}
+
 func testAccAddressBlockTags(address, cidr string, tags map[string]string) string {
     tagsStr := "{\n"
     for k, v := range tags {
@@ -1313,26 +1300,6 @@ resource "bloxone_ipam_address_block" "test_tags" {
 }
 `, address, cidr, tagsStr)
     return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
-}
-
-func testAccAddressBlockWithDefaultTags(address, cidr string, tags map[string]string) string {
-    tagsStr := "{\n"
-    for k, v := range tags {
-        tagsStr += fmt.Sprintf(`
-		%s = %q
-`, k, v)
-    }
-    tagsStr += "\t}"
-
-    config := fmt.Sprintf(`
-resource "bloxone_ipam_address_block" "test_tags" {
-    address = %q
-    cidr = %q
-    space = bloxone_ipam_ip_space.test.id
-    tags = %s
-}
-`, address, cidr, tagsStr)
-    return strings.Join([]string{acctest.TestAccBase_ProviderWithDefaultTags(), testAccBaseWithIPSpace(), config}, "")
 }
 
 func testAccAddressBlockNextAvailableInAB(address string, cidr, wantedCidr int) string {

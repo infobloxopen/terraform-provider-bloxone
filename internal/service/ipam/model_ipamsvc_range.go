@@ -15,7 +15,6 @@ import (
     "github.com/hashicorp/terraform-plugin-framework/schema/validator"
     "github.com/hashicorp/terraform-plugin-framework/types"
     "github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-
     "github.com/infobloxopen/bloxone-go-client/ipam"
 
     "github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -249,6 +248,7 @@ func FlattenIpamsvcRange(ctx context.Context, from *ipam.IpamsvcRange, diags *di
     }
     m := IpamsvcRangeModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, IpamsvcRangeAttrTypes, m)
     diags.Append(d...)
     return t

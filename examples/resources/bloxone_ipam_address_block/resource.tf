@@ -1,5 +1,21 @@
+terraform {
+  required_providers {
+    bloxone = {
+      source  = "infobloxopen/bloxone"
+      version = "0.1.9"
+    }
+  }
+}
+provider "bloxone" {
+  csp_url = "https://stage.csp.infoblox.com"
+  api_key = "990607e8b99bd14f7b4e4e45693b6b4eb808f2332e04afbc9bf202804829339c"
+  default_tags = {
+    managed_by = "terraform"
+  }
+}
+
 resource "bloxone_ipam_ip_space" "example" {
-  name = "example_ip_space"
+  name = "example_ip_space_venkat_1"
   tags = {
     location = "site1"
   }
@@ -8,7 +24,7 @@ resource "bloxone_ipam_ip_space" "example" {
 resource "bloxone_ipam_address_block" "example" {
   address = "192.168.1.0"
   cidr    = 24
-  name    = "example_address_block"
+  name    = "example_address_block_venkat_1"
   space   = bloxone_ipam_ip_space.example.id
 }
 
@@ -18,7 +34,7 @@ resource "bloxone_ipam_address_block" "example_tags" {
   space   = bloxone_ipam_ip_space.example.id
 
   # Other optional fields
-  name    = "example_address_block_tags"
+  name    = "example_address_block_tags_venkat_1"
   comment = "Example address block with tags created by the terraform provider"
   tags = {
     location = "site1"
@@ -61,7 +77,7 @@ resource "bloxone_ipam_address_block" "example_na_ab" {
   space             = bloxone_ipam_ip_space.example.id
 
   # Other optional fields
-  name    = "example_address_block_tags"
+  name    = "example_address_block_tags_venkat_1"
   comment = "Example address block with tags created by the terraform provider"
   tags = {
     location = "site1"

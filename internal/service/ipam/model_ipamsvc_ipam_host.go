@@ -3,15 +3,14 @@ package ipam
 import (
     "context"
 
-    "github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
-    "github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
-    "github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-    "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-
     "github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
     "github.com/hashicorp/terraform-plugin-framework/attr"
     "github.com/hashicorp/terraform-plugin-framework/diag"
     schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+    "github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+    "github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
+    "github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+    "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
     "github.com/hashicorp/terraform-plugin-framework/types"
     "github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -140,6 +139,7 @@ func FlattenIpamsvcIpamHost(ctx context.Context, from *ipam.IpamsvcIpamHost, dia
     }
     m := IpamsvcIpamHostModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, IpamsvcIpamHostAttrTypes, m)
     diags.Append(d...)
     return t

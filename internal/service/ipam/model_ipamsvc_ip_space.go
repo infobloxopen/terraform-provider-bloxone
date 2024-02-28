@@ -359,6 +359,7 @@ func FlattenIpamsvcIPSpace(ctx context.Context, from *ipam.IpamsvcIPSpace, diags
     }
     m := IpamsvcIPSpaceModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, IpamsvcIPSpaceAttrTypes, m)
     diags.Append(d...)
     return t

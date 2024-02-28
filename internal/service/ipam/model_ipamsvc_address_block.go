@@ -19,9 +19,7 @@ import (
     "github.com/hashicorp/terraform-plugin-framework/schema/validator"
     "github.com/hashicorp/terraform-plugin-framework/types"
     "github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-
     "github.com/infobloxopen/bloxone-go-client/ipam"
-
     "github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -442,12 +440,13 @@ func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagn
     return to
 }
 
-func FlattenIpamsvcAddressBlock(ctx context.Context, from *ipam.IpamsvcAddressBlock, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcAddressBlockDataSource(ctx context.Context, from *ipam.IpamsvcAddressBlock, diags *diag.Diagnostics) types.Object {
     if from == nil {
         return types.ObjectNull(IpamsvcAddressBlockAttrTypes)
     }
     m := IpamsvcAddressBlockModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, IpamsvcAddressBlockAttrTypes, m)
     diags.Append(d...)
     return t
@@ -500,4 +499,5 @@ func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.Ipams
     m.Usage = flex.FlattenFrameworkListString(ctx, from.Usage, diags)
     m.Utilization = FlattenIpamsvcUtilization(ctx, from.Utilization, diags)
     m.UtilizationV6 = FlattenIpamsvcUtilizationV6(ctx, from.UtilizationV6, diags)
+
 }

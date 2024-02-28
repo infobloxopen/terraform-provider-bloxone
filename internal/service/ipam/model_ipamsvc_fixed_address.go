@@ -17,7 +17,6 @@ import (
     "github.com/hashicorp/terraform-plugin-framework/schema/validator"
     "github.com/hashicorp/terraform-plugin-framework/types"
     "github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-
     "github.com/infobloxopen/bloxone-go-client/ipam"
 
     "github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -253,6 +252,7 @@ func FlattenIpamsvcFixedAddress(ctx context.Context, from *ipam.IpamsvcFixedAddr
     }
     m := IpamsvcFixedAddressModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, IpamsvcFixedAddressAttrTypes, m)
     diags.Append(d...)
     return t
@@ -285,4 +285,5 @@ func (m *IpamsvcFixedAddressModel) Flatten(ctx context.Context, from *ipam.Ipams
     m.Parent = flex.FlattenStringPointer(from.Parent)
     m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
     m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
+
 }

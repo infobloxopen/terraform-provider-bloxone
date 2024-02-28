@@ -334,7 +334,7 @@ func DefaultTagsHandler(m map[string]interface{}, d *diag.Diagnostics) map[strin
         case string:
             strValue = v
         default:
-            d.AddError("Client error", fmt.Sprintf("Invalid type for default_tags value %s, only string supported", key))
+            d.AddError("Client error", fmt.Sprintf("Invalid type '%v' for default_tags %s value, only string supported", v, key))
             continue
         }
 
