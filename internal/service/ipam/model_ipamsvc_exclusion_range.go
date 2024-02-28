@@ -2,7 +2,9 @@ package ipam
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -31,6 +33,8 @@ var IpamsvcExclusionRangeAttrTypes = map[string]attr.Type{
 var IpamsvcExclusionRangeResourceSchemaAttributes = map[string]schema.Attribute{
 	"comment": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString(""),
 		Validators: []validator.String{
 			stringvalidator.LengthBetween(0, 1024),
 		},
