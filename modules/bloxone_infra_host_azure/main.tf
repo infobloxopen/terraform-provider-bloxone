@@ -33,6 +33,9 @@
  *     environment = "dev"
  *   }
  *
+ *   // If not provided, a new join token will be created
+ *   //join_token                = "existing-join-token"
+ *
  *   tags                      = {
  *     location = "office1"
  *   }
@@ -49,7 +52,7 @@
 resource "random_uuid" "this" {}
 
 locals {
-  join_token = var.join_token == null ? bloxone_infra_join_token.this[0].join_token : var.join_token.join_token
+  join_token = var.join_token == null ? bloxone_infra_join_token.this[0].join_token : var.join_token
   tags       = merge(
     var.tags,
     {

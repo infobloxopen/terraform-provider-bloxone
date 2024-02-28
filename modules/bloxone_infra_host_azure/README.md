@@ -33,6 +33,9 @@ module "bloxone_infra_host_azure" {
     environment = "dev"
   }
 
+  // If not provided, a new join token will be created
+  //join_token                = "existing-join-token"
+
   tags                      = {
     location = "office1"
   }
@@ -74,7 +77,7 @@ module "bloxone_infra_host_azure" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_azure_instance_tags"></a> [azure\_instance\_tags](#input\_azure\_instance\_tags) | The tags to use for the Azure virtual machine. | `map(string)` | `{}` | no |
-| <a name="input_join_token"></a> [join\_token](#input\_join\_token) | The join token to use for the BloxOne Host. If not provided, a join token will be created. | <pre>object({<br>    join_token = string<br>  })</pre> | `null` | no |
+| <a name="input_join_token"></a> [join\_token](#input\_join\_token) | The join token to use for the BloxOne Host. If not provided, a join token will be created. | `string` | `null` | no |
 | <a name="input_location"></a> [location](#input\_location) | The location where the resources will be created | `string` | `"eastus"` | no |
 | <a name="input_os_disk_caching"></a> [os\_disk\_caching](#input\_os\_disk\_caching) | The caching type to use for the OS disk. | `string` | `"ReadWrite"` | no |
 | <a name="input_os_disk_storage_account_type"></a> [os\_disk\_storage\_account\_type](#input\_os\_disk\_storage\_account\_type) | The storage account type to use for the OS disk. | `string` | `"Standard_LRS"` | no |
