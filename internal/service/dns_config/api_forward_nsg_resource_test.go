@@ -203,7 +203,7 @@ func TestAccForwardNsgResource_Name(t *testing.T) {
 				Config: testAccForwardNsgName(name1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "terraform-acc-test.com"),
+					resource.TestCheckResourceAttr(resourceName, "name", name1),
 				),
 			},
 			// Update and Read
@@ -211,7 +211,7 @@ func TestAccForwardNsgResource_Name(t *testing.T) {
 				Config: testAccForwardNsgName(name2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardNsgExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "test.change.com"),
+					resource.TestCheckResourceAttr(resourceName, "name", name2),
 				),
 			},
 			// Delete testing automatically occurs in TestCase

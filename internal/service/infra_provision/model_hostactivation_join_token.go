@@ -118,7 +118,7 @@ func (m *HostactivationJoinTokenModel) Expand(ctx context.Context, diags *diag.D
 	}
 	to := &infra_provision.HostactivationJoinToken{
 		Description: flex.ExpandStringPointer(m.Description),
-		Name:        flex.ExpandString(m.Name),
+		Name:        flex.ExpandStringPointer(m.Name),
 		Tags:        flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 		ExpiresAt:   flex.ExpandTimePointer(ctx, m.ExpiresAt, diags),
 	}
@@ -148,7 +148,7 @@ func (m *HostactivationJoinTokenModel) Flatten(ctx context.Context, from *infra_
 	m.ExpiresAt = timetypes.NewRFC3339TimePointerValue(from.ExpiresAt)
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.LastUsedAt = timetypes.NewRFC3339TimePointerValue(from.LastUsedAt)
-	m.Name = flex.FlattenString(from.Name)
+	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.TokenId = flex.FlattenStringPointer(from.TokenId)
 	m.UseCounter = flex.FlattenInt64(int64(*from.UseCounter))

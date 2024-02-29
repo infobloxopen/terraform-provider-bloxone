@@ -13,6 +13,7 @@ import (
 
 func TestDataSourceNextAvailableIP_AddressBlock(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_next_available_ips.test"
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -27,14 +28,14 @@ func TestDataSourceNextAvailableIP_AddressBlock(t *testing.T) {
 				ExpectError: regexp.MustCompile("invalid resource ID specified"),
 			},
 			{
-				Config: testAccDataSourceNextAvailableIP(1, "bloxone_ipam_address_block.test"),
+				Config: testAccDataSourceNextAvailableIP(spaceName, 1, "bloxone_ipam_address_block.test"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
 					resource.TestCheckResourceAttr(dataSourceName, "results.0", "192.168.0.1"),
 				),
 			},
 			{
-				Config: testAccDataSourceNextAvailableIP(5, "bloxone_ipam_address_block.test"),
+				Config: testAccDataSourceNextAvailableIP(spaceName, 5, "bloxone_ipam_address_block.test"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "ip_count", dataSourceName, "results.#"),
 					resource.TestCheckResourceAttr(dataSourceName, "results.0", "192.168.0.1"),
@@ -50,20 +51,21 @@ func TestDataSourceNextAvailableIP_AddressBlock(t *testing.T) {
 
 func TestDataSourceNextAvailableIP_Subnet(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_next_available_ips.test"
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceNextAvailableIP(1, "bloxone_ipam_subnet.test"),
+				Config: testAccDataSourceNextAvailableIP(spaceName, 1, "bloxone_ipam_subnet.test"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
 					resource.TestCheckResourceAttr(dataSourceName, "results.0", "192.168.0.1"),
 				),
 			},
 			{
-				Config: testAccDataSourceNextAvailableIP(5, "bloxone_ipam_subnet.test"),
+				Config: testAccDataSourceNextAvailableIP(spaceName, 5, "bloxone_ipam_subnet.test"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "ip_count", dataSourceName, "results.#"),
 					resource.TestCheckResourceAttr(dataSourceName, "results.0", "192.168.0.1"),
@@ -79,20 +81,21 @@ func TestDataSourceNextAvailableIP_Subnet(t *testing.T) {
 
 func TestDataSourceNextAvailableIP_Range(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_next_available_ips.test"
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceNextAvailableIP(1, "bloxone_ipam_range.test"),
+				Config: testAccDataSourceNextAvailableIP(spaceName, 1, "bloxone_ipam_range.test"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
 					resource.TestCheckResourceAttr(dataSourceName, "results.0", "192.168.0.15"),
 				),
 			},
 			{
-				Config: testAccDataSourceNextAvailableIP(3, "bloxone_ipam_range.test"),
+				Config: testAccDataSourceNextAvailableIP(spaceName, 3, "bloxone_ipam_range.test"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "ip_count", dataSourceName, "results.#"),
 					resource.TestCheckResourceAttr(dataSourceName, "results.0", "192.168.0.15"),
@@ -104,33 +107,31 @@ func TestDataSourceNextAvailableIP_Range(t *testing.T) {
 	})
 }
 
-func testAccDataSourceNextAvailableIPBaseConfig() string {
-	return `
+func testAccDataSourceNextAvailableIPBaseConfig(spaceName string) string {
+	return fmt.Sprintf(`
 	resource "bloxone_ipam_ip_space" "test" {
-		name = "test_ip_space"
+		name = %q
 	}
 	resource "bloxone_ipam_address_block" "test" {
-		name = "test_address_block"
 		address = "192.168.0.0"
 		cidr = "16"
 		space = bloxone_ipam_ip_space.test.id
 	}
 	resource "bloxone_ipam_subnet" "test" {
-		name = "test_subnet"
 		address = "192.168.0.0"
 		cidr = "24"
 		space = bloxone_ipam_ip_space.test.id
 	}
 	resource "bloxone_ipam_range" "test" {
-		name = "test_range"
 		start = "192.168.0.15"
 		end = "192.168.0.30"
 		space = bloxone_ipam_ip_space.test.id
 		depends_on = [bloxone_ipam_subnet.test]
 	}
-`
+`, spaceName)
 }
-func testAccDataSourceNextAvailableIP(count int, id string) string {
+
+func testAccDataSourceNextAvailableIP(spaceName string, count int, id string) string {
 	var config string
 	if count == 1 {
 		config = fmt.Sprintf(`
@@ -145,5 +146,5 @@ func testAccDataSourceNextAvailableIP(count int, id string) string {
 	}`, id, count)
 	}
 
-	return strings.Join([]string{testAccDataSourceNextAvailableIPBaseConfig(), config}, "")
+	return strings.Join([]string{testAccDataSourceNextAvailableIPBaseConfig(spaceName), config}, "")
 }
