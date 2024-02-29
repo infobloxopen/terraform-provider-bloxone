@@ -36,11 +36,15 @@ func init() {
 // RandomNameWithPrefix generates a random name with the given prefix.
 // This is used in the acceptance tests where a unique name is required for the resource.
 func RandomNameWithPrefix(prefix string) string {
+	return fmt.Sprintf("%s-%s", prefix, RandomName())
+}
+
+func RandomName() string {
 	b := make([]byte, 6)
 	for i := range b {
 		b[i] = letterBytes[rand.Intn(len(letterBytes))]
 	}
-	return fmt.Sprintf("%s-%s", prefix, b)
+	return string(b)
 }
 
 func PreCheck(t *testing.T) {

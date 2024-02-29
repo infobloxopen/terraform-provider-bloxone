@@ -14,7 +14,7 @@ import (
 func TestDataSourceNextAvailableAddressBlock(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_next_available_address_blocks.test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{

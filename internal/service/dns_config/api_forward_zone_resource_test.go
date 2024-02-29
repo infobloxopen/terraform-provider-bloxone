@@ -25,7 +25,7 @@ func TestAccForwardZoneResource_basic(t *testing.T) {
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -54,7 +54,7 @@ func TestAccForwardZoneResource_disappears(t *testing.T) {
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckForwardZoneDestroy(context.Background(), &v),
@@ -77,7 +77,7 @@ func TestAccForwardZoneResource_FQDN(t *testing.T) {
 	var v1 dns_config.ConfigForwardZone
 	var v2 dns_config.ConfigForwardZone
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -108,7 +108,7 @@ func TestAccForwardZoneResource_Comment(t *testing.T) {
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -138,7 +138,7 @@ func TestAccForwardZoneResource_Disabled(t *testing.T) {
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -168,7 +168,7 @@ func TestAccForwardZoneResource_ExternalForwarders_Address(t *testing.T) {
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -229,7 +229,7 @@ func TestAccForwardZoneResource_ForwardOnly(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_forward_only"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -257,7 +257,7 @@ func TestAccForwardZoneResource_Hosts(t *testing.T) {
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -289,7 +289,7 @@ func TestAccForwardZoneResource_InternalForwarders(t *testing.T) {
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -321,7 +321,7 @@ func TestAccForwardZoneResource_Nsgs(t *testing.T) {
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -350,7 +350,7 @@ func TestAccForwardZoneResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_tags"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -387,7 +387,7 @@ func TestAccForwardZoneResource_View(t *testing.T) {
 	var v1 dns_config.ConfigForwardZone
 	var v2 dns_config.ConfigForwardZone
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
