@@ -18,15 +18,24 @@ type FrameworkElementFlExFunc[T any, U any] func(context.Context, T, *diag.Diagn
 type FrameworkElementFlExFuncExt[T any, U any, V any] func(context.Context, T, U, *diag.Diagnostics) V
 
 func FlattenString(s string) types.String {
-	if s == "" {
-		return types.StringNull()
-	}
 	return types.StringValue(s)
 }
 
 func FlattenStringPointer(s *string) types.String {
 	if s == nil {
 		return types.StringNull()
+	}
+	return FlattenString(*s)
+}
+
+// FlattenStringPointerWithNilAsEmpty is a helper function to flatten a string pointer to a string.
+// It returns an empty string if the pointer is nil.
+//
+// For most fields, API returns empty string instead of null to signify no data, so use FlattenStringPointer instead.
+// In cases where the API returns null, use FlattenStringPointerWithNilAsEmpty.
+func FlattenStringPointerWithNilAsEmpty(s *string) types.String {
+	if s == nil {
+		return types.StringValue("")
 	}
 	return FlattenString(*s)
 }
