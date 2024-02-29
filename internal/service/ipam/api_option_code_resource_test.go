@@ -19,14 +19,15 @@ func TestAccOptionCodeResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_code.test"
 	var optionSpace = "bloxone_dhcp_option_space.test"
 	var v ipam.IpamsvcOptionCode
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionCodeBasicConfig("234", "basic_opt_code", "boolean"),
+				Config: testAccOptionCodeBasicConfig(optionSpaceName, "234", "basic_opt_code", "boolean"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "code", "234"),
@@ -50,14 +51,15 @@ func TestAccOptionCodeResource_basic(t *testing.T) {
 func TestAccOptionCodeResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dhcp_option_code.test"
 	var v ipam.IpamsvcOptionCode
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckOptionCodeDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOptionCodeBasicConfig("234", "basic_opt_code", "boolean"),
+				Config: testAccOptionCodeBasicConfig(optionSpaceName, "234", "basic_opt_code", "boolean"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
 					testAccCheckOptionCodeDisappears(context.Background(), &v),
@@ -71,14 +73,15 @@ func TestAccOptionCodeResource_disappears(t *testing.T) {
 func TestAccOptionCodeResource_Array(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_code.test_array"
 	var v ipam.IpamsvcOptionCode
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionCodeArray("234", "basic_opt_code", "boolean", "true"),
+				Config: testAccOptionCodeArray(optionSpaceName, "234", "basic_opt_code", "boolean", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "array", "true"),
@@ -86,7 +89,7 @@ func TestAccOptionCodeResource_Array(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccOptionCodeArray("234", "basic_opt_code", "boolean", "false"),
+				Config: testAccOptionCodeArray(optionSpaceName, "234", "basic_opt_code", "boolean", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "array", "false"),
@@ -100,14 +103,15 @@ func TestAccOptionCodeResource_Array(t *testing.T) {
 func TestAccOptionCodeResource_Code(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_code.test_code"
 	var v ipam.IpamsvcOptionCode
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionCodeCode("234", "basic_opt_code", "boolean"),
+				Config: testAccOptionCodeCode(optionSpaceName, "234", "basic_opt_code", "boolean"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "code", "234"),
@@ -115,7 +119,7 @@ func TestAccOptionCodeResource_Code(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccOptionCodeCode("235", "basic_opt_code", "boolean"),
+				Config: testAccOptionCodeCode(optionSpaceName, "235", "basic_opt_code", "boolean"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "code", "235"),
@@ -129,14 +133,15 @@ func TestAccOptionCodeResource_Code(t *testing.T) {
 func TestAccOptionCodeResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_code.test_comment"
 	var v ipam.IpamsvcOptionCode
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionCodeComment("234", "basic_opt_code", "boolean", "boolean option code type"),
+				Config: testAccOptionCodeComment(optionSpaceName, "234", "basic_opt_code", "boolean", "boolean option code type"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "boolean option code type"),
@@ -144,7 +149,7 @@ func TestAccOptionCodeResource_Comment(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccOptionCodeComment("234", "basic_opt_code", "boolean", "boolean option code type update"),
+				Config: testAccOptionCodeComment(optionSpaceName, "234", "basic_opt_code", "boolean", "boolean option code type update"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "boolean option code type update"),
@@ -158,14 +163,15 @@ func TestAccOptionCodeResource_Comment(t *testing.T) {
 func TestAccOptionCodeResource_Name(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_code.test_name"
 	var v ipam.IpamsvcOptionCode
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionCodeName("234", "basic_opt_code", "boolean"),
+				Config: testAccOptionCodeName(optionSpaceName, "234", "basic_opt_code", "boolean"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", "basic_opt_code"),
@@ -173,7 +179,7 @@ func TestAccOptionCodeResource_Name(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccOptionCodeName("234", "basic_opt_code_1", "boolean"),
+				Config: testAccOptionCodeName(optionSpaceName, "234", "basic_opt_code_1", "boolean"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", "basic_opt_code_1"),
@@ -189,14 +195,16 @@ func TestAccOptionCodeResource_OptionSpace(t *testing.T) {
 	var optSpace1 = "bloxone_dhcp_option_space.test1"
 	var optSpace2 = "bloxone_dhcp_option_space.test2"
 	var v ipam.IpamsvcOptionCode
+	optionSpaceName1 := acctest.RandomNameWithPrefix("os")
+	optionSpaceName2 := acctest.RandomNameWithPrefix("os")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionCodeOptionSpace("234", "basic_opt_code_1", "boolean", optSpace1),
+				Config: testAccOptionCodeOptionSpace(optionSpaceName1, optionSpaceName2, "234", "basic_opt_code_1", "boolean", optSpace1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "option_space", optSpace1, "id"),
@@ -204,7 +212,7 @@ func TestAccOptionCodeResource_OptionSpace(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccOptionCodeOptionSpace("234", "basic_opt_code_1", "boolean", optSpace2),
+				Config: testAccOptionCodeOptionSpace(optionSpaceName1, optionSpaceName2, "234", "basic_opt_code_1", "boolean", optSpace2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "option_space", optSpace2, "id"),
@@ -218,14 +226,15 @@ func TestAccOptionCodeResource_OptionSpace(t *testing.T) {
 func TestAccOptionCodeResource_Type(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_code.test_type"
 	var v ipam.IpamsvcOptionCode
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionCodeType("234", "basic_opt_code", "boolean"),
+				Config: testAccOptionCodeType(optionSpaceName, "234", "basic_opt_code", "boolean"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "type", "boolean"),
@@ -233,7 +242,7 @@ func TestAccOptionCodeResource_Type(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccOptionCodeType("234", "basic_opt_code", "int16"),
+				Config: testAccOptionCodeType(optionSpaceName, "234", "basic_opt_code", "int16"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "type", "int16"),
@@ -298,7 +307,7 @@ func testAccCheckOptionCodeDisappears(ctx context.Context, v *ipam.IpamsvcOption
 	}
 }
 
-func testAccOptionCodeBasicConfig(code, name, type_ string) string {
+func testAccOptionCodeBasicConfig(optionSpaceName, code, name, optionItemType string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_option_code" "test" {
     code = %q
@@ -306,12 +315,12 @@ resource "bloxone_dhcp_option_code" "test" {
     option_space = bloxone_dhcp_option_space.test.id
     type = %q
 }
-`, code, name, type_)
+`, code, name, optionItemType)
 
-	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip4"), config}, "")
+	return strings.Join([]string{testAccBaseWithOptionSpace(optionSpaceName, "ip4"), config}, "")
 }
 
-func testAccOptionCodeArray(code, name, type_, array string) string {
+func testAccOptionCodeArray(optionSpaceName, code, name, optionItemType, array string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_option_code" "test_array" {
     code = %q
@@ -320,12 +329,12 @@ resource "bloxone_dhcp_option_code" "test_array" {
     type = %q
     array = %q
 }
-`, code, name, type_, array)
+`, code, name, optionItemType, array)
 
-	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip4"), config}, "")
+	return strings.Join([]string{testAccBaseWithOptionSpace(optionSpaceName, "ip4"), config}, "")
 }
 
-func testAccOptionCodeCode(code, name, type_ string) string {
+func testAccOptionCodeCode(optionSpaceName, code, name, optionItemType string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_option_code" "test_code" {
     code = %q
@@ -333,12 +342,12 @@ resource "bloxone_dhcp_option_code" "test_code" {
     option_space = bloxone_dhcp_option_space.test.id
     type = %q
 }
-`, code, name, type_)
+`, code, name, optionItemType)
 
-	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip4"), config}, "")
+	return strings.Join([]string{testAccBaseWithOptionSpace(optionSpaceName, "ip4"), config}, "")
 }
 
-func testAccOptionCodeComment(code string, name string, type_ string, comment string) string {
+func testAccOptionCodeComment(optionSpaceName, code string, name string, optionItemType string, comment string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_option_code" "test_comment" {
     code = %q
@@ -347,12 +356,12 @@ resource "bloxone_dhcp_option_code" "test_comment" {
     type = %q
     comment = %q
 }
-`, code, name, type_, comment)
+`, code, name, optionItemType, comment)
 
-	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip4"), config}, "")
+	return strings.Join([]string{testAccBaseWithOptionSpace(optionSpaceName, "ip4"), config}, "")
 }
 
-func testAccOptionCodeName(code string, name string, type_ string) string {
+func testAccOptionCodeName(optionSpaceName, code string, name string, optionItemType string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_option_code" "test_name" {
     code = %q
@@ -360,25 +369,25 @@ resource "bloxone_dhcp_option_code" "test_name" {
     option_space = bloxone_dhcp_option_space.test.id
     type = %q
 }
-`, code, name, type_)
+`, code, name, optionItemType)
 
-	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip4"), config}, "")
+	return strings.Join([]string{testAccBaseWithOptionSpace(optionSpaceName, "ip4"), config}, "")
 }
 
-func testAccOptionCodeOptionSpace(code string, name string, type_, optSpaceName string) string {
+func testAccOptionCodeOptionSpace(optionSpaceName1, optionSpaceName2, code string, name string, optionItemType, optionSpace string) string {
 	config := fmt.Sprintf(`
-resource "bloxone_dhcp_option_code" "test_option_space" {
+resource "bloxone_dhcp_option_code" test_option_space {
     code = %q
     name = %q
     option_space = %s.id
     type = %q
 }
-`, code, name, optSpaceName, type_)
+`, code, name, optionSpace, optionItemType)
 
-	return strings.Join([]string{testAccOptionSpaceMultiple("test_option_space_1", "ip4", "test_option_space_2", "ip4"), config}, "")
+	return strings.Join([]string{testAccBaseWithTwoOptionSpace(optionSpaceName1, "ip4", optionSpaceName2, "ip4"), config}, "")
 }
 
-func testAccOptionCodeType(code string, name string, type_ string) string {
+func testAccOptionCodeType(optionSpaceName, code string, name string, optionItemType string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_option_code" "test_type" {
     code = %q
@@ -386,7 +395,7 @@ resource "bloxone_dhcp_option_code" "test_type" {
     option_space = bloxone_dhcp_option_space.test.id
     type = %q
 }
-`, code, name, type_)
+`, code, name, optionItemType)
 
-	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip4"), config}, "")
+	return strings.Join([]string{testAccBaseWithOptionSpace(optionSpaceName, "ip4"), config}, "")
 }

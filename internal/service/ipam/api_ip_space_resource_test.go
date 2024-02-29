@@ -20,22 +20,20 @@ import (
 // - dhcp_config.filters
 // - dhcp_config.filters_v6
 // - dhcp_config.ignore_items
-// - dhcp_options
 // - vendor_specific_option
-// - inheritance_sources - Currently inheritance sources is always nil
 
 func TestAccIpSpaceResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test"
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceBasicConfig(name),
+				Config: testAccIpSpaceBasicConfig("test", name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					// TODO: check and validate these
@@ -67,13 +65,13 @@ func TestAccIpSpaceResource_disappears(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckIpSpaceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccIpSpaceBasicConfig(name),
+				Config: testAccIpSpaceBasicConfig("test", name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					testAccCheckIpSpaceDisappears(context.Background(), &v),
@@ -89,7 +87,7 @@ func TestAccIpSpaceResource_AsmConfig(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -136,7 +134,7 @@ func TestAccIpSpaceResource_Comment(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -156,6 +154,22 @@ func TestAccIpSpaceResource_Comment(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "comment", "updated comment"),
 				),
 			},
+			// Update and Read  (unset)
+			{
+				Config: testAccIpSpaceComment(name, ""),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "comment", ""),
+				),
+			},
+			// Update and Read  (unset null)
+			{
+				Config: testAccIpSpaceBasicConfig("test_comment", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "comment", ""),
+				),
+			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
@@ -166,7 +180,7 @@ func TestAccIpSpaceResource_DdnsClientUpdate(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -196,7 +210,7 @@ func TestAccIpSpaceResource_DdnsConflictResolutionMode(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -228,7 +242,7 @@ func TestAccIpSpaceResource_DdnsDomain(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -248,6 +262,22 @@ func TestAccIpSpaceResource_DdnsDomain(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "xyz"),
 				),
 			},
+			// Update and Read  (unset empty string)
+			{
+				Config: testAccIpSpaceDdnsDomain(name, ""),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "ddns_domain", ""),
+				),
+			},
+			// Update and Read  (unset null)
+			{
+				Config: testAccIpSpaceBasicConfig("test_ddns_domain", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "ddns_domain", ""),
+				),
+			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
@@ -258,7 +288,7 @@ func TestAccIpSpaceResource_DdnsGenerateName(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -288,7 +318,7 @@ func TestAccIpSpaceResource_DdnsGeneratedPrefix(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -316,14 +346,15 @@ func TestAccIpSpaceResource_DdnsGeneratedPrefix(t *testing.T) {
 func TestAccIpSpaceResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_dhcp_options"
 	var v1 ipam.IpamsvcIPSpace
+	name := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceDhcpOptionsOption("ipspace_dhcp_options_test", "option", "true"),
+				Config: testAccIpSpaceDhcpOptionsOption(name, "option", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpSpaceExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
@@ -333,7 +364,7 @@ func TestAccIpSpaceResource_DhcpOptions(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceDhcpOptionsGroup("ipspace_dhcp_options_test", "group"),
+				Config: testAccIpSpaceDhcpOptionsGroup(name, "group"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpSpaceExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
@@ -347,14 +378,15 @@ func TestAccIpSpaceResource_DhcpOptions(t *testing.T) {
 func TestAccIpSpaceResource_DhcpOptionsV6(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_dhcp_options_v6"
 	var v1 ipam.IpamsvcIPSpace
+	name := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccIpSpaceDhcpOptionsOptionV6("ipspace_dhcp_options_test", "option", "true"),
+				Config: testAccIpSpaceDhcpOptionsOptionV6(name, "option", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpSpaceExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6.#", "1"),
@@ -364,7 +396,7 @@ func TestAccIpSpaceResource_DhcpOptionsV6(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceDhcpOptionsGroupV6("ipspace_dhcp_options_test", "group"),
+				Config: testAccIpSpaceDhcpOptionsGroupV6(name, "group"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpSpaceExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6.#", "1"),
@@ -380,7 +412,7 @@ func TestAccIpSpaceResource_DdnsSendUpdates(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -410,7 +442,7 @@ func TestAccIpSpaceResource_DdnsTtlPercent(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -440,7 +472,7 @@ func TestAccIpSpaceResource_DdnsUpdateOnRenew(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -470,7 +502,7 @@ func TestAccIpSpaceResource_DhcpConfig(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -512,7 +544,7 @@ func TestAccIpSpaceResource_HeaderOptionFilename(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -532,6 +564,22 @@ func TestAccIpSpaceResource_HeaderOptionFilename(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "HEADER_OPTION_FILENAME_UPDATE_REPLACE_ME"),
 				),
 			},
+			// Update and Read  (unset)
+			{
+				Config: testAccIpSpaceHeaderOptionFilename(name, ""),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "header_option_filename", ""),
+				),
+			},
+			// Update and Read  (unset null)
+			{
+				Config: testAccIpSpaceBasicConfig("test_header_option_filename", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "header_option_filename", ""),
+				),
+			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
@@ -542,7 +590,7 @@ func TestAccIpSpaceResource_HeaderOptionServerAddress(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -562,6 +610,22 @@ func TestAccIpSpaceResource_HeaderOptionServerAddress(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "header_option_server_address", "12.0.0.0"),
 				),
 			},
+			// Update and Read  (unset)
+			{
+				Config: testAccIpSpaceHeaderOptionServerAddress(name, ""),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "header_option_server_address", ""),
+				),
+			},
+			// Update and Read  (unset null)
+			{
+				Config: testAccIpSpaceBasicConfig("test_header_option_server_address", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "header_option_server_address", ""),
+				),
+			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
@@ -572,7 +636,7 @@ func TestAccIpSpaceResource_HeaderOptionServerName(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -592,6 +656,22 @@ func TestAccIpSpaceResource_HeaderOptionServerName(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "HEADER_OPTION_SERVER_NAME_UPDATE_REPLACE_ME"),
 				),
 			},
+			// Update and Read  (unset)
+			{
+				Config: testAccIpSpaceHeaderOptionServerName(name, ""),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", ""),
+				),
+			},
+			// Update and Read  (unset null)
+			{
+				Config: testAccIpSpaceBasicConfig("test_header_option_server_name", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", ""),
+				),
+			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
@@ -602,7 +682,7 @@ func TestAccIpSpaceResource_HostnameRewriteChar(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -632,7 +712,7 @@ func TestAccIpSpaceResource_HostnameRewriteEnabled(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -662,7 +742,7 @@ func TestAccIpSpaceResource_HostnameRewriteRegex(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -692,7 +772,7 @@ func TestAccIpSpaceResource_InheritanceSources(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -754,7 +834,7 @@ func TestAccIpSpaceResource_Tags(t *testing.T) {
 	var v ipam.IpamsvcIPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -841,13 +921,13 @@ func testAccCheckIpSpaceDisappears(ctx context.Context, v *ipam.IpamsvcIPSpace) 
 	}
 }
 
-func testAccIpSpaceBasicConfig(name string) string {
+func testAccIpSpaceBasicConfig(rName, name string) string {
 	// TODO: create basic resource with required fields
 	return fmt.Sprintf(`
-resource "bloxone_ipam_ip_space" "test" {
+resource "bloxone_ipam_ip_space" %q {
     name = %q
 }
-`, name)
+`, rName, name)
 }
 
 func testAccIpSpaceAsmConfig(name string, asmThreshold int, enable, enableNotification bool, forecastPeriod, growthFactor int, growthType string, history, minTotal, minUnused int, reenableDate string) string {
@@ -870,7 +950,7 @@ resource "bloxone_ipam_ip_space" "test_asm_config" {
 `, name, asmThreshold, enable, enableNotification, forecastPeriod, growthFactor, growthType, history, minTotal, minUnused, reenableDate)
 }
 
-func testAccIpSpaceComment(name, comment string) string {
+func testAccIpSpaceComment(name string, comment string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_comment" {
     name = %q
@@ -972,7 +1052,7 @@ resource "bloxone_ipam_ip_space" "test_dhcp_config" {
 `, name, abandonedReclaimTime, abandonedReclaimTimeV6, allowUnknown, allowUnknownV6, ignoreClientUid, leaseTime, leaseTimeV6)
 }
 
-func testAccIpSpaceDhcpOptionsOption(name string, type_, optValue string) string {
+func testAccIpSpaceDhcpOptionsOption(name string, optionItemType, optValue string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_dhcp_options" {
     name = %q
@@ -984,12 +1064,12 @@ resource "bloxone_ipam_ip_space" "test_dhcp_options" {
       }
     ]
 }
-`, name, type_, optValue)
-	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode(), config}, "")
+`, name, optionItemType, optValue)
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip4"), config}, "")
 
 }
 
-func testAccIpSpaceDhcpOptionsGroup(name string, type_ string) string {
+func testAccIpSpaceDhcpOptionsGroup(name string, optionItemType string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_dhcp_options" {
     name = %q
@@ -1000,12 +1080,12 @@ resource "bloxone_ipam_ip_space" "test_dhcp_options" {
       }
     ]
 }
-`, name, type_)
-	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode(), config}, "")
+`, name, optionItemType)
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip4"), config}, "")
 
 }
 
-func testAccIpSpaceDhcpOptionsOptionV6(name string, type_, optValue string) string {
+func testAccIpSpaceDhcpOptionsOptionV6(name string, optionItemType, optValue string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_dhcp_options_v6" {
    name = %q
@@ -1017,11 +1097,11 @@ resource "bloxone_ipam_ip_space" "test_dhcp_options_v6" {
      }
    ]
 }
-`, name, type_, optValue)
-	return strings.Join([]string{testAccBaseWithV6OptionSpaceAndCode(), config}, "")
+`, name, optionItemType, optValue)
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip6"), config}, "")
 }
 
-func testAccIpSpaceDhcpOptionsGroupV6(name string, type_ string) string {
+func testAccIpSpaceDhcpOptionsGroupV6(name string, optionItemType string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_dhcp_options_v6" {
    name = %q
@@ -1032,8 +1112,8 @@ resource "bloxone_ipam_ip_space" "test_dhcp_options_v6" {
      }
    ]
 }
-`, name, type_)
-	return strings.Join([]string{testAccBaseWithV6OptionSpaceAndCode(), config}, "")
+`, name, optionItemType)
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip6"), config}, "")
 }
 
 func testAccIpSpaceHeaderOptionFilename(name, headerOptionFilename string) string {

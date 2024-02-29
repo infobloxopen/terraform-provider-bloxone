@@ -17,7 +17,7 @@ func TestAccUIJoinTokenDataSource_Filters(t *testing.T) {
 	var v infra_provision.HostactivationJoinToken
 	name := acctest.RandomNameWithPrefix("jt")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckUIJoinTokenDestroy(context.Background(), &v),
@@ -42,7 +42,7 @@ func TestAccUIJoinTokenDataSource_TagFilters(t *testing.T) {
 	name := acctest.RandomNameWithPrefix("jt")
 	tagValue := acctest.RandomNameWithPrefix("tag ")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckUIJoinTokenDestroy(context.Background(), &v),

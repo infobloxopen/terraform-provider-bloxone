@@ -26,7 +26,7 @@ type HostactivationJoinToken struct {
 	// The resource identifier.
 	Id         *string                   `json:"id,omitempty"`
 	LastUsedAt *time.Time                `json:"last_used_at,omitempty"`
-	Name       string                    `json:"name"`
+	Name       *string                   `json:"name,omitempty"`
 	Status     *JoinTokenJoinTokenStatus `json:"status,omitempty"`
 	Tags       map[string]interface{}    `json:"tags,omitempty"`
 	// first half of the token.
@@ -38,9 +38,8 @@ type HostactivationJoinToken struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewHostactivationJoinToken(name string) *HostactivationJoinToken {
+func NewHostactivationJoinToken() *HostactivationJoinToken {
 	this := HostactivationJoinToken{}
-	this.Name = name
 	var status JoinTokenJoinTokenStatus = JOINTOKENJOINTOKENSTATUS_UNKNOWN
 	this.Status = &status
 	return &this
@@ -216,28 +215,36 @@ func (o *HostactivationJoinToken) SetLastUsedAt(v time.Time) {
 	o.LastUsedAt = &v
 }
 
-// GetName returns the Name field value
+// GetName returns the Name field value if set, zero value otherwise.
 func (o *HostactivationJoinToken) GetName() string {
-	if o == nil {
+	if o == nil || IsNil(o.Name) {
 		var ret string
 		return ret
 	}
-
-	return o.Name
+	return *o.Name
 }
 
-// GetNameOk returns a tuple with the Name field value
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *HostactivationJoinToken) GetNameOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Name) {
 		return nil, false
 	}
-	return &o.Name, true
+	return o.Name, true
 }
 
-// SetName sets field value
+// HasName returns a boolean if a field has been set.
+func (o *HostactivationJoinToken) HasName() bool {
+	if o != nil && !IsNil(o.Name) {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
 func (o *HostactivationJoinToken) SetName(v string) {
-	o.Name = v
+	o.Name = &v
 }
 
 // GetStatus returns the Status field value if set, zero value otherwise.
@@ -393,7 +400,9 @@ func (o HostactivationJoinToken) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.LastUsedAt) {
 		toSerialize["last_used_at"] = o.LastUsedAt
 	}
-	toSerialize["name"] = o.Name
+	if !IsNil(o.Name) {
+		toSerialize["name"] = o.Name
+	}
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
