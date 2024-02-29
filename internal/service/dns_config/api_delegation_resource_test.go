@@ -231,6 +231,8 @@ func TestAccDelegationResource_Tags(t *testing.T) {
 func TestAccDelegationResource_View(t *testing.T) {
 	var resourceName = "bloxone_dns_delegation.test_view"
 	var v1, v2 dns_config.ConfigDelegation
+	view1 := acctest.RandomNameWithPrefix("view")
+	view2 := acctest.RandomNameWithPrefix("view")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -238,19 +240,19 @@ func TestAccDelegationResource_View(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccDelegationView("bloxone_dns_view.test"),
+				Config: testAccDelegationView(view1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDelegationExists(context.Background(), resourceName, &v1),
-					resource.TestCheckResourceAttrPair(resourceName, "view", "bloxone_dns_view.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "view", "bloxone_dns_view."+view1, "id"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccDelegationView("bloxone_dns_view.test1"),
+				Config: testAccDelegationView(view2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDelegationDestroy(context.Background(), &v1),
 					testAccCheckDelegationExists(context.Background(), resourceName, &v2),
-					resource.TestCheckResourceAttrPair(resourceName, "view", "bloxone_dns_view.test1", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "view", "bloxone_dns_view."+view2, "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -431,27 +433,24 @@ resource "bloxone_dns_delegation" "test_tags" {
 
 func testAccDelegationView(view string) string {
 	return fmt.Sprintf(`
-	resource "bloxone_dns_view" "test" {
-     name = "example-view"
-    }
-
-	resource "bloxone_dns_view" "test1" {
-     name = "example-view-1"
+	resource "bloxone_dns_view" %[1]q {
+     name = %[1]q
     }
 
 	resource "bloxone_dns_auth_zone" test {
      fqdn = "123."
      primary_type = "cloud"
-     view = %s.id
+     view = bloxone_dns_view.%[1]s.id
 	}
+
 resource "bloxone_dns_delegation" "test_view" {
     fqdn = "test.123."
-    view = %s.id
+    view = bloxone_dns_view.%[1]s.id
     delegation_servers = [{
 		address = "12.0.0.0"
 		fqdn = "ns1.com."
   	}]
-    depends_on = [bloxone_dns_view.test, bloxone_dns_auth_zone.test]
+    depends_on = [bloxone_dns_auth_zone.test]
 }
-`, view, view)
+`, view)
 }
