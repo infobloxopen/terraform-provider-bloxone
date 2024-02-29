@@ -2,6 +2,8 @@ package infra_mgmt_test
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"net/http"
@@ -19,18 +21,19 @@ func TestAccServicesResource_basic(t *testing.T) {
 	var resourceName = "bloxone_infra_service.test"
 	var v infra_mgmt.InfraService
 	var serviceName = acctest.RandomNameWithPrefix("service")
+	var hostName = acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServicesBasicConfig(serviceName, "dhcp"),
+				Config: testAccServicesBasicConfig(hostName, serviceName, "dhcp"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServicesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", serviceName),
-					resource.TestCheckResourceAttrPair(resourceName, "pool_id", "data.bloxone_infra_hosts.test", "results.0.pool_id"),
+					resource.TestCheckResourceAttrPair(resourceName, "pool_id", "bloxone_infra_host.test", "pool_id"),
 					resource.TestCheckResourceAttr(resourceName, "service_type", "dhcp"),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
@@ -49,14 +52,15 @@ func TestAccServicesResource_disappears(t *testing.T) {
 	resourceName := "bloxone_infra_service.test"
 	var v infra_mgmt.InfraService
 	var serviceName = acctest.RandomNameWithPrefix("service")
+	var hostName = acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckServicesDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccServicesBasicConfig(serviceName, "dhcp"),
+				Config: testAccServicesBasicConfig(hostName, serviceName, "dhcp"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServicesExists(context.Background(), resourceName, &v),
 					testAccCheckServicesDisappears(context.Background(), &v),
@@ -71,14 +75,15 @@ func TestAccServicesResource_Description(t *testing.T) {
 	var resourceName = "bloxone_infra_service.test_description"
 	var v infra_mgmt.InfraService
 	var serviceName = acctest.RandomNameWithPrefix("service")
+	var hostName = acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServicesDescription(serviceName, "dhcp", "service description"),
+				Config: testAccServicesDescription(hostName, serviceName, "dhcp", "service description"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServicesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "service description"),
@@ -86,7 +91,7 @@ func TestAccServicesResource_Description(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServicesDescription(serviceName, "dhcp", "service description updated"),
+				Config: testAccServicesDescription(hostName, serviceName, "dhcp", "service description updated"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServicesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "service description updated"),
@@ -101,14 +106,15 @@ func TestAccServicesResource_DesiredState(t *testing.T) {
 	var resourceName = "bloxone_infra_service.test_desired_state"
 	var v infra_mgmt.InfraService
 	var serviceName = acctest.RandomNameWithPrefix("service")
+	var hostName = acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServicesDesiredState(serviceName, "dhcp", "start"),
+				Config: testAccServicesDesiredState(hostName, serviceName, "dhcp", "start"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServicesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "desired_state", "start"),
@@ -116,7 +122,7 @@ func TestAccServicesResource_DesiredState(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServicesDesiredState(serviceName, "dhcp", "stop"),
+				Config: testAccServicesDesiredState(hostName, serviceName, "dhcp", "stop"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServicesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "desired_state", "stop"),
@@ -131,14 +137,15 @@ func TestAccServicesResource_DesiredVersion(t *testing.T) {
 	var resourceName = "bloxone_infra_service.test_desired_version"
 	var v infra_mgmt.InfraService
 	var serviceName = acctest.RandomNameWithPrefix("service")
+	var hostName = acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServicesDesiredVersion(serviceName, "dhcp", "3.4.0"),
+				Config: testAccServicesDesiredVersion(hostName, serviceName, "dhcp", "3.4.0"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServicesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "desired_version", "3.4.0"),
@@ -146,7 +153,7 @@ func TestAccServicesResource_DesiredVersion(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServicesDesiredVersion(serviceName, "dhcp", "3.5.0"),
+				Config: testAccServicesDesiredVersion(hostName, serviceName, "dhcp", "3.5.0"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServicesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "desired_version", "3.5.0"),
@@ -161,14 +168,15 @@ func TestAccServicesResource_InterfaceLabels(t *testing.T) {
 	var resourceName = "bloxone_infra_service.test_interface_labels"
 	var v infra_mgmt.InfraService
 	var serviceName = acctest.RandomNameWithPrefix("service")
+	var hostName = acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServicesInterfaceLabels(serviceName, "dhcp", []string{"WAN", "LAN"}),
+				Config: testAccServicesInterfaceLabels(hostName, serviceName, "dhcp", []string{"WAN", "LAN"}),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServicesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "interface_labels.0", "WAN"),
@@ -177,7 +185,7 @@ func TestAccServicesResource_InterfaceLabels(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServicesInterfaceLabels(serviceName, "dhcp", []string{"label1", "label2"}),
+				Config: testAccServicesInterfaceLabels(hostName, serviceName, "dhcp", []string{"label1", "label2"}),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServicesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "interface_labels.0", "label1"),
@@ -193,14 +201,15 @@ func TestAccServicesResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_infra_service.test_tags"
 	var v infra_mgmt.InfraService
 	var serviceName = acctest.RandomNameWithPrefix("service")
+	var hostName = acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServicesTags(serviceName, "dhcp", "value1"),
+				Config: testAccServicesTags(hostName, serviceName, "dhcp", "value1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServicesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
@@ -208,7 +217,7 @@ func TestAccServicesResource_Tags(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServicesTags(serviceName, "dhcp", "value2"),
+				Config: testAccServicesTags(hostName, serviceName, "dhcp", "value2"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServicesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value2"),
@@ -272,98 +281,104 @@ func testAccCheckServicesDisappears(ctx context.Context, v *infra_mgmt.InfraServ
 		return nil
 	}
 }
-func testAccServicesBase() string {
-	return `
-data "bloxone_infra_hosts" "test" {
-    tag_filters = {
-		used_for = "Terraform Provider Acceptance Tests"
-	}
+func testAccServicesBaseWithHost(hostName string) string {
+	sn := hex.EncodeToString(sha256.New().Sum([]byte(hostName)))
+	return fmt.Sprintf(`
+resource "bloxone_infra_host" "test" {
+  display_name = %q
+  serial_number = %q
 }
-`
+`, hostName, sn)
 }
 
-func testAccServicesBasicConfig(serviceName, serviceType string) string {
+func testAccServicesBasicConfig(hostName, serviceName, serviceType string) string {
 	return strings.Join([]string{
-		testAccServicesBase(),
+		testAccServicesBaseWithHost(hostName),
 		fmt.Sprintf(`
 resource "bloxone_infra_service" "test" {
     name = %q
-    pool_id = data.bloxone_infra_hosts.test.results.0.pool_id
+    pool_id = bloxone_infra_host.test.pool_id
     service_type = %q
+	wait_for_state = false
 }
 `, serviceName, serviceType),
 	}, "")
 }
 
-func testAccServicesDescription(serviceName, serviceType, description string) string {
+func testAccServicesDescription(hostName, serviceName, serviceType, description string) string {
 	return strings.Join([]string{
-		testAccServicesBase(),
+		testAccServicesBaseWithHost(hostName),
 		fmt.Sprintf(`
 resource "bloxone_infra_service" "test_description" {
     name = %q
-    pool_id = data.bloxone_infra_hosts.test.results.0.pool_id
+    pool_id = bloxone_infra_host.test.pool_id
     service_type = %q
+	wait_for_state = false
     description = %q
 }
 `, serviceName, serviceType, description),
 	}, "")
 }
 
-func testAccServicesDesiredState(serviceName, serviceType, desiredState string) string {
+func testAccServicesDesiredState(hostName, serviceName, serviceType, desiredState string) string {
 	return strings.Join([]string{
-		testAccServicesBase(),
+		testAccServicesBaseWithHost(hostName),
 		fmt.Sprintf(`
 resource "bloxone_infra_service" "test_desired_state" {
     name = %q
-    pool_id = data.bloxone_infra_hosts.test.results.0.pool_id
+    pool_id = bloxone_infra_host.test.pool_id
     service_type = %q
+	wait_for_state = false
     desired_state = %q
 }
 `, serviceName, serviceType, desiredState),
 	}, "")
 }
 
-func testAccServicesDesiredVersion(serviceName, serviceType, desiredVersion string) string {
+func testAccServicesDesiredVersion(hostName, serviceName, serviceType, desiredVersion string) string {
 	return strings.Join([]string{
-		testAccServicesBase(),
+		testAccServicesBaseWithHost(hostName),
 		fmt.Sprintf(`
 resource "bloxone_infra_service" "test_desired_version" {
     name = %q
-    pool_id = data.bloxone_infra_hosts.test.results.0.pool_id
+    pool_id = bloxone_infra_host.test.pool_id
     service_type = %q
+	wait_for_state = false
     desired_version = %q
 }
 `, serviceName, serviceType, desiredVersion),
 	}, "")
 }
 
-func testAccServicesInterfaceLabels(serviceName, serviceType string, interfaceLabels []string) string {
+func testAccServicesInterfaceLabels(hostName, serviceName, serviceType string, interfaceLabels []string) string {
 	interfaceLabelsBlock := strings.Builder{}
 	for _, l := range interfaceLabels {
 		interfaceLabelsBlock.WriteString(fmt.Sprintf("%q,", l))
 	}
 
 	return strings.Join([]string{
-		testAccServicesBase(),
+		testAccServicesBaseWithHost(hostName),
 		fmt.Sprintf(`
 resource "bloxone_infra_service" "test_interface_labels" {
     name = %q
-    pool_id = data.bloxone_infra_hosts.test.results.0.pool_id
+    pool_id = bloxone_infra_host.test.pool_id
     service_type = %q
+	wait_for_state = false
     interface_labels = [%s]
 }
 `, serviceName, serviceType, interfaceLabelsBlock.String()),
 	}, "")
 }
 
-func testAccServicesTags(serviceName, serviceType, tags string) string {
+func testAccServicesTags(hostName, serviceName, serviceType, tags string) string {
 	return strings.Join([]string{
-		testAccServicesBase(),
+		testAccServicesBaseWithHost(hostName),
 		fmt.Sprintf(`
 resource "bloxone_infra_service" "test_tags" {
     name = %q
-    pool_id = data.bloxone_infra_hosts.test.results.0.pool_id
+    pool_id = bloxone_infra_host.test.pool_id
     service_type = %q
+	wait_for_state = false
     tags = {
 		tag1 = %q
 	}

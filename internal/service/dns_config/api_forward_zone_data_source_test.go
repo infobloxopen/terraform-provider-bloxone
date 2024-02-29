@@ -17,7 +17,7 @@ func TestAccForwardZoneDataSource_Filters(t *testing.T) {
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dns_config.ConfigForwardZone
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckForwardZoneDestroy(context.Background(), &v),
@@ -40,13 +40,13 @@ func TestAccForwardZoneDataSource_TagFilters(t *testing.T) {
 	var v dns_config.ConfigForwardZone
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckForwardZoneDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccForwardZoneDataSourceConfigTagFilters(fqdn, "value1"),
+				Config: testAccForwardZoneDataSourceConfigTagFilters(fqdn, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckForwardZoneExists(context.Background(), resourceName, &v),

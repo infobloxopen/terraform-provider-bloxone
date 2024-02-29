@@ -27,7 +27,7 @@ func TestAccAuthZoneResource_basic(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -62,7 +62,7 @@ func TestAccAuthZoneResource_disappears(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckAuthZoneDestroy(context.Background(), &v),
@@ -85,7 +85,7 @@ func TestAccAuthZoneResource_FQDN(t *testing.T) {
 	var v2 dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -119,7 +119,7 @@ func TestAccAuthZoneResource_PrimaryType(t *testing.T) {
 	var v2 dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -152,7 +152,7 @@ func TestAccAuthZoneResource_Comment(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -182,7 +182,7 @@ func TestAccAuthZoneResource_Disabled(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -212,7 +212,7 @@ func TestAccAuthZoneResource_ExternalPrimaries(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -251,7 +251,7 @@ func TestAccAuthZoneResource_ExternalSecondaries(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -283,7 +283,7 @@ func TestAccAuthZoneResource_GssTsigEnabled(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -313,7 +313,7 @@ func TestAccAuthZoneResource_InheritanceSources(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -344,7 +344,7 @@ func TestAccAuthZoneResource_InitialSoaSerial(t *testing.T) {
 	var v2 dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -375,7 +375,7 @@ func TestAccAuthZoneResource_Notify(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -405,7 +405,7 @@ func TestAccAuthZoneResource_Nsgs(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -435,7 +435,7 @@ func TestAccAuthZoneResource_QueryAcl(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -486,7 +486,7 @@ func TestAccAuthZoneResource_Tags(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -524,7 +524,7 @@ func TestAccAuthZoneResource_TransferAcl(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -575,7 +575,7 @@ func TestAccAuthZoneResource_UpdateAcl(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -626,7 +626,7 @@ func TestAccAuthZoneResource_UseForwardersForSubzones(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -657,7 +657,7 @@ func TestAccAuthZoneResource_View(t *testing.T) {
 	var v2 dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -689,7 +689,7 @@ func TestAccAuthZoneResource_ZoneAuthority(t *testing.T) {
 	var v dns_config.ConfigAuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{

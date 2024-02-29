@@ -16,7 +16,7 @@ func TestAccForwardNsgDataSource_Filters(t *testing.T) {
 	resourceName := "bloxone_dns_forward_nsg.test"
 	var v dns_config.ConfigForwardNSG
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckForwardNsgDestroy(context.Background(), &v),
@@ -37,13 +37,13 @@ func TestAccForwardNsgDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_forward_nsgs.test"
 	resourceName := "bloxone_dns_forward_nsg.test"
 	var v dns_config.ConfigForwardNSG
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckForwardNsgDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccForwardNsgDataSourceConfigTagFilters("test.tag.com", "value1"),
+				Config: testAccForwardNsgDataSourceConfigTagFilters("test.tag.com", acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckForwardNsgExists(context.Background(), resourceName, &v),

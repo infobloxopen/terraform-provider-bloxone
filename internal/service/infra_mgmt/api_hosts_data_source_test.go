@@ -17,7 +17,7 @@ func TestAccHostsDataSource_Filters(t *testing.T) {
 	var v infra_mgmt.InfraHost
 	name := acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckHostsDestroy(context.Background(), &v),
@@ -41,7 +41,7 @@ func TestAccHostsDataSource_TagFilters(t *testing.T) {
 	name := acctest.RandomNameWithPrefix("host")
 	tagValue := acctest.RandomNameWithPrefix("tag-value")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckHostsDestroy(context.Background(), &v),

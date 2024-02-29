@@ -14,7 +14,7 @@ import (
 func TestDataSourceNextAvailableIP_AddressBlock(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_next_available_ips.test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -51,7 +51,7 @@ func TestDataSourceNextAvailableIP_AddressBlock(t *testing.T) {
 func TestDataSourceNextAvailableIP_Subnet(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_next_available_ips.test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -80,7 +80,7 @@ func TestDataSourceNextAvailableIP_Subnet(t *testing.T) {
 func TestDataSourceNextAvailableIP_Range(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_next_available_ips.test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
