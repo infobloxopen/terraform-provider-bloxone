@@ -3,15 +3,20 @@ package dns_config
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internalplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
 )
 
 type ConfigACLItemModel struct {
@@ -33,6 +38,10 @@ var ConfigACLItemAttrTypes = map[string]attr.Type{
 var ConfigACLItemResourceSchemaAttributes = map[string]schema.Attribute{
 	"access": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			internalplanmodifier.UseEmptyStringForNull(),
+		},
 		MarkdownDescription: "Access permission for _element_.\n\n" +
 			"  Allowed values:\n" +
 			"  * _allow_\n" +
@@ -44,11 +53,20 @@ var ConfigACLItemResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"address": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			internalplanmodifier.UseEmptyStringForNull(),
+		},
 		MarkdownDescription: `Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.`,
 	},
 	"element": schema.StringAttribute{
-		Required: true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.String{
+			internalvalidator.StringNotNull(),
+			stringvalidator.OneOf("any", "ip", "acl", "tsig_key"),
+		},
 		MarkdownDescription: "Type of element.\n\n" +
 			"  Allowed values:\n" +
 			"  * _any_\n" +
