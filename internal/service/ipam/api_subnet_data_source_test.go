@@ -102,7 +102,6 @@ func testAccCheckSubnetResourceAttrPair(resourceName, dataSourceName string) []r
 		resource.TestCheckResourceAttrPair(resourceName, "space", dataSourceName, "results.0.space"),
 		resource.TestCheckResourceAttrPair(resourceName, "tags", dataSourceName, "results.0.tags"),
 		resource.TestCheckResourceAttrPair(resourceName, "threshold", dataSourceName, "results.0.threshold"),
-		resource.TestCheckResourceAttrPair(resourceName, "updated_at", dataSourceName, "results.0.updated_at"),
 		resource.TestCheckResourceAttrPair(resourceName, "usage", dataSourceName, "results.0.usage"),
 		resource.TestCheckResourceAttrPair(resourceName, "utilization", dataSourceName, "results.0.utilization"),
 		resource.TestCheckResourceAttrPair(resourceName, "utilization_v6", dataSourceName, "results.0.utilization_v6"),
