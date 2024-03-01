@@ -20,14 +20,9 @@ variable "location" {
 }
 
 variable "vm_size" {
-  default     = "Standard_F4s_v2"
   description = "Size of the Virtual Machine based on Azure sizing"
   type        = string
-}
-
-variable "vm_network_security_group_name" {
-  description = "The name of the network security group that will be created and associated to the BloxOne Host"
-  type        = string
+  default     = "Standard_F8s"
 }
 
 variable "vm_network_interface_ids" {

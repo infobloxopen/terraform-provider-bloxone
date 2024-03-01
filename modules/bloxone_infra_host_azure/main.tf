@@ -24,7 +24,6 @@
  *   resource_group_name       = "my-resource-group"
  *   subnet_id                 = "subnet-id"
  *   vnet_id                   = "vnet-id"
- *   vm_network_security_group = "nsg-id"
  *   vm_network_interface_ids  = ["nic-id"]
  *
  *   source_image_reference_offer   = "infoblox-bloxone-34"

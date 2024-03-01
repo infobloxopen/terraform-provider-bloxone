@@ -24,7 +24,6 @@ module "bloxone_infra_host_azure" {
   resource_group_name       = "my-resource-group"
   subnet_id                 = "subnet-id"
   vnet_id                   = "vnet-id"
-  vm_network_security_group = "nsg-id"
   vm_network_interface_ids  = ["nic-id"]
 
   source_image_reference_offer   = "infoblox-bloxone-34"
@@ -97,8 +96,7 @@ module "bloxone_infra_host_azure" {
 | <a name="input_timeouts"></a> [timeouts](#input\_timeouts) | The timeouts to use for the BloxOne Host. The timeout value is a string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). If not provided, the default timeouts will be used. | <pre>object({<br>    create = string<br>    update = string<br>    read   = string<br>  })</pre> | `null` | no |
 | <a name="input_vm_name"></a> [vm\_name](#input\_vm\_name) | The name of the virtual machine | `string` | n/a | yes |
 | <a name="input_vm_network_interface_ids"></a> [vm\_network\_interface\_ids](#input\_vm\_network\_interface\_ids) | The network interface ids that will be associated to the BloxOne Host | `list(string)` | n/a | yes |
-| <a name="input_vm_network_security_group_name"></a> [vm\_network\_security\_group\_name](#input\_vm\_network\_security\_group\_name) | The name of the network security group that will be created and associated to the BloxOne Host | `string` | n/a | yes |
-| <a name="input_vm_size"></a> [vm\_size](#input\_vm\_size) | Size of the Virtual Machine based on Azure sizing | `string` | `"Standard_F4s_v2"` | no |
+| <a name="input_vm_size"></a> [vm\_size](#input\_vm\_size) | Size of the Virtual Machine based on Azure sizing | `string` | `"Standard_F8s"` | no |
 
 ## Outputs
 
