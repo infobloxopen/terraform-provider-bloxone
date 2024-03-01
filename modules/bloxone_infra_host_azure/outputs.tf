@@ -13,7 +13,3 @@ output "azurerm_linux_virtual_machine" {
   description = "The Azure virtual machine object for the instance"
 }
 
-output "azurerm_network_interface" {
-  value       = azurerm_network_interface.this
-  description = "The Azure network interface object for the instance"
-}

@@ -1,7 +1,7 @@
 variable "join_token" {
   description = "The join token to use for the BloxOne Host. If not provided, a join token will be created."
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "vm_name" {
@@ -16,7 +16,6 @@ variable "resource_group_name" {
 
 variable "location" {
   description = "The location where the resources will be created"
-  default     = "eastus"
   type        = string
 }
 
@@ -31,9 +30,9 @@ variable "vm_network_security_group_name" {
   type        = string
 }
 
-variable "vnet_subnet_id" {
-  description = "The subnet id of the virtual network on which the BloxOne Host will be connected"
-  type        = string
+variable "vm_network_interface_ids" {
+  description = "The network interface ids that will be associated to the BloxOne Host"
+  type        = list(string)
 }
 
 variable "tags" {
@@ -62,25 +61,23 @@ variable "os_disk_storage_account_type" {
 
 variable "source_image_reference_publisher" {
   description = "The publisher of the image that you want to deploy"
-  default     = "infoblox"
   type        = string
+  default     = "infoblox"
 }
 
 variable "source_image_reference_offer" {
   description = "The offer of the image that you want to deploy"
-  default     = "infoblox-bloxone-34"
   type        = string
 }
 
 variable "source_image_reference_sku" {
   description = "The sku of the image that you want to deploy"
-  default     = "infoblox-bloxone"
   type        = string
+  default     = "infoblox-bloxone"
 }
 
 variable "source_image_reference_version" {
   description = "The version of the image that you want to deploy."
-  default     = "latest"
   type        = string
 }
 
@@ -93,7 +90,6 @@ variable "plan_name" {
 variable "plan_product" {
   description = "The product to use for the BloxOne Host."
   type        = string
-  default     = "infoblox-bloxone-34"
 }
 
 variable plan_publisher {
@@ -102,10 +98,15 @@ variable plan_publisher {
   default     = "infoblox"
 }
 
+variable "admin_username" {
+  description = "The username to use for the BloxOne Host."
+  type        = string
+  default     = "infobloxadmin"
+}
+
 variable "ssh_public_key_path" {
   description = "The path to the SSH public key to use for the BloxOne Host."
   type        = string
-  default =  "~/.ssh/id_rsa.pub"
 }
 
 variable "services" {

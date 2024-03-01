@@ -25,10 +25,15 @@
  *   subnet_id                 = "subnet-id"
  *   vnet_id                   = "vnet-id"
  *   vm_network_security_group = "nsg-id"
- * 
- *   source_image_reference_offer = "infoblox-bloxone-34"
+ *   vm_network_interface_ids  = ["nic-id"]
+ *
+ *   source_image_reference_offer   = "infoblox-bloxone-34"
+ *   source_image_reference_sku     = "infoblox-bloxone"
  *   source_image_reference_version = "3.8.1"
  *
+ *   plan_name                 = "infoblox-bloxone"
+ *   plan_product              = "infoblox-bloxone-34"
+ * 
  *   azure_instance_tags       = {
  *     environment = "dev"
  *   }
@@ -63,36 +68,24 @@ resource "bloxone_infra_join_token" "this" {
   name  = "jt-${random_uuid.this.result}"
 }
 
-resource "azurerm_network_interface" "this" {
-  name                = "${var.vm_name}-nic"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  tags                = var.azure_instance_tags
-
-  ip_configuration {
-    name                          = "internal"
-    subnet_id                     = var.vnet_subnet_id
-    private_ip_address_allocation = "Dynamic"
-  }
-}
 
 resource "azurerm_linux_virtual_machine" "this" {
-  name                            = var.vm_name
-  location                        = var.location
-  resource_group_name             = var.resource_group_name
-  network_interface_ids           = [azurerm_network_interface.this.id]
-  admin_username                  = "dummyuser"
-  size                            = var.vm_size
-  tags                            = var.azure_instance_tags
+  name                  = var.vm_name
+  location              = var.location
+  resource_group_name   = var.resource_group_name
+  network_interface_ids = var.vm_network_interface_ids
+  admin_username        = var.admin_username
+  size                  = var.vm_size
+  tags                  = var.azure_instance_tags
 
   admin_ssh_key {
-    username   = "dummyuser"
+    username   = var.admin_username
     public_key = file(var.ssh_public_key_path)
   }
-  
+
   os_disk {
     name                 = "${var.vm_name}-os-disk"
-    caching              = "ReadWrite"
+    caching              = var.os_disk_caching
     storage_account_type = var.os_disk_storage_account_type
   }
 
@@ -109,12 +102,11 @@ resource "azurerm_linux_virtual_machine" "this" {
     publisher = var.plan_publisher
   }
 
-  custom_data    = base64encode(templatefile("${path.module}/userdata.tftpl", {
-    join_token   = local.join_token
-    tags         = local.tags
+  custom_data = base64encode(templatefile("${path.module}/userdata.tftpl", {
+    join_token = local.join_token
+    tags       = local.tags
   }))
 
-  depends_on = [azurerm_network_interface.this]
 }
 
 data "bloxone_infra_hosts" "this" {
