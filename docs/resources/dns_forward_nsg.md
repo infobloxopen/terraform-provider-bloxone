@@ -57,6 +57,9 @@ resource "bloxone_dns_forward_nsg" "example" {
 Required:
 
 - `address` (String) Server IP address.
+
+Optional:
+
 - `fqdn` (String) Server FQDN.
 
 Read-Only:

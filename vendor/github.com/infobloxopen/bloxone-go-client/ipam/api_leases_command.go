@@ -21,7 +21,6 @@ import (
 )
 
 type LeasesCommandAPI interface {
-
 	/*
 			LeasesCommandCreate Perform actions like clearing DHCP lease(s).
 
@@ -157,6 +156,5 @@ func (a *LeasesCommandAPIService) LeasesCommandCreateExecute(r ApiLeasesCommandC
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

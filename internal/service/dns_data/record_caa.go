@@ -99,7 +99,11 @@ func flattenRDataFieldString(val interface{}, diags *diag.Diagnostics) basetypes
 		diags.AddError("Value conversion error", fmt.Sprintf("Failed to convert value '%v' to string", val))
 		return types.StringNull()
 	}
-
+	if val.(string) == "" {
+		// rdata is sent as a map, so we need to return a null value if the string is empty
+		// if the empty string is significant, this can be wrapped around a emptyAsNull flag
+		return types.StringNull()
+	}
 	return flex.FlattenString(val.(string))
 }
 

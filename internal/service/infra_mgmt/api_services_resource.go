@@ -88,7 +88,9 @@ func (r *ServicesResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
-	r.waitServiceStartStop(ctx, data.Name.ValueString(), data.DesiredState.ValueString(), createTimeout, &resp.Diagnostics)
+	if data.WaitForState.ValueBool() {
+		r.waitServiceStartStop(ctx, data.Name.ValueString(), data.DesiredState.ValueString(), createTimeout, &resp.Diagnostics)
+	}
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -153,7 +155,9 @@ func (r *ServicesResource) Update(ctx context.Context, req resource.UpdateReques
 		return
 	}
 
-	r.waitServiceStartStop(ctx, data.Name.ValueString(), data.DesiredState.ValueString(), updateTimeout, &resp.Diagnostics)
+	if data.WaitForState.ValueBool() {
+		r.waitServiceStartStop(ctx, data.Name.ValueString(), data.DesiredState.ValueString(), updateTimeout, &resp.Diagnostics)
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

@@ -22,7 +22,6 @@ import (
 )
 
 type ServerAPI interface {
-
 	/*
 			ServerCreate Create the Server object.
 
@@ -37,7 +36,6 @@ type ServerAPI interface {
 	// ServerCreateExecute executes the request
 	//  @return ConfigCreateServerResponse
 	ServerCreateExecute(r ApiServerCreateRequest) (*ConfigCreateServerResponse, *http.Response, error)
-
 	/*
 			ServerDelete Move the Server object to Recyclebin.
 
@@ -52,7 +50,6 @@ type ServerAPI interface {
 
 	// ServerDeleteExecute executes the request
 	ServerDeleteExecute(r ApiServerDeleteRequest) (*http.Response, error)
-
 	/*
 			ServerList List Server objects.
 
@@ -67,7 +64,6 @@ type ServerAPI interface {
 	// ServerListExecute executes the request
 	//  @return ConfigListServerResponse
 	ServerListExecute(r ApiServerListRequest) (*ConfigListServerResponse, *http.Response, error)
-
 	/*
 			ServerRead Read the Server object.
 
@@ -83,7 +79,6 @@ type ServerAPI interface {
 	// ServerReadExecute executes the request
 	//  @return ConfigReadServerResponse
 	ServerReadExecute(r ApiServerReadRequest) (*ConfigReadServerResponse, *http.Response, error)
-
 	/*
 			ServerUpdate Update the Server object.
 
@@ -187,6 +182,14 @@ func (a *ServerAPIService) ServerCreateExecute(r ApiServerCreateRequest) (*Confi
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -230,7 +233,6 @@ func (a *ServerAPIService) ServerCreateExecute(r ApiServerCreateRequest) (*Confi
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -533,7 +535,6 @@ func (a *ServerAPIService) ServerListExecute(r ApiServerListRequest) (*ConfigLis
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -666,7 +667,6 @@ func (a *ServerAPIService) ServerReadExecute(r ApiServerReadRequest) (*ConfigRea
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -757,6 +757,14 @@ func (a *ServerAPIService) ServerUpdateExecute(r ApiServerUpdateRequest) (*Confi
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -800,6 +808,5 @@ func (a *ServerAPIService) ServerUpdateExecute(r ApiServerUpdateRequest) (*Confi
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

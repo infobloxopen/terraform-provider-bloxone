@@ -6,10 +6,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	internalplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -47,7 +49,11 @@ var ConfigSortListItemResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `Optional. The prioritized networks. If empty, the value of _source_ or networks from _acl_ is used.`,
 	},
 	"source": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			internalplanmodifier.UseEmptyStringForNull(),
+		},
 		MarkdownDescription: `Must be empty if _element_ is not _ip_.`,
 	},
 }

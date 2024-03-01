@@ -140,6 +140,8 @@ var ConfigServerResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "Optional. Comment for configuration.",
 	},
 	"created_at": schema.StringAttribute{
@@ -238,7 +240,7 @@ var ConfigServerResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"forwarders": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
-			Attributes: ConfigForwarderResourceSchemaAttributes,
+			Attributes: ConfigForwarderResourceSchemaAttributes(false),
 		},
 		Optional:            true,
 		Computed:            true,

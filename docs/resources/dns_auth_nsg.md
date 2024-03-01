@@ -79,7 +79,7 @@ Read-Only:
 <a id="nestedatt--external_primaries--tsig_key"></a>
 ### Nested Schema for `external_primaries.tsig_key`
 
-Required:
+Optional:
 
 - `key` (String) The resource identifier.
 
@@ -121,7 +121,7 @@ Read-Only:
 <a id="nestedatt--external_secondaries--tsig_key"></a>
 ### Nested Schema for `external_secondaries.tsig_key`
 
-Required:
+Optional:
 
 - `key` (String) The resource identifier.
 
