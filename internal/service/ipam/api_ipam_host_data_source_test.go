@@ -17,7 +17,7 @@ func TestAccIpamHostDataSource_Filters(t *testing.T) {
 	var v ipam.IpamsvcIpamHost
 	var name = acctest.RandomNameWithPrefix("ipam_host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckIpamHostDestroy(context.Background(), &v),
@@ -39,13 +39,13 @@ func TestAccIpamHostDataSource_TagFilters(t *testing.T) {
 	resourceName := "bloxone_ipam_host.test"
 	var v ipam.IpamsvcIpamHost
 	var name = acctest.RandomNameWithPrefix("ipam_host")
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckIpamHostDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccIpamHostDataSourceConfigTagFilters(name, "value1"),
+				Config: testAccIpamHostDataSourceConfigTagFilters(name, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckIpamHostExists(context.Background(), resourceName, &v),

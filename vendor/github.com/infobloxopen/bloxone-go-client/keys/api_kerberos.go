@@ -22,7 +22,6 @@ import (
 )
 
 type KerberosAPI interface {
-
 	/*
 			KerberosDelete Delete the Kerberos key.
 
@@ -37,7 +36,6 @@ type KerberosAPI interface {
 
 	// KerberosDeleteExecute executes the request
 	KerberosDeleteExecute(r ApiKerberosDeleteRequest) (*http.Response, error)
-
 	/*
 			KerberosList Retrieve Kerberos keys.
 
@@ -52,7 +50,6 @@ type KerberosAPI interface {
 	// KerberosListExecute executes the request
 	//  @return KeysListKerberosKeyResponse
 	KerberosListExecute(r ApiKerberosListRequest) (*KeysListKerberosKeyResponse, *http.Response, error)
-
 	/*
 			KerberosRead Retrieve the Kerberos key.
 
@@ -68,7 +65,6 @@ type KerberosAPI interface {
 	// KerberosReadExecute executes the request
 	//  @return KeysReadKerberosKeyResponse
 	KerberosReadExecute(r ApiKerberosReadRequest) (*KeysReadKerberosKeyResponse, *http.Response, error)
-
 	/*
 			KerberosUpdate Update the Kerberos key.
 
@@ -84,6 +80,17 @@ type KerberosAPI interface {
 	// KerberosUpdateExecute executes the request
 	//  @return KeysUpdateKerberosKeyResponse
 	KerberosUpdateExecute(r ApiKerberosUpdateRequest) (*KeysUpdateKerberosKeyResponse, *http.Response, error)
+	/*
+		KeysKerberosPost Method for KeysKerberosPost
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@return ApiKeysKerberosPostRequest
+	*/
+	KeysKerberosPost(ctx context.Context) ApiKeysKerberosPostRequest
+
+	// KeysKerberosPostExecute executes the request
+	//  @return KeysListKerberosKeyResponse
+	KeysKerberosPostExecute(r ApiKeysKerberosPostRequest) (*KeysListKerberosKeyResponse, *http.Response, error)
 }
 
 // KerberosAPIService KerberosAPI service
@@ -378,7 +385,6 @@ func (a *KerberosAPIService) KerberosListExecute(r ApiKerberosListRequest) (*Key
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -501,7 +507,6 @@ func (a *KerberosAPIService) KerberosReadExecute(r ApiKerberosReadRequest) (*Key
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -625,6 +630,121 @@ func (a *KerberosAPIService) KerberosUpdateExecute(r ApiKerberosUpdateRequest) (
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
 
+type ApiKeysKerberosPostRequest struct {
+	ctx        context.Context
+	ApiService KerberosAPI
+	body       *KerberosKey
+}
+
+func (r ApiKeysKerberosPostRequest) Body(body KerberosKey) ApiKeysKerberosPostRequest {
+	r.body = &body
+	return r
+}
+
+func (r ApiKeysKerberosPostRequest) Execute() (*KeysListKerberosKeyResponse, *http.Response, error) {
+	return r.ApiService.KeysKerberosPostExecute(r)
+}
+
+/*
+KeysKerberosPost Method for KeysKerberosPost
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiKeysKerberosPostRequest
+*/
+func (a *KerberosAPIService) KeysKerberosPost(ctx context.Context) ApiKeysKerberosPostRequest {
+	return ApiKeysKerberosPostRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return KeysListKerberosKeyResponse
+func (a *KerberosAPIService) KeysKerberosPostExecute(r ApiKeysKerberosPostRequest) (*KeysListKerberosKeyResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []internal.FormFile
+		localVarReturnValue *KeysListKerberosKeyResponse
+	)
+
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "KerberosAPIService.KeysKerberosPost")
+	if err != nil {
+		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
+	}
+
+	localVarPath := localBasePath + "/keys/kerberos"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := internal.SelectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.body
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
+			if apiKey, ok := auth["ApiKeyAuth"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["Authorization"] = key
+			}
+		}
+	}
+	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.Client.CallAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := internal.NewGenericOpenAPIErrorWithBody(localVarHTTPResponse.Status, localVarBody)
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.Client.Decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

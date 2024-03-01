@@ -19,7 +19,7 @@ func TestAccRecordGenericDataSource_Filters(t *testing.T) {
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 	niz := acctest.RandomNameWithPrefix("generic")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckRecordDestroy(context.Background(), &v),

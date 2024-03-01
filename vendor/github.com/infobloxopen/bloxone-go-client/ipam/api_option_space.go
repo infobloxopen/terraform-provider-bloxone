@@ -22,7 +22,6 @@ import (
 )
 
 type OptionSpaceAPI interface {
-
 	/*
 			OptionSpaceCreate Create the DHCP option space.
 
@@ -37,7 +36,6 @@ type OptionSpaceAPI interface {
 	// OptionSpaceCreateExecute executes the request
 	//  @return IpamsvcCreateOptionSpaceResponse
 	OptionSpaceCreateExecute(r ApiOptionSpaceCreateRequest) (*IpamsvcCreateOptionSpaceResponse, *http.Response, error)
-
 	/*
 			OptionSpaceDelete Move the DHCP option space to the recycle bin.
 
@@ -52,7 +50,6 @@ type OptionSpaceAPI interface {
 
 	// OptionSpaceDeleteExecute executes the request
 	OptionSpaceDeleteExecute(r ApiOptionSpaceDeleteRequest) (*http.Response, error)
-
 	/*
 			OptionSpaceList Retrieve DHCP option spaces.
 
@@ -67,7 +64,6 @@ type OptionSpaceAPI interface {
 	// OptionSpaceListExecute executes the request
 	//  @return IpamsvcListOptionSpaceResponse
 	OptionSpaceListExecute(r ApiOptionSpaceListRequest) (*IpamsvcListOptionSpaceResponse, *http.Response, error)
-
 	/*
 			OptionSpaceRead Retrieve the DHCP option space.
 
@@ -83,7 +79,6 @@ type OptionSpaceAPI interface {
 	// OptionSpaceReadExecute executes the request
 	//  @return IpamsvcReadOptionSpaceResponse
 	OptionSpaceReadExecute(r ApiOptionSpaceReadRequest) (*IpamsvcReadOptionSpaceResponse, *http.Response, error)
-
 	/*
 			OptionSpaceUpdate Update the DHCP option space.
 
@@ -177,6 +172,14 @@ func (a *OptionSpaceAPIService) OptionSpaceCreateExecute(r ApiOptionSpaceCreateR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -220,7 +223,6 @@ func (a *OptionSpaceAPIService) OptionSpaceCreateExecute(r ApiOptionSpaceCreateR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -513,7 +515,6 @@ func (a *OptionSpaceAPIService) OptionSpaceListExecute(r ApiOptionSpaceListReque
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -636,7 +637,6 @@ func (a *OptionSpaceAPIService) OptionSpaceReadExecute(r ApiOptionSpaceReadReque
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -717,6 +717,14 @@ func (a *OptionSpaceAPIService) OptionSpaceUpdateExecute(r ApiOptionSpaceUpdateR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -760,6 +768,5 @@ func (a *OptionSpaceAPIService) OptionSpaceUpdateExecute(r ApiOptionSpaceUpdateR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

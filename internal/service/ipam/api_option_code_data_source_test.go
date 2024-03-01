@@ -16,14 +16,15 @@ func TestAccOptionCodeDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dhcp_option_codes.test"
 	resourceName := "bloxone_dhcp_option_code.test"
 	var v ipam.IpamsvcOptionCode
+	optionSpaceName := acctest.RandomNameWithPrefix("option-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckOptionCodeDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOptionCodeDataSourceConfigFilters("234", "test_option_code", "boolean"),
+				Config: testAccOptionCodeDataSourceConfigFilters(optionSpaceName, "234", "test_option_code", "boolean"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
@@ -49,7 +50,7 @@ func testAccCheckOptionCodeResourceAttrPair(resourceName, dataSourceName string)
 	}
 }
 
-func testAccOptionCodeDataSourceConfigFilters(code, name, type_ string) string {
+func testAccOptionCodeDataSourceConfigFilters(optionSpaceName, code, name, optionItemType string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_option_code" "test" {
   code = %q
@@ -63,7 +64,7 @@ data "bloxone_dhcp_option_codes" "test" {
     name = bloxone_dhcp_option_code.test.name
   }
 }
-`, code, name, type_)
+`, code, name, optionItemType)
 
-	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip4"), config}, "")
+	return strings.Join([]string{testAccBaseWithOptionSpace(optionSpaceName, "ip4"), config}, "")
 }

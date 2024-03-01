@@ -24,7 +24,7 @@ func TestAccAuthNsgResource_basic(t *testing.T) {
 	var v dns_config.ConfigAuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -47,7 +47,7 @@ func TestAccAuthNsgResource_disappears(t *testing.T) {
 	var v dns_config.ConfigAuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckAuthNsgDestroy(context.Background(), &v),
@@ -69,7 +69,7 @@ func TestAccAuthNsgResource_Comment(t *testing.T) {
 	var v dns_config.ConfigAuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -101,7 +101,7 @@ func TestAccAuthNsgResource_ExternalPrimaries(t *testing.T) {
 	nsg1 := acctest.RandomNameWithPrefix("auth-nsg")
 	nsg2 := acctest.RandomNameWithPrefix("auth-nsg")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -141,7 +141,7 @@ func TestAccAuthNsgResource_ExternalSecondaries(t *testing.T) {
 	var v dns_config.ConfigAuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -176,7 +176,7 @@ func TestAccAuthNsgResource_Name(t *testing.T) {
 	var v2 dns_config.ConfigAuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -209,7 +209,7 @@ func TestAccAuthNsgResource_Nsgs(t *testing.T) {
 	nsg1 := acctest.RandomNameWithPrefix("auth-nsg")
 	nsg2 := acctest.RandomNameWithPrefix("auth-nsg")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -242,7 +242,7 @@ func TestAccAuthNsgResource_Tags(t *testing.T) {
 	var v dns_config.ConfigAuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{

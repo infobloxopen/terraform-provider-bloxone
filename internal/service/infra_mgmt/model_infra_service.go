@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -218,6 +219,7 @@ type InfraServiceModelWithTimeouts struct {
 	Tags            types.Map         `tfsdk:"tags"`
 	UpdatedAt       timetypes.RFC3339 `tfsdk:"updated_at"`
 	Timeouts        timeouts.Value    `tfsdk:"timeouts"`
+	WaitForState    types.Bool        `tfsdk:"wait_for_state"`
 }
 
 func (m *InfraServiceModelWithTimeouts) Expand(ctx context.Context, diags *diag.Diagnostics) *infra_mgmt.InfraService {
@@ -266,5 +268,11 @@ func InfraServiceResourceSchemaAttributesWithTimeouts(ctx context.Context) map[s
 		Update:            true,
 		UpdateDescription: "[Duration](https://pkg.go.dev/time#ParseDuration) to wait before being considered a timeout during update operations. Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Default is 20m.",
 	})
+	attributes["wait_for_state"] = schema.BoolAttribute{
+		Optional:            true,
+		Computed:            true,
+		Default:             booldefault.StaticBool(true),
+		MarkdownDescription: "If set to `true`, the resource will wait for the desired state to be reached before returning. If set to `false`, the resource will return immediately after the request is sent to the API.",
+	}
 	return attributes
 }

@@ -20,7 +20,7 @@ func TestAccUIJoinTokenResource_basic(t *testing.T) {
 	var v infra_provision.HostactivationJoinToken
 	name := acctest.RandomNameWithPrefix("jt")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -47,7 +47,7 @@ func TestAccUIJoinTokenResource_disappears(t *testing.T) {
 	var v infra_provision.HostactivationJoinToken
 	name := acctest.RandomNameWithPrefix("jt")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckUIJoinTokenDestroy(context.Background(), &v),
@@ -71,7 +71,7 @@ func TestAccUIJoinTokenResource_Description(t *testing.T) {
 	var v1 infra_provision.HostactivationJoinToken
 	var v2 infra_provision.HostactivationJoinToken
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -103,7 +103,7 @@ func TestAccUIJoinTokenResource_Tags(t *testing.T) {
 	var v infra_provision.HostactivationJoinToken
 	name := acctest.RandomNameWithPrefix("jt")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -134,7 +134,7 @@ func TestAccUIJoinTokenResource_ExpiresAt(t *testing.T) {
 	name := acctest.RandomNameWithPrefix("jt")
 	expiresAt := time.Now().UTC().Add(24 * time.Hour)
 	expiresAtUpdated := expiresAt.Add(24 * time.Hour)
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{

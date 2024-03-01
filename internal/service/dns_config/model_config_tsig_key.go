@@ -6,12 +6,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
 type ConfigTSIGKeyModel struct {
@@ -48,7 +50,11 @@ var ConfigTSIGKeyResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `Comment for TSIG key.`,
 	},
 	"key": schema.StringAttribute{
-		Required:            true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.String{
+			internalvalidator.StringNotNull(),
+		},
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"name": schema.StringAttribute{
