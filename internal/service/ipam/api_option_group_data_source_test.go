@@ -22,7 +22,7 @@ func TestAccOptionGroupDataSource_Filters(t *testing.T) {
 		CheckDestroy:             testAccCheckOptionGroupDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOptionGroupDataSourceConfigFilters("test_option_group", "ip4"),
+				Config: testAccOptionGroupDataSourceConfigFilters(acctest.RandomNameWithPrefix("option-group"), "ip4"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckOptionGroupExists(context.Background(), resourceName, &v),
@@ -43,7 +43,7 @@ func TestAccOptionGroupDataSource_TagFilters(t *testing.T) {
 		CheckDestroy:             testAccCheckOptionGroupDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOptionGroupDataSourceConfigTagFilters("test_option_group_tag", "ip6", acctest.RandomName()),
+				Config: testAccOptionGroupDataSourceConfigTagFilters(acctest.RandomNameWithPrefix("option-group"), "ip6", acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckOptionGroupExists(context.Background(), resourceName, &v),
