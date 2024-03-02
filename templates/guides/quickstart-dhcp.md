@@ -20,11 +20,10 @@ terraform {
   required_providers {
     bloxone = {
       source  = "infobloxopen/bloxone"
-      version = ">= 0.1.0"
+      version = ">= 1.0.0"
     }
   }
-  
-  required_version = ">= 1.0.0"
+  required_version = ">= 1.5.0"
 }
 
 provider "bloxone" {
