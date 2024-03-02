@@ -26,13 +26,6 @@ module "bloxone_infra_host_azure" {
   vnet_id                   = "vnet-id"
   vm_network_interface_ids  = ["nic-id"]
 
-  source_image_reference_offer   = "infoblox-bloxone-34"
-  source_image_reference_sku     = "infoblox-bloxone"
-  source_image_reference_version = "3.8.1"
-
-  plan_name                 = "infoblox-bloxone"
-  plan_product              = "infoblox-bloxone-34"
-
   azure_instance_tags       = {
     environment = "dev"
   }
@@ -52,14 +45,16 @@ module "bloxone_infra_host_azure" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.0.0 |
+| <a name="requirement_bloxone"></a> [bloxone](#requirement\_bloxone) | >= 1.0.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
-| <a name="provider_bloxone"></a> [bloxone](#provider\_bloxone) | n/a |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.0.0 |
+| <a name="provider_bloxone"></a> [bloxone](#provider\_bloxone) | >= 1.0.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Resources
@@ -83,14 +78,14 @@ module "bloxone_infra_host_azure" {
 | <a name="input_os_disk_caching"></a> [os\_disk\_caching](#input\_os\_disk\_caching) | The caching type to use for the OS disk. | `string` | `"ReadWrite"` | no |
 | <a name="input_os_disk_storage_account_type"></a> [os\_disk\_storage\_account\_type](#input\_os\_disk\_storage\_account\_type) | The storage account type to use for the OS disk. | `string` | `"Standard_LRS"` | no |
 | <a name="input_plan_name"></a> [plan\_name](#input\_plan\_name) | The name of the plan to use for the BloxOne Host. | `string` | `"infoblox-bloxone"` | no |
-| <a name="input_plan_product"></a> [plan\_product](#input\_plan\_product) | The product to use for the BloxOne Host. | `string` | n/a | yes |
+| <a name="input_plan_product"></a> [plan\_product](#input\_plan\_product) | The product to use for the BloxOne Host. | `string` | `"infoblox-bloxone-34"` | no |
 | <a name="input_plan_publisher"></a> [plan\_publisher](#input\_plan\_publisher) | The publisher to use for the BloxOne Host. | `string` | `"infoblox"` | no |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The name of the resource group in which the resources will be created | `string` | n/a | yes |
 | <a name="input_services"></a> [services](#input\_services) | The services to provision on the BloxOne Host. The services must be a map of valid service type with values of "start" or "stop". Valid service types are "dhcp" and "dns". | `map(string)` | n/a | yes |
-| <a name="input_source_image_reference_offer"></a> [source\_image\_reference\_offer](#input\_source\_image\_reference\_offer) | The offer of the image that you want to deploy | `string` | n/a | yes |
+| <a name="input_source_image_reference_offer"></a> [source\_image\_reference\_offer](#input\_source\_image\_reference\_offer) | The offer of the image that you want to deploy | `string` | `"infoblox-bloxone-34"` | no |
 | <a name="input_source_image_reference_publisher"></a> [source\_image\_reference\_publisher](#input\_source\_image\_reference\_publisher) | The publisher of the image that you want to deploy | `string` | `"infoblox"` | no |
 | <a name="input_source_image_reference_sku"></a> [source\_image\_reference\_sku](#input\_source\_image\_reference\_sku) | The sku of the image that you want to deploy | `string` | `"infoblox-bloxone"` | no |
-| <a name="input_source_image_reference_version"></a> [source\_image\_reference\_version](#input\_source\_image\_reference\_version) | The version of the image that you want to deploy. | `string` | n/a | yes |
+| <a name="input_source_image_reference_version"></a> [source\_image\_reference\_version](#input\_source\_image\_reference\_version) | The version of the image that you want to deploy. | `string` | `"3.8.1"` | no |
 | <a name="input_ssh_public_key_path"></a> [ssh\_public\_key\_path](#input\_ssh\_public\_key\_path) | The path to the SSH public key to use for the BloxOne Host. | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | The tags to use for the BloxOne Host. | `map(string)` | `{}` | no |
 | <a name="input_timeouts"></a> [timeouts](#input\_timeouts) | The timeouts to use for the BloxOne Host. The timeout value is a string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). If not provided, the default timeouts will be used. | <pre>object({<br>    create = string<br>    update = string<br>    read   = string<br>  })</pre> | `null` | no |

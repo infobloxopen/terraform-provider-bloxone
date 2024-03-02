@@ -63,6 +63,7 @@ variable "source_image_reference_publisher" {
 variable "source_image_reference_offer" {
   description = "The offer of the image that you want to deploy"
   type        = string
+  default     = "infoblox-bloxone-34"
 }
 
 variable "source_image_reference_sku" {
@@ -74,6 +75,7 @@ variable "source_image_reference_sku" {
 variable "source_image_reference_version" {
   description = "The version of the image that you want to deploy."
   type        = string
+  default     = "3.8.1"
 }
 
 variable "plan_name" {
@@ -85,6 +87,7 @@ variable "plan_name" {
 variable "plan_product" {
   description = "The product to use for the BloxOne Host."
   type        = string
+  default     = "infoblox-bloxone-34"
 }
 
 variable plan_publisher {

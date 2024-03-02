@@ -26,13 +26,6 @@
  *   vnet_id                   = "vnet-id"
  *   vm_network_interface_ids  = ["nic-id"]
  *
- *   source_image_reference_offer   = "infoblox-bloxone-34"
- *   source_image_reference_sku     = "infoblox-bloxone"
- *   source_image_reference_version = "3.8.1"
- *
- *   plan_name                 = "infoblox-bloxone"
- *   plan_product              = "infoblox-bloxone-34"
- * 
  *   azure_instance_tags       = {
  *     environment = "dev"
  *   }
