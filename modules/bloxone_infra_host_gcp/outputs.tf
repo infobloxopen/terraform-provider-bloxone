@@ -8,7 +8,7 @@ output "host" {
   description = "The `bloxone_infra_host` object for the instance"
 }
 
-output "gcp_compute_instance" {
+output "google_compute_instance" {
   value       = google_compute_instance.this
   description = "The GCP instance object for the instance"
 }

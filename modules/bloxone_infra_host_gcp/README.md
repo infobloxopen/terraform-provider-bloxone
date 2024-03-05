@@ -80,7 +80,7 @@ module "bloxone_infra_host_gcp" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | Whether the BloxOne Host should have deletion protection enabled. | `bool` | `false` | no |
-| <a name="input_disk_size"></a> [disk\_size](#input\_disk\_size) | The size of the data disk in GB. The minimum size is 59GB and the maximum size is 750GB. | `number` | `59` | no |
+| <a name="input_disk_size"></a> [disk\_size](#input\_disk\_size) | The size of the data disk in GB. | `number` | `59` | no |
 | <a name="input_disk_type"></a> [disk\_type](#input\_disk\_type) | The type of the data disk. | `string` | `"pd-standard"` | no |
 | <a name="input_gcp_instance_labels"></a> [gcp\_instance\_labels](#input\_gcp\_instance\_labels) | The labels to associate with the virtual machine. For `tags` to be used for the BloxOne Host, use the `tags` variable. | `map(string)` | `{}` | no |
 | <a name="input_join_token"></a> [join\_token](#input\_join\_token) | The join token to use for the BloxOne Host. If not provided, a join token will be created. | `string` | `null` | no |

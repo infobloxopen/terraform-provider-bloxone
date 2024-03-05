@@ -31,14 +31,9 @@ variable "disk_type" {
 }
 
 variable "disk_size" {
-  description = "The size of the data disk in GB. The minimum size is 59GB and the maximum size is 750GB."
+  description = "The size of the data disk in GB."
   type        = number
   default     = 59
-
-  validation {
-    condition     = var.disk_size >= 59 && var.disk_size <= 750
-    error_message = "Disk size must be between 59GB and 750GB."
-  }
 }
 
 variable "source_image" {
