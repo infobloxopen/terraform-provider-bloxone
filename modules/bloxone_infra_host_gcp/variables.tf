@@ -9,22 +9,6 @@ variable "name" {
   type        = string
 }
 
-variable "project" {
-  description = "The name of the GCP project"
-  type        = string
-
-}
-
-variable "region" {
-  description = "The region where the resources will be created"
-  type        = string
-}
-
-variable "zone" {
-  description = "The zone where the resources will be created"
-  type        = string
-}
-
 variable "machine_type" {
   description = "The machine type to use for the virtual machine"
   type        = string
@@ -46,13 +30,24 @@ variable "disk_type" {
   default     = "pd-standard"
 }
 
+variable "disk_size" {
+  description = "The size of the data disk in GB. The minimum size is 59GB and the maximum size is 750GB."
+  type        = number
+  default     = 59
+
+  validation {
+    condition     = var.disk_size >= 59 && var.disk_size <= 750
+    error_message = "Disk size must be between 59GB and 750GB."
+  }
+}
+
 variable "source_image" {
   description = "The source image to use for the virtual machine."
   type        = string
 }
 
 variable "gcp_instance_labels" {
-  description = "The labels to associate with the virtual machine"
+  description = "The labels to associate with the virtual machine. For `tags` to be used for the BloxOne Host, use the `tags` variable."
   type        = map(string)
   default     = {}
 }
@@ -63,22 +58,19 @@ variable "tags" {
   default     = {}
 }
 
-variable "service_account_email" {
-  description = "The email of the service account to use for the BloxOne Host."
-  type        = string
-  default     = ""
+variable "service_account" {
+  description = "The service account to use for the BloxOne Host."
+  type        = object({
+    email  = string
+    scopes = list(string)
+  })
+  default = null
 }
 
 variable "deletion_protection" {
   description = "Whether the BloxOne Host should have deletion protection enabled."
   type        = bool
   default     = false
-}
-
-variable "scopes" {
-  description = "The scopes to use for the BloxOne Host."
-  type        = list(string)
-  default     = []
 }
 
 variable "services" {

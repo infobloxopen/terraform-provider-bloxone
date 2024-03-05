@@ -20,10 +20,7 @@
  * module "bloxone_infra_host_gcp" {
  *   source = "github.com/infobloxopen/terraform-provider-bloxone//modules/bloxone_infra_host_gcp"
  *
- *   name         = "bloxone-test-instance"
- *   project_id   = "gcp-engineering"
- *   region       = "us-east1"
- *   zone         = "us-east1-c"
+ *   name         = "bloxone-vm"
  *   source_image = "bloxone-v381"
  *
  *   network_interfaces = [
@@ -74,8 +71,6 @@ resource "bloxone_infra_join_token" "this" {
 
 resource "google_compute_instance" "this" {
   name                = var.name
-  project             = var.project
-  zone                = var.zone
   machine_type        = var.machine_type
   labels              = var.gcp_instance_labels
   deletion_protection = var.deletion_protection
@@ -84,6 +79,7 @@ resource "google_compute_instance" "this" {
     initialize_params {
       image  = var.source_image
       type   = var.disk_type
+      size   = var.disk_size
       labels = var.gcp_instance_labels
     }
   }
@@ -103,16 +99,19 @@ resource "google_compute_instance" "this" {
     }
   }
 
+  dynamic "service_account" {
+    for_each = var.service_account == null ? [] : [1]
+    content {
+      email  = var.service_account.email
+      scopes = var.service_account.scopes
+    }
+  }
+
   metadata = {
     user-data = templatefile("${path.module}/userdata.tftpl", {
       join_token = local.join_token
       tags       = local.tags
     })
-  }
-
-  service_account {
-    email = "var.service_account_email"
-    scopes = var.scopes
   }
 }
 

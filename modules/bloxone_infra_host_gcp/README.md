@@ -19,10 +19,7 @@ The service will be named `<service_type>_<host_display_name>`.
 module "bloxone_infra_host_gcp" {
   source = "github.com/infobloxopen/terraform-provider-bloxone//modules/bloxone_infra_host_gcp"
 
-  name         = "bloxone-test-instance"
-  project_id   = "gcp-engineering"
-  region       = "us-east1"
-  zone         = "us-east1-c"
+  name         = "bloxone-vm"
   source_image = "bloxone-v381"
 
   network_interfaces = [
@@ -83,27 +80,24 @@ module "bloxone_infra_host_gcp" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | Whether the BloxOne Host should have deletion protection enabled. | `bool` | `false` | no |
+| <a name="input_disk_size"></a> [disk\_size](#input\_disk\_size) | The size of the data disk in GB. The minimum size is 59GB and the maximum size is 750GB. | `number` | `59` | no |
 | <a name="input_disk_type"></a> [disk\_type](#input\_disk\_type) | The type of the data disk. | `string` | `"pd-standard"` | no |
-| <a name="input_gcp_instance_labels"></a> [gcp\_instance\_labels](#input\_gcp\_instance\_labels) | The labels to associate with the virtual machine | `map(string)` | `{}` | no |
+| <a name="input_gcp_instance_labels"></a> [gcp\_instance\_labels](#input\_gcp\_instance\_labels) | The labels to associate with the virtual machine. For `tags` to be used for the BloxOne Host, use the `tags` variable. | `map(string)` | `{}` | no |
 | <a name="input_join_token"></a> [join\_token](#input\_join\_token) | The join token to use for the BloxOne Host. If not provided, a join token will be created. | `string` | `null` | no |
 | <a name="input_machine_type"></a> [machine\_type](#input\_machine\_type) | The machine type to use for the virtual machine | `string` | `"e2-standard-4"` | no |
 | <a name="input_name"></a> [name](#input\_name) | The name of the virtual machine | `string` | n/a | yes |
 | <a name="input_network_interfaces"></a> [network\_interfaces](#input\_network\_interfaces) | List of network interfaces to be attached to the virtual machine. | <pre>list(object({<br>    network          = string<br>    subnetwork       = string<br>    assign_public_ip = optional(bool)<br>  }))</pre> | n/a | yes |
-| <a name="input_project"></a> [project](#input\_project) | The name of the GCP project | `string` | n/a | yes |
-| <a name="input_region"></a> [region](#input\_region) | The region where the resources will be created | `string` | n/a | yes |
-| <a name="input_scopes"></a> [scopes](#input\_scopes) | The scopes to use for the BloxOne Host. | `list(string)` | `[]` | no |
-| <a name="input_service_account_email"></a> [service\_account\_email](#input\_service\_account\_email) | The email of the service account to use for the BloxOne Host. | `string` | `""` | no |
+| <a name="input_service_account"></a> [service\_account](#input\_service\_account) | The service account to use for the BloxOne Host. | <pre>object({<br>    email  = string<br>    scopes = list(string)<br>  })</pre> | `null` | no |
 | <a name="input_services"></a> [services](#input\_services) | The services to provision on the BloxOne Host. The services must be a map of valid service type with values of "start" or "stop". Valid service types are "dhcp" and "dns". | `map(string)` | n/a | yes |
 | <a name="input_source_image"></a> [source\_image](#input\_source\_image) | The source image to use for the virtual machine. | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | The tags to use for the BloxOne Host. | `map(string)` | `{}` | no |
 | <a name="input_timeouts"></a> [timeouts](#input\_timeouts) | The timeouts to use for the BloxOne Host. The timeout value is a string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). If not provided, the default timeouts will be used. | <pre>object({<br>    create = string<br>    update = string<br>    read   = string<br>  })</pre> | `null` | no |
-| <a name="input_zone"></a> [zone](#input\_zone) | The zone where the resources will be created | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_gcp_instance"></a> [gcp\_instance](#output\_gcp\_instance) | The GCP instance object for the instance |
+| <a name="output_gcp_compute_instance"></a> [gcp\_compute\_instance](#output\_gcp\_compute\_instance) | The GCP instance object for the instance |
 | <a name="output_host"></a> [host](#output\_host) | The `bloxone_infra_host` object for the instance |
 | <a name="output_services"></a> [services](#output\_services) | The `bloxone_infra_service` objects for the instance. May be empty if no services were specified. |
 <!-- END_TF_DOCS -->
