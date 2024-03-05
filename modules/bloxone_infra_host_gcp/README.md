@@ -97,7 +97,7 @@ module "bloxone_infra_host_gcp" {
 
 | Name | Description |
 |------|-------------|
-| <a name="output_gcp_compute_instance"></a> [gcp\_compute\_instance](#output\_gcp\_compute\_instance) | The GCP instance object for the instance |
+| <a name="output_google_compute_instance"></a> [google\_compute\_instance](#output\_google\_compute\_instance) | The GCP instance object for the instance |
 | <a name="output_host"></a> [host](#output\_host) | The `bloxone_infra_host` object for the instance |
 | <a name="output_services"></a> [services](#output\_services) | The `bloxone_infra_service` objects for the instance. May be empty if no services were specified. |
 <!-- END_TF_DOCS -->
