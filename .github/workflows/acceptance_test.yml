@@ -23,7 +23,7 @@ jobs:
         with:
           go-version: '1.19'
       - name: Run tests
-        timeout-minutes: 60
+        timeout-minutes: 120
         env:
           TF_ACC: "1"
           BLOXONE_CSP_URL: ${{ secrets.BLOXONE_CSP_URL }}
@@ -31,4 +31,4 @@ jobs:
           DHCP_HOST: ${{ secrets.DHCP_HOST }}
           DNS_HOST: ${{ secrets.DNS_HOST }}
         run: |
-          go test $(go list ./... | grep -v 'vendor') -v -cover
+          go test $(go list ./... | grep -v 'vendor') -timeout 120m -v -cover

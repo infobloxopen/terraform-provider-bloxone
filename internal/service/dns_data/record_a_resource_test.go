@@ -20,7 +20,7 @@ func TestAccRecordAResource_basic(t *testing.T) {
 	var v dns_data.DataRecord
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -44,7 +44,7 @@ func TestAccRecordAResource_disappears(t *testing.T) {
 	var v dns_data.DataRecord
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckRecordDestroy(context.Background(), &v),
@@ -66,7 +66,7 @@ func TestAccRecordAResource_Comment(t *testing.T) {
 	var v dns_data.DataRecord
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -96,7 +96,7 @@ func TestAccRecordAResource_Disabled(t *testing.T) {
 	var v dns_data.DataRecord
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -126,7 +126,7 @@ func TestAccRecordAResource_InheritanceSources(t *testing.T) {
 	var v dns_data.DataRecord
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -156,7 +156,7 @@ func TestAccRecordAResource_NameInZone(t *testing.T) {
 	var v dns_data.DataRecord
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -186,7 +186,7 @@ func TestAccRecordAResource_Rdata(t *testing.T) {
 	var v dns_data.DataRecord
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -216,7 +216,7 @@ func TestAccRecordAResource_Tags(t *testing.T) {
 	var v dns_data.DataRecord
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -250,7 +250,7 @@ func TestAccRecordAResource_Ttl(t *testing.T) {
 	var v dns_data.DataRecord
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -279,7 +279,7 @@ func TestAccRecordAResource_View(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_view"
 	var v1, v2 dns_data.DataRecord
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -309,7 +309,7 @@ func TestAccRecordAResource_Zone(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_zone"
 	var v1, v2 dns_data.DataRecord
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{

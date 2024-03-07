@@ -16,14 +16,15 @@ func TestAccFixedAddressDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dhcp_fixed_addresses.test"
 	resourceName := "bloxone_dhcp_fixed_address.test"
 	var v ipam.IpamsvcFixedAddress
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckFixedAddressDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFixedAddressDataSourceConfigFilters("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa"),
+				Config: testAccFixedAddressDataSourceConfigFilters(spaceName, "10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
@@ -38,13 +39,15 @@ func TestAccFixedAddressDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dhcp_fixed_addresses.test"
 	resourceName := "bloxone_dhcp_fixed_address.test"
 	var v ipam.IpamsvcFixedAddress
-	resource.Test(t, resource.TestCase{
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckFixedAddressDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFixedAddressDataSourceConfigTagFilters("10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", "value1"),
+				Config: testAccFixedAddressDataSourceConfigTagFilters(spaceName, "10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
@@ -82,7 +85,7 @@ func testAccCheckFixedAddressResourceAttrPair(resourceName, dataSourceName strin
 	}
 }
 
-func testAccFixedAddressDataSourceConfigFilters(address, matchType, matchValue string) string {
+func testAccFixedAddressDataSourceConfigFilters(spaceName, address, matchType, matchValue string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_fixed_address" "test" {
   ip_space = bloxone_ipam_ip_space.test.id
@@ -95,13 +98,14 @@ resource "bloxone_dhcp_fixed_address" "test" {
 data "bloxone_dhcp_fixed_addresses" "test" {
   filters = {
 	address = bloxone_dhcp_fixed_address.test.address
+	ip_space = bloxone_ipam_ip_space.test.id
   }
 }
 `, address, matchType, matchValue)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
 
-func testAccFixedAddressDataSourceConfigTagFilters(address, matchType, matchValue, tagValue string) string {
+func testAccFixedAddressDataSourceConfigTagFilters(spaceName, address, matchType, matchValue, tagValue string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_fixed_address" "test" {
   ip_space = bloxone_ipam_ip_space.test.id
@@ -120,5 +124,5 @@ data "bloxone_dhcp_fixed_addresses" "test" {
   }
 }
 `, address, matchType, matchValue, tagValue)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }

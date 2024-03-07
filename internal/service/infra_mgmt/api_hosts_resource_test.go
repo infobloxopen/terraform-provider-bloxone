@@ -24,7 +24,7 @@ func TestAccHostsResource_basic(t *testing.T) {
 	var v infra_mgmt.InfraHost
 	name := acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -54,7 +54,7 @@ func TestAccHostsResource_disappears(t *testing.T) {
 	var v infra_mgmt.InfraHost
 	name := acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckHostsDestroy(context.Background(), &v),
@@ -76,7 +76,7 @@ func TestAccHostsResource_Description(t *testing.T) {
 	var v infra_mgmt.InfraHost
 	name := acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -106,7 +106,7 @@ func TestAccHostsResource_IpSpace(t *testing.T) {
 	var v infra_mgmt.InfraHost
 	name := acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -136,7 +136,7 @@ func TestAccHostsResource_MaintenanceMode(t *testing.T) {
 	var v infra_mgmt.InfraHost
 	name := acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -165,25 +165,27 @@ func TestAccHostsResource_SerialNumber(t *testing.T) {
 	var resourceName = "bloxone_infra_host.test_serial_number"
 	var v infra_mgmt.InfraHost
 	name := acctest.RandomNameWithPrefix("host")
+	sn1 := acctest.RandomName()
+	sn2 := acctest.RandomName()
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccHostsSerialNumber(name, "abcd"),
+				Config: testAccHostsSerialNumber(name, sn1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckHostsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "serial_number", "abcd"),
+					resource.TestCheckResourceAttr(resourceName, "serial_number", sn1),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccHostsSerialNumber(name, "xyzf"),
+				Config: testAccHostsSerialNumber(name, sn2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckHostsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "serial_number", "xyzf"),
+					resource.TestCheckResourceAttr(resourceName, "serial_number", sn2),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -196,7 +198,7 @@ func TestAccHostsResource_Tags(t *testing.T) {
 	var v infra_mgmt.InfraHost
 	name := acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{

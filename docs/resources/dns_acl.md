@@ -51,16 +51,6 @@ resource "bloxone_dns_acl" "example_acl" {
 <a id="nestedatt--list"></a>
 ### Nested Schema for `list`
 
-Required:
-
-- `element` (String) Type of element.
-
-  Allowed values:
-  * _any_
-  * _ip_
-  * _acl_
-  * _tsig_key_
-
 Optional:
 
 - `access` (String) Access permission for _element_.
@@ -72,12 +62,19 @@ Optional:
   Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--list--tsig_key))
 
 <a id="nestedatt--list--tsig_key"></a>
 ### Nested Schema for `list.tsig_key`
 
-Required:
+Optional:
 
 - `key` (String) The resource identifier.
 

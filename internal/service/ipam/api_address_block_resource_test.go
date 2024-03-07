@@ -22,14 +22,15 @@ import (
 func TestAccAddressBlockResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockBasicConfig("192.168.0.0", "16"),
+				Config: testAccAddressBlockBasicConfig(spaceName, "192.168.0.0", "16"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					// TODO: check and validate these
@@ -63,14 +64,15 @@ func TestAccAddressBlockResource_basic(t *testing.T) {
 func TestAccAddressBlockResource_disappears(t *testing.T) {
 	resourceName := "bloxone_ipam_address_block.test"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckAddressBlockDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAddressBlockBasicConfig("192.168.0.0", "16"),
+				Config: testAccAddressBlockBasicConfig(spaceName, "192.168.0.0", "16"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					testAccCheckAddressBlockDisappears(context.Background(), &v),
@@ -84,14 +86,15 @@ func TestAccAddressBlockResource_disappears(t *testing.T) {
 func TestAccAddressBlockResource_Address(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test"
 	var v1, v2 ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockBasicConfig("192.168.0.0", "16"),
+				Config: testAccAddressBlockBasicConfig(spaceName, "192.168.0.0", "16"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "address", "192.168.0.0"),
@@ -99,7 +102,7 @@ func TestAccAddressBlockResource_Address(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockBasicConfig("10.0.0.0", "16"),
+				Config: testAccAddressBlockBasicConfig(spaceName, "10.0.0.0", "16"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockDestroy(context.Background(), &v1),
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v2),
@@ -114,14 +117,15 @@ func TestAccAddressBlockResource_Address(t *testing.T) {
 func TestAccAddressBlockResource_AsmConfig(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_asm_config"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockAsmConfig("10.0.0.0", "16", 70, true, true, 12, 40, "count", 40, 30, 30, "2020-01-10T10:11:22Z"),
+				Config: testAccAddressBlockAsmConfig(spaceName, "10.0.0.0", "16", 70, true, true, 12, 40, "count", 40, 30, 30, "2020-01-10T10:11:22Z"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "asm_config.asm_threshold", "70"),
@@ -138,7 +142,7 @@ func TestAccAddressBlockResource_AsmConfig(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockAsmConfig("10.0.0.0", "16", 90, false, false, 14, 60, "count", 40, 60, 50, "2020-01-10T10:11:22Z"),
+				Config: testAccAddressBlockAsmConfig(spaceName, "10.0.0.0", "16", 90, false, false, 14, 60, "count", 40, 60, 50, "2020-01-10T10:11:22Z"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "asm_config.asm_threshold", "90"),
@@ -161,14 +165,15 @@ func TestAccAddressBlockResource_AsmConfig(t *testing.T) {
 func TestAccAddressBlockResource_Cidr(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_cidr"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockCidr("192.168.0.0", "16"),
+				Config: testAccAddressBlockCidr(spaceName, "192.168.0.0", "16"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "cidr", "16"),
@@ -176,7 +181,7 @@ func TestAccAddressBlockResource_Cidr(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockCidr("192.168.0.0", "24"),
+				Config: testAccAddressBlockCidr(spaceName, "192.168.0.0", "24"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "cidr", "24"),
@@ -190,14 +195,15 @@ func TestAccAddressBlockResource_Cidr(t *testing.T) {
 func TestAccAddressBlockResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_comment"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockComment("192.168.0.0", "16", "This address block is created through Terraform"),
+				Config: testAccAddressBlockComment(spaceName, "192.168.0.0", "16", "This address block is created through Terraform"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "This address block is created through Terraform"),
@@ -205,7 +211,7 @@ func TestAccAddressBlockResource_Comment(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockComment("192.168.0.0", "16", "This address block was created through Terraform"),
+				Config: testAccAddressBlockComment(spaceName, "192.168.0.0", "16", "This address block was created through Terraform"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "This address block was created through Terraform"),
@@ -219,14 +225,15 @@ func TestAccAddressBlockResource_Comment(t *testing.T) {
 func TestAccAddressBlockResource_DdnsClientUpdate(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_client_update"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockDdnsClientUpdate("192.168.0.0", "16", "client"),
+				Config: testAccAddressBlockDdnsClientUpdate(spaceName, "192.168.0.0", "16", "client"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_client_update", "client"),
@@ -234,7 +241,7 @@ func TestAccAddressBlockResource_DdnsClientUpdate(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockDdnsClientUpdate("192.168.0.0", "16", "over_no_update"),
+				Config: testAccAddressBlockDdnsClientUpdate(spaceName, "192.168.0.0", "16", "over_no_update"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_client_update", "over_no_update"),
@@ -248,14 +255,15 @@ func TestAccAddressBlockResource_DdnsClientUpdate(t *testing.T) {
 func TestAccAddressBlockResource_DdnsDomain(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_domain"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockDdnsDomain("192.168.0.0", "16", "test.com"),
+				Config: testAccAddressBlockDdnsDomain(spaceName, "192.168.0.0", "16", "test.com"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "test.com"),
@@ -263,7 +271,7 @@ func TestAccAddressBlockResource_DdnsDomain(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockDdnsDomain("192.168.0.0", "16", "test123.com"),
+				Config: testAccAddressBlockDdnsDomain(spaceName, "192.168.0.0", "16", "test123.com"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "test123.com"),
@@ -277,14 +285,15 @@ func TestAccAddressBlockResource_DdnsDomain(t *testing.T) {
 func TestAccAddressBlockResource_DdnsGenerateName(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_generate_name"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockDdnsGenerateName("192.168.0.0", "16", "false"),
+				Config: testAccAddressBlockDdnsGenerateName(spaceName, "192.168.0.0", "16", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_generate_name", "false"),
@@ -292,7 +301,7 @@ func TestAccAddressBlockResource_DdnsGenerateName(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockDdnsGenerateName("192.168.0.0", "16", "true"),
+				Config: testAccAddressBlockDdnsGenerateName(spaceName, "192.168.0.0", "16", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_generate_name", "true"),
@@ -306,14 +315,15 @@ func TestAccAddressBlockResource_DdnsGenerateName(t *testing.T) {
 func TestAccAddressBlockResource_DdnsGeneratedPrefix(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_generated_prefix"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockDdnsGeneratedPrefix("192.168.0.0", "16", "ut"),
+				Config: testAccAddressBlockDdnsGeneratedPrefix(spaceName, "192.168.0.0", "16", "ut"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_generated_prefix", "ut"),
@@ -321,7 +331,7 @@ func TestAccAddressBlockResource_DdnsGeneratedPrefix(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockDdnsGeneratedPrefix("192.168.0.0", "16", "ut-ut"),
+				Config: testAccAddressBlockDdnsGeneratedPrefix(spaceName, "192.168.0.0", "16", "ut-ut"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_generated_prefix", "ut-ut"),
@@ -335,14 +345,15 @@ func TestAccAddressBlockResource_DdnsGeneratedPrefix(t *testing.T) {
 func TestAccAddressBlockResource_DdnsSendUpdates(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_send_updates"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockDdnsSendUpdates("192.168.0.0", "16", "true"),
+				Config: testAccAddressBlockDdnsSendUpdates(spaceName, "192.168.0.0", "16", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_send_updates", "true"),
@@ -350,7 +361,7 @@ func TestAccAddressBlockResource_DdnsSendUpdates(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockDdnsSendUpdates("192.168.0.0", "16", "false"),
+				Config: testAccAddressBlockDdnsSendUpdates(spaceName, "192.168.0.0", "16", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_send_updates", "false"),
@@ -364,14 +375,15 @@ func TestAccAddressBlockResource_DdnsSendUpdates(t *testing.T) {
 func TestAccAddressBlockResource_DdnsTtlPercent(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_ttl_percent"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockDdnsTtlPercent("192.168.0.0", "16", "25"),
+				Config: testAccAddressBlockDdnsTtlPercent(spaceName, "192.168.0.0", "16", "25"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_ttl_percent", "25"),
@@ -379,7 +391,7 @@ func TestAccAddressBlockResource_DdnsTtlPercent(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockDdnsTtlPercent("192.168.0.0", "16", "75"),
+				Config: testAccAddressBlockDdnsTtlPercent(spaceName, "192.168.0.0", "16", "75"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_ttl_percent", "75"),
@@ -393,14 +405,15 @@ func TestAccAddressBlockResource_DdnsTtlPercent(t *testing.T) {
 func TestAccAddressBlockResource_DdnsUpdateOnRenew(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_update_on_renew"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockDdnsUpdateOnRenew("192.168.0.0", "16", "false"),
+				Config: testAccAddressBlockDdnsUpdateOnRenew(spaceName, "192.168.0.0", "16", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_update_on_renew", "false"),
@@ -408,7 +421,7 @@ func TestAccAddressBlockResource_DdnsUpdateOnRenew(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockDdnsUpdateOnRenew("192.168.0.0", "16", "true"),
+				Config: testAccAddressBlockDdnsUpdateOnRenew(spaceName, "192.168.0.0", "16", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_update_on_renew", "true"),
@@ -422,14 +435,15 @@ func TestAccAddressBlockResource_DdnsUpdateOnRenew(t *testing.T) {
 func TestAccAddressBlockResource_DdnsUseConflictResolution(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_use_conflict_resolution"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockDdnsUseConflictResolution("192.168.0.0", "16", "true"),
+				Config: testAccAddressBlockDdnsUseConflictResolution(spaceName, "192.168.0.0", "16", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_use_conflict_resolution", "true"),
@@ -437,7 +451,7 @@ func TestAccAddressBlockResource_DdnsUseConflictResolution(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockDdnsUseConflictResolution("192.168.0.0", "16", "false"),
+				Config: testAccAddressBlockDdnsUseConflictResolution(spaceName, "192.168.0.0", "16", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_use_conflict_resolution", "false"),
@@ -451,14 +465,15 @@ func TestAccAddressBlockResource_DdnsUseConflictResolution(t *testing.T) {
 func TestAccAddressBlockResource_DhcpConfig(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_dhcp_config"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockDhcpConfig("192.168.0.0", "16", true, true, true, 50, 60),
+				Config: testAccAddressBlockDhcpConfig(spaceName, "192.168.0.0", "16", true, true, true, 50, 60),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_config.allow_unknown", "true"),
@@ -470,7 +485,7 @@ func TestAccAddressBlockResource_DhcpConfig(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockDhcpConfig("192.168.0.0", "16", false, true, false, 150, 160),
+				Config: testAccAddressBlockDhcpConfig(spaceName, "192.168.0.0", "16", false, true, false, 150, 160),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_config.allow_unknown", "false"),
@@ -488,14 +503,16 @@ func TestAccAddressBlockResource_DhcpConfig(t *testing.T) {
 func TestAccAddressBlockResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_dhcp_options"
 	var v1 ipam.IpamsvcAddressBlock
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockDhcpOptionOption("192.168.0.0", "16", "option", "true"),
+				Config: testAccAddressBlockDhcpOptionOption(spaceName, "192.168.0.0", "16", optionSpaceName, "option", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
@@ -505,7 +522,7 @@ func TestAccAddressBlockResource_DhcpOptions(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockDhcpOptionsGroup("192.168.0.0", "16", "group"),
+				Config: testAccAddressBlockDhcpOptionsGroup(spaceName, "192.168.0.0", "16", optionSpaceName, "group"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
@@ -519,14 +536,15 @@ func TestAccAddressBlockResource_DhcpOptions(t *testing.T) {
 func TestAccAddressBlockResource_HeaderOptionFilename(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_header_option_filename"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockHeaderOptionFilename("192.168.0.0", "16", "testfile"),
+				Config: testAccAddressBlockHeaderOptionFilename(spaceName, "192.168.0.0", "16", "testfile"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "testfile"),
@@ -534,7 +552,7 @@ func TestAccAddressBlockResource_HeaderOptionFilename(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockHeaderOptionFilename("192.168.0.0", "16", "testfile1"),
+				Config: testAccAddressBlockHeaderOptionFilename(spaceName, "192.168.0.0", "16", "testfile1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "testfile1"),
@@ -548,14 +566,15 @@ func TestAccAddressBlockResource_HeaderOptionFilename(t *testing.T) {
 func TestAccAddressBlockResource_HeaderOptionServerAddress(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_header_option_server_address"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockHeaderOptionServerAddress("192.168.0.0", "16", "1.1.1.1"),
+				Config: testAccAddressBlockHeaderOptionServerAddress(spaceName, "192.168.0.0", "16", "1.1.1.1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_server_address", "1.1.1.1"),
@@ -563,7 +582,7 @@ func TestAccAddressBlockResource_HeaderOptionServerAddress(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockHeaderOptionServerAddress("192.168.0.0", "16", "2.2.2.2"),
+				Config: testAccAddressBlockHeaderOptionServerAddress(spaceName, "192.168.0.0", "16", "2.2.2.2"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_server_address", "2.2.2.2"),
@@ -577,14 +596,15 @@ func TestAccAddressBlockResource_HeaderOptionServerAddress(t *testing.T) {
 func TestAccAddressBlockResource_HeaderOptionServerName(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_header_option_server_name"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockHeaderOptionServerName("192.168.0.0", "16", "test"),
+				Config: testAccAddressBlockHeaderOptionServerName(spaceName, "192.168.0.0", "16", "test"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "test"),
@@ -592,7 +612,7 @@ func TestAccAddressBlockResource_HeaderOptionServerName(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockHeaderOptionServerName("192.168.0.0", "16", "test-1"),
+				Config: testAccAddressBlockHeaderOptionServerName(spaceName, "192.168.0.0", "16", "test-1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "test-1"),
@@ -606,14 +626,15 @@ func TestAccAddressBlockResource_HeaderOptionServerName(t *testing.T) {
 func TestAccAddressBlockResource_HostnameRewriteChar(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_hostname_rewrite_char"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockHostnameRewriteChar("192.168.0.0", "16", "a"),
+				Config: testAccAddressBlockHostnameRewriteChar(spaceName, "192.168.0.0", "16", "a"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_char", "a"),
@@ -621,7 +642,7 @@ func TestAccAddressBlockResource_HostnameRewriteChar(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockHostnameRewriteChar("192.168.0.0", "16", "c"),
+				Config: testAccAddressBlockHostnameRewriteChar(spaceName, "192.168.0.0", "16", "c"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_char", "c"),
@@ -635,14 +656,15 @@ func TestAccAddressBlockResource_HostnameRewriteChar(t *testing.T) {
 func TestAccAddressBlockResource_HostnameRewriteEnabled(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_hostname_rewrite_enabled"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockHostnameRewriteEnabled("192.168.0.0", "16", "true"),
+				Config: testAccAddressBlockHostnameRewriteEnabled(spaceName, "192.168.0.0", "16", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_enabled", "true"),
@@ -650,7 +672,7 @@ func TestAccAddressBlockResource_HostnameRewriteEnabled(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockHostnameRewriteEnabled("192.168.0.0", "16", "false"),
+				Config: testAccAddressBlockHostnameRewriteEnabled(spaceName, "192.168.0.0", "16", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_enabled", "false"),
@@ -664,14 +686,15 @@ func TestAccAddressBlockResource_HostnameRewriteEnabled(t *testing.T) {
 func TestAccAddressBlockResource_HostnameRewriteRegex(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_hostname_rewrite_regex"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockHostnameRewriteRegex("192.168.0.0", "16", "[^a-z]"),
+				Config: testAccAddressBlockHostnameRewriteRegex(spaceName, "192.168.0.0", "16", "[^a-z]"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_regex", "[^a-z]"),
@@ -679,7 +702,7 @@ func TestAccAddressBlockResource_HostnameRewriteRegex(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockHostnameRewriteRegex("192.168.0.0", "16", "[^g-hG-H0-9_.]"),
+				Config: testAccAddressBlockHostnameRewriteRegex(spaceName, "192.168.0.0", "16", "[^g-hG-H0-9_.]"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_regex", "[^g-hG-H0-9_.]"),
@@ -693,14 +716,15 @@ func TestAccAddressBlockResource_HostnameRewriteRegex(t *testing.T) {
 func TestAccAddressBlockResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_inheritance_sources"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockInheritanceSources("192.168.0.0", "16", "inherit"),
+				Config: testAccAddressBlockInheritanceSources(spaceName, "192.168.0.0", "16", "inherit"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_enable_block.action", "inherit"),
@@ -726,7 +750,7 @@ func TestAccAddressBlockResource_InheritanceSources(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockInheritanceSources("192.168.0.0", "16", "override"),
+				Config: testAccAddressBlockInheritanceSources(spaceName, "192.168.0.0", "16", "override"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_enable_block.action", "override"),
@@ -757,14 +781,15 @@ func TestAccAddressBlockResource_InheritanceSources(t *testing.T) {
 func TestAccAddressBlockResource_Name(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_name"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockName("192.168.0.0", "16", "test_name"),
+				Config: testAccAddressBlockName(spaceName, "192.168.0.0", "16", "test_name"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", "test_name"),
@@ -772,7 +797,7 @@ func TestAccAddressBlockResource_Name(t *testing.T) {
 			},
 			// Update and read
 			{
-				Config: testAccAddressBlockName("192.168.0.0", "16", "test_name_1"),
+				Config: testAccAddressBlockName(spaceName, "192.168.0.0", "16", "test_name_1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", "test_name_1"),
@@ -786,14 +811,16 @@ func TestAccAddressBlockResource_Name(t *testing.T) {
 func TestAccAddressBlockResource_Space(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_space"
 	var v1, v2 ipam.IpamsvcAddressBlock
+	spaceName1 := acctest.RandomNameWithPrefix("ip-space")
+	spaceName2 := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockSpace("192.168.0.0", "16", "bloxone_ipam_ip_space.one"),
+				Config: testAccAddressBlockSpace(spaceName1, spaceName2, "192.168.0.0", "16", "bloxone_ipam_ip_space.one"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttrPair(resourceName, "space", "bloxone_ipam_ip_space.one", "id"),
@@ -801,7 +828,7 @@ func TestAccAddressBlockResource_Space(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockSpace("192.168.0.0", "16", "bloxone_ipam_ip_space.two"),
+				Config: testAccAddressBlockSpace(spaceName1, spaceName2, "192.168.0.0", "16", "bloxone_ipam_ip_space.two"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockDestroy(context.Background(), &v1),
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v2),
@@ -816,14 +843,15 @@ func TestAccAddressBlockResource_Space(t *testing.T) {
 func TestAccAddressBlockResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_tags"
 	var v ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockTags("192.168.0.0", "16", map[string]string{"location": "NA"}),
+				Config: testAccAddressBlockTags(spaceName, "192.168.0.0", "16", map[string]string{"location": "NA"}),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.location", "NA"),
@@ -831,7 +859,7 @@ func TestAccAddressBlockResource_Tags(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockTags("192.168.0.0", "16", map[string]string{"location": "CA"}),
+				Config: testAccAddressBlockTags(spaceName, "192.168.0.0", "16", map[string]string{"location": "CA"}),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.location", "CA"),
@@ -846,14 +874,15 @@ func TestAccAddressBlockResource_NextAvailable_AddressBlock(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_next_available"
 	var v1 ipam.IpamsvcAddressBlock
 	var v2 ipam.IpamsvcAddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockNextAvailableInAB("10.0.0.0", 24, 26),
+				Config: testAccAddressBlockNextAvailableInAB(spaceName, "10.0.0.0", 24, 26),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_ipam_address_block.test", "id"),
@@ -865,7 +894,7 @@ func TestAccAddressBlockResource_NextAvailable_AddressBlock(t *testing.T) {
 			// Update and Read
 			// Update of next_available_id will destroy existing resource and create a new resource
 			{
-				Config: testAccAddressBlockNextAvailableInAB("12.0.0.0", 8, 16),
+				Config: testAccAddressBlockNextAvailableInAB(spaceName, "12.0.0.0", 8, 16),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockDestroy(context.Background(), &v1),
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v2),
@@ -934,7 +963,7 @@ func testAccCheckAddressBlockDisappears(ctx context.Context, v *ipam.IpamsvcAddr
 	}
 }
 
-func testAccAddressBlockBasicConfig(address, cidr string) string {
+func testAccAddressBlockBasicConfig(spaceName, address, cidr string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test" {
     address = %q
@@ -943,10 +972,10 @@ resource "bloxone_ipam_address_block" "test" {
 }
 `, address, cidr)
 
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockAsmConfig(address, cidr string, asmThreshold int, enable, enableNotification bool, forecastPeriod, growthFactor int, growthType string, history, minTotal, minUnused int, reenableDate string) string {
+func testAccAddressBlockAsmConfig(spaceName, address, cidr string, asmThreshold int, enable, enableNotification bool, forecastPeriod, growthFactor int, growthType string, history, minTotal, minUnused int, reenableDate string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_asm_config" {
     address = %q
@@ -967,10 +996,10 @@ resource "bloxone_ipam_address_block" "test_asm_config" {
 }
 `, address, cidr, asmThreshold, enable, enableNotification, forecastPeriod, growthFactor, growthType, history, minTotal, minUnused, reenableDate)
 
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockCidr(address string, cidr string) string {
+func testAccAddressBlockCidr(spaceName, address string, cidr string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_cidr" {
     address = %q
@@ -979,10 +1008,10 @@ resource "bloxone_ipam_address_block" "test_cidr" {
 } 
 `, address, cidr)
 
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockComment(address string, cidr string, comment string) string {
+func testAccAddressBlockComment(spaceName, address string, cidr string, comment string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_comment" {
     address = %q
@@ -991,10 +1020,10 @@ resource "bloxone_ipam_address_block" "test_comment" {
     comment = %q
 }
 `, address, cidr, comment)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockDdnsClientUpdate(address string, cidr string, ddnsClientUpdate string) string {
+func testAccAddressBlockDdnsClientUpdate(spaceName, address string, cidr string, ddnsClientUpdate string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_ddns_client_update" {
     address = %q
@@ -1003,10 +1032,10 @@ resource "bloxone_ipam_address_block" "test_ddns_client_update" {
     ddns_client_update = %q
 }
 `, address, cidr, ddnsClientUpdate)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockDdnsDomain(address string, cidr string, ddnsDomain string) string {
+func testAccAddressBlockDdnsDomain(spaceName, address string, cidr string, ddnsDomain string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_ddns_domain" {
     address = %q
@@ -1015,10 +1044,10 @@ resource "bloxone_ipam_address_block" "test_ddns_domain" {
     ddns_domain = %q
 }
 `, address, cidr, ddnsDomain)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockDhcpOptionOption(name string, cidr string, type_, optValue string) string {
+func testAccAddressBlockDhcpOptionOption(spaceName, address string, cidr string, optionSpace, optionItemType, optValue string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_dhcp_options" {
     address = %q
@@ -1032,11 +1061,11 @@ resource "bloxone_ipam_address_block" "test_dhcp_options" {
       }
     ]
 }
-`, name, cidr, type_, optValue)
-	return strings.Join([]string{testAccBaseWithIPSpace(), testAccBaseWithOptionSpaceAndCode(), config}, "")
+`, address, cidr, optionItemType, optValue)
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+optionSpace, optionSpace, "ip4"), config}, "")
 }
 
-func testAccAddressBlockDhcpOptionsGroup(name string, cidr string, type_ string) string {
+func testAccAddressBlockDhcpOptionsGroup(spaceName, address string, cidr string, optionSpaceName, optionItemType string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_dhcp_options" {
     address = %q
@@ -1049,11 +1078,11 @@ resource "bloxone_ipam_address_block" "test_dhcp_options" {
       }
     ]
 }
-`, name, cidr, type_)
-	return strings.Join([]string{testAccBaseWithIPSpace(), testAccBaseWithOptionSpaceAndCode(), config}, "")
+`, address, cidr, optionItemType)
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+optionSpaceName, optionSpaceName, "ip4"), config}, "")
 }
 
-func testAccAddressBlockDdnsGenerateName(address string, cidr string, ddnsGenerateName string) string {
+func testAccAddressBlockDdnsGenerateName(spaceName, address string, cidr string, ddnsGenerateName string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_ddns_generate_name" {
     address = %q
@@ -1062,10 +1091,10 @@ resource "bloxone_ipam_address_block" "test_ddns_generate_name" {
     ddns_generate_name = %q
 }
 `, address, cidr, ddnsGenerateName)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockDdnsGeneratedPrefix(address, cidr, ddnsGeneratedPrefix string) string {
+func testAccAddressBlockDdnsGeneratedPrefix(spaceName, address, cidr, ddnsGeneratedPrefix string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_ddns_generated_prefix" {
     address = %q
@@ -1074,10 +1103,10 @@ resource "bloxone_ipam_address_block" "test_ddns_generated_prefix" {
     ddns_generated_prefix = %q
 }
 `, address, cidr, ddnsGeneratedPrefix)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockDdnsSendUpdates(address, cidr, ddnsSendUpdates string) string {
+func testAccAddressBlockDdnsSendUpdates(spaceName, address, cidr, ddnsSendUpdates string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_ddns_send_updates" {
     address = %q
@@ -1086,10 +1115,10 @@ resource "bloxone_ipam_address_block" "test_ddns_send_updates" {
     ddns_send_updates = %q
 }
 `, address, cidr, ddnsSendUpdates)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockDdnsTtlPercent(address, cidr, ddnsTtlPercent string) string {
+func testAccAddressBlockDdnsTtlPercent(spaceName, address, cidr, ddnsTtlPercent string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_ddns_ttl_percent" {
     address = %q
@@ -1098,10 +1127,10 @@ resource "bloxone_ipam_address_block" "test_ddns_ttl_percent" {
     ddns_ttl_percent = %q
 }
 `, address, cidr, ddnsTtlPercent)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockDdnsUpdateOnRenew(address, cidr, ddnsUpdateOnRenew string) string {
+func testAccAddressBlockDdnsUpdateOnRenew(spaceName, address, cidr, ddnsUpdateOnRenew string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_ddns_update_on_renew" {
     address = %q
@@ -1110,10 +1139,10 @@ resource "bloxone_ipam_address_block" "test_ddns_update_on_renew" {
     ddns_update_on_renew = %q
 }
 `, address, cidr, ddnsUpdateOnRenew)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockDdnsUseConflictResolution(address, cidr, ddnsUseConflictResolution string) string {
+func testAccAddressBlockDdnsUseConflictResolution(spaceName, address, cidr, ddnsUseConflictResolution string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_ddns_use_conflict_resolution" {
     address = %q
@@ -1122,10 +1151,10 @@ resource "bloxone_ipam_address_block" "test_ddns_use_conflict_resolution" {
     ddns_use_conflict_resolution = %q
 }
 `, address, cidr, ddnsUseConflictResolution)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockHeaderOptionFilename(address, cidr, headerOptionFilename string) string {
+func testAccAddressBlockHeaderOptionFilename(spaceName, address, cidr, headerOptionFilename string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_header_option_filename" {
     address = %q
@@ -1134,10 +1163,10 @@ resource "bloxone_ipam_address_block" "test_header_option_filename" {
     header_option_filename = %q
 }
 `, address, cidr, headerOptionFilename)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockHeaderOptionServerAddress(address, cidr, headerOptionServerAddress string) string {
+func testAccAddressBlockHeaderOptionServerAddress(spaceName, address, cidr, headerOptionServerAddress string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_header_option_server_address" {
     address = %q
@@ -1146,10 +1175,10 @@ resource "bloxone_ipam_address_block" "test_header_option_server_address" {
     header_option_server_address = %q
 }
 `, address, cidr, headerOptionServerAddress)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockHeaderOptionServerName(address, cidr, headerOptionServerName string) string {
+func testAccAddressBlockHeaderOptionServerName(spaceName, address, cidr, headerOptionServerName string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_header_option_server_name" {
     address = %q
@@ -1158,10 +1187,10 @@ resource "bloxone_ipam_address_block" "test_header_option_server_name" {
     header_option_server_name = %q
 }
 `, address, cidr, headerOptionServerName)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockHostnameRewriteChar(address, cidr, hostnameRewriteChar string) string {
+func testAccAddressBlockHostnameRewriteChar(spaceName, address, cidr, hostnameRewriteChar string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_hostname_rewrite_char" {
     address = %q
@@ -1170,10 +1199,10 @@ resource "bloxone_ipam_address_block" "test_hostname_rewrite_char" {
     hostname_rewrite_char = %q
 }
 `, address, cidr, hostnameRewriteChar)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockHostnameRewriteEnabled(address, cidr, hostnameRewriteEnabled string) string {
+func testAccAddressBlockHostnameRewriteEnabled(spaceName, address, cidr, hostnameRewriteEnabled string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_hostname_rewrite_enabled" {
     address = %q
@@ -1182,10 +1211,10 @@ resource "bloxone_ipam_address_block" "test_hostname_rewrite_enabled" {
     hostname_rewrite_enabled = %q
 }
 `, address, cidr, hostnameRewriteEnabled)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockHostnameRewriteRegex(address, cidr, hostnameRewriteRegex string) string {
+func testAccAddressBlockHostnameRewriteRegex(spaceName, address, cidr, hostnameRewriteRegex string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_hostname_rewrite_regex" {
     address = %q
@@ -1194,10 +1223,10 @@ resource "bloxone_ipam_address_block" "test_hostname_rewrite_regex" {
     hostname_rewrite_regex = %q
 }
 `, address, cidr, hostnameRewriteRegex)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockDhcpConfig(address, cidr string, allowUnknown, allowUnknownV6, ignoreClientUid bool,
+func testAccAddressBlockDhcpConfig(spaceName, address, cidr string, allowUnknown, allowUnknownV6, ignoreClientUid bool,
 	leaseTime, leaseTimeV6 int) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_dhcp_config" {
@@ -1213,10 +1242,10 @@ resource "bloxone_ipam_address_block" "test_dhcp_config" {
 	}
 }
 `, address, cidr, allowUnknown, allowUnknownV6, ignoreClientUid, leaseTime, leaseTimeV6)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockInheritanceSources(address, cidr, action string) string {
+func testAccAddressBlockInheritanceSources(spaceName, address, cidr, action string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_inheritance_sources" {
     address = %[1]q
@@ -1287,10 +1316,10 @@ resource "bloxone_ipam_address_block" "test_inheritance_sources" {
 
 }
 `, address, cidr, action)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockName(address, cidr, name string) string {
+func testAccAddressBlockName(spaceName, address, cidr, name string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_name" {
     address = %q
@@ -1299,10 +1328,10 @@ resource "bloxone_ipam_address_block" "test_name" {
     name = %q
 }
 `, address, cidr, name)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockSpace(address, cidr, space string) string {
+func testAccAddressBlockSpace(spaceName1, spaceName2, address, cidr, space string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test_space" {
     address = %q
@@ -1310,10 +1339,10 @@ resource "bloxone_ipam_address_block" "test_space" {
     space = %s.id
 }
 `, address, cidr, space)
-	return strings.Join([]string{testAccBaseWithTwoIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithTwoIPSpace(spaceName1, spaceName2), config}, "")
 }
 
-func testAccAddressBlockTags(address, cidr string, tags map[string]string) string {
+func testAccAddressBlockTags(spaceName, address, cidr string, tags map[string]string) string {
 	tagsStr := "{\n"
 	for k, v := range tags {
 		tagsStr += fmt.Sprintf(`
@@ -1330,10 +1359,10 @@ resource "bloxone_ipam_address_block" "test_tags" {
     tags = %s
 }
 `, address, cidr, tagsStr)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockNextAvailableInAB(address string, cidr, wantedCidr int) string {
+func testAccAddressBlockNextAvailableInAB(spaceName, address string, cidr, wantedCidr int) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test" {
     address = %q
@@ -1348,5 +1377,5 @@ resource "bloxone_ipam_address_block" "test_next_available" {
     depends_on = [bloxone_ipam_address_block.test]
 }
 `, address, cidr, wantedCidr)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }

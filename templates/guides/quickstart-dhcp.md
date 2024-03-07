@@ -20,11 +20,10 @@ terraform {
   required_providers {
     bloxone = {
       source  = "infobloxopen/bloxone"
-      version = ">= 0.1.0"
+      version = ">= 1.0.0"
     }
   }
-  
-  required_version = ">= 1.0.0"
+  required_version = ">= 1.5.0"
 }
 
 provider "bloxone" {
@@ -206,18 +205,35 @@ module "bloxone_infra_host_aws" {
 }
 ````
 
-You will also have to modify the subnet resource to assign the BloxOne Host to serve the subnet. To do this, replace the subnet resource with the following code:
+You will need the ID for the DHCP host to assign the subnet to the BloxOne Host. 
+To get the ID, you can use the [bloxone_dhcp_hosts](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/data-sources/dhcp_hosts) data source. 
+Add the following code to your main.tf:
+
+````terraform
+data "bloxone_dhcp_hosts" "this" {
+  filters = {
+    name = module.bloxone_infra_host_aws.host.display_name
+  }
+
+  retry_if_not_found  = true
+  depends_on          = [module.bloxone_infra_host_aws]
+}
+````
+The `retry_if_not_found` attribute is set to true to allow the data source to retry if the host is not found immediately. The `depends_on` attribute is used to ensure that the data source is read after the BloxOne Host is created.
+
+
+You will also have to modify the `bloxone_ipam_subnet` resource to assign the BloxOne Host to serve the subnet. To do this, replace the `bloxone_ipam_subnet` resource with the following code:
 
 ````terraform
 resource "bloxone_ipam_subnet" "this" {
-  space   = bloxone_ipam_ip_space.this.id
-  address = "10.0.0.0"
-  cidr    = "24"
-  dhcp_host    = module.bloxone_infra_host_aws.host.legacy_id
+  space     = bloxone_ipam_ip_space.this.id
+  address   = "10.0.0.0"
+  cidr      = "24"
+  dhcp_host = one(data.bloxone_dhcp_hosts.this.results).id
 }
 ````
 
-Here, the `dhcp_host` attribute has been added to the subnet resource and assigned the `legacy_id` of the BloxOne Host to serve the subnet.
+Here, the `dhcp_host` attribute has been added to the subnet resource and set to the ID of the DHCP host.
 
 You can now run `terraform plan` to see what resources will be created.
 

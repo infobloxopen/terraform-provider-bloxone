@@ -116,6 +116,8 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: `The description for the IP space. May contain 0 to 1024 characters. Can include UTF-8.`,
 	},
 	"created_at": schema.StringAttribute{
@@ -154,6 +156,8 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"ddns_domain": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: `The domain suffix for DDNS updates. FQDN, may be empty.  Defaults to empty.`,
 	},
 	"ddns_generate_name": schema.BoolAttribute{
@@ -223,14 +227,20 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"header_option_filename": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: `The configuration for header option filename field.`,
 	},
 	"header_option_server_address": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: `The configuration for header option server address field.`,
 	},
 	"header_option_server_name": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: `The configuration for header option server name field.`,
 	},
 	"hostname_rewrite_char": schema.StringAttribute{
@@ -319,7 +329,7 @@ func (m *IpamsvcIPSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	}
 	to := &ipam.IpamsvcIPSpace{
 		AsmConfig:                       ExpandIpamsvcASMConfig(ctx, m.AsmConfig, diags),
-		Comment:                         m.Comment.ValueStringPointer(),
+		Comment:                         flex.ExpandStringPointer(m.Comment),
 		DdnsClientUpdate:                m.DdnsClientUpdate.ValueStringPointer(),
 		DdnsConflictResolutionMode:      m.DdnsConflictResolutionMode.ValueStringPointer(),
 		DdnsDomain:                      m.DdnsDomain.ValueStringPointer(),

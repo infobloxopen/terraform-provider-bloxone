@@ -19,7 +19,7 @@ func TestAccTsigResource_basic(t *testing.T) {
 	var v keys.KeysTSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -47,7 +47,7 @@ func TestAccTsigResource_disappears(t *testing.T) {
 	var v keys.KeysTSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckTsigDestroy(context.Background(), &v),
@@ -69,7 +69,7 @@ func TestAccTsigResource_Algorithm(t *testing.T) {
 	var v keys.KeysTSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -99,7 +99,7 @@ func TestAccTsigResource_Comment(t *testing.T) {
 	var v keys.KeysTSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -130,7 +130,7 @@ func TestAccTsigResource_Name(t *testing.T) {
 	name1 := acctest.RandomNameWithPrefix("key") + "."
 	name2 := acctest.RandomNameWithPrefix("key") + "."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -160,7 +160,7 @@ func TestAccTsigResource_Secret(t *testing.T) {
 	var v keys.KeysTSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -190,7 +190,7 @@ func TestAccTsigResource_Tags(t *testing.T) {
 	var v keys.KeysTSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{

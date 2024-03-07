@@ -15,14 +15,17 @@ func TestAccDelegationDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_delegations.test"
 	resourceName := "bloxone_dns_delegation.test"
 	var v dns_config.ConfigDelegation
+	viewName := acctest.RandomNameWithPrefix("view")
+	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
+	delegationFqdn := "test." + zoneFqdn
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckDelegationDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDelegationDataSourceConfigFilters("test.tf-acc-test.com."),
+				Config: testAccDelegationDataSourceConfigFilters(viewName, zoneFqdn, delegationFqdn),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckDelegationExists(context.Background(), resourceName, &v),
@@ -37,13 +40,17 @@ func TestAccDelegationDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_delegations.test"
 	resourceName := "bloxone_dns_delegation.test"
 	var v dns_config.ConfigDelegation
-	resource.Test(t, resource.TestCase{
+	viewName := acctest.RandomNameWithPrefix("view")
+	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
+	delegationFqdn := "test." + zoneFqdn
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckDelegationDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDelegationDataSourceConfigTagFilters("test.tf-acc-test.com.", "value1"),
+				Config: testAccDelegationDataSourceConfigTagFilters(viewName, zoneFqdn, delegationFqdn, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckDelegationExists(context.Background(), resourceName, &v),
@@ -70,14 +77,14 @@ func testAccCheckDelegationResourceAttrPair(resourceName, dataSourceName string)
 	}
 }
 
-func testAccDelegationDataSourceConfigFilters(fqdn string) string {
+func testAccDelegationDataSourceConfigFilters(viewName, zoneFqdn, delegationFqdn string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_view" "test" {
-    name = "example-view"
+    name = %q
 }
 
 resource "bloxone_dns_auth_zone" test{
-  fqdn         = "tf-acc-test.com."
+  fqdn         = %q
   primary_type = "cloud"
   view = bloxone_dns_view.test.id
 }
@@ -98,17 +105,17 @@ data "bloxone_dns_delegations" "test" {
 	fqdn = bloxone_dns_delegation.test.fqdn
   }
 }
-`, fqdn)
+`, viewName, zoneFqdn, delegationFqdn)
 }
 
-func testAccDelegationDataSourceConfigTagFilters(fqdn string, tagValue string) string {
+func testAccDelegationDataSourceConfigTagFilters(viewName, zoneFqdn, delegationFqdn string, tagValue string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_view" "test" {
-    name = "example-view"
+    name = %q
 }
 
 resource "bloxone_dns_auth_zone" test {
-  fqdn         = "tf-acc-test.com."
+  fqdn         = %q
   primary_type = "cloud"
   view = bloxone_dns_view.test.id
   depends_on = [bloxone_dns_view.test]
@@ -132,5 +139,5 @@ data "bloxone_dns_delegations" "test" {
 	tag1 = bloxone_dns_delegation.test.tags.tag1
   }
 }
-`, fqdn, tagValue)
+`, viewName, zoneFqdn, delegationFqdn, tagValue)
 }
