@@ -1,7 +1,6 @@
 package fw_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -27,8 +26,8 @@ func TestAccPopRegionsDataSource_Filters(t *testing.T) {
 }
 
 func testAccPopRegionsDataSourceConfigFilters() string {
-	return fmt.Sprintf(`
+	return `
 data "bloxone_td_pop_regions" "test" {
 }
-`)
+`
 }
