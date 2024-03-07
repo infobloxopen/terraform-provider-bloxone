@@ -22,7 +22,6 @@ import (
 )
 
 type GlobalAPI interface {
-
 	/*
 			GlobalRead Read the Global configuration object.
 
@@ -37,7 +36,6 @@ type GlobalAPI interface {
 	// GlobalReadExecute executes the request
 	//  @return ConfigReadGlobalResponse
 	GlobalReadExecute(r ApiGlobalReadRequest) (*ConfigReadGlobalResponse, *http.Response, error)
-
 	/*
 			GlobalRead2 Read the Global configuration object.
 
@@ -53,7 +51,6 @@ type GlobalAPI interface {
 	// GlobalRead2Execute executes the request
 	//  @return ConfigReadGlobalResponse
 	GlobalRead2Execute(r ApiGlobalRead2Request) (*ConfigReadGlobalResponse, *http.Response, error)
-
 	/*
 			GlobalUpdate Update the Global configuration object.
 
@@ -68,7 +65,6 @@ type GlobalAPI interface {
 	// GlobalUpdateExecute executes the request
 	//  @return ConfigUpdateGlobalResponse
 	GlobalUpdateExecute(r ApiGlobalUpdateRequest) (*ConfigUpdateGlobalResponse, *http.Response, error)
-
 	/*
 			GlobalUpdate2 Update the Global configuration object.
 
@@ -204,7 +200,6 @@ func (a *GlobalAPIService) GlobalReadExecute(r ApiGlobalReadRequest) (*ConfigRea
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -327,7 +322,6 @@ func (a *GlobalAPIService) GlobalRead2Execute(r ApiGlobalRead2Request) (*ConfigR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -447,7 +441,6 @@ func (a *GlobalAPIService) GlobalUpdateExecute(r ApiGlobalUpdateRequest) (*Confi
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -571,6 +564,5 @@ func (a *GlobalAPIService) GlobalUpdate2Execute(r ApiGlobalUpdate2Request) (*Con
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

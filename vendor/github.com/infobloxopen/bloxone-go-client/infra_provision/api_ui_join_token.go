@@ -22,7 +22,6 @@ import (
 )
 
 type UIJoinTokenAPI interface {
-
 	/*
 			UIJoinTokenCreate User can create a join token. Join token is random character string which is used for instant validation of new hosts.
 
@@ -38,7 +37,6 @@ type UIJoinTokenAPI interface {
 	// UIJoinTokenCreateExecute executes the request
 	//  @return HostactivationCreateJoinTokenResponse
 	UIJoinTokenCreateExecute(r ApiUIJoinTokenCreateRequest) (*HostactivationCreateJoinTokenResponse, *http.Response, error)
-
 	/*
 		UIJoinTokenDelete User can revoke the join token. Once revoked, it can not be used further. The join token record is preserved forever.
 
@@ -50,7 +48,6 @@ type UIJoinTokenAPI interface {
 
 	// UIJoinTokenDeleteExecute executes the request
 	UIJoinTokenDeleteExecute(r ApiUIJoinTokenDeleteRequest) (*http.Response, error)
-
 	/*
 		UIJoinTokenDeleteSet User can revoke a list of join tokens. Once revoked, join tokens can not be used further. The records are preserved forever.
 
@@ -61,7 +58,6 @@ type UIJoinTokenAPI interface {
 
 	// UIJoinTokenDeleteSetExecute executes the request
 	UIJoinTokenDeleteSetExecute(r ApiUIJoinTokenDeleteSetRequest) (*http.Response, error)
-
 	/*
 		UIJoinTokenList User can list the join tokens for an account.
 
@@ -75,7 +71,6 @@ type UIJoinTokenAPI interface {
 	// UIJoinTokenListExecute executes the request
 	//  @return HostactivationListJoinTokenResponse
 	UIJoinTokenListExecute(r ApiUIJoinTokenListRequest) (*HostactivationListJoinTokenResponse, *http.Response, error)
-
 	/*
 		UIJoinTokenRead User can get the join token providing its resource id in the parameter.
 
@@ -88,7 +83,6 @@ type UIJoinTokenAPI interface {
 	// UIJoinTokenReadExecute executes the request
 	//  @return HostactivationReadJoinTokenResponse
 	UIJoinTokenReadExecute(r ApiUIJoinTokenReadRequest) (*HostactivationReadJoinTokenResponse, *http.Response, error)
-
 	/*
 			UIJoinTokenUpdate User can modify the tags or expiration time of a join token.
 
@@ -184,6 +178,14 @@ func (a *UIJoinTokenAPIService) UIJoinTokenCreateExecute(r ApiUIJoinTokenCreateR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -227,7 +229,6 @@ func (a *UIJoinTokenAPIService) UIJoinTokenCreateExecute(r ApiUIJoinTokenCreateR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -614,7 +615,6 @@ func (a *UIJoinTokenAPIService) UIJoinTokenListExecute(r ApiUIJoinTokenListReque
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -734,7 +734,6 @@ func (a *UIJoinTokenAPIService) UIJoinTokenReadExecute(r ApiUIJoinTokenReadReque
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -816,6 +815,14 @@ func (a *UIJoinTokenAPIService) UIJoinTokenUpdateExecute(r ApiUIJoinTokenUpdateR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -859,6 +866,5 @@ func (a *UIJoinTokenAPIService) UIJoinTokenUpdateExecute(r ApiUIJoinTokenUpdateR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

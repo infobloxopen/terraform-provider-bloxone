@@ -22,7 +22,6 @@ import (
 )
 
 type HaGroupAPI interface {
-
 	/*
 			HaGroupCreate Create the HA group.
 
@@ -37,7 +36,6 @@ type HaGroupAPI interface {
 	// HaGroupCreateExecute executes the request
 	//  @return IpamsvcCreateHAGroupResponse
 	HaGroupCreateExecute(r ApiHaGroupCreateRequest) (*IpamsvcCreateHAGroupResponse, *http.Response, error)
-
 	/*
 			HaGroupDelete Delete the HA group.
 
@@ -52,7 +50,6 @@ type HaGroupAPI interface {
 
 	// HaGroupDeleteExecute executes the request
 	HaGroupDeleteExecute(r ApiHaGroupDeleteRequest) (*http.Response, error)
-
 	/*
 			HaGroupList Retrieve HA groups.
 
@@ -67,7 +64,6 @@ type HaGroupAPI interface {
 	// HaGroupListExecute executes the request
 	//  @return IpamsvcListHAGroupResponse
 	HaGroupListExecute(r ApiHaGroupListRequest) (*IpamsvcListHAGroupResponse, *http.Response, error)
-
 	/*
 			HaGroupRead Retrieve the HA group.
 
@@ -83,7 +79,6 @@ type HaGroupAPI interface {
 	// HaGroupReadExecute executes the request
 	//  @return IpamsvcReadHAGroupResponse
 	HaGroupReadExecute(r ApiHaGroupReadRequest) (*IpamsvcReadHAGroupResponse, *http.Response, error)
-
 	/*
 			HaGroupUpdate Update the HA group.
 
@@ -177,6 +172,14 @@ func (a *HaGroupAPIService) HaGroupCreateExecute(r ApiHaGroupCreateRequest) (*Ip
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -220,7 +223,6 @@ func (a *HaGroupAPIService) HaGroupCreateExecute(r ApiHaGroupCreateRequest) (*Ip
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -523,7 +525,6 @@ func (a *HaGroupAPIService) HaGroupListExecute(r ApiHaGroupListRequest) (*Ipamsv
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -656,7 +657,6 @@ func (a *HaGroupAPIService) HaGroupReadExecute(r ApiHaGroupReadRequest) (*Ipamsv
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -780,6 +780,5 @@ func (a *HaGroupAPIService) HaGroupUpdateExecute(r ApiHaGroupUpdateRequest) (*Ip
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
