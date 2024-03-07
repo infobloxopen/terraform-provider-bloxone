@@ -17,7 +17,7 @@ func TestAccInternalDomainListsDataSource_Filters(t *testing.T) {
 	var v fw.AtcfwInternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckInternalDomainListsDestroy(context.Background(), &v),
@@ -40,7 +40,7 @@ func TestAccInternalDomainListsDataSource_TagFilters(t *testing.T) {
 	var v fw.AtcfwInternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckInternalDomainListsDestroy(context.Background(), &v),

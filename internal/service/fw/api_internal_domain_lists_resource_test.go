@@ -20,7 +20,7 @@ func TestAccInternalDomainListsResource_basic(t *testing.T) {
 	var v fw.AtcfwInternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -46,7 +46,7 @@ func TestAccInternalDomainListsResource_disappears(t *testing.T) {
 	var v fw.AtcfwInternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckInternalDomainListsDestroy(context.Background(), &v),
@@ -63,12 +63,12 @@ func TestAccInternalDomainListsResource_disappears(t *testing.T) {
 	})
 }
 
-func TestAccServerResource_Description(t *testing.T) {
+func TestAccInternalDomainListsResource_Description(t *testing.T) {
 	resourceName := "bloxone_td_internal_domain_list.test_description"
 	var v fw.AtcfwInternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -93,12 +93,12 @@ func TestAccServerResource_Description(t *testing.T) {
 	})
 }
 
-func TestAccServerResource_InternalDomains(t *testing.T) {
+func TestAccInternalDomainListsResource_InternalDomains(t *testing.T) {
 	resourceName := "bloxone_td_internal_domain_list.test_internal_domain"
 	var v fw.AtcfwInternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -123,13 +123,13 @@ func TestAccServerResource_InternalDomains(t *testing.T) {
 	})
 }
 
-func TestAccServerResource_Name(t *testing.T) {
+func TestAccInternalDomainListsResource_Name(t *testing.T) {
 	resourceName := "bloxone_td_internal_domain_list.test_name"
 	var v1, v2 fw.AtcfwInternalDomains
 	var name1 = acctest.RandomNameWithPrefix("td-internal_domain_list")
 	var name2 = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -155,12 +155,12 @@ func TestAccServerResource_Name(t *testing.T) {
 	})
 }
 
-func TestAccServerResource_Tags(t *testing.T) {
+func TestAccInternalDomainListsResource_Tags(t *testing.T) {
 	resourceName := "bloxone_td_internal_domain_list.test_tags"
 	var v fw.AtcfwInternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -268,16 +268,6 @@ resource "bloxone_td_internal_domain_list" "test_description" {
     description = %q
 }
 `, name, internalDomains, description)
-}
-
-func testAccInternalDomainIsDefault(name string, internalDomains, isDefault string) string {
-	return fmt.Sprintf(`
-resource "bloxone_td_internal_domain_list" "test_is_default" {
-    name = %q
-	internal_domains = [%q]
-    is_default = %q
-}
-`, name, internalDomains, isDefault)
 }
 
 func testAccInternalDomainListsInternalDomain(name, internalDomains string) string {

@@ -2,6 +2,7 @@ package fw
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -48,6 +49,8 @@ var AtcfwInternalDomainsResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"description": schema.StringAttribute{
 		Optional:            true,
+		Default:             stringdefault.StaticString(""),
+		Computed:            true,
 		MarkdownDescription: "The brief description for the internal domain lists .",
 	},
 	"id": schema.Int64Attribute{

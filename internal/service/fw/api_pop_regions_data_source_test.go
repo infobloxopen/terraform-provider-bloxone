@@ -11,7 +11,7 @@ import (
 func TestAccPopRegionsDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_pop_regions.test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
