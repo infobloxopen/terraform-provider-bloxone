@@ -3,6 +3,7 @@ package flex
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -189,7 +190,16 @@ func ExpandFrameworkMapFilterString(ctx context.Context, tfMap types.Map, diags 
 
 	var filters []string
 	for k, v := range elements {
-		filters = append(filters, fmt.Sprintf("%s=='%s'", k, v))
+		// Terraform configuration only supports a single type for map.
+		// The API accepts both string and number values for filters.
+		// This is a workaround to send number values without quotes and string values with quotes.
+		if _, err := strconv.Atoi(v); err == nil {
+			filters = append(filters, fmt.Sprintf("%s==%s", k, v))
+		} else if _, err := strconv.ParseFloat(v, 64); err == nil {
+			filters = append(filters, fmt.Sprintf("%s==%s", k, v))
+		} else {
+			filters = append(filters, fmt.Sprintf("%s=='%s'", k, v))
+		}
 	}
 	filterStr := strings.Join(filters, " and ")
 	return filterStr
