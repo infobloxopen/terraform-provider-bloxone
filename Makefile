@@ -3,8 +3,10 @@ HOSTNAME=registry.terraform.io
 NAMESPACE=infobloxopen
 NAME=bloxone
 BINARY=terraform-provider-${NAME}
-VERSION=0.1.0
+VERSION=1.0.0
 OS_ARCH=linux_amd64
+MODULES_DIR=./modules
+TERRAFORM_DOCS_IMAGE=quay.io/terraform-docs/terraform-docs:0.17.0
 
 default: install
 
@@ -20,10 +22,15 @@ test:
 	echo $(TEST) | xargs -t -n4 go test $(TESTARGS) -timeout=30s -parallel=4 -coverprofile cover.out
 
 testacc:
-	TF_LOG=debug TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m -coverprofile testacc-cover.out
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m -coverprofile testacc-cover.out
 
-gen:
+gen: modules-docs
 	go generate
-	terraform-docs ./modules/bloxone_infra_host_aws
+
+modules-docs: $(MODULES_DIR)/*
+	@for d in $^ ; do \
+		echo "Generating documentation for module $$d" ; \
+		docker run --rm --volume "./$$d:/$$d" $(TERRAFORM_DOCS_IMAGE) markdown "/$$d" ; \
+	done
 
 .PHONY: default test testacc gen

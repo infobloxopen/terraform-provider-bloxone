@@ -27,14 +27,15 @@ import (
 func TestAccSubnetResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetBasicConfig("10.0.0.0", 24),
+				Config: testAccSubnetBasicConfig(spaceName, "10.0.0.0", 24),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "address", "10.0.0.0"),
@@ -66,14 +67,15 @@ func TestAccSubnetResource_basic(t *testing.T) {
 func TestAccSubnetResource_disappears(t *testing.T) {
 	resourceName := "bloxone_ipam_subnet.test"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckSubnetDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSubnetBasicConfig("10.0.0.0", 24),
+				Config: testAccSubnetBasicConfig(spaceName, "10.0.0.0", 24),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					testAccCheckSubnetDisappears(context.Background(), &v),
@@ -88,14 +90,15 @@ func TestAccSubnetResource_Address(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test"
 	var v1 ipam.IpamsvcSubnet
 	var v2 ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetBasicConfig("10.0.0.0", 24),
+				Config: testAccSubnetBasicConfig(spaceName, "10.0.0.0", 24),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "address", "10.0.0.0"),
@@ -105,7 +108,7 @@ func TestAccSubnetResource_Address(t *testing.T) {
 			// Update and Read
 			// Update should destroy previous subnet and create new subnet
 			{
-				Config: testAccSubnetBasicConfig("11.0.0.0", 24),
+				Config: testAccSubnetBasicConfig(spaceName, "11.0.0.0", 24),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetDestroy(context.Background(), &v1),
 					testAccCheckSubnetExists(context.Background(), resourceName, &v2),
@@ -121,14 +124,15 @@ func TestAccSubnetResource_Address(t *testing.T) {
 func TestAccSubnetResource_Cidr(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetBasicConfig("10.0.0.0", 24),
+				Config: testAccSubnetBasicConfig(spaceName, "10.0.0.0", 24),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "address", "10.0.0.0"),
@@ -137,7 +141,7 @@ func TestAccSubnetResource_Cidr(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetBasicConfig("10.0.0.0", 26),
+				Config: testAccSubnetBasicConfig(spaceName, "10.0.0.0", 26),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "address", "10.0.0.0"),
@@ -153,14 +157,16 @@ func TestAccSubnetResource_Space(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test"
 	var v1 ipam.IpamsvcSubnet
 	var v2 ipam.IpamsvcSubnet
+	spaceName1 := acctest.RandomNameWithPrefix("ip-space")
+	spaceName2 := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetSpace("bloxone_ipam_ip_space.one"),
+				Config: testAccSubnetSpace(spaceName1, spaceName2, "bloxone_ipam_ip_space.one"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttrPair(resourceName, "space", "bloxone_ipam_ip_space.one", "id"),
@@ -168,7 +174,7 @@ func TestAccSubnetResource_Space(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetSpace("bloxone_ipam_ip_space.two"),
+				Config: testAccSubnetSpace(spaceName1, spaceName2, "bloxone_ipam_ip_space.two"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetDestroy(context.Background(), &v1),
 					testAccCheckSubnetExists(context.Background(), resourceName, &v2),
@@ -183,14 +189,15 @@ func TestAccSubnetResource_Space(t *testing.T) {
 func TestAccSubnetResource_AsmConfig(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_asm_config"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetAsmConfig("10.0.0.0", 24, 70, true, true, 12, 40, "count", 40, 30, 30, "2020-01-10T10:11:22Z"),
+				Config: testAccSubnetAsmConfig(spaceName, "10.0.0.0", 24, 70, true, true, 12, 40, "count", 40, 30, 30, "2020-01-10T10:11:22Z"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "asm_config.asm_threshold", "70"),
@@ -207,7 +214,7 @@ func TestAccSubnetResource_AsmConfig(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetAsmConfig("10.0.0.0", 24, 80, false, false, 10, 50, "percent", 50, 10, 10, "2021-01-10T10:11:22Z"),
+				Config: testAccSubnetAsmConfig(spaceName, "10.0.0.0", 24, 80, false, false, 10, 50, "percent", 50, 10, 10, "2021-01-10T10:11:22Z"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "asm_config.asm_threshold", "80"),
@@ -230,14 +237,15 @@ func TestAccSubnetResource_AsmConfig(t *testing.T) {
 func TestAccSubnetResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_comment"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetComment("10.0.0.0", 24, "some comment"),
+				Config: testAccSubnetComment(spaceName, "10.0.0.0", 24, "some comment"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "some comment"),
@@ -245,7 +253,7 @@ func TestAccSubnetResource_Comment(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetComment("10.0.0.0", 24, "updated comment"),
+				Config: testAccSubnetComment(spaceName, "10.0.0.0", 24, "updated comment"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "updated comment"),
@@ -259,14 +267,15 @@ func TestAccSubnetResource_Comment(t *testing.T) {
 func TestAccSubnetResource_DdnsClientUpdate(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_client_update"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetDdnsClientUpdate("10.0.0.0", 24, "server"),
+				Config: testAccSubnetDdnsClientUpdate(spaceName, "10.0.0.0", 24, "server"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_client_update", "server"),
@@ -274,7 +283,7 @@ func TestAccSubnetResource_DdnsClientUpdate(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetDdnsClientUpdate("10.0.0.0", 24, "over_client_update"),
+				Config: testAccSubnetDdnsClientUpdate(spaceName, "10.0.0.0", 24, "over_client_update"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_client_update", "over_client_update"),
@@ -288,14 +297,15 @@ func TestAccSubnetResource_DdnsClientUpdate(t *testing.T) {
 func TestAccSubnetResource_DdnsConflictResolutionMode(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_conflict_resolution_mode"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetDdnsConflictResolutionMode("10.0.0.0", 24, false, "check_exists_with_dhcid"),
+				Config: testAccSubnetDdnsConflictResolutionMode(spaceName, "10.0.0.0", 24, false, "check_exists_with_dhcid"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_use_conflict_resolution", "false"),
@@ -304,7 +314,7 @@ func TestAccSubnetResource_DdnsConflictResolutionMode(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetDdnsConflictResolutionMode("10.0.0.0", 24, true, "check_with_dhcid"),
+				Config: testAccSubnetDdnsConflictResolutionMode(spaceName, "10.0.0.0", 24, true, "check_with_dhcid"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_use_conflict_resolution", "true"),
@@ -319,14 +329,15 @@ func TestAccSubnetResource_DdnsConflictResolutionMode(t *testing.T) {
 func TestAccSubnetResource_DdnsDomain(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_domain"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetDdnsDomain("10.0.0.0", 24, "abc"),
+				Config: testAccSubnetDdnsDomain(spaceName, "10.0.0.0", 24, "abc"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "abc"),
@@ -334,7 +345,7 @@ func TestAccSubnetResource_DdnsDomain(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetDdnsDomain("10.0.0.0", 24, "xyz"),
+				Config: testAccSubnetDdnsDomain(spaceName, "10.0.0.0", 24, "xyz"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_domain", "xyz"),
@@ -348,14 +359,15 @@ func TestAccSubnetResource_DdnsDomain(t *testing.T) {
 func TestAccSubnetResource_DdnsGenerateName(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_generate_name"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetDdnsGenerateName("10.0.0.0", 24, true),
+				Config: testAccSubnetDdnsGenerateName(spaceName, "10.0.0.0", 24, true),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_generate_name", "true"),
@@ -363,7 +375,7 @@ func TestAccSubnetResource_DdnsGenerateName(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetDdnsGenerateName("10.0.0.0", 24, false),
+				Config: testAccSubnetDdnsGenerateName(spaceName, "10.0.0.0", 24, false),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_generate_name", "false"),
@@ -377,14 +389,15 @@ func TestAccSubnetResource_DdnsGenerateName(t *testing.T) {
 func TestAccSubnetResource_DdnsGeneratedPrefix(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_generated_prefix"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetDdnsGeneratedPrefix("10.0.0.0", 24, "host-prefix"),
+				Config: testAccSubnetDdnsGeneratedPrefix(spaceName, "10.0.0.0", 24, "host-prefix"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_generated_prefix", "host-prefix"),
@@ -392,7 +405,7 @@ func TestAccSubnetResource_DdnsGeneratedPrefix(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetDdnsGeneratedPrefix("10.0.0.0", 24, "host-another-prefix"),
+				Config: testAccSubnetDdnsGeneratedPrefix(spaceName, "10.0.0.0", 24, "host-another-prefix"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_generated_prefix", "host-another-prefix"),
@@ -405,17 +418,18 @@ func TestAccSubnetResource_DdnsGeneratedPrefix(t *testing.T) {
 
 func TestAccSubnetResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_dhcp_options"
-	var v1 ipam.IpamsvcSubnet
+	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetDhcpOptionsOption("10.0.0.0", 24, "option_group_test", "option", "true"),
+				Config: testAccSubnetDhcpOptionsOption(spaceName, "10.0.0.0", 24, "option_group_test", "option", "true"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSubnetExists(context.Background(), resourceName, &v1),
+					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.0.option_value", "true"),
 					resource.TestCheckResourceAttrPair(resourceName, "dhcp_options.0.option_code", "bloxone_dhcp_option_code.test", "id"),
@@ -423,9 +437,9 @@ func TestAccSubnetResource_DhcpOptions(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetDhcpOptionsGroup("10.0.0.0", 24, "option_group_test", "group"),
+				Config: testAccSubnetDhcpOptionsGroup(spaceName, "10.0.0.0", 24, "option_group_test", "group"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSubnetExists(context.Background(), resourceName, &v1),
+					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
 				),
 			},
@@ -437,14 +451,15 @@ func TestAccSubnetResource_DhcpOptions(t *testing.T) {
 func TestAccSubnetResource_DdnsSendUpdates(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_send_updates"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetDdnsSendUpdates("10.0.0.0", 24, true),
+				Config: testAccSubnetDdnsSendUpdates(spaceName, "10.0.0.0", 24, true),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_send_updates", "true"),
@@ -452,7 +467,7 @@ func TestAccSubnetResource_DdnsSendUpdates(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetDdnsSendUpdates("10.0.0.0", 24, false),
+				Config: testAccSubnetDdnsSendUpdates(spaceName, "10.0.0.0", 24, false),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_send_updates", "false"),
@@ -466,14 +481,15 @@ func TestAccSubnetResource_DdnsSendUpdates(t *testing.T) {
 func TestAccSubnetResource_DdnsTtlPercent(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_ttl_percent"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetDdnsTtlPercent("10.0.0.0", 24, "20"),
+				Config: testAccSubnetDdnsTtlPercent(spaceName, "10.0.0.0", 24, "20"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_ttl_percent", "20"),
@@ -481,7 +497,7 @@ func TestAccSubnetResource_DdnsTtlPercent(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetDdnsTtlPercent("10.0.0.0", 24, "40"),
+				Config: testAccSubnetDdnsTtlPercent(spaceName, "10.0.0.0", 24, "40"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_ttl_percent", "40"),
@@ -495,14 +511,15 @@ func TestAccSubnetResource_DdnsTtlPercent(t *testing.T) {
 func TestAccSubnetResource_DdnsUpdateOnRenew(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_update_on_renew"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetDdnsUpdateOnRenew("10.0.0.0", 24, true),
+				Config: testAccSubnetDdnsUpdateOnRenew(spaceName, "10.0.0.0", 24, true),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_update_on_renew", "true"),
@@ -510,7 +527,7 @@ func TestAccSubnetResource_DdnsUpdateOnRenew(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetDdnsUpdateOnRenew("10.0.0.0", 24, false),
+				Config: testAccSubnetDdnsUpdateOnRenew(spaceName, "10.0.0.0", 24, false),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "ddns_update_on_renew", "false"),
@@ -524,14 +541,15 @@ func TestAccSubnetResource_DdnsUpdateOnRenew(t *testing.T) {
 func TestAccSubnetResource_DhcpConfig(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_dhcp_config"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetDhcpConfig("10.0.0.0", 24, true, true, true, 50, 60),
+				Config: testAccSubnetDhcpConfig(spaceName, "10.0.0.0", 24, true, true, true, 50, 60),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_config.allow_unknown", "true"),
@@ -542,7 +560,7 @@ func TestAccSubnetResource_DhcpConfig(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetDhcpConfig("10.0.0.0", 24, false, false, false, 55, 65),
+				Config: testAccSubnetDhcpConfig(spaceName, "10.0.0.0", 24, false, false, false, 55, 65),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_config.allow_unknown", "false"),
@@ -560,14 +578,15 @@ func TestAccSubnetResource_DhcpConfig(t *testing.T) {
 func TestAccSubnetResource_DisableDhcp(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_disable_dhcp"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetDisableDhcp("10.0.0.0", 24, true),
+				Config: testAccSubnetDisableDhcp(spaceName, "10.0.0.0", 24, true),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "disable_dhcp", "true"),
@@ -575,7 +594,7 @@ func TestAccSubnetResource_DisableDhcp(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetDisableDhcp("10.0.0.0", 24, false),
+				Config: testAccSubnetDisableDhcp(spaceName, "10.0.0.0", 24, false),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "disable_dhcp", "false"),
@@ -589,14 +608,15 @@ func TestAccSubnetResource_DisableDhcp(t *testing.T) {
 func TestAccSubnetResource_HeaderOptionFilename(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_header_option_filename"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetHeaderOptionFilename("10.0.0.0", 24, "HEADER_OPTION_FILENAME_REPLACE_ME"),
+				Config: testAccSubnetHeaderOptionFilename(spaceName, "10.0.0.0", 24, "HEADER_OPTION_FILENAME_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "HEADER_OPTION_FILENAME_REPLACE_ME"),
@@ -604,7 +624,7 @@ func TestAccSubnetResource_HeaderOptionFilename(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetHeaderOptionFilename("10.0.0.0", 24, "HEADER_OPTION_FILENAME_UPDATE_REPLACE_ME"),
+				Config: testAccSubnetHeaderOptionFilename(spaceName, "10.0.0.0", 24, "HEADER_OPTION_FILENAME_UPDATE_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_filename", "HEADER_OPTION_FILENAME_UPDATE_REPLACE_ME"),
@@ -618,14 +638,15 @@ func TestAccSubnetResource_HeaderOptionFilename(t *testing.T) {
 func TestAccSubnetResource_HeaderOptionServerAddress(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_header_option_server_address"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetHeaderOptionServerAddress("10.0.0.0", 24, "12.0.0.4"),
+				Config: testAccSubnetHeaderOptionServerAddress(spaceName, "10.0.0.0", 24, "12.0.0.4"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_server_address", "12.0.0.4"),
@@ -633,7 +654,7 @@ func TestAccSubnetResource_HeaderOptionServerAddress(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetHeaderOptionServerAddress("10.0.0.0", 24, "12.0.0.5"),
+				Config: testAccSubnetHeaderOptionServerAddress(spaceName, "10.0.0.0", 24, "12.0.0.5"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_server_address", "12.0.0.5"),
@@ -647,14 +668,15 @@ func TestAccSubnetResource_HeaderOptionServerAddress(t *testing.T) {
 func TestAccSubnetResource_HeaderOptionServerName(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_header_option_server_name"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetHeaderOptionServerName("10.0.0.0", 24, "HEADER_OPTION_SERVER_NAME_REPLACE_ME"),
+				Config: testAccSubnetHeaderOptionServerName(spaceName, "10.0.0.0", 24, "HEADER_OPTION_SERVER_NAME_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "HEADER_OPTION_SERVER_NAME_REPLACE_ME"),
@@ -662,7 +684,7 @@ func TestAccSubnetResource_HeaderOptionServerName(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetHeaderOptionServerName("10.0.0.0", 24, "HEADER_OPTION_SERVER_NAME_UPDATE_REPLACE_ME"),
+				Config: testAccSubnetHeaderOptionServerName(spaceName, "10.0.0.0", 24, "HEADER_OPTION_SERVER_NAME_UPDATE_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "header_option_server_name", "HEADER_OPTION_SERVER_NAME_UPDATE_REPLACE_ME"),
@@ -676,14 +698,15 @@ func TestAccSubnetResource_HeaderOptionServerName(t *testing.T) {
 func TestAccSubnetResource_HostnameRewriteChar(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_hostname_rewrite_char"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetHostnameRewriteChar("10.0.0.0", 24, "+"),
+				Config: testAccSubnetHostnameRewriteChar(spaceName, "10.0.0.0", 24, "+"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_char", "+"),
@@ -691,7 +714,7 @@ func TestAccSubnetResource_HostnameRewriteChar(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetHostnameRewriteChar("10.0.0.0", 24, "/"),
+				Config: testAccSubnetHostnameRewriteChar(spaceName, "10.0.0.0", 24, "/"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_char", "/"),
@@ -705,14 +728,15 @@ func TestAccSubnetResource_HostnameRewriteChar(t *testing.T) {
 func TestAccSubnetResource_HostnameRewriteEnabled(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_hostname_rewrite_enabled"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetHostnameRewriteEnabled("10.0.0.0", 24, true),
+				Config: testAccSubnetHostnameRewriteEnabled(spaceName, "10.0.0.0", 24, true),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_enabled", "true"),
@@ -720,7 +744,7 @@ func TestAccSubnetResource_HostnameRewriteEnabled(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetHostnameRewriteEnabled("10.0.0.0", 24, false),
+				Config: testAccSubnetHostnameRewriteEnabled(spaceName, "10.0.0.0", 24, false),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_enabled", "false"),
@@ -734,14 +758,15 @@ func TestAccSubnetResource_HostnameRewriteEnabled(t *testing.T) {
 func TestAccSubnetResource_HostnameRewriteRegex(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_hostname_rewrite_regex"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetHostnameRewriteRegex("10.0.0.0", 24, "[^a-z]"),
+				Config: testAccSubnetHostnameRewriteRegex(spaceName, "10.0.0.0", 24, "[^a-z]"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_regex", "[^a-z]"),
@@ -749,7 +774,7 @@ func TestAccSubnetResource_HostnameRewriteRegex(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetHostnameRewriteRegex("10.0.0.0", 24, "[^0-9]"),
+				Config: testAccSubnetHostnameRewriteRegex(spaceName, "10.0.0.0", 24, "[^0-9]"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "hostname_rewrite_regex", "[^0-9]"),
@@ -763,14 +788,15 @@ func TestAccSubnetResource_HostnameRewriteRegex(t *testing.T) {
 func TestAccSubnetResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_inheritance_sources"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetInheritanceSources("10.0.0.0", 24, "inherit"),
+				Config: testAccSubnetInheritanceSources(spaceName, "10.0.0.0", 24, "inherit"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_enable_block.action", "inherit"),
@@ -803,7 +829,7 @@ func TestAccSubnetResource_InheritanceSources(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetInheritanceSources("10.0.0.0", 24, "override"),
+				Config: testAccSubnetInheritanceSources(spaceName, "10.0.0.0", 24, "override"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.asm_config.asm_enable_block.action", "override"),
@@ -841,14 +867,15 @@ func TestAccSubnetResource_InheritanceSources(t *testing.T) {
 func TestAccSubnetResource_Name(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_name"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetName("10.0.0.0", 24, "subnet_name"),
+				Config: testAccSubnetName(spaceName, "10.0.0.0", 24, "subnet_name"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", "subnet_name"),
@@ -856,7 +883,7 @@ func TestAccSubnetResource_Name(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetName("10.0.0.0", 24, "subnet_name_updated"),
+				Config: testAccSubnetName(spaceName, "10.0.0.0", 24, "subnet_name_updated"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", "subnet_name_updated"),
@@ -870,14 +897,15 @@ func TestAccSubnetResource_Name(t *testing.T) {
 func TestAccSubnetResource_RenewTimeAndRebindTime(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_renew_time"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetRebindTimeAndRenewTime("10.0.0.0", 24, "60", "50"),
+				Config: testAccSubnetRebindTimeAndRenewTime(spaceName, "10.0.0.0", 24, "60", "50"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "rebind_time", "60"),
@@ -886,7 +914,7 @@ func TestAccSubnetResource_RenewTimeAndRebindTime(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetRebindTimeAndRenewTime("10.0.0.0", 24, "90", "80"),
+				Config: testAccSubnetRebindTimeAndRenewTime(spaceName, "10.0.0.0", 24, "90", "80"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "rebind_time", "90"),
@@ -901,14 +929,15 @@ func TestAccSubnetResource_RenewTimeAndRebindTime(t *testing.T) {
 func TestAccSubnetResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_tags"
 	var v ipam.IpamsvcSubnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactoriesWithTags,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetTags("10.0.0.0", 24, map[string]string{
+				Config: testAccSubnetTags(spaceName, "10.0.0.0", 24, map[string]string{
 					"tag1": "value1",
 					"tag2": "value2",
 				}),
@@ -923,7 +952,7 @@ func TestAccSubnetResource_Tags(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSubnetTags("10.0.0.0", 24, map[string]string{
+				Config: testAccSubnetTags(spaceName, "10.0.0.0", 24, map[string]string{
 					"tag2": "value2changed",
 					"tag3": "value3",
 				}),
@@ -995,8 +1024,7 @@ func testAccCheckSubnetDisappears(ctx context.Context, v *ipam.IpamsvcSubnet) re
 	}
 }
 
-func testAccBaseWithIPSpace() string {
-	name := acctest.RandomNameWithPrefix("ip-space")
+func testAccBaseWithIPSpace(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test" {
     name = %q
@@ -1004,17 +1032,17 @@ resource "bloxone_ipam_ip_space" "test" {
 `, name)
 }
 
-func testAccBaseWithTwoIPSpace() string {
+func testAccBaseWithTwoIPSpace(name1, name2 string) string {
 	return fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "one" {
     name = %q
 }
 resource "bloxone_ipam_ip_space" "two" {
     name = %q
-}`, acctest.RandomNameWithPrefix("ip-space"), acctest.RandomNameWithPrefix("ip-space"))
+}`, name1, name2)
 }
 
-func testAccSubnetBasicConfig(address string, cidr int) string {
+func testAccSubnetBasicConfig(spaceName, address string, cidr int) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test" {
     address = %q
@@ -1022,10 +1050,10 @@ resource "bloxone_ipam_subnet" "test" {
     space = bloxone_ipam_ip_space.test.id
 }
 `, address, cidr)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetSpace(space string) string {
+func testAccSubnetSpace(spaceName1, spaceName2, space string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test" {
     address = "10.0.0.0"
@@ -1033,10 +1061,10 @@ resource "bloxone_ipam_subnet" "test" {
     space = %s.id
 }
 `, space)
-	return strings.Join([]string{testAccBaseWithTwoIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithTwoIPSpace(spaceName1, spaceName2), config}, "")
 }
 
-func testAccSubnetAsmConfig(address string, cidr int, asmThreshold int, enable, enableNotification bool, forecastPeriod, growthFactor int, growthType string, history, minTotal, minUnused int, reenableDate string) string {
+func testAccSubnetAsmConfig(spaceName, address string, cidr int, asmThreshold int, enable, enableNotification bool, forecastPeriod, growthFactor int, growthType string, history, minTotal, minUnused int, reenableDate string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_asm_config" {
     address = %q
@@ -1056,10 +1084,10 @@ resource "bloxone_ipam_subnet" "test_asm_config" {
 	}
 }
 `, address, cidr, asmThreshold, enable, enableNotification, forecastPeriod, growthFactor, growthType, history, minTotal, minUnused, reenableDate)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetComment(address string, cidr int, comment string) string {
+func testAccSubnetComment(spaceName, address string, cidr int, comment string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_comment" {
     address = %q
@@ -1068,10 +1096,10 @@ resource "bloxone_ipam_subnet" "test_comment" {
     comment = %q
 }
 `, address, cidr, comment)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetDdnsClientUpdate(address string, cidr int, ddnsClientUpdate string) string {
+func testAccSubnetDdnsClientUpdate(spaceName, address string, cidr int, ddnsClientUpdate string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_ddns_client_update" {
     address = %q
@@ -1080,10 +1108,10 @@ resource "bloxone_ipam_subnet" "test_ddns_client_update" {
     ddns_client_update = %q
 }
 `, address, cidr, ddnsClientUpdate)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetDdnsConflictResolutionMode(address string, cidr int, ddnsUseConflictResolution bool, ddnsConflictResolutionMode string) string {
+func testAccSubnetDdnsConflictResolutionMode(spaceName, address string, cidr int, ddnsUseConflictResolution bool, ddnsConflictResolutionMode string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_ddns_conflict_resolution_mode" {
     address = %q
@@ -1093,10 +1121,10 @@ resource "bloxone_ipam_subnet" "test_ddns_conflict_resolution_mode" {
     ddns_conflict_resolution_mode = %q
 }
 `, address, cidr, ddnsUseConflictResolution, ddnsConflictResolutionMode)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetDhcpOptionsOption(address string, cidr int, name, type_, optValue string) string {
+func testAccSubnetDhcpOptionsOption(spaceName, address string, cidr int, name, optionItemType, optValue string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_dhcp_options" {
 	address = %q
@@ -1111,12 +1139,12 @@ resource "bloxone_ipam_subnet" "test_dhcp_options" {
       }
     ]
 }
-`, address, cidr, name, type_, optValue)
+`, address, cidr, name, optionItemType, optValue)
 
-	return strings.Join([]string{testAccBaseWithIPSpace(), testAccBaseWithOptionSpaceAndCode(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip4"), config}, "")
 }
 
-func testAccSubnetDhcpOptionsGroup(address string, cidr int, name, type_ string) string {
+func testAccSubnetDhcpOptionsGroup(spaceName, address string, cidr int, name, optionItemType string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_dhcp_options" {
 	address = %q
@@ -1130,44 +1158,29 @@ resource "bloxone_ipam_subnet" "test_dhcp_options" {
       }
     ]
 }
-`, address, cidr, name, type_)
+`, address, cidr, name, optionItemType)
 
-	return strings.Join([]string{testAccBaseWithIPSpace(), testAccBaseWithOptionSpaceAndCode(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip4"), config}, "")
 }
 
-func testAccBaseWithOptionSpaceAndCode() string {
-	config := `
+func testAccBaseWithOptionSpaceAndCode(optionGroup, optionSpace, protocol string) string {
+	config := fmt.Sprintf(`
 resource "bloxone_dhcp_option_group" "test" {
-    name = "option_group_test"
-    protocol = "ip4"
+    name = %q
+    protocol = %q
 }
+
 resource "bloxone_dhcp_option_code" "test" {
     code = "234"
     name = "test_dhcp_option_code"
     option_space = bloxone_dhcp_option_space.test.id
     type = "boolean"
 }
-`
-	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip4"), config}, "")
+`, optionGroup, protocol)
+	return strings.Join([]string{testAccBaseWithOptionSpace(optionSpace, protocol), config}, "")
 }
 
-func testAccBaseWithV6OptionSpaceAndCode() string {
-	config := `
-resource "bloxone_dhcp_option_group" "test" {
-    name = "option_group_test"
-    protocol = "ip6"
-}
-resource "bloxone_dhcp_option_code" "test" {
-    code = "59"
-    name = "test_dhcp_option_code"
-    option_space = bloxone_dhcp_option_space.test.id
-    type = "text"
-}
-`
-	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip6"), config}, "")
-}
-
-func testAccSubnetDdnsDomain(address string, cidr int, ddnsDomain string) string {
+func testAccSubnetDdnsDomain(spaceName, address string, cidr int, ddnsDomain string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_ddns_domain" {
     address = %q
@@ -1176,10 +1189,10 @@ resource "bloxone_ipam_subnet" "test_ddns_domain" {
     ddns_domain = %q
 }
 `, address, cidr, ddnsDomain)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetDdnsGenerateName(address string, cidr int, ddnsGenerateName bool) string {
+func testAccSubnetDdnsGenerateName(spaceName, address string, cidr int, ddnsGenerateName bool) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_ddns_generate_name" {
     address = %q
@@ -1188,10 +1201,10 @@ resource "bloxone_ipam_subnet" "test_ddns_generate_name" {
     ddns_generate_name = %t
 }
 `, address, cidr, ddnsGenerateName)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetDdnsGeneratedPrefix(address string, cidr int, ddnsGeneratedPrefix string) string {
+func testAccSubnetDdnsGeneratedPrefix(spaceName, address string, cidr int, ddnsGeneratedPrefix string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_ddns_generated_prefix" {
     address = %q
@@ -1200,10 +1213,10 @@ resource "bloxone_ipam_subnet" "test_ddns_generated_prefix" {
     ddns_generated_prefix = %q
 }
 `, address, cidr, ddnsGeneratedPrefix)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetDdnsSendUpdates(address string, cidr int, ddnsSendUpdates bool) string {
+func testAccSubnetDdnsSendUpdates(spaceName, address string, cidr int, ddnsSendUpdates bool) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_ddns_send_updates" {
     address = %q
@@ -1212,10 +1225,10 @@ resource "bloxone_ipam_subnet" "test_ddns_send_updates" {
     ddns_send_updates = %t
 }
 `, address, cidr, ddnsSendUpdates)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetDdnsTtlPercent(address string, cidr int, ddnsTtlPercent string) string {
+func testAccSubnetDdnsTtlPercent(spaceName, address string, cidr int, ddnsTtlPercent string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_ddns_ttl_percent" {
     address = %q
@@ -1224,10 +1237,10 @@ resource "bloxone_ipam_subnet" "test_ddns_ttl_percent" {
     ddns_ttl_percent = %q
 }
 `, address, cidr, ddnsTtlPercent)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetDdnsUpdateOnRenew(address string, cidr int, ddnsUpdateOnRenew bool) string {
+func testAccSubnetDdnsUpdateOnRenew(spaceName, address string, cidr int, ddnsUpdateOnRenew bool) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_ddns_update_on_renew" {
     address = %q
@@ -1236,10 +1249,10 @@ resource "bloxone_ipam_subnet" "test_ddns_update_on_renew" {
     ddns_update_on_renew = %t
 }
 `, address, cidr, ddnsUpdateOnRenew)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetDhcpConfig(address string, cidr int, allowUnknown, allowUnknownV6, ignoreClientUid bool,
+func testAccSubnetDhcpConfig(spaceName, address string, cidr int, allowUnknown, allowUnknownV6, ignoreClientUid bool,
 	leaseTime, leaseTimeV6 int) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_dhcp_config" {
@@ -1255,10 +1268,10 @@ resource "bloxone_ipam_subnet" "test_dhcp_config" {
 	}
 }
 `, address, cidr, allowUnknown, allowUnknownV6, ignoreClientUid, leaseTime, leaseTimeV6)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetDisableDhcp(address string, cidr int, disableDhcp bool) string {
+func testAccSubnetDisableDhcp(spaceName, address string, cidr int, disableDhcp bool) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_disable_dhcp" {
     address = %q
@@ -1267,10 +1280,10 @@ resource "bloxone_ipam_subnet" "test_disable_dhcp" {
     disable_dhcp = %t
 }
 `, address, cidr, disableDhcp)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetHeaderOptionFilename(address string, cidr int, headerOptionFilename string) string {
+func testAccSubnetHeaderOptionFilename(spaceName, address string, cidr int, headerOptionFilename string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_header_option_filename" {
     address = %q
@@ -1279,10 +1292,10 @@ resource "bloxone_ipam_subnet" "test_header_option_filename" {
     header_option_filename = %q
 }
 `, address, cidr, headerOptionFilename)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetHeaderOptionServerAddress(address string, cidr int, headerOptionServerAddress string) string {
+func testAccSubnetHeaderOptionServerAddress(spaceName, address string, cidr int, headerOptionServerAddress string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_header_option_server_address" {
     address = %q
@@ -1291,10 +1304,10 @@ resource "bloxone_ipam_subnet" "test_header_option_server_address" {
     header_option_server_address = %q
 }
 `, address, cidr, headerOptionServerAddress)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetHeaderOptionServerName(address string, cidr int, headerOptionServerName string) string {
+func testAccSubnetHeaderOptionServerName(spaceName, address string, cidr int, headerOptionServerName string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_header_option_server_name" {
     address = %q
@@ -1303,10 +1316,10 @@ resource "bloxone_ipam_subnet" "test_header_option_server_name" {
     header_option_server_name = %q
 }
 `, address, cidr, headerOptionServerName)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetHostnameRewriteChar(address string, cidr int, hostnameRewriteChar string) string {
+func testAccSubnetHostnameRewriteChar(spaceName, address string, cidr int, hostnameRewriteChar string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_hostname_rewrite_char" {
     address = %q
@@ -1315,10 +1328,10 @@ resource "bloxone_ipam_subnet" "test_hostname_rewrite_char" {
     hostname_rewrite_char = %q
 }
 `, address, cidr, hostnameRewriteChar)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetHostnameRewriteEnabled(address string, cidr int, hostnameRewriteEnabled bool) string {
+func testAccSubnetHostnameRewriteEnabled(spaceName, address string, cidr int, hostnameRewriteEnabled bool) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_hostname_rewrite_enabled" {
     address = %q
@@ -1327,10 +1340,10 @@ resource "bloxone_ipam_subnet" "test_hostname_rewrite_enabled" {
     hostname_rewrite_enabled = %t
 }
 `, address, cidr, hostnameRewriteEnabled)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetHostnameRewriteRegex(address string, cidr int, hostnameRewriteRegex string) string {
+func testAccSubnetHostnameRewriteRegex(spaceName, address string, cidr int, hostnameRewriteRegex string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_hostname_rewrite_regex" {
     address = %q
@@ -1339,10 +1352,10 @@ resource "bloxone_ipam_subnet" "test_hostname_rewrite_regex" {
     hostname_rewrite_regex = %q
 }
 `, address, cidr, hostnameRewriteRegex)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetInheritanceSources(address string, cidr int, action string) string {
+func testAccSubnetInheritanceSources(spaceName, address string, cidr int, action string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_inheritance_sources" {
     address = %[1]q
@@ -1439,10 +1452,10 @@ resource "bloxone_ipam_subnet" "test_inheritance_sources" {
 	}
 }
 `, address, cidr, action)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetName(address string, cidr int, name string) string {
+func testAccSubnetName(spaceName, address string, cidr int, name string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_name" {
     address = %q
@@ -1451,10 +1464,10 @@ resource "bloxone_ipam_subnet" "test_name" {
     name = %q
 }
 `, address, cidr, name)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetRebindTimeAndRenewTime(address string, cidr int, rebindTime, renewTime string) string {
+func testAccSubnetRebindTimeAndRenewTime(spaceName, address string, cidr int, rebindTime, renewTime string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test_renew_time" {
     address = %q
@@ -1464,10 +1477,10 @@ resource "bloxone_ipam_subnet" "test_renew_time" {
     renew_time = %q
 }
 `, address, cidr, rebindTime, renewTime)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccSubnetTags(address string, cidr int, tags map[string]string) string {
+func testAccSubnetTags(spaceName, address string, cidr int, tags map[string]string) string {
 	tagsStr := "{\n"
 	for k, v := range tags {
 		tagsStr += fmt.Sprintf(`
@@ -1484,5 +1497,5 @@ resource "bloxone_ipam_subnet" "test_tags" {
     tags = %s
 }
 `, address, cidr, tagsStr)
-	return strings.Join([]string{testAccBaseWithIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }

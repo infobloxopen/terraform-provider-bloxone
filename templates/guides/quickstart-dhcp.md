@@ -20,19 +20,15 @@ terraform {
   required_providers {
     bloxone = {
       source  = "infobloxopen/bloxone"
-      version = ">= 0.1.0"
+      version = ">= 1.0.0"
     }
   }
-  
-  required_version = ">= 1.0.0"
+  required_version = ">= 1.5.0"
 }
 
 provider "bloxone" {
   csp_url = "https://csp.infoblox.com"
   api_key = "<BloxOne API Key>"
-  default_tags = {
-	managed_by = "terraform"
-  }
 }
 ````
 

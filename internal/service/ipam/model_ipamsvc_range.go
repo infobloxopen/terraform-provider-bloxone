@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -75,6 +76,8 @@ var IpamsvcRangeAttrTypes = map[string]attr.Type{
 var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 	"comment": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString(""),
 		Validators: []validator.String{
 			stringvalidator.LengthBetween(0, 1024),
 		},
@@ -88,6 +91,7 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 	"dhcp_host": schema.StringAttribute{
 		Optional:            true,
 		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The resource identifier.",
 	},
 	"dhcp_options": schema.ListNestedAttribute{
@@ -149,6 +153,8 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"name": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString(""),
 		Validators: []validator.String{
 			stringvalidator.LengthBetween(1, 256),
 		},
@@ -263,7 +269,7 @@ func (m *IpamsvcRangeModel) Flatten(ctx context.Context, from *ipam.IpamsvcRange
 	}
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
-	m.DhcpHost = flex.FlattenStringPointer(from.DhcpHost)
+	m.DhcpHost = flex.FlattenStringPointerWithNilAsEmpty(from.DhcpHost)
 	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DisableDhcp = types.BoolPointerValue(from.DisableDhcp)
 	m.End = flex.FlattenString(from.End)

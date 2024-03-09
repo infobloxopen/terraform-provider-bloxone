@@ -16,14 +16,15 @@ func TestAccRangeDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_ranges.test"
 	resourceName := "bloxone_ipam_range.test"
 	var v ipam.IpamsvcRange
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckRangeDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRangeDataSourceConfigFilters("10.0.0.20", "10.0.0.8"),
+				Config: testAccRangeDataSourceConfigFilters(spaceName, "10.0.0.20", "10.0.0.8"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckRangeExists(context.Background(), resourceName, &v),
@@ -38,13 +39,15 @@ func TestAccRangeDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_ranges.test"
 	resourceName := "bloxone_ipam_range.test"
 	var v ipam.IpamsvcRange
-	resource.Test(t, resource.TestCase{
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckRangeDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRangeDataSourceConfigTagFilters("10.0.0.20", "10.0.0.8", "value1"),
+				Config: testAccRangeDataSourceConfigTagFilters(spaceName, "10.0.0.20", "10.0.0.8", acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckRangeExists(context.Background(), resourceName, &v),
@@ -84,7 +87,7 @@ func testAccCheckRangeResourceAttrPair(resourceName, dataSourceName string) []re
 	}
 }
 
-func testAccRangeDataSourceConfigFilters(end, start string) string {
+func testAccRangeDataSourceConfigFilters(spaceName, end, start string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_range" "test" {
   end = %q
@@ -95,13 +98,15 @@ resource "bloxone_ipam_range" "test" {
 
 data "bloxone_ipam_ranges" "test" {
   filters = {
+	start = bloxone_ipam_range.test.start
 	end = bloxone_ipam_range.test.end
+	space = bloxone_ipam_ip_space.test.id
   }
 }`, end, start)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
 
-func testAccRangeDataSourceConfigTagFilters(end, start string, tagValue string) string {
+func testAccRangeDataSourceConfigTagFilters(spaceName, end, start string, tagValue string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_range" "test" {
   end = %q
@@ -119,5 +124,5 @@ data "bloxone_ipam_ranges" "test" {
   }
 }`, end, start, tagValue)
 
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }

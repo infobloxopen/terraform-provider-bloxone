@@ -67,6 +67,7 @@ resource "bloxone_infra_service" "example" {
 - `interface_labels` (List of String) List of interfaces on which this Service can operate. Note: The list can contain custom interface labels (Example: `["WAN","LAN","label1","label2"]`)
 - `tags` (Map of String) Tags associated with this Service.
 - `timeouts` (Attributes) (see [below for nested schema](#nestedatt--timeouts))
+- `wait_for_state` (Boolean) If set to `true`, the resource will wait for the desired state to be reached before returning. If set to `false`, the resource will return immediately after the request is sent to the API.
 
 ### Read-Only
 

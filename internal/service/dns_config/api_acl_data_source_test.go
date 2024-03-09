@@ -16,7 +16,7 @@ func TestAccAclDataSource_Filters(t *testing.T) {
 	resourceName := "bloxone_dns_acl.test"
 	var v dns_config.ConfigACL
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckAclDestroy(context.Background(), &v),
@@ -37,13 +37,13 @@ func TestAccAclDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_acls.test"
 	resourceName := "bloxone_dns_acl.test"
 	var v dns_config.ConfigACL
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckAclDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAclDataSourceConfigTagFilters("NAME_REPLACE_ME", "value1"),
+				Config: testAccAclDataSourceConfigTagFilters("NAME_REPLACE_ME", acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckAclExists(context.Background(), resourceName, &v),

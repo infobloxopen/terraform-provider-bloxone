@@ -7,10 +7,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	internalplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -37,11 +39,19 @@ var ConfigExternalPrimaryAttrTypes = map[string]attr.Type{
 
 var ConfigExternalPrimaryResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			internalplanmodifier.UseEmptyStringForNull(),
+		},
 		MarkdownDescription: `Optional. Required only if _type_ is _server_. IP Address of nameserver.`,
 	},
 	"fqdn": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			internalplanmodifier.UseEmptyStringForNull(),
+		},
 		MarkdownDescription: `Optional. Required only if _type_ is _server_. FQDN of nameserver.`,
 	},
 	"nsg": schema.StringAttribute{

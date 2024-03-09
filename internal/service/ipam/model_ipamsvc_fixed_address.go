@@ -13,6 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -86,6 +87,8 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The description for the fixed address. May contain 0 to 1024 characters. Can include UTF-8.",
 	},
 	"created_at": schema.StringAttribute{
@@ -108,18 +111,26 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"header_option_filename": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The configuration for header option filename field.",
 	},
 	"header_option_server_address": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The configuration for header option server address field.",
 	},
 	"header_option_server_name": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The configuration for header option server name field.",
 	},
 	"hostname": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The DHCP host name associated with this fixed address. It is of FQDN type and it defaults to empty.",
 	},
 	"id": schema.StringAttribute{
@@ -170,6 +181,8 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"name": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The name of the fixed address. May contain 1 to 256 characters. Can include UTF-8.",
 	},
 	"parent": schema.StringAttribute{

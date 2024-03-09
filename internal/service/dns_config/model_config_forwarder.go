@@ -86,6 +86,10 @@ func (m *ConfigForwarderModel) Flatten(ctx context.Context, from *dns_config.Con
 		*m = ConfigForwarderModel{}
 	}
 	m.Address = flex.FlattenString(from.Address)
-	m.Fqdn = flex.FlattenStringPointer(from.Fqdn)
 	m.ProtocolFqdn = flex.FlattenStringPointer(from.ProtocolFqdn)
+	if from.Fqdn == nil || *from.Fqdn == "" {
+		m.Fqdn = types.StringNull()
+	} else {
+		m.Fqdn = types.StringValue(*from.Fqdn)
+	}
 }
