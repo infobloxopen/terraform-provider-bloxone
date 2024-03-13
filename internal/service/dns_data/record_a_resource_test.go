@@ -335,6 +335,52 @@ func TestAccRecordAResource_Zone(t *testing.T) {
 	})
 }
 
+func TestAccRecordAResource_Options(t *testing.T) {
+	var resourceName = "bloxone_dns_a_record.test_options"
+	var datasourceName = "data.bloxone_dns_ptr_records.test"
+	var v1 dns_data.DataRecord
+	var v2 dns_data.DataRecord
+	viewName := acctest.RandomNameWithPrefix("view")
+	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccRecordAOptions(viewName, zoneFqdn, "10.0.0.1", true, true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckRecordExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttr(resourceName, "options.create_ptr", "true"),
+					resource.TestCheckResourceAttr(resourceName, "options.check_rmz", "true"),
+					resource.TestCheckResourceAttr(datasourceName, "results.0.name_in_zone", "1.0.0"),
+				),
+			},
+			{
+				Config: testAccRecordAOptions(viewName, zoneFqdn, "10.0.0.1", true, false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckRecordExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttr(resourceName, "options.create_ptr", "true"),
+					resource.TestCheckResourceAttr(resourceName, "options.check_rmz", "false"),
+					resource.TestCheckResourceAttr(datasourceName, "results.0.name_in_zone", "1.0.0"),
+				),
+			},
+			{
+				// The value of create_ptr has changed from `true` to false, so the resource will be recreated.
+				Config: testAccRecordAOptions(viewName, zoneFqdn, "10.0.0.1", false, false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckRecordDestroy(context.Background(), &v1),
+					testAccCheckRecordExists(context.Background(), resourceName, &v2),
+					resource.TestCheckResourceAttr(resourceName, "options.create_ptr", "false"),
+					resource.TestCheckResourceAttr(resourceName, "options.check_rmz", "false"),
+					resource.TestCheckResourceAttr(datasourceName, "results.#", "0"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckRecordExists(ctx context.Context, resourceName string, v *dns_data.DataRecord) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
@@ -555,6 +601,36 @@ resource "bloxone_dns_a_record" "test_zone" {
 `, zone1fqdn, zone2fqdn, address, zone)
 }
 
+func testAccRecordAOptions(view string, zoneFqdn string, address string, createPtr, checkRmz bool) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dns_a_record" "test_options" {
+    rdata = {
+		"address" = %q
+	}
+	options = {
+		"create_ptr" = %t
+		"check_rmz" = %t
+	}
+	zone = bloxone_dns_auth_zone.test.id
+	depends_on = [bloxone_dns_auth_zone.rmz, bloxone_dns_auth_zone.test]
+}
+
+data "bloxone_dns_ptr_records" "test" {
+	filters = {
+		zone = bloxone_dns_auth_zone.rmz.id
+	}   
+	depends_on = [bloxone_dns_a_record.test_options]
+}
+
+resource "bloxone_dns_auth_zone" "rmz" {
+	fqdn = "10.in-addr.arpa."
+	primary_type = "cloud"
+	view = bloxone_dns_view.test.id
+}
+`, address, createPtr, checkRmz)
+	return strings.Join([]string{testAccBaseWithZoneAndView(view, zoneFqdn), config}, "")
+}
+
 func testAccBaseWithZone(zoneFqdn string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_auth_zone" "test" {
@@ -562,4 +638,18 @@ resource "bloxone_dns_auth_zone" "test" {
     primary_type = "cloud"
 }
 `, zoneFqdn)
+}
+
+func testAccBaseWithZoneAndView(view, zoneFqdn string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_view" "test" {
+	name = %q
+}
+
+resource "bloxone_dns_auth_zone" "test" {
+    fqdn = %q
+    primary_type = "cloud"
+	view = bloxone_dns_view.test.id
+}
+`, view, zoneFqdn)
 }

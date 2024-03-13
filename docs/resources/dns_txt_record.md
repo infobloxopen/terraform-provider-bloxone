@@ -49,21 +49,6 @@ resource "bloxone_dns_txt_record" "example" {
 - `disabled` (Boolean) Indicates if the DNS resource record is disabled. A disabled object is effectively non-existent when generating configuration.  Defaults to _false_.
 - `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources))
 - `name_in_zone` (String) The relative owner name to the zone origin. Must be specified for creating the DNS resource record and is read only for other operations.
-- `options` (Map of String) The DNS resource record type-specific non-protocol options.
-
-  Valid value for _A_ (Address) and _AAAA_ (IPv6 Address) records:
-
-  | Option     | Description                                                                                                                                                                                                 |
-  |------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-  | create_ptr | A boolean flag which can be set to _true_ for POST operation to automatically create the corresponding PTR record.                                                                                          |
-  | check_rmz  | A boolean flag which can be set to _true_ for POST operation to check the existence of reverse zone for creating the corresponding PTR record. Only applicable if the _create_ptr_ option is set to _true_. |
-
-  Valid value for _PTR_ (Pointer) records:
-
-  | Option     | Description                                                                                                                                                                                                                                                                                                       |
-  |------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-  | address    | For GET operation it contains the IPv4 or IPv6 address represented by the PTR record.<br><br>For POST and PATCH operations it can be used to create/update a PTR record based on the IP address it represents. In this case, in addition to the _address_ in the options field, need to specify the _view_ field. |
-  <br>
 - `tags` (Map of String) The tags for the DNS resource record in JSON format.
 - `ttl` (Number) The record time to live value in seconds. The range of this value is 0 to 2147483647.  Defaults to TTL value from the SOA record of the zone.
 - `view` (String) The resource identifier.
@@ -80,6 +65,7 @@ resource "bloxone_dns_txt_record" "example" {
 - `dns_rdata` (String) The DNS protocol textual representation of the DNS resource record data.
 - `id` (String) The resource identifier.
 - `ipam_host` (String) The resource identifier.
+- `options` (Attributes) The DNS resource record type-specific non-protocol options. (see [below for nested schema](#nestedatt--options))
 - `provider_metadata` (Map of String) external DNS provider metadata.
 - `source` (List of String) Valid values are: 
 
@@ -139,3 +125,8 @@ Read-Only:
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
 - `source` (String) The resource identifier.
 - `value` (Number) The inherited value.
+
+
+
+<a id="nestedatt--options"></a>
+### Nested Schema for `options`
