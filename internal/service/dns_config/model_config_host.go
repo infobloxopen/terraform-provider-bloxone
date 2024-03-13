@@ -187,12 +187,13 @@ func (m *ConfigHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *
     return to
 }
 
-func FlattenConfigHost(ctx context.Context, from *dns_config.ConfigHost, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigHost(ctx context.Context, from *dns_config.ConfigHost, diags *diag.Diagnostics) types.Object {
     if from == nil {
         return types.ObjectNull(ConfigHostAttrTypes)
     }
     m := ConfigHostModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, ConfigHostAttrTypes, m)
     diags.Append(d...)
     return t

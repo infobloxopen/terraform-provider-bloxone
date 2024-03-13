@@ -125,12 +125,13 @@ func (m *ConfigAuthNSGModel) Expand(ctx context.Context, diags *diag.Diagnostics
     return to
 }
 
-func FlattenConfigAuthNSG(ctx context.Context, from *dns_config.ConfigAuthNSG, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigAuthNSG(ctx context.Context, from *dns_config.ConfigAuthNSG, diags *diag.Diagnostics) types.Object {
     if from == nil {
         return types.ObjectNull(ConfigAuthNSGAttrTypes)
     }
     m := ConfigAuthNSGModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, ConfigAuthNSGAttrTypes, m)
     diags.Append(d...)
     return t

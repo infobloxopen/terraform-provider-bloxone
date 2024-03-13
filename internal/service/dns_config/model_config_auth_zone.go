@@ -319,12 +319,13 @@ func (m *ConfigAuthZoneModel) Expand(ctx context.Context, diags *diag.Diagnostic
     return to
 }
 
-func FlattenConfigAuthZone(ctx context.Context, from *dns_config.ConfigAuthZone, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigAuthZone(ctx context.Context, from *dns_config.ConfigAuthZone, diags *diag.Diagnostics) types.Object {
     if from == nil {
         return types.ObjectNull(ConfigAuthZoneAttrTypes)
     }
     m := ConfigAuthZoneModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, ConfigAuthZoneAttrTypes, m)
     diags.Append(d...)
     return t

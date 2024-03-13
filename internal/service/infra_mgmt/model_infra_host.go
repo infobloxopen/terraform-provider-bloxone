@@ -229,12 +229,13 @@ func (m *InfraHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *i
     return to
 }
 
-func FlattenInfraHost(ctx context.Context, from *infra_mgmt.InfraHost, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenInfraHost(ctx context.Context, from *infra_mgmt.InfraHost, diags *diag.Diagnostics) types.Object {
     if from == nil {
         return types.ObjectNull(InfraHostAttrTypes)
     }
     m := InfraHostModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, InfraHostAttrTypes, m)
     diags.Append(d...)
     return t

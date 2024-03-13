@@ -139,12 +139,13 @@ func (m *ConfigDelegationModel) Expand(ctx context.Context, diags *diag.Diagnost
     return to
 }
 
-func FlattenConfigDelegation(ctx context.Context, from *dns_config.ConfigDelegation, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigDelegation(ctx context.Context, from *dns_config.ConfigDelegation, diags *diag.Diagnostics) types.Object {
     if from == nil {
         return types.ObjectNull(ConfigDelegationAttrTypes)
     }
     m := ConfigDelegationModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, ConfigDelegationAttrTypes, m)
     diags.Append(d...)
     return t

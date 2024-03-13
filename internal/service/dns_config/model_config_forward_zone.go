@@ -189,12 +189,13 @@ func (m *ConfigForwardZoneModel) Expand(ctx context.Context, diags *diag.Diagnos
     return to
 }
 
-func FlattenConfigForwardZone(ctx context.Context, from *dns_config.ConfigForwardZone, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigForwardZone(ctx context.Context, from *dns_config.ConfigForwardZone, diags *diag.Diagnostics) types.Object {
     if from == nil {
         return types.ObjectNull(ConfigForwardZoneAttrTypes)
     }
     m := ConfigForwardZoneModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, ConfigForwardZoneAttrTypes, m)
     diags.Append(d...)
     return t

@@ -498,12 +498,13 @@ func (m *ConfigServerModel) Expand(ctx context.Context, diags *diag.Diagnostics)
     return to
 }
 
-func FlattenConfigServer(ctx context.Context, from *dns_config.ConfigServer, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigServer(ctx context.Context, from *dns_config.ConfigServer, diags *diag.Diagnostics) types.Object {
     if from == nil {
         return types.ObjectNull(ConfigServerAttrTypes)
     }
     m := ConfigServerModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, ConfigServerAttrTypes, m)
     diags.Append(d...)
     return t

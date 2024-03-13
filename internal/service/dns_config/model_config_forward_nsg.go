@@ -129,12 +129,13 @@ func (m *ConfigForwardNSGModel) Expand(ctx context.Context, diags *diag.Diagnost
     return to
 }
 
-func FlattenConfigForwardNSG(ctx context.Context, from *dns_config.ConfigForwardNSG, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigForwardNSG(ctx context.Context, from *dns_config.ConfigForwardNSG, diags *diag.Diagnostics) types.Object {
     if from == nil {
         return types.ObjectNull(ConfigForwardNSGAttrTypes)
     }
     m := ConfigForwardNSGModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, ConfigForwardNSGAttrTypes, m)
     diags.Append(d...)
     return t

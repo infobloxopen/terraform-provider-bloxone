@@ -171,17 +171,18 @@ func (m *InfraServiceModel) Expand(ctx context.Context, diags *diag.Diagnostics)
         Name:            flex.ExpandString(m.Name),
         PoolId:          flex.ExpandString(m.PoolId),
         ServiceType:     flex.ExpandString(m.ServiceType),
-        Tags:            flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
+        Tags:            flex.ExpandFrameworkMapString(ctx, m.TagsAll, diags),
     }
     return to
 }
 
-func FlattenInfraService(ctx context.Context, from *infra_mgmt.InfraService, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenInfraService(ctx context.Context, from *infra_mgmt.InfraService, diags *diag.Diagnostics) types.Object {
     if from == nil {
         return types.ObjectNull(InfraServiceAttrTypes)
     }
     m := InfraServiceModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, InfraServiceAttrTypes, m)
     diags.Append(d...)
     return t
@@ -204,7 +205,7 @@ func (m *InfraServiceModel) Flatten(ctx context.Context, from *infra_mgmt.InfraS
     m.Name = flex.FlattenString(from.Name)
     m.PoolId = flex.FlattenString(from.PoolId)
     m.ServiceType = flex.FlattenString(from.ServiceType)
-    m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+    m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
     m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }
 

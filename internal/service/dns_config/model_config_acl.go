@@ -94,12 +94,13 @@ func (m *ConfigACLModel) Expand(ctx context.Context, diags *diag.Diagnostics) *d
     return to
 }
 
-func FlattenConfigACL(ctx context.Context, from *dns_config.ConfigACL, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigACL(ctx context.Context, from *dns_config.ConfigACL, diags *diag.Diagnostics) types.Object {
     if from == nil {
         return types.ObjectNull(ConfigACLAttrTypes)
     }
     m := ConfigACLModel{}
     m.Flatten(ctx, from, diags)
+    m.Tags = m.TagsAll
     t, d := types.ObjectValueFrom(ctx, ConfigACLAttrTypes, m)
     diags.Append(d...)
     return t
