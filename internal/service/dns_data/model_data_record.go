@@ -2,8 +2,6 @@ package dns_data
 
 import (
 	"context"
-	"fmt"
-	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -317,27 +315,4 @@ func (m *dataRecordModel) Flatten(ctx context.Context, from *dns_data.DataRecord
 	} else {
 		m.Options = types.ObjectNull(nil)
 	}
-}
-
-func expandOptions(ctx context.Context, options types.Map, diags *diag.Diagnostics) map[string]interface{} {
-	if options.IsNull() || options.IsUnknown() {
-		return nil
-	}
-	elements := make(map[string]string, len(options.Elements()))
-	diags.Append(options.ElementsAs(ctx, &elements, false)...)
-
-	elementsNew := make(map[string]interface{}, len(options.Elements()))
-	for k, v := range elements {
-		if k == "create_ptr" || k == "check_rmz" {
-			boolValue, err := strconv.ParseBool(v)
-			if err != nil {
-				diags.AddError("Value conversion error", fmt.Sprintf("failed to parse value of '%s' as boolean", k))
-				return nil
-			}
-			elementsNew[k] = boolValue
-		} else {
-			elementsNew[k] = v
-		}
-	}
-	return elementsNew
 }
