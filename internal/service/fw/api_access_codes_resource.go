@@ -78,6 +78,7 @@ func (r *AccessCodesResource) Create(ctx context.Context, req resource.CreateReq
 
 	res := apiRes.GetResults()
 	data.Flatten(ctx, &res, &resp.Diagnostics)
+	//resp.State.SetAttribute(ctx, path.Root("id"), data.AccessKey.ValueString())
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

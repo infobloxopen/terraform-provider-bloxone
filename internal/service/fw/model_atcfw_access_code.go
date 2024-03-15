@@ -7,6 +7,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -24,6 +26,7 @@ type AtcfwAccessCodeModel struct {
 	PolicyIds   types.List        `tfsdk:"policy_ids"`
 	Rules       types.List        `tfsdk:"rules"`
 	UpdatedTime timetypes.RFC3339 `tfsdk:"updated_time"`
+	Id          types.String      `tfsdk:"id"`
 }
 
 var AtcfwAccessCodeAttrTypes = map[string]attr.Type{
@@ -36,11 +39,19 @@ var AtcfwAccessCodeAttrTypes = map[string]attr.Type{
 	"policy_ids":   types.ListType{ElemType: types.Int64Type},
 	"rules":        types.ListType{ElemType: types.ObjectType{AttrTypes: AtcfwAccessCodeRuleAttrTypes}},
 	"updated_time": timetypes.RFC3339Type{},
+	"id":           types.StringType,
 }
 
 var AtcfwAccessCodeResourceSchemaAttributes = map[string]schema.Attribute{
+	"id": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+		},
+	},
 	"access_key": schema.StringAttribute{
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Auto generated unique Bypass Code value",
 	},
 	"activation": schema.StringAttribute{
@@ -55,6 +66,7 @@ var AtcfwAccessCodeResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"description": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
 	},
 	"expiration": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -107,7 +119,7 @@ func (m *AtcfwAccessCodeModel) Expand(ctx context.Context, diags *diag.Diagnosti
 		Expiration:  flex.ExpandTimePointer(ctx, m.Expiration, diags),
 		Name:        flex.ExpandStringPointer(m.Name),
 		Rules:       flex.ExpandFrameworkListNestedBlock(ctx, m.Rules, diags, ExpandAtcfwAccessCodeRule),
-		PolicyIds:   flex.ExpandFrameworkListInt32(ctx, m.PolicyIds, diags),
+		PolicyIds:   flex.ExpandFrameworkListInt64(ctx, m.PolicyIds, diags),
 	}
 	return to
 }
@@ -136,7 +148,8 @@ func (m *AtcfwAccessCodeModel) Flatten(ctx context.Context, from *fw.AtcfwAccess
 	m.Description = flex.FlattenStringPointer(from.Description)
 	m.Expiration = timetypes.NewRFC3339TimePointerValue(from.Expiration)
 	m.Name = flex.FlattenStringPointer(from.Name)
+	m.Id = flex.FlattenStringPointer(from.AccessKey)
 	m.Rules = flex.FlattenFrameworkListNestedBlock(ctx, from.Rules, AtcfwAccessCodeRuleAttrTypes, diags, FlattenAtcfwAccessCodeRule)
 	m.UpdatedTime = timetypes.NewRFC3339TimePointerValue(from.UpdatedTime)
-	// PolicyIds // TODO: should have been flattened, but generator didn't know how to.
+	m.PolicyIds = flex.FlattenFrameworkListIn64(ctx, from.PolicyIds, diags)
 }

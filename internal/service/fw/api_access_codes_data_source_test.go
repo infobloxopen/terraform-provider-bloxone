@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
@@ -15,6 +16,7 @@ func TestAccAccessCodesDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_access_codes.test"
 	resourceName := "bloxone_td_access_code.test"
 	var v fw.AtcfwAccessCode
+	name := acctest.RandomNameWithPrefix("ac")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -22,7 +24,7 @@ func TestAccAccessCodesDataSource_Filters(t *testing.T) {
 		CheckDestroy:             testAccCheckAccessCodesDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAccessCodesDataSourceConfigFilters(),
+				Config: testAccAccessCodesDataSourceConfigFilters(name),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
@@ -60,17 +62,29 @@ func testAccCheckAccessCodesResourceAttrPair(resourceName, dataSourceName string
 	return []resource.TestCheckFunc{}
 }
 
-func testAccAccessCodesDataSourceConfigFilters() string {
+func testAccAccessCodesDataSourceConfigFilters(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_access_code" "test" {
+	name = %[1]q
+	activation = %q
+	expiration = %q
+	rules = [
+		{
+			action = "" ,
+			data = "antimalware",
+			description = "",
+			redirect_name = "",
+			type = "named_feed"
+		}
+	]
 }
 
 data "bloxone_td_access_codes" "test" {
   filters = {
-	 = bloxone_td_access_code.test.
+	 name = %[1]q
   }
 }
-`)
+`, name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339))
 }
 
 func testAccAccessCodesDataSourceConfigTagFilters(tagValue string) string {
