@@ -1,6 +1,6 @@
 data "bloxone_dhcp_hosts" "example_host_1" {
   filters = {
-    name = "Your Host name"
+    name = "Your host name"
   }
 }
 

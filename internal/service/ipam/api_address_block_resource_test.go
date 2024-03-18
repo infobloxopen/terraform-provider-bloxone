@@ -10,7 +10,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
-
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
@@ -847,22 +846,37 @@ func TestAccAddressBlockResource_Tags(t *testing.T) {
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactoriesWithTags,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockTags(spaceName, "192.168.0.0", "16", map[string]string{"location": "NA"}),
+				Config: testAccAddressBlockTags(spaceName, "192.168.0.0", "16", map[string]string{
+					"tag1": "value1",
+					"tag2": "value2",
+				}),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "tags.location", "NA"),
+					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag1", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockTags(spaceName, "192.168.0.0", "16", map[string]string{"location": "CA"}),
+				PreConfig: func() {
+					testAccCheckAddressBlockExists(context.Background(), resourceName, &v)
+				},
+				Config: testAccAddressBlockTags(spaceName, "192.168.0.0", "16", map[string]string{
+					"tag2": "value2changed",
+					"tag3": "value3",
+				}),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "tags.location", "CA"),
+					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2changed"),
+					resource.TestCheckResourceAttr(resourceName, "tags.tag3", "value3"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2changed"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag3", "value3"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Delete testing automatically occurs in TestCase

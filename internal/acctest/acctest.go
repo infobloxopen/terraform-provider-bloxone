@@ -9,9 +9,16 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/provider"
+)
+
+const (
+	letterBytes  = "abcdefghijklmnopqrstuvwxyz"
+	defaultKey   = "managed_by"
+	defaultValue = "terraform"
 )
 
 var (
@@ -23,14 +30,15 @@ var (
 	// CLI command executed to create a provider server to which the CLI can
 	// reattach.
 	ProtoV6ProviderFactories = map[string]func() (tfprotov6.ProviderServer, error){
-		"bloxone": providerserver.NewProtocol6WithError(provider.New("test", "none")()),
+		"bloxone": providerserver.NewProtocol6WithError(provider.New("test", "test")()),
+	}
+	ProtoV6ProviderFactoriesWithTags = map[string]func() (tfprotov6.ProviderServer, error){
+		"bloxone": providerserver.NewProtocol6WithError(provider.NewWithTags(map[string]string{defaultKey: defaultValue})()),
 	}
 )
 
-const letterBytes = "abcdefghijklmnopqrstuvwxyz"
-
 func init() {
-	rand.Seed(time.Now().UTC().UnixNano())
+	rand.New(rand.NewSource(time.Now().UTC().UnixNano()))
 }
 
 // RandomNameWithPrefix generates a random name with the given prefix.
@@ -69,8 +77,12 @@ func PreCheck(t *testing.T) {
 	}
 }
 
-// TestAccBaseConfig_DhcpHosts creates a Terraform datasource config that allows you to filter by tags
-func TestAccBaseConfig_DhcpHosts() string {
+func VerifyDefaultTag(resourceName string) resource.TestCheckFunc {
+	return resource.TestCheckResourceAttr(resourceName, fmt.Sprintf("tags_all.%s", defaultKey), defaultValue)
+}
+
+// TestAccBase_DhcpHosts creates a Terraform datasource config that allows you to filter by tags
+func TestAccBase_DhcpHosts() string {
 	return `
 data "bloxone_dhcp_hosts" "test" {
 	tag_filters = {

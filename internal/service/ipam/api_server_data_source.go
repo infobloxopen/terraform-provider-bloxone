@@ -41,7 +41,7 @@ func (m *IpamsvcServerModelWithFilter) FlattenResults(ctx context.Context, from 
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcServerAttrTypes, diags, FlattenIpamsvcServer)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcServerAttrTypes, diags, FlattenIpamsvcServerDataSource)
 }
 
 func (d *ServerDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

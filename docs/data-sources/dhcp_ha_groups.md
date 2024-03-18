@@ -73,6 +73,7 @@ Read-Only:
 - `id` (String) The resource identifier.
 - `ip_space` (String) The resource identifier.
 - `status` (String) Status of the HA group. This field is set when the _collect_stats_ is set to _true_ in the _GET_ _/dhcp/ha_group_ request.
+- `tags_all` (Map of String) The tags for the HA group including default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 
 <a id="nestedatt--results--hosts"></a>

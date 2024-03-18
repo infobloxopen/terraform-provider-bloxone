@@ -33,4 +33,7 @@ modules-docs: $(MODULES_DIR)/*
 		docker run --rm --volume "./$$d:/$$d" $(TERRAFORM_DOCS_IMAGE) markdown "/$$d" ; \
 	done
 
-.PHONY: default test testacc gen
+fmt:
+	go fmt ./...
+
+.PHONY: default test testacc gen fmt

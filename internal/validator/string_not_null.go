@@ -12,7 +12,7 @@ var _ validator.String = stringNotNullValidator{}
 // stringNotNullValidator validates that the value is not null.
 // This is required for some fields that are "required" but cannot be marked required in the schema.
 // See - https://github.com/hashicorp/terraform-plugin-framework/issues/898#issuecomment-1871470240
-type stringNotNullValidator struct {}
+type stringNotNullValidator struct{}
 
 func (s stringNotNullValidator) Description(ctx context.Context) string {
 	return "string must not be null"

@@ -148,7 +148,7 @@ data "bloxone_dhcp_ha_groups" "test" {
   }
   depends_on = [bloxone_dhcp_ha_group.test]
 }`, name, name)
-	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
+	return strings.Join([]string{acctest.TestAccBase_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupDataSourceConfigTagFilters(name, tagValue string) string {
@@ -177,7 +177,7 @@ data "bloxone_dhcp_ha_groups" "test" {
   }
 }`, name, tagValue)
 
-	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
+	return strings.Join([]string{acctest.TestAccBase_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupDataSourceConfigCollectStats(name string) string {
@@ -205,7 +205,7 @@ data "bloxone_dhcp_ha_groups" "test" {
   depends_on = [bloxone_dhcp_ha_group.test]
 }`, name, name)
 
-	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
+	return strings.Join([]string{acctest.TestAccBase_DhcpHosts(), config}, "")
 }
 
 func testAccCheckHAState(state string) error {
