@@ -5,6 +5,6 @@ provider "bloxone" {
   # Other Optional Fields
   default_tags = {
     managed_by = "terraform"
-    site   = "Site A"
+    site       = "Site A"
   }
 }

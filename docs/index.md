@@ -20,7 +20,7 @@ provider "bloxone" {
   # Other Optional Fields
   default_tags = {
     managed_by = "terraform"
-    location   = "us-west-1"
+    site       = "Site A"
   }
 }
 ```
