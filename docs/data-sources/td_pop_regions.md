@@ -3,17 +3,17 @@
 page_title: "bloxone_td_pop_regions Data Source - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  Retrieve information on all Point of Presence (PoP) regions available in the database.
 ---
 
 # bloxone_td_pop_regions (Data Source)
 
-
+Retrieve information on all Point of Presence (PoP) regions available in the database.
 
 ## Example Usage
 
 ```terraform
-# Get all Pop Regions
+# Get all PoP Regions
 data "bloxone_td_pop_regions" "all_pop_regions" {}
 ```
 

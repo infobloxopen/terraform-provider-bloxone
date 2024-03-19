@@ -30,14 +30,14 @@ resource "bloxone_td_internal_domain_list" "example" {
 
 ### Optional
 
-- `description` (String) The brief description for the internal domain lists .
+- `description` (String) The brief description for the internal domain list.
 - `internal_domains` (List of String) The list of internal domains, should be unique to each other and has to be read-only from the API level.
-- `name` (String) The name of the internal domain lists.
-- `tags` (Map of String) Enables tag support for resource where tags attribute contains user-defined key value pairs
+- `name` (String) The name of the internal domain list.
+- `tags` (Map of String) The tags for the internal domain list in JSON format.
 
 ### Read-Only
 
-- `created_time` (String) The time when this Internal Domain lists object was created.
+- `created_time` (String) The time when this Internal Domain list object was created.
 - `id` (Number) The Internal Domain object identifier.
 - `is_default` (Boolean) True if name is 'Default Bypass Domains/CIDRs' otherwise false.
-- `updated_time` (String) The time when this Internal domain lists object was last updated.
+- `updated_time` (String) The time when this Internal domain list object was last updated.
