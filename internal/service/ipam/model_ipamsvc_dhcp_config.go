@@ -46,6 +46,7 @@ var IpamsvcDHCPConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"abandoned_reclaim_time": schema.Int64Attribute{
 		Optional:            true,
 		Computed:            true,
+		Default:             int64default.StaticInt64(300),
 		MarkdownDescription: `The abandoned reclaim time in seconds for IPV4 clients.`,
 	},
 	"abandoned_reclaim_time_v6": schema.Int64Attribute{
