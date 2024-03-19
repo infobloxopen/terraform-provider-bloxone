@@ -2,7 +2,9 @@ package dns_config
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
@@ -11,6 +13,7 @@ import (
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -61,6 +64,8 @@ var ConfigForwardZoneAttrTypes = map[string]attr.Type{
 var ConfigForwardZoneResourceSchemaAttributes = map[string]schema.Attribute{
 	"comment": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "Optional. Comment for zone configuration.",
 	},
 	"created_at": schema.StringAttribute{
@@ -76,7 +81,7 @@ var ConfigForwardZoneResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"external_forwarders": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
-			Attributes: ConfigForwarderResourceSchemaAttributes,
+			Attributes: ConfigForwarderResourceSchemaAttributes(true),
 		},
 		Optional:            true,
 		MarkdownDescription: "Optional. External DNS servers to forward to. Order is not significant.",

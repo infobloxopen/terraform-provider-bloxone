@@ -16,13 +16,13 @@ func TestAccOptionGroupDataSource_Filters(t *testing.T) {
 	resourceName := "bloxone_dhcp_option_group.test"
 	var v ipam.IpamsvcOptionGroup
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckOptionGroupDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOptionGroupDataSourceConfigFilters("test_option_group", "ip4"),
+				Config: testAccOptionGroupDataSourceConfigFilters(acctest.RandomNameWithPrefix("option-group"), "ip4"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckOptionGroupExists(context.Background(), resourceName, &v),
@@ -37,13 +37,13 @@ func TestAccOptionGroupDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dhcp_option_groups.test"
 	resourceName := "bloxone_dhcp_option_group.test"
 	var v ipam.IpamsvcOptionGroup
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckOptionGroupDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOptionGroupDataSourceConfigTagFilters("test_option_group_tag", "ip6", "tag1value"),
+				Config: testAccOptionGroupDataSourceConfigTagFilters(acctest.RandomNameWithPrefix("option-group"), "ip6", acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckOptionGroupExists(context.Background(), resourceName, &v),

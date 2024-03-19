@@ -17,7 +17,7 @@ func TestAccServerDataSource_Filters(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-servers")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckServerDestroy(context.Background(), &v),
@@ -40,13 +40,13 @@ func TestAccServerDataSource_TagFilters(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-servers")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckServerDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccServerDataSourceConfigTagFilters(name, "value1"),
+				Config: testAccServerDataSourceConfigTagFilters(name, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckServerExists(context.Background(), resourceName, &v),

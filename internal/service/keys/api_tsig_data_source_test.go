@@ -17,7 +17,7 @@ func TestAccTsigDataSource_Filters(t *testing.T) {
 	var v keys.KeysTSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckTsigDestroy(context.Background(), &v),
@@ -40,13 +40,13 @@ func TestAccTsigDataSource_TagFilters(t *testing.T) {
 	var v keys.KeysTSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckTsigDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTsigDataSourceConfigTagFilters(name, "value1"),
+				Config: testAccTsigDataSourceConfigTagFilters(name, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckTsigExists(context.Background(), resourceName, &v),

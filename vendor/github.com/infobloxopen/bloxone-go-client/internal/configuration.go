@@ -73,6 +73,7 @@ type Configuration struct {
 	Servers          ServerConfigurations
 	OperationServers map[string]ServerConfigurations
 	HTTPClient       *http.Client
+	DefaultTags      map[string]string
 }
 
 // NewConfiguration returns a new Configuration object
@@ -89,6 +90,7 @@ func NewConfiguration() *Configuration {
 			},
 		},
 		OperationServers: map[string]ServerConfigurations{},
+		DefaultTags:      make(map[string]string),
 	}
 	return cfg
 }

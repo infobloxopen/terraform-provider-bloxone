@@ -16,14 +16,15 @@ func TestAccAddressDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_addresses.test"
 	resourceName := "bloxone_ipam_address.test"
 	var v ipam.IpamsvcAddress
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckAddressDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAddressDataSourceConfigFilters("10.0.0.1"),
+				Config: testAccAddressDataSourceConfigFilters(spaceName, "10.0.0.1"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckAddressExists(context.Background(), resourceName, &v),
@@ -38,13 +39,15 @@ func TestAccAddressDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_addresses.test"
 	resourceName := "bloxone_ipam_address.test"
 	var v ipam.IpamsvcAddress
-	resource.Test(t, resource.TestCase{
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckAddressDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAddressDataSourceConfigTagFilters("10.0.0.1", "value1"),
+				Config: testAccAddressDataSourceConfigTagFilters(spaceName, "10.0.0.1", acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckAddressExists(context.Background(), resourceName, &v),
@@ -82,7 +85,7 @@ func testAccCheckAddressResourceAttrPair(resourceName, dataSourceName string) []
 	}
 }
 
-func testAccAddressDataSourceConfigFilters(address string) string {
+func testAccAddressDataSourceConfigFilters(spaceName, address string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address" "test" {
   address = %q
@@ -93,13 +96,14 @@ resource "bloxone_ipam_address" "test" {
 data "bloxone_ipam_addresses" "test" {
   filters = {
 	address = bloxone_ipam_address.test.address
+	space = bloxone_ipam_ip_space.test.id
   }
 }
 `, address)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
 
-func testAccAddressDataSourceConfigTagFilters(address, tagValue string) string {
+func testAccAddressDataSourceConfigTagFilters(spaceName, address, tagValue string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address" "test" {
   address = %q
@@ -116,6 +120,6 @@ data "bloxone_ipam_addresses" "test" {
   }
 }
 `, address, tagValue)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 
 }

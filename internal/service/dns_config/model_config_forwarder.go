@@ -26,19 +26,22 @@ var ConfigForwarderAttrTypes = map[string]attr.Type{
 	"protocol_fqdn": types.StringType,
 }
 
-var ConfigForwarderResourceSchemaAttributes = map[string]schema.Attribute{
-	"address": schema.StringAttribute{
-		Required:            true,
-		MarkdownDescription: `Server IP address.`,
-	},
-	"fqdn": schema.StringAttribute{
-		Required:            true,
-		MarkdownDescription: `Server FQDN.`,
-	},
-	"protocol_fqdn": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: `Server FQDN in punycode.`,
-	},
+func ConfigForwarderResourceSchemaAttributes(fqdnOptional bool) map[string]schema.Attribute {
+	return map[string]schema.Attribute{
+		"address": schema.StringAttribute{
+			Required:            true,
+			MarkdownDescription: `Server IP address.`,
+		},
+		"fqdn": schema.StringAttribute{
+			Required:            !fqdnOptional,
+			Optional:            fqdnOptional,
+			MarkdownDescription: `Server FQDN.`,
+		},
+		"protocol_fqdn": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: `Server FQDN in punycode.`,
+		},
+	}
 }
 
 func ExpandConfigForwarder(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigForwarder {
@@ -59,7 +62,7 @@ func (m *ConfigForwarderModel) Expand(ctx context.Context, diags *diag.Diagnosti
 	}
 	to := &dns_config.ConfigForwarder{
 		Address: flex.ExpandString(m.Address),
-		Fqdn:    flex.ExpandString(m.Fqdn),
+		Fqdn:    flex.ExpandStringPointer(m.Fqdn),
 	}
 	return to
 }
@@ -83,6 +86,10 @@ func (m *ConfigForwarderModel) Flatten(ctx context.Context, from *dns_config.Con
 		*m = ConfigForwarderModel{}
 	}
 	m.Address = flex.FlattenString(from.Address)
-	m.Fqdn = flex.FlattenString(from.Fqdn)
 	m.ProtocolFqdn = flex.FlattenStringPointer(from.ProtocolFqdn)
+	if from.Fqdn == nil || *from.Fqdn == "" {
+		m.Fqdn = types.StringNull()
+	} else {
+		m.Fqdn = types.StringValue(*from.Fqdn)
+	}
 }

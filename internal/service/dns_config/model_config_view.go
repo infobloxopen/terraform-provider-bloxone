@@ -10,7 +10,6 @@ import (
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -24,14 +23,6 @@ import (
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
-
-var aclDefaultValues = map[string]attr.Value{
-	"access":   types.StringValue("allow"),
-	"acl":      types.StringNull(),
-	"address":  types.StringNull(),
-	"element":  types.StringValue("any"),
-	"tsig_key": types.ObjectNull(ConfigTSIGKeyAttrTypes),
-}
 
 type ConfigViewModel struct {
 	AddEdnsOptionInOutgoingQuery                types.Bool        `tfsdk:"add_edns_option_in_outgoing_query"`
@@ -144,6 +135,8 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: `Optional. Comment for view.`,
 	},
 	"created_at": schema.StringAttribute{
@@ -267,7 +260,7 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"forwarders": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
-			Attributes: ConfigForwarderResourceSchemaAttributes,
+			Attributes: ConfigForwarderResourceSchemaAttributes(false),
 		},
 		Optional:            true,
 		MarkdownDescription: `Optional. List of forwarders.  Error if empty while _forwarders_only_ or _use_root_forwarders_for_local_resolution_with_b1td_ is _true_. Error if there are items in the list with duplicate addresses.  Defaults to empty.`,
@@ -319,9 +312,9 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional: true,
 		Computed: true,
-		Default: listdefault.StaticValue(types.ListValueMust(types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}, []attr.Value{
-			types.ObjectValueMust(ConfigACLItemAttrTypes, aclDefaultValues),
-		})),
+		PlanModifiers: []planmodifier.List{
+			UseDefaultAclForNull(),
+		},
 		MarkdownDescription: `Optional. Specifies which clients have access to the view.  Defaults to empty.`,
 	},
 	"match_destinations_acl": schema.ListNestedAttribute{
@@ -330,9 +323,9 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional: true,
 		Computed: true,
-		Default: listdefault.StaticValue(types.ListValueMust(types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}, []attr.Value{
-			types.ObjectValueMust(ConfigACLItemAttrTypes, aclDefaultValues),
-		})),
+		PlanModifiers: []planmodifier.List{
+			UseDefaultAclForNull(),
+		},
 		MarkdownDescription: `Optional. Specifies which destination addresses have access to the view.  Defaults to empty.`,
 	},
 	"match_recursive_only": schema.BoolAttribute{
@@ -451,6 +444,9 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 		Attributes: ConfigZoneAuthorityResourceSchemaAttributes,
 		Computed:   true,
 		Optional:   true,
+		PlanModifiers: []planmodifier.Object{
+			objectplanmodifier.UseStateForUnknown(),
+		},
 		Default: objectdefault.StaticValue(types.ObjectValueMust(ConfigZoneAuthorityAttrTypes, map[string]attr.Value{
 			"default_ttl":       types.Int64Value(28800),
 			"expire":            types.Int64Value(2.4192e+06),

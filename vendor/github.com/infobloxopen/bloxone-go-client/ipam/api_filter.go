@@ -21,7 +21,6 @@ import (
 )
 
 type FilterAPI interface {
-
 	/*
 		FilterList Retrieve DHCP filters.
 
@@ -224,6 +223,5 @@ func (a *FilterAPIService) FilterListExecute(r ApiFilterListRequest) (*IpamsvcLi
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

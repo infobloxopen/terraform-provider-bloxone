@@ -84,6 +84,7 @@ Class | Method | HTTP request | Description
 *KerberosAPI* | [**KerberosList**](docs/KerberosAPI.md#kerberoslist) | **Get** /keys/kerberos | Retrieve Kerberos keys.
 *KerberosAPI* | [**KerberosRead**](docs/KerberosAPI.md#kerberosread) | **Get** /keys/kerberos/{id} | Retrieve the Kerberos key.
 *KerberosAPI* | [**KerberosUpdate**](docs/KerberosAPI.md#kerberosupdate) | **Patch** /keys/kerberos/{id} | Update the Kerberos key.
+*KerberosAPI* | [**KeysKerberosPost**](docs/KerberosAPI.md#keyskerberospost) | **Post** /keys/kerberos | 
 *TsigAPI* | [**TsigCreate**](docs/TsigAPI.md#tsigcreate) | **Post** /keys/tsig | Create the TSIG key.
 *TsigAPI* | [**TsigDelete**](docs/TsigAPI.md#tsigdelete) | **Delete** /keys/tsig/{id} | Delete the TSIG key.
 *TsigAPI* | [**TsigList**](docs/TsigAPI.md#tsiglist) | **Get** /keys/tsig | Retrieve TSIG keys.

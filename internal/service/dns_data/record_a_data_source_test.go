@@ -19,7 +19,7 @@ func TestAccRecordADataSource_Filters(t *testing.T) {
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 	niz := acctest.RandomNameWithPrefix("a")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckRecordDestroy(context.Background(), &v),
@@ -42,13 +42,13 @@ func TestAccRecordADataSource_TagFilters(t *testing.T) {
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	var v dns_data.DataRecord
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckRecordDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRecordADataSourceConfigTagFilters(zoneFqdn, "10.0.0.15", "value1"),
+				Config: testAccRecordADataSourceConfigTagFilters(zoneFqdn, "10.0.0.15", acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckRecordExists(context.Background(), resourceName, &v),
