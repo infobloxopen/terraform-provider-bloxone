@@ -12,5 +12,5 @@ data "bloxone_td_internal_domain_lists" "example_by_tag" {
   }
 }
 
-# Get all auth zones
+# Get all internal domain lists
 data "bloxone_td_internal_domain_lists" "example_all" {}

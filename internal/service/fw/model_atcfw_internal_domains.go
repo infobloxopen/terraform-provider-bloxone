@@ -45,13 +45,13 @@ var AtcfwInternalDomainsResourceSchemaAttributes = map[string]schema.Attribute{
 	"created_time": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
-		MarkdownDescription: "The time when this Internal Domain lists object was created.",
+		MarkdownDescription: "The time when this Internal Domain list object was created.",
 	},
 	"description": schema.StringAttribute{
 		Optional:            true,
 		Default:             stringdefault.StaticString(""),
 		Computed:            true,
-		MarkdownDescription: "The brief description for the internal domain lists .",
+		MarkdownDescription: "The brief description for the internal domain list.",
 	},
 	"id": schema.Int64Attribute{
 		Computed: true,
@@ -74,17 +74,17 @@ var AtcfwInternalDomainsResourceSchemaAttributes = map[string]schema.Attribute{
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 		},
-		MarkdownDescription: "The name of the internal domain lists.",
+		MarkdownDescription: "The name of the internal domain list.",
 	},
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
-		MarkdownDescription: "Enables tag support for resource where tags attribute contains user-defined key value pairs",
+		MarkdownDescription: "The tags for the internal domain list in JSON format.",
 	},
 	"updated_time": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
-		MarkdownDescription: "The time when this Internal domain lists object was last updated.",
+		MarkdownDescription: "The time when this Internal domain list object was last updated.",
 	},
 }
 
@@ -107,7 +107,6 @@ func (m *AtcfwInternalDomainsModel) Expand(ctx context.Context, diags *diag.Diag
 	to := &fw.AtcfwInternalDomains{
 		Description:     flex.ExpandStringPointer(m.Description),
 		InternalDomains: flex.ExpandFrameworkListString(ctx, m.InternalDomains, diags),
-		IsDefault:       flex.ExpandBoolPointer(m.IsDefault),
 		Name:            flex.ExpandStringPointer(m.Name),
 		Tags:            flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}

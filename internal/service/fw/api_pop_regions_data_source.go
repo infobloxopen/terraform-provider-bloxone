@@ -30,12 +30,12 @@ func (d *PoPRegionsDataSource) Metadata(ctx context.Context, req datasource.Meta
 	resp.TypeName = req.ProviderTypeName + "_" + "td_pop_regions"
 }
 
-type TDPoPRegionsModelWithFilter struct {
+type AtcfwPoPRegionModelWithFilter struct {
 	Filters types.Map  `tfsdk:"filters"`
 	Results types.List `tfsdk:"results"`
 }
 
-func (m *TDPoPRegionsModelWithFilter) FlattenResults(ctx context.Context, from []fw.AtcfwPoPRegion, diags *diag.Diagnostics) {
+func (m *AtcfwPoPRegionModelWithFilter) FlattenResults(ctx context.Context, from []fw.AtcfwPoPRegion, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -44,7 +44,7 @@ func (m *TDPoPRegionsModelWithFilter) FlattenResults(ctx context.Context, from [
 
 func (d *PoPRegionsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Retrieve information on all Point of Presence (PoP) regions available in the database.",
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
@@ -82,7 +82,7 @@ func (d *PoPRegionsDataSource) Configure(ctx context.Context, req datasource.Con
 }
 
 func (d *PoPRegionsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data TDPoPRegionsModelWithFilter
+	var data AtcfwPoPRegionModelWithFilter
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
