@@ -38,16 +38,16 @@ data "bloxone_ipam_next_available_ips" "example_next_ip_ab" {
   ip_count = 5
 }
 
-data "bloxone_next_available_ips" "example_next_ip_ab_default_count" {
+data "bloxone_ipam_next_available_ips" "example_next_ip_ab_default_count" {
   id = data.bloxone_ipam_address_blocks.example_by_attribute.results.0.id
 }
 
-data "bloxone_next_available_ips" "example_next_ip_sub" {
+data "bloxone_ipam_next_available_ips" "example_next_ip_sub" {
   id       = data.bloxone_ipam_subnets.example_by_attribute.results.0.id
   ip_count = 5
 }
 
-data "bloxone_next_available_ips" "example_next_ip_range" {
+data "bloxone_ipam_next_available_ips" "example_next_ip_range" {
   id       = data.bloxone_ipam_ranges.example_by_attribute.results.0.id
   ip_count = 5
 }

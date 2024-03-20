@@ -17,9 +17,6 @@ import (
 
 //TODO: add tests
 // The following require additional resource/data source objects to be supported.
-// - inheritance_sources
-// - ACL Type - TSIG Key
-// - ACL Type - ACL
 // - zone_authority : Mname and rname provide inconsistent result after apply
 
 func TestAccViewResource_basic(t *testing.T) {
@@ -27,7 +24,7 @@ func TestAccViewResource_basic(t *testing.T) {
 	var v dns_config.ConfigView
 	var name = acctest.RandomNameWithPrefix("view")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -61,7 +58,7 @@ func TestAccViewResource_disappears(t *testing.T) {
 	var v dns_config.ConfigView
 	var name = acctest.RandomNameWithPrefix("view")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckViewDestroy(context.Background(), &v),
@@ -85,7 +82,7 @@ func TestAccViewResource_Name(t *testing.T) {
 	var v1 dns_config.ConfigView
 	var v2 dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -116,7 +113,7 @@ func TestAccViewResource_AddEdnsOptionInOutgoingQuery(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -146,7 +143,7 @@ func TestAccViewResource_Comment(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -176,7 +173,7 @@ func TestAccViewResource_CustomRootNs(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -211,7 +208,7 @@ func TestAccViewResource_CustomRootNsEnabled(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -246,7 +243,7 @@ func TestAccViewResource_Disabled(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -276,7 +273,7 @@ func TestAccViewResource_DnssecEnableValidation(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -306,7 +303,7 @@ func TestAccViewResource_DnssecEnabled(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -336,7 +333,7 @@ func TestAccViewResource_DnssecTrustAnchors(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -370,7 +367,7 @@ func TestAccViewResource_DnssecValidateExpiry(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -400,7 +397,7 @@ func TestAccViewResource_DtcConfig(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -430,7 +427,7 @@ func TestAccViewResource_EcsEnabled(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -465,7 +462,7 @@ func TestAccViewResource_EcsForwarding(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -495,7 +492,7 @@ func TestAccViewResource_EcsPrefixV4(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -525,7 +522,7 @@ func TestAccViewResource_EcsPrefixV6(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -555,7 +552,7 @@ func TestAccViewResource_EcsZones(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -587,7 +584,7 @@ func TestAccViewResource_EdnsUdpSize(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -617,13 +614,13 @@ func TestAccViewResource_FilterAaaaAcl(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewAclIP("filter_aaaa_acl", name, "allow", "192.168.10.10"),
+				Config: testAccAclIP("view", "filter_aaaa_acl", name, "allow", "192.168.10.10"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.access", "allow"),
@@ -633,11 +630,30 @@ func TestAccViewResource_FilterAaaaAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccViewAclAny("filter_aaaa_acl", name, "deny"),
+				Config: testAccAclAny("view", "filter_aaaa_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("view", "filter_aaaa_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "filter_aaaa_acl.0.acl", "bloxone_dns_acl.test", "id"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("view", "filter_aaaa_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "filter_aaaa_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -650,7 +666,7 @@ func TestAccViewResource_FilterAaaaOnV4(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -680,7 +696,7 @@ func TestAccViewResource_Forwarders(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -712,7 +728,7 @@ func TestAccViewResource_ForwardersOnly(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -747,7 +763,7 @@ func TestAccViewResource_GssTsigEnabled(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -777,7 +793,7 @@ func TestAccViewResource_InheritanceSources(t *testing.T) {
 	var v dns_config.ConfigView
 	var name = acctest.RandomNameWithPrefix("view")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -859,7 +875,7 @@ func TestAccViewResource_IpSpaces(t *testing.T) {
 	var ipSpaceName = acctest.RandomNameWithPrefix("ip_space")
 	var ipSpaceName2 = acctest.RandomNameWithPrefix("ip_space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -891,7 +907,7 @@ func TestAccViewResource_LameTtl(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -921,13 +937,13 @@ func TestAccViewResource_MatchClientsAcl(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewAclIP("match_clients_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("view", "match_clients_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_clients_acl.0.access", "allow"),
@@ -937,11 +953,30 @@ func TestAccViewResource_MatchClientsAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccViewAclAny("match_clients_acl", name, "deny"),
+				Config: testAccAclAny("view", "match_clients_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_clients_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "match_clients_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("view", "match_clients_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_clients_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "match_clients_acl.0.acl", "bloxone_dns_acl.test", "id"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("view", "match_clients_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_clients_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "match_clients_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "match_clients_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -954,13 +989,13 @@ func TestAccViewResource_MatchDestinationsAcl(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewAclIP("match_destinations_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("view", "match_destinations_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_destinations_acl.0.access", "allow"),
@@ -970,11 +1005,30 @@ func TestAccViewResource_MatchDestinationsAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccViewAclAny("match_destinations_acl", name, "deny"),
+				Config: testAccAclAny("view", "match_destinations_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "match_destinations_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "match_destinations_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("view", "match_destinations_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_destinations_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "match_destinations_acl.0.acl", "bloxone_dns_acl.test", "id"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("view", "match_destinations_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "match_destinations_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "match_destinations_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "match_destinations_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -987,7 +1041,7 @@ func TestAccViewResource_MatchRecursiveOnly(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1017,7 +1071,7 @@ func TestAccViewResource_MaxCacheTtl(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1047,7 +1101,7 @@ func TestAccViewResource_MaxNegativeTtl(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1077,7 +1131,7 @@ func TestAccViewResource_MaxUdpSize(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1107,7 +1161,7 @@ func TestAccViewResource_MinimalResponses(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1137,7 +1191,7 @@ func TestAccViewResource_Notify(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1167,13 +1221,13 @@ func TestAccViewResource_QueryAcl(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewAclIP("query_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("view", "query_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "allow"),
@@ -1183,11 +1237,30 @@ func TestAccViewResource_QueryAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccViewAclAny("query_acl", name, "deny"),
+				Config: testAccAclAny("view", "query_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("view", "query_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "query_acl.0.acl", "bloxone_dns_acl.test", "id"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("view", "query_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "query_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1200,13 +1273,13 @@ func TestAccViewResource_RecursionAcl(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewAclIP("recursion_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("view", "recursion_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.access", "allow"),
@@ -1216,11 +1289,30 @@ func TestAccViewResource_RecursionAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccViewAclAny("recursion_acl", name, "deny"),
+				Config: testAccAclAny("view", "recursion_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("view", "recursion_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "recursion_acl.0.acl", "bloxone_dns_acl.test", "id"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("view", "recursion_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "recursion_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1233,7 +1325,7 @@ func TestAccViewResource_RecursionEnabled(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1263,7 +1355,7 @@ func TestAccViewResource_SortList(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1295,7 +1387,7 @@ func TestAccViewResource_SynthesizeAddressRecordsFromHttps(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1325,7 +1417,7 @@ func TestAccViewResource_Tags(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1363,13 +1455,13 @@ func TestAccViewResource_TransferAcl(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewAclIP("transfer_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("view", "transfer_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "allow"),
@@ -1379,11 +1471,30 @@ func TestAccViewResource_TransferAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccViewAclAny("transfer_acl", name, "deny"),
+				Config: testAccAclAny("view", "transfer_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("view", "transfer_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "transfer_acl.0.acl", "bloxone_dns_acl.test", "id"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("view", "transfer_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "transfer_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1396,13 +1507,13 @@ func TestAccViewResource_UpdateAcl(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccViewAclIP("update_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("view", "update_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "allow"),
@@ -1412,11 +1523,30 @@ func TestAccViewResource_UpdateAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccViewAclAny("update_acl", name, "deny"),
+				Config: testAccAclAny("view", "update_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("view", "update_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "update_acl.0.acl", "bloxone_dns_acl.test", "id"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("view", "update_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "update_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1429,7 +1559,7 @@ func TestAccViewResource_UseForwardersForSubzones(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1459,7 +1589,7 @@ func TestAccViewResource_UseRootForwardersForLocalResolutionWithB1td(t *testing.
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1494,7 +1624,7 @@ func TestAccViewResource_ZoneAuthority(t *testing.T) {
 	var name = acctest.RandomNameWithPrefix("view")
 	var v dns_config.ConfigView
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1966,35 +2096,6 @@ resource "bloxone_dns_view" "test_lame_ttl" {
     lame_ttl = %d
 }
 `, name, lameTtl)
-}
-
-func testAccViewAclIP(aclFieldName, name, access, address string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_view" "test_%[1]s" {
-    name = %[2]q
-    %[1]s = [
-		{
-			access = %[3]q
-			element = "ip"
-			address = %[4]q
-		}
-]
-}
-`, aclFieldName, name, access, address)
-}
-
-func testAccViewAclAny(aclFieldName, name, access string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_view" "test_%[1]s" {
-    name = %[2]q
-    %[1]s = [
-		{
-			access = %[3]q
-			element = "any"
-		}
-]
-}
-`, aclFieldName, name, access)
 }
 
 func testAccViewMatchRecursiveOnly(name, matchRecursiveOnly string) string {

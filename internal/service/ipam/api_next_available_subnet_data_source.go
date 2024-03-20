@@ -31,13 +31,10 @@ type NextAvailableSubnetDataSource struct {
 }
 
 type IpamsvcNextAvailableSubnetModel struct {
-	Id       types.String `tfsdk:"id"`
-	Cidr     types.Int64  `tfsdk:"cidr"`
-	Comment  types.String `tfsdk:"comment"`
-	Name     types.String `tfsdk:"name"`
-	DhcpHost types.String `tfsdk:"dhcp_host"`
-	Count    types.Int64  `tfsdk:"subnet_count"`
-	Results  types.List   `tfsdk:"results"`
+	Id      types.String `tfsdk:"id"`
+	Cidr    types.Int64  `tfsdk:"cidr"`
+	Count   types.Int64  `tfsdk:"subnet_count"`
+	Results types.List   `tfsdk:"results"`
 }
 
 func (m *IpamsvcNextAvailableSubnetModel) FlattenResults(ctx context.Context, from []ipam.IpamsvcSubnet, diags *diag.Diagnostics) {
@@ -70,18 +67,6 @@ func (d *NextAvailableSubnetDataSource) Schema(ctx context.Context, req datasour
 			"cidr": schema.Int64Attribute{
 				Required:            true,
 				MarkdownDescription: `The cidr value of subnets to be created.`,
-			},
-			"comment": schema.StringAttribute{
-				Optional:            true,
-				MarkdownDescription: `Comment of next available subnets.`,
-			},
-			"name": schema.StringAttribute{
-				Optional:            true,
-				MarkdownDescription: `Name of next available subnets.`,
-			},
-			"dhcp_host": schema.StringAttribute{
-				Optional:            true,
-				MarkdownDescription: `Reference of OnPrem Host associated with the next available subnets to be created.`,
 			},
 			"subnet_count": schema.Int64Attribute{
 				Optional:            true,
@@ -130,9 +115,6 @@ func (d *NextAvailableSubnetDataSource) Read(ctx context.Context, req datasource
 		AddressBlockListNextAvailableSubnet(ctx, data.Id.ValueString()).
 		Cidr(int32(data.Cidr.ValueInt64())).
 		Count(int32(data.Count.ValueInt64())).
-		Comment(data.Comment.ValueString()).
-		Name(data.Name.ValueString()).
-		DhcpHost(data.DhcpHost.ValueString()).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read AddressBlock Next Available Subnet API, got error: %s", err))

@@ -17,7 +17,6 @@ import (
 
 //TODO: add tests
 // The following require additional resource/data source objects to be supported.
-// - inheritance_sources
 // - Kerberos_keys
 
 func TestAccServerResource_basic(t *testing.T) {
@@ -25,7 +24,7 @@ func TestAccServerResource_basic(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -34,7 +33,6 @@ func TestAccServerResource_basic(t *testing.T) {
 				Config: testAccServerBasicConfig(name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
-					// TODO: check and validate these
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
@@ -59,7 +57,7 @@ func TestAccServerResource_disappears(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckServerDestroy(context.Background(), &v),
@@ -81,7 +79,7 @@ func TestAccServerResource_AddEdnsOptionInOutgoingQuery(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -111,7 +109,7 @@ func TestAccServerResource_AutoSortViews(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -141,7 +139,7 @@ func TestAccServerResource_Comment(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -171,7 +169,7 @@ func TestAccServerResource_CustomRootNs(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -206,7 +204,7 @@ func TestAccServerResource_CustomRootNsEnabled(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -241,7 +239,7 @@ func TestAccServerResource_DnssecEnableValidation(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -271,7 +269,7 @@ func TestAccServerResource_DnssecEnabled(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -301,7 +299,7 @@ func TestAccServerResource_DnssecTrustAnchors(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -335,7 +333,7 @@ func TestAccServerResource_DnssecValidateExpiry(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -365,7 +363,7 @@ func TestAccServerResource_EcsEnabled(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -400,7 +398,7 @@ func TestAccServerResource_EcsForwarding(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -430,7 +428,7 @@ func TestAccServerResource_EcsPrefixV4(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -460,7 +458,7 @@ func TestAccServerResource_EcsPrefixV6(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -490,7 +488,7 @@ func TestAccServerResource_EcsZones(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -522,13 +520,13 @@ func TestAccServerResource_FilterAaaaAcl(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerAclIP("filter_aaaa_acl", name, "allow", "192.168.10.10"),
+				Config: testAccAclIP("server", "filter_aaaa_acl", name, "allow", "192.168.10.10"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.access", "allow"),
@@ -538,11 +536,30 @@ func TestAccServerResource_FilterAaaaAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServerAclAny("filter_aaaa_acl", name, "deny"),
+				Config: testAccAclAny("server", "filter_aaaa_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("server", "filter_aaaa_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "filter_aaaa_acl.0.acl", "bloxone_dns_acl.test", "id"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("server", "filter_aaaa_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "filter_aaaa_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -555,7 +572,7 @@ func TestAccServerResource_FilterAaaaOnV4(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -585,7 +602,7 @@ func TestAccServerResource_Forwarders(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -617,7 +634,7 @@ func TestAccServerResource_ForwardersOnly(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -652,7 +669,7 @@ func TestAccServerResource_GssTsigEnabled(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -682,7 +699,7 @@ func TestAccServerResource_InheritanceSources(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -760,7 +777,7 @@ func TestAccServerResource_LameTtl(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -790,7 +807,7 @@ func TestAccServerResource_LogQueryResponse(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -820,7 +837,7 @@ func TestAccServerResource_MatchRecursiveOnly(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -850,7 +867,7 @@ func TestAccServerResource_MaxCacheTtl(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -880,7 +897,7 @@ func TestAccServerResource_MaxNegativeTtl(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -910,7 +927,7 @@ func TestAccServerResource_MinimalResponses(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -941,7 +958,7 @@ func TestAccServerResource_Name(t *testing.T) {
 	var name1 = acctest.RandomNameWithPrefix("dns-server")
 	var name2 = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -971,7 +988,7 @@ func TestAccServerResource_Notify(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1001,13 +1018,13 @@ func TestAccServerResource_QueryAcl(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerAclIP("query_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("server", "query_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "allow"),
@@ -1017,11 +1034,30 @@ func TestAccServerResource_QueryAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServerAclAny("query_acl", name, "deny"),
+				Config: testAccAclAny("server", "query_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("server", "query_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "query_acl.0.acl", "bloxone_dns_acl.test", "id"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("server", "query_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "query_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1034,7 +1070,7 @@ func TestAccServerResource_QueryPort(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1064,13 +1100,13 @@ func TestAccServerResource_RecursionAcl(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerAclIP("recursion_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("server", "recursion_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.access", "allow"),
@@ -1080,11 +1116,30 @@ func TestAccServerResource_RecursionAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServerAclAny("recursion_acl", name, "deny"),
+				Config: testAccAclAny("server", "recursion_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("server", "recursion_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "recursion_acl.0.acl", "bloxone_dns_acl.test", "id"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("server", "recursion_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "recursion_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1097,7 +1152,7 @@ func TestAccServerResource_RecursionEnabled(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1127,7 +1182,7 @@ func TestAccServerResource_RecursiveClients(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1157,7 +1212,7 @@ func TestAccServerResource_ResolverQueryTimeout(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1187,7 +1242,7 @@ func TestAccServerResource_SecondaryAxfrQueryLimit(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1217,7 +1272,7 @@ func TestAccServerResource_SecondarySoaQueryLimit(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1247,7 +1302,7 @@ func TestAccServerResource_SortList(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1280,7 +1335,7 @@ func TestAccServerResource_SynthesizeAddressRecordsFromHttps(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1310,7 +1365,7 @@ func TestAccServerResource_Tags(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1348,13 +1403,13 @@ func TestAccServerResource_TransferAcl(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerAclIP("transfer_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("server", "transfer_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "allow"),
@@ -1364,11 +1419,30 @@ func TestAccServerResource_TransferAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServerAclAny("transfer_acl", name, "deny"),
+				Config: testAccAclAny("server", "transfer_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("server", "transfer_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "transfer_acl.0.acl", "bloxone_dns_acl.test", "id"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("server", "transfer_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "transfer_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1381,13 +1455,13 @@ func TestAccServerResource_UpdateAcl(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccServerAclIP("update_acl", name, "allow", "192.168.11.11"),
+				Config: testAccAclIP("server", "update_acl", name, "allow", "192.168.11.11"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "allow"),
@@ -1397,11 +1471,30 @@ func TestAccServerResource_UpdateAcl(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccServerAclAny("update_acl", name, "deny"),
+				Config: testAccAclAny("server", "update_acl", name, "deny"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckServerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "any"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclAcl("server", "update_acl", name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "acl"),
+					resource.TestCheckResourceAttrPair(resourceName, "update_acl.0.acl", "bloxone_dns_acl.test", "id"),
+				),
+			},
+			//Update and Read
+			{
+				Config: testAccAclTsigKey("server", "update_acl", name, "deny"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "deny"),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "tsig_key"),
+					resource.TestCheckResourceAttrPair(resourceName, "update_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1414,7 +1507,7 @@ func TestAccServerResource_UseForwardersForSubzones(t *testing.T) {
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1444,7 +1537,7 @@ func TestAccServerResource_UseRootForwardersForLocalResolutionWithB1td(t *testin
 	var v dns_config.ConfigServer
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1936,35 +2029,6 @@ resource "bloxone_dns_server" "test_query_port" {
     query_port = %q
 }
 `, name, queryPort)
-}
-
-func testAccServerAclIP(aclFieldName, name, access, address string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_server" "test_%[1]s" {
-    name = %[2]q
-    %[1]s = [
-		{
-			access = %[3]q
-			element = "ip"
-			address = %[4]q
-		}
-]
-}
-`, aclFieldName, name, access, address)
-}
-
-func testAccServerAclAny(aclFieldName, name, access string) string {
-	return fmt.Sprintf(`
-resource "bloxone_dns_server" "test_%[1]s" {
-    name = %[2]q
-    %[1]s = [
-		{
-			access = %[3]q
-			element = "any"
-		}
-]
-}
-`, aclFieldName, name, access)
 }
 
 func testAccServerRecursionEnabled(name string, recursionEnabled string) string {

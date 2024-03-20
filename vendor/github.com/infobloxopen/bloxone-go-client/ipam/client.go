@@ -11,7 +11,7 @@ API version: v1
 package ipam
 
 import (
-    "github.com/infobloxopen/bloxone-go-client/internal"
+	"github.com/infobloxopen/bloxone-go-client/internal"
 )
 
 var ServiceBasePath = "/api/ddi/v1"
@@ -19,36 +19,36 @@ var ServiceBasePath = "/api/ddi/v1"
 // APIClient manages communication with the IP Address Management API API vv1
 // In most cases there should be only one, shared, APIClient.
 type APIClient struct {
-    *internal.APIClient
+	*internal.APIClient
 
 	// API Services
-	AddressAPI AddressAPI
-	AddressBlockAPI AddressBlockAPI
-	AsmAPI AsmAPI
-	DhcpHostAPI DhcpHostAPI
-	DnsUsageAPI DnsUsageAPI
-	FilterAPI FilterAPI
-	FixedAddressAPI FixedAddressAPI
-	GlobalAPI GlobalAPI
-	HaGroupAPI HaGroupAPI
+	AddressAPI        AddressAPI
+	AddressBlockAPI   AddressBlockAPI
+	AsmAPI            AsmAPI
+	DhcpHostAPI       DhcpHostAPI
+	DnsUsageAPI       DnsUsageAPI
+	FilterAPI         FilterAPI
+	FixedAddressAPI   FixedAddressAPI
+	GlobalAPI         GlobalAPI
+	HaGroupAPI        HaGroupAPI
 	HardwareFilterAPI HardwareFilterAPI
-	IpSpaceAPI IpSpaceAPI
-	IpamHostAPI IpamHostAPI
-	LeasesCommandAPI LeasesCommandAPI
-	OptionCodeAPI OptionCodeAPI
-	OptionFilterAPI OptionFilterAPI
-	OptionGroupAPI OptionGroupAPI
-	OptionSpaceAPI OptionSpaceAPI
-	RangeAPI RangeAPI
-	ServerAPI ServerAPI
-	SubnetAPI SubnetAPI
+	IpSpaceAPI        IpSpaceAPI
+	IpamHostAPI       IpamHostAPI
+	LeasesCommandAPI  LeasesCommandAPI
+	OptionCodeAPI     OptionCodeAPI
+	OptionFilterAPI   OptionFilterAPI
+	OptionGroupAPI    OptionGroupAPI
+	OptionSpaceAPI    OptionSpaceAPI
+	RangeAPI          RangeAPI
+	ServerAPI         ServerAPI
+	SubnetAPI         SubnetAPI
 }
 
 // NewAPIClient creates a new API client. Requires a userAgent string describing your application.
 // optionally a custom http.Client to allow for advanced features such as caching.
 func NewAPIClient(cfg *internal.Configuration) *APIClient {
 	c := &APIClient{}
-    c.APIClient = internal.NewAPIClient(cfg)
+	c.APIClient = internal.NewAPIClient(cfg)
 
 	// API Services
 	c.AddressAPI = (*AddressAPIService)(&c.Common)

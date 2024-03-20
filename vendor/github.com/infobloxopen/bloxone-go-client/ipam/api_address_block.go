@@ -22,7 +22,6 @@ import (
 )
 
 type AddressBlockAPI interface {
-
 	/*
 			AddressBlockCopy Copy the address block.
 
@@ -38,7 +37,6 @@ type AddressBlockAPI interface {
 	// AddressBlockCopyExecute executes the request
 	//  @return IpamsvcCopyAddressBlockResponse
 	AddressBlockCopyExecute(r ApiAddressBlockCopyRequest) (*IpamsvcCopyAddressBlockResponse, *http.Response, error)
-
 	/*
 			AddressBlockCreate Create the address block.
 
@@ -53,7 +51,6 @@ type AddressBlockAPI interface {
 	// AddressBlockCreateExecute executes the request
 	//  @return IpamsvcCreateAddressBlockResponse
 	AddressBlockCreateExecute(r ApiAddressBlockCreateRequest) (*IpamsvcCreateAddressBlockResponse, *http.Response, error)
-
 	/*
 			AddressBlockCreateNextAvailableAB Create the Next Available Address Block object.
 
@@ -69,7 +66,6 @@ type AddressBlockAPI interface {
 	// AddressBlockCreateNextAvailableABExecute executes the request
 	//  @return IpamsvcCreateNextAvailableABResponse
 	AddressBlockCreateNextAvailableABExecute(r ApiAddressBlockCreateNextAvailableABRequest) (*IpamsvcCreateNextAvailableABResponse, *http.Response, error)
-
 	/*
 			AddressBlockCreateNextAvailableIP Allocate the next available IP address.
 
@@ -85,7 +81,6 @@ type AddressBlockAPI interface {
 	// AddressBlockCreateNextAvailableIPExecute executes the request
 	//  @return IpamsvcCreateNextAvailableIPResponse
 	AddressBlockCreateNextAvailableIPExecute(r ApiAddressBlockCreateNextAvailableIPRequest) (*IpamsvcCreateNextAvailableIPResponse, *http.Response, error)
-
 	/*
 			AddressBlockCreateNextAvailableSubnet Create the Next Available Subnet object.
 
@@ -101,7 +96,6 @@ type AddressBlockAPI interface {
 	// AddressBlockCreateNextAvailableSubnetExecute executes the request
 	//  @return IpamsvcCreateNextAvailableSubnetResponse
 	AddressBlockCreateNextAvailableSubnetExecute(r ApiAddressBlockCreateNextAvailableSubnetRequest) (*IpamsvcCreateNextAvailableSubnetResponse, *http.Response, error)
-
 	/*
 			AddressBlockDelete Move the address block to the recycle bin.
 
@@ -116,7 +110,6 @@ type AddressBlockAPI interface {
 
 	// AddressBlockDeleteExecute executes the request
 	AddressBlockDeleteExecute(r ApiAddressBlockDeleteRequest) (*http.Response, error)
-
 	/*
 			AddressBlockList Retrieve the address blocks.
 
@@ -131,7 +124,6 @@ type AddressBlockAPI interface {
 	// AddressBlockListExecute executes the request
 	//  @return IpamsvcListAddressBlockResponse
 	AddressBlockListExecute(r ApiAddressBlockListRequest) (*IpamsvcListAddressBlockResponse, *http.Response, error)
-
 	/*
 			AddressBlockListNextAvailableAB List Next Available Address Block objects.
 
@@ -147,7 +139,6 @@ type AddressBlockAPI interface {
 	// AddressBlockListNextAvailableABExecute executes the request
 	//  @return IpamsvcNextAvailableABResponse
 	AddressBlockListNextAvailableABExecute(r ApiAddressBlockListNextAvailableABRequest) (*IpamsvcNextAvailableABResponse, *http.Response, error)
-
 	/*
 			AddressBlockListNextAvailableIP Retrieve the next available IP address.
 
@@ -163,7 +154,6 @@ type AddressBlockAPI interface {
 	// AddressBlockListNextAvailableIPExecute executes the request
 	//  @return IpamsvcNextAvailableIPResponse
 	AddressBlockListNextAvailableIPExecute(r ApiAddressBlockListNextAvailableIPRequest) (*IpamsvcNextAvailableIPResponse, *http.Response, error)
-
 	/*
 			AddressBlockListNextAvailableSubnet List Next Available Subnet objects.
 
@@ -179,7 +169,6 @@ type AddressBlockAPI interface {
 	// AddressBlockListNextAvailableSubnetExecute executes the request
 	//  @return IpamsvcNextAvailableSubnetResponse
 	AddressBlockListNextAvailableSubnetExecute(r ApiAddressBlockListNextAvailableSubnetRequest) (*IpamsvcNextAvailableSubnetResponse, *http.Response, error)
-
 	/*
 			AddressBlockRead Retrieve the address block.
 
@@ -195,7 +184,6 @@ type AddressBlockAPI interface {
 	// AddressBlockReadExecute executes the request
 	//  @return IpamsvcReadAddressBlockResponse
 	AddressBlockReadExecute(r ApiAddressBlockReadRequest) (*IpamsvcReadAddressBlockResponse, *http.Response, error)
-
 	/*
 			AddressBlockUpdate Update the address block.
 
@@ -336,7 +324,6 @@ func (a *AddressBlockAPIService) AddressBlockCopyExecute(r ApiAddressBlockCopyRe
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -423,6 +410,14 @@ func (a *AddressBlockAPIService) AddressBlockCreateExecute(r ApiAddressBlockCrea
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -466,7 +461,6 @@ func (a *AddressBlockAPIService) AddressBlockCreateExecute(r ApiAddressBlockCrea
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -623,7 +617,6 @@ func (a *AddressBlockAPIService) AddressBlockCreateNextAvailableABExecute(r ApiA
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -762,7 +755,6 @@ func (a *AddressBlockAPIService) AddressBlockCreateNextAvailableIPExecute(r ApiA
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -929,7 +921,6 @@ func (a *AddressBlockAPIService) AddressBlockCreateNextAvailableSubnetExecute(r 
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -1232,7 +1223,6 @@ func (a *AddressBlockAPIService) AddressBlockListExecute(r ApiAddressBlockListRe
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -1385,7 +1375,6 @@ func (a *AddressBlockAPIService) AddressBlockListNextAvailableABExecute(r ApiAdd
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -1518,7 +1507,6 @@ func (a *AddressBlockAPIService) AddressBlockListNextAvailableIPExecute(r ApiAdd
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -1681,7 +1669,6 @@ func (a *AddressBlockAPIService) AddressBlockListNextAvailableSubnetExecute(r Ap
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -1814,7 +1801,6 @@ func (a *AddressBlockAPIService) AddressBlockReadExecute(r ApiAddressBlockReadRe
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -1905,6 +1891,14 @@ func (a *AddressBlockAPIService) AddressBlockUpdateExecute(r ApiAddressBlockUpda
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -1948,6 +1942,5 @@ func (a *AddressBlockAPIService) AddressBlockUpdateExecute(r ApiAddressBlockUpda
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

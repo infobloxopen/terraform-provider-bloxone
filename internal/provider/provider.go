@@ -44,6 +44,7 @@ func (p *BloxOneProvider) Metadata(_ context.Context, _ provider.MetadataRequest
 
 func (p *BloxOneProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		Description: "The BloxOne provider is used to interact with the resources supported by Infoblox BloxOne API.",
 		Attributes: map[string]schema.Attribute{
 			"csp_url": schema.StringAttribute{
 				MarkdownDescription: "URL for BloxOne Cloud Services Portal. Can also be configured using the `BLOXONE_CSP_URL` environment variable.",
@@ -101,6 +102,7 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		dns_config.NewForwardNsgResource,
 		dns_config.NewDelegationResource,
 		dns_config.NewServerResource,
+		dns_config.NewAclResource,
 
 		dns_data.NewRecordAResource,
 		dns_data.NewRecordAAAAResource,
@@ -143,6 +145,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		ipam.NewOptionGroupDataSource,
 		ipam.NewIpamNextAvailableIPDataSource,
 		ipam.NewNextAvailableSubnetDataSource,
+		ipam.NewNextAvailableAddressBlockDataSource,
 
 		dns_config.NewViewDataSource,
 		dns_config.NewAuthNsgDataSource,
@@ -152,6 +155,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		dns_config.NewForwardNsgDataSource,
 		dns_config.NewDelegationDataSource,
 		dns_config.NewServerDataSource,
+		dns_config.NewAclDataSource,
 
 		dns_data.NewRecordADataSource,
 		dns_data.NewRecordAAAADataSource,

@@ -3,7 +3,10 @@ package keys
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 	"net/http"
+	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -11,6 +14,11 @@ import (
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+)
+
+const (
+	// TsigKeyOperationTimeout is the maximum amount of time to wait for eventual consistency
+	TsigKeyOperationTimeout = 2 * time.Minute
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -165,15 +173,24 @@ func (r *TsigResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 		return
 	}
 
-	httpRes, err := r.client.KeysAPI.
-		TsigAPI.
-		TsigDelete(ctx, data.Id.ValueString()).
-		Execute()
-	if err != nil {
-		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
-			return
+	err := retry.RetryContext(ctx, TsigKeyOperationTimeout, func() *retry.RetryError {
+		httpRes, err := r.client.KeysAPI.
+			TsigAPI.
+			TsigDelete(ctx, data.Id.ValueString()).
+			Execute()
+		if err != nil {
+			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
+				return nil
+			}
+			if strings.Contains(err.Error(), "object is referenced by a 'TSIG Key' object.") {
+				return retry.RetryableError(err)
+			}
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete Tsig, got error: %s", err))
+			return retry.NonRetryableError(err)
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete Tsig, got error: %s", err))
+		return nil
+	})
+	if err != nil {
 		return
 	}
 }

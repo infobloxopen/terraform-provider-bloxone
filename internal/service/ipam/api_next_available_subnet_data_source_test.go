@@ -14,7 +14,7 @@ import (
 func TestDataSourceNextAvailableSubnet(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_next_available_subnets.test"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -48,17 +48,17 @@ func TestDataSourceNextAvailableSubnet(t *testing.T) {
 }
 
 func testAccDataSourceNextAvailableSubnetBaseConfig() string {
-	return `
+	return fmt.Sprintf(`
 	resource "bloxone_ipam_ip_space" "test" {
-		name = "test_ip_space"
+		name = %q
 	}
 	resource "bloxone_ipam_address_block" "test" {
-		name = "test_address_block"
+		name = %q
 		address = "192.168.0.0"
 		cidr = "24"
 		space = bloxone_ipam_ip_space.test.id
 	}
-`
+`, acctest.RandomNameWithPrefix("nextAvailableIPSpace"), acctest.RandomNameWithPrefix("nextAvailableAB"))
 }
 func testAccDataSourceNextAvailableSubnet(count, cidr int) string {
 	var config string

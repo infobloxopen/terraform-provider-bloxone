@@ -16,7 +16,7 @@ func TestAccKerberosDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_keys_kerberoses.test"
 	var v keys.KerberosKey
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -41,7 +41,7 @@ func TestAccKerberosDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_keys_kerberoses.test_tag"
 	var v keys.KerberosKey
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
