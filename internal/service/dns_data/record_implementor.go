@@ -17,6 +17,11 @@ type recordModelCommon interface {
 	recordType() string
 }
 
+type recordModelWithOptions interface {
+	flattenOptions(ctx context.Context, m types.Object, from map[string]interface{}, diags *diag.Diagnostics) types.Object
+	expandOptions(ctx context.Context, m types.Object, diags *diag.Diagnostics) map[string]interface{}
+}
+
 type recordResourceImplementor interface {
 	recordModelCommon
 	resourceName() string
