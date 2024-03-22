@@ -22,11 +22,14 @@ data "bloxone_dhcp_option_codes" "option_code" {
 }
 
 resource "bloxone_dhcp_server" "example" {
-  name = "example"
-
+  name         = "example"
   ddns_enabled = "true"
   ddns_domain  = "domain.com."
+  comment      = "dhcp server"
 
+  tags = {
+    site = "Site A"
+  }
   # ddns_zones configuration
   ddns_zones = [
     {
