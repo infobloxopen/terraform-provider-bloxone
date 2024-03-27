@@ -19,7 +19,7 @@ resource "bloxone_keys_tsig" "example_tsig" {
 
 resource "bloxone_dns_acl" "example_acl" {
   name = "example_acl"
-  elements = [
+  list = [
     {
       access  = "deny"
       element = "ip"
