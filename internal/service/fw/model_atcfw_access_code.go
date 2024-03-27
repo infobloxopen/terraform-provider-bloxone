@@ -55,8 +55,11 @@ var AtcfwAccessCodeResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Auto generated unique Bypass Code value",
 	},
 	"activation": schema.StringAttribute{
-		CustomType:          timetypes.RFC3339Type{},
-		Optional:            true,
+		CustomType: timetypes.RFC3339Type{},
+		Optional:   true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "The time when the Bypass Code object was activated.",
 	},
 	"created_time": schema.StringAttribute{
@@ -67,14 +70,23 @@ var AtcfwAccessCodeResourceSchemaAttributes = map[string]schema.Attribute{
 	"description": schema.StringAttribute{
 		Optional: true,
 		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 	},
 	"expiration": schema.StringAttribute{
-		CustomType:          timetypes.RFC3339Type{},
-		Optional:            true,
+		CustomType: timetypes.RFC3339Type{},
+		Optional:   true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "The time when the Bypass Code object was expired.",
 	},
 	"name": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "The name of Bypass Code",
 	},
 	"policy_ids": schema.ListAttribute{

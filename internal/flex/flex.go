@@ -54,6 +54,13 @@ func FlattenInt64Pointer(i *int64) types.Int64 {
 	return FlattenInt64(*i)
 }
 
+func FlattenInt32Pointer(i *int32) types.Int64 {
+	if i == nil {
+		return types.Int64Null()
+	}
+	return FlattenInt64(int64(*i))
+}
+
 func FlattenFloat64(f float64) types.Float64 {
 	if f == 0 {
 		return types.Float64Null()
