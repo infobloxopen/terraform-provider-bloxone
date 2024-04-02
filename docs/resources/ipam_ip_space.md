@@ -94,6 +94,7 @@ resource "bloxone_ipam_ip_space" "example_tags" {
 - `asm_scope_flag` (Number) The number of times the automated scope management usage limits have been exceeded for any of the subnets in this IP space.
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) The tags of the IP space in JSON format including default tags.
 - `threshold` (Attributes) (see [below for nested schema](#nestedatt--threshold))
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `utilization` (Attributes) (see [below for nested schema](#nestedatt--utilization))

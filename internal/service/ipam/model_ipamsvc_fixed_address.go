@@ -18,8 +18,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -43,6 +43,7 @@ type IpamsvcFixedAddressModel struct {
 	Name                      types.String      `tfsdk:"name"`
 	Parent                    types.String      `tfsdk:"parent"`
 	Tags                      types.Map         `tfsdk:"tags"`
+	TagsAll                   types.Map         `tfsdk:"tags_all"`
 	UpdatedAt                 timetypes.RFC3339 `tfsdk:"updated_at"`
 	NextAvailableId           types.String      `tfsdk:"next_available_id"`
 }
@@ -67,6 +68,7 @@ var IpamsvcFixedAddressAttrTypes = map[string]attr.Type{
 	"name":                         types.StringType,
 	"parent":                       types.StringType,
 	"tags":                         types.MapType{ElemType: types.StringType},
+	"tags_all":                     types.MapType{ElemType: types.StringType},
 	"updated_at":                   timetypes.RFC3339Type{},
 	"next_available_id":            types.StringType,
 }
@@ -192,6 +194,11 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "The tags for the fixed address in JSON format.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the fixed address in JSON format including default tags.",
+	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
@@ -252,12 +259,13 @@ func (m *IpamsvcFixedAddressModel) Expand(ctx context.Context, diags *diag.Diagn
 	return to
 }
 
-func FlattenIpamsvcFixedAddress(ctx context.Context, from *ipam.IpamsvcFixedAddress, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcFixedAddressDataSource(ctx context.Context, from *ipam.IpamsvcFixedAddress, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcFixedAddressAttrTypes)
 	}
 	m := IpamsvcFixedAddressModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcFixedAddressAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -288,6 +296,7 @@ func (m *IpamsvcFixedAddressModel) Flatten(ctx context.Context, from *ipam.Ipams
 	m.MatchValue = flex.FlattenString(from.MatchValue)
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Parent = flex.FlattenStringPointer(from.Parent)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
+
 }
