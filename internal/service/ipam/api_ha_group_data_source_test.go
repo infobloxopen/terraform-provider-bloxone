@@ -7,17 +7,20 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"golang.org/x/exp/slices"
+
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
-	"golang.org/x/exp/slices"
 )
 
 func TestAccHaGroupDataSource_Filters(t *testing.T) {
+	t.Skip("Skipping this test as there is not enough DHCP hosts to run this test")
+
 	dataSourceName := "data.bloxone_dhcp_ha_groups.test"
 	resourceName := "bloxone_dhcp_ha_group.test"
 	var v ipam.IpamsvcHAGroup
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckHaGroupDestroy(context.Background(), &v),
@@ -35,16 +38,18 @@ func TestAccHaGroupDataSource_Filters(t *testing.T) {
 }
 
 func TestAccHaGroupDataSource_TagFilters(t *testing.T) {
+	t.Skip("Skipping this test as there is not enough DHCP hosts to run this test")
+
 	dataSourceName := "data.bloxone_dhcp_ha_groups.test"
 	resourceName := "bloxone_dhcp_ha_group.test"
 	var v ipam.IpamsvcHAGroup
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckHaGroupDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccHaGroupDataSourceConfigTagFilters(acctest.RandomNameWithPrefix("test_ha"), "value1"),
+				Config: testAccHaGroupDataSourceConfigTagFilters(acctest.RandomNameWithPrefix("test_ha"), acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckHaGroupExists(context.Background(), resourceName, &v),
@@ -56,11 +61,13 @@ func TestAccHaGroupDataSource_TagFilters(t *testing.T) {
 }
 
 func TestAccHaGroupDataSource_CollectStats(t *testing.T) {
+	t.Skip("Skipping this test as there is not enough DHCP hosts to run this test")
+
 	dataSourceName := "data.bloxone_dhcp_ha_groups.test"
 	resourceName := "bloxone_dhcp_ha_group.test"
 	var v ipam.IpamsvcHAGroup
 	name := acctest.RandomNameWithPrefix("test_ha_stats")
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckHaGroupDestroy(context.Background(), &v),
@@ -141,7 +148,7 @@ data "bloxone_dhcp_ha_groups" "test" {
   }
   depends_on = [bloxone_dhcp_ha_group.test]
 }`, name, name)
-	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
+	return strings.Join([]string{acctest.TestAccBase_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupDataSourceConfigTagFilters(name, tagValue string) string {
@@ -170,7 +177,7 @@ data "bloxone_dhcp_ha_groups" "test" {
   }
 }`, name, tagValue)
 
-	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
+	return strings.Join([]string{acctest.TestAccBase_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupDataSourceConfigCollectStats(name string) string {
@@ -198,7 +205,7 @@ data "bloxone_dhcp_ha_groups" "test" {
   depends_on = [bloxone_dhcp_ha_group.test]
 }`, name, name)
 
-	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
+	return strings.Join([]string{acctest.TestAccBase_DhcpHosts(), config}, "")
 }
 
 func testAccCheckHAState(state string) error {

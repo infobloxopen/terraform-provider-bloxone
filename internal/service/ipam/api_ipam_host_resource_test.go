@@ -26,7 +26,7 @@ func TestAccIpamHostResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_host.test"
 	var v ipam.IpamsvcIpamHost
 	var name = acctest.RandomNameWithPrefix("ipam_host")
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -54,7 +54,7 @@ func TestAccIpamHostResource_disappears(t *testing.T) {
 	var v ipam.IpamsvcIpamHost
 	var name = acctest.RandomNameWithPrefix("ipam_host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckIpamHostDestroy(context.Background(), &v),
@@ -76,7 +76,7 @@ func TestAccIpamHostResource_Comment(t *testing.T) {
 	var v ipam.IpamsvcIpamHost
 	var name = acctest.RandomNameWithPrefix("ipam_host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -106,9 +106,9 @@ func TestAccIpamHostResource_Tags(t *testing.T) {
 	var v ipam.IpamsvcIpamHost
 	var name = acctest.RandomNameWithPrefix("ipam_host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactoriesWithTags,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
@@ -120,6 +120,9 @@ func TestAccIpamHostResource_Tags(t *testing.T) {
 					testAccCheckIpamHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag1", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Update and Read
@@ -132,6 +135,9 @@ func TestAccIpamHostResource_Tags(t *testing.T) {
 					testAccCheckIpamHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2changed"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag3", "value3"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2changed"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag3", "value3"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -149,15 +155,16 @@ func TestAccIpamHostResource_Addresses(t *testing.T) {
 		name             = acctest.RandomNameWithPrefix("ipam_host")
 		nameNaip         = acctest.RandomNameWithPrefix("ipam_host_naip")
 		v                ipam.IpamsvcIpamHost
+		spaceName        = acctest.RandomNameWithPrefix("ip-space")
 	)
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read NaIP example
 			{
-				Config: testAccIpamHostAddressesNAIP(nameNaip),
+				Config: testAccIpamHostAddressesNAIP(spaceName, nameNaip),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpamHostExists(context.Background(), resourceNameNaip, &v),
 					resource.TestCheckResourceAttr(resourceNameNaip, "addresses.#", "1"),
@@ -180,7 +187,7 @@ func TestAccIpamHostResource_Addresses(t *testing.T) {
 			},
 			// Create and Read
 			{
-				Config: testAccIpamHostAddresses(name, "10.0.0.1"),
+				Config: testAccIpamHostAddresses(spaceName, name, "10.0.0.1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpamHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "addresses.#", "1"),
@@ -190,7 +197,7 @@ func TestAccIpamHostResource_Addresses(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccIpamHostAddresses(name, "10.0.0.2"),
+				Config: testAccIpamHostAddresses(spaceName, name, "10.0.0.2"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpamHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "addresses.#", "1"),
@@ -292,7 +299,7 @@ resource "bloxone_ipam_host" "test_tags" {
 `, name, tagsStr)
 }
 
-func testAccIpamHostAddresses(name, address string) string {
+func testAccIpamHostAddresses(spaceName, name, address string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_host" "test_address" {
     name = %q
@@ -305,10 +312,10 @@ resource "bloxone_ipam_host" "test_address" {
 	depends_on = [bloxone_ipam_subnet.test]
 }
 `, name, address)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
 
-func testAccIpamHostAddressesNAIP(name string) string {
+func testAccIpamHostAddressesNAIP(spaceName, name string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_host" "test_address_naip" {
     name = %q
@@ -319,7 +326,7 @@ resource "bloxone_ipam_host" "test_address_naip" {
 	]
 }
 `, name)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
 
 func testAccIpamHostAddressesNAIPMultipleAddress(name string) string {
@@ -339,13 +346,13 @@ resource "bloxone_ipam_host" "test_address_naip" {
 	]
 }
 `, name)
-	return strings.Join([]string{testAccMultipleIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccMultipleIPSpaceAndSubnet("s1"+name, "s2"+name, "s3"+name), config}, "")
 }
 
-func testAccMultipleIPSpaceAndSubnet() string {
-	return `
+func testAccMultipleIPSpaceAndSubnet(spaceName1, spaceName2, spaceName3 string) string {
+	return fmt.Sprintf(`
 	resource "bloxone_ipam_ip_space" "test" {
-		name = "test"
+		name = %q
 	}
 	resource "bloxone_ipam_subnet" "test" {
 		address = "10.0.0.0"
@@ -353,7 +360,7 @@ func testAccMultipleIPSpaceAndSubnet() string {
 		space = bloxone_ipam_ip_space.test.id
 	}
 	resource "bloxone_ipam_ip_space" "test1" {
-		name = "test1"
+		name = %q
 	}
 	resource "bloxone_ipam_subnet" "test1" {
 		address = "192.168.1.0"
@@ -361,12 +368,12 @@ func testAccMultipleIPSpaceAndSubnet() string {
 		space = bloxone_ipam_ip_space.test1.id
 	}
 	resource "bloxone_ipam_ip_space" "test2" {
-		name = "test2"
+		name = %q
 	}
 	resource "bloxone_ipam_subnet" "test2" {
 		address = "10.0.0.0"
 		cidr = 24
 		space = bloxone_ipam_ip_space.test2.id
 	}
-`
+`, spaceName1, spaceName2, spaceName3)
 }

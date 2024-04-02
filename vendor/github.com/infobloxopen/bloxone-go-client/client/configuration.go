@@ -18,10 +18,9 @@ const (
 	HeaderClient        = "x-infoblox-client"
 	HeaderSDK           = "x-infoblox-sdk"
 	HeaderAuthorization = "Authorization"
+	version             = "0.1"
+	sdkIdentifier       = "golang-sdk"
 )
-
-const version = "0.1"
-const sdkIdentifier = "golang-sdk"
 
 // Configuration stores the configuration of the API client
 type Configuration struct {
@@ -43,6 +42,10 @@ type Configuration struct {
 	// HTTPClient to use for the SDK.
 	// Optional. The default HTTPClient will be used if not provided.
 	HTTPClient *http.Client
+
+	// Default tags the client can set for objects that has tags support.
+	// Optional. The default is an empty map.
+	DefaultTags map[string]string
 }
 
 func (c Configuration) internal(basePath string) (*internal.Configuration, error) {
@@ -83,12 +86,15 @@ func (c Configuration) internal(basePath string) (*internal.Configuration, error
 
 	userAgent := fmt.Sprintf("bloxone-%s/%s", sdkIdentifier, version)
 
-	return &internal.Configuration{
+	ic := &internal.Configuration{
 		DefaultHeader:    defaultHeaders,
 		UserAgent:        userAgent,
 		Debug:            false,
 		OperationServers: nil,
 		Servers:          []internal.ServerConfiguration{{URL: cspURL}},
 		HTTPClient:       httpClient,
-	}, nil
+		DefaultTags:      c.DefaultTags,
+	}
+
+	return ic, nil
 }

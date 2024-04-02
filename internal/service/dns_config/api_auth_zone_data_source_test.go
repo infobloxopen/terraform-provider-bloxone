@@ -14,15 +14,16 @@ import (
 func TestAccAuthZoneDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_auth_zones.test"
 	resourceName := "bloxone_dns_auth_zone.test"
+	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 	var v dns_config.ConfigAuthZone
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckAuthZoneDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAuthZoneDataSourceConfigFilters("tf-acc-test.com.", "cloud"),
+				Config: testAccAuthZoneDataSourceConfigFilters(zoneFqdn, "cloud"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
@@ -36,14 +37,15 @@ func TestAccAuthZoneDataSource_Filters(t *testing.T) {
 func TestAccAuthZoneDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_auth_zones.test"
 	resourceName := "bloxone_dns_auth_zone.test"
+	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 	var v dns_config.ConfigAuthZone
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckAuthZoneDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAuthZoneDataSourceConfigTagFilters("tf-acc-test.com.", "cloud", "value1"),
+				Config: testAccAuthZoneDataSourceConfigTagFilters(zoneFqdn, "cloud", acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckAuthZoneExists(context.Background(), resourceName, &v),

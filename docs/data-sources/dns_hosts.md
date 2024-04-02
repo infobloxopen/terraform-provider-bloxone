@@ -40,11 +40,21 @@ data "bloxone_dns_hosts" "all_dns_hosts_by_tag" {
 ### Optional
 
 - `filters` (Map of String) Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
+- `retry_if_not_found` (Boolean) If set to `true`, the data source will retry until a matching host is found, or until the Read Timeout expires.
 - `tag_filters` (Map of String) Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
+- `timeouts` (Attributes) (see [below for nested schema](#nestedatt--timeouts))
 
 ### Read-Only
 
 - `results` (Attributes List) (see [below for nested schema](#nestedatt--results))
+
+<a id="nestedatt--timeouts"></a>
+### Nested Schema for `timeouts`
+
+Optional:
+
+- `read` (String) [Duration](https://pkg.go.dev/time#ParseDuration) to wait before being considered a timeout during read operations. Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Default is 20m.
+
 
 <a id="nestedatt--results"></a>
 ### Nested Schema for `results`
@@ -72,6 +82,7 @@ Read-Only:
 - `protocol_absolute_name` (String) Host FQDN in punycode.
 - `provider_id` (String) External provider identifier.
 - `site_id` (String) Host site ID.
+- `tags_all` (Map of String) Host tagging specifics includes default tags.
 - `type` (String) Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services,  * _microsoft_active_directory_: host type is Microsoft Active Directory,  * _google_cloud_platform_: host type is Google Cloud Platform.
 
 <a id="nestedatt--results--associated_server"></a>

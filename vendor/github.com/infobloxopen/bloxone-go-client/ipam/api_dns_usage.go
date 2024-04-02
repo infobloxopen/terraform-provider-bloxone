@@ -22,7 +22,6 @@ import (
 )
 
 type DnsUsageAPI interface {
-
 	/*
 		DnsUsageList Retrieve DNS usage for multiple objects.
 
@@ -36,7 +35,6 @@ type DnsUsageAPI interface {
 	// DnsUsageListExecute executes the request
 	//  @return IpamsvcListDNSUsageResponse
 	DnsUsageListExecute(r ApiDnsUsageListRequest) (*IpamsvcListDNSUsageResponse, *http.Response, error)
-
 	/*
 		DnsUsageRead Retrieve the DNS usage.
 
@@ -220,7 +218,6 @@ func (a *DnsUsageAPIService) DnsUsageListExecute(r ApiDnsUsageListRequest) (*Ipa
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -342,6 +339,5 @@ func (a *DnsUsageAPIService) DnsUsageReadExecute(r ApiDnsUsageReadRequest) (*Ipa
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

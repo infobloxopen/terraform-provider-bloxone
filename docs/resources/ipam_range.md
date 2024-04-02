@@ -24,6 +24,12 @@ resource "bloxone_ipam_ip_space" "example" {
   }
 }
 
+data "bloxone_dhcp_option_codes" "option_code" {
+  filters = {
+    name = "domain-name-servers"
+  }
+}
+
 resource "bloxone_ipam_subnet" "example" {
   name    = "example"
   space   = bloxone_ipam_ip_space.example.id
@@ -33,6 +39,15 @@ resource "bloxone_ipam_subnet" "example" {
   tags = {
     location = "site1"
   }
+
+  //dhcp options
+  dhcp_options = [
+    {
+      option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
+      option_value = "10.0.0.1"
+      type         = "option"
+    }
+  ]
 }
 
 resource "bloxone_ipam_range" "example" {
@@ -85,6 +100,7 @@ resource "bloxone_ipam_range" "example" {
 - `inheritance_parent` (String) The resource identifier.
 - `parent` (String) The resource identifier.
 - `protocol` (String) The type of protocol (_ip4_ or _ip6_).
+- `tags_all` (Map of String) The tags for the range in JSON format including default tags.
 - `threshold` (Attributes) (see [below for nested schema](#nestedatt--threshold))
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `utilization` (Attributes) (see [below for nested schema](#nestedatt--utilization))

@@ -26,6 +26,12 @@ resource "bloxone_ipam_address_block" "example" {
   space   = bloxone_ipam_ip_space.example.id
 }
 
+data "bloxone_dhcp_option_codes" "option_code" {
+  filters = {
+    name = "domain-name-servers"
+  }
+}
+
 # Static address
 resource "bloxone_ipam_subnet" "example" {
   address = "10.0.0.0"
@@ -38,6 +44,14 @@ resource "bloxone_ipam_subnet" "example" {
   tags = {
     site = "Site A"
   }
+  //dhcp options
+  dhcp_options = [
+    {
+      option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
+      option_value = "10.0.0.1"
+      type         = "option"
+    }
+  ]
 }
 
 # Next available subnet
@@ -118,6 +132,7 @@ resource "bloxone_ipam_subnet" "example_na_s" {
 - `inheritance_parent` (String) The resource identifier.
 - `parent` (String) The resource identifier.
 - `protocol` (String) The type of protocol of the subnet (_ip4_ or _ip6_).
+- `tags_all` (Map of String) The tags for the subnet in JSON format including default tags.
 - `threshold` (Attributes) (see [below for nested schema](#nestedatt--threshold))
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `usage` (List of String) The usage is a combination of indicators, each tracking a specific associated use. Listed below are usage indicators with their meaning:

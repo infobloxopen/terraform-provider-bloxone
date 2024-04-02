@@ -62,6 +62,7 @@ Optional:
 Read-Only:
 
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) Tagging specifics includes default tags.
 
 <a id="nestedatt--results--external_primaries"></a>
 ### Nested Schema for `results.external_primaries`
@@ -85,7 +86,7 @@ Read-Only:
 <a id="nestedatt--results--external_primaries--tsig_key"></a>
 ### Nested Schema for `results.external_primaries.tsig_key`
 
-Required:
+Optional:
 
 - `key` (String) The resource identifier.
 
@@ -127,7 +128,7 @@ Read-Only:
 <a id="nestedatt--results--external_secondaries--tsig_key"></a>
 ### Nested Schema for `results.external_secondaries.tsig_key`
 
-Required:
+Optional:
 
 - `key` (String) The resource identifier.
 

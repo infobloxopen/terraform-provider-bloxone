@@ -13,12 +13,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -42,6 +43,7 @@ type IpamsvcFixedAddressModel struct {
 	Name                      types.String      `tfsdk:"name"`
 	Parent                    types.String      `tfsdk:"parent"`
 	Tags                      types.Map         `tfsdk:"tags"`
+	TagsAll                   types.Map         `tfsdk:"tags_all"`
 	UpdatedAt                 timetypes.RFC3339 `tfsdk:"updated_at"`
 	NextAvailableId           types.String      `tfsdk:"next_available_id"`
 }
@@ -66,6 +68,7 @@ var IpamsvcFixedAddressAttrTypes = map[string]attr.Type{
 	"name":                         types.StringType,
 	"parent":                       types.StringType,
 	"tags":                         types.MapType{ElemType: types.StringType},
+	"tags_all":                     types.MapType{ElemType: types.StringType},
 	"updated_at":                   timetypes.RFC3339Type{},
 	"next_available_id":            types.StringType,
 }
@@ -84,6 +87,8 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The description for the fixed address. May contain 0 to 1024 characters. Can include UTF-8.",
 	},
 	"created_at": schema.StringAttribute{
@@ -106,18 +111,26 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"header_option_filename": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The configuration for header option filename field.",
 	},
 	"header_option_server_address": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The configuration for header option server address field.",
 	},
 	"header_option_server_name": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The configuration for header option server name field.",
 	},
 	"hostname": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The DHCP host name associated with this fixed address. It is of FQDN type and it defaults to empty.",
 	},
 	"id": schema.StringAttribute{
@@ -168,6 +181,8 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"name": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The name of the fixed address. May contain 1 to 256 characters. Can include UTF-8.",
 	},
 	"parent": schema.StringAttribute{
@@ -178,6 +193,11 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		ElementType:         types.StringType,
 		Optional:            true,
 		MarkdownDescription: "The tags for the fixed address in JSON format.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the fixed address in JSON format including default tags.",
 	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -239,12 +259,13 @@ func (m *IpamsvcFixedAddressModel) Expand(ctx context.Context, diags *diag.Diagn
 	return to
 }
 
-func FlattenIpamsvcFixedAddress(ctx context.Context, from *ipam.IpamsvcFixedAddress, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcFixedAddressDataSource(ctx context.Context, from *ipam.IpamsvcFixedAddress, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcFixedAddressAttrTypes)
 	}
 	m := IpamsvcFixedAddressModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcFixedAddressAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -275,6 +296,7 @@ func (m *IpamsvcFixedAddressModel) Flatten(ctx context.Context, from *ipam.Ipams
 	m.MatchValue = flex.FlattenString(from.MatchValue)
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Parent = flex.FlattenStringPointer(from.Parent)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
+
 }

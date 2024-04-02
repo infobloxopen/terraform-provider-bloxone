@@ -9,7 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_data"
@@ -27,14 +26,16 @@ type BloxOneProvider struct {
 	// version is set to the provider version on release, "dev" when the
 	// provider is built and ran locally, and "test" when running acceptance
 	// testing.
-	version string
-	commit  string
+	version     string
+	commit      string
+	defaultTags map[string]string
 }
 
 // BloxOneProviderModel describes the provider data model.
 type BloxOneProviderModel struct {
-	CSPUrl types.String `tfsdk:"csp_url"`
-	APIKey types.String `tfsdk:"api_key"`
+	CSPUrl      types.String `tfsdk:"csp_url"`
+	APIKey      types.String `tfsdk:"api_key"`
+	DefaultTags types.Map    `tfsdk:"default_tags"`
 }
 
 func (p *BloxOneProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -44,6 +45,7 @@ func (p *BloxOneProvider) Metadata(_ context.Context, _ provider.MetadataRequest
 
 func (p *BloxOneProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		Description: "The BloxOne provider is used to interact with the resources supported by Infoblox BloxOne API.",
 		Attributes: map[string]schema.Attribute{
 			"csp_url": schema.StringAttribute{
 				MarkdownDescription: "URL for BloxOne Cloud Services Portal. Can also be configured using the `BLOXONE_CSP_URL` environment variable.",
@@ -51,6 +53,11 @@ func (p *BloxOneProvider) Schema(_ context.Context, _ provider.SchemaRequest, re
 			},
 			"api_key": schema.StringAttribute{
 				MarkdownDescription: "API key for accessing the BloxOne API. Can also be configured by using the `BLOXONE_API_KEY` environment variable. https://docs.infoblox.com/space/BloxOneCloud/35430405/Configuring+User+API+Keys",
+				Optional:            true,
+			},
+			"default_tags": schema.MapAttribute{
+				ElementType:         types.StringType,
+				MarkdownDescription: "Tags to default for all resources.",
 				Optional:            true,
 			},
 		},
@@ -62,15 +69,22 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
+	dfTags := p.defaultTags
+	if !data.DefaultTags.IsNull() && !data.DefaultTags.IsUnknown() {
+		dfTags := make(map[string]string, len(data.DefaultTags.Elements()))
+		resp.Diagnostics.Append(data.DefaultTags.ElementsAs(ctx, &dfTags, false)...)
+	}
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	client, err := bloxoneclient.NewAPIClient(bloxoneclient.Configuration{
-		ClientName: fmt.Sprintf("terraform/%s#%s", p.version, p.commit),
-		APIKey:     data.APIKey.ValueString(),
-		CSPURL:     data.CSPUrl.ValueString(),
+		ClientName:  fmt.Sprintf("terraform/%s#%s", p.version, p.commit),
+		APIKey:      data.APIKey.ValueString(),
+		CSPURL:      data.CSPUrl.ValueString(),
+		DefaultTags: dfTags,
 	})
+
 	if err != nil {
 		resp.Diagnostics.AddError("Client error", fmt.Sprintf("Unable to create new API client: %s", err))
 	}
@@ -186,6 +200,16 @@ func New(version, commit string) func() provider.Provider {
 		return &BloxOneProvider{
 			version: version,
 			commit:  commit,
+		}
+	}
+}
+
+func NewWithTags(tags map[string]string) func() provider.Provider {
+	return func() provider.Provider {
+		return &BloxOneProvider{
+			version:     "test",
+			commit:      "test",
+			defaultTags: tags,
 		}
 	}
 }

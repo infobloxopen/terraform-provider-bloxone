@@ -16,14 +16,23 @@ func TestAccOptionCodeDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dhcp_option_codes.test"
 	resourceName := "bloxone_dhcp_option_code.test"
 	var v ipam.IpamsvcOptionCode
+	optionSpaceName := acctest.RandomNameWithPrefix("option-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckOptionCodeDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOptionCodeDataSourceConfigFilters("234", "test_option_code", "boolean"),
+				Config: testAccOptionCodeDataSourceConfigFilters(optionSpaceName, "234", "test_option_code", "boolean", "name"),
+				Check: resource.ComposeTestCheckFunc(
+					append([]resource.TestCheckFunc{
+						testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
+					}, testAccCheckOptionCodeResourceAttrPair(resourceName, dataSourceName)...)...,
+				),
+			},
+			{
+				Config: testAccOptionCodeDataSourceConfigFilters(optionSpaceName, "234", "test_option_code", "boolean", "code"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
@@ -49,21 +58,21 @@ func testAccCheckOptionCodeResourceAttrPair(resourceName, dataSourceName string)
 	}
 }
 
-func testAccOptionCodeDataSourceConfigFilters(code, name, type_ string) string {
+func testAccOptionCodeDataSourceConfigFilters(optionSpaceName, code, name, optionItemType string, filterBy string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_option_code" "test" {
-  code = %q
-  name = %q
+  code = %[1]q
+  name = %[2]q
   option_space = bloxone_dhcp_option_space.test.id
-  type = %q
+  type = %[3]q
 }
 
 data "bloxone_dhcp_option_codes" "test" {
   filters = {
-    name = bloxone_dhcp_option_code.test.name
+    %[4]s = bloxone_dhcp_option_code.test.%[4]s
   }
 }
-`, code, name, type_)
+`, code, name, optionItemType, filterBy)
 
-	return strings.Join([]string{testAccOptionSpace("test_option_space", "ip4"), config}, "")
+	return strings.Join([]string{testAccBaseWithOptionSpace(optionSpaceName, "ip4"), config}, "")
 }

@@ -11,11 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -40,6 +40,7 @@ type IpamsvcRangeModel struct {
 	Space                    types.String      `tfsdk:"space"`
 	Start                    types.String      `tfsdk:"start"`
 	Tags                     types.Map         `tfsdk:"tags"`
+	TagsAll                  types.Map         `tfsdk:"tags_all"`
 	Threshold                types.Object      `tfsdk:"threshold"`
 	UpdatedAt                timetypes.RFC3339 `tfsdk:"updated_at"`
 	Utilization              types.Object      `tfsdk:"utilization"`
@@ -65,6 +66,7 @@ var IpamsvcRangeAttrTypes = map[string]attr.Type{
 	"space":                      types.StringType,
 	"start":                      types.StringType,
 	"tags":                       types.MapType{ElemType: types.StringType},
+	"tags_all":                   types.MapType{ElemType: types.StringType},
 	"threshold":                  types.ObjectType{AttrTypes: IpamsvcUtilizationThresholdAttrTypes},
 	"updated_at":                 timetypes.RFC3339Type{},
 	"utilization":                types.ObjectType{AttrTypes: IpamsvcUtilizationAttrTypes},
@@ -74,6 +76,8 @@ var IpamsvcRangeAttrTypes = map[string]attr.Type{
 var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 	"comment": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString(""),
 		Validators: []validator.String{
 			stringvalidator.LengthBetween(0, 1024),
 		},
@@ -87,6 +91,7 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 	"dhcp_host": schema.StringAttribute{
 		Optional:            true,
 		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The resource identifier.",
 	},
 	"dhcp_options": schema.ListNestedAttribute{
@@ -148,6 +153,8 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"name": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString(""),
 		Validators: []validator.String{
 			stringvalidator.LengthBetween(1, 256),
 		},
@@ -176,6 +183,11 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 		ElementType:         types.StringType,
 		Optional:            true,
 		MarkdownDescription: "The tags for the range in JSON format.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the range in JSON format including default tags.",
 	},
 	"threshold": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationThresholdResourceSchemaAttributes,
@@ -236,12 +248,13 @@ func (m *IpamsvcRangeModel) Expand(ctx context.Context, diags *diag.Diagnostics,
 	return to
 }
 
-func FlattenIpamsvcRange(ctx context.Context, from *ipam.IpamsvcRange, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcRangeDataSource(ctx context.Context, from *ipam.IpamsvcRange, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcRangeAttrTypes)
 	}
 	m := IpamsvcRangeModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcRangeAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -256,7 +269,7 @@ func (m *IpamsvcRangeModel) Flatten(ctx context.Context, from *ipam.IpamsvcRange
 	}
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
-	m.DhcpHost = flex.FlattenStringPointer(from.DhcpHost)
+	m.DhcpHost = flex.FlattenStringPointerWithNilAsEmpty(from.DhcpHost)
 	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DisableDhcp = types.BoolPointerValue(from.DisableDhcp)
 	m.End = flex.FlattenString(from.End)
@@ -271,7 +284,7 @@ func (m *IpamsvcRangeModel) Flatten(ctx context.Context, from *ipam.IpamsvcRange
 	m.Protocol = flex.FlattenStringPointer(from.Protocol)
 	m.Space = flex.FlattenStringPointer(from.Space)
 	m.Start = flex.FlattenString(from.Start)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Threshold = FlattenIpamsvcUtilizationThreshold(ctx, from.Threshold, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.Utilization = FlattenIpamsvcUtilization(ctx, from.Utilization, diags)

@@ -20,12 +20,27 @@ resource "bloxone_ipam_ip_space" "example" {
   name = "example_ip_space"
 }
 
+data "bloxone_dhcp_option_codes" "option_code" {
+  filters = {
+    name = "domain-name-servers"
+  }
+}
+
 resource "bloxone_ipam_ip_space" "example_tags" {
   name    = "example_ip_space_tags"
   comment = "Example IP space with tags created by the terraform provider"
   tags = {
     location = "site1"
   }
+
+  //dhcp options
+  dhcp_options = [
+    {
+      option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
+      option_value = "10.0.0.1"
+      type         = "option"
+    }
+  ]
 }
 ```
 
@@ -79,6 +94,7 @@ resource "bloxone_ipam_ip_space" "example_tags" {
 - `asm_scope_flag` (Number) The number of times the automated scope management usage limits have been exceeded for any of the subnets in this IP space.
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) The tags of the IP space in JSON format including default tags.
 - `threshold` (Attributes) (see [below for nested schema](#nestedatt--threshold))
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `utilization` (Attributes) (see [below for nested schema](#nestedatt--utilization))

@@ -18,18 +18,19 @@ import (
 func TestAccOptionGroupResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_group.test"
 	var v ipam.IpamsvcOptionGroup
+	optionGroupName := acctest.RandomNameWithPrefix("option-group")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionGroupBasicConfig("option_group_test", "ip4"),
+				Config: testAccOptionGroupBasicConfig(optionGroupName, "ip4"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionGroupExists(context.Background(), resourceName, &v),
 					// TODO: check and validate these
-					resource.TestCheckResourceAttr(resourceName, "name", "option_group_test"),
+					resource.TestCheckResourceAttr(resourceName, "name", optionGroupName),
 					resource.TestCheckResourceAttr(resourceName, "protocol", "ip4"),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
@@ -46,14 +47,15 @@ func TestAccOptionGroupResource_basic(t *testing.T) {
 func TestAccOptionGroupResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dhcp_option_group.test"
 	var v ipam.IpamsvcOptionGroup
+	optionGroupName := acctest.RandomNameWithPrefix("option-group")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckOptionGroupDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOptionGroupBasicConfig("option_group_test", "ip4"),
+				Config: testAccOptionGroupBasicConfig(optionGroupName, "ip4"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionGroupExists(context.Background(), resourceName, &v),
 					testAccCheckOptionGroupDisappears(context.Background(), &v),
@@ -67,14 +69,15 @@ func TestAccOptionGroupResource_disappears(t *testing.T) {
 func TestAccOptionGroupResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_group.test_comment"
 	var v ipam.IpamsvcOptionGroup
+	optionGroupName := acctest.RandomNameWithPrefix("option-group")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionGroupComment("option_group_test", "ip4", "test comment"),
+				Config: testAccOptionGroupComment(optionGroupName, "ip4", "test comment"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionGroupExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "test comment"),
@@ -82,7 +85,7 @@ func TestAccOptionGroupResource_Comment(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccOptionGroupComment("option_group_test", "ip4", "test comment update"),
+				Config: testAccOptionGroupComment(optionGroupName, "ip4", "test comment update"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionGroupExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "test comment update"),
@@ -96,14 +99,16 @@ func TestAccOptionGroupResource_Comment(t *testing.T) {
 func TestAccOptionGroupResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_group.test_dhcp_options"
 	var v ipam.IpamsvcOptionGroup
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
+	optionGroupName := acctest.RandomNameWithPrefix("option-group")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionGroupDhcpOptions("option_group_test", "ip4", "option", "true"),
+				Config: testAccOptionGroupDhcpOptions(optionSpaceName, optionGroupName, "ip4", "option", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionGroupExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
@@ -113,7 +118,7 @@ func TestAccOptionGroupResource_DhcpOptions(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccOptionGroupDhcpOptions("option_group_test", "ip4", "option", "false"),
+				Config: testAccOptionGroupDhcpOptions(optionSpaceName, optionGroupName, "ip4", "option", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionGroupExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
@@ -129,17 +134,18 @@ func TestAccOptionGroupResource_DhcpOptions(t *testing.T) {
 func TestAccOptionGroupResource_Name(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_group.test_name"
 	var v ipam.IpamsvcOptionGroup
+	optionGroupName := acctest.RandomNameWithPrefix("option-group")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionGroupName("option_group_test", "ip4"),
+				Config: testAccOptionGroupName(optionGroupName, "ip4"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionGroupExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "option_group_test"),
+					resource.TestCheckResourceAttr(resourceName, "name", optionGroupName),
 				),
 			},
 			// Update and Read
@@ -158,14 +164,15 @@ func TestAccOptionGroupResource_Name(t *testing.T) {
 func TestAccOptionGroupResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_group.test_tags"
 	var v ipam.IpamsvcOptionGroup
+	optionGroupName := acctest.RandomNameWithPrefix("option-group")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactoriesWithTags,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionGroupTags("option_group_test", "ip4", map[string]string{
+				Config: testAccOptionGroupTags(optionGroupName, "ip4", map[string]string{
 					"tag1": "value1",
 					"tag2": "value2",
 				}),
@@ -173,11 +180,14 @@ func TestAccOptionGroupResource_Tags(t *testing.T) {
 					testAccCheckOptionGroupExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag1", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccOptionGroupTags("option_group_test", "ip4", map[string]string{
+				Config: testAccOptionGroupTags(optionGroupName, "ip4", map[string]string{
 					"tag2": "value2changed",
 					"tag3": "value3",
 				}),
@@ -185,6 +195,9 @@ func TestAccOptionGroupResource_Tags(t *testing.T) {
 					testAccCheckOptionGroupExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2changed"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag3", "value3"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2changed"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag3", "value3"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -265,8 +278,8 @@ resource "bloxone_dhcp_option_group" "test_comment" {
 `, name, protocol, comment)
 }
 
-func testAccOptionGroupDhcpOptions(name, protocol, type_, optValue string) string {
-	config := fmt.Sprintf(`
+func testAccOptionGroupDhcpOptions(optionSpaceName, name, protocol, optionItemType, optValue string) string {
+	config := fmt.Sprintf(` 
 resource "bloxone_dhcp_option_group" "test_dhcp_options" {
     name = %q
     protocol = %q
@@ -278,9 +291,9 @@ resource "bloxone_dhcp_option_group" "test_dhcp_options" {
       }
     ]
 }
-`, name, protocol, type_, optValue)
+`, name, protocol, optionItemType, optValue)
 
-	return strings.Join([]string{testAccOptionCodeBasicConfig("234", "test_dhcp_option_code", "boolean"), config}, "")
+	return strings.Join([]string{testAccBaseWithOptionCode(optionSpaceName), config}, "")
 }
 
 func testAccOptionGroupName(name, protocol string) string {
@@ -308,4 +321,16 @@ resource "bloxone_dhcp_option_group" "test_tags" {
     tags = %s
 }
 `, name, protocol, tagsStr)
+}
+
+func testAccBaseWithOptionCode(optionSpaceName string) string {
+	config := `
+resource "bloxone_dhcp_option_code" "test" {
+    code = 234
+    name = "test_dhcp_option_code"
+    option_space = bloxone_dhcp_option_space.test.id
+    type = "boolean"
+}
+`
+	return strings.Join([]string{testAccBaseWithOptionSpace(optionSpaceName, "ip4"), config}, "")
 }

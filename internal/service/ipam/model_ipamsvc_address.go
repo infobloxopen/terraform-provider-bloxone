@@ -11,10 +11,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -39,6 +39,7 @@ type IpamsvcAddressModel struct {
 	Space             types.String      `tfsdk:"space"`
 	State             types.String      `tfsdk:"state"`
 	Tags              types.Map         `tfsdk:"tags"`
+	TagsAll           types.Map         `tfsdk:"tags_all"`
 	UpdatedAt         timetypes.RFC3339 `tfsdk:"updated_at"`
 	Usage             types.List        `tfsdk:"usage"`
 	NextAvailableId   types.String      `tfsdk:"next_available_id"`
@@ -63,6 +64,7 @@ var IpamsvcAddressAttrTypes = map[string]attr.Type{
 	"space":              types.StringType,
 	"state":              types.StringType,
 	"tags":               types.MapType{ElemType: types.StringType},
+	"tags_all":           types.MapType{ElemType: types.StringType},
 	"updated_at":         timetypes.RFC3339Type{},
 	"usage":              types.ListType{ElemType: types.StringType},
 	"next_available_id":  types.StringType,
@@ -79,6 +81,8 @@ var IpamsvcAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The description for the address object. May contain 0 to 1024 characters. Can include UTF-8.",
 	},
 	"created_at": schema.StringAttribute{
@@ -110,6 +114,8 @@ var IpamsvcAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"hwaddr": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The hardware address associated with this IP address.",
 	},
 	"id": schema.StringAttribute{
@@ -121,6 +127,8 @@ var IpamsvcAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"interface": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The name of the network interface card (NIC) associated with the address, if any.",
 	},
 	"names": schema.ListNestedAttribute{
@@ -157,6 +165,11 @@ var IpamsvcAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		ElementType:         types.StringType,
 		Optional:            true,
 		MarkdownDescription: "The tags for this address in JSON format.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the address in JSON format including default tags.",
 	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -220,12 +233,13 @@ func (m *IpamsvcAddressModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenIpamsvcAddress(ctx context.Context, from *ipam.IpamsvcAddress, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcAddressDataSource(ctx context.Context, from *ipam.IpamsvcAddress, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcAddressAttrTypes)
 	}
 	m := IpamsvcAddressModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcAddressAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -255,7 +269,7 @@ func (m *IpamsvcAddressModel) Flatten(ctx context.Context, from *ipam.IpamsvcAdd
 	m.Range = flex.FlattenStringPointer(from.Range)
 	m.Space = flex.FlattenStringPointer(from.Space)
 	m.State = flex.FlattenStringPointer(from.State)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.Usage = flex.FlattenFrameworkListString(ctx, from.Usage, diags)
 }

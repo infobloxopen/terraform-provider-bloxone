@@ -5,11 +5,26 @@ resource "bloxone_ipam_ip_space" "example" {
   }
 }
 
+data "bloxone_dhcp_option_codes" "option_code" {
+  filters = {
+    name = "domain-name-servers"
+  }
+}
+
 resource "bloxone_ipam_address_block" "example" {
   address = "192.168.1.0"
   cidr    = 24
   name    = "example_address_block"
   space   = bloxone_ipam_ip_space.example.id
+
+  //dhcp options
+  dhcp_options = [
+    {
+      option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
+      option_value = "10.0.0.1"
+      type         = "option"
+    }
+  ]
 }
 
 resource "bloxone_ipam_address_block" "example_tags" {

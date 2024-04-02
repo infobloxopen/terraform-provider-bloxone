@@ -13,17 +13,18 @@ import (
 )
 
 func TestAccServerDataSource_Filters(t *testing.T) {
-	dataSourceName := "data.bloxone_dhcp_server.test"
+	dataSourceName := "data.bloxone_dhcp_servers.test"
 	resourceName := "bloxone_dhcp_server.test"
 	var v ipam.IpamsvcServer
+	dhcpServerName := acctest.RandomNameWithPrefix("server")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckServerDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccServerDataSourceConfigFilters("TEST-DHCP-SERVER"),
+				Config: testAccServerDataSourceConfigFilters(dhcpServerName),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckServerExists(context.Background(), resourceName, &v),
@@ -35,16 +36,18 @@ func TestAccServerDataSource_Filters(t *testing.T) {
 }
 
 func TestAccServerDataSource_TagFilters(t *testing.T) {
-	dataSourceName := "data.bloxone_dhcp_server.test"
+	dataSourceName := "data.bloxone_dhcp_servers.test"
 	resourceName := "bloxone_dhcp_server.test"
 	var v ipam.IpamsvcServer
-	resource.Test(t, resource.TestCase{
+	dhcpServerName := acctest.RandomNameWithPrefix("server")
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckServerDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccServerDataSourceConfigTagFilters("TEST-DHCP-SERVER", "value1"),
+				Config: testAccServerDataSourceConfigTagFilters(dhcpServerName, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckServerExists(context.Background(), resourceName, &v),

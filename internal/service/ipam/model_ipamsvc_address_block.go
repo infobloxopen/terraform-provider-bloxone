@@ -19,9 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-
 	"github.com/infobloxopen/bloxone-go-client/ipam"
-
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -60,6 +58,7 @@ type IpamsvcAddressBlockModel struct {
 	Protocol                   types.String      `tfsdk:"protocol"`
 	Space                      types.String      `tfsdk:"space"`
 	Tags                       types.Map         `tfsdk:"tags"`
+	TagsAll                    types.Map         `tfsdk:"tags_all"`
 	Threshold                  types.Object      `tfsdk:"threshold"`
 	UpdatedAt                  timetypes.RFC3339 `tfsdk:"updated_at"`
 	Usage                      types.List        `tfsdk:"usage"`
@@ -103,6 +102,7 @@ var IpamsvcAddressBlockAttrTypes = map[string]attr.Type{
 	"protocol":                      types.StringType,
 	"space":                         types.StringType,
 	"tags":                          types.MapType{ElemType: types.StringType},
+	"tags_all":                      types.MapType{ElemType: types.StringType},
 	"threshold":                     types.ObjectType{AttrTypes: IpamsvcUtilizationThresholdAttrTypes},
 	"updated_at":                    timetypes.RFC3339Type{},
 	"usage":                         types.ListType{ElemType: types.StringType},
@@ -150,6 +150,8 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The description for the address block. May contain 0 to 1024 characters. Can include UTF-8.",
 	},
 	"created_at": schema.StringAttribute{
@@ -180,8 +182,11 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"ddns_domain": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The domain suffix for DDNS updates. FQDN, may be empty.  Defaults to empty.",
 	},
+
 	"ddns_generate_name": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
@@ -258,14 +263,20 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"header_option_filename": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The configuration for header option filename field.",
 	},
 	"header_option_server_address": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The configuration for header option server address field.",
 	},
 	"header_option_server_name": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The configuration for header option server name field.",
 	},
 	"hostname_rewrite_char": schema.StringAttribute{
@@ -308,6 +319,8 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"name": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The name of the address block. May contain 1 to 256 characters. Can include UTF-8.",
 	},
 	"parent": schema.StringAttribute{
@@ -329,6 +342,11 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		ElementType:         types.StringType,
 		Optional:            true,
 		MarkdownDescription: "The tags for the address block in JSON format.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the address block in JSON format including default tags.",
 	},
 	"threshold": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationThresholdResourceSchemaAttributes,
@@ -387,6 +405,7 @@ func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagn
 	if m == nil {
 		return nil
 	}
+
 	to := &ipam.IpamsvcAddressBlock{
 		AsmConfig:                  ExpandIpamsvcASMConfig(ctx, m.AsmConfig, diags),
 		Cidr:                       flex.ExpandInt64Pointer(m.Cidr),
@@ -434,12 +453,13 @@ func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagn
 	return to
 }
 
-func FlattenIpamsvcAddressBlock(ctx context.Context, from *ipam.IpamsvcAddressBlock, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcAddressBlockDataSource(ctx context.Context, from *ipam.IpamsvcAddressBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcAddressBlockAttrTypes)
 	}
 	m := IpamsvcAddressBlockModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcAddressBlockAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -452,6 +472,7 @@ func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.Ipams
 	if m == nil {
 		*m = IpamsvcAddressBlockModel{}
 	}
+
 	m.Address = flex.FlattenStringPointer(from.Address)
 	m.AsmConfig = FlattenIpamsvcASMConfig(ctx, from.AsmConfig, diags)
 	m.AsmScopeFlag = flex.FlattenInt64(*from.AsmScopeFlag)
@@ -485,10 +506,11 @@ func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.Ipams
 	m.Parent = flex.FlattenStringPointer(from.Parent)
 	m.Protocol = flex.FlattenStringPointer(from.Protocol)
 	m.Space = flex.FlattenStringPointer(from.Space)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Threshold = FlattenIpamsvcUtilizationThreshold(ctx, from.Threshold, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.Usage = flex.FlattenFrameworkListString(ctx, from.Usage, diags)
 	m.Utilization = FlattenIpamsvcUtilization(ctx, from.Utilization, diags)
 	m.UtilizationV6 = FlattenIpamsvcUtilizationV6(ctx, from.UtilizationV6, diags)
+
 }

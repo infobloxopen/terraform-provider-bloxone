@@ -19,7 +19,7 @@ func TestAccAclResource_basic(t *testing.T) {
 	var v dns_config.ConfigACL
 	var name = acctest.RandomNameWithPrefix("acl")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -43,7 +43,7 @@ func TestAccAclResource_disappears(t *testing.T) {
 	var v dns_config.ConfigACL
 	var name = acctest.RandomNameWithPrefix("acl")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckAclDestroy(context.Background(), &v),
@@ -65,7 +65,7 @@ func TestAccAclResource_Comment(t *testing.T) {
 	var v dns_config.ConfigACL
 	var name = acctest.RandomNameWithPrefix("acl")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -95,7 +95,7 @@ func TestAccAclResource_List(t *testing.T) {
 	var v dns_config.ConfigACL
 	var name = acctest.RandomNameWithPrefix("acl")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -146,7 +146,7 @@ func TestAccAclResource_Name(t *testing.T) {
 	var v dns_config.ConfigACL
 	var name = acctest.RandomNameWithPrefix("acl")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -176,7 +176,7 @@ func TestAccAclResource_Tags(t *testing.T) {
 	var v dns_config.ConfigACL
 	var name = acctest.RandomNameWithPrefix("acl")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{

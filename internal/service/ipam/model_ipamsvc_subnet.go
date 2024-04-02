@@ -18,7 +18,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -64,6 +63,7 @@ type IpamsvcSubnetModel struct {
 	RenewTime                  types.Int64       `tfsdk:"renew_time"`
 	Space                      types.String      `tfsdk:"space"`
 	Tags                       types.Map         `tfsdk:"tags"`
+	TagsAll                    types.Map         `tfsdk:"tags_all"`
 	Threshold                  types.Object      `tfsdk:"threshold"`
 	UpdatedAt                  timetypes.RFC3339 `tfsdk:"updated_at"`
 	Usage                      types.List        `tfsdk:"usage"`
@@ -112,6 +112,7 @@ var IpamsvcSubnetAttrTypes = map[string]attr.Type{
 	"renew_time":                    types.Int64Type,
 	"space":                         types.StringType,
 	"tags":                          types.MapType{ElemType: types.StringType},
+	"tags_all":                      types.MapType{ElemType: types.StringType},
 	"threshold":                     types.ObjectType{AttrTypes: IpamsvcUtilizationThresholdAttrTypes},
 	"updated_at":                    timetypes.RFC3339Type{},
 	"usage":                         types.ListType{ElemType: types.StringType},
@@ -159,6 +160,8 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The description for the subnet. May contain 0 to 1024 characters. Can include UTF-8.",
 	},
 	"created_at": schema.StringAttribute{
@@ -194,6 +197,8 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"ddns_domain": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The domain suffix for DDNS updates. FQDN, may be empty.  Defaults to empty.",
 	},
 	"ddns_generate_name": schema.BoolAttribute{
@@ -249,6 +254,8 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"dhcp_host": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The resource identifier.",
 	},
 	"dhcp_options": schema.ListNestedAttribute{
@@ -280,14 +287,20 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"header_option_filename": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The configuration for header option filename field.",
 	},
 	"header_option_server_address": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The configuration for header option server address field.",
 	},
 	"header_option_server_name": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The configuration for header option server name field.",
 	},
 	"hostname_rewrite_char": schema.StringAttribute{
@@ -336,6 +349,8 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"name": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The name of the subnet. May contain 1 to 256 characters. Can include UTF-8.",
 	},
 	"parent": schema.StringAttribute{
@@ -365,6 +380,11 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		ElementType:         types.StringType,
 		Optional:            true,
 		MarkdownDescription: "The tags for the subnet in JSON format.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the subnet in JSON format including default tags.",
 	},
 	"threshold": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationThresholdResourceSchemaAttributes,
@@ -458,12 +478,13 @@ func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics
 	return to
 }
 
-func FlattenIpamsvcSubnet(ctx context.Context, from *ipam.IpamsvcSubnet, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcSubnetDataSource(ctx context.Context, from *ipam.IpamsvcSubnet, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcSubnetAttrTypes)
 	}
 	m := IpamsvcSubnetModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcSubnetAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -492,7 +513,7 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.IpamsvcSubn
 	m.DdnsUpdateOnRenew = types.BoolPointerValue(from.DdnsUpdateOnRenew)
 	m.DdnsUseConflictResolution = types.BoolPointerValue(from.DdnsUseConflictResolution)
 	m.DhcpConfig = FlattenIpamsvcDHCPConfig(ctx, from.DhcpConfig, diags)
-	m.DhcpHost = flex.FlattenStringPointer(from.DhcpHost)
+	m.DhcpHost = flex.FlattenStringPointerWithNilAsEmpty(from.DhcpHost)
 	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DhcpUtilization = FlattenIpamsvcDHCPUtilization(ctx, from.DhcpUtilization, diags)
 	m.DisableDhcp = types.BoolPointerValue(from.DisableDhcp)
@@ -514,7 +535,7 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.IpamsvcSubn
 	m.RebindTime = flex.FlattenInt64Pointer(from.RebindTime)
 	m.RenewTime = flex.FlattenInt64Pointer(from.RenewTime)
 	m.Space = flex.FlattenStringPointer(from.Space)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Threshold = FlattenIpamsvcUtilizationThreshold(ctx, from.Threshold, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.Usage = flex.FlattenFrameworkListString(ctx, from.Usage, diags)

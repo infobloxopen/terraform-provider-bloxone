@@ -20,6 +20,12 @@ resource "bloxone_dhcp_server" "example" {
   name = "example_dhcp_server"
 }
 
+data "bloxone_dhcp_option_codes" "option_code" {
+  filters = {
+    name = "domain-name-servers"
+  }
+}
+
 resource "bloxone_dhcp_server" "example_with_options" {
   name = "example_dhcp_server_with_options"
 
@@ -28,6 +34,15 @@ resource "bloxone_dhcp_server" "example_with_options" {
   tags = {
     site = "Site A"
   }
+
+  //dhcp options
+  dhcp_options = [
+    {
+      option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
+      option_value = "10.0.0.1"
+      type         = "option"
+    }
+  ]
 }
 ```
 
@@ -91,6 +106,7 @@ resource "bloxone_dhcp_server" "example_with_options" {
 
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) The tags for the DHCP Config Profile in JSON format including default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 
 <a id="nestedatt--ddns_zones"></a>

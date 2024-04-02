@@ -23,11 +23,26 @@ resource "bloxone_ipam_ip_space" "example" {
   }
 }
 
+data "bloxone_dhcp_option_codes" "option_code" {
+  filters = {
+    name = "domain-name-servers"
+  }
+}
+
 resource "bloxone_ipam_address_block" "example" {
   address = "192.168.1.0"
   cidr    = 24
   name    = "example_address_block"
   space   = bloxone_ipam_ip_space.example.id
+
+  //dhcp options
+  dhcp_options = [
+    {
+      option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
+      option_value = "10.0.0.1"
+      type         = "option"
+    }
+  ]
 }
 
 resource "bloxone_ipam_address_block" "example_tags" {
@@ -174,6 +189,7 @@ resource "bloxone_ipam_address_block" "example_na_ab" {
 - `id` (String) The resource identifier.
 - `parent` (String) The resource identifier.
 - `protocol` (String) The type of protocol of address block (_ip4_ or _ip6_).
+- `tags_all` (Map of String) The tags for the address block in JSON format including default tags.
 - `threshold` (Attributes) (see [below for nested schema](#nestedatt--threshold))
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `usage` (List of String) The usage is a combination of indicators, each tracking a specific associated use. Listed below are usage indicators with their meaning:

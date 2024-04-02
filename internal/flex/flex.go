@@ -3,6 +3,7 @@ package flex
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -18,15 +19,24 @@ type FrameworkElementFlExFunc[T any, U any] func(context.Context, T, *diag.Diagn
 type FrameworkElementFlExFuncExt[T any, U any, V any] func(context.Context, T, U, *diag.Diagnostics) V
 
 func FlattenString(s string) types.String {
-	if s == "" {
-		return types.StringNull()
-	}
 	return types.StringValue(s)
 }
 
 func FlattenStringPointer(s *string) types.String {
 	if s == nil {
 		return types.StringNull()
+	}
+	return FlattenString(*s)
+}
+
+// FlattenStringPointerWithNilAsEmpty is a helper function to flatten a string pointer to a string.
+// It returns an empty string if the pointer is nil.
+//
+// For most fields, API returns empty string instead of null to signify no data, so use FlattenStringPointer instead.
+// In cases where the API returns null, use FlattenStringPointerWithNilAsEmpty.
+func FlattenStringPointerWithNilAsEmpty(s *string) types.String {
+	if s == nil {
+		return types.StringValue("")
 	}
 	return FlattenString(*s)
 }
@@ -180,7 +190,16 @@ func ExpandFrameworkMapFilterString(ctx context.Context, tfMap types.Map, diags 
 
 	var filters []string
 	for k, v := range elements {
-		filters = append(filters, fmt.Sprintf("%s=='%s'", k, v))
+		// Terraform configuration only supports a single type for map.
+		// The API accepts both string and number values for filters.
+		// This is a workaround to send number values without quotes and string values with quotes.
+		if _, err := strconv.Atoi(v); err == nil {
+			filters = append(filters, fmt.Sprintf("%s==%s", k, v))
+		} else if _, err := strconv.ParseFloat(v, 64); err == nil {
+			filters = append(filters, fmt.Sprintf("%s==%s", k, v))
+		} else {
+			filters = append(filters, fmt.Sprintf("%s=='%s'", k, v))
+		}
 	}
 	filterStr := strings.Join(filters, " and ")
 	return filterStr

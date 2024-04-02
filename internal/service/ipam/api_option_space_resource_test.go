@@ -17,18 +17,19 @@ import (
 func TestAccOptionSpaceResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_space.test"
 	var v ipam.IpamsvcOptionSpace
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionSpaceBasicConfig("option_space_test", "ip4"),
+				Config: testAccOptionSpaceBasicConfig(optionSpaceName, "ip4"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionSpaceExists(context.Background(), resourceName, &v),
 					// TODO: check and validate these
-					resource.TestCheckResourceAttr(resourceName, "name", "option_space_test"),
+					resource.TestCheckResourceAttr(resourceName, "name", optionSpaceName),
 					resource.TestCheckResourceAttr(resourceName, "protocol", "ip4"),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
@@ -45,14 +46,15 @@ func TestAccOptionSpaceResource_basic(t *testing.T) {
 func TestAccOptionSpaceResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dhcp_option_space.test"
 	var v ipam.IpamsvcOptionSpace
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckOptionSpaceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOptionSpaceBasicConfig("option_space_test", "ip4"),
+				Config: testAccOptionSpaceBasicConfig(optionSpaceName, "ip4"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionSpaceExists(context.Background(), resourceName, &v),
 					testAccCheckOptionSpaceDisappears(context.Background(), &v),
@@ -66,14 +68,15 @@ func TestAccOptionSpaceResource_disappears(t *testing.T) {
 func TestAccOptionSpaceResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_space.test_comment"
 	var v ipam.IpamsvcOptionSpace
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionSpaceComment("option_space_test", "ip4", "test comment"),
+				Config: testAccOptionSpaceComment(optionSpaceName, "ip4", "test comment"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "test comment"),
@@ -81,7 +84,7 @@ func TestAccOptionSpaceResource_Comment(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccOptionSpaceComment("option_space_test", "ip4", "test comment update"),
+				Config: testAccOptionSpaceComment(optionSpaceName, "ip4", "test comment update"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "test comment update"),
@@ -95,25 +98,27 @@ func TestAccOptionSpaceResource_Comment(t *testing.T) {
 func TestAccOptionSpaceResource_Name(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_space.test_name"
 	var v ipam.IpamsvcOptionSpace
+	optionSpaceName1 := acctest.RandomNameWithPrefix("os")
+	optionSpaceName2 := acctest.RandomNameWithPrefix("os")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionSpaceName("option_space_test", "ip4"),
+				Config: testAccOptionSpaceName(optionSpaceName1, "ip4"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionSpaceExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "option_space_test"),
+					resource.TestCheckResourceAttr(resourceName, "name", optionSpaceName1),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccOptionSpaceName("option_space_test_1", "ip4"),
+				Config: testAccOptionSpaceName(optionSpaceName2, "ip4"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionSpaceExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "option_space_test_1"),
+					resource.TestCheckResourceAttr(resourceName, "name", optionSpaceName2),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -124,14 +129,15 @@ func TestAccOptionSpaceResource_Name(t *testing.T) {
 func TestAccOptionSpaceResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_space.test_tags"
 	var v ipam.IpamsvcOptionSpace
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactoriesWithTags,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOptionSpaceTags("option_space_test", "ip4", map[string]string{
+				Config: testAccOptionSpaceTags(optionSpaceName, "ip4", map[string]string{
 					"tag1": "value1",
 					"tag2": "value2",
 				}),
@@ -139,11 +145,14 @@ func TestAccOptionSpaceResource_Tags(t *testing.T) {
 					testAccCheckOptionSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag1", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccOptionSpaceTags("option_space_test", "ip4", map[string]string{
+				Config: testAccOptionSpaceTags(optionSpaceName, "ip4", map[string]string{
 					"tag2": "value2changed",
 					"tag3": "value3",
 				}),
@@ -151,6 +160,9 @@ func TestAccOptionSpaceResource_Tags(t *testing.T) {
 					testAccCheckOptionSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2changed"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag3", "value3"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2changed"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag3", "value3"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Delete testing automatically occurs in TestCase

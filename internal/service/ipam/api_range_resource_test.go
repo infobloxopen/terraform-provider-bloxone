@@ -24,14 +24,15 @@ import (
 func TestAccRangeResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test"
 	var v ipam.IpamsvcRange
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccRangeBasicConfig("10.0.0.8", "10.0.0.20"),
+				Config: testAccRangeBasicConfig(spaceName, "10.0.0.8", "10.0.0.20"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "end", "10.0.0.20"),
@@ -56,14 +57,15 @@ func TestAccRangeResource_basic(t *testing.T) {
 func TestAccRangeResource_disappears(t *testing.T) {
 	resourceName := "bloxone_ipam_range.test"
 	var v ipam.IpamsvcRange
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckRangeDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRangeBasicConfig("10.0.0.8", "10.0.0.20"),
+				Config: testAccRangeBasicConfig(spaceName, "10.0.0.8", "10.0.0.20"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					testAccCheckRangeDisappears(context.Background(), &v),
@@ -77,14 +79,15 @@ func TestAccRangeResource_disappears(t *testing.T) {
 func TestAccRangeResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_comment"
 	var v ipam.IpamsvcRange
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccRangeComment("10.0.0.8", "10.0.0.20", "this range is created by terraform"),
+				Config: testAccRangeComment(spaceName, "10.0.0.8", "10.0.0.20", "this range is created by terraform"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "this range is created by terraform"),
@@ -92,7 +95,7 @@ func TestAccRangeResource_Comment(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccRangeComment("10.0.0.8", "10.0.0.20", "this range was created by terraform"),
+				Config: testAccRangeComment(spaceName, "10.0.0.8", "10.0.0.20", "this range was created by terraform"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "this range was created by terraform"),
@@ -106,14 +109,15 @@ func TestAccRangeResource_Comment(t *testing.T) {
 func TestAccRangeResource_DisableDhcp(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_disable_dhcp"
 	var v ipam.IpamsvcRange
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccRangeDisableDhcp("10.0.0.8", "10.0.0.20", "true"),
+				Config: testAccRangeDisableDhcp(spaceName, "10.0.0.8", "10.0.0.20", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "disable_dhcp", "true"),
@@ -121,7 +125,7 @@ func TestAccRangeResource_DisableDhcp(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccRangeDisableDhcp("10.0.0.8", "10.0.0.20", "false"),
+				Config: testAccRangeDisableDhcp(spaceName, "10.0.0.8", "10.0.0.20", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "disable_dhcp", "false"),
@@ -132,17 +136,51 @@ func TestAccRangeResource_DisableDhcp(t *testing.T) {
 	})
 }
 
-func TestAccRangeResource_End(t *testing.T) {
-	var resourceName = "bloxone_ipam_range.test_end"
+func TestAccRangeResource_DhcpOptions(t *testing.T) {
+	var resourceName = "bloxone_ipam_range.test_dhcp_options"
 	var v ipam.IpamsvcRange
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccRangeEnd("10.0.0.8", "10.0.0.20"),
+				Config: testAccRangeDhcpOptionsOption(spaceName, "10.0.0.10", "10.0.0.20", optionSpaceName, "option", "true"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckRangeExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.0.option_value", "true"),
+					resource.TestCheckResourceAttrPair(resourceName, "dhcp_options.0.option_code", "bloxone_dhcp_option_code.test", "id"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccRangeDhcpOptionsGroup(spaceName, "10.0.0.10", "10.0.0.20", optionSpaceName, "group"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckRangeExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccRangeResource_End(t *testing.T) {
+	var resourceName = "bloxone_ipam_range.test_end"
+	var v ipam.IpamsvcRange
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccRangeEnd(spaceName, "10.0.0.8", "10.0.0.20"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "end", "10.0.0.20"),
@@ -150,7 +188,7 @@ func TestAccRangeResource_End(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccRangeEnd("10.0.0.8", "10.0.0.29"),
+				Config: testAccRangeEnd(spaceName, "10.0.0.8", "10.0.0.29"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "end", "10.0.0.29"),
@@ -164,14 +202,15 @@ func TestAccRangeResource_End(t *testing.T) {
 func TestAccRangeResource_ExclusionRanges(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_exclusion_ranges"
 	var v ipam.IpamsvcRange
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccRangeExclusionRanges("10.0.0.8", "10.0.0.20", "10.0.0.16", "10.0.0.12"),
+				Config: testAccRangeExclusionRanges(spaceName, "10.0.0.8", "10.0.0.20", "10.0.0.16", "10.0.0.12"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "exclusion_ranges.0.start", "10.0.0.12"),
@@ -180,7 +219,7 @@ func TestAccRangeResource_ExclusionRanges(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccRangeExclusionRanges("10.0.0.8", "10.0.0.20", "10.0.0.16", "10.0.0.14"),
+				Config: testAccRangeExclusionRanges(spaceName, "10.0.0.8", "10.0.0.20", "10.0.0.16", "10.0.0.14"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "exclusion_ranges.0.start", "10.0.0.14"),
@@ -195,14 +234,15 @@ func TestAccRangeResource_ExclusionRanges(t *testing.T) {
 func TestAccRangeResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_inheritance_sources"
 	var v ipam.IpamsvcRange
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccRangeInheritanceSources("10.0.0.8", "10.0.0.20", "inherit"),
+				Config: testAccRangeInheritanceSources(spaceName, "10.0.0.8", "10.0.0.20", "inherit"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_options.action", "inherit"),
@@ -210,7 +250,7 @@ func TestAccRangeResource_InheritanceSources(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccRangeInheritanceSources("10.0.0.8", "10.0.0.20", "block"),
+				Config: testAccRangeInheritanceSources(spaceName, "10.0.0.8", "10.0.0.20", "block"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "inheritance_sources.dhcp_options.action", "block"),
@@ -224,14 +264,15 @@ func TestAccRangeResource_InheritanceSources(t *testing.T) {
 func TestAccRangeResource_Name(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_name"
 	var v ipam.IpamsvcRange
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccRangeName("10.0.0.8", "10.0.0.20", "range-test"),
+				Config: testAccRangeName(spaceName, "10.0.0.8", "10.0.0.20", "range-test"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", "range-test"),
@@ -239,7 +280,7 @@ func TestAccRangeResource_Name(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccRangeName("10.0.0.8", "10.0.0.20", "range-test-1"),
+				Config: testAccRangeName(spaceName, "10.0.0.8", "10.0.0.20", "range-test-1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", "range-test-1"),
@@ -252,15 +293,17 @@ func TestAccRangeResource_Name(t *testing.T) {
 
 func TestAccRangeResource_Space(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_space"
-	var v1, v2 ipam.IpamsvcRange
+	var v1 ipam.IpamsvcRange
+	spaceName1 := acctest.RandomNameWithPrefix("ip-space")
+	spaceName2 := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccRangeSpace("10.0.0.8", "10.0.0.20", "bloxone_ipam_ip_space.one"),
+				Config: testAccRangeSpace(spaceName1, spaceName2, "10.0.0.8", "10.0.0.20", "bloxone_ipam_ip_space.one"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttrPair(resourceName, "space", "bloxone_ipam_ip_space.one", "id"),
@@ -268,10 +311,9 @@ func TestAccRangeResource_Space(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccRangeSpace("10.0.0.8", "10.0.0.20", "bloxone_ipam_ip_space.one"),
+				Config: testAccRangeSpace(spaceName1, spaceName2, "10.0.0.8", "10.0.0.20", "bloxone_ipam_ip_space.one"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRangeDestroy(context.Background(), &v1),
-					testAccCheckRangeExists(context.Background(), resourceName, &v2),
+					testAccCheckRangeExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttrPair(resourceName, "space", "bloxone_ipam_ip_space.one", "id"),
 				),
 			},
@@ -283,14 +325,15 @@ func TestAccRangeResource_Space(t *testing.T) {
 func TestAccRangeResource_Start(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_start"
 	var v ipam.IpamsvcRange
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccRangeStart("10.0.0.8", "10.0.0.20"),
+				Config: testAccRangeStart(spaceName, "10.0.0.8", "10.0.0.20"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "start", "10.0.0.8"),
@@ -298,7 +341,7 @@ func TestAccRangeResource_Start(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccRangeStart("10.0.0.12", "10.0.0.20"),
+				Config: testAccRangeStart(spaceName, "10.0.0.12", "10.0.0.20"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "start", "10.0.0.12"),
@@ -312,29 +355,34 @@ func TestAccRangeResource_Start(t *testing.T) {
 func TestAccRangeResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_tags"
 	var v ipam.IpamsvcRange
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactoriesWithTags,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccRangeTags("10.0.0.8", "10.0.0.20", map[string]string{
+				Config: testAccRangeTags(spaceName, "10.0.0.8", "10.0.0.20", map[string]string{
 					"site": "NA",
 				}),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.site", "NA"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.site", "NA"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccRangeTags("10.0.0.8", "10.0.0.20", map[string]string{
+				Config: testAccRangeTags(spaceName, "10.0.0.8", "10.0.0.20", map[string]string{
 					"site": "CA",
 				}),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.site", "CA"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.site", "CA"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -396,7 +444,7 @@ func testAccCheckRangeDisappears(ctx context.Context, v *ipam.IpamsvcRange) reso
 	}
 }
 
-func testAccRangeBasicConfig(start, end string) string {
+func testAccRangeBasicConfig(spaceName, start, end string) string {
 	// TODO: create basic resource with required fields
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_range" "test" {
@@ -406,10 +454,10 @@ resource "bloxone_ipam_range" "test" {
     depends_on = [bloxone_ipam_subnet.test]
 }
 `, start, end)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
 
-func testAccRangeComment(start, end, comment string) string {
+func testAccRangeComment(spaceName, start, end, comment string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_range" "test_comment" {
     space = bloxone_ipam_ip_space.test.id
@@ -419,10 +467,10 @@ resource "bloxone_ipam_range" "test_comment" {
     depends_on = [bloxone_ipam_subnet.test]
 }
 `, start, end, comment)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
 
-func testAccRangeDisableDhcp(start, end, disableDhcp string) string {
+func testAccRangeDisableDhcp(spaceName, start, end, disableDhcp string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_range" "test_disable_dhcp" {
     space = bloxone_ipam_ip_space.test.id
@@ -432,10 +480,51 @@ resource "bloxone_ipam_range" "test_disable_dhcp" {
     depends_on = [bloxone_ipam_subnet.test]
 }
 `, start, end, disableDhcp)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
 
-func testAccRangeEnd(start, end string) string {
+func testAccRangeDhcpOptionsOption(spaceName, start string, end string, optionSpace, optionItemType, optValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_range" "test_dhcp_options" {
+    space = bloxone_ipam_ip_space.test.id
+    start = %q
+    end = %q
+    dhcp_options = [
+      {
+       type = %q
+       option_code = bloxone_dhcp_option_code.test.id
+       option_value = %q
+      }
+    ]
+    depends_on = [bloxone_ipam_subnet.test]
+}
+`, start, end, optionItemType, optValue)
+
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+optionSpace, optionSpace, "ip4"), config}, "")
+
+}
+
+func testAccRangeDhcpOptionsGroup(spaceName, start string, end string, optionSpace, optionItemType string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_range" "test_dhcp_options" {
+    space = bloxone_ipam_ip_space.test.id
+    start = %q
+    end = %q
+    dhcp_options = [
+      {
+       type = %q
+       group = bloxone_dhcp_option_group.test.id
+      }
+    ]
+    depends_on = [bloxone_ipam_subnet.test]
+}
+`, start, end, optionItemType)
+
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+optionSpace, optionSpace, "ip4"), config}, "")
+
+}
+
+func testAccRangeEnd(spaceName, start, end string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_range" "test_end" {
     space = bloxone_ipam_ip_space.test.id
@@ -444,10 +533,10 @@ resource "bloxone_ipam_range" "test_end" {
     depends_on = [bloxone_ipam_subnet.test]
 }
 `, start, end)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
 
-func testAccRangeExclusionRanges(start, end string, exclusionEnd, exclusionStart string) string {
+func testAccRangeExclusionRanges(spaceName, start, end string, exclusionEnd, exclusionStart string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_range" "test_exclusion_ranges" {
     space = bloxone_ipam_ip_space.test.id
@@ -462,10 +551,10 @@ resource "bloxone_ipam_range" "test_exclusion_ranges" {
     depends_on = [bloxone_ipam_subnet.test]
 }
 `, start, end, exclusionEnd, exclusionStart)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
 
-func testAccRangeInheritanceSources(start, end, action string) string {
+func testAccRangeInheritanceSources(spaceName, start, end, action string) string {
 	config := fmt.Sprintf(`
 
 data "bloxone_dhcp_option_codes" "example_by_name" {
@@ -485,10 +574,10 @@ resource "bloxone_ipam_range" "test_inheritance_sources" {
 	depends_on = [bloxone_ipam_subnet.test]
 }
 `, start, end, action)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
 
-func testAccRangeName(start, end string, name string) string {
+func testAccRangeName(spaceName, start, end string, name string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_range" "test_name" {
     space = bloxone_ipam_ip_space.test.id
@@ -498,10 +587,10 @@ resource "bloxone_ipam_range" "test_name" {
     depends_on = [bloxone_ipam_subnet.test]
 }
 `, start, end, name)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
 
-func testAccRangeSpace(start, end, space string) string {
+func testAccRangeSpace(spaceName1, spaceName2, start, end, space string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_subnet" "test" {
     address = "10.0.0.0"
@@ -516,10 +605,10 @@ resource "bloxone_ipam_range" "test_space" {
     depends_on = [bloxone_ipam_subnet.test]
 }
 `, space, space, start, end)
-	return strings.Join([]string{testAccBaseWithTwoIPSpace(), config}, "")
+	return strings.Join([]string{testAccBaseWithTwoIPSpace(spaceName1, spaceName2), config}, "")
 }
 
-func testAccRangeStart(start, end string) string {
+func testAccRangeStart(spaceName, start, end string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_range" "test_start" {
     space = bloxone_ipam_ip_space.test.id
@@ -528,10 +617,10 @@ resource "bloxone_ipam_range" "test_start" {
     depends_on = [bloxone_ipam_subnet.test]
 }
 `, start, end)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
 
-func testAccRangeTags(start, end string, tags map[string]string) string {
+func testAccRangeTags(spaceName, start, end string, tags map[string]string) string {
 	tagsStr := "{\n"
 	for k, v := range tags {
 		tagsStr += fmt.Sprintf(`
@@ -549,5 +638,5 @@ resource "bloxone_ipam_range" "test_tags" {
     depends_on = [bloxone_ipam_subnet.test]
 }
 `, start, end, tagsStr)
-	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }

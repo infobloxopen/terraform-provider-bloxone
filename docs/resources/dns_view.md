@@ -144,6 +144,7 @@ resource "bloxone_dns_view" "example" {
 - `created_at` (String) The timestamp when the object has been created.
 - `dnssec_root_keys` (Attributes List) DNSSEC root keys. The root keys are not configurable.  A default list is provided by cloud management and included here for config generation. (see [below for nested schema](#nestedatt--dnssec_root_keys))
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) Tagging specifics including default tags.
 - `updated_at` (String) The timestamp when the object has been updated. Equals to _created_at_ if not updated after creation.
 
 <a id="nestedatt--custom_root_ns"></a>
@@ -203,16 +204,6 @@ Read-Only:
 <a id="nestedatt--filter_aaaa_acl"></a>
 ### Nested Schema for `filter_aaaa_acl`
 
-Required:
-
-- `element` (String) Type of element.
-
-  Allowed values:
-  * _any_
-  * _ip_
-  * _acl_
-  * _tsig_key_
-
 Optional:
 
 - `access` (String) Access permission for _element_.
@@ -224,12 +215,19 @@ Optional:
   Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--filter_aaaa_acl--tsig_key))
 
 <a id="nestedatt--filter_aaaa_acl--tsig_key"></a>
 ### Nested Schema for `filter_aaaa_acl.tsig_key`
 
-Required:
+Optional:
 
 - `key` (String) The resource identifier.
 
@@ -1218,16 +1216,6 @@ Read-Only:
 <a id="nestedatt--match_clients_acl"></a>
 ### Nested Schema for `match_clients_acl`
 
-Required:
-
-- `element` (String) Type of element.
-
-  Allowed values:
-  * _any_
-  * _ip_
-  * _acl_
-  * _tsig_key_
-
 Optional:
 
 - `access` (String) Access permission for _element_.
@@ -1239,12 +1227,19 @@ Optional:
   Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--match_clients_acl--tsig_key))
 
 <a id="nestedatt--match_clients_acl--tsig_key"></a>
 ### Nested Schema for `match_clients_acl.tsig_key`
 
-Required:
+Optional:
 
 - `key` (String) The resource identifier.
 
@@ -1268,16 +1263,6 @@ Read-Only:
 <a id="nestedatt--match_destinations_acl"></a>
 ### Nested Schema for `match_destinations_acl`
 
-Required:
-
-- `element` (String) Type of element.
-
-  Allowed values:
-  * _any_
-  * _ip_
-  * _acl_
-  * _tsig_key_
-
 Optional:
 
 - `access` (String) Access permission for _element_.
@@ -1289,12 +1274,19 @@ Optional:
   Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--match_destinations_acl--tsig_key))
 
 <a id="nestedatt--match_destinations_acl--tsig_key"></a>
 ### Nested Schema for `match_destinations_acl.tsig_key`
 
-Required:
+Optional:
 
 - `key` (String) The resource identifier.
 
@@ -1318,16 +1310,6 @@ Read-Only:
 <a id="nestedatt--query_acl"></a>
 ### Nested Schema for `query_acl`
 
-Required:
-
-- `element` (String) Type of element.
-
-  Allowed values:
-  * _any_
-  * _ip_
-  * _acl_
-  * _tsig_key_
-
 Optional:
 
 - `access` (String) Access permission for _element_.
@@ -1339,12 +1321,19 @@ Optional:
   Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--query_acl--tsig_key))
 
 <a id="nestedatt--query_acl--tsig_key"></a>
 ### Nested Schema for `query_acl.tsig_key`
 
-Required:
+Optional:
 
 - `key` (String) The resource identifier.
 
@@ -1368,16 +1357,6 @@ Read-Only:
 <a id="nestedatt--recursion_acl"></a>
 ### Nested Schema for `recursion_acl`
 
-Required:
-
-- `element` (String) Type of element.
-
-  Allowed values:
-  * _any_
-  * _ip_
-  * _acl_
-  * _tsig_key_
-
 Optional:
 
 - `access` (String) Access permission for _element_.
@@ -1389,12 +1368,19 @@ Optional:
   Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--recursion_acl--tsig_key))
 
 <a id="nestedatt--recursion_acl--tsig_key"></a>
 ### Nested Schema for `recursion_acl.tsig_key`
 
-Required:
+Optional:
 
 - `key` (String) The resource identifier.
 
@@ -1437,16 +1423,6 @@ Optional:
 <a id="nestedatt--transfer_acl"></a>
 ### Nested Schema for `transfer_acl`
 
-Required:
-
-- `element` (String) Type of element.
-
-  Allowed values:
-  * _any_
-  * _ip_
-  * _acl_
-  * _tsig_key_
-
 Optional:
 
 - `access` (String) Access permission for _element_.
@@ -1458,12 +1434,19 @@ Optional:
   Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--transfer_acl--tsig_key))
 
 <a id="nestedatt--transfer_acl--tsig_key"></a>
 ### Nested Schema for `transfer_acl.tsig_key`
 
-Required:
+Optional:
 
 - `key` (String) The resource identifier.
 
@@ -1487,16 +1470,6 @@ Read-Only:
 <a id="nestedatt--update_acl"></a>
 ### Nested Schema for `update_acl`
 
-Required:
-
-- `element` (String) Type of element.
-
-  Allowed values:
-  * _any_
-  * _ip_
-  * _acl_
-  * _tsig_key_
-
 Optional:
 
 - `access` (String) Access permission for _element_.
@@ -1508,12 +1481,19 @@ Optional:
   Must be empty if _element_ is _acl_.
 - `acl` (String) The resource identifier.
 - `address` (String) Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
+- `element` (String) Type of element.
+
+  Allowed values:
+  * _any_
+  * _ip_
+  * _acl_
+  * _tsig_key_
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--update_acl--tsig_key))
 
 <a id="nestedatt--update_acl--tsig_key"></a>
 ### Nested Schema for `update_acl.tsig_key`
 
-Required:
+Optional:
 
 - `key` (String) The resource identifier.
 

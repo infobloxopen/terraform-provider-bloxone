@@ -45,6 +45,13 @@ resource "bloxone_ipam_subnet" "example" {
   }
 }
 
+data "bloxone_dhcp_option_codes" "option_code" {
+  filters = {
+    name = "domain-name-servers"
+  }
+}
+
+
 resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
   name        = "example_fixed_address"
   address     = "192.168.1.1"
@@ -55,6 +62,14 @@ resource "bloxone_dhcp_fixed_address" "example_fixed_address" {
   tags = {
     location = "site1"
   }
+  //dhcp options
+  dhcp_options = [
+    {
+      option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
+      option_value = "10.0.0.1"
+      type         = "option"
+    }
+  ]
   depends_on = [bloxone_ipam_subnet.example]
 }
 
@@ -108,6 +123,7 @@ resource "bloxone_dhcp_fixed_address" "example_fixed_address_na" {
 - `id` (String) The resource identifier.
 - `inheritance_assigned_hosts` (Attributes List) The list of the inheritance assigned hosts of the object. (see [below for nested schema](#nestedatt--inheritance_assigned_hosts))
 - `parent` (String) The resource identifier.
+- `tags_all` (Map of String) The tags for the fixed address in JSON format including default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 
 <a id="nestedatt--dhcp_options"></a>

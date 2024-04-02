@@ -322,3 +322,24 @@ func ToComputedAttribute(name string, val resourceschema.Attribute) resourcesche
 	tflog.Error(context.Background(), fmt.Sprintf("Failed to convert schema attribute of type '%T' for '%s'", val, name))
 	return nil
 }
+
+// DefaultTagsHandler converts default_tags attribute to map[string]string
+// supports only string values
+func DefaultTagsHandler(m map[string]interface{}, d *diag.Diagnostics) map[string]string {
+	newMap := make(map[string]string, len(m))
+	for key, value := range m {
+		strValue := ""
+
+		switch v := value.(type) {
+		case string:
+			strValue = v
+		default:
+			d.AddError("Client error", fmt.Sprintf("Invalid type '%v' for default_tags %s value, only string supported", v, key))
+			continue
+		}
+
+		newMap[key] = strValue
+	}
+
+	return newMap
+}

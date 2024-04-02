@@ -67,12 +67,14 @@ resource "bloxone_infra_service" "example" {
 - `interface_labels` (List of String) List of interfaces on which this Service can operate. Note: The list can contain custom interface labels (Example: `["WAN","LAN","label1","label2"]`)
 - `tags` (Map of String) Tags associated with this Service.
 - `timeouts` (Attributes) (see [below for nested schema](#nestedatt--timeouts))
+- `wait_for_state` (Boolean) If set to `true`, the resource will wait for the desired state to be reached before returning. If set to `false`, the resource will return immediately after the request is sent to the API.
 
 ### Read-Only
 
 - `configs` (Attributes List) List of Host-specific configurations of this Service. (see [below for nested schema](#nestedatt--configs))
 - `created_at` (String) Timestamp of creation of Service.
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) Tags associated with this Service including default tags.
 - `updated_at` (String) Timestamp of the latest update on Service.
 
 <a id="nestedatt--timeouts"></a>
@@ -80,8 +82,8 @@ resource "bloxone_infra_service" "example" {
 
 Optional:
 
-- `create` (String) A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
-- `update` (String) A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+- `create` (String) [Duration](https://pkg.go.dev/time#ParseDuration) to wait before being considered a timeout during create operations. Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Default is 20m.
+- `update` (String) [Duration](https://pkg.go.dev/time#ParseDuration) to wait before being considered a timeout during update operations. Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Default is 20m.
 
 
 <a id="nestedatt--configs"></a>

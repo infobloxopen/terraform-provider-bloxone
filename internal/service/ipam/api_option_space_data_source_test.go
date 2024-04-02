@@ -17,13 +17,13 @@ func TestAccOptionSpaceDataSource_Filters(t *testing.T) {
 	resourceName := "bloxone_dhcp_option_space.test"
 	var v ipam.IpamsvcOptionSpace
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckOptionSpaceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOptionSpaceDataSourceConfigFilters("test_option_space", "ip4"),
+				Config: testAccOptionSpaceDataSourceConfigFilters(acctest.RandomNameWithPrefix("option-space"), "ip4"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckOptionSpaceExists(context.Background(), resourceName, &v),
@@ -38,13 +38,13 @@ func TestAccOptionSpaceDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dhcp_option_spaces.test"
 	resourceName := "bloxone_dhcp_option_space.test"
 	var v ipam.IpamsvcOptionSpace
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckOptionSpaceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOptionSpaceDataSourceConfigTagFilters("test_option_space_tag", "ip6", "space1"),
+				Config: testAccOptionSpaceDataSourceConfigTagFilters(acctest.RandomNameWithPrefix("option-space"), "ip6", acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckOptionSpaceExists(context.Background(), resourceName, &v),
@@ -69,7 +69,7 @@ func testAccCheckOptionSpaceResourceAttrPair(resourceName, dataSourceName string
 	}
 }
 
-func testAccOptionSpace(name, protocol string) string {
+func testAccBaseWithOptionSpace(name, protocol string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dhcp_option_space" "test" {
   name = %q
@@ -77,7 +77,7 @@ resource "bloxone_dhcp_option_space" "test" {
 }`, name, protocol)
 }
 
-func testAccOptionSpaceMultiple(name1, protocol1, name2, protocol2 string) string {
+func testAccBaseWithTwoOptionSpace(name1, protocol1, name2, protocol2 string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dhcp_option_space" "test1" {
   name = %q
@@ -97,8 +97,7 @@ data "bloxone_dhcp_option_spaces" "test" {
   }
 }
 `
-
-	return strings.Join([]string{config, testAccOptionSpace(name, protocol)}, "")
+	return strings.Join([]string{config, testAccBaseWithOptionSpace(name, protocol)}, "")
 }
 
 func testAccOptionSpaceDataSourceConfigTagFilters(name, protocol, tagValue string) string {

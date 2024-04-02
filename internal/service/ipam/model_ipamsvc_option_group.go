@@ -9,11 +9,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/infobloxopen/bloxone-go-client/ipam"
 
+	"github.com/infobloxopen/bloxone-go-client/ipam"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -25,6 +26,7 @@ type IpamsvcOptionGroupModel struct {
 	Name        types.String      `tfsdk:"name"`
 	Protocol    types.String      `tfsdk:"protocol"`
 	Tags        types.Map         `tfsdk:"tags"`
+	TagsAll     types.Map         `tfsdk:"tags_all"`
 	UpdatedAt   timetypes.RFC3339 `tfsdk:"updated_at"`
 }
 
@@ -36,12 +38,15 @@ var IpamsvcOptionGroupAttrTypes = map[string]attr.Type{
 	"name":         types.StringType,
 	"protocol":     types.StringType,
 	"tags":         types.MapType{ElemType: types.StringType},
+	"tags_all":     types.MapType{ElemType: types.StringType},
 	"updated_at":   timetypes.RFC3339Type{},
 }
 
 var IpamsvcOptionGroupResourceSchemaAttributes = map[string]schema.Attribute{
 	"comment": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString(""),
 		Validators: []validator.String{
 			stringvalidator.LengthBetween(0, 1024),
 		},
@@ -85,6 +90,11 @@ var IpamsvcOptionGroupResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "The tags for the option group in JSON format.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the option group in JSON format including default tag.",
+	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
@@ -108,12 +118,13 @@ func (m *IpamsvcOptionGroupModel) Expand(ctx context.Context, diags *diag.Diagno
 	return to
 }
 
-func FlattenIpamsvcOptionGroup(ctx context.Context, from *ipam.IpamsvcOptionGroup, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcOptionGroupDataSource(ctx context.Context, from *ipam.IpamsvcOptionGroup, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcOptionGroupAttrTypes)
 	}
 	m := IpamsvcOptionGroupModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcOptionGroupAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -132,6 +143,6 @@ func (m *IpamsvcOptionGroupModel) Flatten(ctx context.Context, from *ipam.Ipamsv
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.Name = flex.FlattenString(from.Name)
 	m.Protocol = flex.FlattenStringPointer(from.Protocol)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }
