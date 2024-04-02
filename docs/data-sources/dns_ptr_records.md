@@ -60,7 +60,7 @@ Optional:
 - `name_in_zone` (String) The relative owner name to the zone origin. Must be specified for creating the DNS resource record and is read only for other operations.
 - `options` (Attributes) The DNS resource record type-specific non-protocol options. (see [below for nested schema](#nestedatt--results--options))
 - `tags` (Map of String) The tags for the DNS resource record in JSON format.
-- `tags_all` (Map of String) The default tags for the DNS resource record.
+- `tags_all` (Map of String) The tags for the DNS resource record including default tags.
 - `ttl` (Number) The record time to live value in seconds. The range of this value is 0 to 2147483647.  Defaults to TTL value from the SOA record of the zone.
 - `view` (String) The resource identifier.
 - `zone` (String) The resource identifier.
