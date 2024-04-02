@@ -8,6 +8,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -23,6 +25,11 @@ type aaaaRecordModel struct {
 
 var aaaaRecordAttrTypes = map[string]attr.Type{
 	"address": types.StringType,
+}
+
+var aaaaRecordOptionsAttrTypes = map[string]attr.Type{
+	"create_ptr": types.BoolType,
+	"check_rmz":  types.BoolType,
 }
 
 type recordAAAAResource struct{}
@@ -51,6 +58,24 @@ func (r recordAAAAResource) expandRData(ctx context.Context, o types.Object, dia
 
 }
 
+func (r recordAAAAResource) expandOptions(ctx context.Context, o types.Object, diags *diag.Diagnostics) map[string]interface{} {
+	if o.IsNull() || o.IsUnknown() {
+		return nil
+	}
+	m := struct {
+		CreatePTR types.Bool `tfsdk:"create_ptr"`
+		CheckRMZ  types.Bool `tfsdk:"check_rmz"`
+	}{}
+	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
+	if diags.HasError() {
+		return nil
+	}
+	return map[string]interface{}{
+		"create_ptr": flex.ExpandBool(m.CreatePTR),
+		"check_rmz":  flex.ExpandBool(m.CheckRMZ),
+	}
+}
+
 func (r recordAAAAResource) flattenRData(_ context.Context, from map[string]interface{}, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(aaaaRecordAttrTypes)
@@ -62,9 +87,19 @@ func (r recordAAAAResource) flattenRData(_ context.Context, from map[string]inte
 	return t
 }
 
+func (r recordAAAAResource) flattenOptions(ctx context.Context, m types.Object, from map[string]interface{}, diags *diag.Diagnostics) types.Object {
+	// Preserve the state value. The API doesn't return options in the response.
+	// If the state value is unknown, set null value.
+	if !m.IsUnknown() && !m.IsNull() {
+		return m
+	}
+	return types.ObjectNull(aaaaRecordOptionsAttrTypes)
+}
+
 func (r recordAAAAResource) attributeTypes() map[string]attr.Type {
 	attrTypes := recordCommonAttrTypes()
 	attrTypes["rdata"] = types.ObjectType{AttrTypes: aaaaRecordAttrTypes}
+	attrTypes["options"] = types.ObjectType{AttrTypes: aaaaRecordOptionsAttrTypes}
 	return attrTypes
 }
 
@@ -82,6 +117,23 @@ func (r recordAAAAResource) schemaAttributes() map[string]schema.Attribute {
 			},
 		},
 		Required: true,
+	}
+	schemaAttrs["options"] = schema.SingleNestedAttribute{
+		Attributes: map[string]schema.Attribute{
+			"create_ptr": schema.BoolAttribute{
+				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolplanmodifier.RequiresReplaceIfConfigured(),
+				},
+				MarkdownDescription: "A boolean flag which can be set to _true_ for POST operation to automatically create the corresponding PTR record.",
+			},
+			"check_rmz": schema.BoolAttribute{
+				Optional:            true,
+				MarkdownDescription: "A boolean flag which can be set to _true_ for POST operation to check the existence of reverse zone for creating the corresponding PTR record. Only applicable if the _create_ptr_ option is set to _true_.",
+			},
+		},
+		Optional:            true,
+		MarkdownDescription: "The DNS resource record type-specific non-protocol options.",
 	}
 	return schemaAttrs
 }
