@@ -37,16 +37,16 @@ type AtcfwNamedListModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *AtcfwNamedListModelWithFilter) FlattenResults(ctx context.Context, from []fw.AtcfwNamedList, diags *diag.Diagnostics) {
+func (m *AtcfwNamedListModelWithFilter) FlattenResults(ctx context.Context, from []fw.AtcfwNamedListRead, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, AtcfwNamedListAttrTypes, diags, FlattenAtcfwNamedList)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, AtcfwNamedListReadAttrTypes, diags, FlattenAtcfwNamedListRead)
 }
 
 func (d *NamedListsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Retrieves information about existing Named Lists.",
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",

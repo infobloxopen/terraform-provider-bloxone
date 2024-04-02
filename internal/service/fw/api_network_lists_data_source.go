@@ -15,37 +15,37 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ datasource.DataSource = &AccessCodesDataSource{}
+var _ datasource.DataSource = &NetworkListsDataSource{}
 
-func NewAccessCodesDataSource() datasource.DataSource {
-	return &AccessCodesDataSource{}
+func NewNetworkListsDataSource() datasource.DataSource {
+	return &NetworkListsDataSource{}
 }
 
-// AccessCodesDataSource defines the data source implementation.
-type AccessCodesDataSource struct {
+// NetworkListsDataSource defines the data source implementation.
+type NetworkListsDataSource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (d *AccessCodesDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "td_access_codes"
+func (d *NetworkListsDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "td_network_lists"
 }
 
-type AtcfwAccessCodeModelWithFilter struct {
+type AtcfwNetworkListModelWithFilter struct {
 	Filters    types.Map  `tfsdk:"filters"`
 	TagFilters types.Map  `tfsdk:"tag_filters"`
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *AtcfwAccessCodeModelWithFilter) FlattenResults(ctx context.Context, from []fw.AtcfwAccessCode, diags *diag.Diagnostics) {
+func (m *AtcfwNetworkListModelWithFilter) FlattenResults(ctx context.Context, from []fw.AtcfwNetworkList, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, AtcfwAccessCodeAttrTypes, diags, FlattenAtcfwAccessCode)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, AtcfwNetworkListAttrTypes, diags, FlattenAtcfwNetworkList)
 }
 
-func (d *AccessCodesDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *NetworkListsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Retrieves information about existing Access Codes/Bypass Codes.",
+		MarkdownDescription: "Retrieves information about existing Network Lists.",
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
@@ -59,7 +59,7 @@ func (d *AccessCodesDataSource) Schema(ctx context.Context, req datasource.Schem
 			},
 			"results": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
-					Attributes: utils.DataSourceAttributeMap(AtcfwAccessCodeResourceSchemaAttributes, &resp.Diagnostics),
+					Attributes: utils.DataSourceAttributeMap(AtcfwNetworkListResourceSchemaAttributes, &resp.Diagnostics),
 				},
 				Computed: true,
 			},
@@ -67,7 +67,7 @@ func (d *AccessCodesDataSource) Schema(ctx context.Context, req datasource.Schem
 	}
 }
 
-func (d *AccessCodesDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (d *NetworkListsDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -87,8 +87,8 @@ func (d *AccessCodesDataSource) Configure(ctx context.Context, req datasource.Co
 	d.client = client
 }
 
-func (d *AccessCodesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data AtcfwAccessCodeModelWithFilter
+func (d *NetworkListsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data AtcfwNetworkListModelWithFilter
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -98,12 +98,12 @@ func (d *AccessCodesDataSource) Read(ctx context.Context, req datasource.ReadReq
 	}
 
 	apiRes, _, err := d.client.FWAPI.
-		AccessCodesAPI.
-		AccessCodesListAccessCodes(ctx).
+		NetworkListsAPI.
+		NetworkListsListNetworkLists(ctx).
 		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read AccessCodes, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read NetworkLists, got error: %s", err))
 		return
 	}
 

@@ -2,6 +2,7 @@ package fw
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -51,15 +52,15 @@ var AtcfwAccessCodeResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 	},
 	"access_key": schema.StringAttribute{
-		Computed:            true,
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+		},
 		MarkdownDescription: "Auto generated unique Bypass Code value",
 	},
 	"activation": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Optional:   true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
-		},
+		CustomType:          timetypes.RFC3339Type{},
+		Optional:            true,
 		MarkdownDescription: "The time when the Bypass Code object was activated.",
 	},
 	"created_time": schema.StringAttribute{
@@ -68,18 +69,14 @@ var AtcfwAccessCodeResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The time when the Bypass Code object was created.",
 	},
 	"description": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
-		},
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
+		MarkdownDescription: "The brief description for an access code.",
 	},
 	"expiration": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Optional:   true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
-		},
+		CustomType:          timetypes.RFC3339Type{},
+		Optional:            true,
 		MarkdownDescription: "The time when the Bypass Code object was expired.",
 	},
 	"name": schema.StringAttribute{

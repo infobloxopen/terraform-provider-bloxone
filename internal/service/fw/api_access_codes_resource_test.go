@@ -100,7 +100,7 @@ func TestAccAccessCodesResource_Name(t *testing.T) {
 
 func TestAccAccessCodesResource_Activation(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_activation"
-	var v1, v2 fw.AtcfwAccessCode
+	var v fw.AtcfwAccessCode
 	name := acctest.RandomNameWithPrefix("ac")
 
 	resource.Test(t, resource.TestCase{
@@ -111,7 +111,7 @@ func TestAccAccessCodesResource_Activation(t *testing.T) {
 			{
 				Config: testAccAccessCodesActivation(name, time.Now().UTC().Format(time.RFC3339)),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v1),
+					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "rules.0.data", "antimalware"),
 					resource.TestCheckResourceAttr(resourceName, "rules.0.type", "named_feed"),
 					resource.TestCheckResourceAttr(resourceName, "activation", time.Now().UTC().Format(time.RFC3339)),
@@ -121,8 +121,7 @@ func TestAccAccessCodesResource_Activation(t *testing.T) {
 			{
 				Config: testAccAccessCodesActivation(name, time.Now().UTC().Add(time.Minute*10).Format(time.RFC3339)),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesDestroy(context.Background(), &v1),
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v2),
+					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "rules.0.data", "antimalware"),
 					resource.TestCheckResourceAttr(resourceName, "rules.0.type", "named_feed"),
 					resource.TestCheckResourceAttr(resourceName, "activation", time.Now().UTC().Add(time.Minute*10).Format(time.RFC3339)),
