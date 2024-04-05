@@ -81,6 +81,7 @@ Read-Only:
 - `configs` (Attributes List) List of Host-specific configurations of this Service. (see [below for nested schema](#nestedatt--results--configs))
 - `created_at` (String) Timestamp of creation of Service.
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) Tags associated with this Service including default tags.
 - `updated_at` (String) Timestamp of the latest update on Service.
 
 <a id="nestedatt--results--configs"></a>

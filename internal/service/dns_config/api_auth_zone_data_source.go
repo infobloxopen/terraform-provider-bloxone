@@ -41,7 +41,7 @@ func (m *ConfigAuthZoneModelWithFilter) FlattenResults(ctx context.Context, from
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigAuthZoneAttrTypes, diags, FlattenConfigAuthZone)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigAuthZoneAttrTypes, diags, DataSourceFlattenConfigAuthZone)
 }
 
 func (d *AuthZoneDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

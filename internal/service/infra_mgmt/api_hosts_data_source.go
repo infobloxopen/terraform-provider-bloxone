@@ -47,7 +47,7 @@ func (m *InfraHostModelWithFilter) FlattenResults(ctx context.Context, from []in
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, InfraHostAttrTypes, diags, FlattenInfraHost)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, InfraHostAttrTypes, diags, DataSourceFlattenInfraHost)
 }
 
 func (d *HostsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

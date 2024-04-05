@@ -45,6 +45,7 @@ type ConfigAuthZoneModel struct {
 	ProtocolFqdn             types.String      `tfsdk:"protocol_fqdn"`
 	QueryAcl                 types.List        `tfsdk:"query_acl"`
 	Tags                     types.Map         `tfsdk:"tags"`
+	TagsAll                  types.Map         `tfsdk:"tags_all"`
 	TransferAcl              types.List        `tfsdk:"transfer_acl"`
 	UpdateAcl                types.List        `tfsdk:"update_acl"`
 	UpdatedAt                timetypes.RFC3339 `tfsdk:"updated_at"`
@@ -77,6 +78,7 @@ var ConfigAuthZoneAttrTypes = map[string]attr.Type{
 	"protocol_fqdn":               types.StringType,
 	"query_acl":                   types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}},
 	"tags":                        types.MapType{ElemType: types.StringType},
+	"tags_all":                    types.MapType{ElemType: types.StringType},
 	"transfer_acl":                types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}},
 	"update_acl":                  types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}},
 	"updated_at":                  timetypes.RFC3339Type{},
@@ -225,6 +227,11 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: `Tagging specifics.`,
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: `Tagging specifics includes default tags.`,
+	},
 	"transfer_acl": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigACLItemResourceSchemaAttributes,
@@ -315,12 +322,13 @@ func (m *ConfigAuthZoneModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenConfigAuthZone(ctx context.Context, from *dns_config.ConfigAuthZone, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigAuthZone(ctx context.Context, from *dns_config.ConfigAuthZone, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigAuthZoneAttrTypes)
 	}
 	m := ConfigAuthZoneModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, ConfigAuthZoneAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -354,7 +362,7 @@ func (m *ConfigAuthZoneModel) Flatten(ctx context.Context, from *dns_config.Conf
 	m.PrimaryType = flex.FlattenStringPointer(from.PrimaryType)
 	m.ProtocolFqdn = flex.FlattenStringPointer(from.ProtocolFqdn)
 	m.QueryAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.QueryAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.TransferAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.TransferAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
 	m.UpdateAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.UpdateAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)

@@ -41,7 +41,7 @@ func (m *ConfigDelegationModelWithFilter) FlattenResults(ctx context.Context, fr
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigDelegationAttrTypes, diags, FlattenConfigDelegation)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigDelegationAttrTypes, diags, DataSourceFlattenConfigDelegation)
 }
 
 func (d *DelegationDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

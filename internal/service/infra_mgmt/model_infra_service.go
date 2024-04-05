@@ -34,6 +34,7 @@ type InfraServiceModel struct {
 	PoolId          types.String      `tfsdk:"pool_id"`
 	ServiceType     types.String      `tfsdk:"service_type"`
 	Tags            types.Map         `tfsdk:"tags"`
+	TagsAll         types.Map         `tfsdk:"tags_all"`
 	UpdatedAt       timetypes.RFC3339 `tfsdk:"updated_at"`
 }
 
@@ -49,6 +50,7 @@ var InfraServiceAttrTypes = map[string]attr.Type{
 	"pool_id":          types.StringType,
 	"service_type":     types.StringType,
 	"tags":             types.MapType{ElemType: types.StringType},
+	"tags_all":         types.MapType{ElemType: types.StringType},
 	"updated_at":       timetypes.RFC3339Type{},
 }
 
@@ -133,6 +135,11 @@ func InfraServiceResourceSchemaAttributes() map[string]schema.Attribute {
 			Optional:            true,
 			MarkdownDescription: "Tags associated with this Service.",
 		},
+		"tags_all": schema.MapAttribute{
+			ElementType:         types.StringType,
+			Computed:            true,
+			MarkdownDescription: "Tags associated with this Service including default tags.",
+		},
 		"updated_at": schema.StringAttribute{
 			CustomType:          timetypes.RFC3339Type{},
 			Computed:            true,
@@ -165,17 +172,18 @@ func (m *InfraServiceModel) Expand(ctx context.Context, diags *diag.Diagnostics)
 		Name:            flex.ExpandString(m.Name),
 		PoolId:          flex.ExpandString(m.PoolId),
 		ServiceType:     flex.ExpandString(m.ServiceType),
-		Tags:            flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
+		Tags:            flex.ExpandFrameworkMapString(ctx, m.TagsAll, diags),
 	}
 	return to
 }
 
-func FlattenInfraService(ctx context.Context, from *infra_mgmt.InfraService, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenInfraService(ctx context.Context, from *infra_mgmt.InfraService, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(InfraServiceAttrTypes)
 	}
 	m := InfraServiceModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, InfraServiceAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -217,6 +225,7 @@ type InfraServiceModelWithTimeouts struct {
 	PoolId          types.String      `tfsdk:"pool_id"`
 	ServiceType     types.String      `tfsdk:"service_type"`
 	Tags            types.Map         `tfsdk:"tags"`
+	TagsAll         types.Map         `tfsdk:"tags_all"`
 	UpdatedAt       timetypes.RFC3339 `tfsdk:"updated_at"`
 	Timeouts        timeouts.Value    `tfsdk:"timeouts"`
 	WaitForState    types.Bool        `tfsdk:"wait_for_state"`
@@ -256,7 +265,7 @@ func (m *InfraServiceModelWithTimeouts) Flatten(ctx context.Context, from *infra
 	m.Name = flex.FlattenString(from.Name)
 	m.PoolId = flex.FlattenString(from.PoolId)
 	m.ServiceType = flex.FlattenString(from.ServiceType)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }
 

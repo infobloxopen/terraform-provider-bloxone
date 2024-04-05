@@ -4,15 +4,14 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-
-	"github.com/hashicorp/terraform-plugin-framework/attr"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
-	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -30,6 +29,7 @@ type ConfigDelegationModel struct {
 	Parent            types.String `tfsdk:"parent"`
 	ProtocolFqdn      types.String `tfsdk:"protocol_fqdn"`
 	Tags              types.Map    `tfsdk:"tags"`
+	TagsAll           types.Map    `tfsdk:"tags_all"`
 	View              types.String `tfsdk:"view"`
 }
 
@@ -42,6 +42,7 @@ var ConfigDelegationAttrTypes = map[string]attr.Type{
 	"parent":             types.StringType,
 	"protocol_fqdn":      types.StringType,
 	"tags":               types.MapType{ElemType: types.StringType},
+	"tags_all":           types.MapType{ElemType: types.StringType},
 	"view":               types.StringType,
 }
 
@@ -95,6 +96,11 @@ var ConfigDelegationResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "Tagging specifics.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "Tagging specifics includes default tags.",
+	},
 	"view": schema.StringAttribute{
 		Optional: true,
 		Computed: true,
@@ -135,12 +141,13 @@ func (m *ConfigDelegationModel) Expand(ctx context.Context, diags *diag.Diagnost
 	return to
 }
 
-func FlattenConfigDelegation(ctx context.Context, from *dns_config.ConfigDelegation, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigDelegation(ctx context.Context, from *dns_config.ConfigDelegation, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigDelegationAttrTypes)
 	}
 	m := ConfigDelegationModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, ConfigDelegationAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -160,6 +167,6 @@ func (m *ConfigDelegationModel) Flatten(ctx context.Context, from *dns_config.Co
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.Parent = flex.FlattenStringPointer(from.Parent)
 	m.ProtocolFqdn = flex.FlattenStringPointer(from.ProtocolFqdn)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.View = flex.FlattenStringPointer(from.View)
 }
