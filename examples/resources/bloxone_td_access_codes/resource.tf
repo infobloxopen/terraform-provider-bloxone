@@ -1,14 +1,14 @@
 resource "bloxone_td_access_code" "example" {
   name       = "example_access_code"
-  activation = "2021-01-01T00:00:00Z"
-  expiration = "2025-01-02T00:00:00Z"
+  activation = timestamp()
+  expiration = timeadd(timestamp(), "24h")
   rules = [
     {
       action        = "",
-      data          = "antimalware",
+      data          = "terraform_test",
       description   = "",
       redirect_name = "",
-      type          = "named_feed"
+      type          = "custom_list"
     }
   ]
   # Other optional fields

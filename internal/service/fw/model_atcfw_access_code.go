@@ -89,6 +89,7 @@ var AtcfwAccessCodeResourceSchemaAttributes = map[string]schema.Attribute{
 	"policy_ids": schema.ListAttribute{
 		ElementType:         types.Int64Type,
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The list of SecurityPolicy object identifiers.",
 	},
 	"rules": schema.ListNestedAttribute{
@@ -160,5 +161,5 @@ func (m *AtcfwAccessCodeModel) Flatten(ctx context.Context, from *fw.AtcfwAccess
 	m.Id = flex.FlattenStringPointer(from.AccessKey)
 	m.Rules = flex.FlattenFrameworkListNestedBlock(ctx, from.Rules, AtcfwAccessCodeRuleAttrTypes, diags, FlattenAtcfwAccessCodeRule)
 	m.UpdatedTime = timetypes.NewRFC3339TimePointerValue(from.UpdatedTime)
-	m.PolicyIds = flex.FlattenFrameworkListIn64(ctx, from.PolicyIds, diags)
+	m.PolicyIds = flex.FlattenFrameworkListInt32(ctx, from.PolicyIds, diags)
 }

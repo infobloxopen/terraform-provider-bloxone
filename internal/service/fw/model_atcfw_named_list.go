@@ -81,7 +81,7 @@ var AtcfwNamedListResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"items": schema.ListAttribute{
 		ElementType:         types.StringType,
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The list of the FQDN or IPv4/IPv6 CIDRs to define whitelists and blacklists for additional protection.",
 	},
 	"items_described": schema.ListNestedAttribute{
@@ -114,8 +114,11 @@ var AtcfwNamedListResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The threat level for a custom list. The possible values are [\"INFO\", \"LOW\", \"MEDIUM\", \"HIGH\"]",
 	},
 	"type": schema.StringAttribute{
-		Computed:            true,
-		Optional:            true,
+		Computed: true,
+		Optional: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "The type of the named list, that can be \"custom_list\", \"threat_insight\", \"fast_flux\", \"dga\", \"dnsm\", \"threat_insight_nde\", \"default_allow\", \"default_block\" or \"threat_insight_nde\".",
 	},
 	"updated_time": schema.StringAttribute{

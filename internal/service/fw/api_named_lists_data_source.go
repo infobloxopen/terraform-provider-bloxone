@@ -60,7 +60,7 @@ func (d *NamedListsDataSource) Schema(ctx context.Context, req datasource.Schema
 			},
 			"results": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
-					Attributes: utils.DataSourceAttributeMap(AtcfwNamedListResourceSchemaAttributes, &resp.Diagnostics),
+					Attributes: utils.DataSourceAttributeMap(AtcfwNamedListReadResourceSchemaAttributes, &resp.Diagnostics),
 				},
 				Computed: true,
 			},

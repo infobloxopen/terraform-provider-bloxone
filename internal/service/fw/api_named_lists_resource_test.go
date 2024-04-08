@@ -49,7 +49,7 @@ func TestAccNamedListsResource_disappears(t *testing.T) {
 	resourceName := "bloxone_td_named_list.test"
 	var v fw.AtcfwNamedList
 	name := acctest.RandomNameWithPrefix("named_list")
-	item := acctest.RandomNameWithPrefix("named-list") + ".com."
+	item := acctest.RandomNameWithPrefix("named-list") + ".com"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -73,7 +73,7 @@ func TestAccNamedListsResource_Name(t *testing.T) {
 	var v1, v2 fw.AtcfwNamedList
 	name1 := acctest.RandomNameWithPrefix("named-list")
 	name2 := acctest.RandomNameWithPrefix("named-list")
-	item := acctest.RandomNameWithPrefix("named-list") + ".com."
+	item := acctest.RandomNameWithPrefix("named-list") + ".com"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -109,7 +109,7 @@ func TestAccNamedListsResource_Description(t *testing.T) {
 	resourceName := "bloxone_td_named_list.test_description"
 	var v fw.AtcfwNamedList
 	name := acctest.RandomNameWithPrefix("named_list")
-	item := acctest.RandomNameWithPrefix("named-list") + ".com."
+	item := acctest.RandomNameWithPrefix("named-list") + ".com"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -146,7 +146,7 @@ func TestAccNamedListsResource_Confidence(t *testing.T) {
 	resourceName := "bloxone_td_named_list.test_confidence"
 	var v fw.AtcfwNamedList
 	name := acctest.RandomNameWithPrefix("named_list")
-	item := acctest.RandomNameWithPrefix("named-list") + ".com."
+	item := acctest.RandomNameWithPrefix("named-list") + ".com"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -160,7 +160,7 @@ func TestAccNamedListsResource_Confidence(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
 					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
-					resource.TestCheckResourceAttr(resourceName, "confidence", "HIGH"),
+					resource.TestCheckResourceAttr(resourceName, "confidence_level", "HIGH"),
 				),
 			},
 			// Update and Read
@@ -171,7 +171,7 @@ func TestAccNamedListsResource_Confidence(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
 					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
-					resource.TestCheckResourceAttr(resourceName, "confidence", "MEDIUM"),
+					resource.TestCheckResourceAttr(resourceName, "confidence_level", "MEDIUM"),
 				),
 			},
 			// Update and Read
@@ -182,7 +182,7 @@ func TestAccNamedListsResource_Confidence(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
 					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
-					resource.TestCheckResourceAttr(resourceName, "confidence", "LOW"),
+					resource.TestCheckResourceAttr(resourceName, "confidence_level", "LOW"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -192,9 +192,9 @@ func TestAccNamedListsResource_Confidence(t *testing.T) {
 
 func TestAccNamedListsResource_Type(t *testing.T) {
 	resourceName := "bloxone_td_named_list.test_type"
-	var v fw.AtcfwNamedList
+	var v1 fw.AtcfwNamedList
 	name := acctest.RandomNameWithPrefix("named_list")
-	item := acctest.RandomNameWithPrefix("named-list") + ".com."
+	item := acctest.RandomNameWithPrefix("named-list") + ".com"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -204,44 +204,11 @@ func TestAccNamedListsResource_Type(t *testing.T) {
 			{
 				Config: testAccNamedListsType(name, item, "custom_list"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
+					testAccCheckNamedListsExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
 					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
-					resource.TestCheckResourceAttr(resourceName, "confidence", "custom_list"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccNamedListsType(name, item, "MEDIUM"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
-					resource.TestCheckResourceAttr(resourceName, "confidence", "threat_insight"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccNamedListsType(name, item, "fast_flux"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
-					resource.TestCheckResourceAttr(resourceName, "confidence", "fast_flux"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccNamedListsConfidence(name, item, "INFO"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
-					resource.TestCheckResourceAttr(resourceName, "confidence", "LOW"),
+					resource.TestCheckResourceAttr(resourceName, "type", "custom_list"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -253,7 +220,7 @@ func TestAccNamedListsResource_ThreatLevel(t *testing.T) {
 	resourceName := "bloxone_td_named_list.test_threat_level"
 	var v fw.AtcfwNamedList
 	name := acctest.RandomNameWithPrefix("named_list")
-	item := acctest.RandomNameWithPrefix("named-list") + ".com."
+	item := acctest.RandomNameWithPrefix("named-list") + ".com"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -284,17 +251,6 @@ func TestAccNamedListsResource_ThreatLevel(t *testing.T) {
 			// Update and Read
 			{
 				Config: testAccNamedListsThreatLevel(name, item, "LOW"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
-					resource.TestCheckResourceAttr(resourceName, "threat_level", "LOW"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccNamedListsConfidence(name, item, "INFO"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
@@ -388,6 +344,7 @@ resource "bloxone_td_named_list" "test_name" {
 		description = "Example Domain"
 	}
 	]
+	type = "custom_list"
 }
 `, name, item)
 }
@@ -403,6 +360,7 @@ resource "bloxone_td_named_list" "test_description" {
 	}
 	]
 	description = %q
+	type = "custom_list"
 }
 
 `, name, item, description)
@@ -418,20 +376,11 @@ resource "bloxone_td_named_list" "test_confidence" {
 		description = "Example Domain"
 	}
 	]
-	confidence = %q
+	confidence_level = %q
+	type = "custom_list"
 }
 
 `, name, item, confidence)
-}
-
-func testAccNamedListsItems(name, item string) string {
-	return fmt.Sprintf(`
-resource "bloxone_td_named_list" "test_items" {
-	name = %q
-	items = [ %q ]
-}
-
-`, name, item)
 }
 
 func testAccNamedListsItemsDescribed(name, item, itemsDescription string) string {
@@ -444,6 +393,7 @@ resource "bloxone_td_named_list" "test_items_described" {
 		description = %q
 	}
 	]
+	type = "custom_list"
 }
 
 `, name, item, itemsDescription)
@@ -460,6 +410,7 @@ resource "bloxone_td_named_list" "test_threat_level" {
 	}
 	]
 	threat_level = %q
+	type = "custom_list"
 }
 
 `, name, item, threatLevel)

@@ -60,10 +60,10 @@ resource "bloxone_td_access_code" "test" {
 	rules = [
 		{
 			action = "" ,
-			data = "antimalware",
+			data = "terraform_test",
 			description = "",
 			redirect_name = "",
-			type = "named_feed"
+			type = "custom_list"
 		}
 	]
 }
