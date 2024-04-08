@@ -105,7 +105,7 @@ func TestAccNamedListsResource_Name(t *testing.T) {
 	})
 }
 
-func TestAccNetworkListsResource_ItemsDescribed(t *testing.T) {
+func TestAccNamedListsResource_ItemsDescribed(t *testing.T) {
 	resourceName := "bloxone_td_named_list.test_items_described"
 	var v fw.AtcfwNamedList
 	name := acctest.RandomNameWithPrefix("named-list")
