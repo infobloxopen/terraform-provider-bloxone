@@ -105,6 +105,42 @@ func TestAccNamedListsResource_Name(t *testing.T) {
 	})
 }
 
+func TestAccNetworkListsResource_ItemsDescribed(t *testing.T) {
+	resourceName := "bloxone_td_named_list.test_items_described"
+	var v fw.AtcfwNamedList
+	name := acctest.RandomNameWithPrefix("named-list")
+	item1 := acctest.RandomNameWithPrefix("named-list") + ".com"
+	item2 := acctest.RandomNameWithPrefix("named-list") + ".com"
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccNamedListsItemsDescribed(name, item1, "Example Item 1"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "name", name),
+					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item1),
+					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Item 1"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccNamedListsItemsDescribed(name, item2, "Example Item 2"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "name", name),
+					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item2),
+					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Item 2"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccNamedListsResource_Description(t *testing.T) {
 	resourceName := "bloxone_td_named_list.test_description"
 	var v fw.AtcfwNamedList
