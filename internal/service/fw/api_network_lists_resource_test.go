@@ -172,6 +172,9 @@ func testAccCheckNetworkListsExists(ctx context.Context, resourceName string, v 
 			return fmt.Errorf("not found: %s", resourceName)
 		}
 		id, err := strconv.Atoi(rs.Primary.ID)
+		if err != nil {
+			return err
+		}
 		apiRes, _, err := acctest.BloxOneClient.FWAPI.
 			NetworkListsAPI.
 			NetworkListsReadNetworkList(ctx, int32(id)).

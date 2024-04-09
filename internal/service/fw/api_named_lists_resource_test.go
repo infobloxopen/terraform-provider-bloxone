@@ -305,6 +305,9 @@ func testAccCheckNamedListsExists(ctx context.Context, resourceName string, v *f
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
 		id, err := strconv.Atoi(rs.Primary.ID)
+		if err != nil {
+			return err
+		}
 		if !ok {
 			return fmt.Errorf("not found: %s", resourceName)
 		}
