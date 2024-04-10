@@ -3,12 +3,12 @@
 page_title: "bloxone_td_internal_domain_list Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  Manages an Internal Domain List.
 ---
 
 # bloxone_td_internal_domain_list (Resource)
 
-
+Manages an Internal Domain List.
 
 ## Example Usage
 
