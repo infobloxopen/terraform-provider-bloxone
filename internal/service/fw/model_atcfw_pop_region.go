@@ -7,8 +7,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-
 	"github.com/infobloxopen/bloxone-go-client/fw"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -46,18 +44,6 @@ var AtcfwPoPRegionResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "PoP Region's name",
 	},
-}
-
-func ExpandAtcfwPoPRegion(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.AtcfwPoPRegion {
-	if o.IsNull() || o.IsUnknown() {
-		return nil
-	}
-	var m AtcfwPoPRegionModel
-	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
-	if diags.HasError() {
-		return nil
-	}
-	return m.Expand(ctx, diags)
 }
 
 func (m *AtcfwPoPRegionModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.AtcfwPoPRegion {
