@@ -46,7 +46,7 @@ func TestAccInternalDomainListsDataSource_TagFilters(t *testing.T) {
 		CheckDestroy:             testAccCheckInternalDomainListsDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccInternalDomainListsDataSourceConfigTagFilters(name, "example.somedomain.com", "internal_domain_list_tag1"),
+				Config: testAccInternalDomainListsDataSourceConfigTagFilters(name, "example.somedomain.com", acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckInternalDomainListsExists(context.Background(), resourceName, &v),

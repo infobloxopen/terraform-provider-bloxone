@@ -46,18 +46,6 @@ var AtcfwPoPRegionResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *AtcfwPoPRegionModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.AtcfwPoPRegion {
-	if m == nil {
-		return nil
-	}
-	to := &fw.AtcfwPoPRegion{
-		Addresses: flex.ExpandFrameworkListString(ctx, m.Addresses, diags),
-		Location:  flex.ExpandStringPointer(m.Location),
-		Region:    flex.ExpandStringPointer(m.Region),
-	}
-	return to
-}
-
 func FlattenAtcfwPoPRegion(ctx context.Context, from *fw.AtcfwPoPRegion, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwPoPRegionAttrTypes)
