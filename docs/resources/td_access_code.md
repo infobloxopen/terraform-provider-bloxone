@@ -3,12 +3,12 @@
 page_title: "bloxone_td_access_code Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  Manages an access code.
 ---
 
 # bloxone_td_access_code (Resource)
 
-
+Manages an access code.
 
 
 

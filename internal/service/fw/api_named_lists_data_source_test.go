@@ -92,15 +92,23 @@ data "bloxone_td_named_lists" "test" {
 func testAccNamedListsDataSourceConfigTagFilters(name, tagValue string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_named_list" "test" {
-  tags = {
-	tag1 = %q
-  }
+  name = %q
+	items_described = [
+	{
+		item = "tf-domain.com"
+		description = "Exaample Domain"
+	}
+	]
+	type = "custom_list"
+	tags = {
+		display_name = "Terraform Example Named List"
+	}
 }
 
 data "bloxone_td_named_lists" "test" {
   tag_filters = {
-	tag1 = bloxone_td_named_list.test.tags.tag1
-  }
+		display_name = bloxone_td_named_list.test.tags.display_name
+	}
 }
 `, tagValue)
 }

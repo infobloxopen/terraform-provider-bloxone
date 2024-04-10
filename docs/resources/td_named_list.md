@@ -3,12 +3,12 @@
 page_title: "bloxone_td_named_list Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  Manages a Named List.
 ---
 
 # bloxone_td_named_list (Resource)
 
-
+Manages a Named List.
 
 ## Example Usage
 

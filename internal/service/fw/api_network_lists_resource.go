@@ -31,7 +31,7 @@ func (r *NetworkListsResource) Metadata(ctx context.Context, req resource.Metada
 
 func (r *NetworkListsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages a Network List.",
 		Attributes:          AtcfwNetworkListResourceSchemaAttributes,
 	}
 }

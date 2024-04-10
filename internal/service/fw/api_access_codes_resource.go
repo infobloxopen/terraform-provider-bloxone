@@ -31,7 +31,7 @@ func (r *AccessCodesResource) Metadata(ctx context.Context, req resource.Metadat
 
 func (r *AccessCodesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages an access code.",
 		Attributes:          AtcfwAccessCodeResourceSchemaAttributes,
 	}
 }

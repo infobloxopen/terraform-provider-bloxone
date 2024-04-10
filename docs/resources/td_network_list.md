@@ -3,12 +3,12 @@
 page_title: "bloxone_td_network_list Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  Manages a Network List.
 ---
 
 # bloxone_td_network_list (Resource)
 
-
+Manages a Network List.
 
 ## Example Usage
 

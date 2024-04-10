@@ -98,18 +98,26 @@ func (d *NamedListsDataSource) Read(ctx context.Context, req datasource.ReadRequ
 		return
 	}
 
-	apiRes, _, err := d.client.FWAPI.
-		NamedListsAPI.
-		NamedListsListNamedLists(ctx).
-		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
-		Execute()
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]fw.AtcfwNamedListRead, error) {
+		apiRes, _, err := d.client.FWAPI.
+			NamedListsAPI.
+			NamedListsListNamedLists(ctx).
+			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
+			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+			Offset(offset).
+			Limit(limit).
+			Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Named List, got error: %s", err))
+			return nil, err
+		}
+		return apiRes.GetResults(), nil
+	})
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read NamedLists, got error: %s", err))
 		return
 	}
 
-	data.FlattenResults(ctx, apiRes.GetResults(), &resp.Diagnostics)
+	data.FlattenResults(ctx, allResults, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

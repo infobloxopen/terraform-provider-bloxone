@@ -31,7 +31,7 @@ func (r *NamedListsResource) Metadata(ctx context.Context, req resource.Metadata
 
 func (r *NamedListsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages a Named List.",
 		Attributes:          AtcfwNamedListResourceSchemaAttributes,
 	}
 }
