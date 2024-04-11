@@ -38,7 +38,7 @@ func TestAccNamedListsDataSource_TagFilters(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNamedListsDataSourceConfigTagFilters(name, "value1"),
+				Config: testAccNamedListsDataSourceConfigTagFilters(name, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{}, testAccCheckNamedListsResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
