@@ -27,6 +27,8 @@ type IpamsvcDHCPConfig struct {
 	AllowUnknown *bool `json:"allow_unknown,omitempty"`
 	// Disable to allow leases only for known IPV6 clients, those for which a fixed address is configured.
 	AllowUnknownV6 *bool `json:"allow_unknown_v6,omitempty"`
+	// Enable/disable to include/exclude the client id when responding to discover or request.
+	EchoClientId *bool `json:"echo_client_id,omitempty"`
 	// The resource identifier.
 	Filters []string `json:"filters,omitempty"`
 	// The resource identifier.
@@ -55,6 +57,8 @@ func NewIpamsvcDHCPConfig() *IpamsvcDHCPConfig {
 	this.AllowUnknown = &allowUnknown
 	var allowUnknownV6 bool = true
 	this.AllowUnknownV6 = &allowUnknownV6
+	var echoClientId bool = false
+	this.EchoClientId = &echoClientId
 	var ignoreClientUid bool = false
 	this.IgnoreClientUid = &ignoreClientUid
 	var leaseTime int64 = 3600
@@ -77,6 +81,8 @@ func NewIpamsvcDHCPConfigWithDefaults() *IpamsvcDHCPConfig {
 	this.AllowUnknown = &allowUnknown
 	var allowUnknownV6 bool = true
 	this.AllowUnknownV6 = &allowUnknownV6
+	var echoClientId bool = false
+	this.EchoClientId = &echoClientId
 	var ignoreClientUid bool = false
 	this.IgnoreClientUid = &ignoreClientUid
 	var leaseTime int64 = 3600
@@ -212,6 +218,38 @@ func (o *IpamsvcDHCPConfig) HasAllowUnknownV6() bool {
 // SetAllowUnknownV6 gets a reference to the given bool and assigns it to the AllowUnknownV6 field.
 func (o *IpamsvcDHCPConfig) SetAllowUnknownV6(v bool) {
 	o.AllowUnknownV6 = &v
+}
+
+// GetEchoClientId returns the EchoClientId field value if set, zero value otherwise.
+func (o *IpamsvcDHCPConfig) GetEchoClientId() bool {
+	if o == nil || IsNil(o.EchoClientId) {
+		var ret bool
+		return ret
+	}
+	return *o.EchoClientId
+}
+
+// GetEchoClientIdOk returns a tuple with the EchoClientId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IpamsvcDHCPConfig) GetEchoClientIdOk() (*bool, bool) {
+	if o == nil || IsNil(o.EchoClientId) {
+		return nil, false
+	}
+	return o.EchoClientId, true
+}
+
+// HasEchoClientId returns a boolean if a field has been set.
+func (o *IpamsvcDHCPConfig) HasEchoClientId() bool {
+	if o != nil && !IsNil(o.EchoClientId) {
+		return true
+	}
+
+	return false
+}
+
+// SetEchoClientId gets a reference to the given bool and assigns it to the EchoClientId field.
+func (o *IpamsvcDHCPConfig) SetEchoClientId(v bool) {
+	o.EchoClientId = &v
 }
 
 // GetFilters returns the Filters field value if set, zero value otherwise.
@@ -427,6 +465,9 @@ func (o IpamsvcDHCPConfig) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.AllowUnknownV6) {
 		toSerialize["allow_unknown_v6"] = o.AllowUnknownV6
+	}
+	if !IsNil(o.EchoClientId) {
+		toSerialize["echo_client_id"] = o.EchoClientId
 	}
 	if !IsNil(o.Filters) {
 		toSerialize["filters"] = o.Filters
