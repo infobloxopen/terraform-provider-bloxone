@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -17,6 +18,7 @@ import (
 func TestAccSecurityPoliciesResource_basic(t *testing.T) {
 	var resourceName = "bloxone_td_security_policy.test"
 	var v fw.AtcfwSecurityPolicy
+	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -24,7 +26,7 @@ func TestAccSecurityPoliciesResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSecurityPoliciesBasicConfig(),
+				Config: testAccSecurityPoliciesBasicConfig(name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
 					// TODO: check and validate these
@@ -40,6 +42,7 @@ func TestAccSecurityPoliciesResource_basic(t *testing.T) {
 func TestAccSecurityPoliciesResource_disappears(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test"
 	var v fw.AtcfwSecurityPolicy
+	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -47,7 +50,7 @@ func TestAccSecurityPoliciesResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckSecurityPoliciesDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSecurityPoliciesBasicConfig(),
+				Config: testAccSecurityPoliciesBasicConfig(name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
 					testAccCheckSecurityPoliciesDisappears(context.Background(), &v),
@@ -65,9 +68,13 @@ func testAccCheckSecurityPoliciesExists(ctx context.Context, resourceName string
 		if !ok {
 			return fmt.Errorf("not found: %s", resourceName)
 		}
+		id, err := strconv.Atoi(rs.Primary.ID)
+		if err != nil {
+			return err
+		}
 		apiRes, _, err := acctest.BloxOneClient.FWAPI.
 			SecurityPoliciesAPI.
-			SecurityPoliciesReadSecurityPolicy(ctx, rs.Primary.ID).
+			SecurityPoliciesReadSecurityPolicy(ctx, int32(id)).
 			Execute()
 		if err != nil {
 			return err
@@ -103,7 +110,7 @@ func testAccCheckSecurityPoliciesDisappears(ctx context.Context, v *fw.AtcfwSecu
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.FWAPI.
 			SecurityPoliciesAPI.
-			SecurityPoliciesDeleteSecurityPolicy(ctx, *v.Id).
+			SecurityPoliciesDeleteSingleSecurityPolicy(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

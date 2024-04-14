@@ -15,6 +15,7 @@ func TestAccSecurityPoliciesDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_security_policies.test"
 	resourceName := "bloxone_td_security_policy.test"
 	var v fw.AtcfwSecurityPolicy
+	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -22,7 +23,7 @@ func TestAccSecurityPoliciesDataSource_Filters(t *testing.T) {
 		CheckDestroy:             testAccCheckSecurityPoliciesDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSecurityPoliciesDataSourceConfigFilters(),
+				Config: testAccSecurityPoliciesDataSourceConfigFilters(name),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
@@ -37,6 +38,7 @@ func TestAccSecurityPoliciesDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_security_policies.test"
 	resourceName := "bloxone_td_security_policy.test"
 	var v fw.AtcfwSecurityPolicy
+	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -44,7 +46,7 @@ func TestAccSecurityPoliciesDataSource_TagFilters(t *testing.T) {
 		CheckDestroy:             testAccCheckSecurityPoliciesDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSecurityPoliciesDataSourceConfigTagFilters("value1"),
+				Config: testAccSecurityPoliciesDataSourceConfigTagFilters(name, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
@@ -61,22 +63,24 @@ func testAccCheckSecurityPoliciesResourceAttrPair(resourceName, dataSourceName s
 	return []resource.TestCheckFunc{}
 }
 
-func testAccSecurityPoliciesDataSourceConfigFilters() string {
+func testAccSecurityPoliciesDataSourceConfigFilters(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_security_policy" "test" {
+	name = %q
 }
 
 data "bloxone_td_security_policies" "test" {
   filters = {
-	 = bloxone_td_security_policy.test.
+	name= bloxone_td_security_policy.test.name
   }
 }
-`)
+`, name)
 }
 
-func testAccSecurityPoliciesDataSourceConfigTagFilters(tagValue string) string {
+func testAccSecurityPoliciesDataSourceConfigTagFilters(name, tagValue string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_security_policy" "test" {
+  name = 	%q
   tags = {
 	tag1 = %q
   }
@@ -87,5 +91,5 @@ data "bloxone_td_security_policies" "test" {
 	tag1 = bloxone_td_security_policy.test.tags.tag1
   }
 }
-`, tagValue)
+`, name, tagValue)
 }

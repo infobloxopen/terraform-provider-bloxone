@@ -55,6 +55,13 @@ func FlattenInt64Pointer(i *int64) types.Int64 {
 	return FlattenInt64(*i)
 }
 
+func FlattenInt32Pointer(i *int32) types.Int64 {
+	if i == nil {
+		return types.Int64Null()
+	}
+	return FlattenInt64(int64(*i))
+}
+
 func FlattenFloat64(f float64) types.Float64 {
 	if f == 0 {
 		return types.Float64Null()
@@ -87,11 +94,47 @@ func ExpandFrameworkListString(ctx context.Context, tfList types.List, diags *di
 	return data
 }
 
+func ExpandFrameworkListInt32(ctx context.Context, tfList types.List, diags *diag.Diagnostics) []int32 {
+	if tfList.IsNull() || tfList.IsUnknown() {
+		return nil
+	}
+	var data []int32
+	diags.Append(tfList.ElementsAs(ctx, &data, false)...)
+	return data
+}
+
+func ExpandFrameworkListInt64(ctx context.Context, tfList types.List, diags *diag.Diagnostics) []int64 {
+	if tfList.IsNull() || tfList.IsUnknown() {
+		return nil
+	}
+	var data []int64
+	diags.Append(tfList.ElementsAs(ctx, &data, false)...)
+	return data
+}
+
 func FlattenFrameworkListString(ctx context.Context, l []string, diags *diag.Diagnostics) types.List {
 	if len(l) == 0 {
 		return types.ListNull(types.StringType)
 	}
 	tfList, d := types.ListValueFrom(ctx, types.StringType, l)
+	diags.Append(d...)
+	return tfList
+}
+
+func FlattenFrameworkListInt32(ctx context.Context, l []int32, diags *diag.Diagnostics) types.List {
+	if len(l) == 0 {
+		return types.ListNull(types.Int64Type)
+	}
+	tfList, d := types.ListValueFrom(ctx, types.Int64Type, l)
+	diags.Append(d...)
+	return tfList
+}
+
+func FlattenFrameworkListInt64(ctx context.Context, l []int64, diags *diag.Diagnostics) types.List {
+	if len(l) == 0 {
+		return types.ListNull(types.Int64Type)
+	}
+	tfList, d := types.ListValueFrom(ctx, types.Int64Type, l)
 	diags.Append(d...)
 	return tfList
 }
@@ -250,6 +293,13 @@ func ExpandInt64Pointer(v types.Int64) *int64 {
 		return nil
 	}
 	return v.ValueInt64Pointer()
+}
+
+func ExpandInt32Pointer(v types.Int64) *int32 {
+	if v.IsNull() || v.IsUnknown() {
+		return nil
+	}
+	return utils.Ptr(int32(v.ValueInt64()))
 }
 
 func ExpandFloat64(v types.Float64) float64 {

@@ -111,8 +111,8 @@ func (m *AtcfwSecurityPolicyRuleModel) Flatten(ctx context.Context, from *fw.Atc
 	}
 	m.Action = flex.FlattenStringPointer(from.Action)
 	m.Data = flex.FlattenStringPointer(from.Data)
-	m.ListId = flex.FlattenInt64Pointer(from.ListId)
-	m.PolicyId = flex.FlattenInt64Pointer(from.PolicyId)
+	m.ListId = flex.FlattenInt32Pointer(from.ListId)
+	m.PolicyId = flex.FlattenInt32Pointer(from.PolicyId)
 	m.PolicyName = flex.FlattenStringPointer(from.PolicyName)
 	m.RedirectName = flex.FlattenStringPointer(from.RedirectName)
 	m.Type = flex.FlattenStringPointer(from.Type)

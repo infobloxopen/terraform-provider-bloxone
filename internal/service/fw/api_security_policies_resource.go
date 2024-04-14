@@ -31,7 +31,7 @@ func (r *SecurityPoliciesResource) Metadata(ctx context.Context, req resource.Me
 
 func (r *SecurityPoliciesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manage Security Policies.",
 		Attributes:          AtcfwSecurityPolicyResourceSchemaAttributes,
 	}
 }
@@ -95,7 +95,7 @@ func (r *SecurityPoliciesResource) Read(ctx context.Context, req resource.ReadRe
 
 	apiRes, httpRes, err := r.client.FWAPI.
 		SecurityPoliciesAPI.
-		SecurityPoliciesReadSecurityPolicy(ctx, data.Id.ValueString()).
+		SecurityPoliciesReadSecurityPolicy(ctx, int32(data.Id.ValueInt64())).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *SecurityPoliciesResource) Update(ctx context.Context, req resource.Upda
 
 	apiRes, _, err := r.client.FWAPI.
 		SecurityPoliciesAPI.
-		SecurityPoliciesUpdateSecurityPolicy(ctx, data.Id.ValueString()).
+		SecurityPoliciesUpdateSecurityPolicy(ctx, int32(data.Id.ValueInt64())).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *SecurityPoliciesResource) Delete(ctx context.Context, req resource.Dele
 
 	httpRes, err := r.client.FWAPI.
 		SecurityPoliciesAPI.
-		SecurityPoliciesDeleteSecurityPolicy(ctx, data.Id.ValueString()).
+		SecurityPoliciesDeleteSingleSecurityPolicy(ctx, int32(data.Id.ValueInt64())).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
