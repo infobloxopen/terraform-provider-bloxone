@@ -14,6 +14,7 @@ import (
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_data"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/fw"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_mgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_provision"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/ipam"
@@ -128,6 +129,8 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		keys.NewTsigResource,
 
 		anycast.NewOnPremAnycastManagerResource,
+
+		fw.NewInternalDomainListsResource,
 	}
 }
 
@@ -184,6 +187,9 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		keys.NewKerberosDataSource,
 
 		anycast.NewOnPremAnycastManagerDataSource,
+
+		fw.NewInternalDomainListsDataSource,
+		fw.NewPoPRegionsDataSource,
 	}
 }
 
