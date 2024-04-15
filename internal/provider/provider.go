@@ -130,6 +130,7 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		fw.NewAccessCodesResource,
 		fw.NewNamedListsResource,
 		fw.NewNetworkListsResource,
+		fw.NewInternalDomainListsResource,
 	}
 }
 
@@ -188,6 +189,8 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		fw.NewAccessCodesDataSource,
 		fw.NewNamedListsDataSource,
 		fw.NewNetworkListsDataSource,
+		fw.NewInternalDomainListsDataSource,
+		fw.NewPoPRegionsDataSource,
 	}
 }
 
