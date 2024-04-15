@@ -22,7 +22,7 @@ func NewOnPremAnycastManagerDataSource() datasource.DataSource {
 	return &OnPremAnycastManagerDataSource{}
 }
 
-// OnPremAnycastManagerDataSource defines the data source implementation
+// OnPremAnycastManagerDataSource defines the data source implementation.
 type OnPremAnycastManagerDataSource struct {
 	client *bloxoneclient.APIClient
 }
