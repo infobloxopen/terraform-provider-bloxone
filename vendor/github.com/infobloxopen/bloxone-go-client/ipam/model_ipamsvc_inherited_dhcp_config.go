@@ -23,6 +23,7 @@ type IpamsvcInheritedDHCPConfig struct {
 	AbandonedReclaimTimeV6 *InheritanceInheritedUInt32        `json:"abandoned_reclaim_time_v6,omitempty"`
 	AllowUnknown           *InheritanceInheritedBool          `json:"allow_unknown,omitempty"`
 	AllowUnknownV6         *InheritanceInheritedBool          `json:"allow_unknown_v6,omitempty"`
+	EchoClientId           *InheritanceInheritedBool          `json:"echo_client_id,omitempty"`
 	Filters                *InheritedDHCPConfigFilterList     `json:"filters,omitempty"`
 	FiltersV6              *InheritedDHCPConfigFilterList     `json:"filters_v6,omitempty"`
 	IgnoreClientUid        *InheritanceInheritedBool          `json:"ignore_client_uid,omitempty"`
@@ -174,6 +175,38 @@ func (o *IpamsvcInheritedDHCPConfig) HasAllowUnknownV6() bool {
 // SetAllowUnknownV6 gets a reference to the given InheritanceInheritedBool and assigns it to the AllowUnknownV6 field.
 func (o *IpamsvcInheritedDHCPConfig) SetAllowUnknownV6(v InheritanceInheritedBool) {
 	o.AllowUnknownV6 = &v
+}
+
+// GetEchoClientId returns the EchoClientId field value if set, zero value otherwise.
+func (o *IpamsvcInheritedDHCPConfig) GetEchoClientId() InheritanceInheritedBool {
+	if o == nil || IsNil(o.EchoClientId) {
+		var ret InheritanceInheritedBool
+		return ret
+	}
+	return *o.EchoClientId
+}
+
+// GetEchoClientIdOk returns a tuple with the EchoClientId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IpamsvcInheritedDHCPConfig) GetEchoClientIdOk() (*InheritanceInheritedBool, bool) {
+	if o == nil || IsNil(o.EchoClientId) {
+		return nil, false
+	}
+	return o.EchoClientId, true
+}
+
+// HasEchoClientId returns a boolean if a field has been set.
+func (o *IpamsvcInheritedDHCPConfig) HasEchoClientId() bool {
+	if o != nil && !IsNil(o.EchoClientId) {
+		return true
+	}
+
+	return false
+}
+
+// SetEchoClientId gets a reference to the given InheritanceInheritedBool and assigns it to the EchoClientId field.
+func (o *IpamsvcInheritedDHCPConfig) SetEchoClientId(v InheritanceInheritedBool) {
+	o.EchoClientId = &v
 }
 
 // GetFilters returns the Filters field value if set, zero value otherwise.
@@ -389,6 +422,9 @@ func (o IpamsvcInheritedDHCPConfig) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.AllowUnknownV6) {
 		toSerialize["allow_unknown_v6"] = o.AllowUnknownV6
+	}
+	if !IsNil(o.EchoClientId) {
+		toSerialize["echo_client_id"] = o.EchoClientId
 	}
 	if !IsNil(o.Filters) {
 		toSerialize["filters"] = o.Filters
