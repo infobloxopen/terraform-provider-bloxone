@@ -280,7 +280,7 @@ github.com/huandu/xstrings
 # github.com/imdario/mergo v0.3.15
 ## explicit; go 1.13
 github.com/imdario/mergo
-# github.com/infobloxopen/bloxone-go-client v0.0.0-20240305045934-89496d1321cb => ../bloxone-go-client
+# github.com/infobloxopen/bloxone-go-client v0.0.0-20240229220724-5719a4cf7a9e => ../bloxone-go-client
 ## explicit; go 1.19
 github.com/infobloxopen/bloxone-go-client/anycast
 github.com/infobloxopen/bloxone-go-client/client
@@ -367,7 +367,7 @@ golang.org/x/crypto/hkdf
 golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/scrypt
 golang.org/x/crypto/sha3
-# golang.org/x/exp v0.0.0-20240314144324-c7f7c6466f7f
+# golang.org/x/exp v0.0.0-20230809150735-7b3493d9a819
 ## explicit; go 1.20
 golang.org/x/exp/constraints
 golang.org/x/exp/slices
