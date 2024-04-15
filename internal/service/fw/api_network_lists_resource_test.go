@@ -32,9 +32,15 @@ func TestAccNetworkListsResource_basic(t *testing.T) {
 				Config: testAccNetworkListsBasicConfig(name, "156.2.3.0/24"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkListsExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "name", name),
+					resource.TestCheckResourceAttr(resourceName, "items.0", "156.2.3.0/24"),
+					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_time"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_time"),
+					resource.TestCheckResourceAttrSet(resourceName, "policy_id"),
+					// Test fields with default value
+					resource.TestCheckResourceAttr(resourceName, "description", ""),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -80,17 +86,14 @@ func TestAccNetworkListsResource_Name(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkListsExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "name", name1),
-					resource.TestCheckResourceAttr(resourceName, "items.0", "156.2.3.0/24"),
 				),
 			},
 			// Update and Read
 			{
 				Config: testAccNetworkListsName(name2, "156.2.3.0/24"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkListsDestroy(context.Background(), &v1),
 					testAccCheckNetworkListsExists(context.Background(), resourceName, &v2),
 					resource.TestCheckResourceAttr(resourceName, "name", name2),
-					resource.TestCheckResourceAttr(resourceName, "items.0", "156.2.3.0/24"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -113,7 +116,6 @@ func TestAccNetworkListsResource_Description(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkListsExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items.0", "156.2.3.0/24"),
 					resource.TestCheckResourceAttr(resourceName, "description", "Test Description"),
 				),
 			},
@@ -123,7 +125,6 @@ func TestAccNetworkListsResource_Description(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkListsExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items.0", "156.2.3.0/24"),
 					resource.TestCheckResourceAttr(resourceName, "description", "Updated Test Description"),
 				),
 			},

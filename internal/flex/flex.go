@@ -94,7 +94,7 @@ func ExpandFrameworkListString(ctx context.Context, tfList types.List, diags *di
 	return data
 }
 
-func ExpandFrameworkListInt64(ctx context.Context, tfList types.List, diags *diag.Diagnostics) []int32 {
+func ExpandFrameworkListInt32(ctx context.Context, tfList types.List, diags *diag.Diagnostics) []int32 {
 	if tfList.IsNull() || tfList.IsUnknown() {
 		return nil
 	}

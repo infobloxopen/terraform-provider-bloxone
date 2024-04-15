@@ -33,6 +33,21 @@ func TestAccAccessCodesResource_basic(t *testing.T) {
 				Config: testAccAccessCodesBasicConfig(name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "name", name),
+					resource.TestCheckResourceAttr(resourceName, "rules.0.data", "terraform_test"),
+					resource.TestCheckResourceAttr(resourceName, "rules.0.type", "custom_list"),
+					resource.TestCheckResourceAttr(resourceName, "activation", time.Now().UTC().Format(time.RFC3339)),
+					resource.TestCheckResourceAttr(resourceName, "expiration", time.Now().UTC().Add(time.Hour).Format(time.RFC3339)),
+					// Test Read Only fields
+					resource.TestCheckResourceAttrSet(resourceName, "created_time"),
+					resource.TestCheckResourceAttrSet(resourceName, "id"),
+					resource.TestCheckResourceAttrSet(resourceName, "updated_time"),
+					resource.TestCheckResourceAttrSet(resourceName, "access_key"),
+					// Test fields with default value
+					resource.TestCheckResourceAttr(resourceName, "description", ""),
+					resource.TestCheckResourceAttr(resourceName, "rules.0.action", ""),
+					resource.TestCheckResourceAttr(resourceName, "rules.0.description", ""),
+					resource.TestCheckResourceAttr(resourceName, "rules.0.redirect_name", ""),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -78,19 +93,14 @@ func TestAccAccessCodesResource_Name(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodesExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "name", name1),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.data", "terraform_test"),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.type", "custom_list"),
 				),
 			},
 			// Update and Read
 			{
 				Config: testAccAccessCodesName(name2),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesDestroy(context.Background(), &v1),
 					testAccCheckAccessCodesExists(context.Background(), resourceName, &v2),
 					resource.TestCheckResourceAttr(resourceName, "name", name2),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.data", "terraform_test"),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.type", "custom_list"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -102,6 +112,8 @@ func TestAccAccessCodesResource_Activation(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_activation"
 	var v fw.AtcfwAccessCode
 	name := acctest.RandomNameWithPrefix("ac")
+	actTime1 := time.Now().UTC().Format(time.RFC3339)
+	actTime2 := time.Now().UTC().Add(time.Minute * 10).Format(time.RFC3339)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -109,22 +121,18 @@ func TestAccAccessCodesResource_Activation(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAccessCodesActivation(name, time.Now().UTC().Format(time.RFC3339)),
+				Config: testAccAccessCodesActivation(name, actTime1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.data", "terraform_test"),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.type", "custom_list"),
-					resource.TestCheckResourceAttr(resourceName, "activation", time.Now().UTC().Format(time.RFC3339)),
+					resource.TestCheckResourceAttr(resourceName, "activation", actTime1),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccAccessCodesActivation(name, time.Now().UTC().Add(time.Minute*10).Format(time.RFC3339)),
+				Config: testAccAccessCodesActivation(name, actTime2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.data", "terraform_test"),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.type", "custom_list"),
-					resource.TestCheckResourceAttr(resourceName, "activation", time.Now().UTC().Add(time.Minute*10).Format(time.RFC3339)),
+					resource.TestCheckResourceAttr(resourceName, "activation", actTime2),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -146,8 +154,6 @@ func TestAccAccessCodesResource_Description(t *testing.T) {
 				Config: testAccAccessCodesDescription(name, "Test Description"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodesExists(context.Background(), resourceName, &v1),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.data", "terraform_test"),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.type", "custom_list"),
 					resource.TestCheckResourceAttr(resourceName, "description", "Test Description"),
 				),
 			},
@@ -156,8 +162,6 @@ func TestAccAccessCodesResource_Description(t *testing.T) {
 				Config: testAccAccessCodesDescription(name, "Updated Test Description"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodesExists(context.Background(), resourceName, &v2),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.data", "terraform_test"),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.type", "custom_list"),
 					resource.TestCheckResourceAttr(resourceName, "description", "Updated Test Description"),
 				),
 			},
@@ -170,6 +174,8 @@ func TestAccAccessCodesResource_Expiration(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_expiration"
 	var v fw.AtcfwAccessCode
 	name := acctest.RandomNameWithPrefix("ac")
+	expTime1 := time.Now().UTC().Add(time.Hour).Format(time.RFC3339)
+	expTime2 := time.Now().UTC().Add(time.Hour * 2).Format(time.RFC3339)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -177,22 +183,18 @@ func TestAccAccessCodesResource_Expiration(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAccessCodesExpiration(name, time.Now().UTC().Add(time.Hour).Format(time.RFC3339)),
+				Config: testAccAccessCodesExpiration(name, expTime1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.data", "terraform_test"),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.type", "custom_list"),
-					resource.TestCheckResourceAttr(resourceName, "expiration", time.Now().UTC().Add(time.Hour).Format(time.RFC3339)),
+					resource.TestCheckResourceAttr(resourceName, "expiration", expTime1),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccAccessCodesExpiration(name, time.Now().UTC().Add(time.Hour*2).Format(time.RFC3339)),
+				Config: testAccAccessCodesExpiration(name, expTime2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.data", "terraform_test"),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.type", "custom_list"),
-					resource.TestCheckResourceAttr(resourceName, "expiration", time.Now().UTC().Add(time.Hour*2).Format(time.RFC3339)),
+					resource.TestCheckResourceAttr(resourceName, "expiration", expTime2),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -294,11 +296,8 @@ resource "bloxone_td_access_code" "test" {
 	expiration = %[3]q
 	rules = [
 		{
-			action = "" ,
-			data = "antimalware",
-			description = "",
-			redirect_name = "",
-			type = "named_feed"
+			data = "terraform_test",
+			type = "custom_list"
 		}
 	]
 }
@@ -314,10 +313,7 @@ resource "bloxone_td_access_code" "test_name" {
 	expiration = %[3]q
 	rules = [
 		{
-			action = "" ,
 			data = "terraform_test",
-			description = "",
-			redirect_name = "",
 			type = "custom_list"
 		}
 	]
@@ -334,10 +330,7 @@ resource "bloxone_td_access_code" "test_activation" {
 	expiration = %[3]q
 	rules = [
 		{
-			action = "" ,
 			data = "terraform_test",
-			description = "",
-			redirect_name = "",
 			type = "custom_list"
 		}
 	]
@@ -354,10 +347,7 @@ resource "bloxone_td_access_code" "test_expiration" {
 	expiration = %q
 	rules = [
 		{
-			action = "" ,
 			data = "terraform_test",
-			description = "",
-			redirect_name = "",
 			type = "custom_list"
 		}
 	]
@@ -375,10 +365,7 @@ resource "bloxone_td_access_code" "test_description" {
 	description = %[4]q
 	rules = [
 		{
-			action = "" ,
 			data = "terraform_test",
-			description = "",
-			redirect_name = "",
 			type = "custom_list"
 		}
 	]
@@ -395,10 +382,7 @@ resource "bloxone_td_access_code" "test_rules" {
 	expiration = %[3]q
 	rules = [
 		{
-			action = "" ,
 			data = %[4]q,
-			description = "",
-			redirect_name = "",
 			type = %[5]q
 		}
 	]

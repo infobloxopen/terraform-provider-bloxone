@@ -34,10 +34,19 @@ func TestAccNamedListsResource_basic(t *testing.T) {
 				Config: testAccNamedListsBasicConfig(name, item),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "name", name),
+					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
+					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
+					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_time"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_time"),
 					resource.TestCheckResourceAttrSet(resourceName, "item_count"),
+					resource.TestCheckResourceAttrSet(resourceName, "confidence_level"),
+					resource.TestCheckResourceAttrSet(resourceName, "threat_level"),
+					resource.TestCheckResourceAttrSet(resourceName, "type"),
+					// Test fields with default value
+					resource.TestCheckResourceAttr(resourceName, "description", ""),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -85,8 +94,6 @@ func TestAccNamedListsResource_Name(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "name", name1),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
 				),
 			},
 			// Update and Read
@@ -96,8 +103,6 @@ func TestAccNamedListsResource_Name(t *testing.T) {
 					testAccCheckNamedListsDestroy(context.Background(), &v1),
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v2),
 					resource.TestCheckResourceAttr(resourceName, "name", name2),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -121,7 +126,6 @@ func TestAccNamedListsResource_ItemsDescribed(t *testing.T) {
 				Config: testAccNamedListsItemsDescribed(name, item1, "Example Item 1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", name),
 					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item1),
 					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Item 1"),
 				),
@@ -131,7 +135,6 @@ func TestAccNamedListsResource_ItemsDescribed(t *testing.T) {
 				Config: testAccNamedListsItemsDescribed(name, item2, "Example Item 2"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", name),
 					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item2),
 					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Item 2"),
 				),
@@ -156,9 +159,6 @@ func TestAccNamedListsResource_Description(t *testing.T) {
 				Config: testAccNamedListsDescription(name, item, "Test Description"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
 					resource.TestCheckResourceAttr(resourceName, "description", "Test Description"),
 				),
 			},
@@ -167,9 +167,6 @@ func TestAccNamedListsResource_Description(t *testing.T) {
 				Config: testAccNamedListsDescription(name, item, "Updated Test Description"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
 					resource.TestCheckResourceAttr(resourceName, "description", "Updated Test Description"),
 				),
 			},
@@ -193,9 +190,6 @@ func TestAccNamedListsResource_Confidence(t *testing.T) {
 				Config: testAccNamedListsConfidence(name, item, "HIGH"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
 					resource.TestCheckResourceAttr(resourceName, "confidence_level", "HIGH"),
 				),
 			},
@@ -204,9 +198,6 @@ func TestAccNamedListsResource_Confidence(t *testing.T) {
 				Config: testAccNamedListsConfidence(name, item, "MEDIUM"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
 					resource.TestCheckResourceAttr(resourceName, "confidence_level", "MEDIUM"),
 				),
 			},
@@ -215,9 +206,6 @@ func TestAccNamedListsResource_Confidence(t *testing.T) {
 				Config: testAccNamedListsConfidence(name, item, "LOW"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
 					resource.TestCheckResourceAttr(resourceName, "confidence_level", "LOW"),
 				),
 			},
@@ -241,9 +229,6 @@ func TestAccNamedListsResource_Type(t *testing.T) {
 				Config: testAccNamedListsType(name, item, "custom_list"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v1),
-					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
 					resource.TestCheckResourceAttr(resourceName, "type", "custom_list"),
 				),
 			},
@@ -267,9 +252,6 @@ func TestAccNamedListsResource_ThreatLevel(t *testing.T) {
 				Config: testAccNamedListsThreatLevel(name, item, "HIGH"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
 					resource.TestCheckResourceAttr(resourceName, "threat_level", "HIGH"),
 				),
 			},
@@ -278,9 +260,6 @@ func TestAccNamedListsResource_ThreatLevel(t *testing.T) {
 				Config: testAccNamedListsThreatLevel(name, item, "MEDIUM"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
 					resource.TestCheckResourceAttr(resourceName, "threat_level", "MEDIUM"),
 				),
 			},
@@ -289,9 +268,6 @@ func TestAccNamedListsResource_ThreatLevel(t *testing.T) {
 				Config: testAccNamedListsThreatLevel(name, item, "LOW"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.item", item),
-					resource.TestCheckResourceAttr(resourceName, "items_described.0.description", "Example Domain"),
 					resource.TestCheckResourceAttr(resourceName, "threat_level", "LOW"),
 				),
 			},
@@ -365,7 +341,7 @@ resource "bloxone_td_named_list" "test" {
 	items_described = [
 	{
 		item = %[2]q
-		description = "Exaample Domain"
+		description = "Example Domain"
 	}
 	]
 	type = "custom_list"

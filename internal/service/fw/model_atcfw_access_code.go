@@ -77,13 +77,10 @@ var AtcfwAccessCodeResourceSchemaAttributes = map[string]schema.Attribute{
 	"expiration": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Optional:            true,
-		MarkdownDescription: "The time when the Bypass Code object was expired.",
+		MarkdownDescription: "The time when the Bypass Code object expires.",
 	},
 	"name": schema.StringAttribute{
-		Optional: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
-		},
+		Optional:            true,
 		MarkdownDescription: "The name of Bypass Code",
 	},
 	"policy_ids": schema.ListAttribute{
@@ -129,7 +126,7 @@ func (m *AtcfwAccessCodeModel) Expand(ctx context.Context, diags *diag.Diagnosti
 		Expiration:  flex.ExpandTimePointer(ctx, m.Expiration, diags),
 		Name:        flex.ExpandStringPointer(m.Name),
 		Rules:       flex.ExpandFrameworkListNestedBlock(ctx, m.Rules, diags, ExpandAtcfwAccessCodeRule),
-		PolicyIds:   flex.ExpandFrameworkListInt64(ctx, m.PolicyIds, diags),
+		PolicyIds:   flex.ExpandFrameworkListInt32(ctx, m.PolicyIds, diags),
 	}
 	return to
 }

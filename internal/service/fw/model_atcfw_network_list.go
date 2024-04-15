@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -64,10 +63,7 @@ var AtcfwNetworkListResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The list of networks' CIDRs that are subject for malicious attacks protection.",
 	},
 	"name": schema.StringAttribute{
-		Optional: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
-		},
+		Optional:            true,
 		MarkdownDescription: "The name of the network list.",
 	},
 	"policy_id": schema.Int64Attribute{

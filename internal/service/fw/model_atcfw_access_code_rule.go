@@ -2,6 +2,7 @@ package fw
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -33,15 +34,21 @@ var AtcfwAccessCodeRuleAttrTypes = map[string]attr.Type{
 var AtcfwAccessCodeRuleResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString(""),
 	},
 	"data": schema.StringAttribute{
 		Optional: true,
 	},
 	"description": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString(""),
 	},
 	"redirect_name": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString(""),
 	},
 	"type": schema.StringAttribute{
 		Optional: true,
