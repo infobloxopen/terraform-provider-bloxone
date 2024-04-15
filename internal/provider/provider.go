@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/anycast"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
@@ -125,6 +126,8 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		infra_mgmt.NewServicesResource,
 
 		keys.NewTsigResource,
+
+		anycast.NewOnPremAnycastManagerResource,
 	}
 }
 
@@ -179,6 +182,8 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 
 		keys.NewTsigDataSource,
 		keys.NewKerberosDataSource,
+
+		anycast.NewOnPremAnycastManagerDataSource,
 	}
 }
 

@@ -76,3 +76,5 @@ require (
 	google.golang.org/grpc v1.57.1 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 )
+
+replace github.com/infobloxopen/bloxone-go-client => ../bloxone-go-client
