@@ -43,7 +43,7 @@ Optional:
 
 - `activation` (String) The time when the Bypass Code object was activated.
 - `description` (String) The brief description for an access code.
-- `expiration` (String) The time when the Bypass Code object was expired.
+- `expiration` (String) The time when the Bypass Code object expires.
 - `name` (String) The name of Bypass Code
 - `policy_ids` (List of Number) The list of SecurityPolicy object identifiers.
 - `rules` (Attributes List) The list of selected security rules (see [below for nested schema](#nestedatt--results--rules))
