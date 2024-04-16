@@ -128,6 +128,7 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		keys.NewTsigResource,
 
 		fw.NewSecurityPoliciesResource,
+		fw.NewInternalDomainListsResource,
 	}
 }
 
@@ -184,6 +185,8 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		keys.NewKerberosDataSource,
 
 		fw.NewSecurityPoliciesDataSource,
+		fw.NewInternalDomainListsDataSource,
+		fw.NewPoPRegionsDataSource,
 	}
 }
 
