@@ -4,11 +4,8 @@ resource "bloxone_td_access_code" "example" {
   expiration = timeadd(timestamp(), "24h")
   rules = [
     {
-      action        = "",
-      data          = "terraform_test",
-      description   = "",
-      redirect_name = "",
-      type          = "custom_list"
+      data = "terraform_test",
+      type = "custom_list"
     }
   ]
   # Other optional fields

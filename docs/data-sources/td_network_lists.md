@@ -39,11 +39,14 @@ data "bloxone_td_network_lists" "example_all" {}
 <a id="nestedatt--results"></a>
 ### Nested Schema for `results`
 
+Required:
+
+- `items` (List of String) The list of networks' CIDRs that are subject for malicious attacks protection.
+- `name` (String) The name of the network list.
+
 Optional:
 
 - `description` (String) The brief description for the network list.
-- `items` (List of String) The list of networks' CIDRs that are subject for malicious attacks protection.
-- `name` (String) The name of the network list.
 
 Read-Only:
 

@@ -59,11 +59,11 @@ var AtcfwNetworkListResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"items": schema.ListAttribute{
 		ElementType:         types.StringType,
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The list of networks' CIDRs that are subject for malicious attacks protection.",
 	},
 	"name": schema.StringAttribute{
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The name of the network list.",
 	},
 	"policy_id": schema.Int64Attribute{

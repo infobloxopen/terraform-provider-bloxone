@@ -100,7 +100,6 @@ func TestAccNamedListsResource_Name(t *testing.T) {
 			{
 				Config: testAccNamedListsName(name2, item),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNamedListsDestroy(context.Background(), &v1),
 					testAccCheckNamedListsExists(context.Background(), resourceName, &v2),
 					resource.TestCheckResourceAttr(resourceName, "name", name2),
 				),

@@ -39,14 +39,17 @@ data "bloxone_td_access_codes" "example_all" {}
 <a id="nestedatt--results"></a>
 ### Nested Schema for `results`
 
-Optional:
+Required:
 
 - `activation` (String) The time when the Bypass Code object was activated.
-- `description` (String) The brief description for an access code.
 - `expiration` (String) The time when the Bypass Code object expires.
 - `name` (String) The name of Bypass Code
-- `policy_ids` (List of Number) The list of SecurityPolicy object identifiers.
 - `rules` (Attributes List) The list of selected security rules (see [below for nested schema](#nestedatt--results--rules))
+
+Optional:
+
+- `description` (String) The brief description for an access code.
+- `policy_ids` (List of Number) The list of SecurityPolicy object identifiers.
 
 Read-Only:
 
@@ -60,8 +63,8 @@ Read-Only:
 
 Optional:
 
-- `action` (String)
-- `data` (String)
-- `description` (String)
-- `redirect_name` (String)
-- `type` (String)
+- `action` (String) The action to be used in the rule.
+- `data` (String) The data to be used in the rule.
+- `description` (String) The brief description of the rule.
+- `redirect_name` (String) The name of the redirect to be used in the rule.
+- `type` (String) The type of the rule.

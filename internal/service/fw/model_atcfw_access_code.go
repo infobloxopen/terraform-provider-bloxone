@@ -60,7 +60,7 @@ var AtcfwAccessCodeResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"activation": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The time when the Bypass Code object was activated.",
 	},
 	"created_time": schema.StringAttribute{
@@ -76,11 +76,11 @@ var AtcfwAccessCodeResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"expiration": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The time when the Bypass Code object expires.",
 	},
 	"name": schema.StringAttribute{
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The name of Bypass Code",
 	},
 	"policy_ids": schema.ListAttribute{
@@ -93,7 +93,7 @@ var AtcfwAccessCodeResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: AtcfwAccessCodeRuleResourceSchemaAttributes,
 		},
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The list of selected security rules",
 	},
 	"updated_time": schema.StringAttribute{

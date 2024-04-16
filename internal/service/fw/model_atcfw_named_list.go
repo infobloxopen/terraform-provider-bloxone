@@ -88,14 +88,11 @@ var AtcfwNamedListResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: AtcfwItemStructsResourceSchemaAttributes,
 		},
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The List of ItemStructs structure which contains the item and its description",
 	},
 	"name": schema.StringAttribute{
-		Optional: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
-		},
+		Required:            true,
 		MarkdownDescription: "The name of the named list.",
 	},
 	"policies": schema.ListAttribute{

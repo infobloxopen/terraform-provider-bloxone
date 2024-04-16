@@ -33,25 +33,30 @@ var AtcfwAccessCodeRuleAttrTypes = map[string]attr.Type{
 
 var AtcfwAccessCodeRuleResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		Default:  stringdefault.StaticString(""),
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
+		MarkdownDescription: "The action to be used in the rule.",
 	},
 	"data": schema.StringAttribute{
-		Optional: true,
+		Optional:            true,
+		MarkdownDescription: "The data to be used in the rule.",
 	},
 	"description": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		Default:  stringdefault.StaticString(""),
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
+		MarkdownDescription: "The brief description of the rule.",
 	},
 	"redirect_name": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		Default:  stringdefault.StaticString(""),
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
+		MarkdownDescription: "The name of the redirect to be used in the rule.",
 	},
 	"type": schema.StringAttribute{
-		Optional: true,
+		Optional:            true,
+		MarkdownDescription: "The type of the rule.",
 	},
 }
 
