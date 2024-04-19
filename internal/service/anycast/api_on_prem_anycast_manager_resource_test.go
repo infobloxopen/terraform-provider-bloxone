@@ -4,11 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"math/rand"
 	"net/http"
 	"strconv"
 	"testing"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
@@ -193,7 +191,7 @@ func TestAccOnPremAnycastManagerResource_Service(t *testing.T) {
 	var resourceName = "bloxone_anycast_ac_config.test_service"
 	var v anycast.ProtoAnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
-	anycastIP := RandomIP()
+	anycastIP := acctest.RandomIP()
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -413,9 +411,4 @@ resource "bloxone_anycast_ac_config" "test_tags" {
     tags = %s
 }
 `, anycastIpAddress, name, service, tagsStr)
-}
-
-func RandomIP() string {
-	rand.Seed(time.Now().UnixNano())
-	return fmt.Sprintf("%d.%d.%d.%d", rand.Intn(256), rand.Intn(256), rand.Intn(256), rand.Intn(256))
 }

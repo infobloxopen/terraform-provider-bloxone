@@ -129,10 +129,12 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		keys.NewTsigResource,
 
 		anycast.NewOnPremAnycastManagerResource,
-    
+
 		fw.NewAccessCodesResource,
 		fw.NewNamedListsResource,
 		fw.NewNetworkListsResource,
+		anycast.NewOnPremAnycastOnpremHostResource,
+
 		fw.NewInternalDomainListsResource,
 	}
 }
