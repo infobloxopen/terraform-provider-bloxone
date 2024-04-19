@@ -667,7 +667,7 @@ func (e GenericOpenAPIError) Model() interface{} {
 }
 
 // format error message using title and detail when model implements rfc7807
-func formatErrorMessage(status string, v interface{}) string {
+func FormatErrorMessage(status string, v interface{}) string {
 	str := ""
 	metaValue := reflect.ValueOf(v).Elem()
 
