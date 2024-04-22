@@ -2,13 +2,13 @@ package fw
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -100,11 +100,14 @@ var AtcfwSecurityPolicyResourceSchemaAttributes = map[string]schema.Attribute{
 	"dfp_services": schema.ListAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The list of DNS Forwarding Proxy Services object identifiers. For Internal Use only.",
 	},
 	"dfps": schema.ListAttribute{
 		ElementType:         types.Int64Type,
 		Optional:            true,
+		Computed:            true,
+		Default:             listdefault.StaticValue(types.ListValueMust(types.Int64Type, []attr.Value{})),
 		MarkdownDescription: "The list of DNS Forwarding Proxy object identifiers.",
 	},
 	"ecs": schema.BoolAttribute{
@@ -139,6 +142,8 @@ var AtcfwSecurityPolicyResourceSchemaAttributes = map[string]schema.Attribute{
 	"network_lists": schema.ListAttribute{
 		ElementType:         types.Int64Type,
 		Optional:            true,
+		Computed:            true,
+		Default:             listdefault.StaticValue(types.ListValueMust(types.Int64Type, []attr.Value{})),
 		MarkdownDescription: "The list of Network Lists identifiers that represents networks that you want to protect from malicious attacks.",
 	},
 	"onprem_resolve": schema.BoolAttribute{
@@ -155,6 +160,8 @@ var AtcfwSecurityPolicyResourceSchemaAttributes = map[string]schema.Attribute{
 	"roaming_device_groups": schema.ListAttribute{
 		ElementType:         types.Int64Type,
 		Optional:            true,
+		Computed:            true,
+		Default:             listdefault.StaticValue(types.ListValueMust(types.Int64Type, []attr.Value{})),
 		MarkdownDescription: "The list of BloxOne Endpoint groups identifiers.",
 	},
 	"rules": schema.ListNestedAttribute{
@@ -261,7 +268,7 @@ func (m *AtcfwSecurityPolicyModel) Flatten(ctx context.Context, from *fw.AtcfwSe
 	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedTime = timetypes.NewRFC3339TimePointerValue(from.UpdatedTime)
 	m.UserGroups = flex.FlattenFrameworkListString(ctx, from.UserGroups, diags)
-	m.Dfps = flex.FlattenFrameworkListInt32(ctx, from.Dfps, diags)
-	m.NetworkLists = flex.FlattenFrameworkListInt64(ctx, from.NetworkLists, diags)
-	m.RoamingDeviceGroups = flex.FlattenFrameworkListInt32(ctx, from.RoamingDeviceGroups, diags)
+	m.Dfps = flex.FlattenFrameworkListInt32NotNull(ctx, from.Dfps, diags)
+	m.NetworkLists = flex.FlattenFrameworkListInt64NotNull(ctx, from.NetworkLists, diags)
+	m.RoamingDeviceGroups = flex.FlattenFrameworkListInt32NotNull(ctx, from.RoamingDeviceGroups, diags)
 }

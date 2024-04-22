@@ -93,6 +93,10 @@ func (m *AtcfwNetAddrDfpAssignmentModel) Expand(ctx context.Context, diags *diag
 	if m == nil {
 		return nil
 	}
+	scopeType, err := fw.NewNetAddrDfpAssignmentScopeTypeFromValue(flex.ExpandString(m.ScopeType))
+	if err != nil {
+		return nil
+	}
 	to := &fw.AtcfwNetAddrDfpAssignment{
 		AddrNet:         flex.ExpandStringPointer(m.AddrNet),
 		End:             flex.ExpandStringPointer(m.End),
@@ -100,7 +104,7 @@ func (m *AtcfwNetAddrDfpAssignmentModel) Expand(ctx context.Context, diags *diag
 		HostId:          flex.ExpandStringPointer(m.HostId),
 		IpSpaceId:       flex.ExpandStringPointer(m.IpSpaceId),
 		Start:           flex.ExpandStringPointer(m.Start),
-		ScopeType:       (*fw.NetAddrDfpAssignmentScopeType)(flex.ExpandStringPointer(m.ScopeType)),
+		ScopeType:       scopeType,
 	}
 	return to
 }

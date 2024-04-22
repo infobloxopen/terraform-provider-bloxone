@@ -130,6 +130,12 @@ func FlattenFrameworkListInt32(ctx context.Context, l []int32, diags *diag.Diagn
 	return tfList
 }
 
+func FlattenFrameworkListInt32NotNull(ctx context.Context, l []int32, diags *diag.Diagnostics) types.List {
+	tfList, d := types.ListValueFrom(ctx, types.Int64Type, l)
+	diags.Append(d...)
+	return tfList
+}
+
 func FlattenFrameworkListInt64(ctx context.Context, l []int64, diags *diag.Diagnostics) types.List {
 	if len(l) == 0 {
 		return types.ListNull(types.Int64Type)
@@ -139,6 +145,11 @@ func FlattenFrameworkListInt64(ctx context.Context, l []int64, diags *diag.Diagn
 	return tfList
 }
 
+func FlattenFrameworkListInt64NotNull(ctx context.Context, l []int64, diags *diag.Diagnostics) types.List {
+	tfList, d := types.ListValueFrom(ctx, types.Int64Type, l)
+	diags.Append(d...)
+	return tfList
+}
 
 func FlattenFrameworkListNestedBlock[T any, U any](ctx context.Context, data []T, attrTypes map[string]attr.Type, diags *diag.Diagnostics, f FrameworkElementFlExFunc[*T, U]) types.List {
 	if len(data) == 0 {

@@ -31,13 +31,13 @@ func (d *SecurityPoliciesDataSource) Metadata(ctx context.Context, req datasourc
 	resp.TypeName = req.ProviderTypeName + "_" + "td_security_policies"
 }
 
-type ModelWithFilter struct {
+type AtcfwSecurityPolicyModelWithFilter struct {
 	Filters    types.Map  `tfsdk:"filters"`
 	TagFilters types.Map  `tfsdk:"tag_filters"`
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *ModelWithFilter) FlattenResults(ctx context.Context, from []fw.AtcfwSecurityPolicy, diags *diag.Diagnostics) {
+func (m *AtcfwSecurityPolicyModelWithFilter) FlattenResults(ctx context.Context, from []fw.AtcfwSecurityPolicy, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -89,7 +89,7 @@ func (d *SecurityPoliciesDataSource) Configure(ctx context.Context, req datasour
 }
 
 func (d *SecurityPoliciesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data ModelWithFilter
+	var data AtcfwSecurityPolicyModelWithFilter
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)

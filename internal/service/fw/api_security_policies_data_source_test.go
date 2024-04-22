@@ -80,7 +80,7 @@ data "bloxone_td_security_policies" "test" {
 func testAccSecurityPoliciesDataSourceConfigTagFilters(name, tagValue string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_security_policy" "test" {
-  name = 	%q
+  name = %q
   tags = {
 	tag1 = %q
   }
