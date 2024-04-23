@@ -1,16 +1,12 @@
 variable "join_token" {
   description = "The join token to use for the BloxOne Host. If not provided, a join token will be created."
-  type = object({
-    join_token = string
-  })
+  type = string
   default = null
 }
 
 variable "ami" {
   description = "The AMI to use for the BloxOne Host. If not provided, the latest AMI will be used."
-  type = object({
-    id = string
-  })
+  type = string
   default = null
 }
 

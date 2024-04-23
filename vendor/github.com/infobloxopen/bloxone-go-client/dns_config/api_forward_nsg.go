@@ -22,7 +22,6 @@ import (
 )
 
 type ForwardNsgAPI interface {
-
 	/*
 		ForwardNsgCreate Create the ForwardNSG object.
 
@@ -37,7 +36,6 @@ type ForwardNsgAPI interface {
 	// ForwardNsgCreateExecute executes the request
 	//  @return ConfigCreateForwardNSGResponse
 	ForwardNsgCreateExecute(r ApiForwardNsgCreateRequest) (*ConfigCreateForwardNSGResponse, *http.Response, error)
-
 	/*
 		ForwardNsgDelete Move the ForwardNSG object to Recyclebin.
 
@@ -52,7 +50,6 @@ type ForwardNsgAPI interface {
 
 	// ForwardNsgDeleteExecute executes the request
 	ForwardNsgDeleteExecute(r ApiForwardNsgDeleteRequest) (*http.Response, error)
-
 	/*
 		ForwardNsgList List ForwardNSG objects.
 
@@ -67,7 +64,6 @@ type ForwardNsgAPI interface {
 	// ForwardNsgListExecute executes the request
 	//  @return ConfigListForwardNSGResponse
 	ForwardNsgListExecute(r ApiForwardNsgListRequest) (*ConfigListForwardNSGResponse, *http.Response, error)
-
 	/*
 		ForwardNsgRead Read the ForwardNSG object.
 
@@ -83,7 +79,6 @@ type ForwardNsgAPI interface {
 	// ForwardNsgReadExecute executes the request
 	//  @return ConfigReadForwardNSGResponse
 	ForwardNsgReadExecute(r ApiForwardNsgReadRequest) (*ConfigReadForwardNSGResponse, *http.Response, error)
-
 	/*
 		ForwardNsgUpdate Update the ForwardNSG object.
 
@@ -177,6 +172,14 @@ func (a *ForwardNsgAPIService) ForwardNsgCreateExecute(r ApiForwardNsgCreateRequ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -220,7 +223,6 @@ func (a *ForwardNsgAPIService) ForwardNsgCreateExecute(r ApiForwardNsgCreateRequ
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -513,7 +515,6 @@ func (a *ForwardNsgAPIService) ForwardNsgListExecute(r ApiForwardNsgListRequest)
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -636,7 +637,6 @@ func (a *ForwardNsgAPIService) ForwardNsgReadExecute(r ApiForwardNsgReadRequest)
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -717,6 +717,14 @@ func (a *ForwardNsgAPIService) ForwardNsgUpdateExecute(r ApiForwardNsgUpdateRequ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -760,6 +768,5 @@ func (a *ForwardNsgAPIService) ForwardNsgUpdateExecute(r ApiForwardNsgUpdateRequ
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

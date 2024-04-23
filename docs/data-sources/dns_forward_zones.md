@@ -76,6 +76,9 @@ Read-Only:
 Required:
 
 - `address` (String) Server IP address.
+
+Optional:
+
 - `fqdn` (String) Server FQDN.
 
 Read-Only:

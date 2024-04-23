@@ -22,7 +22,6 @@ import (
 )
 
 type OptionCodeAPI interface {
-
 	/*
 		OptionCodeCreate Create the DHCP option code.
 
@@ -37,7 +36,6 @@ type OptionCodeAPI interface {
 	// OptionCodeCreateExecute executes the request
 	//  @return IpamsvcCreateOptionCodeResponse
 	OptionCodeCreateExecute(r ApiOptionCodeCreateRequest) (*IpamsvcCreateOptionCodeResponse, *http.Response, error)
-
 	/*
 		OptionCodeDelete Delete the DHCP option code.
 
@@ -52,7 +50,6 @@ type OptionCodeAPI interface {
 
 	// OptionCodeDeleteExecute executes the request
 	OptionCodeDeleteExecute(r ApiOptionCodeDeleteRequest) (*http.Response, error)
-
 	/*
 		OptionCodeList Retrieve DHCP option codes.
 
@@ -67,7 +64,6 @@ type OptionCodeAPI interface {
 	// OptionCodeListExecute executes the request
 	//  @return IpamsvcListOptionCodeResponse
 	OptionCodeListExecute(r ApiOptionCodeListRequest) (*IpamsvcListOptionCodeResponse, *http.Response, error)
-
 	/*
 		OptionCodeRead Retrieve the DHCP option code.
 
@@ -83,7 +79,6 @@ type OptionCodeAPI interface {
 	// OptionCodeReadExecute executes the request
 	//  @return IpamsvcReadOptionCodeResponse
 	OptionCodeReadExecute(r ApiOptionCodeReadRequest) (*IpamsvcReadOptionCodeResponse, *http.Response, error)
-
 	/*
 		OptionCodeUpdate Update the DHCP option code.
 
@@ -220,7 +215,6 @@ func (a *OptionCodeAPIService) OptionCodeCreateExecute(r ApiOptionCodeCreateRequ
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -493,7 +487,6 @@ func (a *OptionCodeAPIService) OptionCodeListExecute(r ApiOptionCodeListRequest)
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -616,7 +609,6 @@ func (a *OptionCodeAPIService) OptionCodeReadExecute(r ApiOptionCodeReadRequest)
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -740,6 +732,5 @@ func (a *OptionCodeAPIService) OptionCodeUpdateExecute(r ApiOptionCodeUpdateRequ
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

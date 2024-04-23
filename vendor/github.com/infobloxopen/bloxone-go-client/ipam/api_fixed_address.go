@@ -22,7 +22,6 @@ import (
 )
 
 type FixedAddressAPI interface {
-
 	/*
 		FixedAddressCreate Create the fixed address.
 
@@ -37,7 +36,6 @@ type FixedAddressAPI interface {
 	// FixedAddressCreateExecute executes the request
 	//  @return IpamsvcCreateFixedAddressResponse
 	FixedAddressCreateExecute(r ApiFixedAddressCreateRequest) (*IpamsvcCreateFixedAddressResponse, *http.Response, error)
-
 	/*
 		FixedAddressDelete Move the fixed address to the recycle bin.
 
@@ -52,7 +50,6 @@ type FixedAddressAPI interface {
 
 	// FixedAddressDeleteExecute executes the request
 	FixedAddressDeleteExecute(r ApiFixedAddressDeleteRequest) (*http.Response, error)
-
 	/*
 		FixedAddressList Retrieve fixed addresses.
 
@@ -67,7 +64,6 @@ type FixedAddressAPI interface {
 	// FixedAddressListExecute executes the request
 	//  @return IpamsvcListFixedAddressResponse
 	FixedAddressListExecute(r ApiFixedAddressListRequest) (*IpamsvcListFixedAddressResponse, *http.Response, error)
-
 	/*
 		FixedAddressRead Retrieve the fixed address.
 
@@ -83,7 +79,6 @@ type FixedAddressAPI interface {
 	// FixedAddressReadExecute executes the request
 	//  @return IpamsvcReadFixedAddressResponse
 	FixedAddressReadExecute(r ApiFixedAddressReadRequest) (*IpamsvcReadFixedAddressResponse, *http.Response, error)
-
 	/*
 		FixedAddressUpdate Update the fixed address.
 
@@ -187,6 +182,14 @@ func (a *FixedAddressAPIService) FixedAddressCreateExecute(r ApiFixedAddressCrea
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -230,7 +233,6 @@ func (a *FixedAddressAPIService) FixedAddressCreateExecute(r ApiFixedAddressCrea
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -533,7 +535,6 @@ func (a *FixedAddressAPIService) FixedAddressListExecute(r ApiFixedAddressListRe
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -666,7 +667,6 @@ func (a *FixedAddressAPIService) FixedAddressReadExecute(r ApiFixedAddressReadRe
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -757,6 +757,14 @@ func (a *FixedAddressAPIService) FixedAddressUpdateExecute(r ApiFixedAddressUpda
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -800,6 +808,5 @@ func (a *FixedAddressAPIService) FixedAddressUpdateExecute(r ApiFixedAddressUpda
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

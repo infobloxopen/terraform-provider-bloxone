@@ -22,7 +22,6 @@ import (
 )
 
 type AuthZoneAPI interface {
-
 	/*
 		AuthZoneCopy Copies the __AuthZone__ object.
 
@@ -37,7 +36,6 @@ type AuthZoneAPI interface {
 	// AuthZoneCopyExecute executes the request
 	//  @return ConfigCopyAuthZoneResponse
 	AuthZoneCopyExecute(r ApiAuthZoneCopyRequest) (*ConfigCopyAuthZoneResponse, *http.Response, error)
-
 	/*
 		AuthZoneCreate Create the AuthZone object.
 
@@ -52,7 +50,6 @@ type AuthZoneAPI interface {
 	// AuthZoneCreateExecute executes the request
 	//  @return ConfigCreateAuthZoneResponse
 	AuthZoneCreateExecute(r ApiAuthZoneCreateRequest) (*ConfigCreateAuthZoneResponse, *http.Response, error)
-
 	/*
 		AuthZoneDelete Moves the AuthZone object to Recyclebin.
 
@@ -67,7 +64,6 @@ type AuthZoneAPI interface {
 
 	// AuthZoneDeleteExecute executes the request
 	AuthZoneDeleteExecute(r ApiAuthZoneDeleteRequest) (*http.Response, error)
-
 	/*
 		AuthZoneList List AuthZone objects.
 
@@ -82,7 +78,6 @@ type AuthZoneAPI interface {
 	// AuthZoneListExecute executes the request
 	//  @return ConfigListAuthZoneResponse
 	AuthZoneListExecute(r ApiAuthZoneListRequest) (*ConfigListAuthZoneResponse, *http.Response, error)
-
 	/*
 		AuthZoneRead Read the AuthZone object.
 
@@ -98,7 +93,6 @@ type AuthZoneAPI interface {
 	// AuthZoneReadExecute executes the request
 	//  @return ConfigReadAuthZoneResponse
 	AuthZoneReadExecute(r ApiAuthZoneReadRequest) (*ConfigReadAuthZoneResponse, *http.Response, error)
-
 	/*
 		AuthZoneUpdate Update the AuthZone object.
 
@@ -235,7 +229,6 @@ func (a *AuthZoneAPIService) AuthZoneCopyExecute(r ApiAuthZoneCopyRequest) (*Con
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -322,6 +315,14 @@ func (a *AuthZoneAPIService) AuthZoneCreateExecute(r ApiAuthZoneCreateRequest) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -365,7 +366,6 @@ func (a *AuthZoneAPIService) AuthZoneCreateExecute(r ApiAuthZoneCreateRequest) (
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -668,7 +668,6 @@ func (a *AuthZoneAPIService) AuthZoneListExecute(r ApiAuthZoneListRequest) (*Con
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -801,7 +800,6 @@ func (a *AuthZoneAPIService) AuthZoneReadExecute(r ApiAuthZoneReadRequest) (*Con
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -892,6 +890,14 @@ func (a *AuthZoneAPIService) AuthZoneUpdateExecute(r ApiAuthZoneUpdateRequest) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -935,6 +941,5 @@ func (a *AuthZoneAPIService) AuthZoneUpdateExecute(r ApiAuthZoneUpdateRequest) (
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

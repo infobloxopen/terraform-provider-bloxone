@@ -40,11 +40,21 @@ data "bloxone_dhcp_hosts" "example_all" {}
 ### Optional
 
 - `filters` (Map of String) Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
+- `retry_if_not_found` (Boolean) If set to `true`, the data source will retry until a matching host is found, or until the Read Timeout expires.
 - `tag_filters` (Map of String) Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
+- `timeouts` (Attributes) (see [below for nested schema](#nestedatt--timeouts))
 
 ### Read-Only
 
 - `results` (Attributes List) (see [below for nested schema](#nestedatt--results))
+
+<a id="nestedatt--timeouts"></a>
+### Nested Schema for `timeouts`
+
+Optional:
+
+- `read` (String) [Duration](https://pkg.go.dev/time#ParseDuration) to wait before being considered a timeout during read operations. Valid time units are "s" (seconds), "m" (minutes), "h" (hours). Default is 20m.
+
 
 <a id="nestedatt--results"></a>
 ### Nested Schema for `results`

@@ -22,7 +22,6 @@ import (
 )
 
 type UICSRAPI interface {
-
 	/*
 		UICSRApprove Marks the certificate signing request as approved. The host activation service will then continue with the signing process.
 
@@ -35,7 +34,6 @@ type UICSRAPI interface {
 	// UICSRApproveExecute executes the request
 	//  @return map[string]interface{}
 	UICSRApproveExecute(r ApiUICSRApproveRequest) (map[string]interface{}, *http.Response, error)
-
 	/*
 		UICSRDeny Marks the certificate signing request as denied.
 
@@ -48,7 +46,6 @@ type UICSRAPI interface {
 	// UICSRDenyExecute executes the request
 	//  @return map[string]interface{}
 	UICSRDenyExecute(r ApiUICSRDenyRequest) (map[string]interface{}, *http.Response, error)
-
 	/*
 		UICSRList User can list the certificate signing requests for an account.
 
@@ -60,7 +57,6 @@ type UICSRAPI interface {
 	// UICSRListExecute executes the request
 	//  @return HostactivationListCSRsResponse
 	UICSRListExecute(r ApiUICSRListRequest) (*HostactivationListCSRsResponse, *http.Response, error)
-
 	/*
 		UICSRRevoke Invalidates a certificate by adding it to a certificate revocation list.
 
@@ -78,7 +74,6 @@ type UICSRAPI interface {
 	// UICSRRevokeExecute executes the request
 	//  @return map[string]interface{}
 	UICSRRevokeExecute(r ApiUICSRRevokeRequest) (map[string]interface{}, *http.Response, error)
-
 	/*
 		UICSRRevoke2 Invalidates a certificate by adding it to a certificate revocation list.
 
@@ -218,7 +213,6 @@ func (a *UICSRAPIService) UICSRApproveExecute(r ApiUICSRApproveRequest) (map[str
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -339,7 +333,6 @@ func (a *UICSRAPIService) UICSRDenyExecute(r ApiUICSRDenyRequest) (map[string]in
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -515,7 +508,6 @@ func (a *UICSRAPIService) UICSRListExecute(r ApiUICSRListRequest) (*Hostactivati
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -641,7 +633,6 @@ func (a *UICSRAPIService) UICSRRevokeExecute(r ApiUICSRRevokeRequest) (map[strin
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -767,6 +758,5 @@ func (a *UICSRAPIService) UICSRRevoke2Execute(r ApiUICSRRevoke2Request) (map[str
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

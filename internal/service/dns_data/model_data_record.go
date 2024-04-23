@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -36,7 +37,7 @@ type dataRecordModel struct {
 	InheritanceSources  types.Object      `tfsdk:"inheritance_sources"`
 	IpamHost            types.String      `tfsdk:"ipam_host"`
 	NameInZone          types.String      `tfsdk:"name_in_zone"`
-	Options             types.Map         `tfsdk:"options"`
+	Options             types.Object      `tfsdk:"options"`
 	ProviderMetadata    types.Map         `tfsdk:"provider_metadata"`
 	Rdata               types.Object      `tfsdk:"rdata"`
 	Source              types.List        `tfsdk:"source"`
@@ -66,7 +67,7 @@ func recordCommonAttrTypes() map[string]attr.Type {
 		"inheritance_sources":    types.ObjectType{AttrTypes: DataRecordInheritanceAttrTypes},
 		"ipam_host":              types.StringType,
 		"name_in_zone":           types.StringType,
-		"options":                types.MapType{ElemType: types.StringType},
+		"options":                types.ObjectType{},
 		"provider_metadata":      types.MapType{ElemType: types.StringType},
 		"source":                 types.ListType{ElemType: types.StringType},
 		"subtype":                types.StringType,
@@ -97,6 +98,8 @@ func recordCommonSchema() map[string]schema.Attribute {
 		},
 		"comment": schema.StringAttribute{
 			Optional:            true,
+			Computed:            true,
+			Default:             stringdefault.StaticString(""),
 			MarkdownDescription: "The description for the DNS resource record. May contain 0 to 1024 characters. Can include UTF-8.",
 		},
 		"created_at": schema.StringAttribute{
@@ -158,21 +161,10 @@ func recordCommonSchema() map[string]schema.Attribute {
 				stringvalidator.ConflictsWith(path.MatchRoot("absolute_name_spec"), path.MatchRoot("view")),
 			},
 		},
-		"options": schema.MapAttribute{
-			ElementType: types.StringType,
-			Optional:    true,
-			Computed:    true,
-			MarkdownDescription: "The DNS resource record type-specific non-protocol options.\n\n" +
-				"  Valid value for _A_ (Address) and _AAAA_ (IPv6 Address) records:\n\n" +
-				"  | Option     | Description                                                                                                                                                                                                 |\n" +
-				"  |------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n" +
-				"  | create_ptr | A boolean flag which can be set to _true_ for POST operation to automatically create the corresponding PTR record.                                                                                          |\n" +
-				"  | check_rmz  | A boolean flag which can be set to _true_ for POST operation to check the existence of reverse zone for creating the corresponding PTR record. Only applicable if the _create_ptr_ option is set to _true_. |\n\n" +
-				"  Valid value for _PTR_ (Pointer) records:\n\n" +
-				"  | Option     | Description                                                                                                                                                                                                                                                                                                       |\n" +
-				"  |------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n" +
-				"  | address    | For GET operation it contains the IPv4 or IPv6 address represented by the PTR record.<br><br>For POST and PATCH operations it can be used to create/update a PTR record based on the IP address it represents. In this case, in addition to the _address_ in the options field, need to specify the _view_ field. |\n" +
-				"  <br>",
+		"options": schema.SingleNestedAttribute{
+			Attributes:          map[string]schema.Attribute{},
+			Computed:            true,
+			MarkdownDescription: "The DNS resource record type-specific non-protocol options.",
 		},
 		"provider_metadata": schema.MapAttribute{
 			ElementType:         types.StringType,
@@ -230,7 +222,10 @@ func recordCommonSchema() map[string]schema.Attribute {
 				stringplanmodifier.RequiresReplaceIfConfigured(),
 			},
 			Validators: []validator.String{
-				stringvalidator.AlsoRequires(path.MatchRoot("absolute_name_spec")),
+				stringvalidator.Any(
+					stringvalidator.AlsoRequires(path.MatchRoot("absolute_name_spec")),
+					stringvalidator.AlsoRequires(path.MatchRoot("options").AtName("address")),
+				),
 				stringvalidator.ConflictsWith(path.MatchRoot("zone"), path.MatchRoot("name_in_zone")),
 			},
 		},
@@ -262,11 +257,14 @@ func (m *dataRecordModel) Expand(ctx context.Context, diags *diag.Diagnostics, i
 		Disabled:           flex.ExpandBoolPointer(m.Disabled),
 		InheritanceSources: ExpandDataRecordInheritance(ctx, m.InheritanceSources, diags),
 		NameInZone:         flex.ExpandStringPointer(m.NameInZone),
-		Options:            flex.ExpandFrameworkMapString(ctx, m.Options, diags),
 		Rdata:              impl.expandRData(ctx, m.Rdata, diags),
 		Tags:               flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 		Ttl:                flex.ExpandInt64Pointer(m.Ttl),
 	}
+	if recordWithOptionsImpl, ok := impl.(recordModelWithOptions); ok {
+		to.Options = recordWithOptionsImpl.expandOptions(ctx, m.Options, diags)
+	}
+
 	if isCreate {
 		rType := impl.recordType()
 		to.Type = &rType
@@ -300,7 +298,6 @@ func (m *dataRecordModel) Flatten(ctx context.Context, from *dns_data.DataRecord
 	m.InheritanceSources = FlattenDataRecordInheritance(ctx, from.InheritanceSources, diags)
 	m.IpamHost = flex.FlattenStringPointer(from.IpamHost)
 	m.NameInZone = flex.FlattenStringPointer(from.NameInZone)
-	m.Options = flex.FlattenFrameworkMapString(ctx, from.Options, diags)
 	m.ProviderMetadata = flex.FlattenFrameworkMapString(ctx, from.ProviderMetadata, diags)
 	m.Rdata = impl.flattenRData(ctx, from.Rdata, diags)
 	m.Source = flex.FlattenFrameworkListString(ctx, from.Source, diags)
@@ -312,4 +309,10 @@ func (m *dataRecordModel) Flatten(ctx context.Context, from *dns_data.DataRecord
 	m.View = flex.FlattenStringPointer(from.View)
 	m.ViewName = flex.FlattenStringPointer(from.ViewName)
 	m.Zone = flex.FlattenStringPointer(from.Zone)
+
+	if recordWithOptionsImpl, ok := impl.(recordModelWithOptions); ok {
+		m.Options = recordWithOptionsImpl.flattenOptions(ctx, m.Options, from.Options, diags)
+	} else {
+		m.Options = types.ObjectNull(nil)
+	}
 }

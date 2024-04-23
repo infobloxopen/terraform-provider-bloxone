@@ -2,8 +2,10 @@ package dns_config
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -44,11 +46,13 @@ var ConfigForwardNSGAttrTypes = map[string]attr.Type{
 var ConfigForwardNSGResourceSchemaAttributes = map[string]schema.Attribute{
 	"comment": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "Optional. Comment for the object.",
 	},
 	"external_forwarders": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
-			Attributes: ConfigForwarderResourceSchemaAttributes,
+			Attributes: ConfigForwarderResourceSchemaAttributes(true),
 		},
 		Optional:            true,
 		MarkdownDescription: "Optional. External DNS servers to forward to. Order is not significant.",

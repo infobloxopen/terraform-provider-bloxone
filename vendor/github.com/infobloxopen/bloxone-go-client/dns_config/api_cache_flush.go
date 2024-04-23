@@ -21,7 +21,6 @@ import (
 )
 
 type CacheFlushAPI interface {
-
 	/*
 		CacheFlushCreate Create the Cache Flush object.
 
@@ -157,6 +156,5 @@ func (a *CacheFlushAPIService) CacheFlushCreateExecute(r ApiCacheFlushCreateRequ
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

@@ -17,7 +17,7 @@ func TestAccViewDataSource_Filters(t *testing.T) {
 	var v dns_config.ConfigView
 	var name = acctest.RandomNameWithPrefix("view")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckViewDestroy(context.Background(), &v),
@@ -40,13 +40,13 @@ func TestAccViewDataSource_TagFilters(t *testing.T) {
 	var v dns_config.ConfigView
 	var name = acctest.RandomNameWithPrefix("view")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckViewDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccViewDataSourceConfigTagFilters(name, "value1"),
+				Config: testAccViewDataSourceConfigTagFilters(name, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckViewExists(context.Background(), resourceName, &v),

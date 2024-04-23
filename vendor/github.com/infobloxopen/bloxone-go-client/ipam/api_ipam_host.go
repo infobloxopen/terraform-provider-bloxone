@@ -22,7 +22,6 @@ import (
 )
 
 type IpamHostAPI interface {
-
 	/*
 		IpamHostCreate Create the IPAM host.
 
@@ -37,7 +36,6 @@ type IpamHostAPI interface {
 	// IpamHostCreateExecute executes the request
 	//  @return IpamsvcCreateIpamHostResponse
 	IpamHostCreateExecute(r ApiIpamHostCreateRequest) (*IpamsvcCreateIpamHostResponse, *http.Response, error)
-
 	/*
 		IpamHostDelete Move the IPAM host to the recycle bin.
 
@@ -52,7 +50,6 @@ type IpamHostAPI interface {
 
 	// IpamHostDeleteExecute executes the request
 	IpamHostDeleteExecute(r ApiIpamHostDeleteRequest) (*http.Response, error)
-
 	/*
 		IpamHostList Retrieve the IPAM hosts.
 
@@ -67,7 +64,6 @@ type IpamHostAPI interface {
 	// IpamHostListExecute executes the request
 	//  @return IpamsvcListIpamHostResponse
 	IpamHostListExecute(r ApiIpamHostListRequest) (*IpamsvcListIpamHostResponse, *http.Response, error)
-
 	/*
 		IpamHostRead Retrieve the IPAM host.
 
@@ -83,7 +79,6 @@ type IpamHostAPI interface {
 	// IpamHostReadExecute executes the request
 	//  @return IpamsvcReadIpamHostResponse
 	IpamHostReadExecute(r ApiIpamHostReadRequest) (*IpamsvcReadIpamHostResponse, *http.Response, error)
-
 	/*
 		IpamHostUpdate Update the IPAM host.
 
@@ -177,6 +172,14 @@ func (a *IpamHostAPIService) IpamHostCreateExecute(r ApiIpamHostCreateRequest) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -220,7 +223,6 @@ func (a *IpamHostAPIService) IpamHostCreateExecute(r ApiIpamHostCreateRequest) (
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -513,7 +515,6 @@ func (a *IpamHostAPIService) IpamHostListExecute(r ApiIpamHostListRequest) (*Ipa
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -646,7 +647,6 @@ func (a *IpamHostAPIService) IpamHostReadExecute(r ApiIpamHostReadRequest) (*Ipa
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -727,6 +727,14 @@ func (a *IpamHostAPIService) IpamHostUpdateExecute(r ApiIpamHostUpdateRequest) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -770,6 +778,5 @@ func (a *IpamHostAPIService) IpamHostUpdateExecute(r ApiIpamHostUpdateRequest) (
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

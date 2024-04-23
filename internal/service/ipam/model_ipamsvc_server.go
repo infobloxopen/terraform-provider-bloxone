@@ -107,10 +107,14 @@ var IpamsvcServerAttrTypes = map[string]attr.Type{
 var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 	"client_principal": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The Kerberos principal name. It uses the typical Kerberos notation: `<SERVICE-NAME>/<server-domain-name>@<REALM>`. Defaults to empty.",
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The description for the DHCP Config Profile. May contain 0 to 1024 characters. Can include UTF-8.",
 	},
 	"created_at": schema.StringAttribute{
@@ -149,6 +153,8 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"ddns_domain": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The domain suffix for DDNS updates. FQDN, may be empty. Required if _ddns_enabled_ is true.  Defaults to empty.",
 	},
 	"ddns_enabled": schema.BoolAttribute{
@@ -210,6 +216,7 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 			"abandoned_reclaim_time_v6": types.Int64Value(3600),
 			"allow_unknown":             types.BoolValue(true),
 			"allow_unknown_v6":          types.BoolValue(true),
+			"echo_client_id":            types.BoolValue(false),
 			"filters":                   types.ListNull(types.StringType),
 			"filters_v6":                types.ListNull(types.StringType),
 			"ignore_client_uid":         types.BoolValue(true),
@@ -240,14 +247,20 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"header_option_filename": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The configuration for header option filename field.",
 	},
 	"header_option_server_address": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The configuration for header option server address field.",
 	},
 	"header_option_server_name": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The configuration for header option server name field.",
 	},
 	"hostname_rewrite_char": schema.StringAttribute{
@@ -288,6 +301,8 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"kerberos_kdc": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "Address of Kerberos Key Distribution Center.  Defaults to empty.",
 	},
 	"kerberos_keys": schema.ListNestedAttribute{
@@ -326,6 +341,8 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"server_principal": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The Kerberos principal name of the external DNS server that will receive updates.  Defaults to empty.",
 	},
 	"tags": schema.MapAttribute{

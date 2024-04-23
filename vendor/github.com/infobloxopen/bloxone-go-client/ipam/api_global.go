@@ -22,7 +22,6 @@ import (
 )
 
 type GlobalAPI interface {
-
 	/*
 		GlobalRead Retrieve the global configuration.
 
@@ -37,7 +36,6 @@ type GlobalAPI interface {
 	// GlobalReadExecute executes the request
 	//  @return IpamsvcReadGlobalResponse
 	GlobalReadExecute(r ApiGlobalReadRequest) (*IpamsvcReadGlobalResponse, *http.Response, error)
-
 	/*
 		GlobalRead2 Retrieve the global configuration.
 
@@ -53,7 +51,6 @@ type GlobalAPI interface {
 	// GlobalRead2Execute executes the request
 	//  @return IpamsvcReadGlobalResponse
 	GlobalRead2Execute(r ApiGlobalRead2Request) (*IpamsvcReadGlobalResponse, *http.Response, error)
-
 	/*
 		GlobalUpdate Update the global configuration.
 
@@ -68,7 +65,6 @@ type GlobalAPI interface {
 	// GlobalUpdateExecute executes the request
 	//  @return IpamsvcUpdateGlobalResponse
 	GlobalUpdateExecute(r ApiGlobalUpdateRequest) (*IpamsvcUpdateGlobalResponse, *http.Response, error)
-
 	/*
 		GlobalUpdate2 Update the global configuration.
 
@@ -204,7 +200,6 @@ func (a *GlobalAPIService) GlobalReadExecute(r ApiGlobalReadRequest) (*IpamsvcRe
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -327,7 +322,6 @@ func (a *GlobalAPIService) GlobalRead2Execute(r ApiGlobalRead2Request) (*Ipamsvc
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -447,7 +441,6 @@ func (a *GlobalAPIService) GlobalUpdateExecute(r ApiGlobalUpdateRequest) (*Ipams
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -571,6 +564,5 @@ func (a *GlobalAPIService) GlobalUpdate2Execute(r ApiGlobalUpdate2Request) (*Ipa
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

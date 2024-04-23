@@ -22,7 +22,6 @@ import (
 )
 
 type AuthNsgAPI interface {
-
 	/*
 		AuthNsgCreate Create the AuthNSG object.
 
@@ -37,7 +36,6 @@ type AuthNsgAPI interface {
 	// AuthNsgCreateExecute executes the request
 	//  @return ConfigCreateAuthNSGResponse
 	AuthNsgCreateExecute(r ApiAuthNsgCreateRequest) (*ConfigCreateAuthNSGResponse, *http.Response, error)
-
 	/*
 		AuthNsgDelete Move the AuthNSG object to Recyclebin.
 
@@ -52,7 +50,6 @@ type AuthNsgAPI interface {
 
 	// AuthNsgDeleteExecute executes the request
 	AuthNsgDeleteExecute(r ApiAuthNsgDeleteRequest) (*http.Response, error)
-
 	/*
 		AuthNsgList List AuthNSG objects.
 
@@ -67,7 +64,6 @@ type AuthNsgAPI interface {
 	// AuthNsgListExecute executes the request
 	//  @return ConfigListAuthNSGResponse
 	AuthNsgListExecute(r ApiAuthNsgListRequest) (*ConfigListAuthNSGResponse, *http.Response, error)
-
 	/*
 		AuthNsgRead Read the AuthNSG object.
 
@@ -83,7 +79,6 @@ type AuthNsgAPI interface {
 	// AuthNsgReadExecute executes the request
 	//  @return ConfigReadAuthNSGResponse
 	AuthNsgReadExecute(r ApiAuthNsgReadRequest) (*ConfigReadAuthNSGResponse, *http.Response, error)
-
 	/*
 		AuthNsgUpdate Update the AuthNSG object.
 
@@ -177,6 +172,14 @@ func (a *AuthNsgAPIService) AuthNsgCreateExecute(r ApiAuthNsgCreateRequest) (*Co
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -220,7 +223,6 @@ func (a *AuthNsgAPIService) AuthNsgCreateExecute(r ApiAuthNsgCreateRequest) (*Co
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -513,7 +515,6 @@ func (a *AuthNsgAPIService) AuthNsgListExecute(r ApiAuthNsgListRequest) (*Config
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -636,7 +637,6 @@ func (a *AuthNsgAPIService) AuthNsgReadExecute(r ApiAuthNsgReadRequest) (*Config
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -717,6 +717,14 @@ func (a *AuthNsgAPIService) AuthNsgUpdateExecute(r ApiAuthNsgUpdateRequest) (*Co
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -760,6 +768,5 @@ func (a *AuthNsgAPIService) AuthNsgUpdateExecute(r ApiAuthNsgUpdateRequest) (*Co
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

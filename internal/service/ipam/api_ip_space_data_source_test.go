@@ -14,15 +14,16 @@ import (
 func TestAccIpSpaceDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_ip_spaces.test"
 	resourceName := "bloxone_ipam_ip_space.test"
+	ipSpaceName := acctest.RandomNameWithPrefix("space")
 	var v ipam.IpamsvcIPSpace
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckIpSpaceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccIpSpaceDataSourceConfigFilters("NAME_REPLACE_ME"),
+				Config: testAccIpSpaceDataSourceConfigFilters(ipSpaceName),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
@@ -36,14 +37,15 @@ func TestAccIpSpaceDataSource_Filters(t *testing.T) {
 func TestAccIpSpaceDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_ip_spaces.test"
 	resourceName := "bloxone_ipam_ip_space.test"
+	ipSpaceName := acctest.RandomNameWithPrefix("space")
 	var v ipam.IpamsvcIPSpace
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckIpSpaceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccIpSpaceDataSourceConfigTagFilters("NAME_REPLACE_ME", "value1"),
+				Config: testAccIpSpaceDataSourceConfigTagFilters(ipSpaceName, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckIpSpaceExists(context.Background(), resourceName, &v),

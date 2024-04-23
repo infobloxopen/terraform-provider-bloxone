@@ -75,7 +75,8 @@ func (d *HostsDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				MarkdownDescription: "If set to `true`, the data source will retry until a matching host is found, or until the Read Timeout expires.",
 			},
 			"timeouts": timeouts.Attributes(ctx, timeouts.Opts{
-				Read: true,
+				Read:            true,
+				ReadDescription: "[Duration](https://pkg.go.dev/time#ParseDuration) to wait before being considered a timeout during read operations. Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). Default is 20m.",
 			}),
 		},
 	}

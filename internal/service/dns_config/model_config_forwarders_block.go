@@ -29,7 +29,7 @@ var ConfigForwardersBlockAttrTypes = map[string]attr.Type{
 var ConfigForwardersBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"forwarders": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
-			Attributes: ConfigForwarderResourceSchemaAttributes,
+			Attributes: ConfigForwarderResourceSchemaAttributes(false),
 		},
 		Optional:            true,
 		MarkdownDescription: `Optional. Field config for _forwarders_ field from.`,

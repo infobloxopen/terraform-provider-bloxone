@@ -17,7 +17,7 @@ func TestAccAuthNsgDataSource_Filters(t *testing.T) {
 	var v dns_config.ConfigAuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckAuthNsgDestroy(context.Background(), &v),
@@ -40,13 +40,13 @@ func TestAccAuthNsgDataSource_TagFilters(t *testing.T) {
 	var v dns_config.ConfigAuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckAuthNsgDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAuthNsgDataSourceConfigTagFilters(name, "value1"),
+				Config: testAccAuthNsgDataSourceConfigTagFilters(name, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckAuthNsgExists(context.Background(), resourceName, &v),

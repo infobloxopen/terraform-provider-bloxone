@@ -22,7 +22,6 @@ import (
 )
 
 type ServerAPI interface {
-
 	/*
 		ServerCreate Create the DHCP configuration profile.
 
@@ -37,7 +36,6 @@ type ServerAPI interface {
 	// ServerCreateExecute executes the request
 	//  @return IpamsvcCreateServerResponse
 	ServerCreateExecute(r ApiServerCreateRequest) (*IpamsvcCreateServerResponse, *http.Response, error)
-
 	/*
 		ServerDelete Move the DHCP configuration profile to the recycle bin.
 
@@ -52,7 +50,6 @@ type ServerAPI interface {
 
 	// ServerDeleteExecute executes the request
 	ServerDeleteExecute(r ApiServerDeleteRequest) (*http.Response, error)
-
 	/*
 		ServerList Retrieve DHCP configuration profiles.
 
@@ -67,7 +64,6 @@ type ServerAPI interface {
 	// ServerListExecute executes the request
 	//  @return IpamsvcListServerResponse
 	ServerListExecute(r ApiServerListRequest) (*IpamsvcListServerResponse, *http.Response, error)
-
 	/*
 		ServerRead Retrieve the DHCP configuration profile.
 
@@ -83,7 +79,6 @@ type ServerAPI interface {
 	// ServerReadExecute executes the request
 	//  @return IpamsvcReadServerResponse
 	ServerReadExecute(r ApiServerReadRequest) (*IpamsvcReadServerResponse, *http.Response, error)
-
 	/*
 		ServerUpdate Update the DHCP configuration profile.
 
@@ -187,6 +182,14 @@ func (a *ServerAPIService) ServerCreateExecute(r ApiServerCreateRequest) (*Ipams
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -230,7 +233,6 @@ func (a *ServerAPIService) ServerCreateExecute(r ApiServerCreateRequest) (*Ipams
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -533,7 +535,6 @@ func (a *ServerAPIService) ServerListExecute(r ApiServerListRequest) (*IpamsvcLi
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -666,7 +667,6 @@ func (a *ServerAPIService) ServerReadExecute(r ApiServerReadRequest) (*IpamsvcRe
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -757,6 +757,14 @@ func (a *ServerAPIService) ServerUpdateExecute(r ApiServerUpdateRequest) (*Ipams
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -800,6 +808,5 @@ func (a *ServerAPIService) ServerUpdateExecute(r ApiServerUpdateRequest) (*Ipams
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

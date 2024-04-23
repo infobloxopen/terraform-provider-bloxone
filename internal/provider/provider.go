@@ -14,6 +14,7 @@ import (
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_data"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/fw"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_mgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_provision"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/ipam"
@@ -45,6 +46,7 @@ func (p *BloxOneProvider) Metadata(_ context.Context, _ provider.MetadataRequest
 
 func (p *BloxOneProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		Description: "The BloxOne provider is used to interact with the resources supported by Infoblox BloxOne API.",
 		Attributes: map[string]schema.Attribute{
 			"csp_url": schema.StringAttribute{
 				MarkdownDescription: "URL for BloxOne Cloud Services Portal. Can also be configured using the `BLOXONE_CSP_URL` environment variable.",
@@ -127,6 +129,11 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		keys.NewTsigResource,
 
 		dfp.NewDfpResource,
+
+		fw.NewAccessCodesResource,
+		fw.NewNamedListsResource,
+		fw.NewNetworkListsResource,
+		fw.NewInternalDomainListsResource,
 	}
 }
 
@@ -183,6 +190,12 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		keys.NewKerberosDataSource,
 
 		dfp.NewDfpDataSource,
+
+		fw.NewAccessCodesDataSource,
+		fw.NewNamedListsDataSource,
+		fw.NewNetworkListsDataSource,
+		fw.NewInternalDomainListsDataSource,
+		fw.NewPoPRegionsDataSource,
 	}
 }
 

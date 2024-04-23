@@ -22,7 +22,6 @@ import (
 )
 
 type ForwardZoneAPI interface {
-
 	/*
 		ForwardZoneCopy Copies the __ForwardZone__ object.
 
@@ -37,7 +36,6 @@ type ForwardZoneAPI interface {
 	// ForwardZoneCopyExecute executes the request
 	//  @return ConfigCopyForwardZoneResponse
 	ForwardZoneCopyExecute(r ApiForwardZoneCopyRequest) (*ConfigCopyForwardZoneResponse, *http.Response, error)
-
 	/*
 		ForwardZoneCreate Create the ForwardZone object.
 
@@ -52,7 +50,6 @@ type ForwardZoneAPI interface {
 	// ForwardZoneCreateExecute executes the request
 	//  @return ConfigCreateForwardZoneResponse
 	ForwardZoneCreateExecute(r ApiForwardZoneCreateRequest) (*ConfigCreateForwardZoneResponse, *http.Response, error)
-
 	/*
 		ForwardZoneDelete Move the Forward Zone object to Recyclebin.
 
@@ -67,7 +64,6 @@ type ForwardZoneAPI interface {
 
 	// ForwardZoneDeleteExecute executes the request
 	ForwardZoneDeleteExecute(r ApiForwardZoneDeleteRequest) (*http.Response, error)
-
 	/*
 		ForwardZoneList List Forward Zone objects.
 
@@ -82,7 +78,6 @@ type ForwardZoneAPI interface {
 	// ForwardZoneListExecute executes the request
 	//  @return ConfigListForwardZoneResponse
 	ForwardZoneListExecute(r ApiForwardZoneListRequest) (*ConfigListForwardZoneResponse, *http.Response, error)
-
 	/*
 		ForwardZoneRead Read the Forward Zone object.
 
@@ -98,7 +93,6 @@ type ForwardZoneAPI interface {
 	// ForwardZoneReadExecute executes the request
 	//  @return ConfigReadForwardZoneResponse
 	ForwardZoneReadExecute(r ApiForwardZoneReadRequest) (*ConfigReadForwardZoneResponse, *http.Response, error)
-
 	/*
 		ForwardZoneUpdate Update the Forward Zone object.
 
@@ -235,7 +229,6 @@ func (a *ForwardZoneAPIService) ForwardZoneCopyExecute(r ApiForwardZoneCopyReque
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -312,6 +305,14 @@ func (a *ForwardZoneAPIService) ForwardZoneCreateExecute(r ApiForwardZoneCreateR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -355,7 +356,6 @@ func (a *ForwardZoneAPIService) ForwardZoneCreateExecute(r ApiForwardZoneCreateR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -648,7 +648,6 @@ func (a *ForwardZoneAPIService) ForwardZoneListExecute(r ApiForwardZoneListReque
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -771,7 +770,6 @@ func (a *ForwardZoneAPIService) ForwardZoneReadExecute(r ApiForwardZoneReadReque
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -852,6 +850,14 @@ func (a *ForwardZoneAPIService) ForwardZoneUpdateExecute(r ApiForwardZoneUpdateR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -895,6 +901,5 @@ func (a *ForwardZoneAPIService) ForwardZoneUpdateExecute(r ApiForwardZoneUpdateR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

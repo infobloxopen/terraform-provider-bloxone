@@ -26,6 +26,12 @@ resource "bloxone_ipam_address_block" "example" {
   space   = bloxone_ipam_ip_space.example.id
 }
 
+data "bloxone_dhcp_option_codes" "option_code" {
+  filters = {
+    name = "domain-name-servers"
+  }
+}
+
 # Static address
 resource "bloxone_ipam_subnet" "example" {
   address = "10.0.0.0"
@@ -38,6 +44,14 @@ resource "bloxone_ipam_subnet" "example" {
   tags = {
     site = "Site A"
   }
+  //dhcp options
+  dhcp_options = [
+    {
+      option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
+      option_value = "10.0.0.1"
+      type         = "option"
+    }
+  ]
 }
 
 # Next available subnet
@@ -157,6 +171,7 @@ Optional:
 - `abandoned_reclaim_time_v6` (Number) The abandoned reclaim time in seconds for IPV6 clients.
 - `allow_unknown` (Boolean) Disable to allow leases only for known IPv4 clients, those for which a fixed address is configured.
 - `allow_unknown_v6` (Boolean) Disable to allow leases only for known IPV6 clients, those for which a fixed address is configured.
+- `echo_client_id` (Boolean) Enable/disable to include/exclude the client id when responding to discover or request.
 - `filters` (List of String) The resource identifier.
 - `filters_v6` (List of String) The resource identifier.
 - `ignore_client_uid` (Boolean) Enable to ignore the client UID when issuing a DHCP lease. Use this option to prevent assigning two IP addresses for a client which does not have a UID during one phase of PXE boot but acquires one for the other phase.
@@ -541,6 +556,7 @@ Optional:
 - `abandoned_reclaim_time_v6` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--abandoned_reclaim_time_v6))
 - `allow_unknown` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--allow_unknown))
 - `allow_unknown_v6` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--allow_unknown_v6))
+- `echo_client_id` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--echo_client_id))
 - `filters` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--filters))
 - `filters_v6` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--filters_v6))
 - `ignore_client_uid` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--ignore_client_uid))
@@ -604,6 +620,24 @@ Read-Only:
 
 <a id="nestedatt--inheritance_sources--dhcp_config--allow_unknown_v6"></a>
 ### Nested Schema for `inheritance_sources.dhcp_config.allow_unknown_v6`
+
+Optional:
+
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
+
+Read-Only:
+
+- `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Boolean) The inherited value.
+
+
+<a id="nestedatt--inheritance_sources--dhcp_config--echo_client_id"></a>
+### Nested Schema for `inheritance_sources.dhcp_config.echo_client_id`
 
 Optional:
 

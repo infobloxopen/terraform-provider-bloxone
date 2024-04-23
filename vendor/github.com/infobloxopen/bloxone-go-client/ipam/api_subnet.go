@@ -22,7 +22,6 @@ import (
 )
 
 type SubnetAPI interface {
-
 	/*
 		SubnetCopy Copy the subnet.
 
@@ -38,7 +37,6 @@ type SubnetAPI interface {
 	// SubnetCopyExecute executes the request
 	//  @return IpamsvcCopySubnetResponse
 	SubnetCopyExecute(r ApiSubnetCopyRequest) (*IpamsvcCopySubnetResponse, *http.Response, error)
-
 	/*
 		SubnetCreate Create the subnet.
 
@@ -53,7 +51,6 @@ type SubnetAPI interface {
 	// SubnetCreateExecute executes the request
 	//  @return IpamsvcCreateSubnetResponse
 	SubnetCreateExecute(r ApiSubnetCreateRequest) (*IpamsvcCreateSubnetResponse, *http.Response, error)
-
 	/*
 		SubnetCreateNextAvailableIP Allocate the next available IP address.
 
@@ -69,7 +66,6 @@ type SubnetAPI interface {
 	// SubnetCreateNextAvailableIPExecute executes the request
 	//  @return IpamsvcCreateNextAvailableIPResponse
 	SubnetCreateNextAvailableIPExecute(r ApiSubnetCreateNextAvailableIPRequest) (*IpamsvcCreateNextAvailableIPResponse, *http.Response, error)
-
 	/*
 		SubnetDelete Move the subnet to the recycle bin.
 
@@ -84,7 +80,6 @@ type SubnetAPI interface {
 
 	// SubnetDeleteExecute executes the request
 	SubnetDeleteExecute(r ApiSubnetDeleteRequest) (*http.Response, error)
-
 	/*
 		SubnetList Retrieve subnets.
 
@@ -99,7 +94,6 @@ type SubnetAPI interface {
 	// SubnetListExecute executes the request
 	//  @return IpamsvcListSubnetResponse
 	SubnetListExecute(r ApiSubnetListRequest) (*IpamsvcListSubnetResponse, *http.Response, error)
-
 	/*
 		SubnetListNextAvailableIP Retrieve the next available IP address.
 
@@ -115,7 +109,6 @@ type SubnetAPI interface {
 	// SubnetListNextAvailableIPExecute executes the request
 	//  @return IpamsvcNextAvailableIPResponse
 	SubnetListNextAvailableIPExecute(r ApiSubnetListNextAvailableIPRequest) (*IpamsvcNextAvailableIPResponse, *http.Response, error)
-
 	/*
 		SubnetRead Retrieve the subnet.
 
@@ -131,7 +124,6 @@ type SubnetAPI interface {
 	// SubnetReadExecute executes the request
 	//  @return IpamsvcReadSubnetResponse
 	SubnetReadExecute(r ApiSubnetReadRequest) (*IpamsvcReadSubnetResponse, *http.Response, error)
-
 	/*
 		SubnetUpdate Update the subnet.
 
@@ -272,7 +264,6 @@ func (a *SubnetAPIService) SubnetCopyExecute(r ApiSubnetCopyRequest) (*IpamsvcCo
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -359,6 +350,14 @@ func (a *SubnetAPIService) SubnetCreateExecute(r ApiSubnetCreateRequest) (*Ipams
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -402,7 +401,6 @@ func (a *SubnetAPIService) SubnetCreateExecute(r ApiSubnetCreateRequest) (*Ipams
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -541,7 +539,6 @@ func (a *SubnetAPIService) SubnetCreateNextAvailableIPExecute(r ApiSubnetCreateN
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -844,7 +841,6 @@ func (a *SubnetAPIService) SubnetListExecute(r ApiSubnetListRequest) (*IpamsvcLi
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -977,7 +973,6 @@ func (a *SubnetAPIService) SubnetListNextAvailableIPExecute(r ApiSubnetListNextA
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -1110,7 +1105,6 @@ func (a *SubnetAPIService) SubnetReadExecute(r ApiSubnetReadRequest) (*IpamsvcRe
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -1201,6 +1195,14 @@ func (a *SubnetAPIService) SubnetUpdateExecute(r ApiSubnetUpdateRequest) (*Ipams
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -1244,6 +1246,5 @@ func (a *SubnetAPIService) SubnetUpdateExecute(r ApiSubnetUpdateRequest) (*Ipams
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }

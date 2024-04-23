@@ -22,7 +22,6 @@ import (
 )
 
 type RangeAPI interface {
-
 	/*
 		RangeCreate Create the range.
 
@@ -37,7 +36,6 @@ type RangeAPI interface {
 	// RangeCreateExecute executes the request
 	//  @return IpamsvcCreateRangeResponse
 	RangeCreateExecute(r ApiRangeCreateRequest) (*IpamsvcCreateRangeResponse, *http.Response, error)
-
 	/*
 		RangeCreateNextAvailableIP Allocate the next available IP address.
 
@@ -53,7 +51,6 @@ type RangeAPI interface {
 	// RangeCreateNextAvailableIPExecute executes the request
 	//  @return IpamsvcCreateNextAvailableIPResponse
 	RangeCreateNextAvailableIPExecute(r ApiRangeCreateNextAvailableIPRequest) (*IpamsvcCreateNextAvailableIPResponse, *http.Response, error)
-
 	/*
 		RangeDelete Move the range to the recycle bin.
 
@@ -68,7 +65,6 @@ type RangeAPI interface {
 
 	// RangeDeleteExecute executes the request
 	RangeDeleteExecute(r ApiRangeDeleteRequest) (*http.Response, error)
-
 	/*
 		RangeList Retrieve ranges.
 
@@ -83,7 +79,6 @@ type RangeAPI interface {
 	// RangeListExecute executes the request
 	//  @return IpamsvcListRangeResponse
 	RangeListExecute(r ApiRangeListRequest) (*IpamsvcListRangeResponse, *http.Response, error)
-
 	/*
 		RangeListNextAvailableIP Retrieve the next available IP address.
 
@@ -99,7 +94,6 @@ type RangeAPI interface {
 	// RangeListNextAvailableIPExecute executes the request
 	//  @return IpamsvcNextAvailableIPResponse
 	RangeListNextAvailableIPExecute(r ApiRangeListNextAvailableIPRequest) (*IpamsvcNextAvailableIPResponse, *http.Response, error)
-
 	/*
 		RangeRead Retrieve the range.
 
@@ -115,7 +109,6 @@ type RangeAPI interface {
 	// RangeReadExecute executes the request
 	//  @return IpamsvcReadRangeResponse
 	RangeReadExecute(r ApiRangeReadRequest) (*IpamsvcReadRangeResponse, *http.Response, error)
-
 	/*
 		RangeUpdate Update the range.
 
@@ -219,6 +212,14 @@ func (a *RangeAPIService) RangeCreateExecute(r ApiRangeCreateRequest) (*IpamsvcC
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -262,7 +263,6 @@ func (a *RangeAPIService) RangeCreateExecute(r ApiRangeCreateRequest) (*IpamsvcC
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -401,7 +401,6 @@ func (a *RangeAPIService) RangeCreateNextAvailableIPExecute(r ApiRangeCreateNext
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -704,7 +703,6 @@ func (a *RangeAPIService) RangeListExecute(r ApiRangeListRequest) (*IpamsvcListR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -837,7 +835,6 @@ func (a *RangeAPIService) RangeListNextAvailableIPExecute(r ApiRangeListNextAvai
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -970,7 +967,6 @@ func (a *RangeAPIService) RangeReadExecute(r ApiRangeReadRequest) (*IpamsvcReadR
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
@@ -1061,6 +1057,14 @@ func (a *RangeAPIService) RangeUpdateExecute(r ApiRangeUpdateRequest) (*IpamsvcU
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	if r.body.Tags == nil {
+		r.body.Tags = make(map[string]interface{})
+	}
+	for k, v := range a.Client.Cfg.DefaultTags {
+		if _, ok := r.body.Tags[k]; !ok {
+			r.body.Tags[k] = v
+		}
+	}
 	// body params
 	localVarPostBody = r.body
 	if r.ctx != nil {
@@ -1104,6 +1108,5 @@ func (a *RangeAPIService) RangeUpdateExecute(r ApiRangeUpdateRequest) (*IpamsvcU
 		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
-
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
