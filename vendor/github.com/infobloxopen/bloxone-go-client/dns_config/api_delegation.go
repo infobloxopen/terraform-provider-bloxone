@@ -23,13 +23,13 @@ import (
 
 type DelegationAPI interface {
 	/*
-		DelegationCreate Create the Delegation object.
+			DelegationCreate Create the Delegation object.
 
-		Use this method to create a Delegation object.
-	This object (_dns/delegation_) represents a zone delegation.
+			Use this method to create a Delegation object.
+		This object (_dns/delegation_) represents a zone delegation.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiDelegationCreateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiDelegationCreateRequest
 	*/
 	DelegationCreate(ctx context.Context) ApiDelegationCreateRequest
 
@@ -37,27 +37,27 @@ type DelegationAPI interface {
 	//  @return ConfigCreateDelegationResponse
 	DelegationCreateExecute(r ApiDelegationCreateRequest) (*ConfigCreateDelegationResponse, *http.Response, error)
 	/*
-		DelegationDelete Moves the Delegation object to Recyclebin.
+			DelegationDelete Moves the Delegation object to Recyclebin.
 
-		Use this method to move a Delegation object to Recyclebin.
-	This object (_dns/delegation_) represents a zone delegation.
+			Use this method to move a Delegation object to Recyclebin.
+		This object (_dns/delegation_) represents a zone delegation.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiDelegationDeleteRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiDelegationDeleteRequest
 	*/
 	DelegationDelete(ctx context.Context, id string) ApiDelegationDeleteRequest
 
 	// DelegationDeleteExecute executes the request
 	DelegationDeleteExecute(r ApiDelegationDeleteRequest) (*http.Response, error)
 	/*
-		DelegationList List Delegation objects.
+			DelegationList List Delegation objects.
 
-		Use this method to list Delegation objects.
-	This object (_dns/delegation_) represents a zone delegation.
+			Use this method to list Delegation objects.
+		This object (_dns/delegation_) represents a zone delegation.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiDelegationListRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiDelegationListRequest
 	*/
 	DelegationList(ctx context.Context) ApiDelegationListRequest
 
@@ -65,14 +65,14 @@ type DelegationAPI interface {
 	//  @return ConfigListDelegationResponse
 	DelegationListExecute(r ApiDelegationListRequest) (*ConfigListDelegationResponse, *http.Response, error)
 	/*
-		DelegationRead Read the Delegation object.
+			DelegationRead Read the Delegation object.
 
-		Use this method to read a Delegation object.
-	This object (_dns/delegation)_ represents a zone delegation.
+			Use this method to read a Delegation object.
+		This object (_dns/delegation)_ represents a zone delegation.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiDelegationReadRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiDelegationReadRequest
 	*/
 	DelegationRead(ctx context.Context, id string) ApiDelegationReadRequest
 
@@ -80,14 +80,14 @@ type DelegationAPI interface {
 	//  @return ConfigReadDelegationResponse
 	DelegationReadExecute(r ApiDelegationReadRequest) (*ConfigReadDelegationResponse, *http.Response, error)
 	/*
-		DelegationUpdate Update the Delegation object.
+			DelegationUpdate Update the Delegation object.
 
-		Use this method to update a Delegation object.
-	This object (_dns/delegation_) represents a zone delegation.
+			Use this method to update a Delegation object.
+		This object (_dns/delegation_) represents a zone delegation.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiDelegationUpdateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiDelegationUpdateRequest
 	*/
 	DelegationUpdate(ctx context.Context, id string) ApiDelegationUpdateRequest
 

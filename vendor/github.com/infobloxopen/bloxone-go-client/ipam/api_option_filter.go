@@ -23,13 +23,13 @@ import (
 
 type OptionFilterAPI interface {
 	/*
-		OptionFilterCreate Create the DHCP option filter.
+			OptionFilterCreate Create the DHCP option filter.
 
-		Use this method to create an __OptionFilter__ object.
-	The __OptionFilter__ object applies options to DHCP clients with matching options. It must be configured in the _filters_ list of a scope to be effective.
+			Use this method to create an __OptionFilter__ object.
+		The __OptionFilter__ object applies options to DHCP clients with matching options. It must be configured in the _filters_ list of a scope to be effective.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiOptionFilterCreateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiOptionFilterCreateRequest
 	*/
 	OptionFilterCreate(ctx context.Context) ApiOptionFilterCreateRequest
 
@@ -37,27 +37,27 @@ type OptionFilterAPI interface {
 	//  @return IpamsvcCreateOptionFilterResponse
 	OptionFilterCreateExecute(r ApiOptionFilterCreateRequest) (*IpamsvcCreateOptionFilterResponse, *http.Response, error)
 	/*
-		OptionFilterDelete Move the DHCP option filter to the recycle bin.
+			OptionFilterDelete Move the DHCP option filter to the recycle bin.
 
-		Use this method to move an __OptionFilter__ object to the recycle bin.
-	The __OptionFilter__ object applies options to DHCP clients with matching options. It must be configured in the _filters_ list of a scope to be effective.
+			Use this method to move an __OptionFilter__ object to the recycle bin.
+		The __OptionFilter__ object applies options to DHCP clients with matching options. It must be configured in the _filters_ list of a scope to be effective.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiOptionFilterDeleteRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiOptionFilterDeleteRequest
 	*/
 	OptionFilterDelete(ctx context.Context, id string) ApiOptionFilterDeleteRequest
 
 	// OptionFilterDeleteExecute executes the request
 	OptionFilterDeleteExecute(r ApiOptionFilterDeleteRequest) (*http.Response, error)
 	/*
-		OptionFilterList Retrieve DHCP option filters.
+			OptionFilterList Retrieve DHCP option filters.
 
-		Use this method to retrieve __OptionFilter__ objects.
-	The __OptionFilter__ object applies options to DHCP clients with matching options. It must be configured in the _filters_ list of a scope to be effective.
+			Use this method to retrieve __OptionFilter__ objects.
+		The __OptionFilter__ object applies options to DHCP clients with matching options. It must be configured in the _filters_ list of a scope to be effective.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiOptionFilterListRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiOptionFilterListRequest
 	*/
 	OptionFilterList(ctx context.Context) ApiOptionFilterListRequest
 
@@ -65,14 +65,14 @@ type OptionFilterAPI interface {
 	//  @return IpamsvcListOptionFilterResponse
 	OptionFilterListExecute(r ApiOptionFilterListRequest) (*IpamsvcListOptionFilterResponse, *http.Response, error)
 	/*
-		OptionFilterRead Retrieve the DHCP option filter.
+			OptionFilterRead Retrieve the DHCP option filter.
 
-		Use this method to retrieve an __OptionFilter__ object.
-	The __OptionFilter__ object applies options to DHCP clients with matching options. It must be configured in the _filters_ list of a scope to be effective.
+			Use this method to retrieve an __OptionFilter__ object.
+		The __OptionFilter__ object applies options to DHCP clients with matching options. It must be configured in the _filters_ list of a scope to be effective.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiOptionFilterReadRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiOptionFilterReadRequest
 	*/
 	OptionFilterRead(ctx context.Context, id string) ApiOptionFilterReadRequest
 
@@ -80,14 +80,14 @@ type OptionFilterAPI interface {
 	//  @return IpamsvcReadOptionFilterResponse
 	OptionFilterReadExecute(r ApiOptionFilterReadRequest) (*IpamsvcReadOptionFilterResponse, *http.Response, error)
 	/*
-		OptionFilterUpdate Update the DHCP option filter.
+			OptionFilterUpdate Update the DHCP option filter.
 
-		Use this method to update an __OptionFilter__ object.
-	The __OptionFilter__ object applies options to DHCP clients with matching options. It must be configured in the _filters_ list of a scope to be effective.
+			Use this method to update an __OptionFilter__ object.
+		The __OptionFilter__ object applies options to DHCP clients with matching options. It must be configured in the _filters_ list of a scope to be effective.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiOptionFilterUpdateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiOptionFilterUpdateRequest
 	*/
 	OptionFilterUpdate(ctx context.Context, id string) ApiOptionFilterUpdateRequest
 

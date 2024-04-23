@@ -23,13 +23,13 @@ import (
 
 type IpamHostAPI interface {
 	/*
-		IpamHostCreate Create the IPAM host.
+			IpamHostCreate Create the IPAM host.
 
-		Use this method to create an __IpamHost__ object.
-	The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
+			Use this method to create an __IpamHost__ object.
+		The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiIpamHostCreateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiIpamHostCreateRequest
 	*/
 	IpamHostCreate(ctx context.Context) ApiIpamHostCreateRequest
 
@@ -37,27 +37,27 @@ type IpamHostAPI interface {
 	//  @return IpamsvcCreateIpamHostResponse
 	IpamHostCreateExecute(r ApiIpamHostCreateRequest) (*IpamsvcCreateIpamHostResponse, *http.Response, error)
 	/*
-		IpamHostDelete Move the IPAM host to the recycle bin.
+			IpamHostDelete Move the IPAM host to the recycle bin.
 
-		Use this method to move an __IpamHost__ object to the recycle bin.
-	The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
+			Use this method to move an __IpamHost__ object to the recycle bin.
+		The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiIpamHostDeleteRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiIpamHostDeleteRequest
 	*/
 	IpamHostDelete(ctx context.Context, id string) ApiIpamHostDeleteRequest
 
 	// IpamHostDeleteExecute executes the request
 	IpamHostDeleteExecute(r ApiIpamHostDeleteRequest) (*http.Response, error)
 	/*
-		IpamHostList Retrieve the IPAM hosts.
+			IpamHostList Retrieve the IPAM hosts.
 
-		Use this method to retrieve __IpamHost__ objects.
-	The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
+			Use this method to retrieve __IpamHost__ objects.
+		The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiIpamHostListRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiIpamHostListRequest
 	*/
 	IpamHostList(ctx context.Context) ApiIpamHostListRequest
 
@@ -65,14 +65,14 @@ type IpamHostAPI interface {
 	//  @return IpamsvcListIpamHostResponse
 	IpamHostListExecute(r ApiIpamHostListRequest) (*IpamsvcListIpamHostResponse, *http.Response, error)
 	/*
-		IpamHostRead Retrieve the IPAM host.
+			IpamHostRead Retrieve the IPAM host.
 
-		Use this method to retrieve an __IpamHost__ object.
-	The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
+			Use this method to retrieve an __IpamHost__ object.
+		The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiIpamHostReadRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiIpamHostReadRequest
 	*/
 	IpamHostRead(ctx context.Context, id string) ApiIpamHostReadRequest
 
@@ -80,14 +80,14 @@ type IpamHostAPI interface {
 	//  @return IpamsvcReadIpamHostResponse
 	IpamHostReadExecute(r ApiIpamHostReadRequest) (*IpamsvcReadIpamHostResponse, *http.Response, error)
 	/*
-		IpamHostUpdate Update the IPAM host.
+			IpamHostUpdate Update the IPAM host.
 
-		Use this method to update an __IpamHost__ object.
-	The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
+			Use this method to update an __IpamHost__ object.
+		The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiIpamHostUpdateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiIpamHostUpdateRequest
 	*/
 	IpamHostUpdate(ctx context.Context, id string) ApiIpamHostUpdateRequest
 

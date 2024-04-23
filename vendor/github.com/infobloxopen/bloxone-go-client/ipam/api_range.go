@@ -23,13 +23,13 @@ import (
 
 type RangeAPI interface {
 	/*
-		RangeCreate Create the range.
+			RangeCreate Create the range.
 
-		Use this method to create a __Range__ object.
-	A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
+			Use this method to create a __Range__ object.
+		A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiRangeCreateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiRangeCreateRequest
 	*/
 	RangeCreate(ctx context.Context) ApiRangeCreateRequest
 
@@ -37,14 +37,14 @@ type RangeAPI interface {
 	//  @return IpamsvcCreateRangeResponse
 	RangeCreateExecute(r ApiRangeCreateRequest) (*IpamsvcCreateRangeResponse, *http.Response, error)
 	/*
-		RangeCreateNextAvailableIP Allocate the next available IP address.
+			RangeCreateNextAvailableIP Allocate the next available IP address.
 
-		Use this method to allocate the next available IP address.
-	This allocates one or more __Address__ (_ipam/address_) resource from available addresses, when the IP address is not known prior to allocation.
+			Use this method to allocate the next available IP address.
+		This allocates one or more __Address__ (_ipam/address_) resource from available addresses, when the IP address is not known prior to allocation.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiRangeCreateNextAvailableIPRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiRangeCreateNextAvailableIPRequest
 	*/
 	RangeCreateNextAvailableIP(ctx context.Context, id string) ApiRangeCreateNextAvailableIPRequest
 
@@ -52,27 +52,27 @@ type RangeAPI interface {
 	//  @return IpamsvcCreateNextAvailableIPResponse
 	RangeCreateNextAvailableIPExecute(r ApiRangeCreateNextAvailableIPRequest) (*IpamsvcCreateNextAvailableIPResponse, *http.Response, error)
 	/*
-		RangeDelete Move the range to the recycle bin.
+			RangeDelete Move the range to the recycle bin.
 
-		Use this method to move a __Range__ object to the recycle bin.
-	A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
+			Use this method to move a __Range__ object to the recycle bin.
+		A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiRangeDeleteRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiRangeDeleteRequest
 	*/
 	RangeDelete(ctx context.Context, id string) ApiRangeDeleteRequest
 
 	// RangeDeleteExecute executes the request
 	RangeDeleteExecute(r ApiRangeDeleteRequest) (*http.Response, error)
 	/*
-		RangeList Retrieve ranges.
+			RangeList Retrieve ranges.
 
-		Use this method to retrieve __Range__ objects.
-	A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
+			Use this method to retrieve __Range__ objects.
+		A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiRangeListRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiRangeListRequest
 	*/
 	RangeList(ctx context.Context) ApiRangeListRequest
 
@@ -80,14 +80,14 @@ type RangeAPI interface {
 	//  @return IpamsvcListRangeResponse
 	RangeListExecute(r ApiRangeListRequest) (*IpamsvcListRangeResponse, *http.Response, error)
 	/*
-		RangeListNextAvailableIP Retrieve the next available IP address.
+			RangeListNextAvailableIP Retrieve the next available IP address.
 
-		Use this method to retrieve the next available IP address.
-	This returns one or more __Address__ (_ipam/address_) resource from available addresses, when IP address is not known prior to allocation.
+			Use this method to retrieve the next available IP address.
+		This returns one or more __Address__ (_ipam/address_) resource from available addresses, when IP address is not known prior to allocation.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiRangeListNextAvailableIPRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiRangeListNextAvailableIPRequest
 	*/
 	RangeListNextAvailableIP(ctx context.Context, id string) ApiRangeListNextAvailableIPRequest
 
@@ -95,14 +95,14 @@ type RangeAPI interface {
 	//  @return IpamsvcNextAvailableIPResponse
 	RangeListNextAvailableIPExecute(r ApiRangeListNextAvailableIPRequest) (*IpamsvcNextAvailableIPResponse, *http.Response, error)
 	/*
-		RangeRead Retrieve the range.
+			RangeRead Retrieve the range.
 
-		Use this method to retrieve a __Range__ object.
-	A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
+			Use this method to retrieve a __Range__ object.
+		A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiRangeReadRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiRangeReadRequest
 	*/
 	RangeRead(ctx context.Context, id string) ApiRangeReadRequest
 
@@ -110,14 +110,14 @@ type RangeAPI interface {
 	//  @return IpamsvcReadRangeResponse
 	RangeReadExecute(r ApiRangeReadRequest) (*IpamsvcReadRangeResponse, *http.Response, error)
 	/*
-		RangeUpdate Update the range.
+			RangeUpdate Update the range.
 
-		Use this method to update a __Range__ object.
-	A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
+			Use this method to update a __Range__ object.
+		A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiRangeUpdateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiRangeUpdateRequest
 	*/
 	RangeUpdate(ctx context.Context, id string) ApiRangeUpdateRequest
 

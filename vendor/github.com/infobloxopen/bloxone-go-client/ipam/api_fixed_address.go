@@ -23,13 +23,13 @@ import (
 
 type FixedAddressAPI interface {
 	/*
-		FixedAddressCreate Create the fixed address.
+			FixedAddressCreate Create the fixed address.
 
-		Use this method to create a __FixedAddress__ object.
-	The __FixedAddress__ object reserves an address for a specific client. It must have a _match_type_ and a valid corresponding _match_value_ so that it can match that client.
+			Use this method to create a __FixedAddress__ object.
+		The __FixedAddress__ object reserves an address for a specific client. It must have a _match_type_ and a valid corresponding _match_value_ so that it can match that client.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiFixedAddressCreateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiFixedAddressCreateRequest
 	*/
 	FixedAddressCreate(ctx context.Context) ApiFixedAddressCreateRequest
 
@@ -37,27 +37,27 @@ type FixedAddressAPI interface {
 	//  @return IpamsvcCreateFixedAddressResponse
 	FixedAddressCreateExecute(r ApiFixedAddressCreateRequest) (*IpamsvcCreateFixedAddressResponse, *http.Response, error)
 	/*
-		FixedAddressDelete Move the fixed address to the recycle bin.
+			FixedAddressDelete Move the fixed address to the recycle bin.
 
-		Use this method to move a __FixedAddress__ object to the recycle bin.
-	The __FixedAddress__ object reserves an address for a specific client. It must have a _match_type_ and a valid corresponding _match_value_ so that it can match that client.
+			Use this method to move a __FixedAddress__ object to the recycle bin.
+		The __FixedAddress__ object reserves an address for a specific client. It must have a _match_type_ and a valid corresponding _match_value_ so that it can match that client.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiFixedAddressDeleteRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiFixedAddressDeleteRequest
 	*/
 	FixedAddressDelete(ctx context.Context, id string) ApiFixedAddressDeleteRequest
 
 	// FixedAddressDeleteExecute executes the request
 	FixedAddressDeleteExecute(r ApiFixedAddressDeleteRequest) (*http.Response, error)
 	/*
-		FixedAddressList Retrieve fixed addresses.
+			FixedAddressList Retrieve fixed addresses.
 
-		Use this method to retrieve __FixedAddress__ objects.
-	The __FixedAddress__ object reserves an address for a specific client. It must have a _match_type_ and a valid corresponding _match_value_ so that it can match that client.
+			Use this method to retrieve __FixedAddress__ objects.
+		The __FixedAddress__ object reserves an address for a specific client. It must have a _match_type_ and a valid corresponding _match_value_ so that it can match that client.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiFixedAddressListRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiFixedAddressListRequest
 	*/
 	FixedAddressList(ctx context.Context) ApiFixedAddressListRequest
 
@@ -65,14 +65,14 @@ type FixedAddressAPI interface {
 	//  @return IpamsvcListFixedAddressResponse
 	FixedAddressListExecute(r ApiFixedAddressListRequest) (*IpamsvcListFixedAddressResponse, *http.Response, error)
 	/*
-		FixedAddressRead Retrieve the fixed address.
+			FixedAddressRead Retrieve the fixed address.
 
-		Use this method to retrieve a __FixedAddress__ object.
-	The __FixedAddress__ object reserves an address for a specific client. It must have a _match_type_ and a valid corresponding _match_value_ so that it can match that client.
+			Use this method to retrieve a __FixedAddress__ object.
+		The __FixedAddress__ object reserves an address for a specific client. It must have a _match_type_ and a valid corresponding _match_value_ so that it can match that client.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiFixedAddressReadRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiFixedAddressReadRequest
 	*/
 	FixedAddressRead(ctx context.Context, id string) ApiFixedAddressReadRequest
 
@@ -80,14 +80,14 @@ type FixedAddressAPI interface {
 	//  @return IpamsvcReadFixedAddressResponse
 	FixedAddressReadExecute(r ApiFixedAddressReadRequest) (*IpamsvcReadFixedAddressResponse, *http.Response, error)
 	/*
-		FixedAddressUpdate Update the fixed address.
+			FixedAddressUpdate Update the fixed address.
 
-		Use this method to update a __FixedAddress__ object.
-	The __FixedAddress__ object reserves an address for a specific client. It must have a _match_type_ and a valid corresponding _match_value_ so that it can match that client.
+			Use this method to update a __FixedAddress__ object.
+		The __FixedAddress__ object reserves an address for a specific client. It must have a _match_type_ and a valid corresponding _match_value_ so that it can match that client.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiFixedAddressUpdateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiFixedAddressUpdateRequest
 	*/
 	FixedAddressUpdate(ctx context.Context, id string) ApiFixedAddressUpdateRequest
 

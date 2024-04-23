@@ -23,13 +23,13 @@ import (
 
 type AddressAPI interface {
 	/*
-		AddressCreate Create the IP address.
+			AddressCreate Create the IP address.
 
-		Use this method to create an __Address__ object.
-	The __Address__ object represents any single IP address within a given IP space.
+			Use this method to create an __Address__ object.
+		The __Address__ object represents any single IP address within a given IP space.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiAddressCreateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiAddressCreateRequest
 	*/
 	AddressCreate(ctx context.Context) ApiAddressCreateRequest
 
@@ -37,27 +37,27 @@ type AddressAPI interface {
 	//  @return IpamsvcCreateAddressResponse
 	AddressCreateExecute(r ApiAddressCreateRequest) (*IpamsvcCreateAddressResponse, *http.Response, error)
 	/*
-		AddressDelete Move the IP address to the recycle bin.
+			AddressDelete Move the IP address to the recycle bin.
 
-		Use this method to move an __Address__ object to the recycle bin.
-	The __Address__ object represents any single IP address within a given IP space.
+			Use this method to move an __Address__ object to the recycle bin.
+		The __Address__ object represents any single IP address within a given IP space.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiAddressDeleteRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiAddressDeleteRequest
 	*/
 	AddressDelete(ctx context.Context, id string) ApiAddressDeleteRequest
 
 	// AddressDeleteExecute executes the request
 	AddressDeleteExecute(r ApiAddressDeleteRequest) (*http.Response, error)
 	/*
-		AddressList Retrieve IP addresses.
+			AddressList Retrieve IP addresses.
 
-		Use this method to retrieve __Address__ objects.
-	The __Address__ object represents any single IP address within a given IP space.
+			Use this method to retrieve __Address__ objects.
+		The __Address__ object represents any single IP address within a given IP space.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiAddressListRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiAddressListRequest
 	*/
 	AddressList(ctx context.Context) ApiAddressListRequest
 
@@ -65,14 +65,14 @@ type AddressAPI interface {
 	//  @return IpamsvcListAddressResponse
 	AddressListExecute(r ApiAddressListRequest) (*IpamsvcListAddressResponse, *http.Response, error)
 	/*
-		AddressRead Retrieve the IP address.
+			AddressRead Retrieve the IP address.
 
-		Use this method to retrieve an __Address__ object.
-	The __Address__ object represents any single IP address within a given IP space.
+			Use this method to retrieve an __Address__ object.
+		The __Address__ object represents any single IP address within a given IP space.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiAddressReadRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiAddressReadRequest
 	*/
 	AddressRead(ctx context.Context, id string) ApiAddressReadRequest
 
@@ -80,14 +80,14 @@ type AddressAPI interface {
 	//  @return IpamsvcReadAddressResponse
 	AddressReadExecute(r ApiAddressReadRequest) (*IpamsvcReadAddressResponse, *http.Response, error)
 	/*
-		AddressUpdate Update the IP address.
+			AddressUpdate Update the IP address.
 
-		Use this method to update an __Address__ object.
-	The __Address__ object represents any single IP address within a given IP space.
+			Use this method to update an __Address__ object.
+		The __Address__ object represents any single IP address within a given IP space.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiAddressUpdateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiAddressUpdateRequest
 	*/
 	AddressUpdate(ctx context.Context, id string) ApiAddressUpdateRequest
 

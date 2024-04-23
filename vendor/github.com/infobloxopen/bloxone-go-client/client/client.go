@@ -2,6 +2,7 @@
 package client
 
 import (
+	"github.com/infobloxopen/bloxone-go-client/anycast"
 	"github.com/infobloxopen/bloxone-go-client/dfp"
 	"github.com/infobloxopen/bloxone-go-client/dns_config"
 	"github.com/infobloxopen/bloxone-go-client/dns_data"
@@ -20,8 +21,9 @@ type APIClient struct {
 	HostActivationAPI      *infra_provision.APIClient
 	InfraManagementAPI     *infra_mgmt.APIClient
 	KeysAPI                *keys.APIClient
-	FWAPI                  *fw.APIClient
 	DNSForwardingProxyAPI  *dfp.APIClient
+	FWAPI                  *fw.APIClient
+	AnycastAPI             *anycast.APIClient
 }
 
 // NewAPIClient creates a new BloxOne API Client.
@@ -50,11 +52,15 @@ func NewAPIClient(conf Configuration) (*APIClient, error) {
 	if err != nil {
 		return nil, err
 	}
+	dfpConf, err := conf.internal(dfp.ServiceBasePath)
+	if err != nil {
+		return nil, err
+	}
 	fwConf, err := conf.internal(fw.ServiceBasePath)
 	if err != nil {
 		return nil, err
 	}
-	dfpConf, err := conf.internal(dfp.ServiceBasePath)
+	anycastConf, err := conf.internal(anycast.ServiceBasePath)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +72,8 @@ func NewAPIClient(conf Configuration) (*APIClient, error) {
 		HostActivationAPI:      infra_provision.NewAPIClient(infraProvisionConf),
 		InfraManagementAPI:     infra_mgmt.NewAPIClient(infraMgmtConf),
 		KeysAPI:                keys.NewAPIClient(keysConf),
-		FWAPI:                  fw.NewAPIClient(fwConf),
 		DNSForwardingProxyAPI:  dfp.NewAPIClient(dfpConf),
+		FWAPI:                  fw.NewAPIClient(fwConf),
+		AnycastAPI:             anycast.NewAPIClient(anycastConf),
 	}, nil
 }

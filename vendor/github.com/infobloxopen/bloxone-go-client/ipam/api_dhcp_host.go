@@ -23,13 +23,13 @@ import (
 
 type DhcpHostAPI interface {
 	/*
-		DhcpHostList Retrieve DHCP hosts.
+			DhcpHostList Retrieve DHCP hosts.
 
-		Use this method to retrieve DHCP __Host__ objects.
-	A DHCP __Host__ object associates a __DHCPConfigProfile__ object with an on-prem host.
+			Use this method to retrieve DHCP __Host__ objects.
+		A DHCP __Host__ object associates a __DHCPConfigProfile__ object with an on-prem host.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiDhcpHostListRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiDhcpHostListRequest
 	*/
 	DhcpHostList(ctx context.Context) ApiDhcpHostListRequest
 
@@ -51,14 +51,14 @@ type DhcpHostAPI interface {
 	//  @return IpamsvcHostAssociationsResponse
 	DhcpHostListAssociationsExecute(r ApiDhcpHostListAssociationsRequest) (*IpamsvcHostAssociationsResponse, *http.Response, error)
 	/*
-		DhcpHostRead Retrieve the DHCP host.
+			DhcpHostRead Retrieve the DHCP host.
 
-		Use this method to retrieve a DHCP Host object.
-	A DHCP __Host__ object associates a __DHCPConfigProfile__ object with an on-prem host.
+			Use this method to retrieve a DHCP Host object.
+		A DHCP __Host__ object associates a __DHCPConfigProfile__ object with an on-prem host.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiDhcpHostReadRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiDhcpHostReadRequest
 	*/
 	DhcpHostRead(ctx context.Context, id string) ApiDhcpHostReadRequest
 
@@ -66,14 +66,14 @@ type DhcpHostAPI interface {
 	//  @return IpamsvcReadHostResponse
 	DhcpHostReadExecute(r ApiDhcpHostReadRequest) (*IpamsvcReadHostResponse, *http.Response, error)
 	/*
-		DhcpHostUpdate Update the DHCP hosts.
+			DhcpHostUpdate Update the DHCP hosts.
 
-		Use this method to update a DHCP __Host__ object.
-	A DHCP __Host__ object associates a __DHCPConfigProfile__ object with an on-prem host.
+			Use this method to update a DHCP __Host__ object.
+		A DHCP __Host__ object associates a __DHCPConfigProfile__ object with an on-prem host.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiDhcpHostUpdateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiDhcpHostUpdateRequest
 	*/
 	DhcpHostUpdate(ctx context.Context, id string) ApiDhcpHostUpdateRequest
 

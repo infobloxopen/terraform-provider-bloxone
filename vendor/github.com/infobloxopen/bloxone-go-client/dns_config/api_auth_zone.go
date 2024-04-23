@@ -23,13 +23,13 @@ import (
 
 type AuthZoneAPI interface {
 	/*
-		AuthZoneCopy Copies the __AuthZone__ object.
+			AuthZoneCopy Copies the __AuthZone__ object.
 
-		Use this method to copy an __AuthZone__ object to a different __View__.
-	This object (_dns/auth_zone_) represents an authoritative zone.
+			Use this method to copy an __AuthZone__ object to a different __View__.
+		This object (_dns/auth_zone_) represents an authoritative zone.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiAuthZoneCopyRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiAuthZoneCopyRequest
 	*/
 	AuthZoneCopy(ctx context.Context) ApiAuthZoneCopyRequest
 
@@ -37,13 +37,13 @@ type AuthZoneAPI interface {
 	//  @return ConfigCopyAuthZoneResponse
 	AuthZoneCopyExecute(r ApiAuthZoneCopyRequest) (*ConfigCopyAuthZoneResponse, *http.Response, error)
 	/*
-		AuthZoneCreate Create the AuthZone object.
+			AuthZoneCreate Create the AuthZone object.
 
-		Use this method to create an AuthZone object.
-	This object (_dns/auth_zone_) represents an authoritative zone.
+			Use this method to create an AuthZone object.
+		This object (_dns/auth_zone_) represents an authoritative zone.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiAuthZoneCreateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiAuthZoneCreateRequest
 	*/
 	AuthZoneCreate(ctx context.Context) ApiAuthZoneCreateRequest
 
@@ -51,27 +51,27 @@ type AuthZoneAPI interface {
 	//  @return ConfigCreateAuthZoneResponse
 	AuthZoneCreateExecute(r ApiAuthZoneCreateRequest) (*ConfigCreateAuthZoneResponse, *http.Response, error)
 	/*
-		AuthZoneDelete Moves the AuthZone object to Recyclebin.
+			AuthZoneDelete Moves the AuthZone object to Recyclebin.
 
-		Use this method to move an AuthZone object to Recyclebin.
-	This object (_dns/auth_zone_) represents an authoritative zone.
+			Use this method to move an AuthZone object to Recyclebin.
+		This object (_dns/auth_zone_) represents an authoritative zone.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiAuthZoneDeleteRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiAuthZoneDeleteRequest
 	*/
 	AuthZoneDelete(ctx context.Context, id string) ApiAuthZoneDeleteRequest
 
 	// AuthZoneDeleteExecute executes the request
 	AuthZoneDeleteExecute(r ApiAuthZoneDeleteRequest) (*http.Response, error)
 	/*
-		AuthZoneList List AuthZone objects.
+			AuthZoneList List AuthZone objects.
 
-		Use this method to list AuthZone objects.
-	This object (_dns/auth_zone_) represents an authoritative zone.
+			Use this method to list AuthZone objects.
+		This object (_dns/auth_zone_) represents an authoritative zone.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiAuthZoneListRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiAuthZoneListRequest
 	*/
 	AuthZoneList(ctx context.Context) ApiAuthZoneListRequest
 
@@ -79,14 +79,14 @@ type AuthZoneAPI interface {
 	//  @return ConfigListAuthZoneResponse
 	AuthZoneListExecute(r ApiAuthZoneListRequest) (*ConfigListAuthZoneResponse, *http.Response, error)
 	/*
-		AuthZoneRead Read the AuthZone object.
+			AuthZoneRead Read the AuthZone object.
 
-		Use this method to read an AuthZone object.
-	This object (_dns/auth_zone_) represents an authoritative zone.
+			Use this method to read an AuthZone object.
+		This object (_dns/auth_zone_) represents an authoritative zone.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiAuthZoneReadRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiAuthZoneReadRequest
 	*/
 	AuthZoneRead(ctx context.Context, id string) ApiAuthZoneReadRequest
 
@@ -94,14 +94,14 @@ type AuthZoneAPI interface {
 	//  @return ConfigReadAuthZoneResponse
 	AuthZoneReadExecute(r ApiAuthZoneReadRequest) (*ConfigReadAuthZoneResponse, *http.Response, error)
 	/*
-		AuthZoneUpdate Update the AuthZone object.
+			AuthZoneUpdate Update the AuthZone object.
 
-		Use this method to update an AuthZone object.
-	This object (_dns/auth_zone_) represents an authoritative zone.
+			Use this method to update an AuthZone object.
+		This object (_dns/auth_zone_) represents an authoritative zone.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiAuthZoneUpdateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiAuthZoneUpdateRequest
 	*/
 	AuthZoneUpdate(ctx context.Context, id string) ApiAuthZoneUpdateRequest
 

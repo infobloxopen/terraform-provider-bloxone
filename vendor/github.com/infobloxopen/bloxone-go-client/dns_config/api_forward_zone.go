@@ -23,13 +23,13 @@ import (
 
 type ForwardZoneAPI interface {
 	/*
-		ForwardZoneCopy Copies the __ForwardZone__ object.
+			ForwardZoneCopy Copies the __ForwardZone__ object.
 
-		Use this method to copy an __ForwardZone__ object to a different __View__.
-	This object (_dns/forward_zone_) represents a forwarding zone.
+			Use this method to copy an __ForwardZone__ object to a different __View__.
+		This object (_dns/forward_zone_) represents a forwarding zone.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiForwardZoneCopyRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiForwardZoneCopyRequest
 	*/
 	ForwardZoneCopy(ctx context.Context) ApiForwardZoneCopyRequest
 
@@ -37,13 +37,13 @@ type ForwardZoneAPI interface {
 	//  @return ConfigCopyForwardZoneResponse
 	ForwardZoneCopyExecute(r ApiForwardZoneCopyRequest) (*ConfigCopyForwardZoneResponse, *http.Response, error)
 	/*
-		ForwardZoneCreate Create the ForwardZone object.
+			ForwardZoneCreate Create the ForwardZone object.
 
-		Use this method to create a ForwardZone object.
-	This object (_dns/forward_zone_) represents a forwarding zone.
+			Use this method to create a ForwardZone object.
+		This object (_dns/forward_zone_) represents a forwarding zone.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiForwardZoneCreateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiForwardZoneCreateRequest
 	*/
 	ForwardZoneCreate(ctx context.Context) ApiForwardZoneCreateRequest
 
@@ -51,27 +51,27 @@ type ForwardZoneAPI interface {
 	//  @return ConfigCreateForwardZoneResponse
 	ForwardZoneCreateExecute(r ApiForwardZoneCreateRequest) (*ConfigCreateForwardZoneResponse, *http.Response, error)
 	/*
-		ForwardZoneDelete Move the Forward Zone object to Recyclebin.
+			ForwardZoneDelete Move the Forward Zone object to Recyclebin.
 
-		Use this method to move a Forward Zone object to Recyclebin.
-	This object (_dns/forward_zone_) represents a forwarding zone.
+			Use this method to move a Forward Zone object to Recyclebin.
+		This object (_dns/forward_zone_) represents a forwarding zone.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiForwardZoneDeleteRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiForwardZoneDeleteRequest
 	*/
 	ForwardZoneDelete(ctx context.Context, id string) ApiForwardZoneDeleteRequest
 
 	// ForwardZoneDeleteExecute executes the request
 	ForwardZoneDeleteExecute(r ApiForwardZoneDeleteRequest) (*http.Response, error)
 	/*
-		ForwardZoneList List Forward Zone objects.
+			ForwardZoneList List Forward Zone objects.
 
-		Use this method to list Forward Zone objects.
-	This object (_dns/forward_zone_) represents a forwarding zone.
+			Use this method to list Forward Zone objects.
+		This object (_dns/forward_zone_) represents a forwarding zone.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiForwardZoneListRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiForwardZoneListRequest
 	*/
 	ForwardZoneList(ctx context.Context) ApiForwardZoneListRequest
 
@@ -79,14 +79,14 @@ type ForwardZoneAPI interface {
 	//  @return ConfigListForwardZoneResponse
 	ForwardZoneListExecute(r ApiForwardZoneListRequest) (*ConfigListForwardZoneResponse, *http.Response, error)
 	/*
-		ForwardZoneRead Read the Forward Zone object.
+			ForwardZoneRead Read the Forward Zone object.
 
-		Use this method to read a Forward Zone object.
-	This object (_dns/forward_zone_) represents a forwarding zone.
+			Use this method to read a Forward Zone object.
+		This object (_dns/forward_zone_) represents a forwarding zone.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiForwardZoneReadRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiForwardZoneReadRequest
 	*/
 	ForwardZoneRead(ctx context.Context, id string) ApiForwardZoneReadRequest
 
@@ -94,14 +94,14 @@ type ForwardZoneAPI interface {
 	//  @return ConfigReadForwardZoneResponse
 	ForwardZoneReadExecute(r ApiForwardZoneReadRequest) (*ConfigReadForwardZoneResponse, *http.Response, error)
 	/*
-		ForwardZoneUpdate Update the Forward Zone object.
+			ForwardZoneUpdate Update the Forward Zone object.
 
-		Use this method to update a Forward Zone object.
-	This object (_dns/forward_zone_) represents a forwarding zone.
+			Use this method to update a Forward Zone object.
+		This object (_dns/forward_zone_) represents a forwarding zone.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiForwardZoneUpdateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiForwardZoneUpdateRequest
 	*/
 	ForwardZoneUpdate(ctx context.Context, id string) ApiForwardZoneUpdateRequest
 

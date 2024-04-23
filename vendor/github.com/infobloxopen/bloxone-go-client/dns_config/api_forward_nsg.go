@@ -23,13 +23,13 @@ import (
 
 type ForwardNsgAPI interface {
 	/*
-		ForwardNsgCreate Create the ForwardNSG object.
+			ForwardNsgCreate Create the ForwardNSG object.
 
-		Use this method to create a ForwardNSG object.
-	The _dns/forward_nsg_ object represents a Forward DNS Server Group for forward zones.
+			Use this method to create a ForwardNSG object.
+		The _dns/forward_nsg_ object represents a Forward DNS Server Group for forward zones.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiForwardNsgCreateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiForwardNsgCreateRequest
 	*/
 	ForwardNsgCreate(ctx context.Context) ApiForwardNsgCreateRequest
 
@@ -37,27 +37,27 @@ type ForwardNsgAPI interface {
 	//  @return ConfigCreateForwardNSGResponse
 	ForwardNsgCreateExecute(r ApiForwardNsgCreateRequest) (*ConfigCreateForwardNSGResponse, *http.Response, error)
 	/*
-		ForwardNsgDelete Move the ForwardNSG object to Recyclebin.
+			ForwardNsgDelete Move the ForwardNSG object to Recyclebin.
 
-		Use this method to move a ForwardNSG object to Recyclebin.
-	The _dns/forward_nsg_ object represents a Forward DNS Server Group for forward zones.
+			Use this method to move a ForwardNSG object to Recyclebin.
+		The _dns/forward_nsg_ object represents a Forward DNS Server Group for forward zones.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiForwardNsgDeleteRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiForwardNsgDeleteRequest
 	*/
 	ForwardNsgDelete(ctx context.Context, id string) ApiForwardNsgDeleteRequest
 
 	// ForwardNsgDeleteExecute executes the request
 	ForwardNsgDeleteExecute(r ApiForwardNsgDeleteRequest) (*http.Response, error)
 	/*
-		ForwardNsgList List ForwardNSG objects.
+			ForwardNsgList List ForwardNSG objects.
 
-		Use this method to list ForwardNSG objects.
-	The _dns/forward_nsg_ object represents a Forward DNS Server Group for forward zones.
+			Use this method to list ForwardNSG objects.
+		The _dns/forward_nsg_ object represents a Forward DNS Server Group for forward zones.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiForwardNsgListRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiForwardNsgListRequest
 	*/
 	ForwardNsgList(ctx context.Context) ApiForwardNsgListRequest
 
@@ -65,14 +65,14 @@ type ForwardNsgAPI interface {
 	//  @return ConfigListForwardNSGResponse
 	ForwardNsgListExecute(r ApiForwardNsgListRequest) (*ConfigListForwardNSGResponse, *http.Response, error)
 	/*
-		ForwardNsgRead Read the ForwardNSG object.
+			ForwardNsgRead Read the ForwardNSG object.
 
-		Use this method to read a ForwardNSG object.
-	The _dns/forward_nsg_ object represents a Forward DNS Server Group for forward zones.
+			Use this method to read a ForwardNSG object.
+		The _dns/forward_nsg_ object represents a Forward DNS Server Group for forward zones.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiForwardNsgReadRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiForwardNsgReadRequest
 	*/
 	ForwardNsgRead(ctx context.Context, id string) ApiForwardNsgReadRequest
 
@@ -80,14 +80,14 @@ type ForwardNsgAPI interface {
 	//  @return ConfigReadForwardNSGResponse
 	ForwardNsgReadExecute(r ApiForwardNsgReadRequest) (*ConfigReadForwardNSGResponse, *http.Response, error)
 	/*
-		ForwardNsgUpdate Update the ForwardNSG object.
+			ForwardNsgUpdate Update the ForwardNSG object.
 
-		Use this method to update a ForwardNSG object.
-	The _dns/forward_nsg_ object represents a Forward DNS Server Group for forward zones.
+			Use this method to update a ForwardNSG object.
+		The _dns/forward_nsg_ object represents a Forward DNS Server Group for forward zones.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@param id An application specific resource identity of a resource
-		@return ApiForwardNsgUpdateRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return ApiForwardNsgUpdateRequest
 	*/
 	ForwardNsgUpdate(ctx context.Context, id string) ApiForwardNsgUpdateRequest
 
