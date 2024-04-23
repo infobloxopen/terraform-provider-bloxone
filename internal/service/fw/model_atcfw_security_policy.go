@@ -169,6 +169,7 @@ var AtcfwSecurityPolicyResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: AtcfwSecurityPolicyRuleResourceSchemaAttributes,
 		},
 		Computed:            true,
+		Optional:            true,
 		MarkdownDescription: "The list of Security Policy Rules objects that represent the set of rules and actions that you define to balance access and constraints so you can mitigate malicious attacks and provide security for your networks.",
 	},
 	"safe_search": schema.BoolAttribute{

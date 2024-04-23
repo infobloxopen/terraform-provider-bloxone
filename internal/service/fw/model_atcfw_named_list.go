@@ -98,6 +98,7 @@ var AtcfwNamedListResourceSchemaAttributes = map[string]schema.Attribute{
 	"policies": schema.ListAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The list of the security policy names with which the named list is associated.",
 	},
 	"tags": schema.MapAttribute{

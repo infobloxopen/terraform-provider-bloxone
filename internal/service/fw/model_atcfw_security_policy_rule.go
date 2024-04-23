@@ -37,6 +37,7 @@ var AtcfwSecurityPolicyRuleAttrTypes = map[string]attr.Type{
 var AtcfwSecurityPolicyRuleResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The action for the policy rule that can be either \"action_allow\" or \"action_log\" or \"action_redirect\" or \"action_block\" or \"action_allow_with_local_resolution\". \"action_allow_with_local_resolution\" only supported for application filter rule with enabled onprem_resolve flag on the Security policy.",
 	},
 	"data": schema.StringAttribute{
@@ -61,6 +62,7 @@ var AtcfwSecurityPolicyRuleResourceSchemaAttributes = map[string]schema.Attribut
 	},
 	"type": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The policy rule type that can be either \"named_feed\" or \"custom_list\" or \"category_filter\" or \"application_filter\".",
 	},
 }

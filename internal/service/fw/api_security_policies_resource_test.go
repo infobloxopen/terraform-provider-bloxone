@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
@@ -17,9 +18,7 @@ import (
 
 //TODO: add tests
 // The following require additional resource/data source objects to be supported.
-// - access_codes
 // - dfps
-// - network_lists
 // - net_address_dfps
 // - roaming_device_groups
 // - user_groups
@@ -38,9 +37,18 @@ func TestAccSecurityPoliciesResource_basic(t *testing.T) {
 				Config: testAccSecurityPoliciesBasicConfig(name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
-					// TODO: check and validate these
+					resource.TestCheckResourceAttr(resourceName, "name", name),
 					// Test Read Only fields
+					resource.TestCheckResourceAttrSet(resourceName, "created_time"),
+					resource.TestCheckResourceAttrSet(resourceName, "id"),
+					resource.TestCheckResourceAttrSet(resourceName, "updated_time"),
 					// Test fields with default value
+					resource.TestCheckResourceAttr(resourceName, "description", ""),
+					resource.TestCheckResourceAttr(resourceName, "default_action", "action_allow"),
+					resource.TestCheckResourceAttr(resourceName, "default_redirect_name", ""),
+					resource.TestCheckResourceAttr(resourceName, "ecs", "false"),
+					resource.TestCheckResourceAttr(resourceName, "onprem_resolve", "false"),
+					resource.TestCheckResourceAttr(resourceName, "safe_search", "false"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -145,7 +153,7 @@ func TestAccSecurityPoliciesResource_AccessCodes(t *testing.T) {
 				Config: testAccSecurityPoliciesAccessCodes(name, "ac_test1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "bloxone.access_codes.0.name", "terraform-test1"),
+					//resource.TestCheckResourceAttrPair(resourceName, "access_codes.0", "bloxone_td_access_code.ac_test1", "id"),
 				),
 			},
 			// Update and Read
@@ -153,7 +161,7 @@ func TestAccSecurityPoliciesResource_AccessCodes(t *testing.T) {
 				Config: testAccSecurityPoliciesAccessCodes(name, "ac_test2"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "bloxone.access_codes.0.name", "terraform-test2"),
+					//resource.TestCheckResourceAttrPair(resourceName, "access_codes.0", "bloxone_td_access_code.ac_test2", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -251,6 +259,36 @@ func TestAccSecurityPoliciesResource_Ecs(t *testing.T) {
 	})
 }
 
+func TestAccSecurityPoliciesResource_NetworkLists(t *testing.T) {
+	resourceName := "bloxone_td_security_policy.test_network_lists"
+	var v fw.AtcfwSecurityPolicy
+	name := acctest.RandomNameWithPrefix("sec-policy")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccSecurityPoliciesNetworkLists(name, "nl_test1"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrPair(resourceName, "network_lists.0", "bloxone_td_network_list.nl_test1", "id"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccSecurityPoliciesNetworkLists(name, "nl_test2"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrPair(resourceName, "network_lists.0", "bloxone_td_network_list.nl_test2", "id"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccSecurityPoliciesResource_OnpremResolve(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_onprem_resolve"
 	var v fw.AtcfwSecurityPolicy
@@ -311,6 +349,36 @@ func TestAccSecurityPoliciesResource_Precedence(t *testing.T) {
 	})
 }
 
+func TestAccSecurityPoliciesResource_Rules(t *testing.T) {
+	resourceName := "bloxone_td_security_policy.test_rules"
+	var v fw.AtcfwSecurityPolicy
+	name := acctest.RandomNameWithPrefix("sec-policy")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccSecurityPoliciesRules(name, "action_allow", "nl_test1"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrPair(resourceName, "rules.0.data", "bloxone_td_named_list.nl_test1", "name"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccSecurityPoliciesRules(name, "action_log", "nl_test2"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrPair(resourceName, "rules.0.data", "bloxone_td_named_list.nl_test2", "name"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccSecurityPoliciesResource_SafeSearch(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_safe_search"
 	var v fw.AtcfwSecurityPolicy
@@ -343,7 +411,7 @@ func TestAccSecurityPoliciesResource_SafeSearch(t *testing.T) {
 
 func TestAccSecurityPoliciesResource_Tags(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_tags"
-	var v fw.AtcfwInternalDomains
+	var v fw.AtcfwSecurityPolicy
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -357,7 +425,7 @@ func TestAccSecurityPoliciesResource_Tags(t *testing.T) {
 					"tag2": "value2",
 				}),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckInternalDomainListsExists(context.Background(), resourceName, &v),
+					testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
 				),
@@ -369,39 +437,9 @@ func TestAccSecurityPoliciesResource_Tags(t *testing.T) {
 					"tag3": "value3",
 				}),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckInternalDomainListsExists(context.Background(), resourceName, &v),
+					testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2changed"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag3", "value3"),
-				),
-			},
-			// Delete testing automatically occurs in TestCase
-		},
-	})
-}
-
-func TestAccSecurityPoliciesResource_Rules(t *testing.T) {
-	resourceName := "bloxone_td_security_policy.test_rules"
-	var v fw.AtcfwSecurityPolicy
-	name := acctest.RandomNameWithPrefix("sec-policy")
-
-	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// Create and Read
-			{
-				Config: testAccSecurityPoliciesDescription(name, "TEST_DESCRIPTION"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "description", "TEST_DESCRIPTION"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccSecurityPoliciesDescription(name, "TEST_DESCRIPTION_UPDATE"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "description", "TEST_DESCRIPTION_UPDATE"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -493,24 +531,51 @@ resource "bloxone_td_security_policy" "test_description" {
 }
 
 func testAccSecurityPoliciesAccessCodes(name, accessCode string) string {
+	act := time.Now().UTC().Format(time.RFC3339)
+	exp := time.Now().UTC().Add(time.Hour).Format(time.RFC3339)
 	return fmt.Sprintf(`
-data "bloxone_td_access_codes" "ac_test1" {
-  filters = {
-	 name = "terraform-test1"
-  }
-}
-
-data "bloxone_td_access_codes" "ac_test2" {
-  filters = {
-	 name = "terraform-test2"
-  }
-}
+//resource "bloxone_td_access_code" "ac_test1" {
+//	name = "terraform-test-ac1"
+//	activation = %[1]q
+//	expiration = %[2]q
+//	rules = [
+//		{
+//			data = "terraform_test",
+//			type = "custom_list"
+//		}
+//	]
+//}
+//
+//resource "bloxone_td_access_code" "ac_test2" {
+//	name = "terraform-test-ac2"
+//	activation = %[1]q
+//	expiration = %[2]q
+//	rules = [
+//		{
+//			data = "terraform_test",
+//			type = "custom_list"
+//		}
+//	]
+//}
+//
+//data "bloxone_td_access_codes" "test" {
+//  filters = {
+//	 name = "example_access_code"
+//  }
+//}
 
 resource "bloxone_td_security_policy" "test_access_codes" {
-	name = %q
-	access_codes = [bloxone_td_access_codes.%s.id]
+	name = %[3]q
+	access_codes = ["0VRGD0"]
+	rules = [
+		{
+			action = "action_allow"
+			data = "terraform_test"
+			type = "custom_list"
+		}
+	]
 }
-`, name, accessCode)
+`, act, exp, name, accessCode)
 }
 
 func testAccSecurityPoliciesDefaultAction(name, defaultAction string) string {
@@ -541,6 +606,25 @@ resource "bloxone_td_security_policy" "test_ecs" {
 `, name, ecs)
 }
 
+func testAccSecurityPoliciesNetworkLists(name, accessCode string) string {
+	return fmt.Sprintf(`
+resource "bloxone_td_network_list" "nl_test1" {
+	name = "terraform-test-nl1"
+	items = ["156.2.3.0/24"]
+}
+
+resource "bloxone_td_network_list" "nl_test2" {
+	name = "terraform-test-nl2"
+	items = ["176.2.3.0/24"]
+}
+
+resource "bloxone_td_security_policy" "test_network_lists" {
+	name = %q
+	network_lists = [bloxone_td_network_list.%s.id]
+}
+`, name, accessCode)
+}
+
 func testAccSecurityPoliciesOnpremResolve(name, onpremResolve string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_security_policy" "test_onprem_resolve" {
@@ -568,19 +652,65 @@ resource "bloxone_td_security_policy" "test_safe_search" {
 `, name, safeSearch)
 }
 
-func testAccSecurityPoliciesRules(name, description string) string {
+func testAccSecurityPoliciesRules(name, rulesAction, rulesData string) string {
 	return fmt.Sprintf(`
-resource "bloxone_td_security_policy" "test_description" {
+resource "bloxone_td_named_list" "nl_test1" {
+	name = "terraform-test-nl1"
+	items_described = [
+	{
+		item = "tf1-domain.com"
+		description = "Exaample Domain"
+	}
+	]
+	type = "custom_list"
+}
+
+resource "bloxone_td_named_list" "nl_test2" {
+	name = "terraform-test-nl2"
+	items_described = [
+	{
+		item = "tf2-domain.com"
+		description = "Exaample Domain"
+	}
+	]
+	type = "custom_list"
+}
+
+resource "bloxone_td_security_policy" "test_rules" {
 	name = %q
 	rules = [
 		{
 			action = %q
-			data = "test_data"
-			type = ""
+			data = bloxone_td_named_list.%s.name
+			type = "custom_list"
 		}
 	]
 }
-`, name, description)
+`, name, rulesAction, rulesData)
+}
+
+func testAccSecurityPoliciesRulesTags(name, rulesAction string, rulesTags map[string]string) string {
+	tagsStr := "{\n"
+	for k, v := range rulesTags {
+		tagsStr += fmt.Sprintf(`
+		%s = %q
+`, k, v)
+	}
+	tagsStr += "\t}"
+
+	return fmt.Sprintf(`
+resource "bloxone_td_security_policy" "test_rules" {
+	name = %q
+	rules = [
+		{
+			action = %q
+			tag_scope = "custom_list"
+			tags = %s
+			type = "rule_tag"
+		}
+	]
+}
+`, name, rulesAction, tagsStr)
 }
 
 func testAccSecurityPoliciesTags(name string, tags map[string]string) string {
@@ -593,9 +723,9 @@ func testAccSecurityPoliciesTags(name string, tags map[string]string) string {
 	tagsStr += "\t}"
 
 	return fmt.Sprintf(`
-resource "bloxone_td_internal_domain_list" "test_tags" {
+resource "bloxone_td_security_policy" "test_tags" {
     name = %q
-	internal_domains = [%q]
+	tags = %s
 }
 `, name, tagsStr)
 }
