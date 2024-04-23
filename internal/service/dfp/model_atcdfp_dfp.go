@@ -162,11 +162,11 @@ func (m *AtcdfpDfpModel) Expand(ctx context.Context, diags *diag.Diagnostics) *d
 		return nil
 	}
 	to := &dfp.AtcdfpDfp{
-		ForwardingPolicy: flex.ExpandStringPointer(m.ForwardingPolicy),
-		Host:             flex.ExpandFrameworkListNestedBlock(ctx, m.Host, diags, ExpandAtcdfpDfpHost),
-		NetAddrPolicyIds: flex.ExpandFrameworkListNestedBlock(ctx, m.NetAddrPolicyIds, diags, ExpandAtcdfpNetAddrPolicyAssignment),
-		ResolversAll:     flex.ExpandFrameworkListNestedBlock(ctx, m.ResolversAll, diags, ExpandAtcdfpResolver),
-		// InternalDomainLists // TODO: should have been expanded, but generator didn't know how to.
+		ForwardingPolicy:    flex.ExpandStringPointer(m.ForwardingPolicy),
+		Host:                flex.ExpandFrameworkListNestedBlock(ctx, m.Host, diags, ExpandAtcdfpDfpHost),
+		NetAddrPolicyIds:    flex.ExpandFrameworkListNestedBlock(ctx, m.NetAddrPolicyIds, diags, ExpandAtcdfpNetAddrPolicyAssignment),
+		ResolversAll:        flex.ExpandFrameworkListNestedBlock(ctx, m.ResolversAll, diags, ExpandAtcdfpResolver),
+		InternalDomainLists: flex.ExpandFrameworkListInt32(ctx, m.InternalDomainLists, diags),
 	}
 	return to
 }
@@ -206,5 +206,5 @@ func (m *AtcdfpDfpModel) Flatten(ctx context.Context, from *dfp.AtcdfpDfp, diags
 	m.ServiceName = flex.FlattenStringPointer(from.ServiceName)
 	m.SiteId = flex.FlattenStringPointer(from.SiteId)
 	m.UpdatedTime = timetypes.NewRFC3339TimePointerValue(from.UpdatedTime)
-	// InternalDomainLists // TODO: should have been flattened, but generator didn't know how to.
+	m.InternalDomainLists = flex.FlattenFrameworkListInt32(ctx, from.InternalDomainLists, diags)
 }

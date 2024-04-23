@@ -3,11 +3,11 @@ package dfp
 import (
 	"context"
 	"fmt"
-	"net/http"
-
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/infobloxopen/bloxone-go-client/dfp"
+	"net/http"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 )
@@ -26,12 +26,12 @@ type DfpResource struct {
 }
 
 func (r *DfpResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "dfp_service"
+	resp.TypeName = req.ProviderTypeName + "_" + "td_dfp_service"
 }
 
 func (r *DfpResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages a DNS Forwarding Proxy.",
 		Attributes:          AtcdfpDfpResourceSchemaAttributes,
 	}
 }
@@ -66,9 +66,26 @@ func (r *DfpResource) Create(ctx context.Context, req resource.CreateRequest, re
 		return
 	}
 
+	//err := retry.RetryContext(ctx, 20*time.Minute, func() *retry.RetryError {
+	//	//get  id from infra
+	//	hostRes, _, err := r.client.InfraManagementAPI.
+	//		HostsAPI.
+	//		HostsList(ctx).
+	//		Filter(fmt.Sprintf("legacy_id == '%d'", data.Id.ValueInt64())).Execute()
+	//	if err != nil {
+	//		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create OnPremAnycastManager, got error: %s", err))
+	//		return retry.NonRetryableError(err)
+	//	}
+	//
+	//	//now you add the readonly data
+	//	data.Name = types.StringValue(hostRes.GetResults()[0].DisplayName)
+	//	data.IpAddress = types.StringPointerValue(hostRes.GetResults()[0].IpAddress)
+	//	return nil
+	//})
+
 	apiRes, _, err := r.client.DNSForwardingProxyAPI.
 		DfpAPI.
-		DfpCreateOrUpdateDfp(ctx, data.Id.ValueString()).
+		DfpCreateOrUpdateDfp(ctx, int32(data.Id.ValueInt64())).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -76,7 +93,7 @@ func (r *DfpResource) Create(ctx context.Context, req resource.CreateRequest, re
 		return
 	}
 
-	res := apiRes.GetResult()
+	res := apiRes.GetResults()
 	data.Flatten(ctx, &res, &resp.Diagnostics)
 
 	// Save data into Terraform state
@@ -95,7 +112,7 @@ func (r *DfpResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 
 	apiRes, httpRes, err := r.client.DNSForwardingProxyAPI.
 		DfpAPI.
-		DfpReadDfp(ctx, data.Id.ValueString()).
+		DfpReadDfp(ctx, int32(data.Id.ValueInt64())).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -106,7 +123,7 @@ func (r *DfpResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 		return
 	}
 
-	res := apiRes.GetResult()
+	res := apiRes.GetResults()
 	data.Flatten(ctx, &res, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
@@ -115,6 +132,7 @@ func (r *DfpResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 
 func (r *DfpResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data AtcdfpDfpModel
+	var data2 = dfp.NewAtcdfpDfpCreateOrUpdatePayload()
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -125,7 +143,7 @@ func (r *DfpResource) Update(ctx context.Context, req resource.UpdateRequest, re
 
 	apiRes, _, err := r.client.DNSForwardingProxyAPI.
 		DfpAPI.
-		DfpCreateOrUpdateDfp(ctx, data.Id.ValueString()).
+		DfpCreateOrUpdateDfp(ctx, int32(data.Id.ValueInt64())).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -133,7 +151,7 @@ func (r *DfpResource) Update(ctx context.Context, req resource.UpdateRequest, re
 		return
 	}
 
-	res := apiRes.GetResult()
+	res := apiRes.GetResults()
 	data.Flatten(ctx, &res, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
@@ -150,17 +168,7 @@ func (r *DfpResource) Delete(ctx context.Context, req resource.DeleteRequest, re
 		return
 	}
 
-	httpRes, err := r.client.DNSForwardingProxyAPI.
-		DfpAPI.
-		DfpDelete(ctx, data.Id.ValueString()).
-		Execute()
-	if err != nil {
-		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
-			return
-		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete Dfp, got error: %s", err))
-		return
-	}
+	resp.State.RemoveResource(ctx)
 }
 
 func (r *DfpResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
