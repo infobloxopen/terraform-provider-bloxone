@@ -24,7 +24,6 @@ type ProtoAnycastConfigModel struct {
 	AnycastIpv6Address types.String      `tfsdk:"anycast_ipv6_address"`
 	CreatedAt          timetypes.RFC3339 `tfsdk:"created_at"`
 	Description        types.String      `tfsdk:"description"`
-	Fields             types.Object      `tfsdk:"fields"`
 	Id                 types.Int64       `tfsdk:"id"`
 	IsConfigured       types.Bool        `tfsdk:"is_configured"`
 	Name               types.String      `tfsdk:"name"`
@@ -41,7 +40,6 @@ var ProtoAnycastConfigAttrTypes = map[string]attr.Type{
 	"anycast_ipv6_address": types.StringType,
 	"created_at":           timetypes.RFC3339Type{},
 	"description":          types.StringType,
-	"fields":               types.ObjectType{AttrTypes: ProtobufFieldMaskAttrTypes},
 	"id":                   types.Int64Type,
 	"is_configured":        types.BoolType,
 	"name":                 types.StringType,
@@ -58,7 +56,7 @@ var ProtoAnycastConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The account identifier.",
 	},
 	"anycast_ip_address": schema.StringAttribute{
-		Optional: true,
+		Required: true,
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 		},
@@ -77,10 +75,6 @@ var ProtoAnycastConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "The description for the address object. May contain 0 to 1024 characters. Can include UTF-8.",
 	},
-	"fields": schema.SingleNestedAttribute{
-		Attributes: ProtobufFieldMaskResourceSchemaAttributes,
-		Optional:   true,
-	},
 	"id": schema.Int64Attribute{
 		Computed: true,
 		PlanModifiers: []planmodifier.Int64{
@@ -92,7 +86,7 @@ var ProtoAnycastConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed: true,
 	},
 	"name": schema.StringAttribute{
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: `The name of the anycast configuration.`,
 	},
 	"onprem_hosts": schema.ListNestedAttribute{
@@ -105,7 +99,7 @@ var ProtoAnycastConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed: true,
 	},
 	"service": schema.StringAttribute{
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The type of the Service used in anycast configuration, supports (`dns`, `dhcp`, 'dfp').",
 	},
 	"tags": schema.MapAttribute{
@@ -142,7 +136,6 @@ func (m *ProtoAnycastConfigModel) Expand(ctx context.Context, diags *diag.Diagno
 		AnycastIpv6Address: flex.ExpandStringPointer(m.AnycastIpv6Address),
 		CreatedAt:          flex.ExpandTimePointer(ctx, m.CreatedAt, diags),
 		Description:        flex.ExpandStringPointer(m.Description),
-		Fields:             ExpandProtobufFieldMask(ctx, m.Fields, diags),
 		IsConfigured:       flex.ExpandBoolPointer(m.IsConfigured),
 		Name:               flex.ExpandStringPointer(m.Name),
 		OnpremHosts:        flex.ExpandFrameworkListNestedBlock(ctx, m.OnpremHosts, diags, ExpandProtoOnpremHostRef),
@@ -177,7 +170,6 @@ func (m *ProtoAnycastConfigModel) Flatten(ctx context.Context, from *anycast.Pro
 	m.AnycastIpv6Address = flex.FlattenStringPointer(from.AnycastIpv6Address)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.Description = flex.FlattenStringPointer(from.Description)
-	m.Fields = FlattenProtobufFieldMask(ctx, from.Fields, diags)
 	m.Id = flex.FlattenInt64Pointer(from.Id)
 	m.IsConfigured = types.BoolPointerValue(from.IsConfigured)
 	m.Name = flex.FlattenStringPointer(from.Name)

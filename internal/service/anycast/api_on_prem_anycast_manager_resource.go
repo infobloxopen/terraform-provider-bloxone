@@ -26,12 +26,12 @@ type OnPremAnycastManagerResource struct {
 }
 
 func (r *OnPremAnycastManagerResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "anycast_ac_config"
+	resp.TypeName = req.ProviderTypeName + "_" + "anycast_config"
 }
 
 func (r *OnPremAnycastManagerResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Retrieve an Anycast Configurations.",
+		MarkdownDescription: "RManages Anycast Configuration. Anycast configuration comprises common anycast configuration data that is defined in support of one service on a set of on-prem hosts.",
 		Attributes:          ProtoAnycastConfigResourceSchemaAttributes,
 	}
 }
@@ -78,7 +78,6 @@ func (r *OnPremAnycastManagerResource) Create(ctx context.Context, req resource.
 
 	res := apiRes.GetResults()
 	data.Flatten(ctx, &res, &resp.Diagnostics)
-	//r.client.AnycastAPI.OnPremAnycastManagerAPI.OnPremAnycastManagerUpdateOnpremHost(ctx, data.Id.ValueInt64()).Body(data.OnpremHost).Execute(}
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }

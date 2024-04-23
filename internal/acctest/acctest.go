@@ -40,7 +40,6 @@ func RandomNameWithPrefix(prefix string) string {
 }
 
 func RandomIP() string {
-	rand.Seed(time.Now().UnixNano())
 	return fmt.Sprintf("%d.%d.%d.%d", rand.Intn(256), rand.Intn(256), rand.Intn(256), rand.Intn(256))
 }
 

@@ -16,7 +16,7 @@ import (
 )
 
 func TestAccOnPremAnycastManagerResource_basic(t *testing.T) {
-	var resourceName = "bloxone_anycast_ac_config.test"
+	var resourceName = "bloxone_anycast_config.test"
 	var v anycast.ProtoAnycastConfig
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -42,7 +42,7 @@ func TestAccOnPremAnycastManagerResource_basic(t *testing.T) {
 }
 
 func TestAccOnPremAnycastManagerResource_disappears(t *testing.T) {
-	resourceName := "bloxone_anycast_ac_config.test"
+	resourceName := "bloxone_anycast_config.test"
 	var v anycast.ProtoAnycastConfig
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -63,7 +63,7 @@ func TestAccOnPremAnycastManagerResource_disappears(t *testing.T) {
 }
 
 func TestAccOnPremAnycastManagerResource_AnycastIpAddress(t *testing.T) {
-	var resourceName = "bloxone_anycast_ac_config.test_anycast_ip_address"
+	var resourceName = "bloxone_anycast_config.test_anycast_ip_address"
 	var v anycast.ProtoAnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
@@ -95,7 +95,7 @@ func TestAccOnPremAnycastManagerResource_AnycastIpAddress(t *testing.T) {
 }
 
 func TestAccOnPremAnycastManagerResource_Description(t *testing.T) {
-	var resourceName = "bloxone_anycast_ac_config.test_description"
+	var resourceName = "bloxone_anycast_config.test_description"
 	var v anycast.ProtoAnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
@@ -125,7 +125,7 @@ func TestAccOnPremAnycastManagerResource_Description(t *testing.T) {
 }
 
 func TestAccOnPremAnycastManagerResource_Name(t *testing.T) {
-	var resourceName = "bloxone_anycast_ac_config.test_name"
+	var resourceName = "bloxone_anycast_config.test_name"
 	var v anycast.ProtoAnycastConfig
 	anycastName1 := acctest.RandomNameWithPrefix("anycast")
 	anycastName2 := acctest.RandomNameWithPrefix("anycast")
@@ -156,7 +156,7 @@ func TestAccOnPremAnycastManagerResource_Name(t *testing.T) {
 }
 
 func TestAccOnPremAnycastManagerResource_OnpremHosts(t *testing.T) {
-	var resourceName = "bloxone_anycast_ac_config.test_onprem_hosts"
+	var resourceName = "bloxone_anycast_config.test_onprem_hosts"
 	var v anycast.ProtoAnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
@@ -188,7 +188,7 @@ func TestAccOnPremAnycastManagerResource_OnpremHosts(t *testing.T) {
 }
 
 func TestAccOnPremAnycastManagerResource_Service(t *testing.T) {
-	var resourceName = "bloxone_anycast_ac_config.test_service"
+	var resourceName = "bloxone_anycast_config.test_service"
 	var v anycast.ProtoAnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 	anycastIP := acctest.RandomIP()
@@ -219,7 +219,7 @@ func TestAccOnPremAnycastManagerResource_Service(t *testing.T) {
 }
 
 func TestAccOnPremAnycastManagerResource_Tags(t *testing.T) {
-	var resourceName = "bloxone_anycast_ac_config.test_tags"
+	var resourceName = "bloxone_anycast_config.test_tags"
 	var v anycast.ProtoAnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
@@ -317,7 +317,7 @@ func testAccCheckOnPremAnycastManagerDisappears(ctx context.Context, v *anycast.
 func testAccOnPremAnycastManagerBasicConfig(name, service, anycastIpAddress string) string {
 	// TODO: create basic resource with required fields
 	return fmt.Sprintf(`
-resource "bloxone_anycast_ac_config" "test" {
+resource "bloxone_anycast_config" "test" {
     name = %q
     service= %q
     anycast_ip_address = %q
@@ -327,7 +327,7 @@ resource "bloxone_anycast_ac_config" "test" {
 
 func testAccOnPremAnycastManagerAnycastIpAddress(anycastIpAddress, name, service string) string {
 	return fmt.Sprintf(`
-resource "bloxone_anycast_ac_config" "test_anycast_ip_address" {
+resource "bloxone_anycast_config" "test_anycast_ip_address" {
     anycast_ip_address = %q
     name = %q
     service = %q
@@ -337,7 +337,7 @@ resource "bloxone_anycast_ac_config" "test_anycast_ip_address" {
 
 func testAccOnPremAnycastManagerDescription(anycastIpAddress, name, service, description string) string {
 	return fmt.Sprintf(`
-resource "bloxone_anycast_ac_config" "test_description" {
+resource "bloxone_anycast_config" "test_description" {
     anycast_ip_address = %q
     name = %q
     service = %q
@@ -348,7 +348,7 @@ resource "bloxone_anycast_ac_config" "test_description" {
 
 func testAccOnPremAnycastManagerName(anycastIpAddress, name, service string) string {
 	return fmt.Sprintf(`
-resource "bloxone_anycast_ac_config" "test_name" {
+resource "bloxone_anycast_config" "test_name" {
     anycast_ip_address = %q
     name = %q
     service = %q
@@ -370,7 +370,7 @@ data "bloxone_infra_hosts" "anycast_hosts" {
     }
 }
 
-resource "bloxone_anycast_ac_config" "test_onprem_hosts" {
+resource "bloxone_anycast_config" "test_onprem_hosts" {
     anycast_ip_address = %q
     name = %q
     service = %q
@@ -386,7 +386,7 @@ resource "bloxone_anycast_ac_config" "test_onprem_hosts" {
 
 func testAccOnPremAnycastManagerService(anycastIpAddress, name, service string) string {
 	return fmt.Sprintf(`
-resource "bloxone_anycast_ac_config" "test_service" {
+resource "bloxone_anycast_config" "test_service" {
     anycast_ip_address = %q
     name = %q
     service = %q
@@ -404,7 +404,7 @@ func testAccOnPremAnycastManagerTags(anycastIpAddress, name, service string, tag
 	tagsStr += "\t}"
 
 	return fmt.Sprintf(`
-resource "bloxone_anycast_ac_config" "test_tags" {
+resource "bloxone_anycast_config" "test_tags" {
     anycast_ip_address = %q
     name = %q
     service = %q

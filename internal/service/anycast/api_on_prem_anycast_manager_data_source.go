@@ -28,11 +28,10 @@ type OnPremAnycastManagerDataSource struct {
 }
 
 func (d *OnPremAnycastManagerDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "anycast_ac_configs"
+	resp.TypeName = req.ProviderTypeName + "_" + "anycast_configs"
 }
 
 type ProtoAnycastConfigModelWithFilter struct {
-	Filters     types.Map    `tfsdk:"filters"` //todo : remove this
 	TagFilters  types.Map    `tfsdk:"tag_filters"`
 	Results     types.List   `tfsdk:"results"`
 	Service     types.String `tfsdk:"service"`
@@ -51,11 +50,6 @@ func (d *OnPremAnycastManagerDataSource) Schema(ctx context.Context, req datasou
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Retrieve all named anycast configurations for the account.",
 		Attributes: map[string]schema.Attribute{
-			"filters": schema.MapAttribute{
-				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
-				ElementType: types.StringType,
-				Optional:    true,
-			},
 			"tag_filters": schema.MapAttribute{
 				Description: "Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
 				ElementType: types.StringType,
@@ -68,15 +62,15 @@ func (d *OnPremAnycastManagerDataSource) Schema(ctx context.Context, req datasou
 				Computed: true,
 			},
 			"service": schema.StringAttribute{
-				Description: "Service name.",
+				Description: "Filter by service name.",
 				Optional:    true,
 			},
 			"host_id": schema.Int64Attribute{
-				Description: "Host ID.",
+				Description: "Filter by host ID.",
 				Optional:    true,
 			},
 			"is_configured": schema.BoolAttribute{
-				Description: "Is configured.",
+				Description: "Filter by configuration status.",
 				Optional:    true,
 			},
 		},
