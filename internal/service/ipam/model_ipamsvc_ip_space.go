@@ -195,7 +195,7 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.`,
 	},
 	"dhcp_config": schema.SingleNestedAttribute{
-		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes,
+		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes(false),
 		Optional:   true,
 		Computed:   true,
 		Default: objectdefault.StaticValue(types.ObjectValueMust(IpamsvcDHCPConfigAttrTypes, map[string]attr.Value{

@@ -235,15 +235,15 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.",
 	},
 	"dhcp_config": schema.SingleNestedAttribute{
-		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes,
+		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes(true),
 		Optional:   true,
 		Computed:   true,
 		Default: objectdefault.StaticValue(types.ObjectValueMust(IpamsvcDHCPConfigAttrTypes, map[string]attr.Value{
-			"abandoned_reclaim_time":    types.Int64Null(),
-			"abandoned_reclaim_time_v6": types.Int64Null(),
+			"abandoned_reclaim_time":    types.Int64Null(), // abandoned_reclaim_time cannot be set for subnet
+			"abandoned_reclaim_time_v6": types.Int64Null(), // abandoned_reclaim_time_v6 cannot be set for subnet
 			"allow_unknown":             types.BoolValue(true),
 			"allow_unknown_v6":          types.BoolValue(true),
-			"echo_client_id":            types.BoolValue(false),
+			"echo_client_id":            types.BoolNull(), // echo_id cannot be set for subnet
 			"filters":                   types.ListNull(types.StringType),
 			"filters_v6":                types.ListNull(types.StringType),
 			"ignore_client_uid":         types.BoolValue(false),
@@ -506,7 +506,7 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.IpamsvcSubn
 	m.DdnsTtlPercent = flex.FlattenFloat64(float64(*from.DdnsTtlPercent))
 	m.DdnsUpdateOnRenew = types.BoolPointerValue(from.DdnsUpdateOnRenew)
 	m.DdnsUseConflictResolution = types.BoolPointerValue(from.DdnsUseConflictResolution)
-	m.DhcpConfig = FlattenIpamsvcDHCPConfig(ctx, from.DhcpConfig, diags)
+	m.DhcpConfig = FlattenIpamsvcDHCPConfigForSubnetOrAddressBlock(ctx, from.DhcpConfig, diags)
 	m.DhcpHost = flex.FlattenStringPointerWithNilAsEmpty(from.DhcpHost)
 	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DhcpUtilization = FlattenIpamsvcDHCPUtilization(ctx, from.DhcpUtilization, diags)
