@@ -129,7 +129,7 @@ var AtcfwSecurityPolicyResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Flag that indicates whether this is a default security policy.",
 	},
 	"name": schema.StringAttribute{
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The name of the security policy.",
 	},
 	"net_address_dfps": schema.ListNestedAttribute{
@@ -251,7 +251,9 @@ func (m *AtcfwSecurityPolicyModel) Flatten(ctx context.Context, from *fw.AtcfwSe
 	if m == nil {
 		*m = AtcfwSecurityPolicyModel{}
 	}
-	m.AccessCodes = flex.FlattenFrameworkListString(ctx, from.AccessCodes, diags)
+	if m.AccessCodes.IsNull() || m.AccessCodes.IsUnknown() {
+		m.AccessCodes = types.ListNull(types.StringType)
+	}
 	m.CreatedTime = timetypes.NewRFC3339TimePointerValue(from.CreatedTime)
 	m.DefaultAction = flex.FlattenStringPointer(from.DefaultAction)
 	m.DefaultRedirectName = flex.FlattenStringPointer(from.DefaultRedirectName)

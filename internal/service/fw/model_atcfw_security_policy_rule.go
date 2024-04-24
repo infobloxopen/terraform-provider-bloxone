@@ -42,6 +42,7 @@ var AtcfwSecurityPolicyRuleResourceSchemaAttributes = map[string]schema.Attribut
 	},
 	"data": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The data source for the policy rule, that can be either a name of the predefined feed for \"named_feed\", custom list name for \"custom_list\" type, category filter name for \"category_filter\" type and application filter name for \"application_filter\" type.",
 	},
 	"list_id": schema.Int64Attribute{
@@ -54,10 +55,12 @@ var AtcfwSecurityPolicyRuleResourceSchemaAttributes = map[string]schema.Attribut
 	},
 	"policy_name": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The name of the security policy with which the policy rule is associated.",
 	},
 	"redirect_name": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The name of the redirect address for redirect actions that can be either IPv4 address or a domain name.",
 	},
 	"type": schema.StringAttribute{
