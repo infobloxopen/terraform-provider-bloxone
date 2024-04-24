@@ -167,17 +167,20 @@ Optional:
 
 Optional:
 
-- `abandoned_reclaim_time` (Number) The abandoned reclaim time in seconds for IPV4 clients.
-- `abandoned_reclaim_time_v6` (Number) The abandoned reclaim time in seconds for IPV6 clients.
 - `allow_unknown` (Boolean) Disable to allow leases only for known IPv4 clients, those for which a fixed address is configured.
 - `allow_unknown_v6` (Boolean) Disable to allow leases only for known IPV6 clients, those for which a fixed address is configured.
-- `echo_client_id` (Boolean) Enable/disable to include/exclude the client id when responding to discover or request.
 - `filters` (List of String) The resource identifier.
 - `filters_v6` (List of String) The resource identifier.
 - `ignore_client_uid` (Boolean) Enable to ignore the client UID when issuing a DHCP lease. Use this option to prevent assigning two IP addresses for a client which does not have a UID during one phase of PXE boot but acquires one for the other phase.
 - `ignore_list` (Attributes List) The list of clients to ignore requests from. (see [below for nested schema](#nestedatt--dhcp_config--ignore_list))
 - `lease_time` (Number) The lease duration in seconds.
 - `lease_time_v6` (Number) The lease duration in seconds for IPV6 clients.
+
+Read-Only:
+
+- `abandoned_reclaim_time` (Number) The abandoned reclaim time in seconds for IPV4 clients.
+- `abandoned_reclaim_time_v6` (Number) The abandoned reclaim time in seconds for IPV6 clients.
+- `echo_client_id` (Boolean) Enable/disable to include/exclude the client id when responding to discover or request.
 
 <a id="nestedatt--dhcp_config--ignore_list"></a>
 ### Nested Schema for `dhcp_config.ignore_list`

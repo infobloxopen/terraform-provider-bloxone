@@ -208,7 +208,7 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 	},
 	"dhcp_config": schema.SingleNestedAttribute{
-		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes,
+		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes(false),
 		Optional:   true,
 		Computed:   true,
 		Default: objectdefault.StaticValue(types.ObjectValueMust(IpamsvcDHCPConfigAttrTypes, map[string]attr.Value{

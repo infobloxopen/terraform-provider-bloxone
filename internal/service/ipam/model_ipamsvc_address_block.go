@@ -221,15 +221,15 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.",
 	},
 	"dhcp_config": schema.SingleNestedAttribute{
-		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes,
+		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes(true),
 		Optional:   true,
 		Computed:   true,
 		Default: objectdefault.StaticValue(types.ObjectValueMust(IpamsvcDHCPConfigAttrTypes, map[string]attr.Value{
-			"abandoned_reclaim_time":    types.Int64Null(),
-			"abandoned_reclaim_time_v6": types.Int64Null(),
+			"abandoned_reclaim_time":    types.Int64Null(), // abandonded_reclaim_time cannot be set for address block
+			"abandoned_reclaim_time_v6": types.Int64Null(), // abandonded_reclaim_time_v6 cannot be set for address block
 			"allow_unknown":             types.BoolValue(true),
 			"allow_unknown_v6":          types.BoolValue(true),
-			"echo_client_id":            types.BoolValue(false),
+			"echo_client_id":            types.BoolNull(), // echo_client_id cannot be set for address block
 			"filters":                   types.ListNull(types.StringType),
 			"filters_v6":                types.ListNull(types.StringType),
 			"ignore_client_uid":         types.BoolValue(false),
@@ -481,7 +481,7 @@ func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.Ipams
 	m.DdnsTtlPercent = flex.FlattenFloat64(float64(*from.DdnsTtlPercent))
 	m.DdnsUpdateOnRenew = types.BoolPointerValue(from.DdnsUpdateOnRenew)
 	m.DdnsUseConflictResolution = types.BoolPointerValue(from.DdnsUseConflictResolution)
-	m.DhcpConfig = FlattenIpamsvcDHCPConfig(ctx, from.DhcpConfig, diags)
+	m.DhcpConfig = FlattenIpamsvcDHCPConfigForSubnetOrAddressBlock(ctx, from.DhcpConfig, diags)
 	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DhcpUtilization = FlattenIpamsvcDHCPUtilization(ctx, from.DhcpUtilization, diags)
 	m.DiscoveryAttrs = flex.FlattenFrameworkMapString(ctx, from.DiscoveryAttrs, diags)
