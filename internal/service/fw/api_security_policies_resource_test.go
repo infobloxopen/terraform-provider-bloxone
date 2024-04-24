@@ -683,30 +683,6 @@ resource "bloxone_td_security_policy" "test_rules" {
 `, name, rulesAction, rulesData)
 }
 
-func testAccSecurityPoliciesRulesTags(name, rulesAction string, rulesTags map[string]string) string {
-	tagsStr := "{\n"
-	for k, v := range rulesTags {
-		tagsStr += fmt.Sprintf(`
-		%s = %q
-`, k, v)
-	}
-	tagsStr += "\t}"
-
-	return fmt.Sprintf(`
-resource "bloxone_td_security_policy" "test_rules" {
-	name = %q
-	rules = [
-		{
-			action = %q
-			tag_scope = "custom_list"
-			tags = %s
-			type = "rule_tag"
-		}
-	]
-}
-`, name, rulesAction, tagsStr)
-}
-
 func testAccSecurityPoliciesTags(name string, tags map[string]string) string {
 	tagsStr := "{\n"
 	for k, v := range tags {

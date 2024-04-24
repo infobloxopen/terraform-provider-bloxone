@@ -16,7 +16,6 @@ require (
 	golang.org/x/exp v0.0.0-20240314144324-c7f7c6466f7f
 )
 
-
 require (
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver/v3 v3.1.1 // indirect
