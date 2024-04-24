@@ -3,12 +3,12 @@
 page_title: "bloxone_td_security_policy Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  Manage Security Policies.
+  Creates and Manages Security Policies.
 ---
 
 # bloxone_td_security_policy (Resource)
 
-Manage Security Policies.
+Creates and Manages Security Policies.
 
 ## Example Usage
 
@@ -19,8 +19,8 @@ resource "bloxone_td_security_policy" "example" {
   # Other optional fields
   rules = [
     {
-      action = "allow",
-      data   = "terraform_test",
+      action = "action_allow",
+      data   = "terraform_example",
       type   = "custom_list"
     }
   ]
@@ -43,7 +43,6 @@ resource "bloxone_td_security_policy" "example" {
 - `default_action` (String) The policy-level action gets applied when none of the policy rules apply/match. The default value for default_action is "action_allow".
 - `default_redirect_name` (String) Name of the custom redirect, if the default_action is "action_redirect".
 - `description` (String) The brief description for the security policy.
-- `dfp_services` (List of String) The list of DNS Forwarding Proxy Services object identifiers. For Internal Use only.
 - `dfps` (List of Number) The list of DNS Forwarding Proxy object identifiers.
 - `ecs` (Boolean) Use ECS for handling policy
 - `net_address_dfps` (Attributes List) List of DFPs associated with this policy via network address (with corresponding network address) (see [below for nested schema](#nestedatt--net_address_dfps))
@@ -59,6 +58,7 @@ resource "bloxone_td_security_policy" "example" {
 ### Read-Only
 
 - `created_time` (String) The time when this Security Policy object was created.
+- `dfp_services` (List of String) The list of DNS Forwarding Proxy Services object identifiers. For Internal Use only.
 - `id` (Number) The Security Policy object identifier.
 - `is_default` (Boolean) Flag that indicates whether this is a default security policy.
 - `updated_time` (String) The time when this Security Policy object was last updated.
