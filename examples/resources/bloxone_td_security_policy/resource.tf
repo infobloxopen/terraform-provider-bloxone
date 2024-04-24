@@ -4,8 +4,8 @@ resource "bloxone_td_security_policy" "example" {
   # Other optional fields
   rules = [
     {
-      action = "allow",
-      data   = "terraform_test",
+      action = "action_allow",
+      data   = "terraform_example",
       type   = "custom_list"
     }
   ]

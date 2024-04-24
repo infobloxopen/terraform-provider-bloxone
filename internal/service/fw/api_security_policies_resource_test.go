@@ -260,7 +260,6 @@ func TestAccSecurityPoliciesResource_Ecs(t *testing.T) {
 }
 
 func TestAccSecurityPoliciesResource_NetworkLists(t *testing.T) {
-	t.Skip()
 	resourceName := "bloxone_td_security_policy.test_network_lists"
 	var v fw.AtcfwSecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
@@ -291,7 +290,6 @@ func TestAccSecurityPoliciesResource_NetworkLists(t *testing.T) {
 }
 
 func TestAccSecurityPoliciesResource_OnpremResolve(t *testing.T) {
-	t.Skip()
 	resourceName := "bloxone_td_security_policy.test_onprem_resolve"
 	var v fw.AtcfwSecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
@@ -322,7 +320,6 @@ func TestAccSecurityPoliciesResource_OnpremResolve(t *testing.T) {
 }
 
 func TestAccSecurityPoliciesResource_Precedence(t *testing.T) {
-	t.Skip()
 	resourceName := "bloxone_td_security_policy.test_precedence"
 	var v fw.AtcfwSecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
@@ -353,7 +350,6 @@ func TestAccSecurityPoliciesResource_Precedence(t *testing.T) {
 }
 
 func TestAccSecurityPoliciesResource_Rules(t *testing.T) {
-	t.Skip()
 	resourceName := "bloxone_td_security_policy.test_rules"
 	var v fw.AtcfwSecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
@@ -384,7 +380,6 @@ func TestAccSecurityPoliciesResource_Rules(t *testing.T) {
 }
 
 func TestAccSecurityPoliciesResource_SafeSearch(t *testing.T) {
-	t.Skip()
 	resourceName := "bloxone_td_security_policy.test_safe_search"
 	var v fw.AtcfwSecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
@@ -514,7 +509,7 @@ func testAccCheckSecurityPoliciesDisappears(ctx context.Context, v *fw.AtcfwSecu
 func testAccSecurityPoliciesBasicConfig(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_security_policy" "test" {
-	name=%q
+	name = %q
 }
 `, name)
 }
@@ -522,7 +517,7 @@ resource "bloxone_td_security_policy" "test" {
 func testAccSecurityPoliciesName(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_security_policy" "test_name" {
-	name=%q
+	name = %q
 }
 `, name)
 }

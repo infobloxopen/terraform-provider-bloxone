@@ -99,7 +99,6 @@ var AtcfwSecurityPolicyResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"dfp_services": schema.ListAttribute{
 		ElementType:         types.StringType,
-		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "The list of DNS Forwarding Proxy Services object identifiers. For Internal Use only.",
 	},

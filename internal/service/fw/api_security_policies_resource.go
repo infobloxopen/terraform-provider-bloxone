@@ -31,7 +31,7 @@ func (r *SecurityPoliciesResource) Metadata(ctx context.Context, req resource.Me
 
 func (r *SecurityPoliciesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Manage Security Policies.",
+		MarkdownDescription: "Creates and Manages Security Policies.",
 		Attributes:          AtcfwSecurityPolicyResourceSchemaAttributes,
 	}
 }
