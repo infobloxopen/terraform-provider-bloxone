@@ -110,6 +110,7 @@ func (m *ProtoOnpremHostModel) Expand(ctx context.Context, diags *diag.Diagnosti
 		Ipv6Address:       flex.ExpandStringPointer(m.Ipv6Address),
 		Name:              flex.ExpandStringPointer(m.Name),
 		UpdatedAt:         flex.ExpandTimePointer(ctx, m.UpdatedAt, diags),
+		Id:                flex.ExpandInt64Pointer(m.Id),
 	}
 	return to
 }

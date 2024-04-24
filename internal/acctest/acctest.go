@@ -47,6 +47,11 @@ func RandomName() string {
 	return string(b)
 }
 
+func RandomIP() string {
+	rand.Seed(time.Now().UnixNano())
+	return fmt.Sprintf("%d.%d.%d.%d", rand.Intn(256), rand.Intn(256), rand.Intn(256), rand.Intn(256))
+}
+
 func PreCheck(t *testing.T) {
 	cspURL := os.Getenv("BLOXONE_CSP_URL")
 	if cspURL == "" {
