@@ -17,7 +17,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -284,11 +284,11 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *ConfigAuthZoneModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *dns_config.ConfigAuthZone {
+func (m *ConfigAuthZoneModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *dnsconfig.AuthZone {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigAuthZone{
+	to := &dnsconfig.AuthZone{
 		Comment:                  m.Comment.ValueStringPointer(),
 		Disabled:                 m.Disabled.ValueBoolPointer(),
 		ExternalPrimaries:        flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalPrimaries, diags, ExpandConfigExternalPrimary),
@@ -315,7 +315,7 @@ func (m *ConfigAuthZoneModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenConfigAuthZone(ctx context.Context, from *dns_config.ConfigAuthZone, diags *diag.Diagnostics) types.Object {
+func FlattenConfigAuthZone(ctx context.Context, from *dnsconfig.AuthZone, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigAuthZoneAttrTypes)
 	}
@@ -326,7 +326,7 @@ func FlattenConfigAuthZone(ctx context.Context, from *dns_config.ConfigAuthZone,
 	return t
 }
 
-func (m *ConfigAuthZoneModel) Flatten(ctx context.Context, from *dns_config.ConfigAuthZone, diags *diag.Diagnostics) {
+func (m *ConfigAuthZoneModel) Flatten(ctx context.Context, from *dnsconfig.AuthZone, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

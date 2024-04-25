@@ -35,7 +35,7 @@ var IpamsvcDDNSUpdateBlockResourceSchemaAttributes = map[string]schema.Attribute
 	},
 }
 
-func ExpandIpamsvcDDNSUpdateBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcDDNSUpdateBlock {
+func ExpandIpamsvcDDNSUpdateBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.DDNSUpdateBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -47,18 +47,18 @@ func ExpandIpamsvcDDNSUpdateBlock(ctx context.Context, o types.Object, diags *di
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcDDNSUpdateBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcDDNSUpdateBlock {
+func (m *IpamsvcDDNSUpdateBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.DDNSUpdateBlock {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcDDNSUpdateBlock{
+	to := &ipam.DDNSUpdateBlock{
 		DdnsDomain:      m.DdnsDomain.ValueStringPointer(),
 		DdnsSendUpdates: m.DdnsSendUpdates.ValueBoolPointer(),
 	}
 	return to
 }
 
-func FlattenIpamsvcDDNSUpdateBlock(ctx context.Context, from *ipam.IpamsvcDDNSUpdateBlock, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcDDNSUpdateBlock(ctx context.Context, from *ipam.DDNSUpdateBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcDDNSUpdateBlockAttrTypes)
 	}
@@ -69,7 +69,7 @@ func FlattenIpamsvcDDNSUpdateBlock(ctx context.Context, from *ipam.IpamsvcDDNSUp
 	return t
 }
 
-func (m *IpamsvcDDNSUpdateBlockModel) Flatten(ctx context.Context, from *ipam.IpamsvcDDNSUpdateBlock, diags *diag.Diagnostics) {
+func (m *IpamsvcDDNSUpdateBlockModel) Flatten(ctx context.Context, from *ipam.DDNSUpdateBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

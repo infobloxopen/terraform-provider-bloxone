@@ -22,7 +22,7 @@ import (
 
 type ContentCategoriesAPI interface {
 	/*
-			ContentCategoriesListContentCategories List Content Categories.
+			ListContentCategories List Content Categories.
 
 			Use this method to retrieve information on all Content Category objects for the account.
 
@@ -30,46 +30,46 @@ type ContentCategoriesAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiContentCategoriesListContentCategoriesRequest
+			@return ContentCategoriesAPIListContentCategoriesRequest
 	*/
-	ContentCategoriesListContentCategories(ctx context.Context) ApiContentCategoriesListContentCategoriesRequest
+	ListContentCategories(ctx context.Context) ContentCategoriesAPIListContentCategoriesRequest
 
-	// ContentCategoriesListContentCategoriesExecute executes the request
-	//  @return AtcfwContentCategoryMultiResponse
-	ContentCategoriesListContentCategoriesExecute(r ApiContentCategoriesListContentCategoriesRequest) (*AtcfwContentCategoryMultiResponse, *http.Response, error)
+	// ListContentCategoriesExecute executes the request
+	//  @return ContentCategoryMultiResponse
+	ListContentCategoriesExecute(r ContentCategoriesAPIListContentCategoriesRequest) (*ContentCategoryMultiResponse, *http.Response, error)
 }
 
 // ContentCategoriesAPIService ContentCategoriesAPI service
 type ContentCategoriesAPIService internal.Service
 
-type ApiContentCategoriesListContentCategoriesRequest struct {
+type ContentCategoriesAPIListContentCategoriesRequest struct {
 	ctx        context.Context
 	ApiService ContentCategoriesAPI
 	fields     *string
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiContentCategoriesListContentCategoriesRequest) Fields(fields string) ApiContentCategoriesListContentCategoriesRequest {
+func (r ContentCategoriesAPIListContentCategoriesRequest) Fields(fields string) ContentCategoriesAPIListContentCategoriesRequest {
 	r.fields = &fields
 	return r
 }
 
-func (r ApiContentCategoriesListContentCategoriesRequest) Execute() (*AtcfwContentCategoryMultiResponse, *http.Response, error) {
-	return r.ApiService.ContentCategoriesListContentCategoriesExecute(r)
+func (r ContentCategoriesAPIListContentCategoriesRequest) Execute() (*ContentCategoryMultiResponse, *http.Response, error) {
+	return r.ApiService.ListContentCategoriesExecute(r)
 }
 
 /*
-ContentCategoriesListContentCategories List Content Categories.
+ListContentCategories List Content Categories.
 
 Use this method to retrieve information on all Content Category objects for the account.
 
 The Content Category object represents a specific internet content and used to configure category filters. Based on your configuration, specific actions such as Allow or Block, will be taken on the detected content. BloxOne Cloud provides the following content categories from which you can build your category filters: Drugs, Risk/Fraud/Crime, Entertainment/Culture, Purchasing, Information/Communication, Business/Services, Information Technology, Lifestyle, Society/Education/Religion, Mature/Violent, Games/Gambling, Pornography/Nudity and Uncategorized. Each of these categories contains sub-categories that further define the respective content.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiContentCategoriesListContentCategoriesRequest
+	@return ContentCategoriesAPIListContentCategoriesRequest
 */
-func (a *ContentCategoriesAPIService) ContentCategoriesListContentCategories(ctx context.Context) ApiContentCategoriesListContentCategoriesRequest {
-	return ApiContentCategoriesListContentCategoriesRequest{
+func (a *ContentCategoriesAPIService) ListContentCategories(ctx context.Context) ContentCategoriesAPIListContentCategoriesRequest {
+	return ContentCategoriesAPIListContentCategoriesRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -77,16 +77,16 @@ func (a *ContentCategoriesAPIService) ContentCategoriesListContentCategories(ctx
 
 // Execute executes the request
 //
-//	@return AtcfwContentCategoryMultiResponse
-func (a *ContentCategoriesAPIService) ContentCategoriesListContentCategoriesExecute(r ApiContentCategoriesListContentCategoriesRequest) (*AtcfwContentCategoryMultiResponse, *http.Response, error) {
+//	@return ContentCategoryMultiResponse
+func (a *ContentCategoriesAPIService) ListContentCategoriesExecute(r ContentCategoriesAPIListContentCategoriesRequest) (*ContentCategoryMultiResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwContentCategoryMultiResponse
+		localVarReturnValue *ContentCategoryMultiResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ContentCategoriesAPIService.ContentCategoriesListContentCategories")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ContentCategoriesAPIService.ListContentCategories")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}

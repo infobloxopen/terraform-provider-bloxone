@@ -67,7 +67,7 @@ func (r *IpamHostResource) Create(ctx context.Context, req resource.CreateReques
 	}
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		IpamHostAPI.
-		IpamHostCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -95,7 +95,7 @@ func (r *IpamHostResource) Read(ctx context.Context, req resource.ReadRequest, r
 
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		IpamHostAPI.
-		IpamHostRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *IpamHostResource) Update(ctx context.Context, req resource.UpdateReques
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		IpamHostAPI.
-		IpamHostUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *IpamHostResource) Delete(ctx context.Context, req resource.DeleteReques
 
 	httpRes, err := r.client.IPAddressManagementAPI.
 		IpamHostAPI.
-		IpamHostDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

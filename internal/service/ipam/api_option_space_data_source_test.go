@@ -15,7 +15,7 @@ import (
 func TestAccOptionSpaceDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dhcp_option_spaces.test"
 	resourceName := "bloxone_dhcp_option_space.test"
-	var v ipam.IpamsvcOptionSpace
+	var v ipam.OptionSpace
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -37,7 +37,7 @@ func TestAccOptionSpaceDataSource_Filters(t *testing.T) {
 func TestAccOptionSpaceDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dhcp_option_spaces.test"
 	resourceName := "bloxone_dhcp_option_space.test"
-	var v ipam.IpamsvcOptionSpace
+	var v ipam.OptionSpace
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,

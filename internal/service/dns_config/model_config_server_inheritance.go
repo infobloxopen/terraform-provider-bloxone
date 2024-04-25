@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 )
 
 type ConfigServerInheritanceModel struct {
@@ -224,7 +224,7 @@ var ConfigServerInheritanceResourceSchemaAttributes = map[string]schema.Attribut
 	},
 }
 
-func ExpandConfigServerInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigServerInheritance {
+func ExpandConfigServerInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.ServerInheritance {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -236,11 +236,11 @@ func ExpandConfigServerInheritance(ctx context.Context, o types.Object, diags *d
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigServerInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigServerInheritance {
+func (m *ConfigServerInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.ServerInheritance {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigServerInheritance{
+	to := &dnsconfig.ServerInheritance{
 		AddEdnsOptionInOutgoingQuery:      ExpandInheritance2InheritedBool(ctx, m.AddEdnsOptionInOutgoingQuery, diags),
 		CustomRootNsBlock:                 ExpandConfigInheritedCustomRootNSBlock(ctx, m.CustomRootNsBlock, diags),
 		DnssecValidationBlock:             ExpandConfigInheritedDNSSECValidationBlock(ctx, m.DnssecValidationBlock, diags),
@@ -274,7 +274,7 @@ func (m *ConfigServerInheritanceModel) Expand(ctx context.Context, diags *diag.D
 	return to
 }
 
-func FlattenConfigServerInheritance(ctx context.Context, from *dns_config.ConfigServerInheritance, diags *diag.Diagnostics) types.Object {
+func FlattenConfigServerInheritance(ctx context.Context, from *dnsconfig.ServerInheritance, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigServerInheritanceAttrTypes)
 	}
@@ -285,7 +285,7 @@ func FlattenConfigServerInheritance(ctx context.Context, from *dns_config.Config
 	return t
 }
 
-func (m *ConfigServerInheritanceModel) Flatten(ctx context.Context, from *dns_config.ConfigServerInheritance, diags *diag.Diagnostics) {
+func (m *ConfigServerInheritanceModel) Flatten(ctx context.Context, from *dnsconfig.ServerInheritance, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

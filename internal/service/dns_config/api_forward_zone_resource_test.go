@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
@@ -23,7 +23,7 @@ import (
 func TestAccForwardZoneResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
-	var v dns_config.ConfigForwardZone
+	var v dnsconfig.ForwardZone
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -52,7 +52,7 @@ func TestAccForwardZoneResource_basic(t *testing.T) {
 func TestAccForwardZoneResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dns_forward_zone.test"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
-	var v dns_config.ConfigForwardZone
+	var v dnsconfig.ForwardZone
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -74,8 +74,8 @@ func TestAccForwardZoneResource_disappears(t *testing.T) {
 func TestAccForwardZoneResource_FQDN(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
-	var v1 dns_config.ConfigForwardZone
-	var v2 dns_config.ConfigForwardZone
+	var v1 dnsconfig.ForwardZone
+	var v2 dnsconfig.ForwardZone
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -106,7 +106,7 @@ func TestAccForwardZoneResource_FQDN(t *testing.T) {
 func TestAccForwardZoneResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_comment"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
-	var v dns_config.ConfigForwardZone
+	var v dnsconfig.ForwardZone
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -136,7 +136,7 @@ func TestAccForwardZoneResource_Comment(t *testing.T) {
 func TestAccForwardZoneResource_Disabled(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_disabled"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
-	var v dns_config.ConfigForwardZone
+	var v dnsconfig.ForwardZone
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -166,7 +166,7 @@ func TestAccForwardZoneResource_Disabled(t *testing.T) {
 func TestAccForwardZoneResource_ExternalForwarders_Address(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_external_forwarders_address"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
-	var v dns_config.ConfigForwardZone
+	var v dnsconfig.ForwardZone
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -196,7 +196,7 @@ func TestAccForwardZoneResource_ExternalForwarders_Address(t *testing.T) {
 func TestAccForwardZoneResource_ExternalForwarders_Fqdn(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_external_forwarders_fqdn"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
-	var v dns_config.ConfigForwardZone
+	var v dnsconfig.ForwardZone
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -255,7 +255,7 @@ func TestAccForwardZoneResource_ForwardOnly(t *testing.T) {
 func TestAccForwardZoneResource_Hosts(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_hosts"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
-	var v dns_config.ConfigForwardZone
+	var v dnsconfig.ForwardZone
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -287,7 +287,7 @@ func TestAccForwardZoneResource_Hosts(t *testing.T) {
 func TestAccForwardZoneResource_InternalForwarders(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_internal_forwarders"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
-	var v dns_config.ConfigForwardZone
+	var v dnsconfig.ForwardZone
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -319,7 +319,7 @@ func TestAccForwardZoneResource_InternalForwarders(t *testing.T) {
 func TestAccForwardZoneResource_Nsgs(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_nsgs"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
-	var v dns_config.ConfigForwardZone
+	var v dnsconfig.ForwardZone
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -384,8 +384,8 @@ func TestAccForwardZoneResource_Tags(t *testing.T) {
 func TestAccForwardZoneResource_View(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test_view"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
-	var v1 dns_config.ConfigForwardZone
-	var v2 dns_config.ConfigForwardZone
+	var v1 dnsconfig.ForwardZone
+	var v2 dnsconfig.ForwardZone
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -413,7 +413,7 @@ func TestAccForwardZoneResource_View(t *testing.T) {
 	})
 }
 
-func testAccCheckForwardZoneExists(ctx context.Context, resourceName string, v *dns_config.ConfigForwardZone) resource.TestCheckFunc {
+func testAccCheckForwardZoneExists(ctx context.Context, resourceName string, v *dnsconfig.ForwardZone) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -422,7 +422,7 @@ func testAccCheckForwardZoneExists(ctx context.Context, resourceName string, v *
 		}
 		apiRes, _, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			ForwardZoneAPI.
-			ForwardZoneRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -435,12 +435,12 @@ func testAccCheckForwardZoneExists(ctx context.Context, resourceName string, v *
 	}
 }
 
-func testAccCheckForwardZoneDestroy(ctx context.Context, v *dns_config.ConfigForwardZone) resource.TestCheckFunc {
+func testAccCheckForwardZoneDestroy(ctx context.Context, v *dnsconfig.ForwardZone) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			ForwardZoneAPI.
-			ForwardZoneRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -453,12 +453,12 @@ func testAccCheckForwardZoneDestroy(ctx context.Context, v *dns_config.ConfigFor
 	}
 }
 
-func testAccCheckForwardZoneDisappears(ctx context.Context, v *dns_config.ConfigForwardZone) resource.TestCheckFunc {
+func testAccCheckForwardZoneDisappears(ctx context.Context, v *dnsconfig.ForwardZone) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			ForwardZoneAPI.
-			ForwardZoneDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

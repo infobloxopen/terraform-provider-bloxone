@@ -68,7 +68,7 @@ func (r *NamedListsResource) Create(ctx context.Context, req resource.CreateRequ
 
 	apiRes, _, err := r.client.FWAPI.
 		NamedListsAPI.
-		NamedListsCreateNamedList(ctx).
+		CreateNamedList(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -95,7 +95,7 @@ func (r *NamedListsResource) Read(ctx context.Context, req resource.ReadRequest,
 
 	apiRes, httpRes, err := r.client.FWAPI.
 		NamedListsAPI.
-		NamedListsReadNamedList(ctx, int32(data.Id.ValueInt64())).
+		ReadNamedList(ctx, int32(data.Id.ValueInt64())).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *NamedListsResource) Update(ctx context.Context, req resource.UpdateRequ
 
 	apiRes, _, err := r.client.FWAPI.
 		NamedListsAPI.
-		NamedListsUpdateNamedList(ctx, int32(data.Id.ValueInt64())).
+		UpdateNamedList(ctx, int32(data.Id.ValueInt64())).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *NamedListsResource) Delete(ctx context.Context, req resource.DeleteRequ
 
 	httpRes, err := r.client.FWAPI.
 		NamedListsAPI.
-		NamedListsDeleteSingleNamedLists(ctx, int32(data.Id.ValueInt64())).
+		DeleteSingleNamedLists(ctx, int32(data.Id.ValueInt64())).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

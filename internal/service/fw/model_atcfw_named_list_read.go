@@ -99,7 +99,7 @@ var AtcfwNamedListReadResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandAtcfwNamedListRead(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.AtcfwNamedListRead {
+func ExpandAtcfwNamedListRead(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.NamedListRead {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -111,17 +111,17 @@ func ExpandAtcfwNamedListRead(ctx context.Context, o types.Object, diags *diag.D
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcfwNamedListReadModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.AtcfwNamedListRead {
+func (m *AtcfwNamedListReadModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.NamedListRead {
 	if m == nil {
 		return nil
 	}
-	to := &fw.AtcfwNamedListRead{
+	to := &fw.NamedListRead{
 		Tags: flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 	return to
 }
 
-func FlattenAtcfwNamedListRead(ctx context.Context, from *fw.AtcfwNamedListRead, diags *diag.Diagnostics) types.Object {
+func FlattenAtcfwNamedListRead(ctx context.Context, from *fw.NamedListRead, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwNamedListReadAttrTypes)
 	}
@@ -132,7 +132,7 @@ func FlattenAtcfwNamedListRead(ctx context.Context, from *fw.AtcfwNamedListRead,
 	return t
 }
 
-func (m *AtcfwNamedListReadModel) Flatten(ctx context.Context, from *fw.AtcfwNamedListRead, diags *diag.Diagnostics) {
+func (m *AtcfwNamedListReadModel) Flatten(ctx context.Context, from *fw.NamedListRead, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

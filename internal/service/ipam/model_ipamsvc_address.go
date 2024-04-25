@@ -202,11 +202,11 @@ var IpamsvcAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *IpamsvcAddressModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcAddress {
+func (m *IpamsvcAddressModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.Address {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcAddress{
+	to := &ipam.Address{
 		Address:   flex.ExpandString(m.Address),
 		Comment:   flex.ExpandStringPointer(m.Comment),
 		Hwaddr:    flex.ExpandStringPointer(m.Hwaddr),
@@ -227,7 +227,7 @@ func (m *IpamsvcAddressModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenIpamsvcAddress(ctx context.Context, from *ipam.IpamsvcAddress, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcAddress(ctx context.Context, from *ipam.Address, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcAddressAttrTypes)
 	}
@@ -238,7 +238,7 @@ func FlattenIpamsvcAddress(ctx context.Context, from *ipam.IpamsvcAddress, diags
 	return t
 }
 
-func (m *IpamsvcAddressModel) Flatten(ctx context.Context, from *ipam.IpamsvcAddress, diags *diag.Diagnostics) {
+func (m *IpamsvcAddressModel) Flatten(ctx context.Context, from *ipam.Address, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

@@ -23,38 +23,38 @@ import (
 
 type DnsUsageAPI interface {
 	/*
-		DnsUsageList Retrieve DNS usage for multiple objects.
+		List Retrieve DNS usage for multiple objects.
 
 		Use this method to retrieve __DNSUsage__ objects.
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiDnsUsageListRequest
+		@return DnsUsageAPIListRequest
 	*/
-	DnsUsageList(ctx context.Context) ApiDnsUsageListRequest
+	List(ctx context.Context) DnsUsageAPIListRequest
 
-	// DnsUsageListExecute executes the request
-	//  @return IpamsvcListDNSUsageResponse
-	DnsUsageListExecute(r ApiDnsUsageListRequest) (*IpamsvcListDNSUsageResponse, *http.Response, error)
+	// ListExecute executes the request
+	//  @return ListDNSUsageResponse
+	ListExecute(r DnsUsageAPIListRequest) (*ListDNSUsageResponse, *http.Response, error)
 	/*
-		DnsUsageRead Retrieve the DNS usage.
+		Read Retrieve the DNS usage.
 
 		Use this method to retrieve a __DNSUsage__ object.
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 		@param id An application specific resource identity of a resource
-		@return ApiDnsUsageReadRequest
+		@return DnsUsageAPIReadRequest
 	*/
-	DnsUsageRead(ctx context.Context, id string) ApiDnsUsageReadRequest
+	Read(ctx context.Context, id string) DnsUsageAPIReadRequest
 
-	// DnsUsageReadExecute executes the request
-	//  @return IpamsvcReadDNSUsageResponse
-	DnsUsageReadExecute(r ApiDnsUsageReadRequest) (*IpamsvcReadDNSUsageResponse, *http.Response, error)
+	// ReadExecute executes the request
+	//  @return ReadDNSUsageResponse
+	ReadExecute(r DnsUsageAPIReadRequest) (*ReadDNSUsageResponse, *http.Response, error)
 }
 
 // DnsUsageAPIService DnsUsageAPI service
 type DnsUsageAPIService internal.Service
 
-type ApiDnsUsageListRequest struct {
+type DnsUsageAPIListRequest struct {
 	ctx        context.Context
 	ApiService DnsUsageAPI
 	fields     *string
@@ -66,55 +66,55 @@ type ApiDnsUsageListRequest struct {
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiDnsUsageListRequest) Fields(fields string) ApiDnsUsageListRequest {
+func (r DnsUsageAPIListRequest) Fields(fields string) DnsUsageAPIListRequest {
 	r.fields = &fields
 	return r
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;. The following operators are commonly used in filter expressions:  |  Op   |  Description               |  |  --   |  -----------               |  |  &#x3D;&#x3D;   |  Equal                     |  |  !&#x3D;   |  Not Equal                 |  |  &gt;    |  Greater Than              |  |   &gt;&#x3D;  |  Greater Than or Equal To  |  |  &lt;    |  Less Than                 |  |  &lt;&#x3D;   |  Less Than or Equal To     |  |  and  |  Logical AND               |  |  ~    |  Matches Regex             |  |  !~   |  Does Not Match Regex      |  |  or   |  Logical OR                |  |  not  |  Logical NOT               |  |  ()   |  Groupping Operators       |
-func (r ApiDnsUsageListRequest) Filter(filter string) ApiDnsUsageListRequest {
+func (r DnsUsageAPIListRequest) Filter(filter string) DnsUsageAPIListRequest {
 	r.filter = &filter
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiDnsUsageListRequest) Offset(offset int32) ApiDnsUsageListRequest {
+func (r DnsUsageAPIListRequest) Offset(offset int32) DnsUsageAPIListRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiDnsUsageListRequest) Limit(limit int32) ApiDnsUsageListRequest {
+func (r DnsUsageAPIListRequest) Limit(limit int32) DnsUsageAPIListRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiDnsUsageListRequest) PageToken(pageToken string) ApiDnsUsageListRequest {
+func (r DnsUsageAPIListRequest) PageToken(pageToken string) DnsUsageAPIListRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
 // A collection of response resources can be sorted by their JSON tags. For a &#39;flat&#39; resource, the tag name is straightforward. If sorting is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, its value is assumed to be null.)  Specify this parameter as a comma-separated list of JSON tag names. The sort direction can be specified by a suffix separated by whitespace before the tag name. The suffix &#39;asc&#39; sorts the data in ascending order. The suffix &#39;desc&#39; sorts the data in descending order. If no suffix is specified the data is sorted in ascending order.
-func (r ApiDnsUsageListRequest) OrderBy(orderBy string) ApiDnsUsageListRequest {
+func (r DnsUsageAPIListRequest) OrderBy(orderBy string) DnsUsageAPIListRequest {
 	r.orderBy = &orderBy
 	return r
 }
 
-func (r ApiDnsUsageListRequest) Execute() (*IpamsvcListDNSUsageResponse, *http.Response, error) {
-	return r.ApiService.DnsUsageListExecute(r)
+func (r DnsUsageAPIListRequest) Execute() (*ListDNSUsageResponse, *http.Response, error) {
+	return r.ApiService.ListExecute(r)
 }
 
 /*
-DnsUsageList Retrieve DNS usage for multiple objects.
+List Retrieve DNS usage for multiple objects.
 
 Use this method to retrieve __DNSUsage__ objects.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiDnsUsageListRequest
+	@return DnsUsageAPIListRequest
 */
-func (a *DnsUsageAPIService) DnsUsageList(ctx context.Context) ApiDnsUsageListRequest {
-	return ApiDnsUsageListRequest{
+func (a *DnsUsageAPIService) List(ctx context.Context) DnsUsageAPIListRequest {
+	return DnsUsageAPIListRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -122,16 +122,16 @@ func (a *DnsUsageAPIService) DnsUsageList(ctx context.Context) ApiDnsUsageListRe
 
 // Execute executes the request
 //
-//	@return IpamsvcListDNSUsageResponse
-func (a *DnsUsageAPIService) DnsUsageListExecute(r ApiDnsUsageListRequest) (*IpamsvcListDNSUsageResponse, *http.Response, error) {
+//	@return ListDNSUsageResponse
+func (a *DnsUsageAPIService) ListExecute(r DnsUsageAPIListRequest) (*ListDNSUsageResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcListDNSUsageResponse
+		localVarReturnValue *ListDNSUsageResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "DnsUsageAPIService.DnsUsageList")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "DnsUsageAPIService.List")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -177,20 +177,6 @@ func (a *DnsUsageAPIService) DnsUsageListExecute(r ApiDnsUsageListRequest) (*Ipa
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -221,7 +207,7 @@ func (a *DnsUsageAPIService) DnsUsageListExecute(r ApiDnsUsageListRequest) (*Ipa
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiDnsUsageReadRequest struct {
+type DnsUsageAPIReadRequest struct {
 	ctx        context.Context
 	ApiService DnsUsageAPI
 	id         string
@@ -229,26 +215,26 @@ type ApiDnsUsageReadRequest struct {
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiDnsUsageReadRequest) Fields(fields string) ApiDnsUsageReadRequest {
+func (r DnsUsageAPIReadRequest) Fields(fields string) DnsUsageAPIReadRequest {
 	r.fields = &fields
 	return r
 }
 
-func (r ApiDnsUsageReadRequest) Execute() (*IpamsvcReadDNSUsageResponse, *http.Response, error) {
-	return r.ApiService.DnsUsageReadExecute(r)
+func (r DnsUsageAPIReadRequest) Execute() (*ReadDNSUsageResponse, *http.Response, error) {
+	return r.ApiService.ReadExecute(r)
 }
 
 /*
-DnsUsageRead Retrieve the DNS usage.
+Read Retrieve the DNS usage.
 
 Use this method to retrieve a __DNSUsage__ object.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id An application specific resource identity of a resource
-	@return ApiDnsUsageReadRequest
+	@return DnsUsageAPIReadRequest
 */
-func (a *DnsUsageAPIService) DnsUsageRead(ctx context.Context, id string) ApiDnsUsageReadRequest {
-	return ApiDnsUsageReadRequest{
+func (a *DnsUsageAPIService) Read(ctx context.Context, id string) DnsUsageAPIReadRequest {
+	return DnsUsageAPIReadRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -257,16 +243,16 @@ func (a *DnsUsageAPIService) DnsUsageRead(ctx context.Context, id string) ApiDns
 
 // Execute executes the request
 //
-//	@return IpamsvcReadDNSUsageResponse
-func (a *DnsUsageAPIService) DnsUsageReadExecute(r ApiDnsUsageReadRequest) (*IpamsvcReadDNSUsageResponse, *http.Response, error) {
+//	@return ReadDNSUsageResponse
+func (a *DnsUsageAPIService) ReadExecute(r DnsUsageAPIReadRequest) (*ReadDNSUsageResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcReadDNSUsageResponse
+		localVarReturnValue *ReadDNSUsageResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "DnsUsageAPIService.DnsUsageRead")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "DnsUsageAPIService.Read")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -297,20 +283,6 @@ func (a *DnsUsageAPIService) DnsUsageReadExecute(r ApiDnsUsageReadRequest) (*Ipa
 	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
 	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {

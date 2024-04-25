@@ -37,7 +37,7 @@ type AtcfwNamedListModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *AtcfwNamedListModelWithFilter) FlattenResults(ctx context.Context, from []fw.AtcfwNamedListRead, diags *diag.Diagnostics) {
+func (m *AtcfwNamedListModelWithFilter) FlattenResults(ctx context.Context, from []fw.NamedListRead, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -98,10 +98,10 @@ func (d *NamedListsDataSource) Read(ctx context.Context, req datasource.ReadRequ
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]fw.AtcfwNamedListRead, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]fw.NamedListRead, error) {
 		apiRes, _, err := d.client.FWAPI.
 			NamedListsAPI.
-			NamedListsListNamedLists(ctx).
+			ListNamedLists(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

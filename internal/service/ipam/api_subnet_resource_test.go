@@ -26,7 +26,7 @@ import (
 
 func TestAccSubnetResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -66,7 +66,7 @@ func TestAccSubnetResource_basic(t *testing.T) {
 
 func TestAccSubnetResource_disappears(t *testing.T) {
 	resourceName := "bloxone_ipam_subnet.test"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -88,8 +88,8 @@ func TestAccSubnetResource_disappears(t *testing.T) {
 
 func TestAccSubnetResource_Address(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test"
-	var v1 ipam.IpamsvcSubnet
-	var v2 ipam.IpamsvcSubnet
+	var v1 ipam.Subnet
+	var v2 ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -123,7 +123,7 @@ func TestAccSubnetResource_Address(t *testing.T) {
 
 func TestAccSubnetResource_Cidr(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -155,8 +155,8 @@ func TestAccSubnetResource_Cidr(t *testing.T) {
 
 func TestAccSubnetResource_Space(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test"
-	var v1 ipam.IpamsvcSubnet
-	var v2 ipam.IpamsvcSubnet
+	var v1 ipam.Subnet
+	var v2 ipam.Subnet
 	spaceName1 := acctest.RandomNameWithPrefix("ip-space")
 	spaceName2 := acctest.RandomNameWithPrefix("ip-space")
 
@@ -188,7 +188,7 @@ func TestAccSubnetResource_Space(t *testing.T) {
 
 func TestAccSubnetResource_AsmConfig(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_asm_config"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -236,7 +236,7 @@ func TestAccSubnetResource_AsmConfig(t *testing.T) {
 
 func TestAccSubnetResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_comment"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -266,7 +266,7 @@ func TestAccSubnetResource_Comment(t *testing.T) {
 
 func TestAccSubnetResource_DdnsClientUpdate(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_client_update"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -296,7 +296,7 @@ func TestAccSubnetResource_DdnsClientUpdate(t *testing.T) {
 
 func TestAccSubnetResource_DdnsConflictResolutionMode(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_conflict_resolution_mode"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -328,7 +328,7 @@ func TestAccSubnetResource_DdnsConflictResolutionMode(t *testing.T) {
 
 func TestAccSubnetResource_DdnsDomain(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_domain"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -358,7 +358,7 @@ func TestAccSubnetResource_DdnsDomain(t *testing.T) {
 
 func TestAccSubnetResource_DdnsGenerateName(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_generate_name"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -388,7 +388,7 @@ func TestAccSubnetResource_DdnsGenerateName(t *testing.T) {
 
 func TestAccSubnetResource_DdnsGeneratedPrefix(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_generated_prefix"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -418,7 +418,7 @@ func TestAccSubnetResource_DdnsGeneratedPrefix(t *testing.T) {
 
 func TestAccSubnetResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_dhcp_options"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -450,7 +450,7 @@ func TestAccSubnetResource_DhcpOptions(t *testing.T) {
 
 func TestAccSubnetResource_DdnsSendUpdates(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_send_updates"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -480,7 +480,7 @@ func TestAccSubnetResource_DdnsSendUpdates(t *testing.T) {
 
 func TestAccSubnetResource_DdnsTtlPercent(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_ttl_percent"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -510,7 +510,7 @@ func TestAccSubnetResource_DdnsTtlPercent(t *testing.T) {
 
 func TestAccSubnetResource_DdnsUpdateOnRenew(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_ddns_update_on_renew"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -540,7 +540,7 @@ func TestAccSubnetResource_DdnsUpdateOnRenew(t *testing.T) {
 
 func TestAccSubnetResource_DhcpConfig(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_dhcp_config"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -577,7 +577,7 @@ func TestAccSubnetResource_DhcpConfig(t *testing.T) {
 
 func TestAccSubnetResource_DisableDhcp(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_disable_dhcp"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -607,7 +607,7 @@ func TestAccSubnetResource_DisableDhcp(t *testing.T) {
 
 func TestAccSubnetResource_HeaderOptionFilename(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_header_option_filename"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -637,7 +637,7 @@ func TestAccSubnetResource_HeaderOptionFilename(t *testing.T) {
 
 func TestAccSubnetResource_HeaderOptionServerAddress(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_header_option_server_address"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -667,7 +667,7 @@ func TestAccSubnetResource_HeaderOptionServerAddress(t *testing.T) {
 
 func TestAccSubnetResource_HeaderOptionServerName(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_header_option_server_name"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -697,7 +697,7 @@ func TestAccSubnetResource_HeaderOptionServerName(t *testing.T) {
 
 func TestAccSubnetResource_HostnameRewriteChar(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_hostname_rewrite_char"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -727,7 +727,7 @@ func TestAccSubnetResource_HostnameRewriteChar(t *testing.T) {
 
 func TestAccSubnetResource_HostnameRewriteEnabled(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_hostname_rewrite_enabled"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -757,7 +757,7 @@ func TestAccSubnetResource_HostnameRewriteEnabled(t *testing.T) {
 
 func TestAccSubnetResource_HostnameRewriteRegex(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_hostname_rewrite_regex"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -787,7 +787,7 @@ func TestAccSubnetResource_HostnameRewriteRegex(t *testing.T) {
 
 func TestAccSubnetResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_inheritance_sources"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -866,7 +866,7 @@ func TestAccSubnetResource_InheritanceSources(t *testing.T) {
 
 func TestAccSubnetResource_Name(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_name"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -896,7 +896,7 @@ func TestAccSubnetResource_Name(t *testing.T) {
 
 func TestAccSubnetResource_RenewTimeAndRebindTime(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_renew_time"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -928,7 +928,7 @@ func TestAccSubnetResource_RenewTimeAndRebindTime(t *testing.T) {
 
 func TestAccSubnetResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test_tags"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -964,7 +964,7 @@ func TestAccSubnetResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckSubnetExists(ctx context.Context, resourceName string, v *ipam.IpamsvcSubnet) resource.TestCheckFunc {
+func testAccCheckSubnetExists(ctx context.Context, resourceName string, v *ipam.Subnet) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -973,7 +973,7 @@ func testAccCheckSubnetExists(ctx context.Context, resourceName string, v *ipam.
 		}
 		apiRes, _, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			SubnetAPI.
-			SubnetRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -986,12 +986,12 @@ func testAccCheckSubnetExists(ctx context.Context, resourceName string, v *ipam.
 	}
 }
 
-func testAccCheckSubnetDestroy(ctx context.Context, v *ipam.IpamsvcSubnet) resource.TestCheckFunc {
+func testAccCheckSubnetDestroy(ctx context.Context, v *ipam.Subnet) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			SubnetAPI.
-			SubnetRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -1004,12 +1004,12 @@ func testAccCheckSubnetDestroy(ctx context.Context, v *ipam.IpamsvcSubnet) resou
 	}
 }
 
-func testAccCheckSubnetDisappears(ctx context.Context, v *ipam.IpamsvcSubnet) resource.TestCheckFunc {
+func testAccCheckSubnetDisappears(ctx context.Context, v *ipam.Subnet) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			SubnetAPI.
-			SubnetDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

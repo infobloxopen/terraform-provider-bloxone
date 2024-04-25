@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"net/http"
 	"strconv"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/infobloxopen/bloxone-go-client/fw"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
@@ -20,7 +21,7 @@ import (
 
 func TestAccNetworkListsResource_basic(t *testing.T) {
 	var resourceName = "bloxone_td_network_list.test"
-	var v fw.AtcfwNetworkList
+	var v fw.NetworkList
 	name := acctest.RandomNameWithPrefix("nl")
 
 	resource.Test(t, resource.TestCase{
@@ -50,7 +51,7 @@ func TestAccNetworkListsResource_basic(t *testing.T) {
 
 func TestAccNetworkListsResource_disappears(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test"
-	var v fw.AtcfwNetworkList
+	var v fw.NetworkList
 	name := acctest.RandomNameWithPrefix("nl")
 
 	resource.Test(t, resource.TestCase{
@@ -72,7 +73,7 @@ func TestAccNetworkListsResource_disappears(t *testing.T) {
 
 func TestAccNetworkListsResource_Name(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test_name"
-	var v1, v2 fw.AtcfwNetworkList
+	var v1, v2 fw.NetworkList
 	name1 := acctest.RandomNameWithPrefix("nl")
 	name2 := acctest.RandomNameWithPrefix("nl")
 
@@ -103,7 +104,7 @@ func TestAccNetworkListsResource_Name(t *testing.T) {
 
 func TestAccNetworkListsResource_Description(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test_description"
-	var v fw.AtcfwNetworkList
+	var v fw.NetworkList
 	name := acctest.RandomNameWithPrefix("nl")
 
 	resource.Test(t, resource.TestCase{
@@ -135,7 +136,7 @@ func TestAccNetworkListsResource_Description(t *testing.T) {
 
 func TestAccNetworkListsResource_Items(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test_items"
-	var v fw.AtcfwNetworkList
+	var v fw.NetworkList
 	name := acctest.RandomNameWithPrefix("nl")
 
 	resource.Test(t, resource.TestCase{
@@ -165,7 +166,7 @@ func TestAccNetworkListsResource_Items(t *testing.T) {
 	})
 }
 
-func testAccCheckNetworkListsExists(ctx context.Context, resourceName string, v *fw.AtcfwNetworkList) resource.TestCheckFunc {
+func testAccCheckNetworkListsExists(ctx context.Context, resourceName string, v *fw.NetworkList) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -178,7 +179,7 @@ func testAccCheckNetworkListsExists(ctx context.Context, resourceName string, v 
 		}
 		apiRes, _, err := acctest.BloxOneClient.FWAPI.
 			NetworkListsAPI.
-			NetworkListsReadNetworkList(ctx, int32(id)).
+			ReadNetworkList(ctx, int32(id)).
 			Execute()
 		if err != nil {
 			return err
@@ -191,12 +192,12 @@ func testAccCheckNetworkListsExists(ctx context.Context, resourceName string, v 
 	}
 }
 
-func testAccCheckNetworkListsDestroy(ctx context.Context, v *fw.AtcfwNetworkList) resource.TestCheckFunc {
+func testAccCheckNetworkListsDestroy(ctx context.Context, v *fw.NetworkList) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.FWAPI.
 			NetworkListsAPI.
-			NetworkListsReadNetworkList(ctx, *v.Id).
+			ReadNetworkList(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -209,12 +210,12 @@ func testAccCheckNetworkListsDestroy(ctx context.Context, v *fw.AtcfwNetworkList
 	}
 }
 
-func testAccCheckNetworkListsDisappears(ctx context.Context, v *fw.AtcfwNetworkList) resource.TestCheckFunc {
+func testAccCheckNetworkListsDisappears(ctx context.Context, v *fw.NetworkList) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.FWAPI.
 			NetworkListsAPI.
-			NetworkListsDeleteSingleNetworkLists(ctx, *v.Id).
+			DeleteSingleNetworkLists(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

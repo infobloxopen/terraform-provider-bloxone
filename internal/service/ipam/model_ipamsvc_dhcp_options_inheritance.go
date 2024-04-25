@@ -28,7 +28,7 @@ var IpamsvcDHCPOptionsInheritanceResourceSchemaAttributes = map[string]schema.At
 	},
 }
 
-func ExpandIpamsvcDHCPOptionsInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcDHCPOptionsInheritance {
+func ExpandIpamsvcDHCPOptionsInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.DHCPOptionsInheritance {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -40,17 +40,17 @@ func ExpandIpamsvcDHCPOptionsInheritance(ctx context.Context, o types.Object, di
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcDHCPOptionsInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcDHCPOptionsInheritance {
+func (m *IpamsvcDHCPOptionsInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.DHCPOptionsInheritance {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcDHCPOptionsInheritance{
+	to := &ipam.DHCPOptionsInheritance{
 		DhcpOptions: ExpandIpamsvcInheritedDHCPOptionList(ctx, m.DhcpOptions, diags),
 	}
 	return to
 }
 
-func FlattenIpamsvcDHCPOptionsInheritance(ctx context.Context, from *ipam.IpamsvcDHCPOptionsInheritance, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcDHCPOptionsInheritance(ctx context.Context, from *ipam.DHCPOptionsInheritance, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcDHCPOptionsInheritanceAttrTypes)
 	}
@@ -61,7 +61,7 @@ func FlattenIpamsvcDHCPOptionsInheritance(ctx context.Context, from *ipam.Ipamsv
 	return t
 }
 
-func (m *IpamsvcDHCPOptionsInheritanceModel) Flatten(ctx context.Context, from *ipam.IpamsvcDHCPOptionsInheritance, diags *diag.Diagnostics) {
+func (m *IpamsvcDHCPOptionsInheritanceModel) Flatten(ctx context.Context, from *ipam.DHCPOptionsInheritance, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

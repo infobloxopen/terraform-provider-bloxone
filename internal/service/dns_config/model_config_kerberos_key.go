@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -59,7 +59,7 @@ var ConfigKerberosKeyResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigKerberosKey(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigKerberosKey {
+func ExpandConfigKerberosKey(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.KerberosKey {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -71,17 +71,17 @@ func ExpandConfigKerberosKey(ctx context.Context, o types.Object, diags *diag.Di
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigKerberosKeyModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigKerberosKey {
+func (m *ConfigKerberosKeyModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.KerberosKey {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigKerberosKey{
+	to := &dnsconfig.KerberosKey{
 		Key: flex.ExpandString(m.Key),
 	}
 	return to
 }
 
-func FlattenConfigKerberosKey(ctx context.Context, from *dns_config.ConfigKerberosKey, diags *diag.Diagnostics) types.Object {
+func FlattenConfigKerberosKey(ctx context.Context, from *dnsconfig.KerberosKey, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigKerberosKeyAttrTypes)
 	}
@@ -92,7 +92,7 @@ func FlattenConfigKerberosKey(ctx context.Context, from *dns_config.ConfigKerber
 	return t
 }
 
-func (m *ConfigKerberosKeyModel) Flatten(ctx context.Context, from *dns_config.ConfigKerberosKey, diags *diag.Diagnostics) {
+func (m *ConfigKerberosKeyModel) Flatten(ctx context.Context, from *dnsconfig.KerberosKey, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

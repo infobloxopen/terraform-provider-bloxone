@@ -16,7 +16,7 @@ import (
 
 func TestAccOptionSpaceResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_space.test"
-	var v ipam.IpamsvcOptionSpace
+	var v ipam.OptionSpace
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -45,7 +45,7 @@ func TestAccOptionSpaceResource_basic(t *testing.T) {
 
 func TestAccOptionSpaceResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dhcp_option_space.test"
-	var v ipam.IpamsvcOptionSpace
+	var v ipam.OptionSpace
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -67,7 +67,7 @@ func TestAccOptionSpaceResource_disappears(t *testing.T) {
 
 func TestAccOptionSpaceResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_space.test_comment"
-	var v ipam.IpamsvcOptionSpace
+	var v ipam.OptionSpace
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -97,7 +97,7 @@ func TestAccOptionSpaceResource_Comment(t *testing.T) {
 
 func TestAccOptionSpaceResource_Name(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_space.test_name"
-	var v ipam.IpamsvcOptionSpace
+	var v ipam.OptionSpace
 	optionSpaceName1 := acctest.RandomNameWithPrefix("os")
 	optionSpaceName2 := acctest.RandomNameWithPrefix("os")
 
@@ -128,7 +128,7 @@ func TestAccOptionSpaceResource_Name(t *testing.T) {
 
 func TestAccOptionSpaceResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_space.test_tags"
-	var v ipam.IpamsvcOptionSpace
+	var v ipam.OptionSpace
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -164,7 +164,7 @@ func TestAccOptionSpaceResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckOptionSpaceExists(ctx context.Context, resourceName string, v *ipam.IpamsvcOptionSpace) resource.TestCheckFunc {
+func testAccCheckOptionSpaceExists(ctx context.Context, resourceName string, v *ipam.OptionSpace) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -173,7 +173,7 @@ func testAccCheckOptionSpaceExists(ctx context.Context, resourceName string, v *
 		}
 		apiRes, _, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			OptionSpaceAPI.
-			OptionSpaceRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -186,12 +186,12 @@ func testAccCheckOptionSpaceExists(ctx context.Context, resourceName string, v *
 	}
 }
 
-func testAccCheckOptionSpaceDestroy(ctx context.Context, v *ipam.IpamsvcOptionSpace) resource.TestCheckFunc {
+func testAccCheckOptionSpaceDestroy(ctx context.Context, v *ipam.OptionSpace) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			OptionSpaceAPI.
-			OptionSpaceRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -204,12 +204,12 @@ func testAccCheckOptionSpaceDestroy(ctx context.Context, v *ipam.IpamsvcOptionSp
 	}
 }
 
-func testAccCheckOptionSpaceDisappears(ctx context.Context, v *ipam.IpamsvcOptionSpace) resource.TestCheckFunc {
+func testAccCheckOptionSpaceDisappears(ctx context.Context, v *ipam.OptionSpace) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			OptionSpaceAPI.
-			OptionSpaceDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

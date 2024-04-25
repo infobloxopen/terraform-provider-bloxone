@@ -78,7 +78,7 @@ func (r *AuthZoneResource) Create(ctx context.Context, req resource.CreateReques
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
 		AuthZoneAPI.
-		AuthZoneCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
 		Inherit(inheritanceType).
 		Execute()
@@ -106,7 +106,7 @@ func (r *AuthZoneResource) Read(ctx context.Context, req resource.ReadRequest, r
 
 	apiRes, httpRes, err := r.client.DNSConfigurationAPI.
 		AuthZoneAPI.
-		AuthZoneRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
@@ -137,7 +137,7 @@ func (r *AuthZoneResource) Update(ctx context.Context, req resource.UpdateReques
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
 		AuthZoneAPI.
-		AuthZoneUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
 		Inherit(inheritanceType).
 		Execute()
@@ -165,7 +165,7 @@ func (r *AuthZoneResource) Delete(ctx context.Context, req resource.DeleteReques
 	err := retry.RetryContext(ctx, AuthZoneOperationTimeout, func() *retry.RetryError {
 		httpRes, err := r.client.DNSConfigurationAPI.
 			AuthZoneAPI.
-			AuthZoneDelete(ctx, data.Id.ValueString()).
+			Delete(ctx, data.Id.ValueString()).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

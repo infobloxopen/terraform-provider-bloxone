@@ -35,7 +35,7 @@ var AtcfwItemStructsResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandAtcfwItemStructs(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.AtcfwItemStructs {
+func ExpandAtcfwItemStructs(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.ItemStructs {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -47,18 +47,18 @@ func ExpandAtcfwItemStructs(ctx context.Context, o types.Object, diags *diag.Dia
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcfwItemStructsModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.AtcfwItemStructs {
+func (m *AtcfwItemStructsModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.ItemStructs {
 	if m == nil {
 		return nil
 	}
-	to := &fw.AtcfwItemStructs{
+	to := &fw.ItemStructs{
 		Description: flex.ExpandStringPointer(m.Description),
 		Item:        flex.ExpandStringPointer(m.Item),
 	}
 	return to
 }
 
-func FlattenAtcfwItemStructs(ctx context.Context, from *fw.AtcfwItemStructs, diags *diag.Diagnostics) types.Object {
+func FlattenAtcfwItemStructs(ctx context.Context, from *fw.ItemStructs, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwItemStructsAttrTypes)
 	}
@@ -69,7 +69,7 @@ func FlattenAtcfwItemStructs(ctx context.Context, from *fw.AtcfwItemStructs, dia
 	return t
 }
 
-func (m *AtcfwItemStructsModel) Flatten(ctx context.Context, from *fw.AtcfwItemStructs, diags *diag.Diagnostics) {
+func (m *AtcfwItemStructsModel) Flatten(ctx context.Context, from *fw.ItemStructs, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

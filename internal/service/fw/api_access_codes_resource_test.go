@@ -21,7 +21,7 @@ import (
 
 func TestAccAccessCodesResource_basic(t *testing.T) {
 	var resourceName = "bloxone_td_access_code.test"
-	var v fw.AtcfwAccessCode
+	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
 
 	resource.Test(t, resource.TestCase{
@@ -57,7 +57,7 @@ func TestAccAccessCodesResource_basic(t *testing.T) {
 
 func TestAccAccessCodesResource_disappears(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test"
-	var v fw.AtcfwAccessCode
+	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
 
 	resource.Test(t, resource.TestCase{
@@ -79,7 +79,7 @@ func TestAccAccessCodesResource_disappears(t *testing.T) {
 
 func TestAccAccessCodesResource_Name(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_name"
-	var v1, v2 fw.AtcfwAccessCode
+	var v1, v2 fw.AccessCode
 	name1 := acctest.RandomNameWithPrefix("ac")
 	name2 := acctest.RandomNameWithPrefix("ac")
 
@@ -110,7 +110,7 @@ func TestAccAccessCodesResource_Name(t *testing.T) {
 
 func TestAccAccessCodesResource_Activation(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_activation"
-	var v fw.AtcfwAccessCode
+	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
 	actTime1 := time.Now().UTC().Format(time.RFC3339)
 	actTime2 := time.Now().UTC().Add(time.Minute * 10).Format(time.RFC3339)
@@ -142,7 +142,7 @@ func TestAccAccessCodesResource_Activation(t *testing.T) {
 
 func TestAccAccessCodesResource_Description(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_description"
-	var v1, v2 fw.AtcfwAccessCode
+	var v1, v2 fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
 
 	resource.Test(t, resource.TestCase{
@@ -172,7 +172,7 @@ func TestAccAccessCodesResource_Description(t *testing.T) {
 
 func TestAccAccessCodesResource_Expiration(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_expiration"
-	var v fw.AtcfwAccessCode
+	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
 	expTime1 := time.Now().UTC().Add(time.Hour).Format(time.RFC3339)
 	expTime2 := time.Now().UTC().Add(time.Hour * 2).Format(time.RFC3339)
@@ -204,7 +204,7 @@ func TestAccAccessCodesResource_Expiration(t *testing.T) {
 
 func TestAccAccessCodesResource_Rules(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_rules"
-	var v fw.AtcfwAccessCode
+	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
 
 	resource.Test(t, resource.TestCase{
@@ -234,7 +234,7 @@ func TestAccAccessCodesResource_Rules(t *testing.T) {
 	})
 }
 
-func testAccCheckAccessCodesExists(ctx context.Context, resourceName string, v *fw.AtcfwAccessCode) resource.TestCheckFunc {
+func testAccCheckAccessCodesExists(ctx context.Context, resourceName string, v *fw.AccessCode) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -243,7 +243,7 @@ func testAccCheckAccessCodesExists(ctx context.Context, resourceName string, v *
 		}
 		apiRes, _, err := acctest.BloxOneClient.FWAPI.
 			AccessCodesAPI.
-			AccessCodesReadAccessCode(ctx, rs.Primary.ID).
+			ReadAccessCode(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -256,12 +256,12 @@ func testAccCheckAccessCodesExists(ctx context.Context, resourceName string, v *
 	}
 }
 
-func testAccCheckAccessCodesDestroy(ctx context.Context, v *fw.AtcfwAccessCode) resource.TestCheckFunc {
+func testAccCheckAccessCodesDestroy(ctx context.Context, v *fw.AccessCode) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.FWAPI.
 			AccessCodesAPI.
-			AccessCodesReadAccessCode(ctx, *v.AccessKey).
+			ReadAccessCode(ctx, *v.AccessKey).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -274,12 +274,12 @@ func testAccCheckAccessCodesDestroy(ctx context.Context, v *fw.AtcfwAccessCode) 
 	}
 }
 
-func testAccCheckAccessCodesDisappears(ctx context.Context, v *fw.AtcfwAccessCode) resource.TestCheckFunc {
+func testAccCheckAccessCodesDisappears(ctx context.Context, v *fw.AccessCode) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.FWAPI.
 			AccessCodesAPI.
-			AccessCodesDeleteSingleAccessCodes(ctx, *v.AccessKey).
+			DeleteSingleAccessCodes(ctx, *v.AccessKey).
 			Execute()
 		if err != nil {
 			return err

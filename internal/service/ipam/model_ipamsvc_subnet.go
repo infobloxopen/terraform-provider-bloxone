@@ -423,11 +423,11 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcSubnet {
+func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.Subnet {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcSubnet{
+	to := &ipam.Subnet{
 		AsmConfig:                  ExpandIpamsvcASMConfig(ctx, m.AsmConfig, diags),
 		Cidr:                       flex.ExpandInt64Pointer(m.Cidr),
 		Comment:                    flex.ExpandStringPointer(m.Comment),
@@ -473,7 +473,7 @@ func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics
 	return to
 }
 
-func FlattenIpamsvcSubnet(ctx context.Context, from *ipam.IpamsvcSubnet, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcSubnet(ctx context.Context, from *ipam.Subnet, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcSubnetAttrTypes)
 	}
@@ -484,7 +484,7 @@ func FlattenIpamsvcSubnet(ctx context.Context, from *ipam.IpamsvcSubnet, diags *
 	return t
 }
 
-func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.IpamsvcSubnet, diags *diag.Diagnostics) {
+func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.Subnet, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

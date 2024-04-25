@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	"github.com/infobloxopen/bloxone-go-client/fw"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -46,7 +47,7 @@ var AtcfwPoPRegionResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func FlattenAtcfwPoPRegion(ctx context.Context, from *fw.AtcfwPoPRegion, diags *diag.Diagnostics) types.Object {
+func FlattenAtcfwPoPRegion(ctx context.Context, from *fw.PoPRegion, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwPoPRegionAttrTypes)
 	}
@@ -57,7 +58,7 @@ func FlattenAtcfwPoPRegion(ctx context.Context, from *fw.AtcfwPoPRegion, diags *
 	return t
 }
 
-func (m *AtcfwPoPRegionModel) Flatten(ctx context.Context, from *fw.AtcfwPoPRegion, diags *diag.Diagnostics) {
+func (m *AtcfwPoPRegionModel) Flatten(ctx context.Context, from *fw.PoPRegion, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

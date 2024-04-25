@@ -37,7 +37,7 @@ type KeysTSIGKeyModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *KeysTSIGKeyModelWithFilter) FlattenResults(ctx context.Context, from []keys.KeysTSIGKey, diags *diag.Diagnostics) {
+func (m *KeysTSIGKeyModelWithFilter) FlattenResults(ctx context.Context, from []keys.TSIGKey, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -98,10 +98,10 @@ func (d *TsigDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]keys.KeysTSIGKey, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]keys.TSIGKey, error) {
 		apiRes, _, err := d.client.KeysAPI.
 			TsigAPI.
-			TsigList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

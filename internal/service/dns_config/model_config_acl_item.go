@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -80,7 +80,7 @@ var ConfigACLItemResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigACLItem(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigACLItem {
+func ExpandConfigACLItem(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.ACLItem {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -92,11 +92,11 @@ func ExpandConfigACLItem(ctx context.Context, o types.Object, diags *diag.Diagno
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigACLItemModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigACLItem {
+func (m *ConfigACLItemModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.ACLItem {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigACLItem{
+	to := &dnsconfig.ACLItem{
 		Access:  flex.ExpandString(m.Access),
 		Acl:     flex.ExpandStringPointer(m.Acl),
 		Address: flex.ExpandStringPointer(m.Address),
@@ -106,7 +106,7 @@ func (m *ConfigACLItemModel) Expand(ctx context.Context, diags *diag.Diagnostics
 	return to
 }
 
-func FlattenConfigACLItem(ctx context.Context, from *dns_config.ConfigACLItem, diags *diag.Diagnostics) types.Object {
+func FlattenConfigACLItem(ctx context.Context, from *dnsconfig.ACLItem, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigACLItemAttrTypes)
 	}
@@ -117,7 +117,7 @@ func FlattenConfigACLItem(ctx context.Context, from *dns_config.ConfigACLItem, d
 	return t
 }
 
-func (m *ConfigACLItemModel) Flatten(ctx context.Context, from *dns_config.ConfigACLItem, diags *diag.Diagnostics) {
+func (m *ConfigACLItemModel) Flatten(ctx context.Context, from *dnsconfig.ACLItem, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

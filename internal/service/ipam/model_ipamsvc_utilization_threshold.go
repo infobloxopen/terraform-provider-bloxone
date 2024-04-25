@@ -41,7 +41,7 @@ var IpamsvcUtilizationThresholdResourceSchemaAttributes = map[string]schema.Attr
 	},
 }
 
-func ExpandIpamsvcUtilizationThreshold(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcUtilizationThreshold {
+func ExpandIpamsvcUtilizationThreshold(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.UtilizationThreshold {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -53,11 +53,11 @@ func ExpandIpamsvcUtilizationThreshold(ctx context.Context, o types.Object, diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcUtilizationThresholdModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcUtilizationThreshold {
+func (m *IpamsvcUtilizationThresholdModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.UtilizationThreshold {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcUtilizationThreshold{
+	to := &ipam.UtilizationThreshold{
 		Enabled: m.Enabled.ValueBool(),
 		High:    int64(m.High.ValueInt64()),
 		Low:     int64(m.Low.ValueInt64()),
@@ -65,7 +65,7 @@ func (m *IpamsvcUtilizationThresholdModel) Expand(ctx context.Context, diags *di
 	return to
 }
 
-func FlattenIpamsvcUtilizationThreshold(ctx context.Context, from *ipam.IpamsvcUtilizationThreshold, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcUtilizationThreshold(ctx context.Context, from *ipam.UtilizationThreshold, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcUtilizationThresholdAttrTypes)
 	}
@@ -76,7 +76,7 @@ func FlattenIpamsvcUtilizationThreshold(ctx context.Context, from *ipam.IpamsvcU
 	return t
 }
 
-func (m *IpamsvcUtilizationThresholdModel) Flatten(ctx context.Context, from *ipam.IpamsvcUtilizationThreshold, diags *diag.Diagnostics) {
+func (m *IpamsvcUtilizationThresholdModel) Flatten(ctx context.Context, from *ipam.UtilizationThreshold, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

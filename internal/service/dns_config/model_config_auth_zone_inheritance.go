@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 )
 
 type ConfigAuthZoneInheritanceModel struct {
@@ -70,7 +70,7 @@ var ConfigAuthZoneInheritanceResourceSchemaAttributes = map[string]schema.Attrib
 	},
 }
 
-func ExpandConfigAuthZoneInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigAuthZoneInheritance {
+func ExpandConfigAuthZoneInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.AuthZoneInheritance {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -82,11 +82,11 @@ func ExpandConfigAuthZoneInheritance(ctx context.Context, o types.Object, diags 
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigAuthZoneInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigAuthZoneInheritance {
+func (m *ConfigAuthZoneInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.AuthZoneInheritance {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigAuthZoneInheritance{
+	to := &dnsconfig.AuthZoneInheritance{
 		GssTsigEnabled:           ExpandInheritance2InheritedBool(ctx, m.GssTsigEnabled, diags),
 		Notify:                   ExpandInheritance2InheritedBool(ctx, m.Notify, diags),
 		QueryAcl:                 ExpandConfigInheritedACLItems(ctx, m.QueryAcl, diags),
@@ -98,7 +98,7 @@ func (m *ConfigAuthZoneInheritanceModel) Expand(ctx context.Context, diags *diag
 	return to
 }
 
-func FlattenConfigAuthZoneInheritance(ctx context.Context, from *dns_config.ConfigAuthZoneInheritance, diags *diag.Diagnostics) types.Object {
+func FlattenConfigAuthZoneInheritance(ctx context.Context, from *dnsconfig.AuthZoneInheritance, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigAuthZoneInheritanceAttrTypes)
 	}
@@ -109,7 +109,7 @@ func FlattenConfigAuthZoneInheritance(ctx context.Context, from *dns_config.Conf
 	return t
 }
 
-func (m *ConfigAuthZoneInheritanceModel) Flatten(ctx context.Context, from *dns_config.ConfigAuthZoneInheritance, diags *diag.Diagnostics) {
+func (m *ConfigAuthZoneInheritanceModel) Flatten(ctx context.Context, from *dnsconfig.AuthZoneInheritance, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

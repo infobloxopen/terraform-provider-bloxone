@@ -71,7 +71,7 @@ func (r *AddressBlockResource) Create(ctx context.Context, req resource.CreateRe
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		AddressBlockAPI.
-		AddressBlockCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
 		Inherit(inheritanceType).
 		Execute()
@@ -99,7 +99,7 @@ func (r *AddressBlockResource) Read(ctx context.Context, req resource.ReadReques
 
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		AddressBlockAPI.
-		AddressBlockRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
@@ -130,7 +130,7 @@ func (r *AddressBlockResource) Update(ctx context.Context, req resource.UpdateRe
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		AddressBlockAPI.
-		AddressBlockUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
 		Inherit(inheritanceType).
 		Execute()
@@ -158,7 +158,7 @@ func (r *AddressBlockResource) Delete(ctx context.Context, req resource.DeleteRe
 
 	httpRes, err := r.client.IPAddressManagementAPI.
 		AddressBlockAPI.
-		AddressBlockDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

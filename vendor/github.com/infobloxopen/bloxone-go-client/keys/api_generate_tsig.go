@@ -22,49 +22,49 @@ import (
 
 type GenerateTsigAPI interface {
 	/*
-		GenerateTsigGenerateTSIG Generate TSIG key with a random secret.
+		GenerateTSIG Generate TSIG key with a random secret.
 
 		Use this method to generate a TSIG key with a random secret using the specified algorithm.
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiGenerateTsigGenerateTSIGRequest
+		@return GenerateTsigAPIGenerateTSIGRequest
 	*/
-	GenerateTsigGenerateTSIG(ctx context.Context) ApiGenerateTsigGenerateTSIGRequest
+	GenerateTSIG(ctx context.Context) GenerateTsigAPIGenerateTSIGRequest
 
-	// GenerateTsigGenerateTSIGExecute executes the request
-	//  @return KeysGenerateTSIGResponse
-	GenerateTsigGenerateTSIGExecute(r ApiGenerateTsigGenerateTSIGRequest) (*KeysGenerateTSIGResponse, *http.Response, error)
+	// GenerateTSIGExecute executes the request
+	//  @return GenerateTSIGResponse
+	GenerateTSIGExecute(r GenerateTsigAPIGenerateTSIGRequest) (*GenerateTSIGResponse, *http.Response, error)
 }
 
 // GenerateTsigAPIService GenerateTsigAPI service
 type GenerateTsigAPIService internal.Service
 
-type ApiGenerateTsigGenerateTSIGRequest struct {
+type GenerateTsigAPIGenerateTSIGRequest struct {
 	ctx        context.Context
 	ApiService GenerateTsigAPI
 	algorithm  *string
 }
 
 // The TSIG key algorithm.  Valid values are: * _hmac_sha256_ * _hmac_sha1_ * _hmac_sha224_ * _hmac_sha384_ * _hmac_sha512_  Defaults to _hmac_sha256_.
-func (r ApiGenerateTsigGenerateTSIGRequest) Algorithm(algorithm string) ApiGenerateTsigGenerateTSIGRequest {
+func (r GenerateTsigAPIGenerateTSIGRequest) Algorithm(algorithm string) GenerateTsigAPIGenerateTSIGRequest {
 	r.algorithm = &algorithm
 	return r
 }
 
-func (r ApiGenerateTsigGenerateTSIGRequest) Execute() (*KeysGenerateTSIGResponse, *http.Response, error) {
-	return r.ApiService.GenerateTsigGenerateTSIGExecute(r)
+func (r GenerateTsigAPIGenerateTSIGRequest) Execute() (*GenerateTSIGResponse, *http.Response, error) {
+	return r.ApiService.GenerateTSIGExecute(r)
 }
 
 /*
-GenerateTsigGenerateTSIG Generate TSIG key with a random secret.
+GenerateTSIG Generate TSIG key with a random secret.
 
 Use this method to generate a TSIG key with a random secret using the specified algorithm.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiGenerateTsigGenerateTSIGRequest
+	@return GenerateTsigAPIGenerateTSIGRequest
 */
-func (a *GenerateTsigAPIService) GenerateTsigGenerateTSIG(ctx context.Context) ApiGenerateTsigGenerateTSIGRequest {
-	return ApiGenerateTsigGenerateTSIGRequest{
+func (a *GenerateTsigAPIService) GenerateTSIG(ctx context.Context) GenerateTsigAPIGenerateTSIGRequest {
+	return GenerateTsigAPIGenerateTSIGRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -72,16 +72,16 @@ func (a *GenerateTsigAPIService) GenerateTsigGenerateTSIG(ctx context.Context) A
 
 // Execute executes the request
 //
-//	@return KeysGenerateTSIGResponse
-func (a *GenerateTsigAPIService) GenerateTsigGenerateTSIGExecute(r ApiGenerateTsigGenerateTSIGRequest) (*KeysGenerateTSIGResponse, *http.Response, error) {
+//	@return GenerateTSIGResponse
+func (a *GenerateTsigAPIService) GenerateTSIGExecute(r GenerateTsigAPIGenerateTSIGRequest) (*GenerateTSIGResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *KeysGenerateTSIGResponse
+		localVarReturnValue *GenerateTSIGResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "GenerateTsigAPIService.GenerateTsigGenerateTSIG")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "GenerateTsigAPIService.GenerateTSIG")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -111,20 +111,6 @@ func (a *GenerateTsigAPIService) GenerateTsigGenerateTSIGExecute(r ApiGenerateTs
 	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
 	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {

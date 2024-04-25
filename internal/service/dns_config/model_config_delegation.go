@@ -16,7 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -105,7 +105,7 @@ var ConfigDelegationResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigDelegation(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigDelegation {
+func ExpandConfigDelegation(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.Delegation {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -117,11 +117,11 @@ func ExpandConfigDelegation(ctx context.Context, o types.Object, diags *diag.Dia
 	return m.Expand(ctx, diags, true)
 }
 
-func (m *ConfigDelegationModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *dns_config.ConfigDelegation {
+func (m *ConfigDelegationModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *dnsconfig.Delegation {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigDelegation{
+	to := &dnsconfig.Delegation{
 		Comment:           flex.ExpandStringPointer(m.Comment),
 		DelegationServers: flex.ExpandFrameworkListNestedBlock(ctx, m.DelegationServers, diags, ExpandConfigDelegationServer),
 		Disabled:          flex.ExpandBoolPointer(m.Disabled),
@@ -135,7 +135,7 @@ func (m *ConfigDelegationModel) Expand(ctx context.Context, diags *diag.Diagnost
 	return to
 }
 
-func FlattenConfigDelegation(ctx context.Context, from *dns_config.ConfigDelegation, diags *diag.Diagnostics) types.Object {
+func FlattenConfigDelegation(ctx context.Context, from *dnsconfig.Delegation, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigDelegationAttrTypes)
 	}
@@ -146,7 +146,7 @@ func FlattenConfigDelegation(ctx context.Context, from *dns_config.ConfigDelegat
 	return t
 }
 
-func (m *ConfigDelegationModel) Flatten(ctx context.Context, from *dns_config.ConfigDelegation, diags *diag.Diagnostics) {
+func (m *ConfigDelegationModel) Flatten(ctx context.Context, from *dnsconfig.Delegation, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

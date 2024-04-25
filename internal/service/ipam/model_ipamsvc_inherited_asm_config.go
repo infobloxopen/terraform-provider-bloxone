@@ -70,7 +70,7 @@ var IpamsvcInheritedASMConfigResourceSchemaAttributes = map[string]schema.Attrib
 	},
 }
 
-func ExpandIpamsvcInheritedASMConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcInheritedASMConfig {
+func ExpandIpamsvcInheritedASMConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.InheritedASMConfig {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -82,11 +82,11 @@ func ExpandIpamsvcInheritedASMConfig(ctx context.Context, o types.Object, diags 
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcInheritedASMConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcInheritedASMConfig {
+func (m *IpamsvcInheritedASMConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.InheritedASMConfig {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcInheritedASMConfig{
+	to := &ipam.InheritedASMConfig{
 		AsmEnableBlock: ExpandIpamsvcInheritedAsmEnableBlock(ctx, m.AsmEnableBlock, diags),
 		AsmGrowthBlock: ExpandIpamsvcInheritedAsmGrowthBlock(ctx, m.AsmGrowthBlock, diags),
 		AsmThreshold:   ExpandInheritanceInheritedUInt32(ctx, m.AsmThreshold, diags),
@@ -98,7 +98,7 @@ func (m *IpamsvcInheritedASMConfigModel) Expand(ctx context.Context, diags *diag
 	return to
 }
 
-func FlattenIpamsvcInheritedASMConfig(ctx context.Context, from *ipam.IpamsvcInheritedASMConfig, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcInheritedASMConfig(ctx context.Context, from *ipam.InheritedASMConfig, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcInheritedASMConfigAttrTypes)
 	}
@@ -109,7 +109,7 @@ func FlattenIpamsvcInheritedASMConfig(ctx context.Context, from *ipam.IpamsvcInh
 	return t
 }
 
-func (m *IpamsvcInheritedASMConfigModel) Flatten(ctx context.Context, from *ipam.IpamsvcInheritedASMConfig, diags *diag.Diagnostics) {
+func (m *IpamsvcInheritedASMConfigModel) Flatten(ctx context.Context, from *ipam.InheritedASMConfig, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

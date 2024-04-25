@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 )
 
 type ConfigHostInheritanceModel struct {
@@ -29,7 +29,7 @@ var ConfigHostInheritanceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigHostInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigHostInheritance {
+func ExpandConfigHostInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.HostInheritance {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -41,17 +41,17 @@ func ExpandConfigHostInheritance(ctx context.Context, o types.Object, diags *dia
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigHostInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigHostInheritance {
+func (m *ConfigHostInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.HostInheritance {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigHostInheritance{
+	to := &dnsconfig.HostInheritance{
 		KerberosKeys: ExpandConfigInheritedKerberosKeys(ctx, m.KerberosKeys, diags),
 	}
 	return to
 }
 
-func FlattenConfigHostInheritance(ctx context.Context, from *dns_config.ConfigHostInheritance, diags *diag.Diagnostics) types.Object {
+func FlattenConfigHostInheritance(ctx context.Context, from *dnsconfig.HostInheritance, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigHostInheritanceAttrTypes)
 	}
@@ -62,7 +62,7 @@ func FlattenConfigHostInheritance(ctx context.Context, from *dns_config.ConfigHo
 	return t
 }
 
-func (m *ConfigHostInheritanceModel) Flatten(ctx context.Context, from *dns_config.ConfigHostInheritance, diags *diag.Diagnostics) {
+func (m *ConfigHostInheritanceModel) Flatten(ctx context.Context, from *dnsconfig.HostInheritance, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

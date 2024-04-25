@@ -15,7 +15,7 @@ import (
 func TestAccAccessCodesDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_access_codes.test"
 	resourceName := "bloxone_td_access_code.test"
-	var v fw.AtcfwAccessCode
+	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
 
 	resource.Test(t, resource.TestCase{

@@ -37,7 +37,7 @@ type IpamsvcNextAvailableIPModel struct {
 	Results    types.List   `tfsdk:"results"`
 }
 
-func (m *IpamsvcNextAvailableIPModel) FlattenResults(ctx context.Context, from []ipam.IpamsvcAddress, diags *diag.Diagnostics) {
+func (m *IpamsvcNextAvailableIPModel) FlattenResults(ctx context.Context, from []ipam.Address, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -105,7 +105,7 @@ func (d *NextAvailableIPDataSource) Schema(_ context.Context, _ datasource.Schem
 func (d *NextAvailableIPDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var (
 		data   IpamsvcNextAvailableIPModel
-		apiRes *ipam.IpamsvcNextAvailableIPResponse
+		apiRes *ipam.NextAvailableIPResponse
 		err    error
 	)
 
@@ -120,21 +120,21 @@ func (d *NextAvailableIPDataSource) Read(ctx context.Context, req datasource.Rea
 	switch addressStr[:strings.LastIndex(addressStr, "/")] {
 	case "ipam/address_block":
 		apiRes, _, err = d.client.IPAddressManagementAPI.AddressBlockAPI.
-			AddressBlockListNextAvailableIP(ctx, data.Id.ValueString()).
+			ListNextAvailableIP(ctx, data.Id.ValueString()).
 			Count(int32(data.Count.ValueInt64())).
 			Contiguous(data.Contiguous.ValueBool()).
 			Execute()
 
 	case "ipam/subnet":
 		apiRes, _, err = d.client.IPAddressManagementAPI.SubnetAPI.
-			SubnetListNextAvailableIP(ctx, data.Id.ValueString()).
+			ListNextAvailableIP(ctx, data.Id.ValueString()).
 			Count(int32(data.Count.ValueInt64())).
 			Contiguous(data.Contiguous.ValueBool()).
 			Execute()
 
 	case "ipam/range":
 		apiRes, _, err = d.client.IPAddressManagementAPI.RangeAPI.
-			RangeListNextAvailableIP(ctx, data.Id.ValueString()).
+			ListNextAvailableIP(ctx, data.Id.ValueString()).
 			Count(int32(data.Count.ValueInt64())).
 			Contiguous(data.Contiguous.ValueBool()).
 			Execute()

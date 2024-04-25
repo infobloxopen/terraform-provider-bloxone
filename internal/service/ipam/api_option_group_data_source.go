@@ -37,7 +37,7 @@ type IpamsvcOptionGroupModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *IpamsvcOptionGroupModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamsvcOptionGroup, diags *diag.Diagnostics) {
+func (m *IpamsvcOptionGroupModelWithFilter) FlattenResults(ctx context.Context, from []ipam.OptionGroup, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -100,7 +100,7 @@ func (d *OptionGroupDataSource) Read(ctx context.Context, req datasource.ReadReq
 
 	apiRes, _, err := d.client.IPAddressManagementAPI.
 		OptionGroupAPI.
-		OptionGroupList(ctx).
+		List(ctx).
 		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 		Execute()
