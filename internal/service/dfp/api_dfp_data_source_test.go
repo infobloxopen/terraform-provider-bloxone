@@ -14,7 +14,7 @@ import (
 func TestAccDfpDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dfp_services.test"
 	resourceName := "bloxone_dfp_service.test"
-	var v dfp.AtcdfpDfp
+	var v dfp.Dfp
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -36,7 +36,7 @@ func TestAccDfpDataSource_Filters(t *testing.T) {
 func TestAccDfpDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dfp_services.test"
 	resourceName := "bloxone_dfp_service.test"
-	var v dfp.AtcdfpDfp
+	var v dfp.Dfp
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },

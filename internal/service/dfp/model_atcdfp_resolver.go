@@ -25,7 +25,7 @@ var AtcdfpResolverAttrTypes = map[string]attr.Type{
 	"address":     types.StringType,
 	"is_fallback": types.BoolType,
 	"is_local":    types.BoolType,
-	"protocols":   types.ListType{ElemType: types.ObjectType{AttrTypes: AtcdfpDNSProtocolAttrTypes}},
+	"protocols":   types.ListType{ElemType: types.StringType},
 }
 
 var AtcdfpResolverResourceSchemaAttributes = map[string]schema.Attribute{
@@ -48,7 +48,7 @@ var AtcdfpResolverResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandAtcdfpResolver(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.AtcdfpResolver {
+func ExpandAtcdfpResolver(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.Resolver {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -60,20 +60,29 @@ func ExpandAtcdfpResolver(ctx context.Context, o types.Object, diags *diag.Diagn
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcdfpResolverModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.AtcdfpResolver {
+func (m *AtcdfpResolverModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.Resolver {
 	if m == nil {
 		return nil
 	}
-	to := &dfp.AtcdfpResolver{
+	to := &dfp.Resolver{
 		Address:    flex.ExpandStringPointer(m.Address),
 		IsFallback: flex.ExpandBoolPointer(m.IsFallback),
 		IsLocal:    flex.ExpandBoolPointer(m.IsLocal),
-		Protocols:  flex.ExpandFrameworkListString(ctx, m.Protocols, diags),
+		Protocols:  ExpandAtcdfpDNSProtocol(ctx, m.Protocols, diags),
 	}
 	return to
 }
 
-func FlattenAtcdfpResolver(ctx context.Context, from *dfp.AtcdfpResolver, diags *diag.Diagnostics) types.Object {
+func ExpandAtcdfpDNSProtocol(ctx context.Context, tfList types.List, diags *diag.Diagnostics) []dfp.DNSProtocol {
+	if tfList.IsNull() || tfList.IsUnknown() {
+		return nil
+	}
+	var data []dfp.DNSProtocol
+	diags.Append(tfList.ElementsAs(ctx, &data, false)...)
+	return data
+}
+
+func FlattenAtcdfpResolver(ctx context.Context, from *dfp.Resolver, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcdfpResolverAttrTypes)
 	}
@@ -84,7 +93,7 @@ func FlattenAtcdfpResolver(ctx context.Context, from *dfp.AtcdfpResolver, diags 
 	return t
 }
 
-func (m *AtcdfpResolverModel) Flatten(ctx context.Context, from *dfp.AtcdfpResolver, diags *diag.Diagnostics) {
+func (m *AtcdfpResolverModel) Flatten(ctx context.Context, from *dfp.Resolver, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
@@ -94,5 +103,14 @@ func (m *AtcdfpResolverModel) Flatten(ctx context.Context, from *dfp.AtcdfpResol
 	m.Address = flex.FlattenStringPointer(from.Address)
 	m.IsFallback = types.BoolPointerValue(from.IsFallback)
 	m.IsLocal = types.BoolPointerValue(from.IsLocal)
-	m.Protocols = flex.FlattenFrameworkListString(ctx, from.Protocols, diags)
+	m.Protocols = FlattenAtcdfpDNSProtocol(ctx, from.Protocols, diags)
+}
+
+func FlattenAtcdfpDNSProtocol(ctx context.Context, l []dfp.DNSProtocol, diags *diag.Diagnostics) types.List {
+	if len(l) == 0 {
+		return types.ListNull(types.StringType)
+	}
+	tfList, d := types.ListValueFrom(ctx, types.StringType, l)
+	diags.Append(d...)
+	return tfList
 }

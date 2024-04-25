@@ -35,7 +35,7 @@ var AtcdfpNetAddrPolicyAssignmentResourceSchemaAttributes = map[string]schema.At
 	},
 }
 
-func ExpandAtcdfpNetAddrPolicyAssignment(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.AtcdfpNetAddrPolicyAssignment {
+func ExpandAtcdfpNetAddrPolicyAssignment(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.NetAddrPolicyAssignment {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -47,18 +47,18 @@ func ExpandAtcdfpNetAddrPolicyAssignment(ctx context.Context, o types.Object, di
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcdfpNetAddrPolicyAssignmentModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.AtcdfpNetAddrPolicyAssignment {
+func (m *AtcdfpNetAddrPolicyAssignmentModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.NetAddrPolicyAssignment {
 	if m == nil {
 		return nil
 	}
-	to := &dfp.AtcdfpNetAddrPolicyAssignment{
+	to := &dfp.NetAddrPolicyAssignment{
 		AddrNet:  flex.ExpandStringPointer(m.AddrNet),
 		PolicyId: flex.ExpandInt32Pointer(m.PolicyId),
 	}
 	return to
 }
 
-func FlattenAtcdfpNetAddrPolicyAssignment(ctx context.Context, from *dfp.AtcdfpNetAddrPolicyAssignment, diags *diag.Diagnostics) types.Object {
+func FlattenAtcdfpNetAddrPolicyAssignment(ctx context.Context, from *dfp.NetAddrPolicyAssignment, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcdfpNetAddrPolicyAssignmentAttrTypes)
 	}
@@ -69,7 +69,7 @@ func FlattenAtcdfpNetAddrPolicyAssignment(ctx context.Context, from *dfp.AtcdfpN
 	return t
 }
 
-func (m *AtcdfpNetAddrPolicyAssignmentModel) Flatten(ctx context.Context, from *dfp.AtcdfpNetAddrPolicyAssignment, diags *diag.Diagnostics) {
+func (m *AtcdfpNetAddrPolicyAssignmentModel) Flatten(ctx context.Context, from *dfp.NetAddrPolicyAssignment, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

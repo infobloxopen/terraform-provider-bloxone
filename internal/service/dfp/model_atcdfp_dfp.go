@@ -17,7 +17,6 @@ import (
 
 type AtcdfpDfpModel struct {
 	CreatedTime         timetypes.RFC3339 `tfsdk:"created_time"`
-	DefaultResolvers    types.List        `tfsdk:"default_resolvers"`
 	ElbIpList           types.List        `tfsdk:"elb_ip_list"`
 	ForwardingPolicy    types.String      `tfsdk:"forwarding_policy"`
 	Host                types.List        `tfsdk:"host"`
@@ -28,7 +27,6 @@ type AtcdfpDfpModel struct {
 	Ophid               types.String      `tfsdk:"ophid"`
 	PolicyId            types.Int64       `tfsdk:"policy_id"`
 	PopRegionId         types.Int64       `tfsdk:"pop_region_id"`
-	Resolvers           types.List        `tfsdk:"resolvers"`
 	ResolversAll        types.List        `tfsdk:"resolvers_all"`
 	ServiceId           types.String      `tfsdk:"service_id"`
 	ServiceName         types.String      `tfsdk:"service_name"`
@@ -38,7 +36,6 @@ type AtcdfpDfpModel struct {
 
 var AtcdfpDfpAttrTypes = map[string]attr.Type{
 	"created_time":          timetypes.RFC3339Type{},
-	"default_resolvers":     types.ListType{ElemType: types.StringType},
 	"elb_ip_list":           types.ListType{ElemType: types.StringType},
 	"forwarding_policy":     types.StringType,
 	"host":                  types.ListType{ElemType: types.ObjectType{AttrTypes: AtcdfpDfpHostAttrTypes}},
@@ -49,7 +46,6 @@ var AtcdfpDfpAttrTypes = map[string]attr.Type{
 	"ophid":                 types.StringType,
 	"policy_id":             types.Int64Type,
 	"pop_region_id":         types.Int64Type,
-	"resolvers":             types.ListType{ElemType: types.StringType},
 	"resolvers_all":         types.ListType{ElemType: types.ObjectType{AttrTypes: AtcdfpResolverAttrTypes}},
 	"service_id":            types.StringType,
 	"service_name":          types.StringType,
@@ -62,11 +58,6 @@ var AtcdfpDfpResourceSchemaAttributes = map[string]schema.Attribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
 		MarkdownDescription: "The time when this DNS Forwarding Proxy object was created.",
-	},
-	"default_resolvers": schema.ListAttribute{
-		ElementType:         types.StringType,
-		Computed:            true,
-		MarkdownDescription: "The list of default DNS resolvers that will be used in case if the BloxOne Cloud is unreachable.  Deprecated DO NOT USE. Use resolvers_all.",
 	},
 	"elb_ip_list": schema.ListAttribute{
 		ElementType:         types.StringType,
@@ -84,7 +75,7 @@ var AtcdfpDfpResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "host information. For internal Use only.",
 	},
 	"id": schema.Int64Attribute{
-		Computed:            true,
+		Required:            true,
 		MarkdownDescription: "The DNS Forwarding Proxy object identifier.",
 	},
 	"internal_domain_lists": schema.ListAttribute{
@@ -115,11 +106,6 @@ var AtcdfpDfpResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "Point of Presence (PoP) region",
 	},
-	"resolvers": schema.ListAttribute{
-		ElementType:         types.StringType,
-		Computed:            true,
-		MarkdownDescription: "The list of internal or local DNS servers' IPv4 or IPv6 addresses that are used as DNS resolvers. Deprecated DO NOT USE. Use resolvers_all.",
-	},
 	"resolvers_all": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: AtcdfpResolverResourceSchemaAttributes,
@@ -145,7 +131,7 @@ var AtcdfpDfpResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandAtcdfpDfp(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.AtcdfpDfp {
+func ExpandAtcdfpDfp(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.Dfp {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -157,11 +143,11 @@ func ExpandAtcdfpDfp(ctx context.Context, o types.Object, diags *diag.Diagnostic
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcdfpDfpModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.AtcdfpDfp {
+func (m *AtcdfpDfpModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.Dfp {
 	if m == nil {
 		return nil
 	}
-	to := &dfp.AtcdfpDfp{
+	to := &dfp.Dfp{
 		ForwardingPolicy:    flex.ExpandStringPointer(m.ForwardingPolicy),
 		Host:                flex.ExpandFrameworkListNestedBlock(ctx, m.Host, diags, ExpandAtcdfpDfpHost),
 		NetAddrPolicyIds:    flex.ExpandFrameworkListNestedBlock(ctx, m.NetAddrPolicyIds, diags, ExpandAtcdfpNetAddrPolicyAssignment),
@@ -171,7 +157,25 @@ func (m *AtcdfpDfpModel) Expand(ctx context.Context, diags *diag.Diagnostics) *d
 	return to
 }
 
-func FlattenAtcdfpDfp(ctx context.Context, from *dfp.AtcdfpDfp, diags *diag.Diagnostics) types.Object {
+func (m *AtcdfpDfpModel) ExpandCreateOrUpdatePayload(ctx context.Context, diags *diag.Diagnostics) *dfp.DfpCreateOrUpdatePayload {
+	if m == nil {
+		return nil
+	}
+	to := &dfp.DfpCreateOrUpdatePayload{
+		ForwardingPolicy:    flex.ExpandStringPointer(m.ForwardingPolicy),
+		Host:                flex.ExpandFrameworkListNestedBlock(ctx, m.Host, diags, ExpandAtcdfpDfpHost),
+		InternalDomainLists: flex.ExpandFrameworkListInt32(ctx, m.InternalDomainLists, diags),
+		Name:                flex.ExpandStringPointer(m.Name),
+		PopRegionId:         flex.ExpandInt32Pointer(m.PopRegionId),
+		ResolversAll:        flex.ExpandFrameworkListNestedBlock(ctx, m.ResolversAll, diags, ExpandAtcdfpResolver),
+		ServiceId:           flex.ExpandStringPointer(m.ServiceId),
+		ServiceName:         flex.ExpandStringPointer(m.ServiceName),
+		SiteId:              flex.ExpandStringPointer(m.SiteId),
+	}
+	return to
+}
+
+func FlattenAtcdfpDfp(ctx context.Context, from *dfp.Dfp, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcdfpDfpAttrTypes)
 	}
@@ -182,7 +186,7 @@ func FlattenAtcdfpDfp(ctx context.Context, from *dfp.AtcdfpDfp, diags *diag.Diag
 	return t
 }
 
-func (m *AtcdfpDfpModel) Flatten(ctx context.Context, from *dfp.AtcdfpDfp, diags *diag.Diagnostics) {
+func (m *AtcdfpDfpModel) Flatten(ctx context.Context, from *dfp.Dfp, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
@@ -190,7 +194,6 @@ func (m *AtcdfpDfpModel) Flatten(ctx context.Context, from *dfp.AtcdfpDfp, diags
 		*m = AtcdfpDfpModel{}
 	}
 	m.CreatedTime = timetypes.NewRFC3339TimePointerValue(from.CreatedTime)
-	m.DefaultResolvers = flex.FlattenFrameworkListString(ctx, from.DefaultResolvers, diags)
 	m.ElbIpList = flex.FlattenFrameworkListString(ctx, from.ElbIpList, diags)
 	m.ForwardingPolicy = flex.FlattenStringPointer(from.ForwardingPolicy)
 	m.Host = flex.FlattenFrameworkListNestedBlock(ctx, from.Host, AtcdfpDfpHostAttrTypes, diags, FlattenAtcdfpDfpHost)
@@ -200,7 +203,6 @@ func (m *AtcdfpDfpModel) Flatten(ctx context.Context, from *dfp.AtcdfpDfp, diags
 	m.Ophid = flex.FlattenStringPointer(from.Ophid)
 	m.PolicyId = flex.FlattenInt32Pointer(from.PolicyId)
 	m.PopRegionId = flex.FlattenInt32Pointer(from.PopRegionId)
-	m.Resolvers = flex.FlattenFrameworkListString(ctx, from.Resolvers, diags)
 	m.ResolversAll = flex.FlattenFrameworkListNestedBlock(ctx, from.ResolversAll, AtcdfpResolverAttrTypes, diags, FlattenAtcdfpResolver)
 	m.ServiceId = flex.FlattenStringPointer(from.ServiceId)
 	m.ServiceName = flex.FlattenStringPointer(from.ServiceName)

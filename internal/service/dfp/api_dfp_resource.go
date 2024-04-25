@@ -3,14 +3,16 @@ package dfp
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/infobloxopen/bloxone-go-client/dfp"
-	"net/http"
-
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 )
+
+const HostSyncTimeout = 2 * time.Minute
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &DfpResource{}
@@ -66,33 +68,25 @@ func (r *DfpResource) Create(ctx context.Context, req resource.CreateRequest, re
 		return
 	}
 
-	//err := retry.RetryContext(ctx, 20*time.Minute, func() *retry.RetryError {
-	//	//get  id from infra
-	//	hostRes, _, err := r.client.InfraManagementAPI.
-	//		HostsAPI.
-	//		HostsList(ctx).
-	//		Filter(fmt.Sprintf("legacy_id == '%d'", data.Id.ValueInt64())).Execute()
-	//	if err != nil {
-	//		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create OnPremAnycastManager, got error: %s", err))
-	//		return retry.NonRetryableError(err)
-	//	}
-	//
-	//	//now you add the readonly data
-	//	data.Name = types.StringValue(hostRes.GetResults()[0].DisplayName)
-	//	data.IpAddress = types.StringPointerValue(hostRes.GetResults()[0].IpAddress)
-	//	return nil
-	//})
-
-	apiRes, _, err := r.client.DNSForwardingProxyAPI.
-		DfpAPI.
-		DfpCreateOrUpdateDfp(ctx, int32(data.Id.ValueInt64())).
-		Body(*data.Expand(ctx, &resp.Diagnostics)).
+	_, _, err := r.client.DNSForwardingProxyAPI.
+		InfraServicesAPI.
+		CreateOrUpdateDfpService(ctx, data.ServiceId.String()).
+		Body(*data.ExpandCreateOrUpdatePayload(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Dfp, got error: %s", err))
 		return
 	}
 
+	// We call Read again, so that the fields not part of the CreateOrUpdatePayload are also populated
+	apiRes, _, err := r.client.DNSForwardingProxyAPI.
+		InfraServicesAPI.
+		ReadDfpService(ctx, string(int32(data.Id.ValueInt64()))).
+		Execute()
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Dfp, got error: %s", err))
+		return
+	}
 	res := apiRes.GetResults()
 	data.Flatten(ctx, &res, &resp.Diagnostics)
 
@@ -111,8 +105,8 @@ func (r *DfpResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 	}
 
 	apiRes, httpRes, err := r.client.DNSForwardingProxyAPI.
-		DfpAPI.
-		DfpReadDfp(ctx, int32(data.Id.ValueInt64())).
+		InfraServicesAPI.
+		ReadDfpService(ctx, data.ServiceId.String()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -132,7 +126,6 @@ func (r *DfpResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 
 func (r *DfpResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data AtcdfpDfpModel
-	var data2 = dfp.NewAtcdfpDfpCreateOrUpdatePayload()
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -141,16 +134,25 @@ func (r *DfpResource) Update(ctx context.Context, req resource.UpdateRequest, re
 		return
 	}
 
+	_, _, err := r.client.DNSForwardingProxyAPI.
+		InfraServicesAPI.
+		CreateOrUpdateDfpService(ctx, data.ServiceId.String()).
+		Body(*data.ExpandCreateOrUpdatePayload(ctx, &resp.Diagnostics)).
+		Execute()
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Dfp, got error: %s", err))
+		return
+	}
+
+	// We call Read again, so that the fields not part of the CreateOrUpdatePayload are also populated
 	apiRes, _, err := r.client.DNSForwardingProxyAPI.
-		DfpAPI.
-		DfpCreateOrUpdateDfp(ctx, int32(data.Id.ValueInt64())).
-		Body(*data.Expand(ctx, &resp.Diagnostics)).
+		InfraServicesAPI.
+		ReadDfpService(ctx, data.ServiceId.String()).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Dfp, got error: %s", err))
 		return
 	}
-
 	res := apiRes.GetResults()
 	data.Flatten(ctx, &res, &resp.Diagnostics)
 
@@ -167,6 +169,8 @@ func (r *DfpResource) Delete(ctx context.Context, req resource.DeleteRequest, re
 	if resp.Diagnostics.HasError() {
 		return
 	}
+
+	// TODO: check the UI calls, or confirm if DELETE is called explicitly for the resource in the UI.
 
 	resp.State.RemoveResource(ctx)
 }

@@ -12,7 +12,7 @@ require (
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.29.0
 	github.com/hashicorp/terraform-plugin-testing v1.5.1
-	github.com/infobloxopen/bloxone-go-client v0.0.0-20240423210930-d8559759c1a6
+	github.com/infobloxopen/bloxone-go-client v0.0.0-20240425083248-0242db7bec1c
 	golang.org/x/exp v0.0.0-20240314144324-c7f7c6466f7f
 )
 
@@ -77,4 +77,4 @@ require (
 	google.golang.org/protobuf v1.33.0 // indirect
 )
 
-replace github.com/infobloxopen/bloxone-go-client => ../bloxone-go-client
+//replace github.com/infobloxopen/bloxone-go-client => ../bloxone-go-client

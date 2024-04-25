@@ -19,8 +19,6 @@ var _ MappedNullable = &DfpCreateOrUpdatePayload{}
 
 // DfpCreateOrUpdatePayload DNS Forwarding Proxy object.  For remote office deployments or in cases where installing an endpoint agent is not desirable or possible, you can use the DNS forwarding proxy. It is a software that runs on bare-metal, VM infrastructures, or Infoblox NIOS appliances; and it embeds the client IPs in DNS queries before forwarding them to BloxOne Cloud. The communications are encrypted and client visibility is maintained. The proxy also provides DNS resolution to local DNS zones when you configure local resolvers. Once you set up a DNS forwarding proxy, it becomes the main DNS server for your remote site. It will also cache responses to speed resolution of future queries.  Note that DNS Forwarding Proxy cannot be created (all information regarding DFP is synchronized from hostapp service).
 type DfpCreateOrUpdatePayload struct {
-	// The list of default DNS resolvers that will be used in case if the BloxOne Cloud is unreachable. Deprecated DO NOT USE. Use resolvers_all.
-	DefaultResolvers []string `json:"default_resolvers,omitempty"`
 	// The type of DNS resolver as Forwarding Policy. It can hold values as ib_cloud_first, external_first or external_only The default value is ib_cloud_first. If empty string is sent then ib_cloud_first will be considered.
 	ForwardingPolicy *string `json:"forwarding_policy,omitempty"`
 	// host information. For internal Use only.
@@ -33,8 +31,6 @@ type DfpCreateOrUpdatePayload struct {
 	Name *string `json:"name,omitempty"`
 	// Point of Presence (PoP) region
 	PopRegionId *int32 `json:"pop_region_id,omitempty"`
-	// The list of internal or local DNS servers' IPv4 or IPv6 addresses that are used as DNS resolvers. Deprecated DO NOT USE. Use resolvers_all.
-	Resolvers []string `json:"resolvers,omitempty"`
 	// The DNS forwarding proxy additional resolvers used for fallback and local resolution. This field replaces resolvers and default_resolvers fields which are deprecated. Either deprecated fields or new field can be used, both can not be used at same time.
 	ResolversAll []Resolver `json:"resolvers_all,omitempty"`
 	// The DNS Forwarding Proxy Service ID object identifier.
@@ -60,38 +56,6 @@ func NewDfpCreateOrUpdatePayload() *DfpCreateOrUpdatePayload {
 func NewDfpCreateOrUpdatePayloadWithDefaults() *DfpCreateOrUpdatePayload {
 	this := DfpCreateOrUpdatePayload{}
 	return &this
-}
-
-// GetDefaultResolvers returns the DefaultResolvers field value if set, zero value otherwise.
-func (o *DfpCreateOrUpdatePayload) GetDefaultResolvers() []string {
-	if o == nil || IsNil(o.DefaultResolvers) {
-		var ret []string
-		return ret
-	}
-	return o.DefaultResolvers
-}
-
-// GetDefaultResolversOk returns a tuple with the DefaultResolvers field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *DfpCreateOrUpdatePayload) GetDefaultResolversOk() ([]string, bool) {
-	if o == nil || IsNil(o.DefaultResolvers) {
-		return nil, false
-	}
-	return o.DefaultResolvers, true
-}
-
-// HasDefaultResolvers returns a boolean if a field has been set.
-func (o *DfpCreateOrUpdatePayload) HasDefaultResolvers() bool {
-	if o != nil && !IsNil(o.DefaultResolvers) {
-		return true
-	}
-
-	return false
-}
-
-// SetDefaultResolvers gets a reference to the given []string and assigns it to the DefaultResolvers field.
-func (o *DfpCreateOrUpdatePayload) SetDefaultResolvers(v []string) {
-	o.DefaultResolvers = v
 }
 
 // GetForwardingPolicy returns the ForwardingPolicy field value if set, zero value otherwise.
@@ -286,38 +250,6 @@ func (o *DfpCreateOrUpdatePayload) SetPopRegionId(v int32) {
 	o.PopRegionId = &v
 }
 
-// GetResolvers returns the Resolvers field value if set, zero value otherwise.
-func (o *DfpCreateOrUpdatePayload) GetResolvers() []string {
-	if o == nil || IsNil(o.Resolvers) {
-		var ret []string
-		return ret
-	}
-	return o.Resolvers
-}
-
-// GetResolversOk returns a tuple with the Resolvers field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *DfpCreateOrUpdatePayload) GetResolversOk() ([]string, bool) {
-	if o == nil || IsNil(o.Resolvers) {
-		return nil, false
-	}
-	return o.Resolvers, true
-}
-
-// HasResolvers returns a boolean if a field has been set.
-func (o *DfpCreateOrUpdatePayload) HasResolvers() bool {
-	if o != nil && !IsNil(o.Resolvers) {
-		return true
-	}
-
-	return false
-}
-
-// SetResolvers gets a reference to the given []string and assigns it to the Resolvers field.
-func (o *DfpCreateOrUpdatePayload) SetResolvers(v []string) {
-	o.Resolvers = v
-}
-
 // GetResolversAll returns the ResolversAll field value if set, zero value otherwise.
 func (o *DfpCreateOrUpdatePayload) GetResolversAll() []Resolver {
 	if o == nil || IsNil(o.ResolversAll) {
@@ -456,9 +388,6 @@ func (o DfpCreateOrUpdatePayload) MarshalJSON() ([]byte, error) {
 
 func (o DfpCreateOrUpdatePayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.DefaultResolvers) {
-		toSerialize["default_resolvers"] = o.DefaultResolvers
-	}
 	if !IsNil(o.ForwardingPolicy) {
 		toSerialize["forwarding_policy"] = o.ForwardingPolicy
 	}
@@ -476,9 +405,6 @@ func (o DfpCreateOrUpdatePayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.PopRegionId) {
 		toSerialize["pop_region_id"] = o.PopRegionId
-	}
-	if !IsNil(o.Resolvers) {
-		toSerialize["resolvers"] = o.Resolvers
 	}
 	if !IsNil(o.ResolversAll) {
 		toSerialize["resolvers_all"] = o.ResolversAll

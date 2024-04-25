@@ -14,35 +14,35 @@ import (
 	"encoding/json"
 )
 
-// checks if the DfpListDfp500Response type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &DfpListDfp500Response{}
+// checks if the InfraServicesListDfpServices500Response type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &InfraServicesListDfpServices500Response{}
 
-// DfpListDfp500Response struct for DfpListDfp500Response
-type DfpListDfp500Response struct {
-	Error *DfpListDfp500ResponseError `json:"error,omitempty"`
+// InfraServicesListDfpServices500Response struct for InfraServicesListDfpServices500Response
+type InfraServicesListDfpServices500Response struct {
+	Error *InfraServicesListDfpServices500ResponseError `json:"error,omitempty"`
 }
 
-// NewDfpListDfp500Response instantiates a new DfpListDfp500Response object
+// NewInfraServicesListDfpServices500Response instantiates a new InfraServicesListDfpServices500Response object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDfpListDfp500Response() *DfpListDfp500Response {
-	this := DfpListDfp500Response{}
+func NewInfraServicesListDfpServices500Response() *InfraServicesListDfpServices500Response {
+	this := InfraServicesListDfpServices500Response{}
 	return &this
 }
 
-// NewDfpListDfp500ResponseWithDefaults instantiates a new DfpListDfp500Response object
+// NewInfraServicesListDfpServices500ResponseWithDefaults instantiates a new InfraServicesListDfpServices500Response object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewDfpListDfp500ResponseWithDefaults() *DfpListDfp500Response {
-	this := DfpListDfp500Response{}
+func NewInfraServicesListDfpServices500ResponseWithDefaults() *InfraServicesListDfpServices500Response {
+	this := InfraServicesListDfpServices500Response{}
 	return &this
 }
 
 // GetError returns the Error field value if set, zero value otherwise.
-func (o *DfpListDfp500Response) GetError() DfpListDfp500ResponseError {
+func (o *InfraServicesListDfpServices500Response) GetError() InfraServicesListDfpServices500ResponseError {
 	if o == nil || IsNil(o.Error) {
-		var ret DfpListDfp500ResponseError
+		var ret InfraServicesListDfpServices500ResponseError
 		return ret
 	}
 	return *o.Error
@@ -50,7 +50,7 @@ func (o *DfpListDfp500Response) GetError() DfpListDfp500ResponseError {
 
 // GetErrorOk returns a tuple with the Error field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *DfpListDfp500Response) GetErrorOk() (*DfpListDfp500ResponseError, bool) {
+func (o *InfraServicesListDfpServices500Response) GetErrorOk() (*InfraServicesListDfpServices500ResponseError, bool) {
 	if o == nil || IsNil(o.Error) {
 		return nil, false
 	}
@@ -58,7 +58,7 @@ func (o *DfpListDfp500Response) GetErrorOk() (*DfpListDfp500ResponseError, bool)
 }
 
 // HasError returns a boolean if a field has been set.
-func (o *DfpListDfp500Response) HasError() bool {
+func (o *InfraServicesListDfpServices500Response) HasError() bool {
 	if o != nil && !IsNil(o.Error) {
 		return true
 	}
@@ -66,12 +66,12 @@ func (o *DfpListDfp500Response) HasError() bool {
 	return false
 }
 
-// SetError gets a reference to the given DfpListDfp500ResponseError and assigns it to the Error field.
-func (o *DfpListDfp500Response) SetError(v DfpListDfp500ResponseError) {
+// SetError gets a reference to the given InfraServicesListDfpServices500ResponseError and assigns it to the Error field.
+func (o *InfraServicesListDfpServices500Response) SetError(v InfraServicesListDfpServices500ResponseError) {
 	o.Error = &v
 }
 
-func (o DfpListDfp500Response) MarshalJSON() ([]byte, error) {
+func (o InfraServicesListDfpServices500Response) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -79,7 +79,7 @@ func (o DfpListDfp500Response) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o DfpListDfp500Response) ToMap() (map[string]interface{}, error) {
+func (o InfraServicesListDfpServices500Response) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
@@ -87,38 +87,38 @@ func (o DfpListDfp500Response) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-type NullableDfpListDfp500Response struct {
-	value *DfpListDfp500Response
+type NullableInfraServicesListDfpServices500Response struct {
+	value *InfraServicesListDfpServices500Response
 	isSet bool
 }
 
-func (v NullableDfpListDfp500Response) Get() *DfpListDfp500Response {
+func (v NullableInfraServicesListDfpServices500Response) Get() *InfraServicesListDfpServices500Response {
 	return v.value
 }
 
-func (v *NullableDfpListDfp500Response) Set(val *DfpListDfp500Response) {
+func (v *NullableInfraServicesListDfpServices500Response) Set(val *InfraServicesListDfpServices500Response) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableDfpListDfp500Response) IsSet() bool {
+func (v NullableInfraServicesListDfpServices500Response) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableDfpListDfp500Response) Unset() {
+func (v *NullableInfraServicesListDfpServices500Response) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableDfpListDfp500Response(val *DfpListDfp500Response) *NullableDfpListDfp500Response {
-	return &NullableDfpListDfp500Response{value: val, isSet: true}
+func NewNullableInfraServicesListDfpServices500Response(val *InfraServicesListDfpServices500Response) *NullableInfraServicesListDfpServices500Response {
+	return &NullableInfraServicesListDfpServices500Response{value: val, isSet: true}
 }
 
-func (v NullableDfpListDfp500Response) MarshalJSON() ([]byte, error) {
+func (v NullableInfraServicesListDfpServices500Response) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableDfpListDfp500Response) UnmarshalJSON(src []byte) error {
+func (v *NullableInfraServicesListDfpServices500Response) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

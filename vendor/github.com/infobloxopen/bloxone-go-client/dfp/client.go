@@ -23,8 +23,8 @@ type APIClient struct {
 	*internal.APIClient
 
 	// API Services
-	AccountsAPI AccountsAPI
-	DfpAPI      DfpAPI
+	AccountsAPI      AccountsAPI
+	InfraServicesAPI InfraServicesAPI
 }
 
 // NewAPIClient creates a new API client.
@@ -46,7 +46,7 @@ func NewAPIClient(options ...option.ClientOption) *APIClient {
 
 	// API Services
 	c.AccountsAPI = (*AccountsAPIService)(&c.Common)
-	c.DfpAPI = (*DfpAPIService)(&c.Common)
+	c.InfraServicesAPI = (*InfraServicesAPIService)(&c.Common)
 
 	return c
 }

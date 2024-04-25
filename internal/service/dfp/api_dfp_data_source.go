@@ -27,7 +27,7 @@ type DfpDataSource struct {
 }
 
 func (d *DfpDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "td_dfp_services"
+	resp.TypeName = req.ProviderTypeName + "_" + "dfp_services"
 }
 
 type AtcdfpDfpServicesModelWithFilter struct {
@@ -36,7 +36,7 @@ type AtcdfpDfpServicesModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *AtcdfpDfpServicesModelWithFilter) FlattenResults(ctx context.Context, from []dfp.AtcdfpDfp, diags *diag.Diagnostics) {
+func (m *AtcdfpDfpServicesModelWithFilter) FlattenResults(ctx context.Context, from []dfp.Dfp, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -97,17 +97,25 @@ func (d *DfpDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 		return
 	}
 
-	apiRes, _, err := d.client.DNSForwardingProxyAPI.
-		DfpAPI.
-		DfpListDfp(ctx).
-		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-		Execute()
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]dfp.Dfp, error) {
+		apiRes, _, err := d.client.DNSForwardingProxyAPI.
+			InfraServicesAPI.
+			ListDfpServices(ctx).
+			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
+			Offset(offset).
+			Limit(limit).
+			Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read InfraServices, got error: %s", err))
+			return nil, err
+		}
+		return apiRes.GetResults(), nil
+	})
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Dfp, got error: %s", err))
 		return
 	}
 
-	data.FlattenResults(ctx, apiRes.GetResults(), &resp.Diagnostics)
+	data.FlattenResults(ctx, allResults, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

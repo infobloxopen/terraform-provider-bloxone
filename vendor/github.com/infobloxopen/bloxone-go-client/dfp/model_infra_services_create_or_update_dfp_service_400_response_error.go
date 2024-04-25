@@ -14,35 +14,35 @@ import (
 	"encoding/json"
 )
 
-// checks if the DfpListDfp500ResponseError type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &DfpListDfp500ResponseError{}
+// checks if the InfraServicesCreateOrUpdateDfpService400ResponseError type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &InfraServicesCreateOrUpdateDfpService400ResponseError{}
 
-// DfpListDfp500ResponseError struct for DfpListDfp500ResponseError
-type DfpListDfp500ResponseError struct {
+// InfraServicesCreateOrUpdateDfpService400ResponseError struct for InfraServicesCreateOrUpdateDfpService400ResponseError
+type InfraServicesCreateOrUpdateDfpService400ResponseError struct {
 	Code    *string `json:"code,omitempty"`
 	Message *string `json:"message,omitempty"`
 	Status  *string `json:"status,omitempty"`
 }
 
-// NewDfpListDfp500ResponseError instantiates a new DfpListDfp500ResponseError object
+// NewInfraServicesCreateOrUpdateDfpService400ResponseError instantiates a new InfraServicesCreateOrUpdateDfpService400ResponseError object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDfpListDfp500ResponseError() *DfpListDfp500ResponseError {
-	this := DfpListDfp500ResponseError{}
+func NewInfraServicesCreateOrUpdateDfpService400ResponseError() *InfraServicesCreateOrUpdateDfpService400ResponseError {
+	this := InfraServicesCreateOrUpdateDfpService400ResponseError{}
 	return &this
 }
 
-// NewDfpListDfp500ResponseErrorWithDefaults instantiates a new DfpListDfp500ResponseError object
+// NewInfraServicesCreateOrUpdateDfpService400ResponseErrorWithDefaults instantiates a new InfraServicesCreateOrUpdateDfpService400ResponseError object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewDfpListDfp500ResponseErrorWithDefaults() *DfpListDfp500ResponseError {
-	this := DfpListDfp500ResponseError{}
+func NewInfraServicesCreateOrUpdateDfpService400ResponseErrorWithDefaults() *InfraServicesCreateOrUpdateDfpService400ResponseError {
+	this := InfraServicesCreateOrUpdateDfpService400ResponseError{}
 	return &this
 }
 
 // GetCode returns the Code field value if set, zero value otherwise.
-func (o *DfpListDfp500ResponseError) GetCode() string {
+func (o *InfraServicesCreateOrUpdateDfpService400ResponseError) GetCode() string {
 	if o == nil || IsNil(o.Code) {
 		var ret string
 		return ret
@@ -52,7 +52,7 @@ func (o *DfpListDfp500ResponseError) GetCode() string {
 
 // GetCodeOk returns a tuple with the Code field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *DfpListDfp500ResponseError) GetCodeOk() (*string, bool) {
+func (o *InfraServicesCreateOrUpdateDfpService400ResponseError) GetCodeOk() (*string, bool) {
 	if o == nil || IsNil(o.Code) {
 		return nil, false
 	}
@@ -60,7 +60,7 @@ func (o *DfpListDfp500ResponseError) GetCodeOk() (*string, bool) {
 }
 
 // HasCode returns a boolean if a field has been set.
-func (o *DfpListDfp500ResponseError) HasCode() bool {
+func (o *InfraServicesCreateOrUpdateDfpService400ResponseError) HasCode() bool {
 	if o != nil && !IsNil(o.Code) {
 		return true
 	}
@@ -69,12 +69,12 @@ func (o *DfpListDfp500ResponseError) HasCode() bool {
 }
 
 // SetCode gets a reference to the given string and assigns it to the Code field.
-func (o *DfpListDfp500ResponseError) SetCode(v string) {
+func (o *InfraServicesCreateOrUpdateDfpService400ResponseError) SetCode(v string) {
 	o.Code = &v
 }
 
 // GetMessage returns the Message field value if set, zero value otherwise.
-func (o *DfpListDfp500ResponseError) GetMessage() string {
+func (o *InfraServicesCreateOrUpdateDfpService400ResponseError) GetMessage() string {
 	if o == nil || IsNil(o.Message) {
 		var ret string
 		return ret
@@ -84,7 +84,7 @@ func (o *DfpListDfp500ResponseError) GetMessage() string {
 
 // GetMessageOk returns a tuple with the Message field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *DfpListDfp500ResponseError) GetMessageOk() (*string, bool) {
+func (o *InfraServicesCreateOrUpdateDfpService400ResponseError) GetMessageOk() (*string, bool) {
 	if o == nil || IsNil(o.Message) {
 		return nil, false
 	}
@@ -92,7 +92,7 @@ func (o *DfpListDfp500ResponseError) GetMessageOk() (*string, bool) {
 }
 
 // HasMessage returns a boolean if a field has been set.
-func (o *DfpListDfp500ResponseError) HasMessage() bool {
+func (o *InfraServicesCreateOrUpdateDfpService400ResponseError) HasMessage() bool {
 	if o != nil && !IsNil(o.Message) {
 		return true
 	}
@@ -101,12 +101,12 @@ func (o *DfpListDfp500ResponseError) HasMessage() bool {
 }
 
 // SetMessage gets a reference to the given string and assigns it to the Message field.
-func (o *DfpListDfp500ResponseError) SetMessage(v string) {
+func (o *InfraServicesCreateOrUpdateDfpService400ResponseError) SetMessage(v string) {
 	o.Message = &v
 }
 
 // GetStatus returns the Status field value if set, zero value otherwise.
-func (o *DfpListDfp500ResponseError) GetStatus() string {
+func (o *InfraServicesCreateOrUpdateDfpService400ResponseError) GetStatus() string {
 	if o == nil || IsNil(o.Status) {
 		var ret string
 		return ret
@@ -116,7 +116,7 @@ func (o *DfpListDfp500ResponseError) GetStatus() string {
 
 // GetStatusOk returns a tuple with the Status field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *DfpListDfp500ResponseError) GetStatusOk() (*string, bool) {
+func (o *InfraServicesCreateOrUpdateDfpService400ResponseError) GetStatusOk() (*string, bool) {
 	if o == nil || IsNil(o.Status) {
 		return nil, false
 	}
@@ -124,7 +124,7 @@ func (o *DfpListDfp500ResponseError) GetStatusOk() (*string, bool) {
 }
 
 // HasStatus returns a boolean if a field has been set.
-func (o *DfpListDfp500ResponseError) HasStatus() bool {
+func (o *InfraServicesCreateOrUpdateDfpService400ResponseError) HasStatus() bool {
 	if o != nil && !IsNil(o.Status) {
 		return true
 	}
@@ -133,11 +133,11 @@ func (o *DfpListDfp500ResponseError) HasStatus() bool {
 }
 
 // SetStatus gets a reference to the given string and assigns it to the Status field.
-func (o *DfpListDfp500ResponseError) SetStatus(v string) {
+func (o *InfraServicesCreateOrUpdateDfpService400ResponseError) SetStatus(v string) {
 	o.Status = &v
 }
 
-func (o DfpListDfp500ResponseError) MarshalJSON() ([]byte, error) {
+func (o InfraServicesCreateOrUpdateDfpService400ResponseError) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -145,7 +145,7 @@ func (o DfpListDfp500ResponseError) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o DfpListDfp500ResponseError) ToMap() (map[string]interface{}, error) {
+func (o InfraServicesCreateOrUpdateDfpService400ResponseError) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Code) {
 		toSerialize["code"] = o.Code
@@ -159,38 +159,38 @@ func (o DfpListDfp500ResponseError) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-type NullableDfpListDfp500ResponseError struct {
-	value *DfpListDfp500ResponseError
+type NullableInfraServicesCreateOrUpdateDfpService400ResponseError struct {
+	value *InfraServicesCreateOrUpdateDfpService400ResponseError
 	isSet bool
 }
 
-func (v NullableDfpListDfp500ResponseError) Get() *DfpListDfp500ResponseError {
+func (v NullableInfraServicesCreateOrUpdateDfpService400ResponseError) Get() *InfraServicesCreateOrUpdateDfpService400ResponseError {
 	return v.value
 }
 
-func (v *NullableDfpListDfp500ResponseError) Set(val *DfpListDfp500ResponseError) {
+func (v *NullableInfraServicesCreateOrUpdateDfpService400ResponseError) Set(val *InfraServicesCreateOrUpdateDfpService400ResponseError) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableDfpListDfp500ResponseError) IsSet() bool {
+func (v NullableInfraServicesCreateOrUpdateDfpService400ResponseError) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableDfpListDfp500ResponseError) Unset() {
+func (v *NullableInfraServicesCreateOrUpdateDfpService400ResponseError) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableDfpListDfp500ResponseError(val *DfpListDfp500ResponseError) *NullableDfpListDfp500ResponseError {
-	return &NullableDfpListDfp500ResponseError{value: val, isSet: true}
+func NewNullableInfraServicesCreateOrUpdateDfpService400ResponseError(val *InfraServicesCreateOrUpdateDfpService400ResponseError) *NullableInfraServicesCreateOrUpdateDfpService400ResponseError {
+	return &NullableInfraServicesCreateOrUpdateDfpService400ResponseError{value: val, isSet: true}
 }
 
-func (v NullableDfpListDfp500ResponseError) MarshalJSON() ([]byte, error) {
+func (v NullableInfraServicesCreateOrUpdateDfpService400ResponseError) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableDfpListDfp500ResponseError) UnmarshalJSON(src []byte) error {
+func (v *NullableInfraServicesCreateOrUpdateDfpService400ResponseError) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

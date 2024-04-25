@@ -47,7 +47,7 @@ var AtcdfpDfpHostResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandAtcdfpDfpHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.AtcdfpDfpHost {
+func ExpandAtcdfpDfpHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.DfpHost {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -59,17 +59,17 @@ func ExpandAtcdfpDfpHost(ctx context.Context, o types.Object, diags *diag.Diagno
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcdfpDfpHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.AtcdfpDfpHost {
+func (m *AtcdfpDfpHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.DfpHost {
 	if m == nil {
 		return nil
 	}
-	to := &dfp.AtcdfpDfpHost{
+	to := &dfp.DfpHost{
 		LegacyHostId: flex.ExpandInt32Pointer(m.LegacyHostId),
 	}
 	return to
 }
 
-func FlattenAtcdfpDfpHost(ctx context.Context, from *dfp.AtcdfpDfpHost, diags *diag.Diagnostics) types.Object {
+func FlattenAtcdfpDfpHost(ctx context.Context, from *dfp.DfpHost, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcdfpDfpHostAttrTypes)
 	}
@@ -80,7 +80,7 @@ func FlattenAtcdfpDfpHost(ctx context.Context, from *dfp.AtcdfpDfpHost, diags *d
 	return t
 }
 
-func (m *AtcdfpDfpHostModel) Flatten(ctx context.Context, from *dfp.AtcdfpDfpHost, diags *diag.Diagnostics) {
+func (m *AtcdfpDfpHostModel) Flatten(ctx context.Context, from *dfp.DfpHost, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

@@ -280,7 +280,7 @@ github.com/huandu/xstrings
 # github.com/imdario/mergo v0.3.15
 ## explicit; go 1.13
 github.com/imdario/mergo
-# github.com/infobloxopen/bloxone-go-client v0.0.0-20240423210930-d8559759c1a6
+# github.com/infobloxopen/bloxone-go-client v0.0.0-20240425083248-0242db7bec1c
 ## explicit; go 1.19
 github.com/infobloxopen/bloxone-go-client/anycast
 github.com/infobloxopen/bloxone-go-client/client

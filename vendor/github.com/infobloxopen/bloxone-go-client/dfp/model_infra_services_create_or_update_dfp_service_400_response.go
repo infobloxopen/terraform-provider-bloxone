@@ -14,35 +14,35 @@ import (
 	"encoding/json"
 )
 
-// checks if the DfpReadDfp404Response type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &DfpReadDfp404Response{}
+// checks if the InfraServicesCreateOrUpdateDfpService400Response type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &InfraServicesCreateOrUpdateDfpService400Response{}
 
-// DfpReadDfp404Response struct for DfpReadDfp404Response
-type DfpReadDfp404Response struct {
-	Error *DfpReadDfp404ResponseError `json:"error,omitempty"`
+// InfraServicesCreateOrUpdateDfpService400Response struct for InfraServicesCreateOrUpdateDfpService400Response
+type InfraServicesCreateOrUpdateDfpService400Response struct {
+	Error *InfraServicesCreateOrUpdateDfpService400ResponseError `json:"error,omitempty"`
 }
 
-// NewDfpReadDfp404Response instantiates a new DfpReadDfp404Response object
+// NewInfraServicesCreateOrUpdateDfpService400Response instantiates a new InfraServicesCreateOrUpdateDfpService400Response object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDfpReadDfp404Response() *DfpReadDfp404Response {
-	this := DfpReadDfp404Response{}
+func NewInfraServicesCreateOrUpdateDfpService400Response() *InfraServicesCreateOrUpdateDfpService400Response {
+	this := InfraServicesCreateOrUpdateDfpService400Response{}
 	return &this
 }
 
-// NewDfpReadDfp404ResponseWithDefaults instantiates a new DfpReadDfp404Response object
+// NewInfraServicesCreateOrUpdateDfpService400ResponseWithDefaults instantiates a new InfraServicesCreateOrUpdateDfpService400Response object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewDfpReadDfp404ResponseWithDefaults() *DfpReadDfp404Response {
-	this := DfpReadDfp404Response{}
+func NewInfraServicesCreateOrUpdateDfpService400ResponseWithDefaults() *InfraServicesCreateOrUpdateDfpService400Response {
+	this := InfraServicesCreateOrUpdateDfpService400Response{}
 	return &this
 }
 
 // GetError returns the Error field value if set, zero value otherwise.
-func (o *DfpReadDfp404Response) GetError() DfpReadDfp404ResponseError {
+func (o *InfraServicesCreateOrUpdateDfpService400Response) GetError() InfraServicesCreateOrUpdateDfpService400ResponseError {
 	if o == nil || IsNil(o.Error) {
-		var ret DfpReadDfp404ResponseError
+		var ret InfraServicesCreateOrUpdateDfpService400ResponseError
 		return ret
 	}
 	return *o.Error
@@ -50,7 +50,7 @@ func (o *DfpReadDfp404Response) GetError() DfpReadDfp404ResponseError {
 
 // GetErrorOk returns a tuple with the Error field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *DfpReadDfp404Response) GetErrorOk() (*DfpReadDfp404ResponseError, bool) {
+func (o *InfraServicesCreateOrUpdateDfpService400Response) GetErrorOk() (*InfraServicesCreateOrUpdateDfpService400ResponseError, bool) {
 	if o == nil || IsNil(o.Error) {
 		return nil, false
 	}
@@ -58,7 +58,7 @@ func (o *DfpReadDfp404Response) GetErrorOk() (*DfpReadDfp404ResponseError, bool)
 }
 
 // HasError returns a boolean if a field has been set.
-func (o *DfpReadDfp404Response) HasError() bool {
+func (o *InfraServicesCreateOrUpdateDfpService400Response) HasError() bool {
 	if o != nil && !IsNil(o.Error) {
 		return true
 	}
@@ -66,12 +66,12 @@ func (o *DfpReadDfp404Response) HasError() bool {
 	return false
 }
 
-// SetError gets a reference to the given DfpReadDfp404ResponseError and assigns it to the Error field.
-func (o *DfpReadDfp404Response) SetError(v DfpReadDfp404ResponseError) {
+// SetError gets a reference to the given InfraServicesCreateOrUpdateDfpService400ResponseError and assigns it to the Error field.
+func (o *InfraServicesCreateOrUpdateDfpService400Response) SetError(v InfraServicesCreateOrUpdateDfpService400ResponseError) {
 	o.Error = &v
 }
 
-func (o DfpReadDfp404Response) MarshalJSON() ([]byte, error) {
+func (o InfraServicesCreateOrUpdateDfpService400Response) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -79,7 +79,7 @@ func (o DfpReadDfp404Response) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o DfpReadDfp404Response) ToMap() (map[string]interface{}, error) {
+func (o InfraServicesCreateOrUpdateDfpService400Response) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
@@ -87,38 +87,38 @@ func (o DfpReadDfp404Response) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-type NullableDfpReadDfp404Response struct {
-	value *DfpReadDfp404Response
+type NullableInfraServicesCreateOrUpdateDfpService400Response struct {
+	value *InfraServicesCreateOrUpdateDfpService400Response
 	isSet bool
 }
 
-func (v NullableDfpReadDfp404Response) Get() *DfpReadDfp404Response {
+func (v NullableInfraServicesCreateOrUpdateDfpService400Response) Get() *InfraServicesCreateOrUpdateDfpService400Response {
 	return v.value
 }
 
-func (v *NullableDfpReadDfp404Response) Set(val *DfpReadDfp404Response) {
+func (v *NullableInfraServicesCreateOrUpdateDfpService400Response) Set(val *InfraServicesCreateOrUpdateDfpService400Response) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableDfpReadDfp404Response) IsSet() bool {
+func (v NullableInfraServicesCreateOrUpdateDfpService400Response) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableDfpReadDfp404Response) Unset() {
+func (v *NullableInfraServicesCreateOrUpdateDfpService400Response) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableDfpReadDfp404Response(val *DfpReadDfp404Response) *NullableDfpReadDfp404Response {
-	return &NullableDfpReadDfp404Response{value: val, isSet: true}
+func NewNullableInfraServicesCreateOrUpdateDfpService400Response(val *InfraServicesCreateOrUpdateDfpService400Response) *NullableInfraServicesCreateOrUpdateDfpService400Response {
+	return &NullableInfraServicesCreateOrUpdateDfpService400Response{value: val, isSet: true}
 }
 
-func (v NullableDfpReadDfp404Response) MarshalJSON() ([]byte, error) {
+func (v NullableInfraServicesCreateOrUpdateDfpService400Response) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableDfpReadDfp404Response) UnmarshalJSON(src []byte) error {
+func (v *NullableInfraServicesCreateOrUpdateDfpService400Response) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
