@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/infra_mgmt"
+	"github.com/infobloxopen/bloxone-go-client/inframgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
@@ -21,7 +21,7 @@ import (
 
 func TestAccHostsResource_basic(t *testing.T) {
 	var resourceName = "bloxone_infra_host.test"
-	var v infra_mgmt.InfraHost
+	var v inframgmt.Host
 	name := acctest.RandomNameWithPrefix("host")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -51,7 +51,7 @@ func TestAccHostsResource_basic(t *testing.T) {
 
 func TestAccHostsResource_disappears(t *testing.T) {
 	resourceName := "bloxone_infra_host.test"
-	var v infra_mgmt.InfraHost
+	var v inframgmt.Host
 	name := acctest.RandomNameWithPrefix("host")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -73,7 +73,7 @@ func TestAccHostsResource_disappears(t *testing.T) {
 
 func TestAccHostsResource_Description(t *testing.T) {
 	var resourceName = "bloxone_infra_host.test_description"
-	var v infra_mgmt.InfraHost
+	var v inframgmt.Host
 	name := acctest.RandomNameWithPrefix("host")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -103,7 +103,7 @@ func TestAccHostsResource_Description(t *testing.T) {
 
 func TestAccHostsResource_IpSpace(t *testing.T) {
 	var resourceName = "bloxone_infra_host.test_ip_space"
-	var v infra_mgmt.InfraHost
+	var v inframgmt.Host
 	name := acctest.RandomNameWithPrefix("host")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -133,7 +133,7 @@ func TestAccHostsResource_IpSpace(t *testing.T) {
 
 func TestAccHostsResource_MaintenanceMode(t *testing.T) {
 	var resourceName = "bloxone_infra_host.test_maintenance_mode"
-	var v infra_mgmt.InfraHost
+	var v inframgmt.Host
 	name := acctest.RandomNameWithPrefix("host")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -163,7 +163,7 @@ func TestAccHostsResource_MaintenanceMode(t *testing.T) {
 
 func TestAccHostsResource_SerialNumber(t *testing.T) {
 	var resourceName = "bloxone_infra_host.test_serial_number"
-	var v infra_mgmt.InfraHost
+	var v inframgmt.Host
 	name := acctest.RandomNameWithPrefix("host")
 	sn1 := acctest.RandomName()
 	sn2 := acctest.RandomName()
@@ -195,7 +195,7 @@ func TestAccHostsResource_SerialNumber(t *testing.T) {
 
 func TestAccHostsResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_infra_host.test_tags"
-	var v infra_mgmt.InfraHost
+	var v inframgmt.Host
 	name := acctest.RandomNameWithPrefix("host")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -223,7 +223,7 @@ func TestAccHostsResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckHostsExists(ctx context.Context, resourceName string, v *infra_mgmt.InfraHost) resource.TestCheckFunc {
+func testAccCheckHostsExists(ctx context.Context, resourceName string, v *inframgmt.Host) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -232,7 +232,7 @@ func testAccCheckHostsExists(ctx context.Context, resourceName string, v *infra_
 		}
 		apiRes, _, err := acctest.BloxOneClient.InfraManagementAPI.
 			HostsAPI.
-			HostsRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -245,12 +245,12 @@ func testAccCheckHostsExists(ctx context.Context, resourceName string, v *infra_
 	}
 }
 
-func testAccCheckHostsDestroy(ctx context.Context, v *infra_mgmt.InfraHost) resource.TestCheckFunc {
+func testAccCheckHostsDestroy(ctx context.Context, v *inframgmt.Host) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.InfraManagementAPI.
 			HostsAPI.
-			HostsRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -263,12 +263,12 @@ func testAccCheckHostsDestroy(ctx context.Context, v *infra_mgmt.InfraHost) reso
 	}
 }
 
-func testAccCheckHostsDisappears(ctx context.Context, v *infra_mgmt.InfraHost) resource.TestCheckFunc {
+func testAccCheckHostsDisappears(ctx context.Context, v *inframgmt.Host) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.InfraManagementAPI.
 			HostsAPI.
-			HostsDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

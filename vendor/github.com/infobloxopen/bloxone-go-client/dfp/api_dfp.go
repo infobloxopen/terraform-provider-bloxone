@@ -23,7 +23,7 @@ import (
 
 type DfpAPI interface {
 	/*
-			DfpCreateOrUpdateDfp Update DNS Forwarding Proxy resolvers.
+			CreateOrUpdateDfp Update DNS Forwarding Proxy resolvers.
 
 			Use this method to update resolvers for the specified DNS Forwarding Proxy.
 
@@ -32,15 +32,15 @@ type DfpAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The DNS Forwarding Proxy object identifier.
-			@return ApiDfpCreateOrUpdateDfpRequest
+			@return DfpAPICreateOrUpdateDfpRequest
 	*/
-	DfpCreateOrUpdateDfp(ctx context.Context, id int32) ApiDfpCreateOrUpdateDfpRequest
+	CreateOrUpdateDfp(ctx context.Context, id int32) DfpAPICreateOrUpdateDfpRequest
 
-	// DfpCreateOrUpdateDfpExecute executes the request
-	//  @return AtcdfpDfpCreateOrUpdateResponse
-	DfpCreateOrUpdateDfpExecute(r ApiDfpCreateOrUpdateDfpRequest) (*AtcdfpDfpCreateOrUpdateResponse, *http.Response, error)
+	// CreateOrUpdateDfpExecute executes the request
+	//  @return DfpCreateOrUpdateResponse
+	CreateOrUpdateDfpExecute(r DfpAPICreateOrUpdateDfpRequest) (*DfpCreateOrUpdateResponse, *http.Response, error)
 	/*
-			DfpListDfp List DNS Forwarding Proxies.
+			ListDfp List DNS Forwarding Proxies.
 
 			Use this method to retrieve information on all DNS Forwarding Proxy objects for the account.
 
@@ -49,15 +49,15 @@ type DfpAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiDfpListDfpRequest
+			@return DfpAPIListDfpRequest
 	*/
-	DfpListDfp(ctx context.Context) ApiDfpListDfpRequest
+	ListDfp(ctx context.Context) DfpAPIListDfpRequest
 
-	// DfpListDfpExecute executes the request
-	//  @return AtcdfpDfpListResponse
-	DfpListDfpExecute(r ApiDfpListDfpRequest) (*AtcdfpDfpListResponse, *http.Response, error)
+	// ListDfpExecute executes the request
+	//  @return DfpListResponse
+	ListDfpExecute(r DfpAPIListDfpRequest) (*DfpListResponse, *http.Response, error)
 	/*
-			DfpReadDfp Read DNS Forwarding Proxy.
+			ReadDfp Read DNS Forwarding Proxy.
 
 			Use this method to retrieve information on the specified DNS Forwarding Proxy object.
 
@@ -68,37 +68,37 @@ type DfpAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The DNS Forwarding Proxy object identifier.
-			@return ApiDfpReadDfpRequest
+			@return DfpAPIReadDfpRequest
 	*/
-	DfpReadDfp(ctx context.Context, id int32) ApiDfpReadDfpRequest
+	ReadDfp(ctx context.Context, id int32) DfpAPIReadDfpRequest
 
-	// DfpReadDfpExecute executes the request
-	//  @return AtcdfpDfpReadResponse
-	DfpReadDfpExecute(r ApiDfpReadDfpRequest) (*AtcdfpDfpReadResponse, *http.Response, error)
+	// ReadDfpExecute executes the request
+	//  @return DfpReadResponse
+	ReadDfpExecute(r DfpAPIReadDfpRequest) (*DfpReadResponse, *http.Response, error)
 }
 
 // DfpAPIService DfpAPI service
 type DfpAPIService internal.Service
 
-type ApiDfpCreateOrUpdateDfpRequest struct {
+type DfpAPICreateOrUpdateDfpRequest struct {
 	ctx        context.Context
 	ApiService DfpAPI
 	id         int32
-	body       *AtcdfpDfpCreateOrUpdatePayload
+	body       *DfpCreateOrUpdatePayload
 }
 
 // The DNS Forwarding Proxy object.
-func (r ApiDfpCreateOrUpdateDfpRequest) Body(body AtcdfpDfpCreateOrUpdatePayload) ApiDfpCreateOrUpdateDfpRequest {
+func (r DfpAPICreateOrUpdateDfpRequest) Body(body DfpCreateOrUpdatePayload) DfpAPICreateOrUpdateDfpRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiDfpCreateOrUpdateDfpRequest) Execute() (*AtcdfpDfpCreateOrUpdateResponse, *http.Response, error) {
-	return r.ApiService.DfpCreateOrUpdateDfpExecute(r)
+func (r DfpAPICreateOrUpdateDfpRequest) Execute() (*DfpCreateOrUpdateResponse, *http.Response, error) {
+	return r.ApiService.CreateOrUpdateDfpExecute(r)
 }
 
 /*
-DfpCreateOrUpdateDfp Update DNS Forwarding Proxy resolvers.
+CreateOrUpdateDfp Update DNS Forwarding Proxy resolvers.
 
 Use this method to update resolvers for the specified DNS Forwarding Proxy.
 
@@ -106,10 +106,10 @@ For remote office deployments or in cases where installing an endpoint agent is 
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The DNS Forwarding Proxy object identifier.
-	@return ApiDfpCreateOrUpdateDfpRequest
+	@return DfpAPICreateOrUpdateDfpRequest
 */
-func (a *DfpAPIService) DfpCreateOrUpdateDfp(ctx context.Context, id int32) ApiDfpCreateOrUpdateDfpRequest {
-	return ApiDfpCreateOrUpdateDfpRequest{
+func (a *DfpAPIService) CreateOrUpdateDfp(ctx context.Context, id int32) DfpAPICreateOrUpdateDfpRequest {
+	return DfpAPICreateOrUpdateDfpRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -118,16 +118,16 @@ func (a *DfpAPIService) DfpCreateOrUpdateDfp(ctx context.Context, id int32) ApiD
 
 // Execute executes the request
 //
-//	@return AtcdfpDfpCreateOrUpdateResponse
-func (a *DfpAPIService) DfpCreateOrUpdateDfpExecute(r ApiDfpCreateOrUpdateDfpRequest) (*AtcdfpDfpCreateOrUpdateResponse, *http.Response, error) {
+//	@return DfpCreateOrUpdateResponse
+func (a *DfpAPIService) CreateOrUpdateDfpExecute(r DfpAPICreateOrUpdateDfpRequest) (*DfpCreateOrUpdateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPut
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcdfpDfpCreateOrUpdateResponse
+		localVarReturnValue *DfpCreateOrUpdateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "DfpAPIService.DfpCreateOrUpdateDfp")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "DfpAPIService.CreateOrUpdateDfp")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -220,7 +220,7 @@ func (a *DfpAPIService) DfpCreateOrUpdateDfpExecute(r ApiDfpCreateOrUpdateDfpReq
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiDfpListDfpRequest struct {
+type DfpAPIListDfpRequest struct {
 	ctx        context.Context
 	ApiService DfpAPI
 	filter     *string
@@ -231,51 +231,51 @@ type ApiDfpListDfpRequest struct {
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;.  You can filter by following fields:  | Name                    | type   | Supported Op                | | ----------------------- | ------ | --------------------------- | | name                    | string | !&#x3D;, &#x3D;&#x3D;, ~, !~, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D; | | site_id                 | string | !&#x3D;, &#x3D;&#x3D;, ~, !~, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D; | | ophid                   | string | !&#x3D;, &#x3D;&#x3D;, ~, !~, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D; | | policy_id               | int32  | !&#x3D;, &#x3D;&#x3D;, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D;        | | default_security_policy | bool   | !&#x3D;, &#x3D;&#x3D;                      |  In addition groupping operators are supported:  | Op  | Description          | | --- | -------------------- | | and | Logical AND          | | or  | Logical OR           | | not | Logical NOT          | | ()  | Groupping Operators  |  Example: &#x60;&#x60;&#x60; ?_filter&#x3D;\&quot;((name&#x3D;&#x3D;&#39;dfp1&#39;)or(ophid~&#39;oph&#39;))and(default_security_policy!&#x3D;&#39;true&#39;)\&quot; &#x60;&#x60;&#x60;
-func (r ApiDfpListDfpRequest) Filter(filter string) ApiDfpListDfpRequest {
+func (r DfpAPIListDfpRequest) Filter(filter string) DfpAPIListDfpRequest {
 	r.filter = &filter
 	return r
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiDfpListDfpRequest) Fields(fields string) ApiDfpListDfpRequest {
+func (r DfpAPIListDfpRequest) Fields(fields string) DfpAPIListDfpRequest {
 	r.fields = &fields
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiDfpListDfpRequest) Offset(offset int32) ApiDfpListDfpRequest {
+func (r DfpAPIListDfpRequest) Offset(offset int32) DfpAPIListDfpRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiDfpListDfpRequest) Limit(limit int32) ApiDfpListDfpRequest {
+func (r DfpAPIListDfpRequest) Limit(limit int32) DfpAPIListDfpRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiDfpListDfpRequest) PageToken(pageToken string) ApiDfpListDfpRequest {
+func (r DfpAPIListDfpRequest) PageToken(pageToken string) DfpAPIListDfpRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
-func (r ApiDfpListDfpRequest) Execute() (*AtcdfpDfpListResponse, *http.Response, error) {
-	return r.ApiService.DfpListDfpExecute(r)
+func (r DfpAPIListDfpRequest) Execute() (*DfpListResponse, *http.Response, error) {
+	return r.ApiService.ListDfpExecute(r)
 }
 
 /*
-DfpListDfp List DNS Forwarding Proxies.
+ListDfp List DNS Forwarding Proxies.
 
 Use this method to retrieve information on all DNS Forwarding Proxy objects for the account.
 
 For remote office deployments or in cases where installing an endpoint agent is not desirable or possible, you can use the DNS forwarding proxy. It is a software that runs on bare-metal, VM infrastructures, or Infoblox NIOS appliances; and it embeds the client IPs in DNS queries before forwarding them to BloxOne Cloud. The communications are encrypted and client visibility is maintained. The proxy also provides DNS resolution to local DNS zones when you configure local resolvers. Once you set up a DNS forwarding proxy, it becomes the main DNS server for your remote site. It will also cache responses to speed resolution of future queries.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiDfpListDfpRequest
+	@return DfpAPIListDfpRequest
 */
-func (a *DfpAPIService) DfpListDfp(ctx context.Context) ApiDfpListDfpRequest {
-	return ApiDfpListDfpRequest{
+func (a *DfpAPIService) ListDfp(ctx context.Context) DfpAPIListDfpRequest {
+	return DfpAPIListDfpRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -283,16 +283,16 @@ func (a *DfpAPIService) DfpListDfp(ctx context.Context) ApiDfpListDfpRequest {
 
 // Execute executes the request
 //
-//	@return AtcdfpDfpListResponse
-func (a *DfpAPIService) DfpListDfpExecute(r ApiDfpListDfpRequest) (*AtcdfpDfpListResponse, *http.Response, error) {
+//	@return DfpListResponse
+func (a *DfpAPIService) ListDfpExecute(r DfpAPIListDfpRequest) (*DfpListResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcdfpDfpListResponse
+		localVarReturnValue *DfpListResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "DfpAPIService.DfpListDfp")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "DfpAPIService.ListDfp")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -374,7 +374,7 @@ func (a *DfpAPIService) DfpListDfpExecute(r ApiDfpListDfpRequest) (*AtcdfpDfpLis
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiDfpReadDfpRequest struct {
+type DfpAPIReadDfpRequest struct {
 	ctx        context.Context
 	ApiService DfpAPI
 	id         int32
@@ -384,29 +384,29 @@ type ApiDfpReadDfpRequest struct {
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiDfpReadDfpRequest) Fields(fields string) ApiDfpReadDfpRequest {
+func (r DfpAPIReadDfpRequest) Fields(fields string) DfpAPIReadDfpRequest {
 	r.fields = &fields
 	return r
 }
 
 // The name of the DNS Forwarding Proxy. Used only if the &#39;id&#39; field is empty.
-func (r ApiDfpReadDfpRequest) Name(name string) ApiDfpReadDfpRequest {
+func (r DfpAPIReadDfpRequest) Name(name string) DfpAPIReadDfpRequest {
 	r.name = &name
 	return r
 }
 
 // The On-Prem Application Service identifier. For internal Use only.
-func (r ApiDfpReadDfpRequest) ServiceId(serviceId string) ApiDfpReadDfpRequest {
+func (r DfpAPIReadDfpRequest) ServiceId(serviceId string) DfpAPIReadDfpRequest {
 	r.serviceId = &serviceId
 	return r
 }
 
-func (r ApiDfpReadDfpRequest) Execute() (*AtcdfpDfpReadResponse, *http.Response, error) {
-	return r.ApiService.DfpReadDfpExecute(r)
+func (r DfpAPIReadDfpRequest) Execute() (*DfpReadResponse, *http.Response, error) {
+	return r.ApiService.ReadDfpExecute(r)
 }
 
 /*
-DfpReadDfp Read DNS Forwarding Proxy.
+ReadDfp Read DNS Forwarding Proxy.
 
 Use this method to retrieve information on the specified DNS Forwarding Proxy object.
 
@@ -416,10 +416,10 @@ Note that DNS Forwarding Proxy cannot be created (all information regarding DFP 
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The DNS Forwarding Proxy object identifier.
-	@return ApiDfpReadDfpRequest
+	@return DfpAPIReadDfpRequest
 */
-func (a *DfpAPIService) DfpReadDfp(ctx context.Context, id int32) ApiDfpReadDfpRequest {
-	return ApiDfpReadDfpRequest{
+func (a *DfpAPIService) ReadDfp(ctx context.Context, id int32) DfpAPIReadDfpRequest {
+	return DfpAPIReadDfpRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -428,16 +428,16 @@ func (a *DfpAPIService) DfpReadDfp(ctx context.Context, id int32) ApiDfpReadDfpR
 
 // Execute executes the request
 //
-//	@return AtcdfpDfpReadResponse
-func (a *DfpAPIService) DfpReadDfpExecute(r ApiDfpReadDfpRequest) (*AtcdfpDfpReadResponse, *http.Response, error) {
+//	@return DfpReadResponse
+func (a *DfpAPIService) ReadDfpExecute(r DfpAPIReadDfpRequest) (*DfpReadResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcdfpDfpReadResponse
+		localVarReturnValue *DfpReadResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "DfpAPIService.DfpReadDfp")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "DfpAPIService.ReadDfp")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}

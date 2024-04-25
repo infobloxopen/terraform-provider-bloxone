@@ -11,13 +11,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_data"
+	"github.com/infobloxopen/bloxone-go-client/dnsdata"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccRecordAResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -41,7 +41,7 @@ func TestAccRecordAResource_basic(t *testing.T) {
 
 func TestAccRecordAResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dns_a_record.test"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -63,7 +63,7 @@ func TestAccRecordAResource_disappears(t *testing.T) {
 
 func TestAccRecordAResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_comment"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -93,7 +93,7 @@ func TestAccRecordAResource_Comment(t *testing.T) {
 
 func TestAccRecordAResource_Disabled(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_disabled"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -123,7 +123,7 @@ func TestAccRecordAResource_Disabled(t *testing.T) {
 
 func TestAccRecordAResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_inheritance_sources"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -153,7 +153,7 @@ func TestAccRecordAResource_InheritanceSources(t *testing.T) {
 
 func TestAccRecordAResource_NameInZone(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_name_in_zone"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -183,7 +183,7 @@ func TestAccRecordAResource_NameInZone(t *testing.T) {
 
 func TestAccRecordAResource_Rdata(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_rdata"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -213,7 +213,7 @@ func TestAccRecordAResource_Rdata(t *testing.T) {
 
 func TestAccRecordAResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_tags"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -247,7 +247,7 @@ func TestAccRecordAResource_Tags(t *testing.T) {
 
 func TestAccRecordAResource_Ttl(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_ttl"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -277,7 +277,7 @@ func TestAccRecordAResource_Ttl(t *testing.T) {
 
 func TestAccRecordAResource_View(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_view"
-	var v1, v2 dns_data.DataRecord
+	var v1, v2 dnsdata.Record
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -307,7 +307,7 @@ func TestAccRecordAResource_View(t *testing.T) {
 
 func TestAccRecordAResource_Zone(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_zone"
-	var v1, v2 dns_data.DataRecord
+	var v1, v2 dnsdata.Record
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -338,8 +338,8 @@ func TestAccRecordAResource_Zone(t *testing.T) {
 func TestAccRecordAResource_Options(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_options"
 	var datasourceName = "data.bloxone_dns_ptr_records.test"
-	var v1 dns_data.DataRecord
-	var v2 dns_data.DataRecord
+	var v1 dnsdata.Record
+	var v2 dnsdata.Record
 	viewName := acctest.RandomNameWithPrefix("view")
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
@@ -381,7 +381,7 @@ func TestAccRecordAResource_Options(t *testing.T) {
 	})
 }
 
-func testAccCheckRecordExists(ctx context.Context, resourceName string, v *dns_data.DataRecord) resource.TestCheckFunc {
+func testAccCheckRecordExists(ctx context.Context, resourceName string, v *dnsdata.Record) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -390,7 +390,7 @@ func testAccCheckRecordExists(ctx context.Context, resourceName string, v *dns_d
 		}
 		apiRes, _, err := acctest.BloxOneClient.DNSDataAPI.
 			RecordAPI.
-			RecordRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -403,12 +403,12 @@ func testAccCheckRecordExists(ctx context.Context, resourceName string, v *dns_d
 	}
 }
 
-func testAccCheckRecordDestroy(ctx context.Context, v *dns_data.DataRecord) resource.TestCheckFunc {
+func testAccCheckRecordDestroy(ctx context.Context, v *dnsdata.Record) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.DNSDataAPI.
 			RecordAPI.
-			RecordRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -421,12 +421,12 @@ func testAccCheckRecordDestroy(ctx context.Context, v *dns_data.DataRecord) reso
 	}
 }
 
-func testAccCheckRecordDisappears(ctx context.Context, v *dns_data.DataRecord) resource.TestCheckFunc {
+func testAccCheckRecordDisappears(ctx context.Context, v *dnsdata.Record) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.DNSDataAPI.
 			RecordAPI.
-			RecordDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

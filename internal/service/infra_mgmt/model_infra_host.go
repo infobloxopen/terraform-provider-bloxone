@@ -13,8 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/infra_mgmt"
-
+	"github.com/infobloxopen/bloxone-go-client/inframgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -193,7 +192,7 @@ var InfraHostResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandInfraHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *infra_mgmt.InfraHost {
+func ExpandInfraHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *inframgmt.Host {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -205,11 +204,11 @@ func ExpandInfraHost(ctx context.Context, o types.Object, diags *diag.Diagnostic
 	return m.Expand(ctx, diags)
 }
 
-func (m *InfraHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *infra_mgmt.InfraHost {
+func (m *InfraHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *inframgmt.Host {
 	if m == nil {
 		return nil
 	}
-	to := &infra_mgmt.InfraHost{
+	to := &inframgmt.Host{
 		Description:     flex.ExpandStringPointer(m.Description),
 		DisplayName:     flex.ExpandString(m.DisplayName),
 		IpSpace:         flex.ExpandStringPointer(m.IpSpace),
@@ -222,7 +221,7 @@ func (m *InfraHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *i
 	return to
 }
 
-func FlattenInfraHost(ctx context.Context, from *infra_mgmt.InfraHost, diags *diag.Diagnostics) types.Object {
+func FlattenInfraHost(ctx context.Context, from *inframgmt.Host, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(InfraHostAttrTypes)
 	}
@@ -233,7 +232,7 @@ func FlattenInfraHost(ctx context.Context, from *infra_mgmt.InfraHost, diags *di
 	return t
 }
 
-func (m *InfraHostModel) Flatten(ctx context.Context, from *infra_mgmt.InfraHost, diags *diag.Diagnostics) {
+func (m *InfraHostModel) Flatten(ctx context.Context, from *inframgmt.Host, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

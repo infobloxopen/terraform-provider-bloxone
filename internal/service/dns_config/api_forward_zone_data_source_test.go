@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
@@ -15,7 +15,7 @@ func TestAccForwardZoneDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_forward_zones.test"
 	resourceName := "bloxone_dns_forward_zone.test"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
-	var v dns_config.ConfigForwardZone
+	var v dnsconfig.ForwardZone
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -37,7 +37,7 @@ func TestAccForwardZoneDataSource_Filters(t *testing.T) {
 func TestAccForwardZoneDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_forward_zones.test"
 	resourceName := "bloxone_dns_forward_zone.test"
-	var v dns_config.ConfigForwardZone
+	var v dnsconfig.ForwardZone
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{

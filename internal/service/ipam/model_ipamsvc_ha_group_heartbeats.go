@@ -35,7 +35,7 @@ var IpamsvcHAGroupHeartbeatsResourceSchemaAttributes = map[string]schema.Attribu
 	},
 }
 
-func ExpandIpamsvcHAGroupHeartbeats(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcHAGroupHeartbeats {
+func ExpandIpamsvcHAGroupHeartbeats(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.HAGroupHeartbeats {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -47,18 +47,18 @@ func ExpandIpamsvcHAGroupHeartbeats(ctx context.Context, o types.Object, diags *
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcHAGroupHeartbeatsModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcHAGroupHeartbeats {
+func (m *IpamsvcHAGroupHeartbeatsModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.HAGroupHeartbeats {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcHAGroupHeartbeats{
+	to := &ipam.HAGroupHeartbeats{
 		Peer:                flex.ExpandStringPointer(m.Peer),
 		SuccessfulHeartbeat: flex.ExpandStringPointer(m.SuccessfulHeartbeat),
 	}
 	return to
 }
 
-func FlattenIpamsvcHAGroupHeartbeats(ctx context.Context, from *ipam.IpamsvcHAGroupHeartbeats, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcHAGroupHeartbeats(ctx context.Context, from *ipam.HAGroupHeartbeats, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcHAGroupHeartbeatsAttrTypes)
 	}
@@ -69,7 +69,7 @@ func FlattenIpamsvcHAGroupHeartbeats(ctx context.Context, from *ipam.IpamsvcHAGr
 	return t
 }
 
-func (m *IpamsvcHAGroupHeartbeatsModel) Flatten(ctx context.Context, from *ipam.IpamsvcHAGroupHeartbeats, diags *diag.Diagnostics) {
+func (m *IpamsvcHAGroupHeartbeatsModel) Flatten(ctx context.Context, from *ipam.HAGroupHeartbeats, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

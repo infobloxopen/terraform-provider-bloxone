@@ -208,7 +208,7 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 	},
 	"dhcp_config": schema.SingleNestedAttribute{
-		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes,
+		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes(false),
 		Optional:   true,
 		Computed:   true,
 		Default: objectdefault.StaticValue(types.ObjectValueMust(IpamsvcDHCPConfigAttrTypes, map[string]attr.Value{
@@ -361,11 +361,11 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *IpamsvcServerModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcServer {
+func (m *IpamsvcServerModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.Server {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcServer{
+	to := &ipam.Server{
 		ClientPrincipal:                 flex.ExpandStringPointer(m.ClientPrincipal),
 		Comment:                         flex.ExpandStringPointer(m.Comment),
 		DdnsClientUpdate:                flex.ExpandStringPointer(m.DdnsClientUpdate),
@@ -404,7 +404,7 @@ func (m *IpamsvcServerModel) Expand(ctx context.Context, diags *diag.Diagnostics
 	return to
 }
 
-func FlattenIpamsvcServer(ctx context.Context, from *ipam.IpamsvcServer, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcServer(ctx context.Context, from *ipam.Server, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcServerAttrTypes)
 	}
@@ -415,7 +415,7 @@ func FlattenIpamsvcServer(ctx context.Context, from *ipam.IpamsvcServer, diags *
 	return t
 }
 
-func (m *IpamsvcServerModel) Flatten(ctx context.Context, from *ipam.IpamsvcServer, diags *diag.Diagnostics) {
+func (m *IpamsvcServerModel) Flatten(ctx context.Context, from *ipam.Server, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

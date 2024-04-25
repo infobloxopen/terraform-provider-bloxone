@@ -98,7 +98,7 @@ var IpamsvcInheritedDHCPConfigResourceSchemaAttributes = map[string]schema.Attri
 	},
 }
 
-func ExpandIpamsvcInheritedDHCPConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcInheritedDHCPConfig {
+func ExpandIpamsvcInheritedDHCPConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.InheritedDHCPConfig {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -110,11 +110,11 @@ func ExpandIpamsvcInheritedDHCPConfig(ctx context.Context, o types.Object, diags
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcInheritedDHCPConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcInheritedDHCPConfig {
+func (m *IpamsvcInheritedDHCPConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.InheritedDHCPConfig {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcInheritedDHCPConfig{
+	to := &ipam.InheritedDHCPConfig{
 		AbandonedReclaimTime:   ExpandInheritanceInheritedUInt32(ctx, m.AbandonedReclaimTime, diags),
 		AbandonedReclaimTimeV6: ExpandInheritanceInheritedUInt32(ctx, m.AbandonedReclaimTimeV6, diags),
 		AllowUnknown:           ExpandInheritanceInheritedBool(ctx, m.AllowUnknown, diags),
@@ -130,7 +130,7 @@ func (m *IpamsvcInheritedDHCPConfigModel) Expand(ctx context.Context, diags *dia
 	return to
 }
 
-func FlattenIpamsvcInheritedDHCPConfig(ctx context.Context, from *ipam.IpamsvcInheritedDHCPConfig, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcInheritedDHCPConfig(ctx context.Context, from *ipam.InheritedDHCPConfig, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcInheritedDHCPConfigAttrTypes)
 	}
@@ -141,7 +141,7 @@ func FlattenIpamsvcInheritedDHCPConfig(ctx context.Context, from *ipam.IpamsvcIn
 	return t
 }
 
-func (m *IpamsvcInheritedDHCPConfigModel) Flatten(ctx context.Context, from *ipam.IpamsvcInheritedDHCPConfig, diags *diag.Diagnostics) {
+func (m *IpamsvcInheritedDHCPConfigModel) Flatten(ctx context.Context, from *ipam.InheritedDHCPConfig, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

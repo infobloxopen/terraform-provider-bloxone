@@ -7,14 +7,14 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccDelegationDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_delegations.test"
 	resourceName := "bloxone_dns_delegation.test"
-	var v dns_config.ConfigDelegation
+	var v dnsconfig.Delegation
 	viewName := acctest.RandomNameWithPrefix("view")
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 	delegationFqdn := "test." + zoneFqdn
@@ -39,7 +39,7 @@ func TestAccDelegationDataSource_Filters(t *testing.T) {
 func TestAccDelegationDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_delegations.test"
 	resourceName := "bloxone_dns_delegation.test"
-	var v dns_config.ConfigDelegation
+	var v dnsconfig.Delegation
 	viewName := acctest.RandomNameWithPrefix("view")
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 	delegationFqdn := "test." + zoneFqdn

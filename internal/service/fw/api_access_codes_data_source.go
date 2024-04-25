@@ -3,10 +3,12 @@ package fw
 import (
 	"context"
 	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/fw"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -35,7 +37,7 @@ type AtcfwAccessCodeModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *AtcfwAccessCodeModelWithFilter) FlattenResults(ctx context.Context, from []fw.AtcfwAccessCode, diags *diag.Diagnostics) {
+func (m *AtcfwAccessCodeModelWithFilter) FlattenResults(ctx context.Context, from []fw.AccessCode, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -96,10 +98,10 @@ func (d *AccessCodesDataSource) Read(ctx context.Context, req datasource.ReadReq
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]fw.AtcfwAccessCode, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]fw.AccessCode, error) {
 		apiRes, _, err := d.client.FWAPI.
 			AccessCodesAPI.
-			AccessCodesListAccessCodes(ctx).
+			ListAccessCodes(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Offset(offset).
 			Limit(limit).

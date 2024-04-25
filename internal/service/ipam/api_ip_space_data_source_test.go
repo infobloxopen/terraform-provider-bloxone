@@ -15,7 +15,7 @@ func TestAccIpSpaceDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_ip_spaces.test"
 	resourceName := "bloxone_ipam_ip_space.test"
 	ipSpaceName := acctest.RandomNameWithPrefix("space")
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -38,7 +38,7 @@ func TestAccIpSpaceDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_ip_spaces.test"
 	resourceName := "bloxone_ipam_ip_space.test"
 	ipSpaceName := acctest.RandomNameWithPrefix("space")
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,

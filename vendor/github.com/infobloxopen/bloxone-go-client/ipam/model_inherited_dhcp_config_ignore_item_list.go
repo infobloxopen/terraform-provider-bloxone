@@ -26,7 +26,7 @@ type InheritedDHCPConfigIgnoreItemList struct {
 	// The resource identifier.
 	Source *string `json:"source,omitempty"`
 	// The inherited value.
-	Value []IpamsvcIgnoreItem `json:"value,omitempty"`
+	Value []IgnoreItem `json:"value,omitempty"`
 }
 
 // NewInheritedDHCPConfigIgnoreItemList instantiates a new InheritedDHCPConfigIgnoreItemList object
@@ -143,9 +143,9 @@ func (o *InheritedDHCPConfigIgnoreItemList) SetSource(v string) {
 }
 
 // GetValue returns the Value field value if set, zero value otherwise.
-func (o *InheritedDHCPConfigIgnoreItemList) GetValue() []IpamsvcIgnoreItem {
+func (o *InheritedDHCPConfigIgnoreItemList) GetValue() []IgnoreItem {
 	if o == nil || IsNil(o.Value) {
-		var ret []IpamsvcIgnoreItem
+		var ret []IgnoreItem
 		return ret
 	}
 	return o.Value
@@ -153,7 +153,7 @@ func (o *InheritedDHCPConfigIgnoreItemList) GetValue() []IpamsvcIgnoreItem {
 
 // GetValueOk returns a tuple with the Value field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *InheritedDHCPConfigIgnoreItemList) GetValueOk() ([]IpamsvcIgnoreItem, bool) {
+func (o *InheritedDHCPConfigIgnoreItemList) GetValueOk() ([]IgnoreItem, bool) {
 	if o == nil || IsNil(o.Value) {
 		return nil, false
 	}
@@ -169,8 +169,8 @@ func (o *InheritedDHCPConfigIgnoreItemList) HasValue() bool {
 	return false
 }
 
-// SetValue gets a reference to the given []IpamsvcIgnoreItem and assigns it to the Value field.
-func (o *InheritedDHCPConfigIgnoreItemList) SetValue(v []IpamsvcIgnoreItem) {
+// SetValue gets a reference to the given []IgnoreItem and assigns it to the Value field.
+func (o *InheritedDHCPConfigIgnoreItemList) SetValue(v []IgnoreItem) {
 	o.Value = v
 }
 

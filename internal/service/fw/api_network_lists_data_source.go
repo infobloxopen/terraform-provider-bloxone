@@ -3,11 +3,13 @@ package fw
 import (
 	"context"
 	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/fw"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -36,7 +38,7 @@ type AtcfwNetworkListModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *AtcfwNetworkListModelWithFilter) FlattenResults(ctx context.Context, from []fw.AtcfwNetworkList, diags *diag.Diagnostics) {
+func (m *AtcfwNetworkListModelWithFilter) FlattenResults(ctx context.Context, from []fw.NetworkList, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -97,10 +99,10 @@ func (d *NetworkListsDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]fw.AtcfwNetworkList, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]fw.NetworkList, error) {
 		apiRes, _, err := d.client.FWAPI.
 			NetworkListsAPI.
-			NetworkListsListNetworkLists(ctx).
+			ListNetworkLists(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Offset(offset).
 			Limit(limit).

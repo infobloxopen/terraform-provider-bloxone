@@ -108,7 +108,7 @@ var IpamsvcDDNSBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcDDNSBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcDDNSBlock {
+func ExpandIpamsvcDDNSBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.DDNSBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -120,11 +120,11 @@ func ExpandIpamsvcDDNSBlock(ctx context.Context, o types.Object, diags *diag.Dia
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcDDNSBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcDDNSBlock {
+func (m *IpamsvcDDNSBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.DDNSBlock {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcDDNSBlock{
+	to := &ipam.DDNSBlock{
 		ClientPrincipal:       m.ClientPrincipal.ValueStringPointer(),
 		DdnsDomain:            m.DdnsDomain.ValueStringPointer(),
 		DdnsEnabled:           m.DdnsEnabled.ValueBoolPointer(),
@@ -142,7 +142,7 @@ func (m *IpamsvcDDNSBlockModel) Expand(ctx context.Context, diags *diag.Diagnost
 	return to
 }
 
-func FlattenIpamsvcDDNSBlock(ctx context.Context, from *ipam.IpamsvcDDNSBlock, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcDDNSBlock(ctx context.Context, from *ipam.DDNSBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcDDNSBlockAttrTypes)
 	}
@@ -153,7 +153,7 @@ func FlattenIpamsvcDDNSBlock(ctx context.Context, from *ipam.IpamsvcDDNSBlock, d
 	return t
 }
 
-func (m *IpamsvcDDNSBlockModel) Flatten(ctx context.Context, from *ipam.IpamsvcDDNSBlock, diags *diag.Diagnostics) {
+func (m *IpamsvcDDNSBlockModel) Flatten(ctx context.Context, from *ipam.DDNSBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

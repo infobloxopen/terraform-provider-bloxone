@@ -15,7 +15,7 @@ import (
 func TestAccOptionCodeDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dhcp_option_codes.test"
 	resourceName := "bloxone_dhcp_option_code.test"
-	var v ipam.IpamsvcOptionCode
+	var v ipam.OptionCode
 	optionSpaceName := acctest.RandomNameWithPrefix("option-space")
 
 	resource.ParallelTest(t, resource.TestCase{

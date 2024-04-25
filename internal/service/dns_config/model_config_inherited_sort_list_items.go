@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -52,7 +52,7 @@ var ConfigInheritedSortListItemsResourceSchemaAttributes = map[string]schema.Att
 	},
 }
 
-func ExpandConfigInheritedSortListItems(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigInheritedSortListItems {
+func ExpandConfigInheritedSortListItems(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.InheritedSortListItems {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -64,17 +64,17 @@ func ExpandConfigInheritedSortListItems(ctx context.Context, o types.Object, dia
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigInheritedSortListItemsModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigInheritedSortListItems {
+func (m *ConfigInheritedSortListItemsModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.InheritedSortListItems {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigInheritedSortListItems{
+	to := &dnsconfig.InheritedSortListItems{
 		Action: flex.ExpandStringPointer(m.Action),
 	}
 	return to
 }
 
-func FlattenConfigInheritedSortListItems(ctx context.Context, from *dns_config.ConfigInheritedSortListItems, diags *diag.Diagnostics) types.Object {
+func FlattenConfigInheritedSortListItems(ctx context.Context, from *dnsconfig.InheritedSortListItems, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigInheritedSortListItemsAttrTypes)
 	}
@@ -85,7 +85,7 @@ func FlattenConfigInheritedSortListItems(ctx context.Context, from *dns_config.C
 	return t
 }
 
-func (m *ConfigInheritedSortListItemsModel) Flatten(ctx context.Context, from *dns_config.ConfigInheritedSortListItems, diags *diag.Diagnostics) {
+func (m *ConfigInheritedSortListItemsModel) Flatten(ctx context.Context, from *dnsconfig.InheritedSortListItems, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

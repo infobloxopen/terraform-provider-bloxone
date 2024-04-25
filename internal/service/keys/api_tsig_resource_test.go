@@ -16,7 +16,7 @@ import (
 
 func TestAccTsigResource_basic(t *testing.T) {
 	var resourceName = "bloxone_keys_tsig.test"
-	var v keys.KeysTSIGKey
+	var v keys.TSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -44,7 +44,7 @@ func TestAccTsigResource_basic(t *testing.T) {
 
 func TestAccTsigResource_disappears(t *testing.T) {
 	resourceName := "bloxone_keys_tsig.test"
-	var v keys.KeysTSIGKey
+	var v keys.TSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -66,7 +66,7 @@ func TestAccTsigResource_disappears(t *testing.T) {
 
 func TestAccTsigResource_Algorithm(t *testing.T) {
 	var resourceName = "bloxone_keys_tsig.test_algorithm"
-	var v keys.KeysTSIGKey
+	var v keys.TSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -96,7 +96,7 @@ func TestAccTsigResource_Algorithm(t *testing.T) {
 
 func TestAccTsigResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_keys_tsig.test_comment"
-	var v keys.KeysTSIGKey
+	var v keys.TSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -126,7 +126,7 @@ func TestAccTsigResource_Comment(t *testing.T) {
 
 func TestAccTsigResource_Name(t *testing.T) {
 	var resourceName = "bloxone_keys_tsig.test_name"
-	var v keys.KeysTSIGKey
+	var v keys.TSIGKey
 	name1 := acctest.RandomNameWithPrefix("key") + "."
 	name2 := acctest.RandomNameWithPrefix("key") + "."
 
@@ -157,7 +157,7 @@ func TestAccTsigResource_Name(t *testing.T) {
 
 func TestAccTsigResource_Secret(t *testing.T) {
 	var resourceName = "bloxone_keys_tsig.test_secret"
-	var v keys.KeysTSIGKey
+	var v keys.TSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -187,7 +187,7 @@ func TestAccTsigResource_Secret(t *testing.T) {
 
 func TestAccTsigResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_keys_tsig.test_tags"
-	var v keys.KeysTSIGKey
+	var v keys.TSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -223,7 +223,7 @@ func TestAccTsigResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckTsigExists(ctx context.Context, resourceName string, v *keys.KeysTSIGKey) resource.TestCheckFunc {
+func testAccCheckTsigExists(ctx context.Context, resourceName string, v *keys.TSIGKey) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -232,7 +232,7 @@ func testAccCheckTsigExists(ctx context.Context, resourceName string, v *keys.Ke
 		}
 		apiRes, _, err := acctest.BloxOneClient.KeysAPI.
 			TsigAPI.
-			TsigRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -245,12 +245,12 @@ func testAccCheckTsigExists(ctx context.Context, resourceName string, v *keys.Ke
 	}
 }
 
-func testAccCheckTsigDestroy(ctx context.Context, v *keys.KeysTSIGKey) resource.TestCheckFunc {
+func testAccCheckTsigDestroy(ctx context.Context, v *keys.TSIGKey) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.KeysAPI.
 			TsigAPI.
-			TsigRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -263,12 +263,12 @@ func testAccCheckTsigDestroy(ctx context.Context, v *keys.KeysTSIGKey) resource.
 	}
 }
 
-func testAccCheckTsigDisappears(ctx context.Context, v *keys.KeysTSIGKey) resource.TestCheckFunc {
+func testAccCheckTsigDisappears(ctx context.Context, v *keys.TSIGKey) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.KeysAPI.
 			TsigAPI.
-			TsigDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

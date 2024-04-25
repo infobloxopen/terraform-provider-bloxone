@@ -12,11 +12,12 @@ package fw
 
 import (
 	"github.com/infobloxopen/bloxone-go-client/internal"
+	"github.com/infobloxopen/bloxone-go-client/option"
 )
 
-var ServiceBasePath = "/api/atcfw/v1"
+const serviceBasePath = "/api/atcfw/v1"
 
-// APIClient manages communication with the BloxOne FW API API vv1
+// APIClient manages communication with the BloxOne FW API v1
 // In most cases there should be only one, shared, APIClient.
 type APIClient struct {
 	*internal.APIClient
@@ -37,11 +38,22 @@ type APIClient struct {
 	ThreatFeedsAPI         ThreatFeedsAPI
 }
 
-// NewAPIClient creates a new API client. Requires a userAgent string describing your application.
-// optionally a custom http.Client to allow for advanced features such as caching.
-func NewAPIClient(cfg *internal.Configuration) *APIClient {
+// NewAPIClient creates a new API client.
+// The client can be configured with a variadic option. The following options are available:
+// - WithClientName(string) sets the name of the client using the SDK.
+// - WithCSPUrl(string) sets the URL for BloxOne Cloud Services Portal.
+// - WithAPIKey(string) sets the APIKey for accessing the BloxOne API.
+// - WithHTTPClient(*http.Client) sets the HTTPClient to use for the SDK.
+// - WithDefaultTags(map[string]string) sets the tags the client can set by default for objects that has tags support.
+// - WithDebug() sets the debug mode.
+func NewAPIClient(options ...option.ClientOption) *APIClient {
+	cfg := internal.NewConfiguration()
+	for _, o := range options {
+		o(cfg)
+	}
+
 	c := &APIClient{}
-	c.APIClient = internal.NewAPIClient(cfg)
+	c.APIClient = internal.NewAPIClient(serviceBasePath, cfg)
 
 	// API Services
 	c.AccessCodesAPI = (*AccessCodesAPIService)(&c.Common)

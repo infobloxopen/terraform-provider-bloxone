@@ -23,6 +23,18 @@ import (
 	"unicode/utf8"
 )
 
+const (
+	headerClient        = "x-infoblox-client"
+	headerSDK           = "x-infoblox-sdk"
+	headerAuthorization = "Authorization"
+
+	envBloxOneCSPURL = "BLOXONE_CSP_URL"
+	envBloxOneAPIKey = "BLOXONE_API_KEY"
+
+	version       = "0.1"
+	sdkIdentifier = "golang-sdk"
+)
+
 var (
 	jsonCheck       = regexp.MustCompile(`(?i:(?:application|text)/(?:vnd\.[^;]+\+)?json)`)
 	xmlCheck        = regexp.MustCompile(`(?i:(?:application|text)/xml)`)
@@ -43,10 +55,22 @@ type Service struct {
 
 // NewAPIClient creates a new API client. Requires a userAgent string describing your application.
 // optionally a custom http.Client to allow for advanced features such as caching.
-func NewAPIClient(cfg *Configuration) *APIClient {
+func NewAPIClient(basePath string, cfg *Configuration) *APIClient {
 	if cfg.HTTPClient == nil {
 		cfg.HTTPClient = http.DefaultClient
 	}
+	if cfg.DefaultHeader == nil {
+		cfg.DefaultHeader = make(map[string]string)
+	}
+	if cfg.DefaultTags == nil {
+		cfg.DefaultTags = make(map[string]string)
+	}
+
+	apiUrl := cfg.CSPURL + basePath
+	cfg.Servers = []ServerConfiguration{{URL: apiUrl}}
+	cfg.DefaultHeader[headerSDK] = sdkIdentifier
+	cfg.DefaultHeader[headerClient] = cfg.ClientName
+	cfg.DefaultHeader[headerAuthorization] = "Token " + cfg.APIKey
 
 	c := &APIClient{}
 	c.Cfg = cfg
@@ -265,12 +289,6 @@ func (c *APIClient) CallAPI(request *http.Request) (*http.Response, error) {
 	return resp, err
 }
 
-// GetConfig allow modification of underlying config for alternate implementations and testing
-// Caution: modifying the configuration while live can cause data races and potentially unwanted behavior
-func (c *APIClient) GetConfig() *Configuration {
-	return c.Cfg
-}
-
 type FormFile struct {
 	FileBytes    []byte
 	FileName     string
@@ -359,16 +377,6 @@ func (c *APIClient) PrepareRequest(
 	url, err := url.Parse(path)
 	if err != nil {
 		return nil, err
-	}
-
-	// Override request host, if applicable
-	if c.Cfg.Host != "" {
-		url.Host = c.Cfg.Host
-	}
-
-	// Override request scheme, if applicable
-	if c.Cfg.Scheme != "" {
-		url.Scheme = c.Cfg.Scheme
 	}
 
 	// Adding Query Param

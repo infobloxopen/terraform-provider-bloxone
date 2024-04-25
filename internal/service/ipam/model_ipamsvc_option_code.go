@@ -125,7 +125,7 @@ var IpamsvcOptionCodeResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcOptionCode(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcOptionCode {
+func ExpandIpamsvcOptionCode(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.OptionCode {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -137,11 +137,11 @@ func ExpandIpamsvcOptionCode(ctx context.Context, o types.Object, diags *diag.Di
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcOptionCodeModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcOptionCode {
+func (m *IpamsvcOptionCodeModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.OptionCode {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcOptionCode{
+	to := &ipam.OptionCode{
 		Array:       flex.ExpandBoolPointer(m.Array),
 		Code:        flex.ExpandInt64(m.Code),
 		Comment:     flex.ExpandStringPointer(m.Comment),
@@ -152,7 +152,7 @@ func (m *IpamsvcOptionCodeModel) Expand(ctx context.Context, diags *diag.Diagnos
 	return to
 }
 
-func FlattenIpamsvcOptionCode(ctx context.Context, from *ipam.IpamsvcOptionCode, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcOptionCode(ctx context.Context, from *ipam.OptionCode, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcOptionCodeAttrTypes)
 	}
@@ -163,7 +163,7 @@ func FlattenIpamsvcOptionCode(ctx context.Context, from *ipam.IpamsvcOptionCode,
 	return t
 }
 
-func (m *IpamsvcOptionCodeModel) Flatten(ctx context.Context, from *ipam.IpamsvcOptionCode, diags *diag.Diagnostics) {
+func (m *IpamsvcOptionCodeModel) Flatten(ctx context.Context, from *ipam.OptionCode, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

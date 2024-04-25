@@ -77,7 +77,7 @@ var AtcfwNetworkListResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandAtcfwNetworkList(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.AtcfwNetworkList {
+func ExpandAtcfwNetworkList(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.NetworkList {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -89,11 +89,11 @@ func ExpandAtcfwNetworkList(ctx context.Context, o types.Object, diags *diag.Dia
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcfwNetworkListModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.AtcfwNetworkList {
+func (m *AtcfwNetworkListModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.NetworkList {
 	if m == nil {
 		return nil
 	}
-	to := &fw.AtcfwNetworkList{
+	to := &fw.NetworkList{
 		Description: flex.ExpandStringPointer(m.Description),
 		Items:       flex.ExpandFrameworkListString(ctx, m.Items, diags),
 		Name:        flex.ExpandStringPointer(m.Name),
@@ -101,7 +101,7 @@ func (m *AtcfwNetworkListModel) Expand(ctx context.Context, diags *diag.Diagnost
 	return to
 }
 
-func FlattenAtcfwNetworkList(ctx context.Context, from *fw.AtcfwNetworkList, diags *diag.Diagnostics) types.Object {
+func FlattenAtcfwNetworkList(ctx context.Context, from *fw.NetworkList, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwNetworkListAttrTypes)
 	}
@@ -112,7 +112,7 @@ func FlattenAtcfwNetworkList(ctx context.Context, from *fw.AtcfwNetworkList, dia
 	return t
 }
 
-func (m *AtcfwNetworkListModel) Flatten(ctx context.Context, from *fw.AtcfwNetworkList, diags *diag.Diagnostics) {
+func (m *AtcfwNetworkListModel) Flatten(ctx context.Context, from *fw.NetworkList, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
