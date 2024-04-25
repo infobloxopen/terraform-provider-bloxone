@@ -37,7 +37,7 @@ data "bloxone_anycast_ac_configs" "example_all" {
 
 - `host_id` (Number) Filter by host ID.
 - `is_configured` (Boolean) Filter by configuration status.
-- `service` (String) Filter by service name.
+- `service` (String) Filter by service type.
 - `tag_filters` (Map of String) Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
 
 ### Read-Only
@@ -51,7 +51,7 @@ Required:
 
 - `anycast_ip_address` (String) IPv4 address of the host in string format.
 - `name` (String) The name of the anycast configuration.
-- `service` (String) The type of the Service used in anycast configuration, supports (`dns`, `dhcp`, 'dfp').
+- `service` (String) The type of the Service used in anycast configuration, supports (`dns`, `dhcp`, `dfp`).
 
 Optional:
 

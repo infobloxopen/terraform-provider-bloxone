@@ -62,7 +62,7 @@ func (d *OnPremAnycastManagerDataSource) Schema(ctx context.Context, req datasou
 				Computed: true,
 			},
 			"service": schema.StringAttribute{
-				Description: "Filter by service name.",
+				Description: "Filter by service type.",
 				Optional:    true,
 			},
 			"host_id": schema.Int64Attribute{

@@ -100,7 +100,7 @@ var ProtoAnycastConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"service": schema.StringAttribute{
 		Required:            true,
-		MarkdownDescription: "The type of the Service used in anycast configuration, supports (`dns`, `dhcp`, 'dfp').",
+		MarkdownDescription: "The type of the Service used in anycast configuration, supports (`dns`, `dhcp`, `dfp`).",
 	},
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
