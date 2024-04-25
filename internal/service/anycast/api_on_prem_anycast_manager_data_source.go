@@ -18,7 +18,7 @@ import (
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ datasource.DataSource = &OnPremAnycastManagerDataSource{}
 
-func NewOnPremAnycastManagerDataSource() datasource.DataSource {
+func NewAnycastConfigDataSource() datasource.DataSource {
 	return &OnPremAnycastManagerDataSource{}
 }
 

@@ -27,5 +27,4 @@ resource "bloxone_anycast_ac_config" "example" {
       name = data.bloxone_infra_hosts.anycast_hosts.results.0.display_name
     }
   ]
-
 }
