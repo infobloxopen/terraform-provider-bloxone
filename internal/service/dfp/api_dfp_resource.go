@@ -3,6 +3,7 @@ package dfp
 import (
 	"context"
 	"fmt"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 	"net/http"
 	"time"
 
@@ -28,13 +29,13 @@ type DfpResource struct {
 }
 
 func (r *DfpResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "td_dfp_service"
+	resp.TypeName = req.ProviderTypeName + "_" + "dfp_service"
 }
 
 func (r *DfpResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manages a DNS Forwarding Proxy.",
-		Attributes:          AtcdfpDfpResourceSchemaAttributes,
+		Attributes:          DfpResourceSchemaAttributes,
 	}
 }
 
@@ -59,7 +60,7 @@ func (r *DfpResource) Configure(ctx context.Context, req resource.ConfigureReque
 }
 
 func (r *DfpResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data AtcdfpDfpModel
+	var data DfpModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -70,7 +71,7 @@ func (r *DfpResource) Create(ctx context.Context, req resource.CreateRequest, re
 
 	_, _, err := r.client.DNSForwardingProxyAPI.
 		InfraServicesAPI.
-		CreateOrUpdateDfpService(ctx, data.ServiceId.String()).
+		CreateOrUpdateDfpService(ctx, utils.ExtractResourceId(data.ServiceId.ValueString())).
 		Body(*data.ExpandCreateOrUpdatePayload(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -81,7 +82,7 @@ func (r *DfpResource) Create(ctx context.Context, req resource.CreateRequest, re
 	// We call Read again, so that the fields not part of the CreateOrUpdatePayload are also populated
 	apiRes, _, err := r.client.DNSForwardingProxyAPI.
 		InfraServicesAPI.
-		ReadDfpService(ctx, string(int32(data.Id.ValueInt64()))).
+		ReadDfpService(ctx, utils.ExtractResourceId(data.ServiceId.ValueString())).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Dfp, got error: %s", err))
@@ -95,7 +96,7 @@ func (r *DfpResource) Create(ctx context.Context, req resource.CreateRequest, re
 }
 
 func (r *DfpResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data AtcdfpDfpModel
+	var data DfpModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -106,7 +107,7 @@ func (r *DfpResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 
 	apiRes, httpRes, err := r.client.DNSForwardingProxyAPI.
 		InfraServicesAPI.
-		ReadDfpService(ctx, data.ServiceId.String()).
+		ReadDfpService(ctx, utils.ExtractResourceId(data.ServiceId.ValueString())).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +126,7 @@ func (r *DfpResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 }
 
 func (r *DfpResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data AtcdfpDfpModel
+	var data DfpModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -136,7 +137,7 @@ func (r *DfpResource) Update(ctx context.Context, req resource.UpdateRequest, re
 
 	_, _, err := r.client.DNSForwardingProxyAPI.
 		InfraServicesAPI.
-		CreateOrUpdateDfpService(ctx, data.ServiceId.String()).
+		CreateOrUpdateDfpService(ctx, utils.ExtractResourceId(data.ServiceId.ValueString())).
 		Body(*data.ExpandCreateOrUpdatePayload(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -147,7 +148,7 @@ func (r *DfpResource) Update(ctx context.Context, req resource.UpdateRequest, re
 	// We call Read again, so that the fields not part of the CreateOrUpdatePayload are also populated
 	apiRes, _, err := r.client.DNSForwardingProxyAPI.
 		InfraServicesAPI.
-		ReadDfpService(ctx, data.ServiceId.String()).
+		ReadDfpService(ctx, utils.ExtractResourceId(data.ServiceId.ValueString())).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Dfp, got error: %s", err))
@@ -161,7 +162,7 @@ func (r *DfpResource) Update(ctx context.Context, req resource.UpdateRequest, re
 }
 
 func (r *DfpResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data AtcdfpDfpModel
+	var data DfpModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)

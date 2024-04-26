@@ -31,6 +31,7 @@ var DfpHostAttrTypes = map[string]attr.Type{
 var DfpHostResourceSchemaAttributes = map[string]schema.Attribute{
 	"legacy_host_id": schema.Int64Attribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "// The DNS Forwarding Proxy legacy ID object identifier.",
 	},
 	"name": schema.StringAttribute{

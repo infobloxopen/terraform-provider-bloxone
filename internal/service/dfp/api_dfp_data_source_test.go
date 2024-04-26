@@ -63,14 +63,7 @@ func testAccCheckDfpResourceAttrPair(resourceName, dataSourceName string) []reso
 
 func testAccDfpDataSourceConfigFilters() string {
 	return fmt.Sprintf(`
-resource "bloxone_dfp_service" "test" {
-}
 
-data "bloxone_dfp_services" "test" {
-  filters = {
-	 = bloxone_dfp_service.test.
-  }
-}
 `)
 }
 

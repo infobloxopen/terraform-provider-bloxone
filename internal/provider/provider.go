@@ -74,6 +74,7 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 		option.WithClientName(fmt.Sprintf("terraform/%s#%s", p.version, p.commit)),
 		option.WithAPIKey(data.APIKey.ValueString()),
 		option.WithCSPUrl(data.CSPUrl.ValueString()),
+		option.WithDebug(true),
 	)
 
 	resp.DataSourceData = client

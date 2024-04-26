@@ -30,17 +30,17 @@ func (d *DfpDataSource) Metadata(ctx context.Context, req datasource.MetadataReq
 	resp.TypeName = req.ProviderTypeName + "_" + "dfp_services"
 }
 
-type AtcdfpDfpServicesModelWithFilter struct {
+type DfpServicesModelWithFilter struct {
 	Filters    types.Map  `tfsdk:"filters"`
 	TagFilters types.Map  `tfsdk:"tag_filters"`
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *AtcdfpDfpServicesModelWithFilter) FlattenResults(ctx context.Context, from []dfp.Dfp, diags *diag.Diagnostics) {
+func (m *DfpServicesModelWithFilter) FlattenResults(ctx context.Context, from []dfp.Dfp, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, AtcdfpDfpAttrTypes, diags, FlattenAtcdfpDfp)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, DfpAttrTypes, diags, FlattenDfp)
 }
 
 func (d *DfpDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -59,7 +59,7 @@ func (d *DfpDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 			},
 			"results": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
-					Attributes: utils.DataSourceAttributeMap(AtcdfpDfpResourceSchemaAttributes, &resp.Diagnostics),
+					Attributes: utils.DataSourceAttributeMap(DfpResourceSchemaAttributes, &resp.Diagnostics),
 				},
 				Computed: true,
 			},
@@ -88,7 +88,7 @@ func (d *DfpDataSource) Configure(ctx context.Context, req datasource.ConfigureR
 }
 
 func (d *DfpDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data AtcdfpDfpServicesModelWithFilter
+	var data DfpServicesModelWithFilter
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)

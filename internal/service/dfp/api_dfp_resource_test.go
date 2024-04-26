@@ -15,7 +15,7 @@ import (
 )
 
 func TestAccDfpResource_basic(t *testing.T) {
-	var resourceName = "bloxone_td_dfp_service.test"
+	var resourceName = "bloxone_dfp_service.test"
 	var v dfp.Dfp
 	var name = acctest.RandomNameWithPrefix("dfp_service")
 
@@ -39,7 +39,7 @@ func TestAccDfpResource_basic(t *testing.T) {
 }
 
 //func TestAccDfpResource_disappears(t *testing.T) {
-//	resourceName := "bloxone_td_dfp_service.test"
+//	resourceName := "bloxone_dfp_service.test"
 //	var v dfp.Dfp
 //	var name = acctest.RandomNameWithPrefix("dfp_service")
 //
@@ -61,7 +61,7 @@ func TestAccDfpResource_basic(t *testing.T) {
 //}
 
 func TestAccSecurityPoliciesResource_Name(t *testing.T) {
-	resourceName := "bloxone_td_dfp_service.test_name"
+	resourceName := "bloxone_dfp_service.test_name"
 	var v dfp.Dfp
 	var name1 = acctest.RandomNameWithPrefix("dfp_service")
 	var name2 = acctest.RandomNameWithPrefix("dfp_service")
@@ -92,7 +92,7 @@ func TestAccSecurityPoliciesResource_Name(t *testing.T) {
 }
 
 func TestAccSecurityPoliciesResource_Host(t *testing.T) {
-	resourceName := "bloxone_td_dfp_service.test_name"
+	resourceName := "bloxone_dfp_service.test_name"
 	var v dfp.Dfp
 	var name = acctest.RandomNameWithPrefix("dfp_service")
 
@@ -122,7 +122,7 @@ func TestAccSecurityPoliciesResource_Host(t *testing.T) {
 }
 
 func TestAccDfpResource_InternalDomainLists(t *testing.T) {
-	resourceName := "bloxone_td_dfp_service.test_internal_domain_lists"
+	resourceName := "bloxone_dfp_service.test_internal_domain_lists"
 	var v dfp.Dfp
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
@@ -207,21 +207,25 @@ func testAccCheckDfpDestroy(ctx context.Context, v *dfp.Dfp) resource.TestCheckF
 
 func testAccDfpBasicConfig(name string) string {
 	return fmt.Sprintf(`
-data "bloxone_infra_hosts" "dfp_host" {
-	filters = {
-		display_name = "TF_TEST_HOST_01"
-	}
+data "bloxone_infra_hosts" "test_host_1" {
+  filters = {
+    display_name = "TF_TEST_HOST_01"
+  }
 }
 
-resource "bloxone_dfp_service" "test" {
-	name = %q
-	host = [
-		{
-			legacy_host_id = data.bloxone_infra_hosts.dfp_host.results.0.legacy_host_id
-		}
-	]
+resource "bloxone_infra_service" "example" {
+  name         = "example_dfp_service_new"
+  pool_id      = data.bloxone_infra_hosts.test_host_1.results.0.pool_id
+  service_type = "dfp"
+  desired_state = "start"
+  wait_for_state = false
+
 }
-`, name)
+
+resource "bloxone_dfp_service" "example" {
+  service_id = bloxone_infra_service.example.id
+}
+`)
 }
 
 func testAccDfpName(name string) string {

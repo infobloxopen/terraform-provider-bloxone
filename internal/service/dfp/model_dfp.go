@@ -2,11 +2,12 @@ package dfp
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -66,16 +67,21 @@ var DfpResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"forwarding_policy": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
 	},
 	"host": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: DfpHostResourceSchemaAttributes,
 		},
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "host information. For internal Use only.",
 	},
 	"id": schema.Int64Attribute{
-		Required:            true,
+		Computed: true,
+		PlanModifiers: []planmodifier.Int64{
+			int64planmodifier.UseStateForUnknown(),
+		},
 		MarkdownDescription: "The DNS Forwarding Proxy object identifier.",
 	},
 	"internal_domain_lists": schema.ListAttribute{
@@ -113,7 +119,7 @@ var DfpResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional: true,
 	},
 	"service_id": schema.StringAttribute{
-		Computed:            true,
+		Required:            true,
 		MarkdownDescription: "The On-Prem Application Service identifier. For internal Use only",
 	},
 	"service_name": schema.StringAttribute{
