@@ -15,7 +15,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
-type AtcdfpDfpModel struct {
+type DfpModel struct {
 	CreatedTime         timetypes.RFC3339 `tfsdk:"created_time"`
 	ElbIpList           types.List        `tfsdk:"elb_ip_list"`
 	ForwardingPolicy    types.String      `tfsdk:"forwarding_policy"`
@@ -34,26 +34,26 @@ type AtcdfpDfpModel struct {
 	UpdatedTime         timetypes.RFC3339 `tfsdk:"updated_time"`
 }
 
-var AtcdfpDfpAttrTypes = map[string]attr.Type{
+var DfpAttrTypes = map[string]attr.Type{
 	"created_time":          timetypes.RFC3339Type{},
 	"elb_ip_list":           types.ListType{ElemType: types.StringType},
 	"forwarding_policy":     types.StringType,
-	"host":                  types.ListType{ElemType: types.ObjectType{AttrTypes: AtcdfpDfpHostAttrTypes}},
+	"host":                  types.ListType{ElemType: types.ObjectType{AttrTypes: DfpHostAttrTypes}},
 	"id":                    types.Int64Type,
 	"internal_domain_lists": types.ListType{ElemType: types.Int64Type},
 	"name":                  types.StringType,
-	"net_addr_policy_ids":   types.ListType{ElemType: types.ObjectType{AttrTypes: AtcdfpNetAddrPolicyAssignmentAttrTypes}},
+	"net_addr_policy_ids":   types.ListType{ElemType: types.ObjectType{AttrTypes: NetAddrPolicyAssignmentAttrTypes}},
 	"ophid":                 types.StringType,
 	"policy_id":             types.Int64Type,
 	"pop_region_id":         types.Int64Type,
-	"resolvers_all":         types.ListType{ElemType: types.ObjectType{AttrTypes: AtcdfpResolverAttrTypes}},
+	"resolvers_all":         types.ListType{ElemType: types.ObjectType{AttrTypes: ResolverAttrTypes}},
 	"service_id":            types.StringType,
 	"service_name":          types.StringType,
 	"site_id":               types.StringType,
 	"updated_time":          timetypes.RFC3339Type{},
 }
 
-var AtcdfpDfpResourceSchemaAttributes = map[string]schema.Attribute{
+var DfpResourceSchemaAttributes = map[string]schema.Attribute{
 	"created_time": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
@@ -69,7 +69,7 @@ var AtcdfpDfpResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"host": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
-			Attributes: AtcdfpDfpHostResourceSchemaAttributes,
+			Attributes: DfpHostResourceSchemaAttributes,
 		},
 		Optional:            true,
 		MarkdownDescription: "host information. For internal Use only.",
@@ -89,7 +89,7 @@ var AtcdfpDfpResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"net_addr_policy_ids": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
-			Attributes: AtcdfpNetAddrPolicyAssignmentResourceSchemaAttributes,
+			Attributes: NetAddrPolicyAssignmentResourceSchemaAttributes,
 		},
 		Optional:            true,
 		MarkdownDescription: "List of network-address-scoped security policy assignments",
@@ -108,7 +108,7 @@ var AtcdfpDfpResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"resolvers_all": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
-			Attributes: AtcdfpResolverResourceSchemaAttributes,
+			Attributes: ResolverResourceSchemaAttributes,
 		},
 		Optional: true,
 	},
@@ -131,11 +131,11 @@ var AtcdfpDfpResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandAtcdfpDfp(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.Dfp {
+func ExpandDfp(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.Dfp {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
-	var m AtcdfpDfpModel
+	var m DfpModel
 	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
 	if diags.HasError() {
 		return nil
@@ -143,31 +143,31 @@ func ExpandAtcdfpDfp(ctx context.Context, o types.Object, diags *diag.Diagnostic
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcdfpDfpModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.Dfp {
+func (m *DfpModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.Dfp {
 	if m == nil {
 		return nil
 	}
 	to := &dfp.Dfp{
 		ForwardingPolicy:    flex.ExpandStringPointer(m.ForwardingPolicy),
-		Host:                flex.ExpandFrameworkListNestedBlock(ctx, m.Host, diags, ExpandAtcdfpDfpHost),
-		NetAddrPolicyIds:    flex.ExpandFrameworkListNestedBlock(ctx, m.NetAddrPolicyIds, diags, ExpandAtcdfpNetAddrPolicyAssignment),
-		ResolversAll:        flex.ExpandFrameworkListNestedBlock(ctx, m.ResolversAll, diags, ExpandAtcdfpResolver),
+		Host:                flex.ExpandFrameworkListNestedBlock(ctx, m.Host, diags, ExpandDfpHost),
+		NetAddrPolicyIds:    flex.ExpandFrameworkListNestedBlock(ctx, m.NetAddrPolicyIds, diags, ExpandNetAddrPolicyAssignment),
+		ResolversAll:        flex.ExpandFrameworkListNestedBlock(ctx, m.ResolversAll, diags, ExpandResolver),
 		InternalDomainLists: flex.ExpandFrameworkListInt32(ctx, m.InternalDomainLists, diags),
 	}
 	return to
 }
 
-func (m *AtcdfpDfpModel) ExpandCreateOrUpdatePayload(ctx context.Context, diags *diag.Diagnostics) *dfp.DfpCreateOrUpdatePayload {
+func (m *DfpModel) ExpandCreateOrUpdatePayload(ctx context.Context, diags *diag.Diagnostics) *dfp.DfpCreateOrUpdatePayload {
 	if m == nil {
 		return nil
 	}
 	to := &dfp.DfpCreateOrUpdatePayload{
 		ForwardingPolicy:    flex.ExpandStringPointer(m.ForwardingPolicy),
-		Host:                flex.ExpandFrameworkListNestedBlock(ctx, m.Host, diags, ExpandAtcdfpDfpHost),
+		Host:                flex.ExpandFrameworkListNestedBlock(ctx, m.Host, diags, ExpandDfpHost),
 		InternalDomainLists: flex.ExpandFrameworkListInt32(ctx, m.InternalDomainLists, diags),
 		Name:                flex.ExpandStringPointer(m.Name),
 		PopRegionId:         flex.ExpandInt32Pointer(m.PopRegionId),
-		ResolversAll:        flex.ExpandFrameworkListNestedBlock(ctx, m.ResolversAll, diags, ExpandAtcdfpResolver),
+		ResolversAll:        flex.ExpandFrameworkListNestedBlock(ctx, m.ResolversAll, diags, ExpandResolver),
 		ServiceId:           flex.ExpandStringPointer(m.ServiceId),
 		ServiceName:         flex.ExpandStringPointer(m.ServiceName),
 		SiteId:              flex.ExpandStringPointer(m.SiteId),
@@ -175,35 +175,35 @@ func (m *AtcdfpDfpModel) ExpandCreateOrUpdatePayload(ctx context.Context, diags 
 	return to
 }
 
-func FlattenAtcdfpDfp(ctx context.Context, from *dfp.Dfp, diags *diag.Diagnostics) types.Object {
+func FlattenDfp(ctx context.Context, from *dfp.Dfp, diags *diag.Diagnostics) types.Object {
 	if from == nil {
-		return types.ObjectNull(AtcdfpDfpAttrTypes)
+		return types.ObjectNull(DfpAttrTypes)
 	}
-	m := AtcdfpDfpModel{}
+	m := DfpModel{}
 	m.Flatten(ctx, from, diags)
-	t, d := types.ObjectValueFrom(ctx, AtcdfpDfpAttrTypes, m)
+	t, d := types.ObjectValueFrom(ctx, DfpAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *AtcdfpDfpModel) Flatten(ctx context.Context, from *dfp.Dfp, diags *diag.Diagnostics) {
+func (m *DfpModel) Flatten(ctx context.Context, from *dfp.Dfp, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
 	if m == nil {
-		*m = AtcdfpDfpModel{}
+		*m = DfpModel{}
 	}
 	m.CreatedTime = timetypes.NewRFC3339TimePointerValue(from.CreatedTime)
 	m.ElbIpList = flex.FlattenFrameworkListString(ctx, from.ElbIpList, diags)
 	m.ForwardingPolicy = flex.FlattenStringPointer(from.ForwardingPolicy)
-	m.Host = flex.FlattenFrameworkListNestedBlock(ctx, from.Host, AtcdfpDfpHostAttrTypes, diags, FlattenAtcdfpDfpHost)
+	m.Host = flex.FlattenFrameworkListNestedBlock(ctx, from.Host, DfpHostAttrTypes, diags, FlattenDfpHost)
 	m.Id = flex.FlattenInt32Pointer(from.Id)
 	m.Name = flex.FlattenStringPointer(from.Name)
-	m.NetAddrPolicyIds = flex.FlattenFrameworkListNestedBlock(ctx, from.NetAddrPolicyIds, AtcdfpNetAddrPolicyAssignmentAttrTypes, diags, FlattenAtcdfpNetAddrPolicyAssignment)
+	m.NetAddrPolicyIds = flex.FlattenFrameworkListNestedBlock(ctx, from.NetAddrPolicyIds, NetAddrPolicyAssignmentAttrTypes, diags, FlattenNetAddrPolicyAssignment)
 	m.Ophid = flex.FlattenStringPointer(from.Ophid)
 	m.PolicyId = flex.FlattenInt32Pointer(from.PolicyId)
 	m.PopRegionId = flex.FlattenInt32Pointer(from.PopRegionId)
-	m.ResolversAll = flex.FlattenFrameworkListNestedBlock(ctx, from.ResolversAll, AtcdfpResolverAttrTypes, diags, FlattenAtcdfpResolver)
+	m.ResolversAll = flex.FlattenFrameworkListNestedBlock(ctx, from.ResolversAll, ResolverAttrTypes, diags, FlattenResolver)
 	m.ServiceId = flex.FlattenStringPointer(from.ServiceId)
 	m.ServiceName = flex.FlattenStringPointer(from.ServiceName)
 	m.SiteId = flex.FlattenStringPointer(from.SiteId)

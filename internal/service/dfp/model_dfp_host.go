@@ -14,21 +14,21 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
-type AtcdfpDfpHostModel struct {
+type DfpHostModel struct {
 	LegacyHostId types.Int64  `tfsdk:"legacy_host_id"`
 	Name         types.String `tfsdk:"name"`
 	Ophid        types.String `tfsdk:"ophid"`
 	SiteId       types.String `tfsdk:"site_id"`
 }
 
-var AtcdfpDfpHostAttrTypes = map[string]attr.Type{
+var DfpHostAttrTypes = map[string]attr.Type{
 	"legacy_host_id": types.Int64Type,
 	"name":           types.StringType,
 	"ophid":          types.StringType,
 	"site_id":        types.StringType,
 }
 
-var AtcdfpDfpHostResourceSchemaAttributes = map[string]schema.Attribute{
+var DfpHostResourceSchemaAttributes = map[string]schema.Attribute{
 	"legacy_host_id": schema.Int64Attribute{
 		Optional:            true,
 		MarkdownDescription: "// The DNS Forwarding Proxy legacy ID object identifier.",
@@ -47,11 +47,11 @@ var AtcdfpDfpHostResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandAtcdfpDfpHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.DfpHost {
+func ExpandDfpHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.DfpHost {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
-	var m AtcdfpDfpHostModel
+	var m DfpHostModel
 	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
 	if diags.HasError() {
 		return nil
@@ -59,7 +59,7 @@ func ExpandAtcdfpDfpHost(ctx context.Context, o types.Object, diags *diag.Diagno
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcdfpDfpHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.DfpHost {
+func (m *DfpHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.DfpHost {
 	if m == nil {
 		return nil
 	}
@@ -69,23 +69,23 @@ func (m *AtcdfpDfpHostModel) Expand(ctx context.Context, diags *diag.Diagnostics
 	return to
 }
 
-func FlattenAtcdfpDfpHost(ctx context.Context, from *dfp.DfpHost, diags *diag.Diagnostics) types.Object {
+func FlattenDfpHost(ctx context.Context, from *dfp.DfpHost, diags *diag.Diagnostics) types.Object {
 	if from == nil {
-		return types.ObjectNull(AtcdfpDfpHostAttrTypes)
+		return types.ObjectNull(DfpHostAttrTypes)
 	}
-	m := AtcdfpDfpHostModel{}
+	m := DfpHostModel{}
 	m.Flatten(ctx, from, diags)
-	t, d := types.ObjectValueFrom(ctx, AtcdfpDfpHostAttrTypes, m)
+	t, d := types.ObjectValueFrom(ctx, DfpHostAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *AtcdfpDfpHostModel) Flatten(ctx context.Context, from *dfp.DfpHost, diags *diag.Diagnostics) {
+func (m *DfpHostModel) Flatten(ctx context.Context, from *dfp.DfpHost, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
 	if m == nil {
-		*m = AtcdfpDfpHostModel{}
+		*m = DfpHostModel{}
 	}
 	m.LegacyHostId = flex.FlattenInt32Pointer(from.LegacyHostId)
 	m.Name = flex.FlattenStringPointer(from.Name)

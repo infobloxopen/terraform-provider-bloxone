@@ -14,21 +14,21 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
-type AtcdfpResolverModel struct {
+type ResolverModel struct {
 	Address    types.String `tfsdk:"address"`
 	IsFallback types.Bool   `tfsdk:"is_fallback"`
 	IsLocal    types.Bool   `tfsdk:"is_local"`
 	Protocols  types.List   `tfsdk:"protocols"`
 }
 
-var AtcdfpResolverAttrTypes = map[string]attr.Type{
+var ResolverAttrTypes = map[string]attr.Type{
 	"address":     types.StringType,
 	"is_fallback": types.BoolType,
 	"is_local":    types.BoolType,
 	"protocols":   types.ListType{ElemType: types.StringType},
 }
 
-var AtcdfpResolverResourceSchemaAttributes = map[string]schema.Attribute{
+var ResolverResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
 		Optional:            true,
 		MarkdownDescription: "address that can be used as resolver",
@@ -48,11 +48,11 @@ var AtcdfpResolverResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandAtcdfpResolver(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.Resolver {
+func ExpandResolver(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.Resolver {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
-	var m AtcdfpResolverModel
+	var m ResolverModel
 	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
 	if diags.HasError() {
 		return nil
@@ -60,7 +60,7 @@ func ExpandAtcdfpResolver(ctx context.Context, o types.Object, diags *diag.Diagn
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcdfpResolverModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.Resolver {
+func (m *ResolverModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.Resolver {
 	if m == nil {
 		return nil
 	}
@@ -68,12 +68,12 @@ func (m *AtcdfpResolverModel) Expand(ctx context.Context, diags *diag.Diagnostic
 		Address:    flex.ExpandStringPointer(m.Address),
 		IsFallback: flex.ExpandBoolPointer(m.IsFallback),
 		IsLocal:    flex.ExpandBoolPointer(m.IsLocal),
-		Protocols:  ExpandAtcdfpDNSProtocol(ctx, m.Protocols, diags),
+		Protocols:  ExpandDNSProtocol(ctx, m.Protocols, diags),
 	}
 	return to
 }
 
-func ExpandAtcdfpDNSProtocol(ctx context.Context, tfList types.List, diags *diag.Diagnostics) []dfp.DNSProtocol {
+func ExpandDNSProtocol(ctx context.Context, tfList types.List, diags *diag.Diagnostics) []dfp.DNSProtocol {
 	if tfList.IsNull() || tfList.IsUnknown() {
 		return nil
 	}
@@ -82,31 +82,31 @@ func ExpandAtcdfpDNSProtocol(ctx context.Context, tfList types.List, diags *diag
 	return data
 }
 
-func FlattenAtcdfpResolver(ctx context.Context, from *dfp.Resolver, diags *diag.Diagnostics) types.Object {
+func FlattenResolver(ctx context.Context, from *dfp.Resolver, diags *diag.Diagnostics) types.Object {
 	if from == nil {
-		return types.ObjectNull(AtcdfpResolverAttrTypes)
+		return types.ObjectNull(ResolverAttrTypes)
 	}
-	m := AtcdfpResolverModel{}
+	m := ResolverModel{}
 	m.Flatten(ctx, from, diags)
-	t, d := types.ObjectValueFrom(ctx, AtcdfpResolverAttrTypes, m)
+	t, d := types.ObjectValueFrom(ctx, ResolverAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *AtcdfpResolverModel) Flatten(ctx context.Context, from *dfp.Resolver, diags *diag.Diagnostics) {
+func (m *ResolverModel) Flatten(ctx context.Context, from *dfp.Resolver, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
 	if m == nil {
-		*m = AtcdfpResolverModel{}
+		*m = ResolverModel{}
 	}
 	m.Address = flex.FlattenStringPointer(from.Address)
 	m.IsFallback = types.BoolPointerValue(from.IsFallback)
 	m.IsLocal = types.BoolPointerValue(from.IsLocal)
-	m.Protocols = FlattenAtcdfpDNSProtocol(ctx, from.Protocols, diags)
+	m.Protocols = FlattenDNSProtocol(ctx, from.Protocols, diags)
 }
 
-func FlattenAtcdfpDNSProtocol(ctx context.Context, l []dfp.DNSProtocol, diags *diag.Diagnostics) types.List {
+func FlattenDNSProtocol(ctx context.Context, l []dfp.DNSProtocol, diags *diag.Diagnostics) types.List {
 	if len(l) == 0 {
 		return types.ListNull(types.StringType)
 	}

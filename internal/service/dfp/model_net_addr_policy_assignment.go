@@ -14,17 +14,17 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
-type AtcdfpNetAddrPolicyAssignmentModel struct {
+type NetAddrPolicyAssignmentModel struct {
 	AddrNet  types.String `tfsdk:"addr_net"`
 	PolicyId types.Int64  `tfsdk:"policy_id"`
 }
 
-var AtcdfpNetAddrPolicyAssignmentAttrTypes = map[string]attr.Type{
+var NetAddrPolicyAssignmentAttrTypes = map[string]attr.Type{
 	"addr_net":  types.StringType,
 	"policy_id": types.Int64Type,
 }
 
-var AtcdfpNetAddrPolicyAssignmentResourceSchemaAttributes = map[string]schema.Attribute{
+var NetAddrPolicyAssignmentResourceSchemaAttributes = map[string]schema.Attribute{
 	"addr_net": schema.StringAttribute{
 		Optional:            true,
 		MarkdownDescription: "network address in IPv4 CIDR (address/bitmask length) string format",
@@ -35,11 +35,11 @@ var AtcdfpNetAddrPolicyAssignmentResourceSchemaAttributes = map[string]schema.At
 	},
 }
 
-func ExpandAtcdfpNetAddrPolicyAssignment(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.NetAddrPolicyAssignment {
+func ExpandNetAddrPolicyAssignment(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dfp.NetAddrPolicyAssignment {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
-	var m AtcdfpNetAddrPolicyAssignmentModel
+	var m NetAddrPolicyAssignmentModel
 	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
 	if diags.HasError() {
 		return nil
@@ -47,7 +47,7 @@ func ExpandAtcdfpNetAddrPolicyAssignment(ctx context.Context, o types.Object, di
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcdfpNetAddrPolicyAssignmentModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.NetAddrPolicyAssignment {
+func (m *NetAddrPolicyAssignmentModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dfp.NetAddrPolicyAssignment {
 	if m == nil {
 		return nil
 	}
@@ -58,23 +58,23 @@ func (m *AtcdfpNetAddrPolicyAssignmentModel) Expand(ctx context.Context, diags *
 	return to
 }
 
-func FlattenAtcdfpNetAddrPolicyAssignment(ctx context.Context, from *dfp.NetAddrPolicyAssignment, diags *diag.Diagnostics) types.Object {
+func FlattenNetAddrPolicyAssignment(ctx context.Context, from *dfp.NetAddrPolicyAssignment, diags *diag.Diagnostics) types.Object {
 	if from == nil {
-		return types.ObjectNull(AtcdfpNetAddrPolicyAssignmentAttrTypes)
+		return types.ObjectNull(NetAddrPolicyAssignmentAttrTypes)
 	}
-	m := AtcdfpNetAddrPolicyAssignmentModel{}
+	m := NetAddrPolicyAssignmentModel{}
 	m.Flatten(ctx, from, diags)
-	t, d := types.ObjectValueFrom(ctx, AtcdfpNetAddrPolicyAssignmentAttrTypes, m)
+	t, d := types.ObjectValueFrom(ctx, NetAddrPolicyAssignmentAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *AtcdfpNetAddrPolicyAssignmentModel) Flatten(ctx context.Context, from *dfp.NetAddrPolicyAssignment, diags *diag.Diagnostics) {
+func (m *NetAddrPolicyAssignmentModel) Flatten(ctx context.Context, from *dfp.NetAddrPolicyAssignment, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
 	if m == nil {
-		*m = AtcdfpNetAddrPolicyAssignmentModel{}
+		*m = NetAddrPolicyAssignmentModel{}
 	}
 	m.AddrNet = flex.FlattenStringPointer(from.AddrNet)
 	m.PolicyId = flex.FlattenInt32Pointer(from.PolicyId)
