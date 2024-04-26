@@ -41,7 +41,7 @@ var IpamsvcHostnameRewriteBlockResourceSchemaAttributes = map[string]schema.Attr
 	},
 }
 
-func ExpandIpamsvcHostnameRewriteBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcHostnameRewriteBlock {
+func ExpandIpamsvcHostnameRewriteBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.HostnameRewriteBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -53,11 +53,11 @@ func ExpandIpamsvcHostnameRewriteBlock(ctx context.Context, o types.Object, diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcHostnameRewriteBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcHostnameRewriteBlock {
+func (m *IpamsvcHostnameRewriteBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.HostnameRewriteBlock {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcHostnameRewriteBlock{
+	to := &ipam.HostnameRewriteBlock{
 		HostnameRewriteChar:    m.HostnameRewriteChar.ValueStringPointer(),
 		HostnameRewriteEnabled: m.HostnameRewriteEnabled.ValueBoolPointer(),
 		HostnameRewriteRegex:   m.HostnameRewriteRegex.ValueStringPointer(),
@@ -65,7 +65,7 @@ func (m *IpamsvcHostnameRewriteBlockModel) Expand(ctx context.Context, diags *di
 	return to
 }
 
-func FlattenIpamsvcHostnameRewriteBlock(ctx context.Context, from *ipam.IpamsvcHostnameRewriteBlock, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcHostnameRewriteBlock(ctx context.Context, from *ipam.HostnameRewriteBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcHostnameRewriteBlockAttrTypes)
 	}
@@ -76,7 +76,7 @@ func FlattenIpamsvcHostnameRewriteBlock(ctx context.Context, from *ipam.IpamsvcH
 	return t
 }
 
-func (m *IpamsvcHostnameRewriteBlockModel) Flatten(ctx context.Context, from *ipam.IpamsvcHostnameRewriteBlock, diags *diag.Diagnostics) {
+func (m *IpamsvcHostnameRewriteBlockModel) Flatten(ctx context.Context, from *ipam.HostnameRewriteBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

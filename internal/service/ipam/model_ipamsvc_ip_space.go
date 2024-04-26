@@ -312,7 +312,7 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcIPSpace(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcIPSpace {
+func ExpandIpamsvcIPSpace(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IPSpace {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -324,11 +324,11 @@ func ExpandIpamsvcIPSpace(ctx context.Context, o types.Object, diags *diag.Diagn
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcIPSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcIPSpace {
+func (m *IpamsvcIPSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IPSpace {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcIPSpace{
+	to := &ipam.IPSpace{
 		AsmConfig:                       ExpandIpamsvcASMConfig(ctx, m.AsmConfig, diags),
 		Comment:                         flex.ExpandStringPointer(m.Comment),
 		DdnsClientUpdate:                m.DdnsClientUpdate.ValueStringPointer(),
@@ -357,7 +357,7 @@ func (m *IpamsvcIPSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenIpamsvcIPSpace(ctx context.Context, from *ipam.IpamsvcIPSpace, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcIPSpace(ctx context.Context, from *ipam.IPSpace, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcIPSpaceAttrTypes)
 	}
@@ -368,7 +368,7 @@ func FlattenIpamsvcIPSpace(ctx context.Context, from *ipam.IpamsvcIPSpace, diags
 	return t
 }
 
-func (m *IpamsvcIPSpaceModel) Flatten(ctx context.Context, from *ipam.IpamsvcIPSpace, diags *diag.Diagnostics) {
+func (m *IpamsvcIPSpaceModel) Flatten(ctx context.Context, from *ipam.IPSpace, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

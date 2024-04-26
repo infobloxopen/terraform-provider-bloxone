@@ -14,7 +14,7 @@ import (
 func TestAccInternalDomainListsDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_internal_domain_lists.test"
 	resourceName := "bloxone_td_internal_domain_list.test"
-	var v fw.AtcfwInternalDomains
+	var v fw.InternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -37,7 +37,7 @@ func TestAccInternalDomainListsDataSource_Filters(t *testing.T) {
 func TestAccInternalDomainListsDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_internal_domain_lists.test"
 	resourceName := "bloxone_td_internal_domain_list.test"
-	var v fw.AtcfwInternalDomains
+	var v fw.InternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
 	resource.ParallelTest(t, resource.TestCase{

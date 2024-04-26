@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -35,7 +35,7 @@ var ConfigWarningResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigWarning(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigWarning {
+func ExpandConfigWarning(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.Warning {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -47,17 +47,17 @@ func ExpandConfigWarning(ctx context.Context, o types.Object, diags *diag.Diagno
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigWarningModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigWarning {
+func (m *ConfigWarningModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.Warning {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigWarning{
+	to := &dnsconfig.Warning{
 		Message: flex.ExpandStringPointer(m.Name),
 	}
 	return to
 }
 
-func FlattenConfigWarning(ctx context.Context, from *dns_config.ConfigWarning, diags *diag.Diagnostics) types.Object {
+func FlattenConfigWarning(ctx context.Context, from *dnsconfig.Warning, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigWarningAttrTypes)
 	}
@@ -68,7 +68,7 @@ func FlattenConfigWarning(ctx context.Context, from *dns_config.ConfigWarning, d
 	return t
 }
 
-func (m *ConfigWarningModel) Flatten(ctx context.Context, from *dns_config.ConfigWarning, diags *diag.Diagnostics) {
+func (m *ConfigWarningModel) Flatten(ctx context.Context, from *dnsconfig.Warning, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

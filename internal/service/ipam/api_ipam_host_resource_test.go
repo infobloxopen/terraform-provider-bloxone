@@ -24,7 +24,7 @@ import (
 // Test case
 func TestAccIpamHostResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_host.test"
-	var v ipam.IpamsvcIpamHost
+	var v ipam.IpamHost
 	var name = acctest.RandomNameWithPrefix("ipam_host")
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -51,7 +51,7 @@ func TestAccIpamHostResource_basic(t *testing.T) {
 
 func TestAccIpamHostResource_disappears(t *testing.T) {
 	resourceName := "bloxone_ipam_host.test"
-	var v ipam.IpamsvcIpamHost
+	var v ipam.IpamHost
 	var name = acctest.RandomNameWithPrefix("ipam_host")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -73,7 +73,7 @@ func TestAccIpamHostResource_disappears(t *testing.T) {
 
 func TestAccIpamHostResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_ipam_host.test_comment"
-	var v ipam.IpamsvcIpamHost
+	var v ipam.IpamHost
 	var name = acctest.RandomNameWithPrefix("ipam_host")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -103,7 +103,7 @@ func TestAccIpamHostResource_Comment(t *testing.T) {
 
 func TestAccIpamHostResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_ipam_host.test_tags"
-	var v ipam.IpamsvcIpamHost
+	var v ipam.IpamHost
 	var name = acctest.RandomNameWithPrefix("ipam_host")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -148,7 +148,7 @@ func TestAccIpamHostResource_Addresses(t *testing.T) {
 		spaceResource2   = "bloxone_ipam_ip_space.test2"
 		name             = acctest.RandomNameWithPrefix("ipam_host")
 		nameNaip         = acctest.RandomNameWithPrefix("ipam_host_naip")
-		v                ipam.IpamsvcIpamHost
+		v                ipam.IpamHost
 		spaceName        = acctest.RandomNameWithPrefix("ip-space")
 	)
 
@@ -205,7 +205,7 @@ func TestAccIpamHostResource_Addresses(t *testing.T) {
 	})
 }
 
-func testAccCheckIpamHostExists(ctx context.Context, resourceName string, v *ipam.IpamsvcIpamHost) resource.TestCheckFunc {
+func testAccCheckIpamHostExists(ctx context.Context, resourceName string, v *ipam.IpamHost) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -214,7 +214,7 @@ func testAccCheckIpamHostExists(ctx context.Context, resourceName string, v *ipa
 		}
 		apiRes, _, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			IpamHostAPI.
-			IpamHostRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -227,12 +227,12 @@ func testAccCheckIpamHostExists(ctx context.Context, resourceName string, v *ipa
 	}
 }
 
-func testAccCheckIpamHostDestroy(ctx context.Context, v *ipam.IpamsvcIpamHost) resource.TestCheckFunc {
+func testAccCheckIpamHostDestroy(ctx context.Context, v *ipam.IpamHost) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			IpamHostAPI.
-			IpamHostRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -245,12 +245,12 @@ func testAccCheckIpamHostDestroy(ctx context.Context, v *ipam.IpamsvcIpamHost) r
 	}
 }
 
-func testAccCheckIpamHostDisappears(ctx context.Context, v *ipam.IpamsvcIpamHost) resource.TestCheckFunc {
+func testAccCheckIpamHostDisappears(ctx context.Context, v *ipam.IpamHost) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			IpamHostAPI.
-			IpamHostDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

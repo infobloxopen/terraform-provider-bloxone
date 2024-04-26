@@ -2,6 +2,7 @@ package fw
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
@@ -103,7 +104,7 @@ var AtcfwAccessCodeResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandAtcfwAccessCode(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.AtcfwAccessCode {
+func ExpandAtcfwAccessCode(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.AccessCode {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -115,11 +116,11 @@ func ExpandAtcfwAccessCode(ctx context.Context, o types.Object, diags *diag.Diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcfwAccessCodeModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.AtcfwAccessCode {
+func (m *AtcfwAccessCodeModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.AccessCode {
 	if m == nil {
 		return nil
 	}
-	to := &fw.AtcfwAccessCode{
+	to := &fw.AccessCode{
 		AccessKey:   flex.ExpandStringPointer(m.AccessKey),
 		Activation:  flex.ExpandTimePointer(ctx, m.Activation, diags),
 		Description: flex.ExpandStringPointer(m.Description),
@@ -131,7 +132,7 @@ func (m *AtcfwAccessCodeModel) Expand(ctx context.Context, diags *diag.Diagnosti
 	return to
 }
 
-func FlattenAtcfwAccessCode(ctx context.Context, from *fw.AtcfwAccessCode, diags *diag.Diagnostics) types.Object {
+func FlattenAtcfwAccessCode(ctx context.Context, from *fw.AccessCode, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwAccessCodeAttrTypes)
 	}
@@ -142,7 +143,7 @@ func FlattenAtcfwAccessCode(ctx context.Context, from *fw.AtcfwAccessCode, diags
 	return t
 }
 
-func (m *AtcfwAccessCodeModel) Flatten(ctx context.Context, from *fw.AtcfwAccessCode, diags *diag.Diagnostics) {
+func (m *AtcfwAccessCodeModel) Flatten(ctx context.Context, from *fw.AccessCode, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

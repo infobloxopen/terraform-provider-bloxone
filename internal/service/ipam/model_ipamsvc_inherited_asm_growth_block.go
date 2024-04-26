@@ -52,7 +52,7 @@ var IpamsvcInheritedAsmGrowthBlockResourceSchemaAttributes = map[string]schema.A
 	},
 }
 
-func ExpandIpamsvcInheritedAsmGrowthBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcInheritedAsmGrowthBlock {
+func ExpandIpamsvcInheritedAsmGrowthBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.InheritedAsmGrowthBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -64,17 +64,17 @@ func ExpandIpamsvcInheritedAsmGrowthBlock(ctx context.Context, o types.Object, d
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcInheritedAsmGrowthBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcInheritedAsmGrowthBlock {
+func (m *IpamsvcInheritedAsmGrowthBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.InheritedAsmGrowthBlock {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcInheritedAsmGrowthBlock{
+	to := &ipam.InheritedAsmGrowthBlock{
 		Action: m.Action.ValueStringPointer(),
 	}
 	return to
 }
 
-func FlattenIpamsvcInheritedAsmGrowthBlock(ctx context.Context, from *ipam.IpamsvcInheritedAsmGrowthBlock, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcInheritedAsmGrowthBlock(ctx context.Context, from *ipam.InheritedAsmGrowthBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcInheritedAsmGrowthBlockAttrTypes)
 	}
@@ -85,7 +85,7 @@ func FlattenIpamsvcInheritedAsmGrowthBlock(ctx context.Context, from *ipam.Ipams
 	return t
 }
 
-func (m *IpamsvcInheritedAsmGrowthBlockModel) Flatten(ctx context.Context, from *ipam.IpamsvcInheritedAsmGrowthBlock, diags *diag.Diagnostics) {
+func (m *IpamsvcInheritedAsmGrowthBlockModel) Flatten(ctx context.Context, from *ipam.InheritedAsmGrowthBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

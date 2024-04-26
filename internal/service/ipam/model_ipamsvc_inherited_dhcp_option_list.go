@@ -42,7 +42,7 @@ var IpamsvcInheritedDHCPOptionListResourceSchemaAttributes = map[string]schema.A
 	},
 }
 
-func ExpandIpamsvcInheritedDHCPOptionList(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcInheritedDHCPOptionList {
+func ExpandIpamsvcInheritedDHCPOptionList(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.InheritedDHCPOptionList {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -54,18 +54,18 @@ func ExpandIpamsvcInheritedDHCPOptionList(ctx context.Context, o types.Object, d
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcInheritedDHCPOptionListModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcInheritedDHCPOptionList {
+func (m *IpamsvcInheritedDHCPOptionListModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.InheritedDHCPOptionList {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcInheritedDHCPOptionList{
+	to := &ipam.InheritedDHCPOptionList{
 		Action: m.Action.ValueStringPointer(),
 		Value:  flex.ExpandFrameworkListNestedBlock(ctx, m.Value, diags, ExpandIpamsvcInheritedDHCPOption),
 	}
 	return to
 }
 
-func FlattenIpamsvcInheritedDHCPOptionList(ctx context.Context, from *ipam.IpamsvcInheritedDHCPOptionList, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcInheritedDHCPOptionList(ctx context.Context, from *ipam.InheritedDHCPOptionList, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcInheritedDHCPOptionListAttrTypes)
 	}
@@ -76,7 +76,7 @@ func FlattenIpamsvcInheritedDHCPOptionList(ctx context.Context, from *ipam.Ipams
 	return t
 }
 
-func (m *IpamsvcInheritedDHCPOptionListModel) Flatten(ctx context.Context, from *ipam.IpamsvcInheritedDHCPOptionList, diags *diag.Diagnostics) {
+func (m *IpamsvcInheritedDHCPOptionListModel) Flatten(ctx context.Context, from *ipam.InheritedDHCPOptionList, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

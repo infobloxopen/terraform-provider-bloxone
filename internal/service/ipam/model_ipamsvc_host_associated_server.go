@@ -34,7 +34,7 @@ var IpamsvcHostAssociatedServerResourceSchemaAttributes = map[string]schema.Attr
 	},
 }
 
-func ExpandIpamsvcHostAssociatedServer(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcHostAssociatedServer {
+func ExpandIpamsvcHostAssociatedServer(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.HostAssociatedServer {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -46,15 +46,15 @@ func ExpandIpamsvcHostAssociatedServer(ctx context.Context, o types.Object, diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcHostAssociatedServerModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcHostAssociatedServer {
+func (m *IpamsvcHostAssociatedServerModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.HostAssociatedServer {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcHostAssociatedServer{}
+	to := &ipam.HostAssociatedServer{}
 	return to
 }
 
-func FlattenIpamsvcHostAssociatedServer(ctx context.Context, from *ipam.IpamsvcHostAssociatedServer, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcHostAssociatedServer(ctx context.Context, from *ipam.HostAssociatedServer, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcHostAssociatedServerAttrTypes)
 	}
@@ -65,7 +65,7 @@ func FlattenIpamsvcHostAssociatedServer(ctx context.Context, from *ipam.IpamsvcH
 	return t
 }
 
-func (m *IpamsvcHostAssociatedServerModel) Flatten(ctx context.Context, from *ipam.IpamsvcHostAssociatedServer, diags *diag.Diagnostics) {
+func (m *IpamsvcHostAssociatedServerModel) Flatten(ctx context.Context, from *ipam.HostAssociatedServer, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

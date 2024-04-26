@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/infra_provision"
+	"github.com/infobloxopen/bloxone-go-client/infraprovision"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
@@ -37,7 +37,7 @@ type HostactivationJoinTokenModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *HostactivationJoinTokenModelWithFilter) FlattenResults(ctx context.Context, from []infra_provision.HostactivationJoinToken, diags *diag.Diagnostics) {
+func (m *HostactivationJoinTokenModelWithFilter) FlattenResults(ctx context.Context, from []infraprovision.JoinToken, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -98,10 +98,10 @@ func (d *UIJoinTokenDataSource) Read(ctx context.Context, req datasource.ReadReq
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]infra_provision.HostactivationJoinToken, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]infraprovision.JoinToken, error) {
 		apiRes, _, err := d.client.HostActivationAPI.
 			UIJoinTokenAPI.
-			UIJoinTokenList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

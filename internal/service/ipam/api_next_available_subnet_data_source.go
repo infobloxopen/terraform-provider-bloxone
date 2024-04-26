@@ -37,7 +37,7 @@ type IpamsvcNextAvailableSubnetModel struct {
 	Results types.List   `tfsdk:"results"`
 }
 
-func (m *IpamsvcNextAvailableSubnetModel) FlattenResults(ctx context.Context, from []ipam.IpamsvcSubnet, diags *diag.Diagnostics) {
+func (m *IpamsvcNextAvailableSubnetModel) FlattenResults(ctx context.Context, from []ipam.Subnet, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -112,7 +112,7 @@ func (d *NextAvailableSubnetDataSource) Read(ctx context.Context, req datasource
 
 	apiRes, _, err := d.client.IPAddressManagementAPI.
 		AddressBlockAPI.
-		AddressBlockListNextAvailableSubnet(ctx, data.Id.ValueString()).
+		ListNextAvailableSubnet(ctx, data.Id.ValueString()).
 		Cidr(int32(data.Cidr.ValueInt64())).
 		Count(int32(data.Count.ValueInt64())).
 		Execute()

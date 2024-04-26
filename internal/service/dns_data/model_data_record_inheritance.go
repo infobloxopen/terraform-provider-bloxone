@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_data"
+	"github.com/infobloxopen/bloxone-go-client/dnsdata"
 )
 
 type DataRecordInheritanceModel struct {
@@ -28,7 +28,7 @@ var DataRecordInheritanceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandDataRecordInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_data.DataRecordInheritance {
+func ExpandDataRecordInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsdata.RecordInheritance {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -40,17 +40,17 @@ func ExpandDataRecordInheritance(ctx context.Context, o types.Object, diags *dia
 	return m.Expand(ctx, diags)
 }
 
-func (m *DataRecordInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_data.DataRecordInheritance {
+func (m *DataRecordInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsdata.RecordInheritance {
 	if m == nil {
 		return nil
 	}
-	to := &dns_data.DataRecordInheritance{
+	to := &dnsdata.RecordInheritance{
 		Ttl: ExpandInheritance2InheritedUInt32(ctx, m.Ttl, diags),
 	}
 	return to
 }
 
-func FlattenDataRecordInheritance(ctx context.Context, from *dns_data.DataRecordInheritance, diags *diag.Diagnostics) types.Object {
+func FlattenDataRecordInheritance(ctx context.Context, from *dnsdata.RecordInheritance, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(DataRecordInheritanceAttrTypes)
 	}
@@ -61,7 +61,7 @@ func FlattenDataRecordInheritance(ctx context.Context, from *dns_data.DataRecord
 	return t
 }
 
-func (m *DataRecordInheritanceModel) Flatten(ctx context.Context, from *dns_data.DataRecordInheritance, diags *diag.Diagnostics) {
+func (m *DataRecordInheritanceModel) Flatten(ctx context.Context, from *dnsdata.RecordInheritance, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

@@ -105,7 +105,7 @@ var KeysTSIGKeyResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandKeysTSIGKey(ctx context.Context, o types.Object, diags *diag.Diagnostics) *keys.KeysTSIGKey {
+func ExpandKeysTSIGKey(ctx context.Context, o types.Object, diags *diag.Diagnostics) *keys.TSIGKey {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -117,11 +117,11 @@ func ExpandKeysTSIGKey(ctx context.Context, o types.Object, diags *diag.Diagnost
 	return m.Expand(ctx, diags)
 }
 
-func (m *KeysTSIGKeyModel) Expand(ctx context.Context, diags *diag.Diagnostics) *keys.KeysTSIGKey {
+func (m *KeysTSIGKeyModel) Expand(ctx context.Context, diags *diag.Diagnostics) *keys.TSIGKey {
 	if m == nil {
 		return nil
 	}
-	to := &keys.KeysTSIGKey{
+	to := &keys.TSIGKey{
 		Algorithm: flex.ExpandStringPointer(m.Algorithm),
 		Comment:   flex.ExpandStringPointer(m.Comment),
 		Name:      flex.ExpandString(m.Name),
@@ -131,7 +131,7 @@ func (m *KeysTSIGKeyModel) Expand(ctx context.Context, diags *diag.Diagnostics) 
 	return to
 }
 
-func FlattenKeysTSIGKey(ctx context.Context, from *keys.KeysTSIGKey, diags *diag.Diagnostics) types.Object {
+func FlattenKeysTSIGKey(ctx context.Context, from *keys.TSIGKey, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(KeysTSIGKeyAttrTypes)
 	}
@@ -142,7 +142,7 @@ func FlattenKeysTSIGKey(ctx context.Context, from *keys.KeysTSIGKey, diags *diag
 	return t
 }
 
-func (m *KeysTSIGKeyModel) Flatten(ctx context.Context, from *keys.KeysTSIGKey, diags *diag.Diagnostics) {
+func (m *KeysTSIGKeyModel) Flatten(ctx context.Context, from *keys.TSIGKey, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

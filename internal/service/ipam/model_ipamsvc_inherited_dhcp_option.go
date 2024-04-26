@@ -52,7 +52,7 @@ var IpamsvcInheritedDHCPOptionResourceSchemaAttributes = map[string]schema.Attri
 	},
 }
 
-func ExpandIpamsvcInheritedDHCPOption(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcInheritedDHCPOption {
+func ExpandIpamsvcInheritedDHCPOption(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.InheritedDHCPOption {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -64,17 +64,17 @@ func ExpandIpamsvcInheritedDHCPOption(ctx context.Context, o types.Object, diags
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcInheritedDHCPOptionModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcInheritedDHCPOption {
+func (m *IpamsvcInheritedDHCPOptionModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.InheritedDHCPOption {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcInheritedDHCPOption{
+	to := &ipam.InheritedDHCPOption{
 		Action: m.Action.ValueStringPointer(),
 	}
 	return to
 }
 
-func FlattenIpamsvcInheritedDHCPOption(ctx context.Context, from *ipam.IpamsvcInheritedDHCPOption, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcInheritedDHCPOption(ctx context.Context, from *ipam.InheritedDHCPOption, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcInheritedDHCPOptionAttrTypes)
 	}
@@ -85,7 +85,7 @@ func FlattenIpamsvcInheritedDHCPOption(ctx context.Context, from *ipam.IpamsvcIn
 	return t
 }
 
-func (m *IpamsvcInheritedDHCPOptionModel) Flatten(ctx context.Context, from *ipam.IpamsvcInheritedDHCPOption, diags *diag.Diagnostics) {
+func (m *IpamsvcInheritedDHCPOptionModel) Flatten(ctx context.Context, from *ipam.InheritedDHCPOption, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

@@ -23,145 +23,145 @@ import (
 
 type RangeAPI interface {
 	/*
-			RangeCreate Create the range.
+			Create Create the range.
 
 			Use this method to create a __Range__ object.
 		A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiRangeCreateRequest
+			@return RangeAPICreateRequest
 	*/
-	RangeCreate(ctx context.Context) ApiRangeCreateRequest
+	Create(ctx context.Context) RangeAPICreateRequest
 
-	// RangeCreateExecute executes the request
-	//  @return IpamsvcCreateRangeResponse
-	RangeCreateExecute(r ApiRangeCreateRequest) (*IpamsvcCreateRangeResponse, *http.Response, error)
+	// CreateExecute executes the request
+	//  @return CreateRangeResponse
+	CreateExecute(r RangeAPICreateRequest) (*CreateRangeResponse, *http.Response, error)
 	/*
-			RangeCreateNextAvailableIP Allocate the next available IP address.
+			CreateNextAvailableIP Allocate the next available IP address.
 
 			Use this method to allocate the next available IP address.
 		This allocates one or more __Address__ (_ipam/address_) resource from available addresses, when the IP address is not known prior to allocation.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id An application specific resource identity of a resource
-			@return ApiRangeCreateNextAvailableIPRequest
+			@return RangeAPICreateNextAvailableIPRequest
 	*/
-	RangeCreateNextAvailableIP(ctx context.Context, id string) ApiRangeCreateNextAvailableIPRequest
+	CreateNextAvailableIP(ctx context.Context, id string) RangeAPICreateNextAvailableIPRequest
 
-	// RangeCreateNextAvailableIPExecute executes the request
-	//  @return IpamsvcCreateNextAvailableIPResponse
-	RangeCreateNextAvailableIPExecute(r ApiRangeCreateNextAvailableIPRequest) (*IpamsvcCreateNextAvailableIPResponse, *http.Response, error)
+	// CreateNextAvailableIPExecute executes the request
+	//  @return CreateNextAvailableIPResponse
+	CreateNextAvailableIPExecute(r RangeAPICreateNextAvailableIPRequest) (*CreateNextAvailableIPResponse, *http.Response, error)
 	/*
-			RangeDelete Move the range to the recycle bin.
+			Delete Move the range to the recycle bin.
 
 			Use this method to move a __Range__ object to the recycle bin.
 		A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id An application specific resource identity of a resource
-			@return ApiRangeDeleteRequest
+			@return RangeAPIDeleteRequest
 	*/
-	RangeDelete(ctx context.Context, id string) ApiRangeDeleteRequest
+	Delete(ctx context.Context, id string) RangeAPIDeleteRequest
 
-	// RangeDeleteExecute executes the request
-	RangeDeleteExecute(r ApiRangeDeleteRequest) (*http.Response, error)
+	// DeleteExecute executes the request
+	DeleteExecute(r RangeAPIDeleteRequest) (*http.Response, error)
 	/*
-			RangeList Retrieve ranges.
+			List Retrieve ranges.
 
 			Use this method to retrieve __Range__ objects.
 		A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiRangeListRequest
+			@return RangeAPIListRequest
 	*/
-	RangeList(ctx context.Context) ApiRangeListRequest
+	List(ctx context.Context) RangeAPIListRequest
 
-	// RangeListExecute executes the request
-	//  @return IpamsvcListRangeResponse
-	RangeListExecute(r ApiRangeListRequest) (*IpamsvcListRangeResponse, *http.Response, error)
+	// ListExecute executes the request
+	//  @return ListRangeResponse
+	ListExecute(r RangeAPIListRequest) (*ListRangeResponse, *http.Response, error)
 	/*
-			RangeListNextAvailableIP Retrieve the next available IP address.
+			ListNextAvailableIP Retrieve the next available IP address.
 
 			Use this method to retrieve the next available IP address.
 		This returns one or more __Address__ (_ipam/address_) resource from available addresses, when IP address is not known prior to allocation.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id An application specific resource identity of a resource
-			@return ApiRangeListNextAvailableIPRequest
+			@return RangeAPIListNextAvailableIPRequest
 	*/
-	RangeListNextAvailableIP(ctx context.Context, id string) ApiRangeListNextAvailableIPRequest
+	ListNextAvailableIP(ctx context.Context, id string) RangeAPIListNextAvailableIPRequest
 
-	// RangeListNextAvailableIPExecute executes the request
-	//  @return IpamsvcNextAvailableIPResponse
-	RangeListNextAvailableIPExecute(r ApiRangeListNextAvailableIPRequest) (*IpamsvcNextAvailableIPResponse, *http.Response, error)
+	// ListNextAvailableIPExecute executes the request
+	//  @return NextAvailableIPResponse
+	ListNextAvailableIPExecute(r RangeAPIListNextAvailableIPRequest) (*NextAvailableIPResponse, *http.Response, error)
 	/*
-			RangeRead Retrieve the range.
+			Read Retrieve the range.
 
 			Use this method to retrieve a __Range__ object.
 		A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id An application specific resource identity of a resource
-			@return ApiRangeReadRequest
+			@return RangeAPIReadRequest
 	*/
-	RangeRead(ctx context.Context, id string) ApiRangeReadRequest
+	Read(ctx context.Context, id string) RangeAPIReadRequest
 
-	// RangeReadExecute executes the request
-	//  @return IpamsvcReadRangeResponse
-	RangeReadExecute(r ApiRangeReadRequest) (*IpamsvcReadRangeResponse, *http.Response, error)
+	// ReadExecute executes the request
+	//  @return ReadRangeResponse
+	ReadExecute(r RangeAPIReadRequest) (*ReadRangeResponse, *http.Response, error)
 	/*
-			RangeUpdate Update the range.
+			Update Update the range.
 
 			Use this method to update a __Range__ object.
 		A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id An application specific resource identity of a resource
-			@return ApiRangeUpdateRequest
+			@return RangeAPIUpdateRequest
 	*/
-	RangeUpdate(ctx context.Context, id string) ApiRangeUpdateRequest
+	Update(ctx context.Context, id string) RangeAPIUpdateRequest
 
-	// RangeUpdateExecute executes the request
-	//  @return IpamsvcUpdateRangeResponse
-	RangeUpdateExecute(r ApiRangeUpdateRequest) (*IpamsvcUpdateRangeResponse, *http.Response, error)
+	// UpdateExecute executes the request
+	//  @return UpdateRangeResponse
+	UpdateExecute(r RangeAPIUpdateRequest) (*UpdateRangeResponse, *http.Response, error)
 }
 
 // RangeAPIService RangeAPI service
 type RangeAPIService internal.Service
 
-type ApiRangeCreateRequest struct {
+type RangeAPICreateRequest struct {
 	ctx        context.Context
 	ApiService RangeAPI
-	body       *IpamsvcRange
+	body       *Range
 	inherit    *string
 }
 
-func (r ApiRangeCreateRequest) Body(body IpamsvcRange) ApiRangeCreateRequest {
+func (r RangeAPICreateRequest) Body(body Range) RangeAPICreateRequest {
 	r.body = &body
 	return r
 }
 
 // This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
-func (r ApiRangeCreateRequest) Inherit(inherit string) ApiRangeCreateRequest {
+func (r RangeAPICreateRequest) Inherit(inherit string) RangeAPICreateRequest {
 	r.inherit = &inherit
 	return r
 }
 
-func (r ApiRangeCreateRequest) Execute() (*IpamsvcCreateRangeResponse, *http.Response, error) {
-	return r.ApiService.RangeCreateExecute(r)
+func (r RangeAPICreateRequest) Execute() (*CreateRangeResponse, *http.Response, error) {
+	return r.ApiService.CreateExecute(r)
 }
 
 /*
-RangeCreate Create the range.
+Create Create the range.
 
 Use this method to create a __Range__ object.
 A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiRangeCreateRequest
+	@return RangeAPICreateRequest
 */
-func (a *RangeAPIService) RangeCreate(ctx context.Context) ApiRangeCreateRequest {
-	return ApiRangeCreateRequest{
+func (a *RangeAPIService) Create(ctx context.Context) RangeAPICreateRequest {
+	return RangeAPICreateRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -169,16 +169,16 @@ func (a *RangeAPIService) RangeCreate(ctx context.Context) ApiRangeCreateRequest
 
 // Execute executes the request
 //
-//	@return IpamsvcCreateRangeResponse
-func (a *RangeAPIService) RangeCreateExecute(r ApiRangeCreateRequest) (*IpamsvcCreateRangeResponse, *http.Response, error) {
+//	@return CreateRangeResponse
+func (a *RangeAPIService) CreateExecute(r RangeAPICreateRequest) (*CreateRangeResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcCreateRangeResponse
+		localVarReturnValue *CreateRangeResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "RangeAPIService.RangeCreate")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "RangeAPIService.Create")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -212,30 +212,18 @@ func (a *RangeAPIService) RangeCreateExecute(r ApiRangeCreateRequest) (*IpamsvcC
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.body.Tags == nil {
-		r.body.Tags = make(map[string]interface{})
-	}
-	for k, v := range a.Client.Cfg.DefaultTags {
-		if _, ok := r.body.Tags[k]; !ok {
-			r.body.Tags[k] = v
+	if len(a.Client.Cfg.DefaultTags) > 0 && r.body != nil {
+		if r.body.Tags == nil {
+			r.body.Tags = make(map[string]interface{})
+		}
+		for k, v := range a.Client.Cfg.DefaultTags {
+			if _, ok := r.body.Tags[k]; !ok {
+				r.body.Tags[k] = v
+			}
 		}
 	}
 	// body params
 	localVarPostBody = r.body
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -266,7 +254,7 @@ func (a *RangeAPIService) RangeCreateExecute(r ApiRangeCreateRequest) (*IpamsvcC
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiRangeCreateNextAvailableIPRequest struct {
+type RangeAPICreateNextAvailableIPRequest struct {
 	ctx        context.Context
 	ApiService RangeAPI
 	id         string
@@ -275,33 +263,33 @@ type ApiRangeCreateNextAvailableIPRequest struct {
 }
 
 // Indicates whether the IP addresses should belong to a contiguous block.  Defaults to _false_.
-func (r ApiRangeCreateNextAvailableIPRequest) Contiguous(contiguous bool) ApiRangeCreateNextAvailableIPRequest {
+func (r RangeAPICreateNextAvailableIPRequest) Contiguous(contiguous bool) RangeAPICreateNextAvailableIPRequest {
 	r.contiguous = &contiguous
 	return r
 }
 
 // The number of IP addresses requested.  Defaults to 1.
-func (r ApiRangeCreateNextAvailableIPRequest) Count(count int32) ApiRangeCreateNextAvailableIPRequest {
+func (r RangeAPICreateNextAvailableIPRequest) Count(count int32) RangeAPICreateNextAvailableIPRequest {
 	r.count = &count
 	return r
 }
 
-func (r ApiRangeCreateNextAvailableIPRequest) Execute() (*IpamsvcCreateNextAvailableIPResponse, *http.Response, error) {
-	return r.ApiService.RangeCreateNextAvailableIPExecute(r)
+func (r RangeAPICreateNextAvailableIPRequest) Execute() (*CreateNextAvailableIPResponse, *http.Response, error) {
+	return r.ApiService.CreateNextAvailableIPExecute(r)
 }
 
 /*
-RangeCreateNextAvailableIP Allocate the next available IP address.
+CreateNextAvailableIP Allocate the next available IP address.
 
 Use this method to allocate the next available IP address.
 This allocates one or more __Address__ (_ipam/address_) resource from available addresses, when the IP address is not known prior to allocation.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id An application specific resource identity of a resource
-	@return ApiRangeCreateNextAvailableIPRequest
+	@return RangeAPICreateNextAvailableIPRequest
 */
-func (a *RangeAPIService) RangeCreateNextAvailableIP(ctx context.Context, id string) ApiRangeCreateNextAvailableIPRequest {
-	return ApiRangeCreateNextAvailableIPRequest{
+func (a *RangeAPIService) CreateNextAvailableIP(ctx context.Context, id string) RangeAPICreateNextAvailableIPRequest {
+	return RangeAPICreateNextAvailableIPRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -310,16 +298,16 @@ func (a *RangeAPIService) RangeCreateNextAvailableIP(ctx context.Context, id str
 
 // Execute executes the request
 //
-//	@return IpamsvcCreateNextAvailableIPResponse
-func (a *RangeAPIService) RangeCreateNextAvailableIPExecute(r ApiRangeCreateNextAvailableIPRequest) (*IpamsvcCreateNextAvailableIPResponse, *http.Response, error) {
+//	@return CreateNextAvailableIPResponse
+func (a *RangeAPIService) CreateNextAvailableIPExecute(r RangeAPICreateNextAvailableIPRequest) (*CreateNextAvailableIPResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcCreateNextAvailableIPResponse
+		localVarReturnValue *CreateNextAvailableIPResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "RangeAPIService.RangeCreateNextAvailableIP")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "RangeAPIService.CreateNextAvailableIP")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -360,20 +348,6 @@ func (a *RangeAPIService) RangeCreateNextAvailableIPExecute(r ApiRangeCreateNext
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -404,28 +378,28 @@ func (a *RangeAPIService) RangeCreateNextAvailableIPExecute(r ApiRangeCreateNext
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiRangeDeleteRequest struct {
+type RangeAPIDeleteRequest struct {
 	ctx        context.Context
 	ApiService RangeAPI
 	id         string
 }
 
-func (r ApiRangeDeleteRequest) Execute() (*http.Response, error) {
-	return r.ApiService.RangeDeleteExecute(r)
+func (r RangeAPIDeleteRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteExecute(r)
 }
 
 /*
-RangeDelete Move the range to the recycle bin.
+Delete Move the range to the recycle bin.
 
 Use this method to move a __Range__ object to the recycle bin.
 A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id An application specific resource identity of a resource
-	@return ApiRangeDeleteRequest
+	@return RangeAPIDeleteRequest
 */
-func (a *RangeAPIService) RangeDelete(ctx context.Context, id string) ApiRangeDeleteRequest {
-	return ApiRangeDeleteRequest{
+func (a *RangeAPIService) Delete(ctx context.Context, id string) RangeAPIDeleteRequest {
+	return RangeAPIDeleteRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -433,14 +407,14 @@ func (a *RangeAPIService) RangeDelete(ctx context.Context, id string) ApiRangeDe
 }
 
 // Execute executes the request
-func (a *RangeAPIService) RangeDeleteExecute(r ApiRangeDeleteRequest) (*http.Response, error) {
+func (a *RangeAPIService) DeleteExecute(r RangeAPIDeleteRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "RangeAPIService.RangeDelete")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "RangeAPIService.Delete")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -469,20 +443,6 @@ func (a *RangeAPIService) RangeDeleteExecute(r ApiRangeDeleteRequest) (*http.Res
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return nil, err
@@ -508,7 +468,7 @@ func (a *RangeAPIService) RangeDeleteExecute(r ApiRangeDeleteRequest) (*http.Res
 	return localVarHTTPResponse, nil
 }
 
-type ApiRangeListRequest struct {
+type RangeAPIListRequest struct {
 	ctx        context.Context
 	ApiService RangeAPI
 	filter     *string
@@ -523,74 +483,74 @@ type ApiRangeListRequest struct {
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;. The following operators are commonly used in filter expressions:  |  Op   |  Description               |  |  --   |  -----------               |  |  &#x3D;&#x3D;   |  Equal                     |  |  !&#x3D;   |  Not Equal                 |  |  &gt;    |  Greater Than              |  |   &gt;&#x3D;  |  Greater Than or Equal To  |  |  &lt;    |  Less Than                 |  |  &lt;&#x3D;   |  Less Than or Equal To     |  |  and  |  Logical AND               |  |  ~    |  Matches Regex             |  |  !~   |  Does Not Match Regex      |  |  or   |  Logical OR                |  |  not  |  Logical NOT               |  |  ()   |  Groupping Operators       |
-func (r ApiRangeListRequest) Filter(filter string) ApiRangeListRequest {
+func (r RangeAPIListRequest) Filter(filter string) RangeAPIListRequest {
 	r.filter = &filter
 	return r
 }
 
 // A collection of response resources can be sorted by their JSON tags. For a &#39;flat&#39; resource, the tag name is straightforward. If sorting is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, its value is assumed to be null.)  Specify this parameter as a comma-separated list of JSON tag names. The sort direction can be specified by a suffix separated by whitespace before the tag name. The suffix &#39;asc&#39; sorts the data in ascending order. The suffix &#39;desc&#39; sorts the data in descending order. If no suffix is specified the data is sorted in ascending order.
-func (r ApiRangeListRequest) OrderBy(orderBy string) ApiRangeListRequest {
+func (r RangeAPIListRequest) OrderBy(orderBy string) RangeAPIListRequest {
 	r.orderBy = &orderBy
 	return r
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiRangeListRequest) Fields(fields string) ApiRangeListRequest {
+func (r RangeAPIListRequest) Fields(fields string) RangeAPIListRequest {
 	r.fields = &fields
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiRangeListRequest) Offset(offset int32) ApiRangeListRequest {
+func (r RangeAPIListRequest) Offset(offset int32) RangeAPIListRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiRangeListRequest) Limit(limit int32) ApiRangeListRequest {
+func (r RangeAPIListRequest) Limit(limit int32) RangeAPIListRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiRangeListRequest) PageToken(pageToken string) ApiRangeListRequest {
+func (r RangeAPIListRequest) PageToken(pageToken string) RangeAPIListRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
 // This parameter is used for sorting by tags.
-func (r ApiRangeListRequest) TorderBy(torderBy string) ApiRangeListRequest {
+func (r RangeAPIListRequest) TorderBy(torderBy string) RangeAPIListRequest {
 	r.torderBy = &torderBy
 	return r
 }
 
 // This parameter is used for filtering by tags.
-func (r ApiRangeListRequest) Tfilter(tfilter string) ApiRangeListRequest {
+func (r RangeAPIListRequest) Tfilter(tfilter string) RangeAPIListRequest {
 	r.tfilter = &tfilter
 	return r
 }
 
 // This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
-func (r ApiRangeListRequest) Inherit(inherit string) ApiRangeListRequest {
+func (r RangeAPIListRequest) Inherit(inherit string) RangeAPIListRequest {
 	r.inherit = &inherit
 	return r
 }
 
-func (r ApiRangeListRequest) Execute() (*IpamsvcListRangeResponse, *http.Response, error) {
-	return r.ApiService.RangeListExecute(r)
+func (r RangeAPIListRequest) Execute() (*ListRangeResponse, *http.Response, error) {
+	return r.ApiService.ListExecute(r)
 }
 
 /*
-RangeList Retrieve ranges.
+List Retrieve ranges.
 
 Use this method to retrieve __Range__ objects.
 A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiRangeListRequest
+	@return RangeAPIListRequest
 */
-func (a *RangeAPIService) RangeList(ctx context.Context) ApiRangeListRequest {
-	return ApiRangeListRequest{
+func (a *RangeAPIService) List(ctx context.Context) RangeAPIListRequest {
+	return RangeAPIListRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -598,16 +558,16 @@ func (a *RangeAPIService) RangeList(ctx context.Context) ApiRangeListRequest {
 
 // Execute executes the request
 //
-//	@return IpamsvcListRangeResponse
-func (a *RangeAPIService) RangeListExecute(r ApiRangeListRequest) (*IpamsvcListRangeResponse, *http.Response, error) {
+//	@return ListRangeResponse
+func (a *RangeAPIService) ListExecute(r RangeAPIListRequest) (*ListRangeResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcListRangeResponse
+		localVarReturnValue *ListRangeResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "RangeAPIService.RangeList")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "RangeAPIService.List")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -662,20 +622,6 @@ func (a *RangeAPIService) RangeListExecute(r ApiRangeListRequest) (*IpamsvcListR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -706,7 +652,7 @@ func (a *RangeAPIService) RangeListExecute(r ApiRangeListRequest) (*IpamsvcListR
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiRangeListNextAvailableIPRequest struct {
+type RangeAPIListNextAvailableIPRequest struct {
 	ctx        context.Context
 	ApiService RangeAPI
 	id         string
@@ -715,33 +661,33 @@ type ApiRangeListNextAvailableIPRequest struct {
 }
 
 // Indicates whether the IP addresses should belong to a contiguous block.  Defaults to _false_.
-func (r ApiRangeListNextAvailableIPRequest) Contiguous(contiguous bool) ApiRangeListNextAvailableIPRequest {
+func (r RangeAPIListNextAvailableIPRequest) Contiguous(contiguous bool) RangeAPIListNextAvailableIPRequest {
 	r.contiguous = &contiguous
 	return r
 }
 
 // The number of IP addresses requested.  Defaults to 1.
-func (r ApiRangeListNextAvailableIPRequest) Count(count int32) ApiRangeListNextAvailableIPRequest {
+func (r RangeAPIListNextAvailableIPRequest) Count(count int32) RangeAPIListNextAvailableIPRequest {
 	r.count = &count
 	return r
 }
 
-func (r ApiRangeListNextAvailableIPRequest) Execute() (*IpamsvcNextAvailableIPResponse, *http.Response, error) {
-	return r.ApiService.RangeListNextAvailableIPExecute(r)
+func (r RangeAPIListNextAvailableIPRequest) Execute() (*NextAvailableIPResponse, *http.Response, error) {
+	return r.ApiService.ListNextAvailableIPExecute(r)
 }
 
 /*
-RangeListNextAvailableIP Retrieve the next available IP address.
+ListNextAvailableIP Retrieve the next available IP address.
 
 Use this method to retrieve the next available IP address.
 This returns one or more __Address__ (_ipam/address_) resource from available addresses, when IP address is not known prior to allocation.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id An application specific resource identity of a resource
-	@return ApiRangeListNextAvailableIPRequest
+	@return RangeAPIListNextAvailableIPRequest
 */
-func (a *RangeAPIService) RangeListNextAvailableIP(ctx context.Context, id string) ApiRangeListNextAvailableIPRequest {
-	return ApiRangeListNextAvailableIPRequest{
+func (a *RangeAPIService) ListNextAvailableIP(ctx context.Context, id string) RangeAPIListNextAvailableIPRequest {
+	return RangeAPIListNextAvailableIPRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -750,16 +696,16 @@ func (a *RangeAPIService) RangeListNextAvailableIP(ctx context.Context, id strin
 
 // Execute executes the request
 //
-//	@return IpamsvcNextAvailableIPResponse
-func (a *RangeAPIService) RangeListNextAvailableIPExecute(r ApiRangeListNextAvailableIPRequest) (*IpamsvcNextAvailableIPResponse, *http.Response, error) {
+//	@return NextAvailableIPResponse
+func (a *RangeAPIService) ListNextAvailableIPExecute(r RangeAPIListNextAvailableIPRequest) (*NextAvailableIPResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcNextAvailableIPResponse
+		localVarReturnValue *NextAvailableIPResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "RangeAPIService.RangeListNextAvailableIP")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "RangeAPIService.ListNextAvailableIP")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -794,20 +740,6 @@ func (a *RangeAPIService) RangeListNextAvailableIPExecute(r ApiRangeListNextAvai
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -838,7 +770,7 @@ func (a *RangeAPIService) RangeListNextAvailableIPExecute(r ApiRangeListNextAvai
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiRangeReadRequest struct {
+type RangeAPIReadRequest struct {
 	ctx        context.Context
 	ApiService RangeAPI
 	id         string
@@ -847,33 +779,33 @@ type ApiRangeReadRequest struct {
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiRangeReadRequest) Fields(fields string) ApiRangeReadRequest {
+func (r RangeAPIReadRequest) Fields(fields string) RangeAPIReadRequest {
 	r.fields = &fields
 	return r
 }
 
 // This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
-func (r ApiRangeReadRequest) Inherit(inherit string) ApiRangeReadRequest {
+func (r RangeAPIReadRequest) Inherit(inherit string) RangeAPIReadRequest {
 	r.inherit = &inherit
 	return r
 }
 
-func (r ApiRangeReadRequest) Execute() (*IpamsvcReadRangeResponse, *http.Response, error) {
-	return r.ApiService.RangeReadExecute(r)
+func (r RangeAPIReadRequest) Execute() (*ReadRangeResponse, *http.Response, error) {
+	return r.ApiService.ReadExecute(r)
 }
 
 /*
-RangeRead Retrieve the range.
+Read Retrieve the range.
 
 Use this method to retrieve a __Range__ object.
 A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id An application specific resource identity of a resource
-	@return ApiRangeReadRequest
+	@return RangeAPIReadRequest
 */
-func (a *RangeAPIService) RangeRead(ctx context.Context, id string) ApiRangeReadRequest {
-	return ApiRangeReadRequest{
+func (a *RangeAPIService) Read(ctx context.Context, id string) RangeAPIReadRequest {
+	return RangeAPIReadRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -882,16 +814,16 @@ func (a *RangeAPIService) RangeRead(ctx context.Context, id string) ApiRangeRead
 
 // Execute executes the request
 //
-//	@return IpamsvcReadRangeResponse
-func (a *RangeAPIService) RangeReadExecute(r ApiRangeReadRequest) (*IpamsvcReadRangeResponse, *http.Response, error) {
+//	@return ReadRangeResponse
+func (a *RangeAPIService) ReadExecute(r RangeAPIReadRequest) (*ReadRangeResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcReadRangeResponse
+		localVarReturnValue *ReadRangeResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "RangeAPIService.RangeRead")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "RangeAPIService.Read")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -926,20 +858,6 @@ func (a *RangeAPIService) RangeReadExecute(r ApiRangeReadRequest) (*IpamsvcReadR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -970,41 +888,41 @@ func (a *RangeAPIService) RangeReadExecute(r ApiRangeReadRequest) (*IpamsvcReadR
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiRangeUpdateRequest struct {
+type RangeAPIUpdateRequest struct {
 	ctx        context.Context
 	ApiService RangeAPI
 	id         string
-	body       *IpamsvcRange
+	body       *Range
 	inherit    *string
 }
 
-func (r ApiRangeUpdateRequest) Body(body IpamsvcRange) ApiRangeUpdateRequest {
+func (r RangeAPIUpdateRequest) Body(body Range) RangeAPIUpdateRequest {
 	r.body = &body
 	return r
 }
 
 // This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
-func (r ApiRangeUpdateRequest) Inherit(inherit string) ApiRangeUpdateRequest {
+func (r RangeAPIUpdateRequest) Inherit(inherit string) RangeAPIUpdateRequest {
 	r.inherit = &inherit
 	return r
 }
 
-func (r ApiRangeUpdateRequest) Execute() (*IpamsvcUpdateRangeResponse, *http.Response, error) {
-	return r.ApiService.RangeUpdateExecute(r)
+func (r RangeAPIUpdateRequest) Execute() (*UpdateRangeResponse, *http.Response, error) {
+	return r.ApiService.UpdateExecute(r)
 }
 
 /*
-RangeUpdate Update the range.
+Update Update the range.
 
 Use this method to update a __Range__ object.
 A __Range__ object represents a set of contiguous IP addresses in the same IP space with no gap, expressed as a (start, end) pair within a given subnet that are grouped together for administrative purpose and protocol management. The start and end values are not required to align with CIDR boundaries.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id An application specific resource identity of a resource
-	@return ApiRangeUpdateRequest
+	@return RangeAPIUpdateRequest
 */
-func (a *RangeAPIService) RangeUpdate(ctx context.Context, id string) ApiRangeUpdateRequest {
-	return ApiRangeUpdateRequest{
+func (a *RangeAPIService) Update(ctx context.Context, id string) RangeAPIUpdateRequest {
+	return RangeAPIUpdateRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -1013,16 +931,16 @@ func (a *RangeAPIService) RangeUpdate(ctx context.Context, id string) ApiRangeUp
 
 // Execute executes the request
 //
-//	@return IpamsvcUpdateRangeResponse
-func (a *RangeAPIService) RangeUpdateExecute(r ApiRangeUpdateRequest) (*IpamsvcUpdateRangeResponse, *http.Response, error) {
+//	@return UpdateRangeResponse
+func (a *RangeAPIService) UpdateExecute(r RangeAPIUpdateRequest) (*UpdateRangeResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPatch
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcUpdateRangeResponse
+		localVarReturnValue *UpdateRangeResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "RangeAPIService.RangeUpdate")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "RangeAPIService.Update")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -1057,30 +975,18 @@ func (a *RangeAPIService) RangeUpdateExecute(r ApiRangeUpdateRequest) (*IpamsvcU
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.body.Tags == nil {
-		r.body.Tags = make(map[string]interface{})
-	}
-	for k, v := range a.Client.Cfg.DefaultTags {
-		if _, ok := r.body.Tags[k]; !ok {
-			r.body.Tags[k] = v
+	if len(a.Client.Cfg.DefaultTags) > 0 && r.body != nil {
+		if r.body.Tags == nil {
+			r.body.Tags = make(map[string]interface{})
+		}
+		for k, v := range a.Client.Cfg.DefaultTags {
+			if _, ok := r.body.Tags[k]; !ok {
+				r.body.Tags[k] = v
+			}
 		}
 	}
 	// body params
 	localVarPostBody = r.body
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

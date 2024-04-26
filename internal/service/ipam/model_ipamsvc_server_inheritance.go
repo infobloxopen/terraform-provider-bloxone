@@ -126,7 +126,7 @@ var IpamsvcServerInheritanceResourceSchemaAttributes = map[string]schema.Attribu
 	},
 }
 
-func ExpandIpamsvcServerInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcServerInheritance {
+func ExpandIpamsvcServerInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.ServerInheritance {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -138,11 +138,11 @@ func ExpandIpamsvcServerInheritance(ctx context.Context, o types.Object, diags *
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcServerInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcServerInheritance {
+func (m *IpamsvcServerInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.ServerInheritance {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcServerInheritance{
+	to := &ipam.ServerInheritance{
 		DdnsBlock:                       ExpandIpamsvcInheritedDDNSBlock(ctx, m.DdnsBlock, diags),
 		DdnsClientUpdate:                ExpandInheritanceInheritedString(ctx, m.DdnsClientUpdate, diags),
 		DdnsConflictResolutionMode:      ExpandInheritanceInheritedString(ctx, m.DdnsConflictResolutionMode, diags),
@@ -162,7 +162,7 @@ func (m *IpamsvcServerInheritanceModel) Expand(ctx context.Context, diags *diag.
 	return to
 }
 
-func FlattenIpamsvcServerInheritance(ctx context.Context, from *ipam.IpamsvcServerInheritance, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcServerInheritance(ctx context.Context, from *ipam.ServerInheritance, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcServerInheritanceAttrTypes)
 	}
@@ -173,7 +173,7 @@ func FlattenIpamsvcServerInheritance(ctx context.Context, from *ipam.IpamsvcServ
 	return t
 }
 
-func (m *IpamsvcServerInheritanceModel) Flatten(ctx context.Context, from *ipam.IpamsvcServerInheritance, diags *diag.Diagnostics) {
+func (m *IpamsvcServerInheritanceModel) Flatten(ctx context.Context, from *ipam.ServerInheritance, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

@@ -87,11 +87,11 @@ var IpamsvcOptionSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *IpamsvcOptionSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcOptionSpace {
+func (m *IpamsvcOptionSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.OptionSpace {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcOptionSpace{
+	to := &ipam.OptionSpace{
 		Comment: flex.ExpandStringPointer(m.Comment),
 		Name:    flex.ExpandString(m.Name),
 		Tags:    flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
@@ -102,7 +102,7 @@ func (m *IpamsvcOptionSpaceModel) Expand(ctx context.Context, diags *diag.Diagno
 	return to
 }
 
-func FlattenIpamsvcOptionSpace(ctx context.Context, from *ipam.IpamsvcOptionSpace, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcOptionSpace(ctx context.Context, from *ipam.OptionSpace, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcOptionSpaceAttrTypes)
 	}
@@ -113,7 +113,7 @@ func FlattenIpamsvcOptionSpace(ctx context.Context, from *ipam.IpamsvcOptionSpac
 	return t
 }
 
-func (m *IpamsvcOptionSpaceModel) Flatten(ctx context.Context, from *ipam.IpamsvcOptionSpace, diags *diag.Diagnostics) {
+func (m *IpamsvcOptionSpaceModel) Flatten(ctx context.Context, from *ipam.OptionSpace, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

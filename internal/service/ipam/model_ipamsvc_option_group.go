@@ -96,11 +96,11 @@ var IpamsvcOptionGroupResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *IpamsvcOptionGroupModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcOptionGroup {
+func (m *IpamsvcOptionGroupModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.OptionGroup {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcOptionGroup{
+	to := &ipam.OptionGroup{
 		Comment:     flex.ExpandStringPointer(m.Comment),
 		DhcpOptions: flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
 		Name:        flex.ExpandString(m.Name),
@@ -112,7 +112,7 @@ func (m *IpamsvcOptionGroupModel) Expand(ctx context.Context, diags *diag.Diagno
 	return to
 }
 
-func FlattenIpamsvcOptionGroup(ctx context.Context, from *ipam.IpamsvcOptionGroup, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcOptionGroup(ctx context.Context, from *ipam.OptionGroup, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcOptionGroupAttrTypes)
 	}
@@ -123,7 +123,7 @@ func FlattenIpamsvcOptionGroup(ctx context.Context, from *ipam.IpamsvcOptionGrou
 	return t
 }
 
-func (m *IpamsvcOptionGroupModel) Flatten(ctx context.Context, from *ipam.IpamsvcOptionGroup, diags *diag.Diagnostics) {
+func (m *IpamsvcOptionGroupModel) Flatten(ctx context.Context, from *ipam.OptionGroup, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

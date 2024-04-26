@@ -385,7 +385,7 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcAddressBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcAddressBlock {
+func ExpandIpamsvcAddressBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.AddressBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -397,11 +397,11 @@ func ExpandIpamsvcAddressBlock(ctx context.Context, o types.Object, diags *diag.
 	return m.Expand(ctx, diags, true)
 }
 
-func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcAddressBlock {
+func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.AddressBlock {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcAddressBlock{
+	to := &ipam.AddressBlock{
 		AsmConfig:                  ExpandIpamsvcASMConfig(ctx, m.AsmConfig, diags),
 		Cidr:                       flex.ExpandInt64Pointer(m.Cidr),
 		Comment:                    flex.ExpandStringPointer(m.Comment),
@@ -448,7 +448,7 @@ func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagn
 	return to
 }
 
-func FlattenIpamsvcAddressBlock(ctx context.Context, from *ipam.IpamsvcAddressBlock, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcAddressBlock(ctx context.Context, from *ipam.AddressBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcAddressBlockAttrTypes)
 	}
@@ -459,7 +459,7 @@ func FlattenIpamsvcAddressBlock(ctx context.Context, from *ipam.IpamsvcAddressBl
 	return t
 }
 
-func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.IpamsvcAddressBlock, diags *diag.Diagnostics) {
+func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.AddressBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

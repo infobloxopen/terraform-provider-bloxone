@@ -23,7 +23,7 @@ import (
 
 type AccessCodesAPI interface {
 	/*
-			AccessCodesCreateAccessCode Create Access Codes
+			CreateAccessCode Create Access Codes
 
 			Use this method to create the Bypass Code corresponding to the
 		security rules passed.
@@ -41,15 +41,15 @@ type AccessCodesAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiAccessCodesCreateAccessCodeRequest
+			@return AccessCodesAPICreateAccessCodeRequest
 	*/
-	AccessCodesCreateAccessCode(ctx context.Context) ApiAccessCodesCreateAccessCodeRequest
+	CreateAccessCode(ctx context.Context) AccessCodesAPICreateAccessCodeRequest
 
-	// AccessCodesCreateAccessCodeExecute executes the request
-	//  @return AtcfwAccessCodeCreateResponse
-	AccessCodesCreateAccessCodeExecute(r ApiAccessCodesCreateAccessCodeRequest) (*AtcfwAccessCodeCreateResponse, *http.Response, error)
+	// CreateAccessCodeExecute executes the request
+	//  @return AccessCodeCreateResponse
+	CreateAccessCodeExecute(r AccessCodesAPICreateAccessCodeRequest) (*AccessCodeCreateResponse, *http.Response, error)
 	/*
-			AccessCodesDeleteAccessCodes Delete Access Codes
+			DeleteAccessCodes Delete Access Codes
 
 			Use this method to delete Bypass Code objects. Deletion of
 		multiple bypass codes is an all-or-nothing operation (if any of
@@ -62,14 +62,14 @@ type AccessCodesAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiAccessCodesDeleteAccessCodesRequest
+			@return AccessCodesAPIDeleteAccessCodesRequest
 	*/
-	AccessCodesDeleteAccessCodes(ctx context.Context) ApiAccessCodesDeleteAccessCodesRequest
+	DeleteAccessCodes(ctx context.Context) AccessCodesAPIDeleteAccessCodesRequest
 
-	// AccessCodesDeleteAccessCodesExecute executes the request
-	AccessCodesDeleteAccessCodesExecute(r ApiAccessCodesDeleteAccessCodesRequest) (*http.Response, error)
+	// DeleteAccessCodesExecute executes the request
+	DeleteAccessCodesExecute(r AccessCodesAPIDeleteAccessCodesRequest) (*http.Response, error)
 	/*
-		AccessCodesDeleteSingleAccessCodes Delete Access Code By ID
+		DeleteSingleAccessCodes Delete Access Code By ID
 
 		Use this method to delete Bypass Code object.
 
@@ -77,29 +77,29 @@ type AccessCodesAPI interface {
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 		@param accessKey The Bypass Code identifier.
-		@return ApiAccessCodesDeleteSingleAccessCodesRequest
+		@return AccessCodesAPIDeleteSingleAccessCodesRequest
 	*/
-	AccessCodesDeleteSingleAccessCodes(ctx context.Context, accessKey string) ApiAccessCodesDeleteSingleAccessCodesRequest
+	DeleteSingleAccessCodes(ctx context.Context, accessKey string) AccessCodesAPIDeleteSingleAccessCodesRequest
 
-	// AccessCodesDeleteSingleAccessCodesExecute executes the request
-	AccessCodesDeleteSingleAccessCodesExecute(r ApiAccessCodesDeleteSingleAccessCodesRequest) (*http.Response, error)
+	// DeleteSingleAccessCodesExecute executes the request
+	DeleteSingleAccessCodesExecute(r AccessCodesAPIDeleteSingleAccessCodesRequest) (*http.Response, error)
 	/*
-		AccessCodesListAccessCodes List Access Codes
+		ListAccessCodes List Access Codes
 
 		Use this method to retrieve a collection of Bypass Code objects.
 
 
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiAccessCodesListAccessCodesRequest
+		@return AccessCodesAPIListAccessCodesRequest
 	*/
-	AccessCodesListAccessCodes(ctx context.Context) ApiAccessCodesListAccessCodesRequest
+	ListAccessCodes(ctx context.Context) AccessCodesAPIListAccessCodesRequest
 
-	// AccessCodesListAccessCodesExecute executes the request
-	//  @return AtcfwAccessCodeMultiResponse
-	AccessCodesListAccessCodesExecute(r ApiAccessCodesListAccessCodesRequest) (*AtcfwAccessCodeMultiResponse, *http.Response, error)
+	// ListAccessCodesExecute executes the request
+	//  @return AccessCodeMultiResponse
+	ListAccessCodesExecute(r AccessCodesAPIListAccessCodesRequest) (*AccessCodeMultiResponse, *http.Response, error)
 	/*
-		AccessCodesReadAccessCode Read Access Codes
+		ReadAccessCode Read Access Codes
 
 		Use this method to retrieve the Bypass Code by key.
 
@@ -107,15 +107,15 @@ type AccessCodesAPI interface {
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 		@param accessKey The Bypass Code identifier.
-		@return ApiAccessCodesReadAccessCodeRequest
+		@return AccessCodesAPIReadAccessCodeRequest
 	*/
-	AccessCodesReadAccessCode(ctx context.Context, accessKey string) ApiAccessCodesReadAccessCodeRequest
+	ReadAccessCode(ctx context.Context, accessKey string) AccessCodesAPIReadAccessCodeRequest
 
-	// AccessCodesReadAccessCodeExecute executes the request
-	//  @return AtcfwAccessCodeReadResponse
-	AccessCodesReadAccessCodeExecute(r ApiAccessCodesReadAccessCodeRequest) (*AtcfwAccessCodeReadResponse, *http.Response, error)
+	// ReadAccessCodeExecute executes the request
+	//  @return AccessCodeReadResponse
+	ReadAccessCodeExecute(r AccessCodesAPIReadAccessCodeRequest) (*AccessCodeReadResponse, *http.Response, error)
 	/*
-			AccessCodesUpdateAccessCode Update Access Codes
+			UpdateAccessCode Update Access Codes
 
 			Use this method to update the Bypass Code corresponding to the security rules passed.
 		It's an atomic operation. It should delete existing security rules and
@@ -135,36 +135,36 @@ type AccessCodesAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param payloadAccessKey Auto generated unique Bypass Code value
-			@return ApiAccessCodesUpdateAccessCodeRequest
+			@return AccessCodesAPIUpdateAccessCodeRequest
 	*/
-	AccessCodesUpdateAccessCode(ctx context.Context, payloadAccessKey string) ApiAccessCodesUpdateAccessCodeRequest
+	UpdateAccessCode(ctx context.Context, payloadAccessKey string) AccessCodesAPIUpdateAccessCodeRequest
 
-	// AccessCodesUpdateAccessCodeExecute executes the request
-	//  @return AtcfwAccessCodeUpdateResponse
-	AccessCodesUpdateAccessCodeExecute(r ApiAccessCodesUpdateAccessCodeRequest) (*AtcfwAccessCodeUpdateResponse, *http.Response, error)
+	// UpdateAccessCodeExecute executes the request
+	//  @return AccessCodeUpdateResponse
+	UpdateAccessCodeExecute(r AccessCodesAPIUpdateAccessCodeRequest) (*AccessCodeUpdateResponse, *http.Response, error)
 }
 
 // AccessCodesAPIService AccessCodesAPI service
 type AccessCodesAPIService internal.Service
 
-type ApiAccessCodesCreateAccessCodeRequest struct {
+type AccessCodesAPICreateAccessCodeRequest struct {
 	ctx        context.Context
 	ApiService AccessCodesAPI
-	body       *AtcfwAccessCode
+	body       *AccessCode
 }
 
 // The Bypass Code object.
-func (r ApiAccessCodesCreateAccessCodeRequest) Body(body AtcfwAccessCode) ApiAccessCodesCreateAccessCodeRequest {
+func (r AccessCodesAPICreateAccessCodeRequest) Body(body AccessCode) AccessCodesAPICreateAccessCodeRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiAccessCodesCreateAccessCodeRequest) Execute() (*AtcfwAccessCodeCreateResponse, *http.Response, error) {
-	return r.ApiService.AccessCodesCreateAccessCodeExecute(r)
+func (r AccessCodesAPICreateAccessCodeRequest) Execute() (*AccessCodeCreateResponse, *http.Response, error) {
+	return r.ApiService.CreateAccessCodeExecute(r)
 }
 
 /*
-AccessCodesCreateAccessCode Create Access Codes
+CreateAccessCode Create Access Codes
 
 Use this method to create the Bypass Code corresponding to the
 security rules passed.
@@ -178,10 +178,10 @@ Required:
 - expiration
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiAccessCodesCreateAccessCodeRequest
+	@return AccessCodesAPICreateAccessCodeRequest
 */
-func (a *AccessCodesAPIService) AccessCodesCreateAccessCode(ctx context.Context) ApiAccessCodesCreateAccessCodeRequest {
-	return ApiAccessCodesCreateAccessCodeRequest{
+func (a *AccessCodesAPIService) CreateAccessCode(ctx context.Context) AccessCodesAPICreateAccessCodeRequest {
+	return AccessCodesAPICreateAccessCodeRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -189,16 +189,16 @@ func (a *AccessCodesAPIService) AccessCodesCreateAccessCode(ctx context.Context)
 
 // Execute executes the request
 //
-//	@return AtcfwAccessCodeCreateResponse
-func (a *AccessCodesAPIService) AccessCodesCreateAccessCodeExecute(r ApiAccessCodesCreateAccessCodeRequest) (*AtcfwAccessCodeCreateResponse, *http.Response, error) {
+//	@return AccessCodeCreateResponse
+func (a *AccessCodesAPIService) CreateAccessCodeExecute(r AccessCodesAPICreateAccessCodeRequest) (*AccessCodeCreateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwAccessCodeCreateResponse
+		localVarReturnValue *AccessCodeCreateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AccessCodesAPIService.AccessCodesCreateAccessCode")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AccessCodesAPIService.CreateAccessCode")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -300,23 +300,23 @@ func (a *AccessCodesAPIService) AccessCodesCreateAccessCodeExecute(r ApiAccessCo
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiAccessCodesDeleteAccessCodesRequest struct {
+type AccessCodesAPIDeleteAccessCodesRequest struct {
 	ctx        context.Context
 	ApiService AccessCodesAPI
-	body       *AtcfwAccessCodeDeleteRequest
+	body       *AccessCodeDeleteRequest
 }
 
-func (r ApiAccessCodesDeleteAccessCodesRequest) Body(body AtcfwAccessCodeDeleteRequest) ApiAccessCodesDeleteAccessCodesRequest {
+func (r AccessCodesAPIDeleteAccessCodesRequest) Body(body AccessCodeDeleteRequest) AccessCodesAPIDeleteAccessCodesRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiAccessCodesDeleteAccessCodesRequest) Execute() (*http.Response, error) {
-	return r.ApiService.AccessCodesDeleteAccessCodesExecute(r)
+func (r AccessCodesAPIDeleteAccessCodesRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteAccessCodesExecute(r)
 }
 
 /*
-AccessCodesDeleteAccessCodes Delete Access Codes
+DeleteAccessCodes Delete Access Codes
 
 Use this method to delete Bypass Code objects. Deletion of
 multiple bypass codes is an all-or-nothing operation (if any of
@@ -327,24 +327,24 @@ Required:
 - ids
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiAccessCodesDeleteAccessCodesRequest
+	@return AccessCodesAPIDeleteAccessCodesRequest
 */
-func (a *AccessCodesAPIService) AccessCodesDeleteAccessCodes(ctx context.Context) ApiAccessCodesDeleteAccessCodesRequest {
-	return ApiAccessCodesDeleteAccessCodesRequest{
+func (a *AccessCodesAPIService) DeleteAccessCodes(ctx context.Context) AccessCodesAPIDeleteAccessCodesRequest {
+	return AccessCodesAPIDeleteAccessCodesRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-func (a *AccessCodesAPIService) AccessCodesDeleteAccessCodesExecute(r ApiAccessCodesDeleteAccessCodesRequest) (*http.Response, error) {
+func (a *AccessCodesAPIService) DeleteAccessCodesExecute(r AccessCodesAPIDeleteAccessCodesRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AccessCodesAPIService.AccessCodesDeleteAccessCodes")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AccessCodesAPIService.DeleteAccessCodes")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -421,27 +421,27 @@ func (a *AccessCodesAPIService) AccessCodesDeleteAccessCodesExecute(r ApiAccessC
 	return localVarHTTPResponse, nil
 }
 
-type ApiAccessCodesDeleteSingleAccessCodesRequest struct {
+type AccessCodesAPIDeleteSingleAccessCodesRequest struct {
 	ctx        context.Context
 	ApiService AccessCodesAPI
 	accessKey  string
 }
 
-func (r ApiAccessCodesDeleteSingleAccessCodesRequest) Execute() (*http.Response, error) {
-	return r.ApiService.AccessCodesDeleteSingleAccessCodesExecute(r)
+func (r AccessCodesAPIDeleteSingleAccessCodesRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteSingleAccessCodesExecute(r)
 }
 
 /*
-AccessCodesDeleteSingleAccessCodes Delete Access Code By ID
+DeleteSingleAccessCodes Delete Access Code By ID
 
 Use this method to delete Bypass Code object.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param accessKey The Bypass Code identifier.
-	@return ApiAccessCodesDeleteSingleAccessCodesRequest
+	@return AccessCodesAPIDeleteSingleAccessCodesRequest
 */
-func (a *AccessCodesAPIService) AccessCodesDeleteSingleAccessCodes(ctx context.Context, accessKey string) ApiAccessCodesDeleteSingleAccessCodesRequest {
-	return ApiAccessCodesDeleteSingleAccessCodesRequest{
+func (a *AccessCodesAPIService) DeleteSingleAccessCodes(ctx context.Context, accessKey string) AccessCodesAPIDeleteSingleAccessCodesRequest {
+	return AccessCodesAPIDeleteSingleAccessCodesRequest{
 		ApiService: a,
 		ctx:        ctx,
 		accessKey:  accessKey,
@@ -449,14 +449,14 @@ func (a *AccessCodesAPIService) AccessCodesDeleteSingleAccessCodes(ctx context.C
 }
 
 // Execute executes the request
-func (a *AccessCodesAPIService) AccessCodesDeleteSingleAccessCodesExecute(r ApiAccessCodesDeleteSingleAccessCodesRequest) (*http.Response, error) {
+func (a *AccessCodesAPIService) DeleteSingleAccessCodesExecute(r AccessCodesAPIDeleteSingleAccessCodesRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AccessCodesAPIService.AccessCodesDeleteSingleAccessCodes")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AccessCodesAPIService.DeleteSingleAccessCodes")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -529,7 +529,7 @@ func (a *AccessCodesAPIService) AccessCodesDeleteSingleAccessCodesExecute(r ApiA
 	return localVarHTTPResponse, nil
 }
 
-type ApiAccessCodesListAccessCodesRequest struct {
+type AccessCodesAPIListAccessCodesRequest struct {
 	ctx        context.Context
 	ApiService AccessCodesAPI
 	filter     *string
@@ -539,43 +539,43 @@ type ApiAccessCodesListAccessCodesRequest struct {
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;.  You can filter by following fields:  | Name               | type   | Supported Op                | | ------------------ | ------ | --------------------------- | | access_key         | string | !&#x3D;, &#x3D;&#x3D;, ~, !~, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D; | | name               | string | !&#x3D;, &#x3D;&#x3D;, ~, !~, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D; | | description        | string | !&#x3D;, &#x3D;&#x3D;, ~, !~, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D; | | security_policy_id | int32  | !&#x3D;, &#x3D;&#x3D;, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D;        |  In addition, grouping operators are supported:  | Op  | Description          | | --- | -------------------- | | and | Logical AND          | | or  | Logical OR           | | not | Logical NOT          | | ()  | Groupping Operators  |  Example: &#x60;&#x60;&#x60; ?_filter&#x3D;\&quot;((name&#x3D;&#x3D;&#39;acc_code&#39;)or(name~&#39;key&#39;))and(security_policy_id!&#x3D;32)\&quot; &#x60;&#x60;&#x60;
-func (r ApiAccessCodesListAccessCodesRequest) Filter(filter string) ApiAccessCodesListAccessCodesRequest {
+func (r AccessCodesAPIListAccessCodesRequest) Filter(filter string) AccessCodesAPIListAccessCodesRequest {
 	r.filter = &filter
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiAccessCodesListAccessCodesRequest) Offset(offset int32) ApiAccessCodesListAccessCodesRequest {
+func (r AccessCodesAPIListAccessCodesRequest) Offset(offset int32) AccessCodesAPIListAccessCodesRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiAccessCodesListAccessCodesRequest) Limit(limit int32) ApiAccessCodesListAccessCodesRequest {
+func (r AccessCodesAPIListAccessCodesRequest) Limit(limit int32) AccessCodesAPIListAccessCodesRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiAccessCodesListAccessCodesRequest) PageToken(pageToken string) ApiAccessCodesListAccessCodesRequest {
+func (r AccessCodesAPIListAccessCodesRequest) PageToken(pageToken string) AccessCodesAPIListAccessCodesRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
-func (r ApiAccessCodesListAccessCodesRequest) Execute() (*AtcfwAccessCodeMultiResponse, *http.Response, error) {
-	return r.ApiService.AccessCodesListAccessCodesExecute(r)
+func (r AccessCodesAPIListAccessCodesRequest) Execute() (*AccessCodeMultiResponse, *http.Response, error) {
+	return r.ApiService.ListAccessCodesExecute(r)
 }
 
 /*
-AccessCodesListAccessCodes List Access Codes
+ListAccessCodes List Access Codes
 
 Use this method to retrieve a collection of Bypass Code objects.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiAccessCodesListAccessCodesRequest
+	@return AccessCodesAPIListAccessCodesRequest
 */
-func (a *AccessCodesAPIService) AccessCodesListAccessCodes(ctx context.Context) ApiAccessCodesListAccessCodesRequest {
-	return ApiAccessCodesListAccessCodesRequest{
+func (a *AccessCodesAPIService) ListAccessCodes(ctx context.Context) AccessCodesAPIListAccessCodesRequest {
+	return AccessCodesAPIListAccessCodesRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -583,16 +583,16 @@ func (a *AccessCodesAPIService) AccessCodesListAccessCodes(ctx context.Context) 
 
 // Execute executes the request
 //
-//	@return AtcfwAccessCodeMultiResponse
-func (a *AccessCodesAPIService) AccessCodesListAccessCodesExecute(r ApiAccessCodesListAccessCodesRequest) (*AtcfwAccessCodeMultiResponse, *http.Response, error) {
+//	@return AccessCodeMultiResponse
+func (a *AccessCodesAPIService) ListAccessCodesExecute(r AccessCodesAPIListAccessCodesRequest) (*AccessCodeMultiResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwAccessCodeMultiResponse
+		localVarReturnValue *AccessCodeMultiResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AccessCodesAPIService.AccessCodesListAccessCodes")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AccessCodesAPIService.ListAccessCodes")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -671,7 +671,7 @@ func (a *AccessCodesAPIService) AccessCodesListAccessCodesExecute(r ApiAccessCod
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiAccessCodesReadAccessCodeRequest struct {
+type AccessCodesAPIReadAccessCodeRequest struct {
 	ctx        context.Context
 	ApiService AccessCodesAPI
 	accessKey  string
@@ -679,26 +679,26 @@ type ApiAccessCodesReadAccessCodeRequest struct {
 }
 
 // The Bypass Code name.
-func (r ApiAccessCodesReadAccessCodeRequest) Name(name string) ApiAccessCodesReadAccessCodeRequest {
+func (r AccessCodesAPIReadAccessCodeRequest) Name(name string) AccessCodesAPIReadAccessCodeRequest {
 	r.name = &name
 	return r
 }
 
-func (r ApiAccessCodesReadAccessCodeRequest) Execute() (*AtcfwAccessCodeReadResponse, *http.Response, error) {
-	return r.ApiService.AccessCodesReadAccessCodeExecute(r)
+func (r AccessCodesAPIReadAccessCodeRequest) Execute() (*AccessCodeReadResponse, *http.Response, error) {
+	return r.ApiService.ReadAccessCodeExecute(r)
 }
 
 /*
-AccessCodesReadAccessCode Read Access Codes
+ReadAccessCode Read Access Codes
 
 Use this method to retrieve the Bypass Code by key.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param accessKey The Bypass Code identifier.
-	@return ApiAccessCodesReadAccessCodeRequest
+	@return AccessCodesAPIReadAccessCodeRequest
 */
-func (a *AccessCodesAPIService) AccessCodesReadAccessCode(ctx context.Context, accessKey string) ApiAccessCodesReadAccessCodeRequest {
-	return ApiAccessCodesReadAccessCodeRequest{
+func (a *AccessCodesAPIService) ReadAccessCode(ctx context.Context, accessKey string) AccessCodesAPIReadAccessCodeRequest {
+	return AccessCodesAPIReadAccessCodeRequest{
 		ApiService: a,
 		ctx:        ctx,
 		accessKey:  accessKey,
@@ -707,16 +707,16 @@ func (a *AccessCodesAPIService) AccessCodesReadAccessCode(ctx context.Context, a
 
 // Execute executes the request
 //
-//	@return AtcfwAccessCodeReadResponse
-func (a *AccessCodesAPIService) AccessCodesReadAccessCodeExecute(r ApiAccessCodesReadAccessCodeRequest) (*AtcfwAccessCodeReadResponse, *http.Response, error) {
+//	@return AccessCodeReadResponse
+func (a *AccessCodesAPIService) ReadAccessCodeExecute(r AccessCodesAPIReadAccessCodeRequest) (*AccessCodeReadResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwAccessCodeReadResponse
+		localVarReturnValue *AccessCodeReadResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AccessCodesAPIService.AccessCodesReadAccessCode")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AccessCodesAPIService.ReadAccessCode")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -797,25 +797,25 @@ func (a *AccessCodesAPIService) AccessCodesReadAccessCodeExecute(r ApiAccessCode
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiAccessCodesUpdateAccessCodeRequest struct {
+type AccessCodesAPIUpdateAccessCodeRequest struct {
 	ctx              context.Context
 	ApiService       AccessCodesAPI
 	payloadAccessKey string
-	body             *AtcfwAccessCode
+	body             *AccessCode
 }
 
 // The Bypass Code object.
-func (r ApiAccessCodesUpdateAccessCodeRequest) Body(body AtcfwAccessCode) ApiAccessCodesUpdateAccessCodeRequest {
+func (r AccessCodesAPIUpdateAccessCodeRequest) Body(body AccessCode) AccessCodesAPIUpdateAccessCodeRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiAccessCodesUpdateAccessCodeRequest) Execute() (*AtcfwAccessCodeUpdateResponse, *http.Response, error) {
-	return r.ApiService.AccessCodesUpdateAccessCodeExecute(r)
+func (r AccessCodesAPIUpdateAccessCodeRequest) Execute() (*AccessCodeUpdateResponse, *http.Response, error) {
+	return r.ApiService.UpdateAccessCodeExecute(r)
 }
 
 /*
-AccessCodesUpdateAccessCode Update Access Codes
+UpdateAccessCode Update Access Codes
 
 Use this method to update the Bypass Code corresponding to the security rules passed.
 It's an atomic operation. It should delete existing security rules and
@@ -831,10 +831,10 @@ Required:
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param payloadAccessKey Auto generated unique Bypass Code value
-	@return ApiAccessCodesUpdateAccessCodeRequest
+	@return AccessCodesAPIUpdateAccessCodeRequest
 */
-func (a *AccessCodesAPIService) AccessCodesUpdateAccessCode(ctx context.Context, payloadAccessKey string) ApiAccessCodesUpdateAccessCodeRequest {
-	return ApiAccessCodesUpdateAccessCodeRequest{
+func (a *AccessCodesAPIService) UpdateAccessCode(ctx context.Context, payloadAccessKey string) AccessCodesAPIUpdateAccessCodeRequest {
+	return AccessCodesAPIUpdateAccessCodeRequest{
 		ApiService:       a,
 		ctx:              ctx,
 		payloadAccessKey: payloadAccessKey,
@@ -843,16 +843,16 @@ func (a *AccessCodesAPIService) AccessCodesUpdateAccessCode(ctx context.Context,
 
 // Execute executes the request
 //
-//	@return AtcfwAccessCodeUpdateResponse
-func (a *AccessCodesAPIService) AccessCodesUpdateAccessCodeExecute(r ApiAccessCodesUpdateAccessCodeRequest) (*AtcfwAccessCodeUpdateResponse, *http.Response, error) {
+//	@return AccessCodeUpdateResponse
+func (a *AccessCodesAPIService) UpdateAccessCodeExecute(r AccessCodesAPIUpdateAccessCodeRequest) (*AccessCodeUpdateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPut
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwAccessCodeUpdateResponse
+		localVarReturnValue *AccessCodeUpdateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AccessCodesAPIService.AccessCodesUpdateAccessCode")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AccessCodesAPIService.UpdateAccessCode")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}

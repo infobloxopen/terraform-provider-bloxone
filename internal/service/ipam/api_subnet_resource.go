@@ -68,7 +68,7 @@ func (r *SubnetResource) Create(ctx context.Context, req resource.CreateRequest,
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		SubnetAPI.
-		SubnetCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
 		Inherit(inheritanceType).
 		Execute()
@@ -96,7 +96,7 @@ func (r *SubnetResource) Read(ctx context.Context, req resource.ReadRequest, res
 
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		SubnetAPI.
-		SubnetRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
@@ -127,7 +127,7 @@ func (r *SubnetResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		SubnetAPI.
-		SubnetUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
 		Inherit(inheritanceType).
 		Execute()
@@ -155,7 +155,7 @@ func (r *SubnetResource) Delete(ctx context.Context, req resource.DeleteRequest,
 
 	httpRes, err := r.client.IPAddressManagementAPI.
 		SubnetAPI.
-		SubnetDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

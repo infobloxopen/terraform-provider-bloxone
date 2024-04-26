@@ -22,7 +22,7 @@ import (
 
 type ThreatFeedsAPI interface {
 	/*
-			ThreatFeedsListThreatFeeds List Threat Feeds.
+			ListThreatFeeds List Threat Feeds.
 
 			Use this method to retrieve information on all Threat Feed objects for the account.
 
@@ -31,19 +31,19 @@ type ThreatFeedsAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiThreatFeedsListThreatFeedsRequest
+			@return ThreatFeedsAPIListThreatFeedsRequest
 	*/
-	ThreatFeedsListThreatFeeds(ctx context.Context) ApiThreatFeedsListThreatFeedsRequest
+	ListThreatFeeds(ctx context.Context) ThreatFeedsAPIListThreatFeedsRequest
 
-	// ThreatFeedsListThreatFeedsExecute executes the request
-	//  @return AtcfwThreatFeedMultiResponse
-	ThreatFeedsListThreatFeedsExecute(r ApiThreatFeedsListThreatFeedsRequest) (*AtcfwThreatFeedMultiResponse, *http.Response, error)
+	// ListThreatFeedsExecute executes the request
+	//  @return ThreatFeedMultiResponse
+	ListThreatFeedsExecute(r ThreatFeedsAPIListThreatFeedsRequest) (*ThreatFeedMultiResponse, *http.Response, error)
 }
 
 // ThreatFeedsAPIService ThreatFeedsAPI service
 type ThreatFeedsAPIService internal.Service
 
-type ApiThreatFeedsListThreatFeedsRequest struct {
+type ThreatFeedsAPIListThreatFeedsRequest struct {
 	ctx        context.Context
 	ApiService ThreatFeedsAPI
 	filter     *string
@@ -54,51 +54,51 @@ type ApiThreatFeedsListThreatFeedsRequest struct {
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;.  You can filter by following fields:  | Name               | type   | Supported Op                | | ------------------ | ------ | --------------------------- | | name               | string | !&#x3D;, &#x3D;&#x3D;, ~, !~, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D; |  In addition grouping operators are supported:  | Op  | Description          | | --- | -------------------- | | and | Logical AND          | | or  | Logical OR           | | not | Logical NOT          | | ()  | Grouping Operators  |  Example: &#x60;&#x60;&#x60; ?_filter&#x3D;\&quot;((name&#x3D;&#x3D;&#39;AntiMalware&#39;)or(name~&#39;FarSightNOD&#39;))\&quot; &#x60;&#x60;&#x60;
-func (r ApiThreatFeedsListThreatFeedsRequest) Filter(filter string) ApiThreatFeedsListThreatFeedsRequest {
+func (r ThreatFeedsAPIListThreatFeedsRequest) Filter(filter string) ThreatFeedsAPIListThreatFeedsRequest {
 	r.filter = &filter
 	return r
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiThreatFeedsListThreatFeedsRequest) Fields(fields string) ApiThreatFeedsListThreatFeedsRequest {
+func (r ThreatFeedsAPIListThreatFeedsRequest) Fields(fields string) ThreatFeedsAPIListThreatFeedsRequest {
 	r.fields = &fields
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiThreatFeedsListThreatFeedsRequest) Offset(offset int32) ApiThreatFeedsListThreatFeedsRequest {
+func (r ThreatFeedsAPIListThreatFeedsRequest) Offset(offset int32) ThreatFeedsAPIListThreatFeedsRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiThreatFeedsListThreatFeedsRequest) Limit(limit int32) ApiThreatFeedsListThreatFeedsRequest {
+func (r ThreatFeedsAPIListThreatFeedsRequest) Limit(limit int32) ThreatFeedsAPIListThreatFeedsRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiThreatFeedsListThreatFeedsRequest) PageToken(pageToken string) ApiThreatFeedsListThreatFeedsRequest {
+func (r ThreatFeedsAPIListThreatFeedsRequest) PageToken(pageToken string) ThreatFeedsAPIListThreatFeedsRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
-func (r ApiThreatFeedsListThreatFeedsRequest) Execute() (*AtcfwThreatFeedMultiResponse, *http.Response, error) {
-	return r.ApiService.ThreatFeedsListThreatFeedsExecute(r)
+func (r ThreatFeedsAPIListThreatFeedsRequest) Execute() (*ThreatFeedMultiResponse, *http.Response, error) {
+	return r.ApiService.ListThreatFeedsExecute(r)
 }
 
 /*
-ThreatFeedsListThreatFeeds List Threat Feeds.
+ListThreatFeeds List Threat Feeds.
 
 Use this method to retrieve information on all Threat Feed objects for the account.
 
 BloxOne Cloud provides predefined threat intelligence feeds based on your subscription. The Plus subscription offers a few more feeds than the Standard subscription. The Advanced subscription offers a few more feeds than the Plus subscription. A threat feed subscription for RPZ updates offers protection against malicious hostnames.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiThreatFeedsListThreatFeedsRequest
+	@return ThreatFeedsAPIListThreatFeedsRequest
 */
-func (a *ThreatFeedsAPIService) ThreatFeedsListThreatFeeds(ctx context.Context) ApiThreatFeedsListThreatFeedsRequest {
-	return ApiThreatFeedsListThreatFeedsRequest{
+func (a *ThreatFeedsAPIService) ListThreatFeeds(ctx context.Context) ThreatFeedsAPIListThreatFeedsRequest {
+	return ThreatFeedsAPIListThreatFeedsRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -106,16 +106,16 @@ func (a *ThreatFeedsAPIService) ThreatFeedsListThreatFeeds(ctx context.Context) 
 
 // Execute executes the request
 //
-//	@return AtcfwThreatFeedMultiResponse
-func (a *ThreatFeedsAPIService) ThreatFeedsListThreatFeedsExecute(r ApiThreatFeedsListThreatFeedsRequest) (*AtcfwThreatFeedMultiResponse, *http.Response, error) {
+//	@return ThreatFeedMultiResponse
+func (a *ThreatFeedsAPIService) ListThreatFeedsExecute(r ThreatFeedsAPIListThreatFeedsRequest) (*ThreatFeedMultiResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwThreatFeedMultiResponse
+		localVarReturnValue *ThreatFeedMultiResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ThreatFeedsAPIService.ThreatFeedsListThreatFeeds")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ThreatFeedsAPIService.ListThreatFeeds")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}

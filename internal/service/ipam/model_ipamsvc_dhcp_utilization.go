@@ -47,7 +47,7 @@ var IpamsvcDHCPUtilizationResourceSchemaAttributes = map[string]schema.Attribute
 	},
 }
 
-func ExpandIpamsvcDHCPUtilization(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcDHCPUtilization {
+func ExpandIpamsvcDHCPUtilization(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.DHCPUtilization {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -59,15 +59,15 @@ func ExpandIpamsvcDHCPUtilization(ctx context.Context, o types.Object, diags *di
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcDHCPUtilizationModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcDHCPUtilization {
+func (m *IpamsvcDHCPUtilizationModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.DHCPUtilization {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcDHCPUtilization{}
+	to := &ipam.DHCPUtilization{}
 	return to
 }
 
-func FlattenIpamsvcDHCPUtilization(ctx context.Context, from *ipam.IpamsvcDHCPUtilization, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcDHCPUtilization(ctx context.Context, from *ipam.DHCPUtilization, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcDHCPUtilizationAttrTypes)
 	}
@@ -78,7 +78,7 @@ func FlattenIpamsvcDHCPUtilization(ctx context.Context, from *ipam.IpamsvcDHCPUt
 	return t
 }
 
-func (m *IpamsvcDHCPUtilizationModel) Flatten(ctx context.Context, from *ipam.IpamsvcDHCPUtilization, diags *diag.Diagnostics) {
+func (m *IpamsvcDHCPUtilizationModel) Flatten(ctx context.Context, from *ipam.DHCPUtilization, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

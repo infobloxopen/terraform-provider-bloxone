@@ -21,7 +21,7 @@ import (
 
 func TestAccNamedListsResource_basic(t *testing.T) {
 	var resourceName = "bloxone_td_named_list.test"
-	var v fw.AtcfwNamedList
+	var v fw.NamedList
 	name := acctest.RandomNameWithPrefix("named_list")
 	item := acctest.RandomNameWithPrefix("named-list") + ".com"
 
@@ -56,7 +56,7 @@ func TestAccNamedListsResource_basic(t *testing.T) {
 
 func TestAccNamedListsResource_disappears(t *testing.T) {
 	resourceName := "bloxone_td_named_list.test"
-	var v fw.AtcfwNamedList
+	var v fw.NamedList
 	name := acctest.RandomNameWithPrefix("named_list")
 	item := acctest.RandomNameWithPrefix("named-list") + ".com"
 
@@ -79,7 +79,7 @@ func TestAccNamedListsResource_disappears(t *testing.T) {
 
 func TestAccNamedListsResource_Name(t *testing.T) {
 	resourceName := "bloxone_td_named_list.test_name"
-	var v1, v2 fw.AtcfwNamedList
+	var v1, v2 fw.NamedList
 	name1 := acctest.RandomNameWithPrefix("named-list")
 	name2 := acctest.RandomNameWithPrefix("named-list")
 	item := acctest.RandomNameWithPrefix("named-list") + ".com"
@@ -111,7 +111,7 @@ func TestAccNamedListsResource_Name(t *testing.T) {
 
 func TestAccNamedListsResource_ItemsDescribed(t *testing.T) {
 	resourceName := "bloxone_td_named_list.test_items_described"
-	var v fw.AtcfwNamedList
+	var v fw.NamedList
 	name := acctest.RandomNameWithPrefix("named-list")
 	item1 := acctest.RandomNameWithPrefix("named-list") + ".com"
 	item2 := acctest.RandomNameWithPrefix("named-list") + ".com"
@@ -145,7 +145,7 @@ func TestAccNamedListsResource_ItemsDescribed(t *testing.T) {
 
 func TestAccNamedListsResource_Description(t *testing.T) {
 	resourceName := "bloxone_td_named_list.test_description"
-	var v fw.AtcfwNamedList
+	var v fw.NamedList
 	name := acctest.RandomNameWithPrefix("named_list")
 	item := acctest.RandomNameWithPrefix("named-list") + ".com"
 
@@ -176,7 +176,7 @@ func TestAccNamedListsResource_Description(t *testing.T) {
 
 func TestAccNamedListsResource_Confidence(t *testing.T) {
 	resourceName := "bloxone_td_named_list.test_confidence"
-	var v fw.AtcfwNamedList
+	var v fw.NamedList
 	name := acctest.RandomNameWithPrefix("named_list")
 	item := acctest.RandomNameWithPrefix("named-list") + ".com"
 
@@ -215,7 +215,7 @@ func TestAccNamedListsResource_Confidence(t *testing.T) {
 
 func TestAccNamedListsResource_Type(t *testing.T) {
 	resourceName := "bloxone_td_named_list.test_type"
-	var v1 fw.AtcfwNamedList
+	var v1 fw.NamedList
 	name := acctest.RandomNameWithPrefix("named_list")
 	item := acctest.RandomNameWithPrefix("named-list") + ".com"
 
@@ -238,7 +238,7 @@ func TestAccNamedListsResource_Type(t *testing.T) {
 
 func TestAccNamedListsResource_ThreatLevel(t *testing.T) {
 	resourceName := "bloxone_td_named_list.test_threat_level"
-	var v fw.AtcfwNamedList
+	var v fw.NamedList
 	name := acctest.RandomNameWithPrefix("named_list")
 	item := acctest.RandomNameWithPrefix("named-list") + ".com"
 
@@ -275,7 +275,7 @@ func TestAccNamedListsResource_ThreatLevel(t *testing.T) {
 	})
 }
 
-func testAccCheckNamedListsExists(ctx context.Context, resourceName string, v *fw.AtcfwNamedList) resource.TestCheckFunc {
+func testAccCheckNamedListsExists(ctx context.Context, resourceName string, v *fw.NamedList) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -288,7 +288,7 @@ func testAccCheckNamedListsExists(ctx context.Context, resourceName string, v *f
 		}
 		apiRes, _, err := acctest.BloxOneClient.FWAPI.
 			NamedListsAPI.
-			NamedListsReadNamedList(ctx, int32(id)).
+			ReadNamedList(ctx, int32(id)).
 			Execute()
 		if err != nil {
 			return err
@@ -301,12 +301,12 @@ func testAccCheckNamedListsExists(ctx context.Context, resourceName string, v *f
 	}
 }
 
-func testAccCheckNamedListsDestroy(ctx context.Context, v *fw.AtcfwNamedList) resource.TestCheckFunc {
+func testAccCheckNamedListsDestroy(ctx context.Context, v *fw.NamedList) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.FWAPI.
 			NamedListsAPI.
-			NamedListsReadNamedList(ctx, *v.Id).
+			ReadNamedList(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -319,12 +319,12 @@ func testAccCheckNamedListsDestroy(ctx context.Context, v *fw.AtcfwNamedList) re
 	}
 }
 
-func testAccCheckNamedListsDisappears(ctx context.Context, v *fw.AtcfwNamedList) resource.TestCheckFunc {
+func testAccCheckNamedListsDisappears(ctx context.Context, v *fw.NamedList) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.FWAPI.
 			NamedListsAPI.
-			NamedListsDeleteSingleNamedLists(ctx, *v.Id).
+			DeleteSingleNamedLists(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

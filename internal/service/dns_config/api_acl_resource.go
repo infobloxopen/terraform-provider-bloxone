@@ -68,7 +68,7 @@ func (r *AclResource) Create(ctx context.Context, req resource.CreateRequest, re
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
 		AclAPI.
-		AclCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -95,7 +95,7 @@ func (r *AclResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 
 	apiRes, httpRes, err := r.client.DNSConfigurationAPI.
 		AclAPI.
-		AclRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *AclResource) Update(ctx context.Context, req resource.UpdateRequest, re
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
 		AclAPI.
-		AclUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *AclResource) Delete(ctx context.Context, req resource.DeleteRequest, re
 
 	httpRes, err := r.client.DNSConfigurationAPI.
 		AclAPI.
-		AclDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

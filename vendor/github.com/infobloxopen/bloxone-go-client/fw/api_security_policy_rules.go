@@ -22,7 +22,7 @@ import (
 
 type SecurityPolicyRulesAPI interface {
 	/*
-			SecurityPolicyRulesListSecurityPolicyRules List Security Policy Rules.
+			ListSecurityPolicyRules List Security Policy Rules.
 
 			Use this method to retrieve information on all Security Policy Rule objects for the account.
 
@@ -31,19 +31,19 @@ type SecurityPolicyRulesAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiSecurityPolicyRulesListSecurityPolicyRulesRequest
+			@return SecurityPolicyRulesAPIListSecurityPolicyRulesRequest
 	*/
-	SecurityPolicyRulesListSecurityPolicyRules(ctx context.Context) ApiSecurityPolicyRulesListSecurityPolicyRulesRequest
+	ListSecurityPolicyRules(ctx context.Context) SecurityPolicyRulesAPIListSecurityPolicyRulesRequest
 
-	// SecurityPolicyRulesListSecurityPolicyRulesExecute executes the request
-	//  @return AtcfwSecurityPolicyRuleMultiResponse
-	SecurityPolicyRulesListSecurityPolicyRulesExecute(r ApiSecurityPolicyRulesListSecurityPolicyRulesRequest) (*AtcfwSecurityPolicyRuleMultiResponse, *http.Response, error)
+	// ListSecurityPolicyRulesExecute executes the request
+	//  @return SecurityPolicyRuleMultiResponse
+	ListSecurityPolicyRulesExecute(r SecurityPolicyRulesAPIListSecurityPolicyRulesRequest) (*SecurityPolicyRuleMultiResponse, *http.Response, error)
 }
 
 // SecurityPolicyRulesAPIService SecurityPolicyRulesAPI service
 type SecurityPolicyRulesAPIService internal.Service
 
-type ApiSecurityPolicyRulesListSecurityPolicyRulesRequest struct {
+type SecurityPolicyRulesAPIListSecurityPolicyRulesRequest struct {
 	ctx        context.Context
 	ApiService SecurityPolicyRulesAPI
 	filter     *string
@@ -54,51 +54,51 @@ type ApiSecurityPolicyRulesListSecurityPolicyRulesRequest struct {
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;.  You can filter by following fields:  | Name               | type   | Supported Ops    | | ------------------ | ------ | ---------------- | | policy_id          | int32  | &#x3D;&#x3D;               | | list_id            | int32  | &#x3D;&#x3D;               | | category_filter_id | int32  | &#x3D;&#x3D;               |  Groupping operators (and, or, not, ()) are not supported.
-func (r ApiSecurityPolicyRulesListSecurityPolicyRulesRequest) Filter(filter string) ApiSecurityPolicyRulesListSecurityPolicyRulesRequest {
+func (r SecurityPolicyRulesAPIListSecurityPolicyRulesRequest) Filter(filter string) SecurityPolicyRulesAPIListSecurityPolicyRulesRequest {
 	r.filter = &filter
 	return r
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiSecurityPolicyRulesListSecurityPolicyRulesRequest) Fields(fields string) ApiSecurityPolicyRulesListSecurityPolicyRulesRequest {
+func (r SecurityPolicyRulesAPIListSecurityPolicyRulesRequest) Fields(fields string) SecurityPolicyRulesAPIListSecurityPolicyRulesRequest {
 	r.fields = &fields
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiSecurityPolicyRulesListSecurityPolicyRulesRequest) Offset(offset int32) ApiSecurityPolicyRulesListSecurityPolicyRulesRequest {
+func (r SecurityPolicyRulesAPIListSecurityPolicyRulesRequest) Offset(offset int32) SecurityPolicyRulesAPIListSecurityPolicyRulesRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiSecurityPolicyRulesListSecurityPolicyRulesRequest) Limit(limit int32) ApiSecurityPolicyRulesListSecurityPolicyRulesRequest {
+func (r SecurityPolicyRulesAPIListSecurityPolicyRulesRequest) Limit(limit int32) SecurityPolicyRulesAPIListSecurityPolicyRulesRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiSecurityPolicyRulesListSecurityPolicyRulesRequest) PageToken(pageToken string) ApiSecurityPolicyRulesListSecurityPolicyRulesRequest {
+func (r SecurityPolicyRulesAPIListSecurityPolicyRulesRequest) PageToken(pageToken string) SecurityPolicyRulesAPIListSecurityPolicyRulesRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
-func (r ApiSecurityPolicyRulesListSecurityPolicyRulesRequest) Execute() (*AtcfwSecurityPolicyRuleMultiResponse, *http.Response, error) {
-	return r.ApiService.SecurityPolicyRulesListSecurityPolicyRulesExecute(r)
+func (r SecurityPolicyRulesAPIListSecurityPolicyRulesRequest) Execute() (*SecurityPolicyRuleMultiResponse, *http.Response, error) {
+	return r.ApiService.ListSecurityPolicyRulesExecute(r)
 }
 
 /*
-SecurityPolicyRulesListSecurityPolicyRules List Security Policy Rules.
+ListSecurityPolicyRules List Security Policy Rules.
 
 Use this method to retrieve information on all Security Policy Rule objects for the account.
 
 The Security Policy Rule object represents a rule and action that you define to balance access and constraints so you can mitigate malicious attacks and provide security for your networks.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiSecurityPolicyRulesListSecurityPolicyRulesRequest
+	@return SecurityPolicyRulesAPIListSecurityPolicyRulesRequest
 */
-func (a *SecurityPolicyRulesAPIService) SecurityPolicyRulesListSecurityPolicyRules(ctx context.Context) ApiSecurityPolicyRulesListSecurityPolicyRulesRequest {
-	return ApiSecurityPolicyRulesListSecurityPolicyRulesRequest{
+func (a *SecurityPolicyRulesAPIService) ListSecurityPolicyRules(ctx context.Context) SecurityPolicyRulesAPIListSecurityPolicyRulesRequest {
+	return SecurityPolicyRulesAPIListSecurityPolicyRulesRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -106,16 +106,16 @@ func (a *SecurityPolicyRulesAPIService) SecurityPolicyRulesListSecurityPolicyRul
 
 // Execute executes the request
 //
-//	@return AtcfwSecurityPolicyRuleMultiResponse
-func (a *SecurityPolicyRulesAPIService) SecurityPolicyRulesListSecurityPolicyRulesExecute(r ApiSecurityPolicyRulesListSecurityPolicyRulesRequest) (*AtcfwSecurityPolicyRuleMultiResponse, *http.Response, error) {
+//	@return SecurityPolicyRuleMultiResponse
+func (a *SecurityPolicyRulesAPIService) ListSecurityPolicyRulesExecute(r SecurityPolicyRulesAPIListSecurityPolicyRulesRequest) (*SecurityPolicyRuleMultiResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwSecurityPolicyRuleMultiResponse
+		localVarReturnValue *SecurityPolicyRuleMultiResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "SecurityPolicyRulesAPIService.SecurityPolicyRulesListSecurityPolicyRules")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "SecurityPolicyRulesAPIService.ListSecurityPolicyRules")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}

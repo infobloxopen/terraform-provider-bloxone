@@ -31,7 +31,7 @@ import (
 
 func TestAccServerResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -69,7 +69,7 @@ func TestAccServerResource_basic(t *testing.T) {
 
 func TestAccServerResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dhcp_server.test"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -91,7 +91,7 @@ func TestAccServerResource_disappears(t *testing.T) {
 
 func TestAccServerResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_comment"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -121,7 +121,7 @@ func TestAccServerResource_Comment(t *testing.T) {
 
 func TestAccServerResource_DdnsClientUpdate(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_client_update"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp_server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -151,7 +151,7 @@ func TestAccServerResource_DdnsClientUpdate(t *testing.T) {
 
 func TestAccServerResource_DdnsConflictResolutionMode(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_conflict_resolution_mode"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -183,7 +183,7 @@ func TestAccServerResource_DdnsConflictResolutionMode(t *testing.T) {
 
 func TestAccServerResource_DdnsDomain(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_domain"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -213,7 +213,7 @@ func TestAccServerResource_DdnsDomain(t *testing.T) {
 
 func TestAccServerResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_dhcp_options"
-	var v1 ipam.IpamsvcServer
+	var v1 ipam.Server
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 	serverName := acctest.RandomNameWithPrefix("dhcp-server")
 
@@ -246,7 +246,7 @@ func TestAccServerResource_DhcpOptions(t *testing.T) {
 
 func TestAccServerResource_DhcpOptionsV6(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_dhcp_options"
-	var v1 ipam.IpamsvcServer
+	var v1 ipam.Server
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 	serverName := acctest.RandomNameWithPrefix("dhcp-server")
 
@@ -279,7 +279,7 @@ func TestAccServerResource_DhcpOptionsV6(t *testing.T) {
 
 func TestAccServerResource_DdnsEnabled(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_enabled"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -309,7 +309,7 @@ func TestAccServerResource_DdnsEnabled(t *testing.T) {
 
 func TestAccServerResource_DdnsGenerateName(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_generate_name"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -339,7 +339,7 @@ func TestAccServerResource_DdnsGenerateName(t *testing.T) {
 
 func TestAccServerResource_DdnsGeneratedPrefix(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_generated_prefix"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -369,7 +369,7 @@ func TestAccServerResource_DdnsGeneratedPrefix(t *testing.T) {
 
 func TestAccServerResource_DdnsSendUpdates(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_send_updates"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -399,7 +399,7 @@ func TestAccServerResource_DdnsSendUpdates(t *testing.T) {
 
 func TestAccServerResource_DdnsTtlPercent(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_ttl_percent"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -429,7 +429,7 @@ func TestAccServerResource_DdnsTtlPercent(t *testing.T) {
 
 func TestAccServerResource_DdnsUpdateOnRenew(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_update_on_renew"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -459,7 +459,7 @@ func TestAccServerResource_DdnsUpdateOnRenew(t *testing.T) {
 
 func TestAccServerResource_DdnsUseConflictResolution(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_use_conflict_resolution"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -491,7 +491,7 @@ func TestAccServerResource_DdnsUseConflictResolution(t *testing.T) {
 
 func TestAccServerResource_DdnsZones(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_ddns_zones"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 	var zoneFQDN = acctest.RandomNameWithPrefix("auth-zone") + "."
 
@@ -525,7 +525,7 @@ func TestAccServerResource_DdnsZones(t *testing.T) {
 
 func TestAccServerResource_DhcpConfig(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_dhcp_config"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -563,7 +563,7 @@ func TestAccServerResource_DhcpConfig(t *testing.T) {
 
 func TestAccServerResource_GssTsigFallback(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_gss_tsig_fallback"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -593,7 +593,7 @@ func TestAccServerResource_GssTsigFallback(t *testing.T) {
 
 func TestAccServerResource_HeaderOptionFilename(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_header_option_filename"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -623,7 +623,7 @@ func TestAccServerResource_HeaderOptionFilename(t *testing.T) {
 
 func TestAccServerResource_HeaderOptionServerAddress(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_header_option_server_address"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -653,7 +653,7 @@ func TestAccServerResource_HeaderOptionServerAddress(t *testing.T) {
 
 func TestAccServerResource_HeaderOptionServerName(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_header_option_server_name"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -683,7 +683,7 @@ func TestAccServerResource_HeaderOptionServerName(t *testing.T) {
 
 func TestAccServerResource_HostnameRewriteChar(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_hostname_rewrite_char"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -713,7 +713,7 @@ func TestAccServerResource_HostnameRewriteChar(t *testing.T) {
 
 func TestAccServerResource_HostnameRewriteEnabled(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_hostname_rewrite_enabled"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -743,7 +743,7 @@ func TestAccServerResource_HostnameRewriteEnabled(t *testing.T) {
 
 func TestAccServerResource_HostnameRewriteRegex(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_hostname_rewrite_regex"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -773,7 +773,7 @@ func TestAccServerResource_HostnameRewriteRegex(t *testing.T) {
 
 func TestAccServerResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_inheritance_sources"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -837,7 +837,7 @@ func TestAccServerResource_InheritanceSources(t *testing.T) {
 
 func TestAccServerResource_Name(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_name"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -867,7 +867,7 @@ func TestAccServerResource_Name(t *testing.T) {
 
 func TestAccServerResource_ServerPrincipal(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_server_principal"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -897,7 +897,7 @@ func TestAccServerResource_ServerPrincipal(t *testing.T) {
 
 func TestAccServerResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_tags"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	var name = acctest.RandomNameWithPrefix("dhcp-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -933,7 +933,7 @@ func TestAccServerResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckServerExists(ctx context.Context, resourceName string, v *ipam.IpamsvcServer) resource.TestCheckFunc {
+func testAccCheckServerExists(ctx context.Context, resourceName string, v *ipam.Server) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -942,7 +942,7 @@ func testAccCheckServerExists(ctx context.Context, resourceName string, v *ipam.
 		}
 		apiRes, _, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			ServerAPI.
-			ServerRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -955,12 +955,12 @@ func testAccCheckServerExists(ctx context.Context, resourceName string, v *ipam.
 	}
 }
 
-func testAccCheckServerDestroy(ctx context.Context, v *ipam.IpamsvcServer) resource.TestCheckFunc {
+func testAccCheckServerDestroy(ctx context.Context, v *ipam.Server) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			ServerAPI.
-			ServerRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -973,12 +973,12 @@ func testAccCheckServerDestroy(ctx context.Context, v *ipam.IpamsvcServer) resou
 	}
 }
 
-func testAccCheckServerDisappears(ctx context.Context, v *ipam.IpamsvcServer) resource.TestCheckFunc {
+func testAccCheckServerDisappears(ctx context.Context, v *ipam.Server) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			ServerAPI.
-			ServerDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

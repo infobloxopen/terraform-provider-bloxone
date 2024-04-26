@@ -140,7 +140,7 @@ var IpamsvcIPSpaceInheritanceResourceSchemaAttributes = map[string]schema.Attrib
 	},
 }
 
-func ExpandIpamsvcIPSpaceInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcIPSpaceInheritance {
+func ExpandIpamsvcIPSpaceInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IPSpaceInheritance {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -152,11 +152,11 @@ func ExpandIpamsvcIPSpaceInheritance(ctx context.Context, o types.Object, diags 
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcIPSpaceInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcIPSpaceInheritance {
+func (m *IpamsvcIPSpaceInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IPSpaceInheritance {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcIPSpaceInheritance{
+	to := &ipam.IPSpaceInheritance{
 		AsmConfig:                       ExpandIpamsvcInheritedASMConfig(ctx, m.AsmConfig, diags),
 		DdnsClientUpdate:                ExpandInheritanceInheritedString(ctx, m.DdnsClientUpdate, diags),
 		DdnsConflictResolutionMode:      ExpandInheritanceInheritedString(ctx, m.DdnsConflictResolutionMode, diags),
@@ -178,7 +178,7 @@ func (m *IpamsvcIPSpaceInheritanceModel) Expand(ctx context.Context, diags *diag
 	return to
 }
 
-func FlattenIpamsvcIPSpaceInheritance(ctx context.Context, from *ipam.IpamsvcIPSpaceInheritance, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcIPSpaceInheritance(ctx context.Context, from *ipam.IPSpaceInheritance, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcIPSpaceInheritanceAttrTypes)
 	}
@@ -189,7 +189,7 @@ func FlattenIpamsvcIPSpaceInheritance(ctx context.Context, from *ipam.IpamsvcIPS
 	return t
 }
 
-func (m *IpamsvcIPSpaceInheritanceModel) Flatten(ctx context.Context, from *ipam.IpamsvcIPSpaceInheritance, diags *diag.Diagnostics) {
+func (m *IpamsvcIPSpaceInheritanceModel) Flatten(ctx context.Context, from *ipam.IPSpaceInheritance, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

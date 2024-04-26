@@ -111,7 +111,7 @@ func IpamsvcDHCPConfigResourceSchemaAttributes(forSubnetOrAddressBlock bool) map
 	}
 }
 
-func ExpandIpamsvcDHCPConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcDHCPConfig {
+func ExpandIpamsvcDHCPConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.DHCPConfig {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -123,11 +123,11 @@ func ExpandIpamsvcDHCPConfig(ctx context.Context, o types.Object, diags *diag.Di
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcDHCPConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcDHCPConfig {
+func (m *IpamsvcDHCPConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.DHCPConfig {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcDHCPConfig{
+	to := &ipam.DHCPConfig{
 		AbandonedReclaimTime:   flex.ExpandInt64Pointer(m.AbandonedReclaimTime),
 		AbandonedReclaimTimeV6: flex.ExpandInt64Pointer(m.AbandonedReclaimTimeV6),
 		AllowUnknown:           flex.ExpandBoolPointer(m.AllowUnknown),
@@ -143,7 +143,7 @@ func (m *IpamsvcDHCPConfigModel) Expand(ctx context.Context, diags *diag.Diagnos
 	return to
 }
 
-func FlattenIpamsvcDHCPConfig(ctx context.Context, from *ipam.IpamsvcDHCPConfig, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcDHCPConfig(ctx context.Context, from *ipam.DHCPConfig, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcDHCPConfigAttrTypes)
 	}
@@ -154,7 +154,7 @@ func FlattenIpamsvcDHCPConfig(ctx context.Context, from *ipam.IpamsvcDHCPConfig,
 	return t
 }
 
-func FlattenIpamsvcDHCPConfigForSubnetOrAddressBlock(ctx context.Context, from *ipam.IpamsvcDHCPConfig, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcDHCPConfigForSubnetOrAddressBlock(ctx context.Context, from *ipam.DHCPConfig, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcDHCPConfigAttrTypes)
 	}
@@ -172,7 +172,7 @@ func FlattenIpamsvcDHCPConfigForSubnetOrAddressBlock(ctx context.Context, from *
 	return t
 }
 
-func (m *IpamsvcDHCPConfigModel) Flatten(ctx context.Context, from *ipam.IpamsvcDHCPConfig, diags *diag.Diagnostics) {
+func (m *IpamsvcDHCPConfigModel) Flatten(ctx context.Context, from *ipam.DHCPConfig, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

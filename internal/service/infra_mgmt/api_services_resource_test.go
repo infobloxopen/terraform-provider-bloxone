@@ -13,13 +13,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/infra_mgmt"
+	"github.com/infobloxopen/bloxone-go-client/inframgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccServicesResource_basic(t *testing.T) {
 	var resourceName = "bloxone_infra_service.test"
-	var v infra_mgmt.InfraService
+	var v inframgmt.Service
 	var serviceName = acctest.RandomNameWithPrefix("service")
 	var hostName = acctest.RandomNameWithPrefix("host")
 
@@ -50,7 +50,7 @@ func TestAccServicesResource_basic(t *testing.T) {
 
 func TestAccServicesResource_disappears(t *testing.T) {
 	resourceName := "bloxone_infra_service.test"
-	var v infra_mgmt.InfraService
+	var v inframgmt.Service
 	var serviceName = acctest.RandomNameWithPrefix("service")
 	var hostName = acctest.RandomNameWithPrefix("host")
 
@@ -73,7 +73,7 @@ func TestAccServicesResource_disappears(t *testing.T) {
 
 func TestAccServicesResource_Description(t *testing.T) {
 	var resourceName = "bloxone_infra_service.test_description"
-	var v infra_mgmt.InfraService
+	var v inframgmt.Service
 	var serviceName = acctest.RandomNameWithPrefix("service")
 	var hostName = acctest.RandomNameWithPrefix("host")
 
@@ -104,7 +104,7 @@ func TestAccServicesResource_Description(t *testing.T) {
 
 func TestAccServicesResource_DesiredState(t *testing.T) {
 	var resourceName = "bloxone_infra_service.test_desired_state"
-	var v infra_mgmt.InfraService
+	var v inframgmt.Service
 	var serviceName = acctest.RandomNameWithPrefix("service")
 	var hostName = acctest.RandomNameWithPrefix("host")
 
@@ -135,7 +135,7 @@ func TestAccServicesResource_DesiredState(t *testing.T) {
 
 func TestAccServicesResource_DesiredVersion(t *testing.T) {
 	var resourceName = "bloxone_infra_service.test_desired_version"
-	var v infra_mgmt.InfraService
+	var v inframgmt.Service
 	var serviceName = acctest.RandomNameWithPrefix("service")
 	var hostName = acctest.RandomNameWithPrefix("host")
 
@@ -166,7 +166,7 @@ func TestAccServicesResource_DesiredVersion(t *testing.T) {
 
 func TestAccServicesResource_InterfaceLabels(t *testing.T) {
 	var resourceName = "bloxone_infra_service.test_interface_labels"
-	var v infra_mgmt.InfraService
+	var v inframgmt.Service
 	var serviceName = acctest.RandomNameWithPrefix("service")
 	var hostName = acctest.RandomNameWithPrefix("host")
 
@@ -199,7 +199,7 @@ func TestAccServicesResource_InterfaceLabels(t *testing.T) {
 
 func TestAccServicesResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_infra_service.test_tags"
-	var v infra_mgmt.InfraService
+	var v inframgmt.Service
 	var serviceName = acctest.RandomNameWithPrefix("service")
 	var hostName = acctest.RandomNameWithPrefix("host")
 
@@ -228,7 +228,7 @@ func TestAccServicesResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckServicesExists(ctx context.Context, resourceName string, v *infra_mgmt.InfraService) resource.TestCheckFunc {
+func testAccCheckServicesExists(ctx context.Context, resourceName string, v *inframgmt.Service) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -237,7 +237,7 @@ func testAccCheckServicesExists(ctx context.Context, resourceName string, v *inf
 		}
 		apiRes, _, err := acctest.BloxOneClient.InfraManagementAPI.
 			ServicesAPI.
-			ServicesRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -250,12 +250,12 @@ func testAccCheckServicesExists(ctx context.Context, resourceName string, v *inf
 	}
 }
 
-func testAccCheckServicesDestroy(ctx context.Context, v *infra_mgmt.InfraService) resource.TestCheckFunc {
+func testAccCheckServicesDestroy(ctx context.Context, v *inframgmt.Service) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.InfraManagementAPI.
 			ServicesAPI.
-			ServicesRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -268,12 +268,12 @@ func testAccCheckServicesDestroy(ctx context.Context, v *infra_mgmt.InfraService
 	}
 }
 
-func testAccCheckServicesDisappears(ctx context.Context, v *infra_mgmt.InfraService) resource.TestCheckFunc {
+func testAccCheckServicesDisappears(ctx context.Context, v *inframgmt.Service) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.InfraManagementAPI.
 			ServicesAPI.
-			ServicesDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

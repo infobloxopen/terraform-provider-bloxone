@@ -68,7 +68,7 @@ func (r *OptionSpaceResource) Create(ctx context.Context, req resource.CreateReq
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		OptionSpaceAPI.
-		OptionSpaceCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
 		Execute()
 	if err != nil {
@@ -95,7 +95,7 @@ func (r *OptionSpaceResource) Read(ctx context.Context, req resource.ReadRequest
 
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		OptionSpaceAPI.
-		OptionSpaceRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *OptionSpaceResource) Update(ctx context.Context, req resource.UpdateReq
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		OptionSpaceAPI.
-		OptionSpaceUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *OptionSpaceResource) Delete(ctx context.Context, req resource.DeleteReq
 
 	httpRes, err := r.client.IPAddressManagementAPI.
 		OptionSpaceAPI.
-		OptionSpaceDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
