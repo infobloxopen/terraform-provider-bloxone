@@ -50,7 +50,7 @@ var IpamsvcExclusionRangeResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcExclusionRange(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcExclusionRange {
+func ExpandIpamsvcExclusionRange(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.ExclusionRange {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -62,11 +62,11 @@ func ExpandIpamsvcExclusionRange(ctx context.Context, o types.Object, diags *dia
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcExclusionRangeModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcExclusionRange {
+func (m *IpamsvcExclusionRangeModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.ExclusionRange {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcExclusionRange{
+	to := &ipam.ExclusionRange{
 		Comment: flex.ExpandStringPointer(m.Comment),
 		End:     flex.ExpandString(m.End),
 		Start:   flex.ExpandString(m.Start),
@@ -74,7 +74,7 @@ func (m *IpamsvcExclusionRangeModel) Expand(ctx context.Context, diags *diag.Dia
 	return to
 }
 
-func FlattenIpamsvcExclusionRange(ctx context.Context, from *ipam.IpamsvcExclusionRange, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcExclusionRange(ctx context.Context, from *ipam.ExclusionRange, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcExclusionRangeAttrTypes)
 	}
@@ -85,7 +85,7 @@ func FlattenIpamsvcExclusionRange(ctx context.Context, from *ipam.IpamsvcExclusi
 	return t
 }
 
-func (m *IpamsvcExclusionRangeModel) Flatten(ctx context.Context, from *ipam.IpamsvcExclusionRange, diags *diag.Diagnostics) {
+func (m *IpamsvcExclusionRangeModel) Flatten(ctx context.Context, from *ipam.ExclusionRange, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

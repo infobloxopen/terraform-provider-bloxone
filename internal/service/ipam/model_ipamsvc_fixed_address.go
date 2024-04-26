@@ -18,6 +18,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -218,7 +219,7 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcFixedAddress(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcFixedAddress {
+func ExpandIpamsvcFixedAddress(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.FixedAddress {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -230,11 +231,11 @@ func ExpandIpamsvcFixedAddress(ctx context.Context, o types.Object, diags *diag.
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcFixedAddressModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcFixedAddress {
+func (m *IpamsvcFixedAddressModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.FixedAddress {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcFixedAddress{
+	to := &ipam.FixedAddress{
 		Comment:                   flex.ExpandStringPointer(m.Comment),
 		DhcpOptions:               flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
 		DisableDhcp:               flex.ExpandBoolPointer(m.DisableDhcp),
@@ -259,7 +260,7 @@ func (m *IpamsvcFixedAddressModel) Expand(ctx context.Context, diags *diag.Diagn
 	return to
 }
 
-func FlattenIpamsvcFixedAddressDataSource(ctx context.Context, from *ipam.IpamsvcFixedAddress, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcFixedAddressDataSource(ctx context.Context, from *ipam.FixedAddress, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcFixedAddressAttrTypes)
 	}
@@ -271,7 +272,7 @@ func FlattenIpamsvcFixedAddressDataSource(ctx context.Context, from *ipam.Ipamsv
 	return t
 }
 
-func (m *IpamsvcFixedAddressModel) Flatten(ctx context.Context, from *ipam.IpamsvcFixedAddress, diags *diag.Diagnostics) {
+func (m *IpamsvcFixedAddressModel) Flatten(ctx context.Context, from *ipam.FixedAddress, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

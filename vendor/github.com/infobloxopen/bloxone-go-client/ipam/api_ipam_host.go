@@ -23,108 +23,108 @@ import (
 
 type IpamHostAPI interface {
 	/*
-			IpamHostCreate Create the IPAM host.
+			Create Create the IPAM host.
 
 			Use this method to create an __IpamHost__ object.
 		The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiIpamHostCreateRequest
+			@return IpamHostAPICreateRequest
 	*/
-	IpamHostCreate(ctx context.Context) ApiIpamHostCreateRequest
+	Create(ctx context.Context) IpamHostAPICreateRequest
 
-	// IpamHostCreateExecute executes the request
-	//  @return IpamsvcCreateIpamHostResponse
-	IpamHostCreateExecute(r ApiIpamHostCreateRequest) (*IpamsvcCreateIpamHostResponse, *http.Response, error)
+	// CreateExecute executes the request
+	//  @return CreateIpamHostResponse
+	CreateExecute(r IpamHostAPICreateRequest) (*CreateIpamHostResponse, *http.Response, error)
 	/*
-			IpamHostDelete Move the IPAM host to the recycle bin.
+			Delete Move the IPAM host to the recycle bin.
 
 			Use this method to move an __IpamHost__ object to the recycle bin.
 		The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id An application specific resource identity of a resource
-			@return ApiIpamHostDeleteRequest
+			@return IpamHostAPIDeleteRequest
 	*/
-	IpamHostDelete(ctx context.Context, id string) ApiIpamHostDeleteRequest
+	Delete(ctx context.Context, id string) IpamHostAPIDeleteRequest
 
-	// IpamHostDeleteExecute executes the request
-	IpamHostDeleteExecute(r ApiIpamHostDeleteRequest) (*http.Response, error)
+	// DeleteExecute executes the request
+	DeleteExecute(r IpamHostAPIDeleteRequest) (*http.Response, error)
 	/*
-			IpamHostList Retrieve the IPAM hosts.
+			List Retrieve the IPAM hosts.
 
 			Use this method to retrieve __IpamHost__ objects.
 		The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiIpamHostListRequest
+			@return IpamHostAPIListRequest
 	*/
-	IpamHostList(ctx context.Context) ApiIpamHostListRequest
+	List(ctx context.Context) IpamHostAPIListRequest
 
-	// IpamHostListExecute executes the request
-	//  @return IpamsvcListIpamHostResponse
-	IpamHostListExecute(r ApiIpamHostListRequest) (*IpamsvcListIpamHostResponse, *http.Response, error)
+	// ListExecute executes the request
+	//  @return ListIpamHostResponse
+	ListExecute(r IpamHostAPIListRequest) (*ListIpamHostResponse, *http.Response, error)
 	/*
-			IpamHostRead Retrieve the IPAM host.
+			Read Retrieve the IPAM host.
 
 			Use this method to retrieve an __IpamHost__ object.
 		The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id An application specific resource identity of a resource
-			@return ApiIpamHostReadRequest
+			@return IpamHostAPIReadRequest
 	*/
-	IpamHostRead(ctx context.Context, id string) ApiIpamHostReadRequest
+	Read(ctx context.Context, id string) IpamHostAPIReadRequest
 
-	// IpamHostReadExecute executes the request
-	//  @return IpamsvcReadIpamHostResponse
-	IpamHostReadExecute(r ApiIpamHostReadRequest) (*IpamsvcReadIpamHostResponse, *http.Response, error)
+	// ReadExecute executes the request
+	//  @return ReadIpamHostResponse
+	ReadExecute(r IpamHostAPIReadRequest) (*ReadIpamHostResponse, *http.Response, error)
 	/*
-			IpamHostUpdate Update the IPAM host.
+			Update Update the IPAM host.
 
 			Use this method to update an __IpamHost__ object.
 		The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id An application specific resource identity of a resource
-			@return ApiIpamHostUpdateRequest
+			@return IpamHostAPIUpdateRequest
 	*/
-	IpamHostUpdate(ctx context.Context, id string) ApiIpamHostUpdateRequest
+	Update(ctx context.Context, id string) IpamHostAPIUpdateRequest
 
-	// IpamHostUpdateExecute executes the request
-	//  @return IpamsvcUpdateIpamHostResponse
-	IpamHostUpdateExecute(r ApiIpamHostUpdateRequest) (*IpamsvcUpdateIpamHostResponse, *http.Response, error)
+	// UpdateExecute executes the request
+	//  @return UpdateIpamHostResponse
+	UpdateExecute(r IpamHostAPIUpdateRequest) (*UpdateIpamHostResponse, *http.Response, error)
 }
 
 // IpamHostAPIService IpamHostAPI service
 type IpamHostAPIService internal.Service
 
-type ApiIpamHostCreateRequest struct {
+type IpamHostAPICreateRequest struct {
 	ctx        context.Context
 	ApiService IpamHostAPI
-	body       *IpamsvcIpamHost
+	body       *IpamHost
 }
 
-func (r ApiIpamHostCreateRequest) Body(body IpamsvcIpamHost) ApiIpamHostCreateRequest {
+func (r IpamHostAPICreateRequest) Body(body IpamHost) IpamHostAPICreateRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiIpamHostCreateRequest) Execute() (*IpamsvcCreateIpamHostResponse, *http.Response, error) {
-	return r.ApiService.IpamHostCreateExecute(r)
+func (r IpamHostAPICreateRequest) Execute() (*CreateIpamHostResponse, *http.Response, error) {
+	return r.ApiService.CreateExecute(r)
 }
 
 /*
-IpamHostCreate Create the IPAM host.
+Create Create the IPAM host.
 
 Use this method to create an __IpamHost__ object.
 The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiIpamHostCreateRequest
+	@return IpamHostAPICreateRequest
 */
-func (a *IpamHostAPIService) IpamHostCreate(ctx context.Context) ApiIpamHostCreateRequest {
-	return ApiIpamHostCreateRequest{
+func (a *IpamHostAPIService) Create(ctx context.Context) IpamHostAPICreateRequest {
+	return IpamHostAPICreateRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -132,16 +132,16 @@ func (a *IpamHostAPIService) IpamHostCreate(ctx context.Context) ApiIpamHostCrea
 
 // Execute executes the request
 //
-//	@return IpamsvcCreateIpamHostResponse
-func (a *IpamHostAPIService) IpamHostCreateExecute(r ApiIpamHostCreateRequest) (*IpamsvcCreateIpamHostResponse, *http.Response, error) {
+//	@return CreateIpamHostResponse
+func (a *IpamHostAPIService) CreateExecute(r IpamHostAPICreateRequest) (*CreateIpamHostResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcCreateIpamHostResponse
+		localVarReturnValue *CreateIpamHostResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "IpamHostAPIService.IpamHostCreate")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "IpamHostAPIService.Create")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -172,30 +172,18 @@ func (a *IpamHostAPIService) IpamHostCreateExecute(r ApiIpamHostCreateRequest) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.body.Tags == nil {
-		r.body.Tags = make(map[string]interface{})
-	}
-	for k, v := range a.Client.Cfg.DefaultTags {
-		if _, ok := r.body.Tags[k]; !ok {
-			r.body.Tags[k] = v
+	if len(a.Client.Cfg.DefaultTags) > 0 && r.body != nil {
+		if r.body.Tags == nil {
+			r.body.Tags = make(map[string]interface{})
+		}
+		for k, v := range a.Client.Cfg.DefaultTags {
+			if _, ok := r.body.Tags[k]; !ok {
+				r.body.Tags[k] = v
+			}
 		}
 	}
 	// body params
 	localVarPostBody = r.body
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -226,28 +214,28 @@ func (a *IpamHostAPIService) IpamHostCreateExecute(r ApiIpamHostCreateRequest) (
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiIpamHostDeleteRequest struct {
+type IpamHostAPIDeleteRequest struct {
 	ctx        context.Context
 	ApiService IpamHostAPI
 	id         string
 }
 
-func (r ApiIpamHostDeleteRequest) Execute() (*http.Response, error) {
-	return r.ApiService.IpamHostDeleteExecute(r)
+func (r IpamHostAPIDeleteRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteExecute(r)
 }
 
 /*
-IpamHostDelete Move the IPAM host to the recycle bin.
+Delete Move the IPAM host to the recycle bin.
 
 Use this method to move an __IpamHost__ object to the recycle bin.
 The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id An application specific resource identity of a resource
-	@return ApiIpamHostDeleteRequest
+	@return IpamHostAPIDeleteRequest
 */
-func (a *IpamHostAPIService) IpamHostDelete(ctx context.Context, id string) ApiIpamHostDeleteRequest {
-	return ApiIpamHostDeleteRequest{
+func (a *IpamHostAPIService) Delete(ctx context.Context, id string) IpamHostAPIDeleteRequest {
+	return IpamHostAPIDeleteRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -255,14 +243,14 @@ func (a *IpamHostAPIService) IpamHostDelete(ctx context.Context, id string) ApiI
 }
 
 // Execute executes the request
-func (a *IpamHostAPIService) IpamHostDeleteExecute(r ApiIpamHostDeleteRequest) (*http.Response, error) {
+func (a *IpamHostAPIService) DeleteExecute(r IpamHostAPIDeleteRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "IpamHostAPIService.IpamHostDelete")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "IpamHostAPIService.Delete")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -291,20 +279,6 @@ func (a *IpamHostAPIService) IpamHostDeleteExecute(r ApiIpamHostDeleteRequest) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return nil, err
@@ -330,7 +304,7 @@ func (a *IpamHostAPIService) IpamHostDeleteExecute(r ApiIpamHostDeleteRequest) (
 	return localVarHTTPResponse, nil
 }
 
-type ApiIpamHostListRequest struct {
+type IpamHostAPIListRequest struct {
 	ctx        context.Context
 	ApiService IpamHostAPI
 	fields     *string
@@ -344,68 +318,68 @@ type ApiIpamHostListRequest struct {
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiIpamHostListRequest) Fields(fields string) ApiIpamHostListRequest {
+func (r IpamHostAPIListRequest) Fields(fields string) IpamHostAPIListRequest {
 	r.fields = &fields
 	return r
 }
 
 // A collection of response resources can be sorted by their JSON tags. For a &#39;flat&#39; resource, the tag name is straightforward. If sorting is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, its value is assumed to be null.)  Specify this parameter as a comma-separated list of JSON tag names. The sort direction can be specified by a suffix separated by whitespace before the tag name. The suffix &#39;asc&#39; sorts the data in ascending order. The suffix &#39;desc&#39; sorts the data in descending order. If no suffix is specified the data is sorted in ascending order.
-func (r ApiIpamHostListRequest) OrderBy(orderBy string) ApiIpamHostListRequest {
+func (r IpamHostAPIListRequest) OrderBy(orderBy string) IpamHostAPIListRequest {
 	r.orderBy = &orderBy
 	return r
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;. The following operators are commonly used in filter expressions:  |  Op   |  Description               |  |  --   |  -----------               |  |  &#x3D;&#x3D;   |  Equal                     |  |  !&#x3D;   |  Not Equal                 |  |  &gt;    |  Greater Than              |  |   &gt;&#x3D;  |  Greater Than or Equal To  |  |  &lt;    |  Less Than                 |  |  &lt;&#x3D;   |  Less Than or Equal To     |  |  and  |  Logical AND               |  |  ~    |  Matches Regex             |  |  !~   |  Does Not Match Regex      |  |  or   |  Logical OR                |  |  not  |  Logical NOT               |  |  ()   |  Groupping Operators       |
-func (r ApiIpamHostListRequest) Filter(filter string) ApiIpamHostListRequest {
+func (r IpamHostAPIListRequest) Filter(filter string) IpamHostAPIListRequest {
 	r.filter = &filter
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiIpamHostListRequest) Offset(offset int32) ApiIpamHostListRequest {
+func (r IpamHostAPIListRequest) Offset(offset int32) IpamHostAPIListRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiIpamHostListRequest) Limit(limit int32) ApiIpamHostListRequest {
+func (r IpamHostAPIListRequest) Limit(limit int32) IpamHostAPIListRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiIpamHostListRequest) PageToken(pageToken string) ApiIpamHostListRequest {
+func (r IpamHostAPIListRequest) PageToken(pageToken string) IpamHostAPIListRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
 // This parameter is used for sorting by tags.
-func (r ApiIpamHostListRequest) TorderBy(torderBy string) ApiIpamHostListRequest {
+func (r IpamHostAPIListRequest) TorderBy(torderBy string) IpamHostAPIListRequest {
 	r.torderBy = &torderBy
 	return r
 }
 
 // This parameter is used for filtering by tags.
-func (r ApiIpamHostListRequest) Tfilter(tfilter string) ApiIpamHostListRequest {
+func (r IpamHostAPIListRequest) Tfilter(tfilter string) IpamHostAPIListRequest {
 	r.tfilter = &tfilter
 	return r
 }
 
-func (r ApiIpamHostListRequest) Execute() (*IpamsvcListIpamHostResponse, *http.Response, error) {
-	return r.ApiService.IpamHostListExecute(r)
+func (r IpamHostAPIListRequest) Execute() (*ListIpamHostResponse, *http.Response, error) {
+	return r.ApiService.ListExecute(r)
 }
 
 /*
-IpamHostList Retrieve the IPAM hosts.
+List Retrieve the IPAM hosts.
 
 Use this method to retrieve __IpamHost__ objects.
 The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiIpamHostListRequest
+	@return IpamHostAPIListRequest
 */
-func (a *IpamHostAPIService) IpamHostList(ctx context.Context) ApiIpamHostListRequest {
-	return ApiIpamHostListRequest{
+func (a *IpamHostAPIService) List(ctx context.Context) IpamHostAPIListRequest {
+	return IpamHostAPIListRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -413,16 +387,16 @@ func (a *IpamHostAPIService) IpamHostList(ctx context.Context) ApiIpamHostListRe
 
 // Execute executes the request
 //
-//	@return IpamsvcListIpamHostResponse
-func (a *IpamHostAPIService) IpamHostListExecute(r ApiIpamHostListRequest) (*IpamsvcListIpamHostResponse, *http.Response, error) {
+//	@return ListIpamHostResponse
+func (a *IpamHostAPIService) ListExecute(r IpamHostAPIListRequest) (*ListIpamHostResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcListIpamHostResponse
+		localVarReturnValue *ListIpamHostResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "IpamHostAPIService.IpamHostList")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "IpamHostAPIService.List")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -474,20 +448,6 @@ func (a *IpamHostAPIService) IpamHostListExecute(r ApiIpamHostListRequest) (*Ipa
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -518,7 +478,7 @@ func (a *IpamHostAPIService) IpamHostListExecute(r ApiIpamHostListRequest) (*Ipa
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiIpamHostReadRequest struct {
+type IpamHostAPIReadRequest struct {
 	ctx        context.Context
 	ApiService IpamHostAPI
 	id         string
@@ -527,33 +487,33 @@ type ApiIpamHostReadRequest struct {
 }
 
 // A collection of response resources can be sorted by their JSON tags. For a &#39;flat&#39; resource, the tag name is straightforward. If sorting is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, its value is assumed to be null.)  Specify this parameter as a comma-separated list of JSON tag names. The sort direction can be specified by a suffix separated by whitespace before the tag name. The suffix &#39;asc&#39; sorts the data in ascending order. The suffix &#39;desc&#39; sorts the data in descending order. If no suffix is specified the data is sorted in ascending order.
-func (r ApiIpamHostReadRequest) OrderBy(orderBy string) ApiIpamHostReadRequest {
+func (r IpamHostAPIReadRequest) OrderBy(orderBy string) IpamHostAPIReadRequest {
 	r.orderBy = &orderBy
 	return r
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiIpamHostReadRequest) Fields(fields string) ApiIpamHostReadRequest {
+func (r IpamHostAPIReadRequest) Fields(fields string) IpamHostAPIReadRequest {
 	r.fields = &fields
 	return r
 }
 
-func (r ApiIpamHostReadRequest) Execute() (*IpamsvcReadIpamHostResponse, *http.Response, error) {
-	return r.ApiService.IpamHostReadExecute(r)
+func (r IpamHostAPIReadRequest) Execute() (*ReadIpamHostResponse, *http.Response, error) {
+	return r.ApiService.ReadExecute(r)
 }
 
 /*
-IpamHostRead Retrieve the IPAM host.
+Read Retrieve the IPAM host.
 
 Use this method to retrieve an __IpamHost__ object.
 The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id An application specific resource identity of a resource
-	@return ApiIpamHostReadRequest
+	@return IpamHostAPIReadRequest
 */
-func (a *IpamHostAPIService) IpamHostRead(ctx context.Context, id string) ApiIpamHostReadRequest {
-	return ApiIpamHostReadRequest{
+func (a *IpamHostAPIService) Read(ctx context.Context, id string) IpamHostAPIReadRequest {
+	return IpamHostAPIReadRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -562,16 +522,16 @@ func (a *IpamHostAPIService) IpamHostRead(ctx context.Context, id string) ApiIpa
 
 // Execute executes the request
 //
-//	@return IpamsvcReadIpamHostResponse
-func (a *IpamHostAPIService) IpamHostReadExecute(r ApiIpamHostReadRequest) (*IpamsvcReadIpamHostResponse, *http.Response, error) {
+//	@return ReadIpamHostResponse
+func (a *IpamHostAPIService) ReadExecute(r IpamHostAPIReadRequest) (*ReadIpamHostResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcReadIpamHostResponse
+		localVarReturnValue *ReadIpamHostResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "IpamHostAPIService.IpamHostRead")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "IpamHostAPIService.Read")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -606,20 +566,6 @@ func (a *IpamHostAPIService) IpamHostReadExecute(r ApiIpamHostReadRequest) (*Ipa
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -650,34 +596,34 @@ func (a *IpamHostAPIService) IpamHostReadExecute(r ApiIpamHostReadRequest) (*Ipa
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiIpamHostUpdateRequest struct {
+type IpamHostAPIUpdateRequest struct {
 	ctx        context.Context
 	ApiService IpamHostAPI
 	id         string
-	body       *IpamsvcIpamHost
+	body       *IpamHost
 }
 
-func (r ApiIpamHostUpdateRequest) Body(body IpamsvcIpamHost) ApiIpamHostUpdateRequest {
+func (r IpamHostAPIUpdateRequest) Body(body IpamHost) IpamHostAPIUpdateRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiIpamHostUpdateRequest) Execute() (*IpamsvcUpdateIpamHostResponse, *http.Response, error) {
-	return r.ApiService.IpamHostUpdateExecute(r)
+func (r IpamHostAPIUpdateRequest) Execute() (*UpdateIpamHostResponse, *http.Response, error) {
+	return r.ApiService.UpdateExecute(r)
 }
 
 /*
-IpamHostUpdate Update the IPAM host.
+Update Update the IPAM host.
 
 Use this method to update an __IpamHost__ object.
 The __IpamHost__ object (_ipam/host_) represents any network connected equipment that is assigned one or more IP Addresses.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id An application specific resource identity of a resource
-	@return ApiIpamHostUpdateRequest
+	@return IpamHostAPIUpdateRequest
 */
-func (a *IpamHostAPIService) IpamHostUpdate(ctx context.Context, id string) ApiIpamHostUpdateRequest {
-	return ApiIpamHostUpdateRequest{
+func (a *IpamHostAPIService) Update(ctx context.Context, id string) IpamHostAPIUpdateRequest {
+	return IpamHostAPIUpdateRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -686,16 +632,16 @@ func (a *IpamHostAPIService) IpamHostUpdate(ctx context.Context, id string) ApiI
 
 // Execute executes the request
 //
-//	@return IpamsvcUpdateIpamHostResponse
-func (a *IpamHostAPIService) IpamHostUpdateExecute(r ApiIpamHostUpdateRequest) (*IpamsvcUpdateIpamHostResponse, *http.Response, error) {
+//	@return UpdateIpamHostResponse
+func (a *IpamHostAPIService) UpdateExecute(r IpamHostAPIUpdateRequest) (*UpdateIpamHostResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPatch
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcUpdateIpamHostResponse
+		localVarReturnValue *UpdateIpamHostResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "IpamHostAPIService.IpamHostUpdate")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "IpamHostAPIService.Update")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -727,30 +673,18 @@ func (a *IpamHostAPIService) IpamHostUpdateExecute(r ApiIpamHostUpdateRequest) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.body.Tags == nil {
-		r.body.Tags = make(map[string]interface{})
-	}
-	for k, v := range a.Client.Cfg.DefaultTags {
-		if _, ok := r.body.Tags[k]; !ok {
-			r.body.Tags[k] = v
+	if len(a.Client.Cfg.DefaultTags) > 0 && r.body != nil {
+		if r.body.Tags == nil {
+			r.body.Tags = make(map[string]interface{})
+		}
+		for k, v := range a.Client.Cfg.DefaultTags {
+			if _, ok := r.body.Tags[k]; !ok {
+				r.body.Tags[k] = v
+			}
 		}
 	}
 	// body params
 	localVarPostBody = r.body
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -100,7 +100,7 @@ var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigAuthNSG(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigAuthNSG {
+func ExpandConfigAuthNSG(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.AuthNSG {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -112,11 +112,11 @@ func ExpandConfigAuthNSG(ctx context.Context, o types.Object, diags *diag.Diagno
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigAuthNSGModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigAuthNSG {
+func (m *ConfigAuthNSGModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.AuthNSG {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigAuthNSG{
+	to := &dnsconfig.AuthNSG{
 		Comment:             flex.ExpandStringPointer(m.Comment),
 		ExternalPrimaries:   flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalPrimaries, diags, ExpandConfigExternalPrimary),
 		ExternalSecondaries: flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalSecondaries, diags, ExpandConfigExternalSecondary),
@@ -128,7 +128,7 @@ func (m *ConfigAuthNSGModel) Expand(ctx context.Context, diags *diag.Diagnostics
 	return to
 }
 
-func DataSourceFlattenConfigAuthNSG(ctx context.Context, from *dns_config.ConfigAuthNSG, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigAuthNSG(ctx context.Context, from *dnsconfig.AuthNSG, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigAuthNSGAttrTypes)
 	}
@@ -140,7 +140,7 @@ func DataSourceFlattenConfigAuthNSG(ctx context.Context, from *dns_config.Config
 	return t
 }
 
-func (m *ConfigAuthNSGModel) Flatten(ctx context.Context, from *dns_config.ConfigAuthNSG, diags *diag.Diagnostics) {
+func (m *ConfigAuthNSGModel) Flatten(ctx context.Context, from *dnsconfig.AuthNSG, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

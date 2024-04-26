@@ -15,7 +15,7 @@ import (
 func TestAccRangeDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_ranges.test"
 	resourceName := "bloxone_ipam_range.test"
-	var v ipam.IpamsvcRange
+	var v ipam.Range
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -38,7 +38,7 @@ func TestAccRangeDataSource_Filters(t *testing.T) {
 func TestAccRangeDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_ranges.test"
 	resourceName := "bloxone_ipam_range.test"
-	var v ipam.IpamsvcRange
+	var v ipam.Range
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{

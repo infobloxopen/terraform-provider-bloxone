@@ -126,7 +126,7 @@ var IpamsvcDHCPInheritanceResourceSchemaAttributes = map[string]schema.Attribute
 	},
 }
 
-func ExpandIpamsvcDHCPInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcDHCPInheritance {
+func ExpandIpamsvcDHCPInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.DHCPInheritance {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -138,11 +138,11 @@ func ExpandIpamsvcDHCPInheritance(ctx context.Context, o types.Object, diags *di
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcDHCPInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcDHCPInheritance {
+func (m *IpamsvcDHCPInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.DHCPInheritance {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcDHCPInheritance{
+	to := &ipam.DHCPInheritance{
 		AsmConfig:                  ExpandIpamsvcInheritedASMConfig(ctx, m.AsmConfig, diags),
 		DdnsClientUpdate:           ExpandInheritanceInheritedString(ctx, m.DdnsClientUpdate, diags),
 		DdnsConflictResolutionMode: ExpandInheritanceInheritedString(ctx, m.DdnsConflictResolutionMode, diags),
@@ -162,7 +162,7 @@ func (m *IpamsvcDHCPInheritanceModel) Expand(ctx context.Context, diags *diag.Di
 	return to
 }
 
-func FlattenIpamsvcDHCPInheritance(ctx context.Context, from *ipam.IpamsvcDHCPInheritance, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcDHCPInheritance(ctx context.Context, from *ipam.DHCPInheritance, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcDHCPInheritanceAttrTypes)
 	}
@@ -173,7 +173,7 @@ func FlattenIpamsvcDHCPInheritance(ctx context.Context, from *ipam.IpamsvcDHCPIn
 	return t
 }
 
-func (m *IpamsvcDHCPInheritanceModel) Flatten(ctx context.Context, from *ipam.IpamsvcDHCPInheritance, diags *diag.Diagnostics) {
+func (m *IpamsvcDHCPInheritanceModel) Flatten(ctx context.Context, from *ipam.DHCPInheritance, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

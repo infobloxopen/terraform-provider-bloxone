@@ -13,7 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -102,7 +102,7 @@ var ConfigForwardNSGResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigForwardNSG(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigForwardNSG {
+func ExpandConfigForwardNSG(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.ForwardNSG {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -114,11 +114,11 @@ func ExpandConfigForwardNSG(ctx context.Context, o types.Object, diags *diag.Dia
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigForwardNSGModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigForwardNSG {
+func (m *ConfigForwardNSGModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.ForwardNSG {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigForwardNSG{
+	to := &dnsconfig.ForwardNSG{
 		Comment:            flex.ExpandStringPointer(m.Comment),
 		ExternalForwarders: flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalForwarders, diags, ExpandConfigForwarder),
 		ForwardersOnly:     flex.ExpandBoolPointer(m.ForwardersOnly),
@@ -131,7 +131,7 @@ func (m *ConfigForwardNSGModel) Expand(ctx context.Context, diags *diag.Diagnost
 	return to
 }
 
-func DataSourceFlattenConfigForwardNSG(ctx context.Context, from *dns_config.ConfigForwardNSG, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigForwardNSG(ctx context.Context, from *dnsconfig.ForwardNSG, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigForwardNSGAttrTypes)
 	}
@@ -143,7 +143,7 @@ func DataSourceFlattenConfigForwardNSG(ctx context.Context, from *dns_config.Con
 	return t
 }
 
-func (m *ConfigForwardNSGModel) Flatten(ctx context.Context, from *dns_config.ConfigForwardNSG, diags *diag.Diagnostics) {
+func (m *ConfigForwardNSGModel) Flatten(ctx context.Context, from *dnsconfig.ForwardNSG, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

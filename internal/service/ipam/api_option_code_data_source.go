@@ -36,7 +36,7 @@ type IpamsvcOptionCodeModelWithFilter struct {
 	Results types.List `tfsdk:"results"`
 }
 
-func (m *IpamsvcOptionCodeModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamsvcOptionCode, diags *diag.Diagnostics) {
+func (m *IpamsvcOptionCodeModelWithFilter) FlattenResults(ctx context.Context, from []ipam.OptionCode, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -94,7 +94,7 @@ func (d *OptionCodeDataSource) Read(ctx context.Context, req datasource.ReadRequ
 
 	apiRes, _, err := d.client.IPAddressManagementAPI.
 		OptionCodeAPI.
-		OptionCodeList(ctx).
+		List(ctx).
 		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 		Execute()
 	if err != nil {

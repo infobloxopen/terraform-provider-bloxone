@@ -71,7 +71,7 @@ func (r *ServicesResource) Create(ctx context.Context, req resource.CreateReques
 
 	apiRes, _, err := r.client.InfraManagementAPI.
 		ServicesAPI.
-		ServicesCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -108,7 +108,7 @@ func (r *ServicesResource) Read(ctx context.Context, req resource.ReadRequest, r
 
 	apiRes, httpRes, err := r.client.InfraManagementAPI.
 		ServicesAPI.
-		ServicesRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -138,7 +138,7 @@ func (r *ServicesResource) Update(ctx context.Context, req resource.UpdateReques
 
 	apiRes, _, err := r.client.InfraManagementAPI.
 		ServicesAPI.
-		ServicesUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -175,7 +175,7 @@ func (r *ServicesResource) Delete(ctx context.Context, req resource.DeleteReques
 
 	httpRes, err := r.client.InfraManagementAPI.
 		ServicesAPI.
-		ServicesDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -237,7 +237,7 @@ func (r *ServicesResource) waitServiceStopped(ctx context.Context, name string, 
 func (r *ServicesResource) stateRefreshFunc(name string) retry.StateRefreshFunc {
 	return func() (result interface{}, state string, err error) {
 		apiRes, _, err := r.client.InfraManagementAPI.
-			DetailAPI.DetailServicesList(context.Background()).
+			DetailAPI.ServicesList(context.Background()).
 			Filter(fmt.Sprintf("name=='%s'", name)).
 			Execute()
 		if err != nil {

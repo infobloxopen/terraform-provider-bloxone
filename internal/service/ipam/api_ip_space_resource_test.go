@@ -24,7 +24,7 @@ import (
 
 func TestAccIpSpaceResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -62,7 +62,7 @@ func TestAccIpSpaceResource_basic(t *testing.T) {
 
 func TestAccIpSpaceResource_disappears(t *testing.T) {
 	resourceName := "bloxone_ipam_ip_space.test"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -84,7 +84,7 @@ func TestAccIpSpaceResource_disappears(t *testing.T) {
 
 func TestAccIpSpaceResource_AsmConfig(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_asm_config"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -131,7 +131,7 @@ func TestAccIpSpaceResource_AsmConfig(t *testing.T) {
 
 func TestAccIpSpaceResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_comment"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -177,7 +177,7 @@ func TestAccIpSpaceResource_Comment(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsClientUpdate(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_client_update"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -207,7 +207,7 @@ func TestAccIpSpaceResource_DdnsClientUpdate(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsConflictResolutionMode(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_conflict_resolution_mode"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -239,7 +239,7 @@ func TestAccIpSpaceResource_DdnsConflictResolutionMode(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsDomain(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_domain"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -285,7 +285,7 @@ func TestAccIpSpaceResource_DdnsDomain(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsGenerateName(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_generate_name"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -315,7 +315,7 @@ func TestAccIpSpaceResource_DdnsGenerateName(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsGeneratedPrefix(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_generated_prefix"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -345,7 +345,7 @@ func TestAccIpSpaceResource_DdnsGeneratedPrefix(t *testing.T) {
 
 func TestAccIpSpaceResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_dhcp_options"
-	var v1 ipam.IpamsvcIPSpace
+	var v1 ipam.IPSpace
 	name := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -377,7 +377,7 @@ func TestAccIpSpaceResource_DhcpOptions(t *testing.T) {
 
 func TestAccIpSpaceResource_DhcpOptionsV6(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_dhcp_options_v6"
-	var v1 ipam.IpamsvcIPSpace
+	var v1 ipam.IPSpace
 	name := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -409,7 +409,7 @@ func TestAccIpSpaceResource_DhcpOptionsV6(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsSendUpdates(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_send_updates"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -439,7 +439,7 @@ func TestAccIpSpaceResource_DdnsSendUpdates(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsTtlPercent(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_ttl_percent"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -469,7 +469,7 @@ func TestAccIpSpaceResource_DdnsTtlPercent(t *testing.T) {
 
 func TestAccIpSpaceResource_DdnsUpdateOnRenew(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_update_on_renew"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -499,7 +499,7 @@ func TestAccIpSpaceResource_DdnsUpdateOnRenew(t *testing.T) {
 
 func TestAccIpSpaceResource_DhcpConfig(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_dhcp_config"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -541,7 +541,7 @@ func TestAccIpSpaceResource_DhcpConfig(t *testing.T) {
 
 func TestAccIpSpaceResource_HeaderOptionFilename(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_header_option_filename"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -587,7 +587,7 @@ func TestAccIpSpaceResource_HeaderOptionFilename(t *testing.T) {
 
 func TestAccIpSpaceResource_HeaderOptionServerAddress(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_header_option_server_address"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -633,7 +633,7 @@ func TestAccIpSpaceResource_HeaderOptionServerAddress(t *testing.T) {
 
 func TestAccIpSpaceResource_HeaderOptionServerName(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_header_option_server_name"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -679,7 +679,7 @@ func TestAccIpSpaceResource_HeaderOptionServerName(t *testing.T) {
 
 func TestAccIpSpaceResource_HostnameRewriteChar(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_hostname_rewrite_char"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -709,7 +709,7 @@ func TestAccIpSpaceResource_HostnameRewriteChar(t *testing.T) {
 
 func TestAccIpSpaceResource_HostnameRewriteEnabled(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_hostname_rewrite_enabled"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -739,7 +739,7 @@ func TestAccIpSpaceResource_HostnameRewriteEnabled(t *testing.T) {
 
 func TestAccIpSpaceResource_HostnameRewriteRegex(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_hostname_rewrite_regex"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -769,7 +769,7 @@ func TestAccIpSpaceResource_HostnameRewriteRegex(t *testing.T) {
 
 func TestAccIpSpaceResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_inheritance_sources"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -831,7 +831,7 @@ func TestAccIpSpaceResource_InheritanceSources(t *testing.T) {
 
 func TestAccIpSpaceResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_tags"
-	var v ipam.IpamsvcIPSpace
+	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -873,7 +873,7 @@ func TestAccIpSpaceResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckIpSpaceExists(ctx context.Context, resourceName string, v *ipam.IpamsvcIPSpace) resource.TestCheckFunc {
+func testAccCheckIpSpaceExists(ctx context.Context, resourceName string, v *ipam.IPSpace) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -882,7 +882,7 @@ func testAccCheckIpSpaceExists(ctx context.Context, resourceName string, v *ipam
 		}
 		apiRes, _, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			IpSpaceAPI.
-			IpSpaceRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -895,12 +895,12 @@ func testAccCheckIpSpaceExists(ctx context.Context, resourceName string, v *ipam
 	}
 }
 
-func testAccCheckIpSpaceDestroy(ctx context.Context, v *ipam.IpamsvcIPSpace) resource.TestCheckFunc {
+func testAccCheckIpSpaceDestroy(ctx context.Context, v *ipam.IPSpace) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			IpSpaceAPI.
-			IpSpaceRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -913,12 +913,12 @@ func testAccCheckIpSpaceDestroy(ctx context.Context, v *ipam.IpamsvcIPSpace) res
 	}
 }
 
-func testAccCheckIpSpaceDisappears(ctx context.Context, v *ipam.IpamsvcIPSpace) resource.TestCheckFunc {
+func testAccCheckIpSpaceDisappears(ctx context.Context, v *ipam.IPSpace) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			IpSpaceAPI.
-			IpSpaceDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

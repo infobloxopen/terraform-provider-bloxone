@@ -8,14 +8,14 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_data"
+	"github.com/infobloxopen/bloxone-go-client/dnsdata"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccRecordADataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_a_records.test"
 	resourceName := "bloxone_dns_a_record.test"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 	niz := acctest.RandomNameWithPrefix("a")
 
@@ -41,7 +41,7 @@ func TestAccRecordADataSource_TagFilters(t *testing.T) {
 	resourceName := "bloxone_dns_a_record.test"
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,

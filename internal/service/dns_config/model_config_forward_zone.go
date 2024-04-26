@@ -13,7 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -170,11 +170,11 @@ var ConfigForwardZoneResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *ConfigForwardZoneModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *dns_config.ConfigForwardZone {
+func (m *ConfigForwardZoneModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *dnsconfig.ForwardZone {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigForwardZone{
+	to := &dnsconfig.ForwardZone{
 		Comment:            flex.ExpandStringPointer(m.Comment),
 		Disabled:           flex.ExpandBoolPointer(m.Disabled),
 		ExternalForwarders: flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalForwarders, diags, ExpandConfigForwarder),
@@ -192,7 +192,7 @@ func (m *ConfigForwardZoneModel) Expand(ctx context.Context, diags *diag.Diagnos
 	return to
 }
 
-func DataSourceFlattenConfigForwardZone(ctx context.Context, from *dns_config.ConfigForwardZone, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigForwardZone(ctx context.Context, from *dnsconfig.ForwardZone, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigForwardZoneAttrTypes)
 	}
@@ -204,7 +204,7 @@ func DataSourceFlattenConfigForwardZone(ctx context.Context, from *dns_config.Co
 	return t
 }
 
-func (m *ConfigForwardZoneModel) Flatten(ctx context.Context, from *dns_config.ConfigForwardZone, diags *diag.Diagnostics) {
+func (m *ConfigForwardZoneModel) Flatten(ctx context.Context, from *dnsconfig.ForwardZone, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

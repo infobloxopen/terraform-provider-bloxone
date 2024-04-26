@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -52,7 +52,7 @@ var ConfigTrustAnchorResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigTrustAnchor(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigTrustAnchor {
+func ExpandConfigTrustAnchor(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.TrustAnchor {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -64,11 +64,11 @@ func ExpandConfigTrustAnchor(ctx context.Context, o types.Object, diags *diag.Di
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigTrustAnchorModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigTrustAnchor {
+func (m *ConfigTrustAnchorModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.TrustAnchor {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigTrustAnchor{
+	to := &dnsconfig.TrustAnchor{
 		Algorithm: flex.ExpandInt64(m.Algorithm),
 		PublicKey: flex.ExpandString(m.PublicKey),
 		Sep:       flex.ExpandBoolPointer(m.Sep),
@@ -77,7 +77,7 @@ func (m *ConfigTrustAnchorModel) Expand(ctx context.Context, diags *diag.Diagnos
 	return to
 }
 
-func FlattenConfigTrustAnchor(ctx context.Context, from *dns_config.ConfigTrustAnchor, diags *diag.Diagnostics) types.Object {
+func FlattenConfigTrustAnchor(ctx context.Context, from *dnsconfig.TrustAnchor, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigTrustAnchorAttrTypes)
 	}
@@ -88,7 +88,7 @@ func FlattenConfigTrustAnchor(ctx context.Context, from *dns_config.ConfigTrustA
 	return t
 }
 
-func (m *ConfigTrustAnchorModel) Flatten(ctx context.Context, from *dns_config.ConfigTrustAnchor, diags *diag.Diagnostics) {
+func (m *ConfigTrustAnchorModel) Flatten(ctx context.Context, from *dnsconfig.TrustAnchor, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

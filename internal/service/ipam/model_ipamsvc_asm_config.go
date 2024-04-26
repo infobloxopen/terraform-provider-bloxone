@@ -108,7 +108,7 @@ var IpamsvcASMConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcASMConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcASMConfig {
+func ExpandIpamsvcASMConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.ASMConfig {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -120,11 +120,11 @@ func ExpandIpamsvcASMConfig(ctx context.Context, o types.Object, diags *diag.Dia
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcASMConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcASMConfig {
+func (m *IpamsvcASMConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.ASMConfig {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcASMConfig{
+	to := &ipam.ASMConfig{
 		AsmThreshold:       utils.Ptr(int64(m.AsmThreshold.ValueInt64())),
 		Enable:             m.Enable.ValueBoolPointer(),
 		EnableNotification: m.EnableNotification.ValueBoolPointer(),
@@ -139,7 +139,7 @@ func (m *IpamsvcASMConfigModel) Expand(ctx context.Context, diags *diag.Diagnost
 	return to
 }
 
-func FlattenIpamsvcASMConfig(ctx context.Context, from *ipam.IpamsvcASMConfig, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcASMConfig(ctx context.Context, from *ipam.ASMConfig, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcASMConfigAttrTypes)
 	}
@@ -150,7 +150,7 @@ func FlattenIpamsvcASMConfig(ctx context.Context, from *ipam.IpamsvcASMConfig, d
 	return t
 }
 
-func (m *IpamsvcASMConfigModel) Flatten(ctx context.Context, from *ipam.IpamsvcASMConfig, diags *diag.Diagnostics) {
+func (m *IpamsvcASMConfigModel) Flatten(ctx context.Context, from *ipam.ASMConfig, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

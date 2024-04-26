@@ -23,101 +23,90 @@ import (
 
 type KerberosAPI interface {
 	/*
-			KerberosDelete Delete the Kerberos key.
+			Delete Delete the Kerberos key.
 
 			Use this method to delete a __KerberosKey__ object.
 		A __KerberosKey__ object represents a Kerberos key.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id An application specific resource identity of a resource
-			@return ApiKerberosDeleteRequest
+			@return KerberosAPIDeleteRequest
 	*/
-	KerberosDelete(ctx context.Context, id string) ApiKerberosDeleteRequest
+	Delete(ctx context.Context, id string) KerberosAPIDeleteRequest
 
-	// KerberosDeleteExecute executes the request
-	KerberosDeleteExecute(r ApiKerberosDeleteRequest) (*http.Response, error)
+	// DeleteExecute executes the request
+	DeleteExecute(r KerberosAPIDeleteRequest) (*http.Response, error)
 	/*
-			KerberosList Retrieve Kerberos keys.
+			List Retrieve Kerberos keys.
 
 			Use this method to retrieve __KerberosKey__ objects.
 		A __KerberosKey__ object represents a Kerberos key.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiKerberosListRequest
+			@return KerberosAPIListRequest
 	*/
-	KerberosList(ctx context.Context) ApiKerberosListRequest
+	List(ctx context.Context) KerberosAPIListRequest
 
-	// KerberosListExecute executes the request
-	//  @return KeysListKerberosKeyResponse
-	KerberosListExecute(r ApiKerberosListRequest) (*KeysListKerberosKeyResponse, *http.Response, error)
+	// ListExecute executes the request
+	//  @return ListKerberosKeyResponse
+	ListExecute(r KerberosAPIListRequest) (*ListKerberosKeyResponse, *http.Response, error)
 	/*
-			KerberosRead Retrieve the Kerberos key.
+			Read Retrieve the Kerberos key.
 
 			Use this method to retrieve a __KerberosKey__ object.
 		A __KerberosKey__ object represents a Kerberos key.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id An application specific resource identity of a resource
-			@return ApiKerberosReadRequest
+			@return KerberosAPIReadRequest
 	*/
-	KerberosRead(ctx context.Context, id string) ApiKerberosReadRequest
+	Read(ctx context.Context, id string) KerberosAPIReadRequest
 
-	// KerberosReadExecute executes the request
-	//  @return KeysReadKerberosKeyResponse
-	KerberosReadExecute(r ApiKerberosReadRequest) (*KeysReadKerberosKeyResponse, *http.Response, error)
+	// ReadExecute executes the request
+	//  @return ReadKerberosKeyResponse
+	ReadExecute(r KerberosAPIReadRequest) (*ReadKerberosKeyResponse, *http.Response, error)
 	/*
-			KerberosUpdate Update the Kerberos key.
+			Update Update the Kerberos key.
 
 			Use this method to update a __KerberosKey__ object.
 		A __KerberosKey__ object represents a Kerberos key.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id An application specific resource identity of a resource
-			@return ApiKerberosUpdateRequest
+			@return KerberosAPIUpdateRequest
 	*/
-	KerberosUpdate(ctx context.Context, id string) ApiKerberosUpdateRequest
+	Update(ctx context.Context, id string) KerberosAPIUpdateRequest
 
-	// KerberosUpdateExecute executes the request
-	//  @return KeysUpdateKerberosKeyResponse
-	KerberosUpdateExecute(r ApiKerberosUpdateRequest) (*KeysUpdateKerberosKeyResponse, *http.Response, error)
-	/*
-		KeysKerberosPost Method for KeysKerberosPost
-
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiKeysKerberosPostRequest
-	*/
-	KeysKerberosPost(ctx context.Context) ApiKeysKerberosPostRequest
-
-	// KeysKerberosPostExecute executes the request
-	//  @return KeysListKerberosKeyResponse
-	KeysKerberosPostExecute(r ApiKeysKerberosPostRequest) (*KeysListKerberosKeyResponse, *http.Response, error)
+	// UpdateExecute executes the request
+	//  @return UpdateKerberosKeyResponse
+	UpdateExecute(r KerberosAPIUpdateRequest) (*UpdateKerberosKeyResponse, *http.Response, error)
 }
 
 // KerberosAPIService KerberosAPI service
 type KerberosAPIService internal.Service
 
-type ApiKerberosDeleteRequest struct {
+type KerberosAPIDeleteRequest struct {
 	ctx        context.Context
 	ApiService KerberosAPI
 	id         string
 }
 
-func (r ApiKerberosDeleteRequest) Execute() (*http.Response, error) {
-	return r.ApiService.KerberosDeleteExecute(r)
+func (r KerberosAPIDeleteRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteExecute(r)
 }
 
 /*
-KerberosDelete Delete the Kerberos key.
+Delete Delete the Kerberos key.
 
 Use this method to delete a __KerberosKey__ object.
 A __KerberosKey__ object represents a Kerberos key.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id An application specific resource identity of a resource
-	@return ApiKerberosDeleteRequest
+	@return KerberosAPIDeleteRequest
 */
-func (a *KerberosAPIService) KerberosDelete(ctx context.Context, id string) ApiKerberosDeleteRequest {
-	return ApiKerberosDeleteRequest{
+func (a *KerberosAPIService) Delete(ctx context.Context, id string) KerberosAPIDeleteRequest {
+	return KerberosAPIDeleteRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -125,14 +114,14 @@ func (a *KerberosAPIService) KerberosDelete(ctx context.Context, id string) ApiK
 }
 
 // Execute executes the request
-func (a *KerberosAPIService) KerberosDeleteExecute(r ApiKerberosDeleteRequest) (*http.Response, error) {
+func (a *KerberosAPIService) DeleteExecute(r KerberosAPIDeleteRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "KerberosAPIService.KerberosDelete")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "KerberosAPIService.Delete")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -161,20 +150,6 @@ func (a *KerberosAPIService) KerberosDeleteExecute(r ApiKerberosDeleteRequest) (
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return nil, err
@@ -200,7 +175,7 @@ func (a *KerberosAPIService) KerberosDeleteExecute(r ApiKerberosDeleteRequest) (
 	return localVarHTTPResponse, nil
 }
 
-type ApiKerberosListRequest struct {
+type KerberosAPIListRequest struct {
 	ctx        context.Context
 	ApiService KerberosAPI
 	fields     *string
@@ -214,68 +189,68 @@ type ApiKerberosListRequest struct {
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiKerberosListRequest) Fields(fields string) ApiKerberosListRequest {
+func (r KerberosAPIListRequest) Fields(fields string) KerberosAPIListRequest {
 	r.fields = &fields
 	return r
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;. The following operators are commonly used in filter expressions:  |  Op   |  Description               |  |  --   |  -----------               |  |  &#x3D;&#x3D;   |  Equal                     |  |  !&#x3D;   |  Not Equal                 |  |  &gt;    |  Greater Than              |  |   &gt;&#x3D;  |  Greater Than or Equal To  |  |  &lt;    |  Less Than                 |  |  &lt;&#x3D;   |  Less Than or Equal To     |  |  and  |  Logical AND               |  |  ~    |  Matches Regex             |  |  !~   |  Does Not Match Regex      |  |  or   |  Logical OR                |  |  not  |  Logical NOT               |  |  ()   |  Groupping Operators       |
-func (r ApiKerberosListRequest) Filter(filter string) ApiKerberosListRequest {
+func (r KerberosAPIListRequest) Filter(filter string) KerberosAPIListRequest {
 	r.filter = &filter
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiKerberosListRequest) Offset(offset int32) ApiKerberosListRequest {
+func (r KerberosAPIListRequest) Offset(offset int32) KerberosAPIListRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiKerberosListRequest) Limit(limit int32) ApiKerberosListRequest {
+func (r KerberosAPIListRequest) Limit(limit int32) KerberosAPIListRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiKerberosListRequest) PageToken(pageToken string) ApiKerberosListRequest {
+func (r KerberosAPIListRequest) PageToken(pageToken string) KerberosAPIListRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
 // A collection of response resources can be sorted by their JSON tags. For a &#39;flat&#39; resource, the tag name is straightforward. If sorting is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, its value is assumed to be null.)  Specify this parameter as a comma-separated list of JSON tag names. The sort direction can be specified by a suffix separated by whitespace before the tag name. The suffix &#39;asc&#39; sorts the data in ascending order. The suffix &#39;desc&#39; sorts the data in descending order. If no suffix is specified the data is sorted in ascending order.
-func (r ApiKerberosListRequest) OrderBy(orderBy string) ApiKerberosListRequest {
+func (r KerberosAPIListRequest) OrderBy(orderBy string) KerberosAPIListRequest {
 	r.orderBy = &orderBy
 	return r
 }
 
 // This parameter is used for filtering by tags.
-func (r ApiKerberosListRequest) Tfilter(tfilter string) ApiKerberosListRequest {
+func (r KerberosAPIListRequest) Tfilter(tfilter string) KerberosAPIListRequest {
 	r.tfilter = &tfilter
 	return r
 }
 
 // This parameter is used for sorting by tags.
-func (r ApiKerberosListRequest) TorderBy(torderBy string) ApiKerberosListRequest {
+func (r KerberosAPIListRequest) TorderBy(torderBy string) KerberosAPIListRequest {
 	r.torderBy = &torderBy
 	return r
 }
 
-func (r ApiKerberosListRequest) Execute() (*KeysListKerberosKeyResponse, *http.Response, error) {
-	return r.ApiService.KerberosListExecute(r)
+func (r KerberosAPIListRequest) Execute() (*ListKerberosKeyResponse, *http.Response, error) {
+	return r.ApiService.ListExecute(r)
 }
 
 /*
-KerberosList Retrieve Kerberos keys.
+List Retrieve Kerberos keys.
 
 Use this method to retrieve __KerberosKey__ objects.
 A __KerberosKey__ object represents a Kerberos key.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiKerberosListRequest
+	@return KerberosAPIListRequest
 */
-func (a *KerberosAPIService) KerberosList(ctx context.Context) ApiKerberosListRequest {
-	return ApiKerberosListRequest{
+func (a *KerberosAPIService) List(ctx context.Context) KerberosAPIListRequest {
+	return KerberosAPIListRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -283,16 +258,16 @@ func (a *KerberosAPIService) KerberosList(ctx context.Context) ApiKerberosListRe
 
 // Execute executes the request
 //
-//	@return KeysListKerberosKeyResponse
-func (a *KerberosAPIService) KerberosListExecute(r ApiKerberosListRequest) (*KeysListKerberosKeyResponse, *http.Response, error) {
+//	@return ListKerberosKeyResponse
+func (a *KerberosAPIService) ListExecute(r KerberosAPIListRequest) (*ListKerberosKeyResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *KeysListKerberosKeyResponse
+		localVarReturnValue *ListKerberosKeyResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "KerberosAPIService.KerberosList")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "KerberosAPIService.List")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -344,20 +319,6 @@ func (a *KerberosAPIService) KerberosListExecute(r ApiKerberosListRequest) (*Key
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -388,7 +349,7 @@ func (a *KerberosAPIService) KerberosListExecute(r ApiKerberosListRequest) (*Key
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiKerberosReadRequest struct {
+type KerberosAPIReadRequest struct {
 	ctx        context.Context
 	ApiService KerberosAPI
 	id         string
@@ -396,27 +357,27 @@ type ApiKerberosReadRequest struct {
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiKerberosReadRequest) Fields(fields string) ApiKerberosReadRequest {
+func (r KerberosAPIReadRequest) Fields(fields string) KerberosAPIReadRequest {
 	r.fields = &fields
 	return r
 }
 
-func (r ApiKerberosReadRequest) Execute() (*KeysReadKerberosKeyResponse, *http.Response, error) {
-	return r.ApiService.KerberosReadExecute(r)
+func (r KerberosAPIReadRequest) Execute() (*ReadKerberosKeyResponse, *http.Response, error) {
+	return r.ApiService.ReadExecute(r)
 }
 
 /*
-KerberosRead Retrieve the Kerberos key.
+Read Retrieve the Kerberos key.
 
 Use this method to retrieve a __KerberosKey__ object.
 A __KerberosKey__ object represents a Kerberos key.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id An application specific resource identity of a resource
-	@return ApiKerberosReadRequest
+	@return KerberosAPIReadRequest
 */
-func (a *KerberosAPIService) KerberosRead(ctx context.Context, id string) ApiKerberosReadRequest {
-	return ApiKerberosReadRequest{
+func (a *KerberosAPIService) Read(ctx context.Context, id string) KerberosAPIReadRequest {
+	return KerberosAPIReadRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -425,16 +386,16 @@ func (a *KerberosAPIService) KerberosRead(ctx context.Context, id string) ApiKer
 
 // Execute executes the request
 //
-//	@return KeysReadKerberosKeyResponse
-func (a *KerberosAPIService) KerberosReadExecute(r ApiKerberosReadRequest) (*KeysReadKerberosKeyResponse, *http.Response, error) {
+//	@return ReadKerberosKeyResponse
+func (a *KerberosAPIService) ReadExecute(r KerberosAPIReadRequest) (*ReadKerberosKeyResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *KeysReadKerberosKeyResponse
+		localVarReturnValue *ReadKerberosKeyResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "KerberosAPIService.KerberosRead")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "KerberosAPIService.Read")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -466,20 +427,6 @@ func (a *KerberosAPIService) KerberosReadExecute(r ApiKerberosReadRequest) (*Key
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -510,34 +457,34 @@ func (a *KerberosAPIService) KerberosReadExecute(r ApiKerberosReadRequest) (*Key
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiKerberosUpdateRequest struct {
+type KerberosAPIUpdateRequest struct {
 	ctx        context.Context
 	ApiService KerberosAPI
 	id         string
 	body       *KerberosKey
 }
 
-func (r ApiKerberosUpdateRequest) Body(body KerberosKey) ApiKerberosUpdateRequest {
+func (r KerberosAPIUpdateRequest) Body(body KerberosKey) KerberosAPIUpdateRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiKerberosUpdateRequest) Execute() (*KeysUpdateKerberosKeyResponse, *http.Response, error) {
-	return r.ApiService.KerberosUpdateExecute(r)
+func (r KerberosAPIUpdateRequest) Execute() (*UpdateKerberosKeyResponse, *http.Response, error) {
+	return r.ApiService.UpdateExecute(r)
 }
 
 /*
-KerberosUpdate Update the Kerberos key.
+Update Update the Kerberos key.
 
 Use this method to update a __KerberosKey__ object.
 A __KerberosKey__ object represents a Kerberos key.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id An application specific resource identity of a resource
-	@return ApiKerberosUpdateRequest
+	@return KerberosAPIUpdateRequest
 */
-func (a *KerberosAPIService) KerberosUpdate(ctx context.Context, id string) ApiKerberosUpdateRequest {
-	return ApiKerberosUpdateRequest{
+func (a *KerberosAPIService) Update(ctx context.Context, id string) KerberosAPIUpdateRequest {
+	return KerberosAPIUpdateRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -546,16 +493,16 @@ func (a *KerberosAPIService) KerberosUpdate(ctx context.Context, id string) ApiK
 
 // Execute executes the request
 //
-//	@return KeysUpdateKerberosKeyResponse
-func (a *KerberosAPIService) KerberosUpdateExecute(r ApiKerberosUpdateRequest) (*KeysUpdateKerberosKeyResponse, *http.Response, error) {
+//	@return UpdateKerberosKeyResponse
+func (a *KerberosAPIService) UpdateExecute(r KerberosAPIUpdateRequest) (*UpdateKerberosKeyResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPatch
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *KeysUpdateKerberosKeyResponse
+		localVarReturnValue *UpdateKerberosKeyResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "KerberosAPIService.KerberosUpdate")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "KerberosAPIService.Update")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -589,136 +536,6 @@ func (a *KerberosAPIService) KerberosUpdateExecute(r ApiKerberosUpdateRequest) (
 	}
 	// body params
 	localVarPostBody = r.body
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
-	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.Client.CallAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := internal.NewGenericOpenAPIErrorWithBody(localVarHTTPResponse.Status, localVarBody)
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.Client.Decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiKeysKerberosPostRequest struct {
-	ctx        context.Context
-	ApiService KerberosAPI
-	body       *KerberosKey
-}
-
-func (r ApiKeysKerberosPostRequest) Body(body KerberosKey) ApiKeysKerberosPostRequest {
-	r.body = &body
-	return r
-}
-
-func (r ApiKeysKerberosPostRequest) Execute() (*KeysListKerberosKeyResponse, *http.Response, error) {
-	return r.ApiService.KeysKerberosPostExecute(r)
-}
-
-/*
-KeysKerberosPost Method for KeysKerberosPost
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiKeysKerberosPostRequest
-*/
-func (a *KerberosAPIService) KeysKerberosPost(ctx context.Context) ApiKeysKerberosPostRequest {
-	return ApiKeysKerberosPostRequest{
-		ApiService: a,
-		ctx:        ctx,
-	}
-}
-
-// Execute executes the request
-//
-//	@return KeysListKerberosKeyResponse
-func (a *KerberosAPIService) KeysKerberosPostExecute(r ApiKeysKerberosPostRequest) (*KeysListKerberosKeyResponse, *http.Response, error) {
-	var (
-		localVarHTTPMethod  = http.MethodPost
-		localVarPostBody    interface{}
-		formFiles           []internal.FormFile
-		localVarReturnValue *KeysListKerberosKeyResponse
-	)
-
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "KerberosAPIService.KeysKerberosPost")
-	if err != nil {
-		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
-	}
-
-	localVarPath := localBasePath + "/keys/kerberos"
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.body == nil {
-		return localVarReturnValue, nil, internal.ReportError("body is required and must be specified")
-	}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := internal.SelectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	// body params
-	localVarPostBody = r.body
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -65,7 +65,7 @@ var ConfigExternalSecondaryResourceSchemaAttributes = map[string]schema.Attribut
 	},
 }
 
-func ExpandConfigExternalSecondary(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigExternalSecondary {
+func ExpandConfigExternalSecondary(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.ExternalSecondary {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -77,11 +77,11 @@ func ExpandConfigExternalSecondary(ctx context.Context, o types.Object, diags *d
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigExternalSecondaryModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigExternalSecondary {
+func (m *ConfigExternalSecondaryModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.ExternalSecondary {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigExternalSecondary{
+	to := &dnsconfig.ExternalSecondary{
 		Address:     flex.ExpandString(m.Address),
 		Fqdn:        flex.ExpandString(m.Fqdn),
 		Stealth:     flex.ExpandBoolPointer(m.Stealth),
@@ -91,7 +91,7 @@ func (m *ConfigExternalSecondaryModel) Expand(ctx context.Context, diags *diag.D
 	return to
 }
 
-func FlattenConfigExternalSecondary(ctx context.Context, from *dns_config.ConfigExternalSecondary, diags *diag.Diagnostics) types.Object {
+func FlattenConfigExternalSecondary(ctx context.Context, from *dnsconfig.ExternalSecondary, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigExternalSecondaryAttrTypes)
 	}
@@ -102,7 +102,7 @@ func FlattenConfigExternalSecondary(ctx context.Context, from *dns_config.Config
 	return t
 }
 
-func (m *ConfigExternalSecondaryModel) Flatten(ctx context.Context, from *dns_config.ConfigExternalSecondary, diags *diag.Diagnostics) {
+func (m *ConfigExternalSecondaryModel) Flatten(ctx context.Context, from *dnsconfig.ExternalSecondary, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

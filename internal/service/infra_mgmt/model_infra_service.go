@@ -17,7 +17,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/infra_mgmt"
+	"github.com/infobloxopen/bloxone-go-client/inframgmt"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -148,7 +148,7 @@ func InfraServiceResourceSchemaAttributes() map[string]schema.Attribute {
 	}
 }
 
-func ExpandInfraService(ctx context.Context, o types.Object, diags *diag.Diagnostics) *infra_mgmt.InfraService {
+func ExpandInfraService(ctx context.Context, o types.Object, diags *diag.Diagnostics) *inframgmt.Service {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -160,11 +160,11 @@ func ExpandInfraService(ctx context.Context, o types.Object, diags *diag.Diagnos
 	return m.Expand(ctx, diags)
 }
 
-func (m *InfraServiceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *infra_mgmt.InfraService {
+func (m *InfraServiceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *inframgmt.Service {
 	if m == nil {
 		return nil
 	}
-	to := &infra_mgmt.InfraService{
+	to := &inframgmt.Service{
 		Description:     flex.ExpandStringPointer(m.Description),
 		DesiredState:    flex.ExpandStringPointer(m.DesiredState),
 		DesiredVersion:  flex.ExpandStringPointer(m.DesiredVersion),
@@ -177,7 +177,7 @@ func (m *InfraServiceModel) Expand(ctx context.Context, diags *diag.Diagnostics)
 	return to
 }
 
-func DataSourceFlattenInfraService(ctx context.Context, from *infra_mgmt.InfraService, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenInfraService(ctx context.Context, from *inframgmt.Service, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(InfraServiceAttrTypes)
 	}
@@ -189,7 +189,7 @@ func DataSourceFlattenInfraService(ctx context.Context, from *infra_mgmt.InfraSe
 	return t
 }
 
-func (m *InfraServiceModel) Flatten(ctx context.Context, from *infra_mgmt.InfraService, diags *diag.Diagnostics) {
+func (m *InfraServiceModel) Flatten(ctx context.Context, from *inframgmt.Service, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
@@ -231,11 +231,11 @@ type InfraServiceModelWithTimeouts struct {
 	WaitForState    types.Bool        `tfsdk:"wait_for_state"`
 }
 
-func (m *InfraServiceModelWithTimeouts) Expand(ctx context.Context, diags *diag.Diagnostics) *infra_mgmt.InfraService {
+func (m *InfraServiceModelWithTimeouts) Expand(ctx context.Context, diags *diag.Diagnostics) *inframgmt.Service {
 	if m == nil {
 		return nil
 	}
-	to := &infra_mgmt.InfraService{
+	to := &inframgmt.Service{
 		Description:     flex.ExpandStringPointer(m.Description),
 		DesiredState:    flex.ExpandStringPointer(m.DesiredState),
 		DesiredVersion:  flex.ExpandStringPointer(m.DesiredVersion),
@@ -248,7 +248,7 @@ func (m *InfraServiceModelWithTimeouts) Expand(ctx context.Context, diags *diag.
 	return to
 }
 
-func (m *InfraServiceModelWithTimeouts) Flatten(ctx context.Context, from *infra_mgmt.InfraService, diags *diag.Diagnostics) {
+func (m *InfraServiceModelWithTimeouts) Flatten(ctx context.Context, from *inframgmt.Service, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

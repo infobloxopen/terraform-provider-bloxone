@@ -15,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -208,11 +209,11 @@ var IpamsvcAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *IpamsvcAddressModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcAddress {
+func (m *IpamsvcAddressModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.Address {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcAddress{
+	to := &ipam.Address{
 		Address:   flex.ExpandString(m.Address),
 		Comment:   flex.ExpandStringPointer(m.Comment),
 		Hwaddr:    flex.ExpandStringPointer(m.Hwaddr),
@@ -233,7 +234,7 @@ func (m *IpamsvcAddressModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenIpamsvcAddressDataSource(ctx context.Context, from *ipam.IpamsvcAddress, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcAddressDataSource(ctx context.Context, from *ipam.Address, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcAddressAttrTypes)
 	}
@@ -245,7 +246,7 @@ func FlattenIpamsvcAddressDataSource(ctx context.Context, from *ipam.IpamsvcAddr
 	return t
 }
 
-func (m *IpamsvcAddressModel) Flatten(ctx context.Context, from *ipam.IpamsvcAddress, diags *diag.Diagnostics) {
+func (m *IpamsvcAddressModel) Flatten(ctx context.Context, from *ipam.Address, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

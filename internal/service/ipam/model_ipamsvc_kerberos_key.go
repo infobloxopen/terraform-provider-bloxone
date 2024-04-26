@@ -59,7 +59,7 @@ var IpamsvcKerberosKeyResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcKerberosKey(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcKerberosKey {
+func ExpandIpamsvcKerberosKey(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.KerberosKey {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -71,17 +71,17 @@ func ExpandIpamsvcKerberosKey(ctx context.Context, o types.Object, diags *diag.D
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcKerberosKeyModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcKerberosKey {
+func (m *IpamsvcKerberosKeyModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.KerberosKey {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcKerberosKey{
+	to := &ipam.KerberosKey{
 		Key: m.Key.ValueString(),
 	}
 	return to
 }
 
-func FlattenIpamsvcKerberosKey(ctx context.Context, from *ipam.IpamsvcKerberosKey, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcKerberosKey(ctx context.Context, from *ipam.KerberosKey, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcKerberosKeyAttrTypes)
 	}
@@ -92,7 +92,7 @@ func FlattenIpamsvcKerberosKey(ctx context.Context, from *ipam.IpamsvcKerberosKe
 	return t
 }
 
-func (m *IpamsvcKerberosKeyModel) Flatten(ctx context.Context, from *ipam.IpamsvcKerberosKey, diags *diag.Diagnostics) {
+func (m *IpamsvcKerberosKeyModel) Flatten(ctx context.Context, from *ipam.KerberosKey, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

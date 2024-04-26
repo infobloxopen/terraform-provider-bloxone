@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/infra_mgmt"
+	"github.com/infobloxopen/bloxone-go-client/inframgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
@@ -43,7 +43,7 @@ type InfraHostModelWithFilter struct {
 	Timeouts        timeouts.Value `tfsdk:"timeouts"`
 }
 
-func (m *InfraHostModelWithFilter) FlattenResults(ctx context.Context, from []infra_mgmt.InfraHost, diags *diag.Diagnostics) {
+func (m *InfraHostModelWithFilter) FlattenResults(ctx context.Context, from []inframgmt.Host, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -117,10 +117,10 @@ func (d *HostsDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	}
 
 	err := retry.RetryContext(ctx, readTimeout, func() *retry.RetryError {
-		allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]infra_mgmt.InfraHost, error) {
+		allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]inframgmt.Host, error) {
 			apiRes, _, err := d.client.InfraManagementAPI.
 				HostsAPI.
-				HostsList(ctx).
+				List(ctx).
 				Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 				Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 				Execute()

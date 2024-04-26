@@ -10,8 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/infra_mgmt"
-
+	"github.com/infobloxopen/bloxone-go-client/inframgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -67,7 +66,7 @@ var InfraServiceHostConfigResourceSchemaAttributes = map[string]schema.Attribute
 	},
 }
 
-func ExpandInfraServiceHostConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *infra_mgmt.InfraServiceHostConfig {
+func ExpandInfraServiceHostConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *inframgmt.ServiceHostConfig {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -79,11 +78,11 @@ func ExpandInfraServiceHostConfig(ctx context.Context, o types.Object, diags *di
 	return m.Expand(ctx, diags)
 }
 
-func (m *InfraServiceHostConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *infra_mgmt.InfraServiceHostConfig {
+func (m *InfraServiceHostConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *inframgmt.ServiceHostConfig {
 	if m == nil {
 		return nil
 	}
-	to := &infra_mgmt.InfraServiceHostConfig{
+	to := &inframgmt.ServiceHostConfig{
 		CurrentVersion: flex.ExpandStringPointer(m.CurrentVersion),
 		ExtraData:      flex.ExpandStringPointer(m.ExtraData),
 		HostId:         flex.ExpandStringPointer(m.HostId),
@@ -94,7 +93,7 @@ func (m *InfraServiceHostConfigModel) Expand(ctx context.Context, diags *diag.Di
 	return to
 }
 
-func FlattenInfraServiceHostConfig(ctx context.Context, from *infra_mgmt.InfraServiceHostConfig, diags *diag.Diagnostics) types.Object {
+func FlattenInfraServiceHostConfig(ctx context.Context, from *inframgmt.ServiceHostConfig, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(InfraServiceHostConfigAttrTypes)
 	}
@@ -105,7 +104,7 @@ func FlattenInfraServiceHostConfig(ctx context.Context, from *infra_mgmt.InfraSe
 	return t
 }
 
-func (m *InfraServiceHostConfigModel) Flatten(ctx context.Context, from *infra_mgmt.InfraServiceHostConfig, diags *diag.Diagnostics) {
+func (m *InfraServiceHostConfigModel) Flatten(ctx context.Context, from *inframgmt.ServiceHostConfig, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

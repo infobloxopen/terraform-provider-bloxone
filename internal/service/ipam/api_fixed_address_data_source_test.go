@@ -15,7 +15,7 @@ import (
 func TestAccFixedAddressDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dhcp_fixed_addresses.test"
 	resourceName := "bloxone_dhcp_fixed_address.test"
-	var v ipam.IpamsvcFixedAddress
+	var v ipam.FixedAddress
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -38,7 +38,7 @@ func TestAccFixedAddressDataSource_Filters(t *testing.T) {
 func TestAccFixedAddressDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dhcp_fixed_addresses.test"
 	resourceName := "bloxone_dhcp_fixed_address.test"
-	var v ipam.IpamsvcFixedAddress
+	var v ipam.FixedAddress
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{

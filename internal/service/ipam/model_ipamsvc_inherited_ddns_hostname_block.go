@@ -52,7 +52,7 @@ var IpamsvcInheritedDDNSHostnameBlockResourceSchemaAttributes = map[string]schem
 	},
 }
 
-func ExpandIpamsvcInheritedDDNSHostnameBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcInheritedDDNSHostnameBlock {
+func ExpandIpamsvcInheritedDDNSHostnameBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.InheritedDDNSHostnameBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -64,17 +64,17 @@ func ExpandIpamsvcInheritedDDNSHostnameBlock(ctx context.Context, o types.Object
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcInheritedDDNSHostnameBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcInheritedDDNSHostnameBlock {
+func (m *IpamsvcInheritedDDNSHostnameBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.InheritedDDNSHostnameBlock {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcInheritedDDNSHostnameBlock{
+	to := &ipam.InheritedDDNSHostnameBlock{
 		Action: m.Action.ValueStringPointer(),
 	}
 	return to
 }
 
-func FlattenIpamsvcInheritedDDNSHostnameBlock(ctx context.Context, from *ipam.IpamsvcInheritedDDNSHostnameBlock, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcInheritedDDNSHostnameBlock(ctx context.Context, from *ipam.InheritedDDNSHostnameBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcInheritedDDNSHostnameBlockAttrTypes)
 	}
@@ -85,7 +85,7 @@ func FlattenIpamsvcInheritedDDNSHostnameBlock(ctx context.Context, from *ipam.Ip
 	return t
 }
 
-func (m *IpamsvcInheritedDDNSHostnameBlockModel) Flatten(ctx context.Context, from *ipam.IpamsvcInheritedDDNSHostnameBlock, diags *diag.Diagnostics) {
+func (m *IpamsvcInheritedDDNSHostnameBlockModel) Flatten(ctx context.Context, from *ipam.InheritedDDNSHostnameBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

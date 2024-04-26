@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 )
 
 type ConfigInheritedDtcConfigModel struct {
@@ -28,7 +28,7 @@ var ConfigInheritedDtcConfigResourceSchemaAttributes = map[string]schema.Attribu
 	},
 }
 
-func ExpandConfigInheritedDtcConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigInheritedDtcConfig {
+func ExpandConfigInheritedDtcConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.InheritedDtcConfig {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -40,17 +40,17 @@ func ExpandConfigInheritedDtcConfig(ctx context.Context, o types.Object, diags *
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigInheritedDtcConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigInheritedDtcConfig {
+func (m *ConfigInheritedDtcConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.InheritedDtcConfig {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigInheritedDtcConfig{
+	to := &dnsconfig.InheritedDtcConfig{
 		DefaultTtl: ExpandInheritance2InheritedUInt32(ctx, m.DefaultTtl, diags),
 	}
 	return to
 }
 
-func FlattenConfigInheritedDtcConfig(ctx context.Context, from *dns_config.ConfigInheritedDtcConfig, diags *diag.Diagnostics) types.Object {
+func FlattenConfigInheritedDtcConfig(ctx context.Context, from *dnsconfig.InheritedDtcConfig, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigInheritedDtcConfigAttrTypes)
 	}
@@ -61,7 +61,7 @@ func FlattenConfigInheritedDtcConfig(ctx context.Context, from *dns_config.Confi
 	return t
 }
 
-func (m *ConfigInheritedDtcConfigModel) Flatten(ctx context.Context, from *dns_config.ConfigInheritedDtcConfig, diags *diag.Diagnostics) {
+func (m *ConfigInheritedDtcConfigModel) Flatten(ctx context.Context, from *dnsconfig.InheritedDtcConfig, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

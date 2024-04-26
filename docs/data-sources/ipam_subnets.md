@@ -146,8 +146,6 @@ Optional:
 
 Optional:
 
-- `abandoned_reclaim_time` (Number) The abandoned reclaim time in seconds for IPV4 clients.
-- `abandoned_reclaim_time_v6` (Number) The abandoned reclaim time in seconds for IPV6 clients.
 - `allow_unknown` (Boolean) Disable to allow leases only for known IPv4 clients, those for which a fixed address is configured.
 - `allow_unknown_v6` (Boolean) Disable to allow leases only for known IPV6 clients, those for which a fixed address is configured.
 - `filters` (List of String) The resource identifier.
@@ -156,6 +154,12 @@ Optional:
 - `ignore_list` (Attributes List) The list of clients to ignore requests from. (see [below for nested schema](#nestedatt--results--dhcp_config--ignore_list))
 - `lease_time` (Number) The lease duration in seconds.
 - `lease_time_v6` (Number) The lease duration in seconds for IPV6 clients.
+
+Read-Only:
+
+- `abandoned_reclaim_time` (Number) The abandoned reclaim time in seconds for IPV4 clients.
+- `abandoned_reclaim_time_v6` (Number) The abandoned reclaim time in seconds for IPV6 clients.
+- `echo_client_id` (Boolean) Enable/disable to include/exclude the client id when responding to discover or request.
 
 <a id="nestedatt--results--dhcp_config--ignore_list"></a>
 ### Nested Schema for `results.dhcp_config.ignore_list`
@@ -534,6 +538,7 @@ Optional:
 - `abandoned_reclaim_time_v6` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--abandoned_reclaim_time_v6))
 - `allow_unknown` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--allow_unknown))
 - `allow_unknown_v6` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--allow_unknown_v6))
+- `echo_client_id` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--echo_client_id))
 - `filters` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--filters))
 - `filters_v6` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--filters_v6))
 - `ignore_client_uid` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--ignore_client_uid))
@@ -596,6 +601,24 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--allow_unknown_v6"></a>
+### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+
+Optional:
+
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
+
+Read-Only:
+
+- `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Boolean) The inherited value.
+
+
+<a id="nestedatt--results--inheritance_sources--dhcp_config--echo_client_id"></a>
 ### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
 
 Optional:

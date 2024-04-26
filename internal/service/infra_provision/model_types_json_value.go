@@ -9,8 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/infra_provision"
-
+	"github.com/infobloxopen/bloxone-go-client/infraprovision"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -28,7 +27,7 @@ var TypesJSONValueResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandTypesJSONValue(ctx context.Context, o types.Object, diags *diag.Diagnostics) *infra_provision.TypesJSONValue {
+func ExpandTypesJSONValue(ctx context.Context, o types.Object, diags *diag.Diagnostics) *infraprovision.TypesJSONValue {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -40,17 +39,17 @@ func ExpandTypesJSONValue(ctx context.Context, o types.Object, diags *diag.Diagn
 	return m.Expand(ctx, diags)
 }
 
-func (m *TypesJSONValueModel) Expand(ctx context.Context, diags *diag.Diagnostics) *infra_provision.TypesJSONValue {
+func (m *TypesJSONValueModel) Expand(ctx context.Context, diags *diag.Diagnostics) *infraprovision.TypesJSONValue {
 	if m == nil {
 		return nil
 	}
-	to := &infra_provision.TypesJSONValue{
+	to := &infraprovision.TypesJSONValue{
 		Value: m.Value.ValueStringPointer(),
 	}
 	return to
 }
 
-func FlattenTypesJSONValue(ctx context.Context, from *infra_provision.TypesJSONValue, diags *diag.Diagnostics) types.Object {
+func FlattenTypesJSONValue(ctx context.Context, from *infraprovision.TypesJSONValue, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(TypesJSONValueAttrTypes)
 	}
@@ -61,7 +60,7 @@ func FlattenTypesJSONValue(ctx context.Context, from *infra_provision.TypesJSONV
 	return t
 }
 
-func (m *TypesJSONValueModel) Flatten(ctx context.Context, from *infra_provision.TypesJSONValue, diags *diag.Diagnostics) {
+func (m *TypesJSONValueModel) Flatten(ctx context.Context, from *infraprovision.TypesJSONValue, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

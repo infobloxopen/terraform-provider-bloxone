@@ -48,7 +48,7 @@ var IpamsvcUtilizationV6ResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcUtilizationV6(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcUtilizationV6 {
+func ExpandIpamsvcUtilizationV6(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.UtilizationV6 {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -60,11 +60,11 @@ func ExpandIpamsvcUtilizationV6(ctx context.Context, o types.Object, diags *diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcUtilizationV6Model) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcUtilizationV6 {
+func (m *IpamsvcUtilizationV6Model) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.UtilizationV6 {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcUtilizationV6{
+	to := &ipam.UtilizationV6{
 		Abandoned: m.Abandoned.ValueStringPointer(),
 		Dynamic:   m.Dynamic.ValueStringPointer(),
 		Static:    m.Static.ValueStringPointer(),
@@ -74,7 +74,7 @@ func (m *IpamsvcUtilizationV6Model) Expand(ctx context.Context, diags *diag.Diag
 	return to
 }
 
-func FlattenIpamsvcUtilizationV6(ctx context.Context, from *ipam.IpamsvcUtilizationV6, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcUtilizationV6(ctx context.Context, from *ipam.UtilizationV6, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcUtilizationV6AttrTypes)
 	}
@@ -85,7 +85,7 @@ func FlattenIpamsvcUtilizationV6(ctx context.Context, from *ipam.IpamsvcUtilizat
 	return t
 }
 
-func (m *IpamsvcUtilizationV6Model) Flatten(ctx context.Context, from *ipam.IpamsvcUtilizationV6, diags *diag.Diagnostics) {
+func (m *IpamsvcUtilizationV6Model) Flatten(ctx context.Context, from *ipam.UtilizationV6, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

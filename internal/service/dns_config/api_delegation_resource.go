@@ -68,7 +68,7 @@ func (r *DelegationResource) Create(ctx context.Context, req resource.CreateRequ
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
 		DelegationAPI.
-		DelegationCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
 		Execute()
 	if err != nil {
@@ -95,7 +95,7 @@ func (r *DelegationResource) Read(ctx context.Context, req resource.ReadRequest,
 
 	apiRes, httpRes, err := r.client.DNSConfigurationAPI.
 		DelegationAPI.
-		DelegationRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *DelegationResource) Update(ctx context.Context, req resource.UpdateRequ
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
 		DelegationAPI.
-		DelegationUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *DelegationResource) Delete(ctx context.Context, req resource.DeleteRequ
 
 	httpRes, err := r.client.DNSConfigurationAPI.
 		DelegationAPI.
-		DelegationDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

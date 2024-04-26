@@ -15,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -102,11 +103,11 @@ var IpamsvcOptionGroupResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *IpamsvcOptionGroupModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcOptionGroup {
+func (m *IpamsvcOptionGroupModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.OptionGroup {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcOptionGroup{
+	to := &ipam.OptionGroup{
 		Comment:     flex.ExpandStringPointer(m.Comment),
 		DhcpOptions: flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
 		Name:        flex.ExpandString(m.Name),
@@ -118,7 +119,7 @@ func (m *IpamsvcOptionGroupModel) Expand(ctx context.Context, diags *diag.Diagno
 	return to
 }
 
-func FlattenIpamsvcOptionGroupDataSource(ctx context.Context, from *ipam.IpamsvcOptionGroup, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcOptionGroupDataSource(ctx context.Context, from *ipam.OptionGroup, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcOptionGroupAttrTypes)
 	}
@@ -130,7 +131,7 @@ func FlattenIpamsvcOptionGroupDataSource(ctx context.Context, from *ipam.Ipamsvc
 	return t
 }
 
-func (m *IpamsvcOptionGroupModel) Flatten(ctx context.Context, from *ipam.IpamsvcOptionGroup, diags *diag.Diagnostics) {
+func (m *IpamsvcOptionGroupModel) Flatten(ctx context.Context, from *ipam.OptionGroup, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
