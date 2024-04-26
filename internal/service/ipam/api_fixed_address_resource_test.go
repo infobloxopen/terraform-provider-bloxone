@@ -530,6 +530,28 @@ func TestAccFixedAddressResource_Tags(t *testing.T) {
 	})
 }
 
+func TestAccFixedAddressResource_NextAvailableId_Count(t *testing.T) {
+	var resourceName = "bloxone_dhcp_fixed_address.test_next_available_id_count"
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccFixedAddressNextAvailableIdCount(spaceName, 5),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrPair(resourceName+".0", "parent", "bloxone_ipam_subnet.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".1", "parent", "bloxone_ipam_subnet.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".2", "parent", "bloxone_ipam_subnet.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".3", "parent", "bloxone_ipam_subnet.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".4", "parent", "bloxone_ipam_subnet.test", "id"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckFixedAddressExists(ctx context.Context, resourceName string, v *ipam.FixedAddress) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
@@ -842,5 +864,18 @@ resource "bloxone_dhcp_fixed_address" "test_inheritance_sources" {
 
 }
 `, address, matchType, matchValue, action)
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
+}
+
+func testAccFixedAddressNextAvailableIdCount(spaceName string, count int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_fixed_address" "test_next_available_id_count" {
+	next_available_id = bloxone_ipam_subnet.test.id
+	ip_space = bloxone_ipam_ip_space.test.id
+	count = %d
+	match_type = "mac"
+	match_value = "aa:aa:aa:aa:aa:${count.index + 10}"
+}   
+`, count)
 	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
