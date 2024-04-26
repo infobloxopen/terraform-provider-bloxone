@@ -11,7 +11,6 @@ API version: v1
 package keys
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -27,8 +26,9 @@ type UploadRequest struct {
 	Content string             `json:"content"`
 	Fields  *ProtobufFieldMask `json:"fields,omitempty"`
 	// The tags for uploaded content in JSON format.
-	Tags map[string]interface{} `json:"tags,omitempty"`
-	Type UploadContentType      `json:"type"`
+	Tags                 map[string]interface{} `json:"tags,omitempty"`
+	Type                 UploadContentType      `json:"type"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UploadRequest UploadRequest
@@ -219,6 +219,11 @@ func (o UploadRequest) ToMap() (map[string]interface{}, error) {
 		toSerialize["tags"] = o.Tags
 	}
 	toSerialize["type"] = o.Type
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -247,15 +252,24 @@ func (o *UploadRequest) UnmarshalJSON(data []byte) (err error) {
 
 	varUploadRequest := _UploadRequest{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varUploadRequest)
+	err = json.Unmarshal(data, &varUploadRequest)
 
 	if err != nil {
 		return err
 	}
 
 	*o = UploadRequest(varUploadRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "content")
+		delete(additionalProperties, "fields")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "type")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

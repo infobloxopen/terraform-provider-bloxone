@@ -26,7 +26,10 @@ type AuthZoneInheritance struct {
 	UpdateAcl                *InheritedACLItems         `json:"update_acl,omitempty"`
 	UseForwardersForSubzones *Inheritance2InheritedBool `json:"use_forwarders_for_subzones,omitempty"`
 	ZoneAuthority            *InheritedZoneAuthority    `json:"zone_authority,omitempty"`
+	AdditionalProperties     map[string]interface{}
 }
+
+type _AuthZoneInheritance AuthZoneInheritance
 
 // NewAuthZoneInheritance instantiates a new AuthZoneInheritance object
 // This constructor will assign default values to properties that have it defined,
@@ -300,7 +303,39 @@ func (o AuthZoneInheritance) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ZoneAuthority) {
 		toSerialize["zone_authority"] = o.ZoneAuthority
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AuthZoneInheritance) UnmarshalJSON(data []byte) (err error) {
+	varAuthZoneInheritance := _AuthZoneInheritance{}
+
+	err = json.Unmarshal(data, &varAuthZoneInheritance)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AuthZoneInheritance(varAuthZoneInheritance)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "gss_tsig_enabled")
+		delete(additionalProperties, "notify")
+		delete(additionalProperties, "query_acl")
+		delete(additionalProperties, "transfer_acl")
+		delete(additionalProperties, "update_acl")
+		delete(additionalProperties, "use_forwarders_for_subzones")
+		delete(additionalProperties, "zone_authority")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAuthZoneInheritance struct {

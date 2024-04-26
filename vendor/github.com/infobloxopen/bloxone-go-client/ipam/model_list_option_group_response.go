@@ -20,8 +20,11 @@ var _ MappedNullable = &ListOptionGroupResponse{}
 // ListOptionGroupResponse The response format to retrieve __OptionGroup__ objects.
 type ListOptionGroupResponse struct {
 	// A list of OptionGroup objects.
-	Results []OptionGroup `json:"results,omitempty"`
+	Results              []OptionGroup `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListOptionGroupResponse ListOptionGroupResponse
 
 // NewListOptionGroupResponse instantiates a new ListOptionGroupResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListOptionGroupResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListOptionGroupResponse) UnmarshalJSON(data []byte) (err error) {
+	varListOptionGroupResponse := _ListOptionGroupResponse{}
+
+	err = json.Unmarshal(data, &varListOptionGroupResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListOptionGroupResponse(varListOptionGroupResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListOptionGroupResponse struct {

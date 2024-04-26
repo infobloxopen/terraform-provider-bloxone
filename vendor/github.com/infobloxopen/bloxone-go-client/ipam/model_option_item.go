@@ -26,8 +26,11 @@ type OptionItem struct {
 	// The option value.
 	OptionValue *string `json:"option_value,omitempty"`
 	// The type of item.  Valid values are: * _group_ * _option_
-	Type *string `json:"type,omitempty"`
+	Type                 *string `json:"type,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _OptionItem OptionItem
 
 // NewOptionItem instantiates a new OptionItem object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,36 @@ func (o OptionItem) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Type) {
 		toSerialize["type"] = o.Type
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *OptionItem) UnmarshalJSON(data []byte) (err error) {
+	varOptionItem := _OptionItem{}
+
+	err = json.Unmarshal(data, &varOptionItem)
+
+	if err != nil {
+		return err
+	}
+
+	*o = OptionItem(varOptionItem)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "group")
+		delete(additionalProperties, "option_code")
+		delete(additionalProperties, "option_value")
+		delete(additionalProperties, "type")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableOptionItem struct {

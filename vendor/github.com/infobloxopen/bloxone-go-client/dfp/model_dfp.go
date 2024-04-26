@@ -49,8 +49,11 @@ type Dfp struct {
 	// The DNS Forwarding Proxy site identifier that is appended to DNS queries originating from this DNS Forwarding Proxy and subsequently used for policy lookup purposes.
 	SiteId *string `json:"site_id,omitempty"`
 	// The time when this DNS Forwarding Proxy object was last updated.
-	UpdatedTime *time.Time `json:"updated_time,omitempty"`
+	UpdatedTime          *time.Time `json:"updated_time,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Dfp Dfp
 
 // NewDfp instantiates a new Dfp object
 // This constructor will assign default values to properties that have it defined,
@@ -639,7 +642,48 @@ func (o Dfp) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedTime) {
 		toSerialize["updated_time"] = o.UpdatedTime
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Dfp) UnmarshalJSON(data []byte) (err error) {
+	varDfp := _Dfp{}
+
+	err = json.Unmarshal(data, &varDfp)
+
+	if err != nil {
+		return err
+	}
+
+	*o = Dfp(varDfp)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_time")
+		delete(additionalProperties, "elb_ip_list")
+		delete(additionalProperties, "forwarding_policy")
+		delete(additionalProperties, "host")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "internal_domain_lists")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "net_addr_policy_ids")
+		delete(additionalProperties, "ophid")
+		delete(additionalProperties, "policy_id")
+		delete(additionalProperties, "pop_region_id")
+		delete(additionalProperties, "resolvers_all")
+		delete(additionalProperties, "service_id")
+		delete(additionalProperties, "service_name")
+		delete(additionalProperties, "site_id")
+		delete(additionalProperties, "updated_time")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDfp struct {

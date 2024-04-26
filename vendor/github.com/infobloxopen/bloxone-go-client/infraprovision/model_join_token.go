@@ -30,9 +30,12 @@ type JoinToken struct {
 	Status     *JoinTokenJoinTokenStatus `json:"status,omitempty"`
 	Tags       map[string]interface{}    `json:"tags,omitempty"`
 	// first half of the token.
-	TokenId    *string `json:"token_id,omitempty"`
-	UseCounter *int64  `json:"use_counter,omitempty"`
+	TokenId              *string `json:"token_id,omitempty"`
+	UseCounter           *int64  `json:"use_counter,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _JoinToken JoinToken
 
 // NewJoinToken instantiates a new JoinToken object
 // This constructor will assign default values to properties that have it defined,
@@ -415,7 +418,42 @@ func (o JoinToken) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UseCounter) {
 		toSerialize["use_counter"] = o.UseCounter
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *JoinToken) UnmarshalJSON(data []byte) (err error) {
+	varJoinToken := _JoinToken{}
+
+	err = json.Unmarshal(data, &varJoinToken)
+
+	if err != nil {
+		return err
+	}
+
+	*o = JoinToken(varJoinToken)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "deleted_at")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "expires_at")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "last_used_at")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "token_id")
+		delete(additionalProperties, "use_counter")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableJoinToken struct {

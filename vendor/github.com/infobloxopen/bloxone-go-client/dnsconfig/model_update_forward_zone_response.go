@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateForwardZoneResponse{}
 
 // UpdateForwardZoneResponse The Forward Zone object update response format.
 type UpdateForwardZoneResponse struct {
-	Result *ForwardZone `json:"result,omitempty"`
+	Result               *ForwardZone `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateForwardZoneResponse UpdateForwardZoneResponse
 
 // NewUpdateForwardZoneResponse instantiates a new UpdateForwardZoneResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateForwardZoneResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateForwardZoneResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateForwardZoneResponse := _UpdateForwardZoneResponse{}
+
+	err = json.Unmarshal(data, &varUpdateForwardZoneResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateForwardZoneResponse(varUpdateForwardZoneResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateForwardZoneResponse struct {

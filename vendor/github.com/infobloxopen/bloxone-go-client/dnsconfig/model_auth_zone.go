@@ -74,9 +74,12 @@ type AuthZone struct {
 	// The resource identifier.
 	View *string `json:"view,omitempty"`
 	// The list of an auth zone warnings.
-	Warnings      []Warning      `json:"warnings,omitempty"`
-	ZoneAuthority *ZoneAuthority `json:"zone_authority,omitempty"`
+	Warnings             []Warning      `json:"warnings,omitempty"`
+	ZoneAuthority        *ZoneAuthority `json:"zone_authority,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AuthZone AuthZone
 
 // NewAuthZone instantiates a new AuthZone object
 // This constructor will assign default values to properties that have it defined,
@@ -1120,7 +1123,61 @@ func (o AuthZone) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ZoneAuthority) {
 		toSerialize["zone_authority"] = o.ZoneAuthority
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AuthZone) UnmarshalJSON(data []byte) (err error) {
+	varAuthZone := _AuthZone{}
+
+	err = json.Unmarshal(data, &varAuthZone)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AuthZone(varAuthZone)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "disabled")
+		delete(additionalProperties, "external_primaries")
+		delete(additionalProperties, "external_providers")
+		delete(additionalProperties, "external_secondaries")
+		delete(additionalProperties, "fqdn")
+		delete(additionalProperties, "gss_tsig_enabled")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "inheritance_assigned_hosts")
+		delete(additionalProperties, "inheritance_sources")
+		delete(additionalProperties, "initial_soa_serial")
+		delete(additionalProperties, "internal_secondaries")
+		delete(additionalProperties, "mapped_subnet")
+		delete(additionalProperties, "mapping")
+		delete(additionalProperties, "notify")
+		delete(additionalProperties, "nsgs")
+		delete(additionalProperties, "parent")
+		delete(additionalProperties, "primary_type")
+		delete(additionalProperties, "protocol_fqdn")
+		delete(additionalProperties, "query_acl")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "transfer_acl")
+		delete(additionalProperties, "update_acl")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "use_forwarders_for_subzones")
+		delete(additionalProperties, "view")
+		delete(additionalProperties, "warnings")
+		delete(additionalProperties, "zone_authority")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAuthZone struct {

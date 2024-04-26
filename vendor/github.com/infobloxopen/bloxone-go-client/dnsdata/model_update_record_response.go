@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateRecordResponse{}
 
 // UpdateRecordResponse The response format to update the __Record__ object.
 type UpdateRecordResponse struct {
-	Result *Record `json:"result,omitempty"`
+	Result               *Record `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateRecordResponse UpdateRecordResponse
 
 // NewUpdateRecordResponse instantiates a new UpdateRecordResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateRecordResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateRecordResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateRecordResponse := _UpdateRecordResponse{}
+
+	err = json.Unmarshal(data, &varUpdateRecordResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateRecordResponse(varUpdateRecordResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateRecordResponse struct {

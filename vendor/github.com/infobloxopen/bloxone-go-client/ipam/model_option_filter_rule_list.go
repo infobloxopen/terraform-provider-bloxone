@@ -22,8 +22,11 @@ type OptionFilterRuleList struct {
 	// Indicates if this list should match if any or all rules match (_any_ or _all_).
 	Match *string `json:"match,omitempty"`
 	// The list of child rules.
-	Rules []OptionFilterRule `json:"rules,omitempty"`
+	Rules                []OptionFilterRule `json:"rules,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _OptionFilterRuleList OptionFilterRuleList
 
 // NewOptionFilterRuleList instantiates a new OptionFilterRuleList object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o OptionFilterRuleList) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Rules) {
 		toSerialize["rules"] = o.Rules
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *OptionFilterRuleList) UnmarshalJSON(data []byte) (err error) {
+	varOptionFilterRuleList := _OptionFilterRuleList{}
+
+	err = json.Unmarshal(data, &varOptionFilterRuleList)
+
+	if err != nil {
+		return err
+	}
+
+	*o = OptionFilterRuleList(varOptionFilterRuleList)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "match")
+		delete(additionalProperties, "rules")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableOptionFilterRuleList struct {

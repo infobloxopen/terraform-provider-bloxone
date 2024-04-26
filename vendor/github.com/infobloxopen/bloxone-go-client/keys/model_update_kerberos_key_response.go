@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateKerberosKeyResponse{}
 
 // UpdateKerberosKeyResponse The response format to update __KerberosKey__ resource extracted from the uploaded keytab file.
 type UpdateKerberosKeyResponse struct {
-	Result *KerberosKey `json:"result,omitempty"`
+	Result               *KerberosKey `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateKerberosKeyResponse UpdateKerberosKeyResponse
 
 // NewUpdateKerberosKeyResponse instantiates a new UpdateKerberosKeyResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateKerberosKeyResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateKerberosKeyResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateKerberosKeyResponse := _UpdateKerberosKeyResponse{}
+
+	err = json.Unmarshal(data, &varUpdateKerberosKeyResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateKerberosKeyResponse(varUpdateKerberosKeyResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateKerberosKeyResponse struct {

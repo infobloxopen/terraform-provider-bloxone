@@ -19,8 +19,11 @@ var _ MappedNullable = &HostInheritance{}
 
 // HostInheritance Inheritance configuration specifies how and which fields _Host_ object inherits from _Global_ or _Server_ parent.
 type HostInheritance struct {
-	KerberosKeys *InheritedKerberosKeys `json:"kerberos_keys,omitempty"`
+	KerberosKeys         *InheritedKerberosKeys `json:"kerberos_keys,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _HostInheritance HostInheritance
 
 // NewHostInheritance instantiates a new HostInheritance object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o HostInheritance) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.KerberosKeys) {
 		toSerialize["kerberos_keys"] = o.KerberosKeys
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *HostInheritance) UnmarshalJSON(data []byte) (err error) {
+	varHostInheritance := _HostInheritance{}
+
+	err = json.Unmarshal(data, &varHostInheritance)
+
+	if err != nil {
+		return err
+	}
+
+	*o = HostInheritance(varHostInheritance)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "kerberos_keys")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableHostInheritance struct {

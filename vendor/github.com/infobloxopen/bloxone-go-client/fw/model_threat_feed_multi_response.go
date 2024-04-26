@@ -14,14 +14,42 @@ import (
 	"encoding/json"
 )
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_content_category_multi_response.go
+// checks if the ContentCategoryMultiResponse type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ContentCategoryMultiResponse{}
+
+// ContentCategoryMultiResponse The Content Category list response.
+type ContentCategoryMultiResponse struct {
+	// The list of Content Category objects.
+	Results []ContentCategory `json:"results,omitempty"`
+}
+
+// NewContentCategoryMultiResponse instantiates a new ContentCategoryMultiResponse object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewContentCategoryMultiResponse() *ContentCategoryMultiResponse {
+	this := ContentCategoryMultiResponse{}
+	return &this
+}
+
+// NewContentCategoryMultiResponseWithDefaults instantiates a new ContentCategoryMultiResponse object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewContentCategoryMultiResponseWithDefaults() *ContentCategoryMultiResponse {
+	this := ContentCategoryMultiResponse{}
+========
 // checks if the ThreatFeedMultiResponse type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ThreatFeedMultiResponse{}
 
 // ThreatFeedMultiResponse The Threat Feed list response.
 type ThreatFeedMultiResponse struct {
 	// The list of Threat Feed objects.
-	Results []ThreatFeed `json:"results,omitempty"`
+	Results              []ThreatFeed `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ThreatFeedMultiResponse ThreatFeedMultiResponse
 
 // NewThreatFeedMultiResponse instantiates a new ThreatFeedMultiResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -37,13 +65,20 @@ func NewThreatFeedMultiResponse() *ThreatFeedMultiResponse {
 // but it doesn't guarantee that properties required by API are set
 func NewThreatFeedMultiResponseWithDefaults() *ThreatFeedMultiResponse {
 	this := ThreatFeedMultiResponse{}
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_threat_feed_multi_response.go
 	return &this
 }
 
 // GetResults returns the Results field value if set, zero value otherwise.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_content_category_multi_response.go
+func (o *ContentCategoryMultiResponse) GetResults() []ContentCategory {
+	if o == nil || IsNil(o.Results) {
+		var ret []ContentCategory
+========
 func (o *ThreatFeedMultiResponse) GetResults() []ThreatFeed {
 	if o == nil || IsNil(o.Results) {
 		var ret []ThreatFeed
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_threat_feed_multi_response.go
 		return ret
 	}
 	return o.Results
@@ -51,7 +86,11 @@ func (o *ThreatFeedMultiResponse) GetResults() []ThreatFeed {
 
 // GetResultsOk returns a tuple with the Results field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_content_category_multi_response.go
+func (o *ContentCategoryMultiResponse) GetResultsOk() ([]ContentCategory, bool) {
+========
 func (o *ThreatFeedMultiResponse) GetResultsOk() ([]ThreatFeed, bool) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_threat_feed_multi_response.go
 	if o == nil || IsNil(o.Results) {
 		return nil, false
 	}
@@ -59,7 +98,11 @@ func (o *ThreatFeedMultiResponse) GetResultsOk() ([]ThreatFeed, bool) {
 }
 
 // HasResults returns a boolean if a field has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_content_category_multi_response.go
+func (o *ContentCategoryMultiResponse) HasResults() bool {
+========
 func (o *ThreatFeedMultiResponse) HasResults() bool {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_threat_feed_multi_response.go
 	if o != nil && !IsNil(o.Results) {
 		return true
 	}
@@ -67,12 +110,21 @@ func (o *ThreatFeedMultiResponse) HasResults() bool {
 	return false
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_content_category_multi_response.go
+// SetResults gets a reference to the given []ContentCategory and assigns it to the Results field.
+func (o *ContentCategoryMultiResponse) SetResults(v []ContentCategory) {
+	o.Results = v
+}
+
+func (o ContentCategoryMultiResponse) MarshalJSON() ([]byte, error) {
+========
 // SetResults gets a reference to the given []ThreatFeed and assigns it to the Results field.
 func (o *ThreatFeedMultiResponse) SetResults(v []ThreatFeed) {
 	o.Results = v
 }
 
 func (o ThreatFeedMultiResponse) MarshalJSON() ([]byte, error) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_threat_feed_multi_response.go
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -80,12 +132,54 @@ func (o ThreatFeedMultiResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_content_category_multi_response.go
+func (o ContentCategoryMultiResponse) ToMap() (map[string]interface{}, error) {
+========
 func (o ThreatFeedMultiResponse) ToMap() (map[string]interface{}, error) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_threat_feed_multi_response.go
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_content_category_multi_response.go
+type NullableContentCategoryMultiResponse struct {
+	value *ContentCategoryMultiResponse
+	isSet bool
+}
+
+func (v NullableContentCategoryMultiResponse) Get() *ContentCategoryMultiResponse {
+	return v.value
+}
+
+func (v *NullableContentCategoryMultiResponse) Set(val *ContentCategoryMultiResponse) {
+========
+func (o *ThreatFeedMultiResponse) UnmarshalJSON(data []byte) (err error) {
+	varThreatFeedMultiResponse := _ThreatFeedMultiResponse{}
+
+	err = json.Unmarshal(data, &varThreatFeedMultiResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ThreatFeedMultiResponse(varThreatFeedMultiResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableThreatFeedMultiResponse struct {
@@ -98,19 +192,39 @@ func (v NullableThreatFeedMultiResponse) Get() *ThreatFeedMultiResponse {
 }
 
 func (v *NullableThreatFeedMultiResponse) Set(val *ThreatFeedMultiResponse) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_threat_feed_multi_response.go
 	v.value = val
 	v.isSet = true
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_content_category_multi_response.go
+func (v NullableContentCategoryMultiResponse) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableContentCategoryMultiResponse) Unset() {
+========
 func (v NullableThreatFeedMultiResponse) IsSet() bool {
 	return v.isSet
 }
 
 func (v *NullableThreatFeedMultiResponse) Unset() {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_threat_feed_multi_response.go
 	v.value = nil
 	v.isSet = false
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_content_category_multi_response.go
+func NewNullableContentCategoryMultiResponse(val *ContentCategoryMultiResponse) *NullableContentCategoryMultiResponse {
+	return &NullableContentCategoryMultiResponse{value: val, isSet: true}
+}
+
+func (v NullableContentCategoryMultiResponse) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableContentCategoryMultiResponse) UnmarshalJSON(src []byte) error {
+========
 func NewNullableThreatFeedMultiResponse(val *ThreatFeedMultiResponse) *NullableThreatFeedMultiResponse {
 	return &NullableThreatFeedMultiResponse{value: val, isSet: true}
 }
@@ -120,6 +234,7 @@ func (v NullableThreatFeedMultiResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (v *NullableThreatFeedMultiResponse) UnmarshalJSON(src []byte) error {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_threat_feed_multi_response.go
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

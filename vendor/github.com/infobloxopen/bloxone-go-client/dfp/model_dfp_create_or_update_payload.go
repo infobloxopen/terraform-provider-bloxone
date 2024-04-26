@@ -38,8 +38,11 @@ type DfpCreateOrUpdatePayload struct {
 	// The name of the DNS Forwarding Proxy Service.
 	ServiceName *string `json:"service_name,omitempty"`
 	// The DNS Forwarding Proxy site identifier that is appended to DNS queries originating from this DNS Forwarding Proxy and subsequently used for policy lookup purposes.
-	SiteId *string `json:"site_id,omitempty"`
+	SiteId               *string `json:"site_id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DfpCreateOrUpdatePayload DfpCreateOrUpdatePayload
 
 // NewDfpCreateOrUpdatePayload instantiates a new DfpCreateOrUpdatePayload object
 // This constructor will assign default values to properties that have it defined,
@@ -418,7 +421,42 @@ func (o DfpCreateOrUpdatePayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.SiteId) {
 		toSerialize["site_id"] = o.SiteId
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DfpCreateOrUpdatePayload) UnmarshalJSON(data []byte) (err error) {
+	varDfpCreateOrUpdatePayload := _DfpCreateOrUpdatePayload{}
+
+	err = json.Unmarshal(data, &varDfpCreateOrUpdatePayload)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DfpCreateOrUpdatePayload(varDfpCreateOrUpdatePayload)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "forwarding_policy")
+		delete(additionalProperties, "host")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "internal_domain_lists")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "pop_region_id")
+		delete(additionalProperties, "resolvers_all")
+		delete(additionalProperties, "service_id")
+		delete(additionalProperties, "service_name")
+		delete(additionalProperties, "site_id")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDfpCreateOrUpdatePayload struct {

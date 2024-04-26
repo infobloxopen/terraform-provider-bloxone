@@ -19,8 +19,11 @@ var _ MappedNullable = &InfraServicesCreateOrUpdateDfpService404Response{}
 
 // InfraServicesCreateOrUpdateDfpService404Response struct for InfraServicesCreateOrUpdateDfpService404Response
 type InfraServicesCreateOrUpdateDfpService404Response struct {
-	Error *InfraServicesCreateOrUpdateDfpService404ResponseError `json:"error,omitempty"`
+	Error                *InfraServicesCreateOrUpdateDfpService404ResponseError `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InfraServicesCreateOrUpdateDfpService404Response InfraServicesCreateOrUpdateDfpService404Response
 
 // NewInfraServicesCreateOrUpdateDfpService404Response instantiates a new InfraServicesCreateOrUpdateDfpService404Response object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o InfraServicesCreateOrUpdateDfpService404Response) ToMap() (map[string]in
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InfraServicesCreateOrUpdateDfpService404Response) UnmarshalJSON(data []byte) (err error) {
+	varInfraServicesCreateOrUpdateDfpService404Response := _InfraServicesCreateOrUpdateDfpService404Response{}
+
+	err = json.Unmarshal(data, &varInfraServicesCreateOrUpdateDfpService404Response)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InfraServicesCreateOrUpdateDfpService404Response(varInfraServicesCreateOrUpdateDfpService404Response)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "error")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInfraServicesCreateOrUpdateDfpService404Response struct {

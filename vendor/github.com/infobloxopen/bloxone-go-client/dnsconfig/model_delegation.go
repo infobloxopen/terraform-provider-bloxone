@@ -36,8 +36,11 @@ type Delegation struct {
 	// Tagging specifics.
 	Tags map[string]interface{} `json:"tags,omitempty"`
 	// The resource identifier.
-	View *string `json:"view,omitempty"`
+	View                 *string `json:"view,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Delegation Delegation
 
 // NewDelegation instantiates a new Delegation object
 // This constructor will assign default values to properties that have it defined,
@@ -381,7 +384,41 @@ func (o Delegation) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.View) {
 		toSerialize["view"] = o.View
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Delegation) UnmarshalJSON(data []byte) (err error) {
+	varDelegation := _Delegation{}
+
+	err = json.Unmarshal(data, &varDelegation)
+
+	if err != nil {
+		return err
+	}
+
+	*o = Delegation(varDelegation)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "delegation_servers")
+		delete(additionalProperties, "disabled")
+		delete(additionalProperties, "fqdn")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "parent")
+		delete(additionalProperties, "protocol_fqdn")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "view")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDelegation struct {

@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadJoinTokenResponse{}
 
 // ReadJoinTokenResponse struct for ReadJoinTokenResponse
 type ReadJoinTokenResponse struct {
-	Result *JoinToken `json:"result,omitempty"`
+	Result               *JoinToken `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadJoinTokenResponse ReadJoinTokenResponse
 
 // NewReadJoinTokenResponse instantiates a new ReadJoinTokenResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadJoinTokenResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadJoinTokenResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadJoinTokenResponse := _ReadJoinTokenResponse{}
+
+	err = json.Unmarshal(data, &varReadJoinTokenResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadJoinTokenResponse(varReadJoinTokenResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadJoinTokenResponse struct {

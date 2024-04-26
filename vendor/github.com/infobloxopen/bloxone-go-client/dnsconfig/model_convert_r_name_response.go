@@ -20,8 +20,11 @@ var _ MappedNullable = &ConvertRNameResponse{}
 // ConvertRNameResponse struct for ConvertRNameResponse
 type ConvertRNameResponse struct {
 	// The SOA RNAME field converted from the provided email address.
-	Rname *string `json:"rname,omitempty"`
+	Rname                *string `json:"rname,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ConvertRNameResponse ConvertRNameResponse
 
 // NewConvertRNameResponse instantiates a new ConvertRNameResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ConvertRNameResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Rname) {
 		toSerialize["rname"] = o.Rname
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ConvertRNameResponse) UnmarshalJSON(data []byte) (err error) {
+	varConvertRNameResponse := _ConvertRNameResponse{}
+
+	err = json.Unmarshal(data, &varConvertRNameResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ConvertRNameResponse(varConvertRNameResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "rname")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableConvertRNameResponse struct {

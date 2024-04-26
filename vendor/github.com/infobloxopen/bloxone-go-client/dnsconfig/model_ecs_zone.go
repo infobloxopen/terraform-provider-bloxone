@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -26,7 +25,8 @@ type ECSZone struct {
 	// Zone FQDN.
 	Fqdn string `json:"fqdn"`
 	// Zone FQDN in punycode.
-	ProtocolFqdn *string `json:"protocol_fqdn,omitempty"`
+	ProtocolFqdn         *string `json:"protocol_fqdn,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ECSZone ECSZone
@@ -145,6 +145,11 @@ func (o ECSZone) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ProtocolFqdn) {
 		toSerialize["protocol_fqdn"] = o.ProtocolFqdn
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -173,15 +178,22 @@ func (o *ECSZone) UnmarshalJSON(data []byte) (err error) {
 
 	varECSZone := _ECSZone{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varECSZone)
+	err = json.Unmarshal(data, &varECSZone)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ECSZone(varECSZone)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "access")
+		delete(additionalProperties, "fqdn")
+		delete(additionalProperties, "protocol_fqdn")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

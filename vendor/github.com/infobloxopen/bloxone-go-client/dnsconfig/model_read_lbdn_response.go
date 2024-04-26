@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadLBDNResponse{}
 
 // ReadLBDNResponse The __LBDN__ object read response format.
 type ReadLBDNResponse struct {
-	Result *LBDN `json:"result,omitempty"`
+	Result               *LBDN `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadLBDNResponse ReadLBDNResponse
 
 // NewReadLBDNResponse instantiates a new ReadLBDNResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadLBDNResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadLBDNResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadLBDNResponse := _ReadLBDNResponse{}
+
+	err = json.Unmarshal(data, &varReadLBDNResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadLBDNResponse(varReadLBDNResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadLBDNResponse struct {

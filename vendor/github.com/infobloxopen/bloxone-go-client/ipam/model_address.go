@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -60,7 +59,8 @@ type Address struct {
 	// Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	// The usage is a combination of indicators, each tracking a specific associated use. Listed below are usage indicators with their meaning:  usage indicator        | description  ---------------------- | --------------------------------  _IPAM_                 |  Address was created by the IPAM component.  _IPAM_, _RESERVED_     |  Address was created by the API call _ipam/address_ or _ipam/host_.  _IPAM_, _NETWORK_      |  Address was automatically created by the IPAM component and is the network address of the parent subnet.  _IPAM_, _BROADCAST_    |  Address was automatically created by the IPAM component and is the broadcast address of the parent subnet.  _DHCP_                 |  Address was created by the DHCP component.  _DHCP_, _FIXEDADDRESS_ |  Address was created by the API call _dhcp/fixed_address_.  _DHCP_, _LEASED_       |  An active lease for that address was issued by a DHCP server.  _DHCP_, _DISABLED_     |  Address is disabled.  _DNS_                  |  Address is used by one or more DNS records.  _DISCOVERED_           |  Address is discovered by some network discovery probe like Network Insight or NetMRI in NIOS.
-	Usage []string `json:"usage,omitempty"`
+	Usage                []string `json:"usage,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _Address Address
@@ -783,6 +783,11 @@ func (o Address) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Usage) {
 		toSerialize["usage"] = o.Usage
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -810,15 +815,39 @@ func (o *Address) UnmarshalJSON(data []byte) (err error) {
 
 	varAddress := _Address{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varAddress)
+	err = json.Unmarshal(data, &varAddress)
 
 	if err != nil {
 		return err
 	}
 
 	*o = Address(varAddress)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "dhcp_info")
+		delete(additionalProperties, "disable_dhcp")
+		delete(additionalProperties, "discovery_attrs")
+		delete(additionalProperties, "discovery_metadata")
+		delete(additionalProperties, "host")
+		delete(additionalProperties, "hwaddr")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "interface")
+		delete(additionalProperties, "names")
+		delete(additionalProperties, "parent")
+		delete(additionalProperties, "protocol")
+		delete(additionalProperties, "range")
+		delete(additionalProperties, "space")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "usage")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

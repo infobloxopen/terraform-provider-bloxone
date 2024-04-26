@@ -19,9 +19,12 @@ var _ MappedNullable = &CreateJoinTokenResponse{}
 
 // CreateJoinTokenResponse struct for CreateJoinTokenResponse
 type CreateJoinTokenResponse struct {
-	JoinToken *string    `json:"join_token,omitempty"`
-	Result    *JoinToken `json:"result,omitempty"`
+	JoinToken            *string    `json:"join_token,omitempty"`
+	Result               *JoinToken `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateJoinTokenResponse CreateJoinTokenResponse
 
 // NewCreateJoinTokenResponse instantiates a new CreateJoinTokenResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +123,34 @@ func (o CreateJoinTokenResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateJoinTokenResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateJoinTokenResponse := _CreateJoinTokenResponse{}
+
+	err = json.Unmarshal(data, &varCreateJoinTokenResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateJoinTokenResponse(varCreateJoinTokenResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "join_token")
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateJoinTokenResponse struct {

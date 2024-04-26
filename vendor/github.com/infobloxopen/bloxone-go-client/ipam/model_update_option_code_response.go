@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateOptionCodeResponse{}
 
 // UpdateOptionCodeResponse The response format to update the __OptionCode__ object.
 type UpdateOptionCodeResponse struct {
-	Result *OptionCode `json:"result,omitempty"`
+	Result               *OptionCode `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateOptionCodeResponse UpdateOptionCodeResponse
 
 // NewUpdateOptionCodeResponse instantiates a new UpdateOptionCodeResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateOptionCodeResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateOptionCodeResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateOptionCodeResponse := _UpdateOptionCodeResponse{}
+
+	err = json.Unmarshal(data, &varUpdateOptionCodeResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateOptionCodeResponse(varUpdateOptionCodeResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateOptionCodeResponse struct {

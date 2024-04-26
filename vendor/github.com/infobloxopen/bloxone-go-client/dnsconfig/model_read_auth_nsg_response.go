@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadAuthNSGResponse{}
 
 // ReadAuthNSGResponse The AuthNSG object read response format.
 type ReadAuthNSGResponse struct {
-	Result *AuthNSG `json:"result,omitempty"`
+	Result               *AuthNSG `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadAuthNSGResponse ReadAuthNSGResponse
 
 // NewReadAuthNSGResponse instantiates a new ReadAuthNSGResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadAuthNSGResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadAuthNSGResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadAuthNSGResponse := _ReadAuthNSGResponse{}
+
+	err = json.Unmarshal(data, &varReadAuthNSGResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadAuthNSGResponse(varReadAuthNSGResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadAuthNSGResponse struct {

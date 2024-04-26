@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadKerberosKeyResponse{}
 
 // ReadKerberosKeyResponse The response format to retrieve the __KerberosKey__ resource extracted from the uploaded keytab file.
 type ReadKerberosKeyResponse struct {
-	Result *KerberosKey `json:"result,omitempty"`
+	Result               *KerberosKey `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadKerberosKeyResponse ReadKerberosKeyResponse
 
 // NewReadKerberosKeyResponse instantiates a new ReadKerberosKeyResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadKerberosKeyResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadKerberosKeyResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadKerberosKeyResponse := _ReadKerberosKeyResponse{}
+
+	err = json.Unmarshal(data, &varReadKerberosKeyResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadKerberosKeyResponse(varReadKerberosKeyResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadKerberosKeyResponse struct {

@@ -22,8 +22,11 @@ type ItemStructs struct {
 	// The description of the item
 	Description *string `json:"description,omitempty"`
 	// The data of the Item
-	Item *string `json:"item,omitempty"`
+	Item                 *string `json:"item,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ItemStructs ItemStructs
 
 // NewItemStructs instantiates a new ItemStructs object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o ItemStructs) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Item) {
 		toSerialize["item"] = o.Item
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ItemStructs) UnmarshalJSON(data []byte) (err error) {
+	varItemStructs := _ItemStructs{}
+
+	err = json.Unmarshal(data, &varItemStructs)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ItemStructs(varItemStructs)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "item")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableItemStructs struct {

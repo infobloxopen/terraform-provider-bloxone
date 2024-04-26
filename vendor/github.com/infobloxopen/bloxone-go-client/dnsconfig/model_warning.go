@@ -22,8 +22,11 @@ type Warning struct {
 	// Warning message.
 	Message *string `json:"message,omitempty"`
 	// Name of a warning.
-	Name *string `json:"name,omitempty"`
+	Name                 *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Warning Warning
 
 // NewWarning instantiates a new Warning object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o Warning) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Name) {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Warning) UnmarshalJSON(data []byte) (err error) {
+	varWarning := _Warning{}
+
+	err = json.Unmarshal(data, &varWarning)
+
+	if err != nil {
+		return err
+	}
+
+	*o = Warning(varWarning)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableWarning struct {

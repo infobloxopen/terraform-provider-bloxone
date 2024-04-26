@@ -21,8 +21,11 @@ var _ MappedNullable = &AnycastConfigRef{}
 type AnycastConfigRef struct {
 	AnycastConfigName *string `json:"anycast_config_name,omitempty"`
 	// Routing protocols enabled for this anycast configuration, on a particular host. Valid protocol names are \"BGP\", \"OSPF\"/\"OSPFv2\", \"OSPFv3\".
-	RoutingProtocols []string `json:"routing_protocols,omitempty"`
+	RoutingProtocols     []string `json:"routing_protocols,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AnycastConfigRef AnycastConfigRef
 
 // NewAnycastConfigRef instantiates a new AnycastConfigRef object
 // This constructor will assign default values to properties that have it defined,
@@ -121,7 +124,34 @@ func (o AnycastConfigRef) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RoutingProtocols) {
 		toSerialize["routing_protocols"] = o.RoutingProtocols
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AnycastConfigRef) UnmarshalJSON(data []byte) (err error) {
+	varAnycastConfigRef := _AnycastConfigRef{}
+
+	err = json.Unmarshal(data, &varAnycastConfigRef)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AnycastConfigRef(varAnycastConfigRef)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "anycast_config_name")
+		delete(additionalProperties, "routing_protocols")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAnycastConfigRef struct {

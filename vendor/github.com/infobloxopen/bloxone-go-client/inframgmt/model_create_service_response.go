@@ -19,8 +19,11 @@ var _ MappedNullable = &CreateServiceResponse{}
 
 // CreateServiceResponse struct for CreateServiceResponse
 type CreateServiceResponse struct {
-	Result *Service `json:"result,omitempty"`
+	Result               *Service `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateServiceResponse CreateServiceResponse
 
 // NewCreateServiceResponse instantiates a new CreateServiceResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CreateServiceResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateServiceResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateServiceResponse := _CreateServiceResponse{}
+
+	err = json.Unmarshal(data, &varCreateServiceResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateServiceResponse(varCreateServiceResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateServiceResponse struct {

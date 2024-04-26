@@ -19,10 +19,13 @@ var _ MappedNullable = &InfraServicesCreateOrUpdateDfpService400ResponseError{}
 
 // InfraServicesCreateOrUpdateDfpService400ResponseError struct for InfraServicesCreateOrUpdateDfpService400ResponseError
 type InfraServicesCreateOrUpdateDfpService400ResponseError struct {
-	Code    *string `json:"code,omitempty"`
-	Message *string `json:"message,omitempty"`
-	Status  *string `json:"status,omitempty"`
+	Code                 *string `json:"code,omitempty"`
+	Message              *string `json:"message,omitempty"`
+	Status               *string `json:"status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InfraServicesCreateOrUpdateDfpService400ResponseError InfraServicesCreateOrUpdateDfpService400ResponseError
 
 // NewInfraServicesCreateOrUpdateDfpService400ResponseError instantiates a new InfraServicesCreateOrUpdateDfpService400ResponseError object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o InfraServicesCreateOrUpdateDfpService400ResponseError) ToMap() (map[stri
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InfraServicesCreateOrUpdateDfpService400ResponseError) UnmarshalJSON(data []byte) (err error) {
+	varInfraServicesCreateOrUpdateDfpService400ResponseError := _InfraServicesCreateOrUpdateDfpService400ResponseError{}
+
+	err = json.Unmarshal(data, &varInfraServicesCreateOrUpdateDfpService400ResponseError)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InfraServicesCreateOrUpdateDfpService400ResponseError(varInfraServicesCreateOrUpdateDfpService400ResponseError)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "code")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInfraServicesCreateOrUpdateDfpService400ResponseError struct {

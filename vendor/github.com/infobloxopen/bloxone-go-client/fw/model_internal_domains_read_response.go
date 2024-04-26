@@ -19,8 +19,11 @@ var _ MappedNullable = &InternalDomainsReadResponse{}
 
 // InternalDomainsReadResponse The Internal Domains read response.
 type InternalDomainsReadResponse struct {
-	Results *InternalDomains `json:"results,omitempty"`
+	Results              *InternalDomains `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InternalDomainsReadResponse InternalDomainsReadResponse
 
 // NewInternalDomainsReadResponse instantiates a new InternalDomainsReadResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o InternalDomainsReadResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InternalDomainsReadResponse) UnmarshalJSON(data []byte) (err error) {
+	varInternalDomainsReadResponse := _InternalDomainsReadResponse{}
+
+	err = json.Unmarshal(data, &varInternalDomainsReadResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InternalDomainsReadResponse(varInternalDomainsReadResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInternalDomainsReadResponse struct {

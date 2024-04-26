@@ -64,8 +64,11 @@ type DetailHost struct {
 	// The timezone of the Host.
 	Timezone *string `json:"timezone,omitempty"`
 	// The timestamp of the latest update on Host.
-	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	UpdatedAt            *time.Time `json:"updated_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DetailHost DetailHost
 
 // NewDetailHost instantiates a new DetailHost object
 // This constructor will assign default values to properties that have it defined,
@@ -969,7 +972,57 @@ func (o DetailHost) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DetailHost) UnmarshalJSON(data []byte) (err error) {
+	varDetailHost := _DetailHost{}
+
+	err = json.Unmarshal(data, &varDetailHost)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DetailHost(varDetailHost)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "composite_status")
+		delete(additionalProperties, "configs")
+		delete(additionalProperties, "connectivity_monitor")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "host_subtype")
+		delete(additionalProperties, "host_type")
+		delete(additionalProperties, "host_version")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "ip_address")
+		delete(additionalProperties, "ip_space")
+		delete(additionalProperties, "legacy_id")
+		delete(additionalProperties, "location")
+		delete(additionalProperties, "mac_address")
+		delete(additionalProperties, "maintenance_mode")
+		delete(additionalProperties, "nat_ip")
+		delete(additionalProperties, "ophid")
+		delete(additionalProperties, "pool")
+		delete(additionalProperties, "serial_number")
+		delete(additionalProperties, "services")
+		delete(additionalProperties, "site_id")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "timezone")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDetailHost struct {

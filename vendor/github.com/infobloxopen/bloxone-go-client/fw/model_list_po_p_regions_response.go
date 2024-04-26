@@ -19,9 +19,12 @@ var _ MappedNullable = &ListPoPRegionsResponse{}
 
 // ListPoPRegionsResponse struct for ListPoPRegionsResponse
 type ListPoPRegionsResponse struct {
-	Results          []PoPRegion `json:"results,omitempty"`
-	TotalResultCount *int32      `json:"total_result_count,omitempty"`
+	Results              []PoPRegion `json:"results,omitempty"`
+	TotalResultCount     *int32      `json:"total_result_count,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListPoPRegionsResponse ListPoPRegionsResponse
 
 // NewListPoPRegionsResponse instantiates a new ListPoPRegionsResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +123,34 @@ func (o ListPoPRegionsResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.TotalResultCount) {
 		toSerialize["total_result_count"] = o.TotalResultCount
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListPoPRegionsResponse) UnmarshalJSON(data []byte) (err error) {
+	varListPoPRegionsResponse := _ListPoPRegionsResponse{}
+
+	err = json.Unmarshal(data, &varListPoPRegionsResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListPoPRegionsResponse(varListPoPRegionsResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		delete(additionalProperties, "total_result_count")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListPoPRegionsResponse struct {

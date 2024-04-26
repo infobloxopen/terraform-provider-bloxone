@@ -19,8 +19,11 @@ var _ MappedNullable = &TTLInheritance{}
 
 // TTLInheritance The inheritance configuration specifies how the object inherits the _ttl_ field.
 type TTLInheritance struct {
-	Ttl *Inheritance2InheritedUInt32 `json:"ttl,omitempty"`
+	Ttl                  *Inheritance2InheritedUInt32 `json:"ttl,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _TTLInheritance TTLInheritance
 
 // NewTTLInheritance instantiates a new TTLInheritance object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o TTLInheritance) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Ttl) {
 		toSerialize["ttl"] = o.Ttl
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *TTLInheritance) UnmarshalJSON(data []byte) (err error) {
+	varTTLInheritance := _TTLInheritance{}
+
+	err = json.Unmarshal(data, &varTTLInheritance)
+
+	if err != nil {
+		return err
+	}
+
+	*o = TTLInheritance(varTTLInheritance)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ttl")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableTTLInheritance struct {

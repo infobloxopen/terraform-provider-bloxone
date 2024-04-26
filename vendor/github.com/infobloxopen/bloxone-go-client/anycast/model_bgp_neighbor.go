@@ -23,11 +23,14 @@ type BgpNeighbor struct {
 	// Examples:     ASDOT        ASPLAIN     INTEGER     VALID/INVALID     0.1          1           1           Valid     1            1           1           Valid     65535        65535       65535       Valid     0.65535      65535       65535       Valid     1.0          65536       65536       Valid     1.1          65537       65537       Valid     1.65535      131071      131071      Valid     65535.0      4294901760  4294901760  Valid     65535.1      4294901761  4294901761  Valid     65535.65535  4294967295  4294967295  Valid      0.65536                              Invalid     65535.655536                         Invalid     65536.0                              Invalid     65536.65535                          Invalid                  4294967296              Invalid
 	AsnText *string `json:"asn_text,omitempty"`
 	// IPv4 address of the BGP neighbor
-	IpAddress   *string `json:"ip_address,omitempty"`
-	MaxHopCount *int64  `json:"max_hop_count,omitempty"`
-	Multihop    *bool   `json:"multihop,omitempty"`
-	Password    *string `json:"password,omitempty"`
+	IpAddress            *string `json:"ip_address,omitempty"`
+	MaxHopCount          *int64  `json:"max_hop_count,omitempty"`
+	Multihop             *bool   `json:"multihop,omitempty"`
+	Password             *string `json:"password,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _BgpNeighbor BgpNeighbor
 
 // NewBgpNeighbor instantiates a new BgpNeighbor object
 // This constructor will assign default values to properties that have it defined,
@@ -266,7 +269,38 @@ func (o BgpNeighbor) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Password) {
 		toSerialize["password"] = o.Password
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *BgpNeighbor) UnmarshalJSON(data []byte) (err error) {
+	varBgpNeighbor := _BgpNeighbor{}
+
+	err = json.Unmarshal(data, &varBgpNeighbor)
+
+	if err != nil {
+		return err
+	}
+
+	*o = BgpNeighbor(varBgpNeighbor)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "asn")
+		delete(additionalProperties, "asn_text")
+		delete(additionalProperties, "ip_address")
+		delete(additionalProperties, "max_hop_count")
+		delete(additionalProperties, "multihop")
+		delete(additionalProperties, "password")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBgpNeighbor struct {

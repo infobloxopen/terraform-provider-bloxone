@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -28,7 +27,8 @@ type SortListItem struct {
 	// Optional. The prioritized networks. If empty, the value of _source_ or networks from _acl_ is used.
 	PrioritizedNetworks []string `json:"prioritized_networks,omitempty"`
 	// Must be empty if _element_ is not _ip_.
-	Source *string `json:"source,omitempty"`
+	Source               *string `json:"source,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _SortListItem SortListItem
@@ -191,6 +191,11 @@ func (o SortListItem) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Source) {
 		toSerialize["source"] = o.Source
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -218,15 +223,23 @@ func (o *SortListItem) UnmarshalJSON(data []byte) (err error) {
 
 	varSortListItem := _SortListItem{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varSortListItem)
+	err = json.Unmarshal(data, &varSortListItem)
 
 	if err != nil {
 		return err
 	}
 
 	*o = SortListItem(varSortListItem)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "acl")
+		delete(additionalProperties, "element")
+		delete(additionalProperties, "prioritized_networks")
+		delete(additionalProperties, "source")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

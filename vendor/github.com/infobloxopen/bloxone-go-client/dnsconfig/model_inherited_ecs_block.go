@@ -14,19 +14,50 @@ import (
 	"encoding/json"
 )
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+// checks if the InheritedZoneAuthorityMNameBlock type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &InheritedZoneAuthorityMNameBlock{}
+
+// InheritedZoneAuthorityMNameBlock Inheritance block for fields: _mname_, _protocol_mname_, _default_mname_.
+type InheritedZoneAuthorityMNameBlock struct {
+========
 // checks if the InheritedECSBlock type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &InheritedECSBlock{}
 
 // InheritedECSBlock Inheritance block for fields: _ecs_enabled_, _ecs_forwarding_, _ecs_prefix_v4_, _ecs_prefix_v6_, _ecs_zones_.
 type InheritedECSBlock struct {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	// Defaults to _inherit_.
 	Action *string `json:"action,omitempty"`
 	// Human-readable display name for the object referred to by _source_.
 	DisplayName *string `json:"display_name,omitempty"`
 	// The resource identifier.
-	Source *string   `json:"source,omitempty"`
-	Value  *ECSBlock `json:"value,omitempty"`
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+	Source *string                  `json:"source,omitempty"`
+	Value  *ZoneAuthorityMNameBlock `json:"value,omitempty"`
 }
+
+// NewInheritedZoneAuthorityMNameBlock instantiates a new InheritedZoneAuthorityMNameBlock object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewInheritedZoneAuthorityMNameBlock() *InheritedZoneAuthorityMNameBlock {
+	this := InheritedZoneAuthorityMNameBlock{}
+	return &this
+}
+
+// NewInheritedZoneAuthorityMNameBlockWithDefaults instantiates a new InheritedZoneAuthorityMNameBlock object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewInheritedZoneAuthorityMNameBlockWithDefaults() *InheritedZoneAuthorityMNameBlock {
+	this := InheritedZoneAuthorityMNameBlock{}
+========
+	Source               *string   `json:"source,omitempty"`
+	Value                *ECSBlock `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
+}
+
+type _InheritedECSBlock InheritedECSBlock
 
 // NewInheritedECSBlock instantiates a new InheritedECSBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -42,11 +73,16 @@ func NewInheritedECSBlock() *InheritedECSBlock {
 // but it doesn't guarantee that properties required by API are set
 func NewInheritedECSBlockWithDefaults() *InheritedECSBlock {
 	this := InheritedECSBlock{}
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	return &this
 }
 
 // GetAction returns the Action field value if set, zero value otherwise.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o *InheritedZoneAuthorityMNameBlock) GetAction() string {
+========
 func (o *InheritedECSBlock) GetAction() string {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	if o == nil || IsNil(o.Action) {
 		var ret string
 		return ret
@@ -56,7 +92,11 @@ func (o *InheritedECSBlock) GetAction() string {
 
 // GetActionOk returns a tuple with the Action field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o *InheritedZoneAuthorityMNameBlock) GetActionOk() (*string, bool) {
+========
 func (o *InheritedECSBlock) GetActionOk() (*string, bool) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	if o == nil || IsNil(o.Action) {
 		return nil, false
 	}
@@ -64,7 +104,11 @@ func (o *InheritedECSBlock) GetActionOk() (*string, bool) {
 }
 
 // HasAction returns a boolean if a field has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o *InheritedZoneAuthorityMNameBlock) HasAction() bool {
+========
 func (o *InheritedECSBlock) HasAction() bool {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	if o != nil && !IsNil(o.Action) {
 		return true
 	}
@@ -73,12 +117,20 @@ func (o *InheritedECSBlock) HasAction() bool {
 }
 
 // SetAction gets a reference to the given string and assigns it to the Action field.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o *InheritedZoneAuthorityMNameBlock) SetAction(v string) {
+========
 func (o *InheritedECSBlock) SetAction(v string) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	o.Action = &v
 }
 
 // GetDisplayName returns the DisplayName field value if set, zero value otherwise.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o *InheritedZoneAuthorityMNameBlock) GetDisplayName() string {
+========
 func (o *InheritedECSBlock) GetDisplayName() string {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	if o == nil || IsNil(o.DisplayName) {
 		var ret string
 		return ret
@@ -88,7 +140,11 @@ func (o *InheritedECSBlock) GetDisplayName() string {
 
 // GetDisplayNameOk returns a tuple with the DisplayName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o *InheritedZoneAuthorityMNameBlock) GetDisplayNameOk() (*string, bool) {
+========
 func (o *InheritedECSBlock) GetDisplayNameOk() (*string, bool) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	if o == nil || IsNil(o.DisplayName) {
 		return nil, false
 	}
@@ -96,7 +152,11 @@ func (o *InheritedECSBlock) GetDisplayNameOk() (*string, bool) {
 }
 
 // HasDisplayName returns a boolean if a field has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o *InheritedZoneAuthorityMNameBlock) HasDisplayName() bool {
+========
 func (o *InheritedECSBlock) HasDisplayName() bool {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	if o != nil && !IsNil(o.DisplayName) {
 		return true
 	}
@@ -105,12 +165,20 @@ func (o *InheritedECSBlock) HasDisplayName() bool {
 }
 
 // SetDisplayName gets a reference to the given string and assigns it to the DisplayName field.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o *InheritedZoneAuthorityMNameBlock) SetDisplayName(v string) {
+========
 func (o *InheritedECSBlock) SetDisplayName(v string) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	o.DisplayName = &v
 }
 
 // GetSource returns the Source field value if set, zero value otherwise.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o *InheritedZoneAuthorityMNameBlock) GetSource() string {
+========
 func (o *InheritedECSBlock) GetSource() string {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	if o == nil || IsNil(o.Source) {
 		var ret string
 		return ret
@@ -120,7 +188,11 @@ func (o *InheritedECSBlock) GetSource() string {
 
 // GetSourceOk returns a tuple with the Source field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o *InheritedZoneAuthorityMNameBlock) GetSourceOk() (*string, bool) {
+========
 func (o *InheritedECSBlock) GetSourceOk() (*string, bool) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	if o == nil || IsNil(o.Source) {
 		return nil, false
 	}
@@ -128,7 +200,11 @@ func (o *InheritedECSBlock) GetSourceOk() (*string, bool) {
 }
 
 // HasSource returns a boolean if a field has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o *InheritedZoneAuthorityMNameBlock) HasSource() bool {
+========
 func (o *InheritedECSBlock) HasSource() bool {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	if o != nil && !IsNil(o.Source) {
 		return true
 	}
@@ -137,14 +213,24 @@ func (o *InheritedECSBlock) HasSource() bool {
 }
 
 // SetSource gets a reference to the given string and assigns it to the Source field.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o *InheritedZoneAuthorityMNameBlock) SetSource(v string) {
+========
 func (o *InheritedECSBlock) SetSource(v string) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	o.Source = &v
 }
 
 // GetValue returns the Value field value if set, zero value otherwise.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o *InheritedZoneAuthorityMNameBlock) GetValue() ZoneAuthorityMNameBlock {
+	if o == nil || IsNil(o.Value) {
+		var ret ZoneAuthorityMNameBlock
+========
 func (o *InheritedECSBlock) GetValue() ECSBlock {
 	if o == nil || IsNil(o.Value) {
 		var ret ECSBlock
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 		return ret
 	}
 	return *o.Value
@@ -152,7 +238,11 @@ func (o *InheritedECSBlock) GetValue() ECSBlock {
 
 // GetValueOk returns a tuple with the Value field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o *InheritedZoneAuthorityMNameBlock) GetValueOk() (*ZoneAuthorityMNameBlock, bool) {
+========
 func (o *InheritedECSBlock) GetValueOk() (*ECSBlock, bool) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	if o == nil || IsNil(o.Value) {
 		return nil, false
 	}
@@ -160,7 +250,11 @@ func (o *InheritedECSBlock) GetValueOk() (*ECSBlock, bool) {
 }
 
 // HasValue returns a boolean if a field has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o *InheritedZoneAuthorityMNameBlock) HasValue() bool {
+========
 func (o *InheritedECSBlock) HasValue() bool {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	if o != nil && !IsNil(o.Value) {
 		return true
 	}
@@ -168,12 +262,21 @@ func (o *InheritedECSBlock) HasValue() bool {
 	return false
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+// SetValue gets a reference to the given ZoneAuthorityMNameBlock and assigns it to the Value field.
+func (o *InheritedZoneAuthorityMNameBlock) SetValue(v ZoneAuthorityMNameBlock) {
+	o.Value = &v
+}
+
+func (o InheritedZoneAuthorityMNameBlock) MarshalJSON() ([]byte, error) {
+========
 // SetValue gets a reference to the given ECSBlock and assigns it to the Value field.
 func (o *InheritedECSBlock) SetValue(v ECSBlock) {
 	o.Value = &v
 }
 
 func (o InheritedECSBlock) MarshalJSON() ([]byte, error) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -181,7 +284,11 @@ func (o InheritedECSBlock) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (o InheritedZoneAuthorityMNameBlock) ToMap() (map[string]interface{}, error) {
+========
 func (o InheritedECSBlock) ToMap() (map[string]interface{}, error) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Action) {
 		toSerialize["action"] = o.Action
@@ -195,7 +302,48 @@ func (o InheritedECSBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+type NullableInheritedZoneAuthorityMNameBlock struct {
+	value *InheritedZoneAuthorityMNameBlock
+	isSet bool
+}
+
+func (v NullableInheritedZoneAuthorityMNameBlock) Get() *InheritedZoneAuthorityMNameBlock {
+	return v.value
+}
+
+func (v *NullableInheritedZoneAuthorityMNameBlock) Set(val *InheritedZoneAuthorityMNameBlock) {
+========
+func (o *InheritedECSBlock) UnmarshalJSON(data []byte) (err error) {
+	varInheritedECSBlock := _InheritedECSBlock{}
+
+	err = json.Unmarshal(data, &varInheritedECSBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedECSBlock(varInheritedECSBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedECSBlock struct {
@@ -208,19 +356,39 @@ func (v NullableInheritedECSBlock) Get() *InheritedECSBlock {
 }
 
 func (v *NullableInheritedECSBlock) Set(val *InheritedECSBlock) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	v.value = val
 	v.isSet = true
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func (v NullableInheritedZoneAuthorityMNameBlock) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableInheritedZoneAuthorityMNameBlock) Unset() {
+========
 func (v NullableInheritedECSBlock) IsSet() bool {
 	return v.isSet
 }
 
 func (v *NullableInheritedECSBlock) Unset() {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	v.value = nil
 	v.isSet = false
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_zone_authority_m_name_block.go
+func NewNullableInheritedZoneAuthorityMNameBlock(val *InheritedZoneAuthorityMNameBlock) *NullableInheritedZoneAuthorityMNameBlock {
+	return &NullableInheritedZoneAuthorityMNameBlock{value: val, isSet: true}
+}
+
+func (v NullableInheritedZoneAuthorityMNameBlock) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableInheritedZoneAuthorityMNameBlock) UnmarshalJSON(src []byte) error {
+========
 func NewNullableInheritedECSBlock(val *InheritedECSBlock) *NullableInheritedECSBlock {
 	return &NullableInheritedECSBlock{value: val, isSet: true}
 }
@@ -230,6 +398,7 @@ func (v NullableInheritedECSBlock) MarshalJSON() ([]byte, error) {
 }
 
 func (v *NullableInheritedECSBlock) UnmarshalJSON(src []byte) error {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_ecs_block.go
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

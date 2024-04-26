@@ -26,8 +26,11 @@ type InheritanceInheritedBool struct {
 	// The resource identifier.
 	Source *string `json:"source,omitempty"`
 	// The inherited value.
-	Value *bool `json:"value,omitempty"`
+	Value                *bool `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InheritanceInheritedBool InheritanceInheritedBool
 
 // NewInheritanceInheritedBool instantiates a new InheritanceInheritedBool object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,36 @@ func (o InheritanceInheritedBool) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritanceInheritedBool) UnmarshalJSON(data []byte) (err error) {
+	varInheritanceInheritedBool := _InheritanceInheritedBool{}
+
+	err = json.Unmarshal(data, &varInheritanceInheritedBool)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritanceInheritedBool(varInheritanceInheritedBool)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritanceInheritedBool struct {

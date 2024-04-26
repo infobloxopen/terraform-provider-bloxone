@@ -19,8 +19,11 @@ var _ MappedNullable = &CopyAddressBlockResponse{}
 
 // CopyAddressBlockResponse The response format to copy the __AddressBlock__ object.
 type CopyAddressBlockResponse struct {
-	Result *CopyResponse `json:"result,omitempty"`
+	Result               *CopyResponse `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CopyAddressBlockResponse CopyAddressBlockResponse
 
 // NewCopyAddressBlockResponse instantiates a new CopyAddressBlockResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CopyAddressBlockResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CopyAddressBlockResponse) UnmarshalJSON(data []byte) (err error) {
+	varCopyAddressBlockResponse := _CopyAddressBlockResponse{}
+
+	err = json.Unmarshal(data, &varCopyAddressBlockResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CopyAddressBlockResponse(varCopyAddressBlockResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCopyAddressBlockResponse struct {

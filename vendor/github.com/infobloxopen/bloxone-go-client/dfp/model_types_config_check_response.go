@@ -20,8 +20,11 @@ var _ MappedNullable = &TypesConfigCheckResponse{}
 // TypesConfigCheckResponse The Config Check response.
 type TypesConfigCheckResponse struct {
 	// The list of check result.
-	Results []TypesConfigCheckResult `json:"results,omitempty"`
+	Results              []TypesConfigCheckResult `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _TypesConfigCheckResponse TypesConfigCheckResponse
 
 // NewTypesConfigCheckResponse instantiates a new TypesConfigCheckResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o TypesConfigCheckResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *TypesConfigCheckResponse) UnmarshalJSON(data []byte) (err error) {
+	varTypesConfigCheckResponse := _TypesConfigCheckResponse{}
+
+	err = json.Unmarshal(data, &varTypesConfigCheckResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = TypesConfigCheckResponse(varTypesConfigCheckResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableTypesConfigCheckResponse struct {

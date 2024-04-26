@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadSubnetResponse{}
 
 // ReadSubnetResponse The response format to retrieve the __Subnet__ object.
 type ReadSubnetResponse struct {
-	Result *Subnet `json:"result,omitempty"`
+	Result               *Subnet `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadSubnetResponse ReadSubnetResponse
 
 // NewReadSubnetResponse instantiates a new ReadSubnetResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadSubnetResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadSubnetResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadSubnetResponse := _ReadSubnetResponse{}
+
+	err = json.Unmarshal(data, &varReadSubnetResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadSubnetResponse(varReadSubnetResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadSubnetResponse struct {

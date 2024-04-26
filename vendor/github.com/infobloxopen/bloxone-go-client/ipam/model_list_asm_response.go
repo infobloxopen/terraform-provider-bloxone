@@ -14,14 +14,42 @@ import (
 	"encoding/json"
 )
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_option_code_response.go
+// checks if the ListOptionCodeResponse type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ListOptionCodeResponse{}
+
+// ListOptionCodeResponse The response format to retrieve __OptionCode__ objects.
+type ListOptionCodeResponse struct {
+	// The list of OptionCode objects.
+	Results []OptionCode `json:"results,omitempty"`
+}
+
+// NewListOptionCodeResponse instantiates a new ListOptionCodeResponse object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewListOptionCodeResponse() *ListOptionCodeResponse {
+	this := ListOptionCodeResponse{}
+	return &this
+}
+
+// NewListOptionCodeResponseWithDefaults instantiates a new ListOptionCodeResponse object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewListOptionCodeResponseWithDefaults() *ListOptionCodeResponse {
+	this := ListOptionCodeResponse{}
+========
 // checks if the ListASMResponse type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ListASMResponse{}
 
 // ListASMResponse The response format to retrieve __ASM__ objects.
 type ListASMResponse struct {
 	// The list of ASM objects.
-	Results []ASM `json:"results,omitempty"`
+	Results              []ASM `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListASMResponse ListASMResponse
 
 // NewListASMResponse instantiates a new ListASMResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -37,13 +65,20 @@ func NewListASMResponse() *ListASMResponse {
 // but it doesn't guarantee that properties required by API are set
 func NewListASMResponseWithDefaults() *ListASMResponse {
 	this := ListASMResponse{}
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_asm_response.go
 	return &this
 }
 
 // GetResults returns the Results field value if set, zero value otherwise.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_option_code_response.go
+func (o *ListOptionCodeResponse) GetResults() []OptionCode {
+	if o == nil || IsNil(o.Results) {
+		var ret []OptionCode
+========
 func (o *ListASMResponse) GetResults() []ASM {
 	if o == nil || IsNil(o.Results) {
 		var ret []ASM
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_asm_response.go
 		return ret
 	}
 	return o.Results
@@ -51,7 +86,11 @@ func (o *ListASMResponse) GetResults() []ASM {
 
 // GetResultsOk returns a tuple with the Results field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_option_code_response.go
+func (o *ListOptionCodeResponse) GetResultsOk() ([]OptionCode, bool) {
+========
 func (o *ListASMResponse) GetResultsOk() ([]ASM, bool) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_asm_response.go
 	if o == nil || IsNil(o.Results) {
 		return nil, false
 	}
@@ -59,7 +98,11 @@ func (o *ListASMResponse) GetResultsOk() ([]ASM, bool) {
 }
 
 // HasResults returns a boolean if a field has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_option_code_response.go
+func (o *ListOptionCodeResponse) HasResults() bool {
+========
 func (o *ListASMResponse) HasResults() bool {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_asm_response.go
 	if o != nil && !IsNil(o.Results) {
 		return true
 	}
@@ -67,12 +110,21 @@ func (o *ListASMResponse) HasResults() bool {
 	return false
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_option_code_response.go
+// SetResults gets a reference to the given []OptionCode and assigns it to the Results field.
+func (o *ListOptionCodeResponse) SetResults(v []OptionCode) {
+	o.Results = v
+}
+
+func (o ListOptionCodeResponse) MarshalJSON() ([]byte, error) {
+========
 // SetResults gets a reference to the given []ASM and assigns it to the Results field.
 func (o *ListASMResponse) SetResults(v []ASM) {
 	o.Results = v
 }
 
 func (o ListASMResponse) MarshalJSON() ([]byte, error) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_asm_response.go
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -80,12 +132,54 @@ func (o ListASMResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_option_code_response.go
+func (o ListOptionCodeResponse) ToMap() (map[string]interface{}, error) {
+========
 func (o ListASMResponse) ToMap() (map[string]interface{}, error) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_asm_response.go
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_option_code_response.go
+type NullableListOptionCodeResponse struct {
+	value *ListOptionCodeResponse
+	isSet bool
+}
+
+func (v NullableListOptionCodeResponse) Get() *ListOptionCodeResponse {
+	return v.value
+}
+
+func (v *NullableListOptionCodeResponse) Set(val *ListOptionCodeResponse) {
+========
+func (o *ListASMResponse) UnmarshalJSON(data []byte) (err error) {
+	varListASMResponse := _ListASMResponse{}
+
+	err = json.Unmarshal(data, &varListASMResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListASMResponse(varListASMResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListASMResponse struct {
@@ -98,19 +192,39 @@ func (v NullableListASMResponse) Get() *ListASMResponse {
 }
 
 func (v *NullableListASMResponse) Set(val *ListASMResponse) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_asm_response.go
 	v.value = val
 	v.isSet = true
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_option_code_response.go
+func (v NullableListOptionCodeResponse) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableListOptionCodeResponse) Unset() {
+========
 func (v NullableListASMResponse) IsSet() bool {
 	return v.isSet
 }
 
 func (v *NullableListASMResponse) Unset() {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_asm_response.go
 	v.value = nil
 	v.isSet = false
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_option_code_response.go
+func NewNullableListOptionCodeResponse(val *ListOptionCodeResponse) *NullableListOptionCodeResponse {
+	return &NullableListOptionCodeResponse{value: val, isSet: true}
+}
+
+func (v NullableListOptionCodeResponse) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableListOptionCodeResponse) UnmarshalJSON(src []byte) error {
+========
 func NewNullableListASMResponse(val *ListASMResponse) *NullableListASMResponse {
 	return &NullableListASMResponse{value: val, isSet: true}
 }
@@ -120,6 +234,7 @@ func (v NullableListASMResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (v *NullableListASMResponse) UnmarshalJSON(src []byte) error {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_list_asm_response.go
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

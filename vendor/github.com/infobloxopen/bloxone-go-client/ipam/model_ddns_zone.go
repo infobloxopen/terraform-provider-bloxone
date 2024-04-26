@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -35,7 +34,8 @@ type DDNSZone struct {
 	// The name of the view.
 	ViewName *string `json:"view_name,omitempty"`
 	// The resource identifier.
-	Zone string `json:"zone"`
+	Zone                 string `json:"zone"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _DDNSZone DDNSZone
@@ -338,6 +338,11 @@ func (o DDNSZone) ToMap() (map[string]interface{}, error) {
 		toSerialize["view_name"] = o.ViewName
 	}
 	toSerialize["zone"] = o.Zone
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -365,15 +370,27 @@ func (o *DDNSZone) UnmarshalJSON(data []byte) (err error) {
 
 	varDDNSZone := _DDNSZone{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varDDNSZone)
+	err = json.Unmarshal(data, &varDDNSZone)
 
 	if err != nil {
 		return err
 	}
 
 	*o = DDNSZone(varDDNSZone)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "fqdn")
+		delete(additionalProperties, "gss_tsig_enabled")
+		delete(additionalProperties, "nameservers")
+		delete(additionalProperties, "tsig_enabled")
+		delete(additionalProperties, "tsig_key")
+		delete(additionalProperties, "view")
+		delete(additionalProperties, "view_name")
+		delete(additionalProperties, "zone")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

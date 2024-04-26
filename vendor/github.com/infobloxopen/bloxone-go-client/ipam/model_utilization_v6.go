@@ -19,12 +19,15 @@ var _ MappedNullable = &UtilizationV6{}
 
 // UtilizationV6 The __UtilizationV6__ object represents IPV6 address usage statistics for an object.
 type UtilizationV6 struct {
-	Abandoned *string `json:"abandoned,omitempty"`
-	Dynamic   *string `json:"dynamic,omitempty"`
-	Static    *string `json:"static,omitempty"`
-	Total     *string `json:"total,omitempty"`
-	Used      *string `json:"used,omitempty"`
+	Abandoned            *string `json:"abandoned,omitempty"`
+	Dynamic              *string `json:"dynamic,omitempty"`
+	Static               *string `json:"static,omitempty"`
+	Total                *string `json:"total,omitempty"`
+	Used                 *string `json:"used,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UtilizationV6 UtilizationV6
 
 // NewUtilizationV6 instantiates a new UtilizationV6 object
 // This constructor will assign default values to properties that have it defined,
@@ -228,7 +231,37 @@ func (o UtilizationV6) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Used) {
 		toSerialize["used"] = o.Used
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UtilizationV6) UnmarshalJSON(data []byte) (err error) {
+	varUtilizationV6 := _UtilizationV6{}
+
+	err = json.Unmarshal(data, &varUtilizationV6)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UtilizationV6(varUtilizationV6)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "abandoned")
+		delete(additionalProperties, "dynamic")
+		delete(additionalProperties, "static")
+		delete(additionalProperties, "total")
+		delete(additionalProperties, "used")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUtilizationV6 struct {

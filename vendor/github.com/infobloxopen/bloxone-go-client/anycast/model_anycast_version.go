@@ -19,9 +19,12 @@ var _ MappedNullable = &AnycastVersion{}
 
 // AnycastVersion struct for AnycastVersion
 type AnycastVersion struct {
-	AccountId *int64  `json:"account_id,omitempty"`
-	Version   *string `json:"version,omitempty"`
+	AccountId            *int64  `json:"account_id,omitempty"`
+	Version              *string `json:"version,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AnycastVersion AnycastVersion
 
 // NewAnycastVersion instantiates a new AnycastVersion object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +123,34 @@ func (o AnycastVersion) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Version) {
 		toSerialize["version"] = o.Version
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AnycastVersion) UnmarshalJSON(data []byte) (err error) {
+	varAnycastVersion := _AnycastVersion{}
+
+	err = json.Unmarshal(data, &varAnycastVersion)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AnycastVersion(varAnycastVersion)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "account_id")
+		delete(additionalProperties, "version")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAnycastVersion struct {

@@ -26,8 +26,11 @@ type Resolver struct {
 	// Mark it true to set internal or local DNS servers' IPv4 or IPv6 addresses that are used as DNS resolvers
 	IsLocal *bool `json:"is_local,omitempty"`
 	// The list of DNS resolver communication protocols.
-	Protocols []DNSProtocol `json:"protocols,omitempty"`
+	Protocols            []DNSProtocol `json:"protocols,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Resolver Resolver
 
 // NewResolver instantiates a new Resolver object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,36 @@ func (o Resolver) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Protocols) {
 		toSerialize["protocols"] = o.Protocols
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Resolver) UnmarshalJSON(data []byte) (err error) {
+	varResolver := _Resolver{}
+
+	err = json.Unmarshal(data, &varResolver)
+
+	if err != nil {
+		return err
+	}
+
+	*o = Resolver(varResolver)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "is_fallback")
+		delete(additionalProperties, "is_local")
+		delete(additionalProperties, "protocols")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableResolver struct {

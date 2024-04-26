@@ -21,9 +21,12 @@ var _ MappedNullable = &RevokeCertRequest{}
 type RevokeCertRequest struct {
 	CertSerial *string `json:"cert_serial,omitempty"`
 	// On-prem host ID which can be obtained either from on-prem or BloxOne UI portal(Manage > Infrastructure > Hosts > Select the onprem > click on 3 dots on top right side > General Information > Ophid) .
-	Ophid        *string `json:"ophid,omitempty"`
-	RevokeReason *string `json:"revoke_reason,omitempty"`
+	Ophid                *string `json:"ophid,omitempty"`
+	RevokeReason         *string `json:"revoke_reason,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _RevokeCertRequest RevokeCertRequest
 
 // NewRevokeCertRequest instantiates a new RevokeCertRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -157,7 +160,35 @@ func (o RevokeCertRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RevokeReason) {
 		toSerialize["revoke_reason"] = o.RevokeReason
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *RevokeCertRequest) UnmarshalJSON(data []byte) (err error) {
+	varRevokeCertRequest := _RevokeCertRequest{}
+
+	err = json.Unmarshal(data, &varRevokeCertRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = RevokeCertRequest(varRevokeCertRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "cert_serial")
+		delete(additionalProperties, "ophid")
+		delete(additionalProperties, "revoke_reason")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableRevokeCertRequest struct {

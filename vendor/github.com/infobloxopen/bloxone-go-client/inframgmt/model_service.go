@@ -11,7 +11,6 @@ API version: v1
 package inframgmt
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -45,7 +44,8 @@ type Service struct {
 	// Tags associated with this Service.
 	Tags map[string]interface{} `json:"tags,omitempty"`
 	// Timestamp of the latest update on Service.
-	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	UpdatedAt            *time.Time `json:"updated_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _Service Service
@@ -470,6 +470,11 @@ func (o Service) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -499,15 +504,31 @@ func (o *Service) UnmarshalJSON(data []byte) (err error) {
 
 	varService := _Service{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varService)
+	err = json.Unmarshal(data, &varService)
 
 	if err != nil {
 		return err
 	}
 
 	*o = Service(varService)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "configs")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "desired_state")
+		delete(additionalProperties, "desired_version")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "interface_labels")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "pool_id")
+		delete(additionalProperties, "service_type")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

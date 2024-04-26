@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadAddressResponse{}
 
 // ReadAddressResponse The response format to retrieve the __Address__ object.
 type ReadAddressResponse struct {
-	Result *Address `json:"result,omitempty"`
+	Result               *Address `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadAddressResponse ReadAddressResponse
 
 // NewReadAddressResponse instantiates a new ReadAddressResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadAddressResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadAddressResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadAddressResponse := _ReadAddressResponse{}
+
+	err = json.Unmarshal(data, &varReadAddressResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadAddressResponse(varReadAddressResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadAddressResponse struct {

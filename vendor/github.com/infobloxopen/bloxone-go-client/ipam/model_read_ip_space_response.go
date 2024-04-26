@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadIPSpaceResponse{}
 
 // ReadIPSpaceResponse The response format to retrieve the __IPSpace__ object.
 type ReadIPSpaceResponse struct {
-	Result *IPSpace `json:"result,omitempty"`
+	Result               *IPSpace `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadIPSpaceResponse ReadIPSpaceResponse
 
 // NewReadIPSpaceResponse instantiates a new ReadIPSpaceResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadIPSpaceResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadIPSpaceResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadIPSpaceResponse := _ReadIPSpaceResponse{}
+
+	err = json.Unmarshal(data, &varReadIPSpaceResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadIPSpaceResponse(varReadIPSpaceResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadIPSpaceResponse struct {

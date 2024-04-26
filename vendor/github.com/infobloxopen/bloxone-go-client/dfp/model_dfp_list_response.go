@@ -20,8 +20,11 @@ var _ MappedNullable = &DfpListResponse{}
 // DfpListResponse The DNS Forwarding Proxy list response.
 type DfpListResponse struct {
 	// The list of DNS Forwarding Proxy objects.
-	Results []Dfp `json:"results,omitempty"`
+	Results              []Dfp `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DfpListResponse DfpListResponse
 
 // NewDfpListResponse instantiates a new DfpListResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o DfpListResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DfpListResponse) UnmarshalJSON(data []byte) (err error) {
+	varDfpListResponse := _DfpListResponse{}
+
+	err = json.Unmarshal(data, &varDfpListResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DfpListResponse(varDfpListResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDfpListResponse struct {

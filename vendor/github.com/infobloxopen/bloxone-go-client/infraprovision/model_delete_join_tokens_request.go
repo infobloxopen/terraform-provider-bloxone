@@ -20,8 +20,11 @@ var _ MappedNullable = &DeleteJoinTokensRequest{}
 // DeleteJoinTokensRequest struct for DeleteJoinTokensRequest
 type DeleteJoinTokensRequest struct {
 	// The resource identifier.
-	Ids []string `json:"ids,omitempty"`
+	Ids                  []string `json:"ids,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DeleteJoinTokensRequest DeleteJoinTokensRequest
 
 // NewDeleteJoinTokensRequest instantiates a new DeleteJoinTokensRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o DeleteJoinTokensRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Ids) {
 		toSerialize["ids"] = o.Ids
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DeleteJoinTokensRequest) UnmarshalJSON(data []byte) (err error) {
+	varDeleteJoinTokensRequest := _DeleteJoinTokensRequest{}
+
+	err = json.Unmarshal(data, &varDeleteJoinTokensRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DeleteJoinTokensRequest(varDeleteJoinTokensRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ids")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDeleteJoinTokensRequest struct {

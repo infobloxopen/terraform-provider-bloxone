@@ -19,10 +19,13 @@ var _ MappedNullable = &ApplicationFiltersDeleteApplicationFilters400ResponseErr
 
 // ApplicationFiltersDeleteApplicationFilters400ResponseError struct for ApplicationFiltersDeleteApplicationFilters400ResponseError
 type ApplicationFiltersDeleteApplicationFilters400ResponseError struct {
-	Code    *string `json:"code,omitempty"`
-	Message *string `json:"message,omitempty"`
-	Status  *string `json:"status,omitempty"`
+	Code                 *string `json:"code,omitempty"`
+	Message              *string `json:"message,omitempty"`
+	Status               *string `json:"status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ApplicationFiltersDeleteApplicationFilters400ResponseError ApplicationFiltersDeleteApplicationFilters400ResponseError
 
 // NewApplicationFiltersDeleteApplicationFilters400ResponseError instantiates a new ApplicationFiltersDeleteApplicationFilters400ResponseError object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o ApplicationFiltersDeleteApplicationFilters400ResponseError) ToMap() (map
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ApplicationFiltersDeleteApplicationFilters400ResponseError) UnmarshalJSON(data []byte) (err error) {
+	varApplicationFiltersDeleteApplicationFilters400ResponseError := _ApplicationFiltersDeleteApplicationFilters400ResponseError{}
+
+	err = json.Unmarshal(data, &varApplicationFiltersDeleteApplicationFilters400ResponseError)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ApplicationFiltersDeleteApplicationFilters400ResponseError(varApplicationFiltersDeleteApplicationFilters400ResponseError)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "code")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableApplicationFiltersDeleteApplicationFilters400ResponseError struct {

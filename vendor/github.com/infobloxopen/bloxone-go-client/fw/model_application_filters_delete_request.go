@@ -20,8 +20,11 @@ var _ MappedNullable = &ApplicationFiltersDeleteRequest{}
 // ApplicationFiltersDeleteRequest The Application Filter delete request.
 type ApplicationFiltersDeleteRequest struct {
 	// The list of Application Filter object identifiers.
-	Ids []int32 `json:"ids,omitempty"`
+	Ids                  []int32 `json:"ids,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ApplicationFiltersDeleteRequest ApplicationFiltersDeleteRequest
 
 // NewApplicationFiltersDeleteRequest instantiates a new ApplicationFiltersDeleteRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ApplicationFiltersDeleteRequest) ToMap() (map[string]interface{}, error)
 	if !IsNil(o.Ids) {
 		toSerialize["ids"] = o.Ids
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ApplicationFiltersDeleteRequest) UnmarshalJSON(data []byte) (err error) {
+	varApplicationFiltersDeleteRequest := _ApplicationFiltersDeleteRequest{}
+
+	err = json.Unmarshal(data, &varApplicationFiltersDeleteRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ApplicationFiltersDeleteRequest(varApplicationFiltersDeleteRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ids")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableApplicationFiltersDeleteRequest struct {

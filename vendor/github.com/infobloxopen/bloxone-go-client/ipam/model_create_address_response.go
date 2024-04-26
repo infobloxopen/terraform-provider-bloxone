@@ -19,8 +19,11 @@ var _ MappedNullable = &CreateAddressResponse{}
 
 // CreateAddressResponse The response format to create the __Address__ object.
 type CreateAddressResponse struct {
-	Result *Address `json:"result,omitempty"`
+	Result               *Address `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateAddressResponse CreateAddressResponse
 
 // NewCreateAddressResponse instantiates a new CreateAddressResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CreateAddressResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateAddressResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateAddressResponse := _CreateAddressResponse{}
+
+	err = json.Unmarshal(data, &varCreateAddressResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateAddressResponse(varCreateAddressResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateAddressResponse struct {

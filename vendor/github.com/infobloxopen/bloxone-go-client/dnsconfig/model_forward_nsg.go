@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -38,7 +37,8 @@ type ForwardNSG struct {
 	// The resource identifier.
 	Nsgs []string `json:"nsgs,omitempty"`
 	// Tagging specifics.
-	Tags map[string]interface{} `json:"tags,omitempty"`
+	Tags                 map[string]interface{} `json:"tags,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ForwardNSG ForwardNSG
@@ -376,6 +376,11 @@ func (o ForwardNSG) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -403,15 +408,28 @@ func (o *ForwardNSG) UnmarshalJSON(data []byte) (err error) {
 
 	varForwardNSG := _ForwardNSG{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varForwardNSG)
+	err = json.Unmarshal(data, &varForwardNSG)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ForwardNSG(varForwardNSG)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "external_forwarders")
+		delete(additionalProperties, "forwarders_only")
+		delete(additionalProperties, "hosts")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "internal_forwarders")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "nsgs")
+		delete(additionalProperties, "tags")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

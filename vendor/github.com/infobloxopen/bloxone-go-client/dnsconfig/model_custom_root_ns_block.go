@@ -22,8 +22,11 @@ type CustomRootNSBlock struct {
 	// Optional. Field config for _custom_root_ns_ field.
 	CustomRootNs []RootNS `json:"custom_root_ns,omitempty"`
 	// Optional. Field config for _custom_root_ns_enabled_ field.
-	CustomRootNsEnabled *bool `json:"custom_root_ns_enabled,omitempty"`
+	CustomRootNsEnabled  *bool `json:"custom_root_ns_enabled,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CustomRootNSBlock CustomRootNSBlock
 
 // NewCustomRootNSBlock instantiates a new CustomRootNSBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o CustomRootNSBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.CustomRootNsEnabled) {
 		toSerialize["custom_root_ns_enabled"] = o.CustomRootNsEnabled
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CustomRootNSBlock) UnmarshalJSON(data []byte) (err error) {
+	varCustomRootNSBlock := _CustomRootNSBlock{}
+
+	err = json.Unmarshal(data, &varCustomRootNSBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CustomRootNSBlock(varCustomRootNSBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "custom_root_ns")
+		delete(additionalProperties, "custom_root_ns_enabled")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCustomRootNSBlock struct {

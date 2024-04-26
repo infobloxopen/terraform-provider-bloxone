@@ -98,10 +98,13 @@ type Subnet struct {
 	// Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	// The usage is a combination of indicators, each tracking a specific associated use. Listed below are usage indicators with their meaning:  usage indicator        | description  ---------------------- | --------------------------------  _IPAM_                 |  Subnet is managed in BloxOne DDI.  _DHCP_                 |  Subnet is served by a DHCP Host.  _DISCOVERED_           |  Subnet is discovered by some network discovery probe like Network Insight or NetMRI in NIOS.
-	Usage         []string       `json:"usage,omitempty"`
-	Utilization   *Utilization   `json:"utilization,omitempty"`
-	UtilizationV6 *UtilizationV6 `json:"utilization_v6,omitempty"`
+	Usage                []string       `json:"usage,omitempty"`
+	Utilization          *Utilization   `json:"utilization,omitempty"`
+	UtilizationV6        *UtilizationV6 `json:"utilization_v6,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Subnet Subnet
 
 // NewSubnet instantiates a new Subnet object
 // This constructor will assign default values to properties that have it defined,
@@ -1670,7 +1673,76 @@ func (o Subnet) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UtilizationV6) {
 		toSerialize["utilization_v6"] = o.UtilizationV6
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Subnet) UnmarshalJSON(data []byte) (err error) {
+	varSubnet := _Subnet{}
+
+	err = json.Unmarshal(data, &varSubnet)
+
+	if err != nil {
+		return err
+	}
+
+	*o = Subnet(varSubnet)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "asm_config")
+		delete(additionalProperties, "asm_scope_flag")
+		delete(additionalProperties, "cidr")
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "ddns_client_update")
+		delete(additionalProperties, "ddns_conflict_resolution_mode")
+		delete(additionalProperties, "ddns_domain")
+		delete(additionalProperties, "ddns_generate_name")
+		delete(additionalProperties, "ddns_generated_prefix")
+		delete(additionalProperties, "ddns_send_updates")
+		delete(additionalProperties, "ddns_ttl_percent")
+		delete(additionalProperties, "ddns_update_on_renew")
+		delete(additionalProperties, "ddns_use_conflict_resolution")
+		delete(additionalProperties, "dhcp_config")
+		delete(additionalProperties, "dhcp_host")
+		delete(additionalProperties, "dhcp_options")
+		delete(additionalProperties, "dhcp_utilization")
+		delete(additionalProperties, "disable_dhcp")
+		delete(additionalProperties, "discovery_attrs")
+		delete(additionalProperties, "discovery_metadata")
+		delete(additionalProperties, "header_option_filename")
+		delete(additionalProperties, "header_option_server_address")
+		delete(additionalProperties, "header_option_server_name")
+		delete(additionalProperties, "hostname_rewrite_char")
+		delete(additionalProperties, "hostname_rewrite_enabled")
+		delete(additionalProperties, "hostname_rewrite_regex")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "inheritance_assigned_hosts")
+		delete(additionalProperties, "inheritance_parent")
+		delete(additionalProperties, "inheritance_sources")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "parent")
+		delete(additionalProperties, "protocol")
+		delete(additionalProperties, "rebind_time")
+		delete(additionalProperties, "renew_time")
+		delete(additionalProperties, "space")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "threshold")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "usage")
+		delete(additionalProperties, "utilization")
+		delete(additionalProperties, "utilization_v6")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSubnet struct {

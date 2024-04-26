@@ -14,19 +14,50 @@ import (
 	"encoding/json"
 )
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+// checks if the InheritedDNSSECValidationBlock type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &InheritedDNSSECValidationBlock{}
+
+// InheritedDNSSECValidationBlock Inheritance block for fields: _dnssec_enabled_, _dnssec_enable_validation_, _dnssec_validate_expiry_, _dnssec_trust_anchors_.
+type InheritedDNSSECValidationBlock struct {
+========
 // checks if the InheritedForwardersBlock type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &InheritedForwardersBlock{}
 
 // InheritedForwardersBlock Inheritance block for fields: _forwarders_, _forwarders_only_, _use_root_forwarders_for_local_resolution_with_b1td_.
 type InheritedForwardersBlock struct {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	// Defaults to _inherit_.
 	Action *string `json:"action,omitempty"`
 	// Human-readable display name for the object referred to by _source_.
 	DisplayName *string `json:"display_name,omitempty"`
 	// The resource identifier.
-	Source *string          `json:"source,omitempty"`
-	Value  *ForwardersBlock `json:"value,omitempty"`
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+	Source *string                `json:"source,omitempty"`
+	Value  *DNSSECValidationBlock `json:"value,omitempty"`
 }
+
+// NewInheritedDNSSECValidationBlock instantiates a new InheritedDNSSECValidationBlock object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewInheritedDNSSECValidationBlock() *InheritedDNSSECValidationBlock {
+	this := InheritedDNSSECValidationBlock{}
+	return &this
+}
+
+// NewInheritedDNSSECValidationBlockWithDefaults instantiates a new InheritedDNSSECValidationBlock object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewInheritedDNSSECValidationBlockWithDefaults() *InheritedDNSSECValidationBlock {
+	this := InheritedDNSSECValidationBlock{}
+========
+	Source               *string          `json:"source,omitempty"`
+	Value                *ForwardersBlock `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
+}
+
+type _InheritedForwardersBlock InheritedForwardersBlock
 
 // NewInheritedForwardersBlock instantiates a new InheritedForwardersBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -42,11 +73,16 @@ func NewInheritedForwardersBlock() *InheritedForwardersBlock {
 // but it doesn't guarantee that properties required by API are set
 func NewInheritedForwardersBlockWithDefaults() *InheritedForwardersBlock {
 	this := InheritedForwardersBlock{}
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	return &this
 }
 
 // GetAction returns the Action field value if set, zero value otherwise.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o *InheritedDNSSECValidationBlock) GetAction() string {
+========
 func (o *InheritedForwardersBlock) GetAction() string {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	if o == nil || IsNil(o.Action) {
 		var ret string
 		return ret
@@ -56,7 +92,11 @@ func (o *InheritedForwardersBlock) GetAction() string {
 
 // GetActionOk returns a tuple with the Action field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o *InheritedDNSSECValidationBlock) GetActionOk() (*string, bool) {
+========
 func (o *InheritedForwardersBlock) GetActionOk() (*string, bool) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	if o == nil || IsNil(o.Action) {
 		return nil, false
 	}
@@ -64,7 +104,11 @@ func (o *InheritedForwardersBlock) GetActionOk() (*string, bool) {
 }
 
 // HasAction returns a boolean if a field has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o *InheritedDNSSECValidationBlock) HasAction() bool {
+========
 func (o *InheritedForwardersBlock) HasAction() bool {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	if o != nil && !IsNil(o.Action) {
 		return true
 	}
@@ -73,12 +117,20 @@ func (o *InheritedForwardersBlock) HasAction() bool {
 }
 
 // SetAction gets a reference to the given string and assigns it to the Action field.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o *InheritedDNSSECValidationBlock) SetAction(v string) {
+========
 func (o *InheritedForwardersBlock) SetAction(v string) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	o.Action = &v
 }
 
 // GetDisplayName returns the DisplayName field value if set, zero value otherwise.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o *InheritedDNSSECValidationBlock) GetDisplayName() string {
+========
 func (o *InheritedForwardersBlock) GetDisplayName() string {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	if o == nil || IsNil(o.DisplayName) {
 		var ret string
 		return ret
@@ -88,7 +140,11 @@ func (o *InheritedForwardersBlock) GetDisplayName() string {
 
 // GetDisplayNameOk returns a tuple with the DisplayName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o *InheritedDNSSECValidationBlock) GetDisplayNameOk() (*string, bool) {
+========
 func (o *InheritedForwardersBlock) GetDisplayNameOk() (*string, bool) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	if o == nil || IsNil(o.DisplayName) {
 		return nil, false
 	}
@@ -96,7 +152,11 @@ func (o *InheritedForwardersBlock) GetDisplayNameOk() (*string, bool) {
 }
 
 // HasDisplayName returns a boolean if a field has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o *InheritedDNSSECValidationBlock) HasDisplayName() bool {
+========
 func (o *InheritedForwardersBlock) HasDisplayName() bool {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	if o != nil && !IsNil(o.DisplayName) {
 		return true
 	}
@@ -105,12 +165,20 @@ func (o *InheritedForwardersBlock) HasDisplayName() bool {
 }
 
 // SetDisplayName gets a reference to the given string and assigns it to the DisplayName field.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o *InheritedDNSSECValidationBlock) SetDisplayName(v string) {
+========
 func (o *InheritedForwardersBlock) SetDisplayName(v string) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	o.DisplayName = &v
 }
 
 // GetSource returns the Source field value if set, zero value otherwise.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o *InheritedDNSSECValidationBlock) GetSource() string {
+========
 func (o *InheritedForwardersBlock) GetSource() string {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	if o == nil || IsNil(o.Source) {
 		var ret string
 		return ret
@@ -120,7 +188,11 @@ func (o *InheritedForwardersBlock) GetSource() string {
 
 // GetSourceOk returns a tuple with the Source field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o *InheritedDNSSECValidationBlock) GetSourceOk() (*string, bool) {
+========
 func (o *InheritedForwardersBlock) GetSourceOk() (*string, bool) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	if o == nil || IsNil(o.Source) {
 		return nil, false
 	}
@@ -128,7 +200,11 @@ func (o *InheritedForwardersBlock) GetSourceOk() (*string, bool) {
 }
 
 // HasSource returns a boolean if a field has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o *InheritedDNSSECValidationBlock) HasSource() bool {
+========
 func (o *InheritedForwardersBlock) HasSource() bool {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	if o != nil && !IsNil(o.Source) {
 		return true
 	}
@@ -137,14 +213,24 @@ func (o *InheritedForwardersBlock) HasSource() bool {
 }
 
 // SetSource gets a reference to the given string and assigns it to the Source field.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o *InheritedDNSSECValidationBlock) SetSource(v string) {
+========
 func (o *InheritedForwardersBlock) SetSource(v string) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	o.Source = &v
 }
 
 // GetValue returns the Value field value if set, zero value otherwise.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o *InheritedDNSSECValidationBlock) GetValue() DNSSECValidationBlock {
+	if o == nil || IsNil(o.Value) {
+		var ret DNSSECValidationBlock
+========
 func (o *InheritedForwardersBlock) GetValue() ForwardersBlock {
 	if o == nil || IsNil(o.Value) {
 		var ret ForwardersBlock
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 		return ret
 	}
 	return *o.Value
@@ -152,7 +238,11 @@ func (o *InheritedForwardersBlock) GetValue() ForwardersBlock {
 
 // GetValueOk returns a tuple with the Value field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o *InheritedDNSSECValidationBlock) GetValueOk() (*DNSSECValidationBlock, bool) {
+========
 func (o *InheritedForwardersBlock) GetValueOk() (*ForwardersBlock, bool) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	if o == nil || IsNil(o.Value) {
 		return nil, false
 	}
@@ -160,7 +250,11 @@ func (o *InheritedForwardersBlock) GetValueOk() (*ForwardersBlock, bool) {
 }
 
 // HasValue returns a boolean if a field has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o *InheritedDNSSECValidationBlock) HasValue() bool {
+========
 func (o *InheritedForwardersBlock) HasValue() bool {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	if o != nil && !IsNil(o.Value) {
 		return true
 	}
@@ -168,12 +262,21 @@ func (o *InheritedForwardersBlock) HasValue() bool {
 	return false
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+// SetValue gets a reference to the given DNSSECValidationBlock and assigns it to the Value field.
+func (o *InheritedDNSSECValidationBlock) SetValue(v DNSSECValidationBlock) {
+	o.Value = &v
+}
+
+func (o InheritedDNSSECValidationBlock) MarshalJSON() ([]byte, error) {
+========
 // SetValue gets a reference to the given ForwardersBlock and assigns it to the Value field.
 func (o *InheritedForwardersBlock) SetValue(v ForwardersBlock) {
 	o.Value = &v
 }
 
 func (o InheritedForwardersBlock) MarshalJSON() ([]byte, error) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -181,7 +284,11 @@ func (o InheritedForwardersBlock) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (o InheritedDNSSECValidationBlock) ToMap() (map[string]interface{}, error) {
+========
 func (o InheritedForwardersBlock) ToMap() (map[string]interface{}, error) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Action) {
 		toSerialize["action"] = o.Action
@@ -195,7 +302,48 @@ func (o InheritedForwardersBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+type NullableInheritedDNSSECValidationBlock struct {
+	value *InheritedDNSSECValidationBlock
+	isSet bool
+}
+
+func (v NullableInheritedDNSSECValidationBlock) Get() *InheritedDNSSECValidationBlock {
+	return v.value
+}
+
+func (v *NullableInheritedDNSSECValidationBlock) Set(val *InheritedDNSSECValidationBlock) {
+========
+func (o *InheritedForwardersBlock) UnmarshalJSON(data []byte) (err error) {
+	varInheritedForwardersBlock := _InheritedForwardersBlock{}
+
+	err = json.Unmarshal(data, &varInheritedForwardersBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedForwardersBlock(varInheritedForwardersBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedForwardersBlock struct {
@@ -208,19 +356,39 @@ func (v NullableInheritedForwardersBlock) Get() *InheritedForwardersBlock {
 }
 
 func (v *NullableInheritedForwardersBlock) Set(val *InheritedForwardersBlock) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	v.value = val
 	v.isSet = true
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func (v NullableInheritedDNSSECValidationBlock) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableInheritedDNSSECValidationBlock) Unset() {
+========
 func (v NullableInheritedForwardersBlock) IsSet() bool {
 	return v.isSet
 }
 
 func (v *NullableInheritedForwardersBlock) Unset() {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	v.value = nil
 	v.isSet = false
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_dnssec_validation_block.go
+func NewNullableInheritedDNSSECValidationBlock(val *InheritedDNSSECValidationBlock) *NullableInheritedDNSSECValidationBlock {
+	return &NullableInheritedDNSSECValidationBlock{value: val, isSet: true}
+}
+
+func (v NullableInheritedDNSSECValidationBlock) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableInheritedDNSSECValidationBlock) UnmarshalJSON(src []byte) error {
+========
 func NewNullableInheritedForwardersBlock(val *InheritedForwardersBlock) *NullableInheritedForwardersBlock {
 	return &NullableInheritedForwardersBlock{value: val, isSet: true}
 }
@@ -230,6 +398,7 @@ func (v NullableInheritedForwardersBlock) MarshalJSON() ([]byte, error) {
 }
 
 func (v *NullableInheritedForwardersBlock) UnmarshalJSON(src []byte) error {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/dnsconfig/model_inherited_forwarders_block.go
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

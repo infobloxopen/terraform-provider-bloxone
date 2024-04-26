@@ -20,8 +20,11 @@ var _ MappedNullable = &NextAvailableSubnetResponse{}
 // NextAvailableSubnetResponse The Next Available Subnet object list response format.
 type NextAvailableSubnetResponse struct {
 	// The list of Next Available Subnet objects.
-	Results []Subnet `json:"results,omitempty"`
+	Results              []Subnet `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NextAvailableSubnetResponse NextAvailableSubnetResponse
 
 // NewNextAvailableSubnetResponse instantiates a new NextAvailableSubnetResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o NextAvailableSubnetResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NextAvailableSubnetResponse) UnmarshalJSON(data []byte) (err error) {
+	varNextAvailableSubnetResponse := _NextAvailableSubnetResponse{}
+
+	err = json.Unmarshal(data, &varNextAvailableSubnetResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NextAvailableSubnetResponse(varNextAvailableSubnetResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNextAvailableSubnetResponse struct {

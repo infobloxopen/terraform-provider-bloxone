@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -28,7 +27,8 @@ type OptionFilterRule struct {
 	// The value to match against.
 	OptionValue *string `json:"option_value,omitempty"`
 	// The offset where the substring match starts. This is used only if comparing the _option_value_ using any of the substring modes.
-	SubstringOffset *int64 `json:"substring_offset,omitempty"`
+	SubstringOffset      *int64 `json:"substring_offset,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _OptionFilterRule OptionFilterRule
@@ -182,6 +182,11 @@ func (o OptionFilterRule) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.SubstringOffset) {
 		toSerialize["substring_offset"] = o.SubstringOffset
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -210,15 +215,23 @@ func (o *OptionFilterRule) UnmarshalJSON(data []byte) (err error) {
 
 	varOptionFilterRule := _OptionFilterRule{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varOptionFilterRule)
+	err = json.Unmarshal(data, &varOptionFilterRule)
 
 	if err != nil {
 		return err
 	}
 
 	*o = OptionFilterRule(varOptionFilterRule)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "compare")
+		delete(additionalProperties, "option_code")
+		delete(additionalProperties, "option_value")
+		delete(additionalProperties, "substring_offset")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -67,6 +68,13 @@ func (r *AddressBlockResource) Create(ctx context.Context, req resource.CreateRe
 
 	if resp.Diagnostics.HasError() {
 		return
+	}
+
+	if !data.NextAvailableId.IsUnknown() && !data.NextAvailableId.IsNull() {
+		// Lock the mutex to serialize operations with the same key
+		// This is necessary to prevent the same block being returned.
+		utils.GlobalMutexStore.Lock(data.NextAvailableId.ValueString())
+		defer utils.GlobalMutexStore.Unlock(data.NextAvailableId.ValueString())
 	}
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.

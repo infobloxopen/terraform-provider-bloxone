@@ -22,7 +22,6 @@ import (
 // - dhcp_config.ignore_items
 // - dhcp_host
 // - dhcp_options
-// - next_available_id
 
 func TestAccSubnetResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test"
@@ -964,6 +963,48 @@ func TestAccSubnetResource_Tags(t *testing.T) {
 	})
 }
 
+func TestAccSubnetResource_NextAvailableId(t *testing.T) {
+	var resourceName = "bloxone_ipam_subnet.test_next_available_id"
+	var v ipam.Subnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSubnetNextAvailableId(spaceName, "bloxone_ipam_address_block.one", 24, 1),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSubnetExists(context.Background(), resourceName+".0", &v),
+					resource.TestCheckResourceAttrPair(resourceName+".0", "next_available_id", "bloxone_ipam_address_block.one", "id"),
+					resource.TestCheckResourceAttr(resourceName+".0", "address", "10.0.0.0"),
+					resource.TestCheckResourceAttr(resourceName+".0", "cidr", "24"),
+				),
+			},
+			{
+				Config: testAccSubnetNextAvailableId(spaceName, "bloxone_ipam_address_block.two", 24, 1),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSubnetExists(context.Background(), resourceName+".0", &v),
+					resource.TestCheckResourceAttrPair(resourceName+".0", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+					resource.TestCheckResourceAttr(resourceName+".0", "address", "11.0.0.0"),
+					resource.TestCheckResourceAttr(resourceName+".0", "cidr", "24"),
+				),
+			},
+			// Test when count > 1
+			{
+				Config: testAccSubnetNextAvailableId(spaceName, "bloxone_ipam_address_block.two", 24, 5),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrPair(resourceName+".0", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".1", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".2", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".3", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".4", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckSubnetExists(ctx context.Context, resourceName string, v *ipam.Subnet) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
@@ -1491,5 +1532,29 @@ resource "bloxone_ipam_subnet" "test_tags" {
     tags = %s
 }
 `, address, cidr, tagsStr)
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
+}
+
+func testAccSubnetNextAvailableId(spaceName string, addressBlockResourceName string, cidr int, count int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "one" {
+	space = bloxone_ipam_ip_space.test.id
+	address = "10.0.0.0"
+	cidr = 16
+}
+
+resource "bloxone_ipam_address_block" "two" {
+	space = bloxone_ipam_ip_space.test.id
+	address = "11.0.0.0"
+	cidr = 16
+}
+
+resource "bloxone_ipam_subnet" "test_next_available_id" {
+	count = %d
+    next_available_id = %s.id
+    cidr = %d
+    space = bloxone_ipam_ip_space.test.id
+}
+`, count, addressBlockResourceName, cidr)
 	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }

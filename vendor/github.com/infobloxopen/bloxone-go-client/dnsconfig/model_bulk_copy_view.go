@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -31,7 +30,8 @@ type BulkCopyView struct {
 	// Indicates whether copying should skip object in case of error and continue with next, or abort copying in case of error.  Defaults to _false_.
 	SkipOnError *bool `json:"skip_on_error,omitempty"`
 	// The resource identifier.
-	Target string `json:"target"`
+	Target               string `json:"target"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _BulkCopyView BulkCopyView
@@ -290,6 +290,11 @@ func (o BulkCopyView) ToMap() (map[string]interface{}, error) {
 		toSerialize["skip_on_error"] = o.SkipOnError
 	}
 	toSerialize["target"] = o.Target
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -318,15 +323,26 @@ func (o *BulkCopyView) UnmarshalJSON(data []byte) (err error) {
 
 	varBulkCopyView := _BulkCopyView{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varBulkCopyView)
+	err = json.Unmarshal(data, &varBulkCopyView)
 
 	if err != nil {
 		return err
 	}
 
 	*o = BulkCopyView(varBulkCopyView)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "auth_zone_config")
+		delete(additionalProperties, "forward_zone_config")
+		delete(additionalProperties, "recursive")
+		delete(additionalProperties, "resources")
+		delete(additionalProperties, "secondary_zone_config")
+		delete(additionalProperties, "skip_on_error")
+		delete(additionalProperties, "target")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

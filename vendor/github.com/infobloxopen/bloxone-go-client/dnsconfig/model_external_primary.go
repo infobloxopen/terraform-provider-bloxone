@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -33,7 +32,8 @@ type ExternalPrimary struct {
 	TsigEnabled *bool    `json:"tsig_enabled,omitempty"`
 	TsigKey     *TSIGKey `json:"tsig_key,omitempty"`
 	// Allowed values: * _nsg_, * _primary_.
-	Type string `json:"type"`
+	Type                 string `json:"type"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ExternalPrimary ExternalPrimary
@@ -301,6 +301,11 @@ func (o ExternalPrimary) ToMap() (map[string]interface{}, error) {
 		toSerialize["tsig_key"] = o.TsigKey
 	}
 	toSerialize["type"] = o.Type
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -328,15 +333,26 @@ func (o *ExternalPrimary) UnmarshalJSON(data []byte) (err error) {
 
 	varExternalPrimary := _ExternalPrimary{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varExternalPrimary)
+	err = json.Unmarshal(data, &varExternalPrimary)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ExternalPrimary(varExternalPrimary)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "fqdn")
+		delete(additionalProperties, "nsg")
+		delete(additionalProperties, "protocol_fqdn")
+		delete(additionalProperties, "tsig_enabled")
+		delete(additionalProperties, "tsig_key")
+		delete(additionalProperties, "type")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

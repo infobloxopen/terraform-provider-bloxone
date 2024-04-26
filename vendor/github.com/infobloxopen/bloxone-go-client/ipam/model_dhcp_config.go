@@ -40,8 +40,11 @@ type DHCPConfig struct {
 	// The lease duration in seconds.
 	LeaseTime *int64 `json:"lease_time,omitempty"`
 	// The lease duration in seconds for IPV6 clients.
-	LeaseTimeV6 *int64 `json:"lease_time_v6,omitempty"`
+	LeaseTimeV6          *int64 `json:"lease_time_v6,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DHCPConfig DHCPConfig
 
 // NewDHCPConfig instantiates a new DHCPConfig object
 // This constructor will assign default values to properties that have it defined,
@@ -487,7 +490,43 @@ func (o DHCPConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.LeaseTimeV6) {
 		toSerialize["lease_time_v6"] = o.LeaseTimeV6
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DHCPConfig) UnmarshalJSON(data []byte) (err error) {
+	varDHCPConfig := _DHCPConfig{}
+
+	err = json.Unmarshal(data, &varDHCPConfig)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DHCPConfig(varDHCPConfig)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "abandoned_reclaim_time")
+		delete(additionalProperties, "abandoned_reclaim_time_v6")
+		delete(additionalProperties, "allow_unknown")
+		delete(additionalProperties, "allow_unknown_v6")
+		delete(additionalProperties, "echo_client_id")
+		delete(additionalProperties, "filters")
+		delete(additionalProperties, "filters_v6")
+		delete(additionalProperties, "ignore_client_uid")
+		delete(additionalProperties, "ignore_list")
+		delete(additionalProperties, "lease_time")
+		delete(additionalProperties, "lease_time_v6")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDHCPConfig struct {

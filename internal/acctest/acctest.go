@@ -60,7 +60,7 @@ func PreCheck(t *testing.T) {
 	}
 
 	BloxOneClient = bloxoneclient.NewAPIClient(
-		option.WithClientName("teraform-acceptance-tests"),
+		option.WithClientName("terraform-acceptance-tests"),
 		option.WithCSPUrl(cspURL),
 		option.WithAPIKey(apiKey),
 	)

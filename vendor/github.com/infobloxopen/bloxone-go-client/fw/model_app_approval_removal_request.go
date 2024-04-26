@@ -19,8 +19,11 @@ var _ MappedNullable = &AppApprovalRemovalRequest{}
 
 // AppApprovalRemovalRequest struct for AppApprovalRemovalRequest
 type AppApprovalRemovalRequest struct {
-	AppName *string `json:"app_name,omitempty"`
+	AppName              *string `json:"app_name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AppApprovalRemovalRequest AppApprovalRemovalRequest
 
 // NewAppApprovalRemovalRequest instantiates a new AppApprovalRemovalRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o AppApprovalRemovalRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.AppName) {
 		toSerialize["app_name"] = o.AppName
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AppApprovalRemovalRequest) UnmarshalJSON(data []byte) (err error) {
+	varAppApprovalRemovalRequest := _AppApprovalRemovalRequest{}
+
+	err = json.Unmarshal(data, &varAppApprovalRemovalRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AppApprovalRemovalRequest(varAppApprovalRemovalRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "app_name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAppApprovalRemovalRequest struct {

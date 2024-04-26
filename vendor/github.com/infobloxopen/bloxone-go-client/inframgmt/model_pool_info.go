@@ -24,8 +24,11 @@ type PoolInfo struct {
 	// The resource identifier.
 	PoolId *string `json:"pool_id,omitempty"`
 	// Name of the Pool that this resource belongs to.
-	PoolName *string `json:"pool_name,omitempty"`
+	PoolName             *string `json:"pool_name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PoolInfo PoolInfo
 
 // NewPoolInfo instantiates a new PoolInfo object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,35 @@ func (o PoolInfo) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.PoolName) {
 		toSerialize["pool_name"] = o.PoolName
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *PoolInfo) UnmarshalJSON(data []byte) (err error) {
+	varPoolInfo := _PoolInfo{}
+
+	err = json.Unmarshal(data, &varPoolInfo)
+
+	if err != nil {
+		return err
+	}
+
+	*o = PoolInfo(varPoolInfo)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "composite_status")
+		delete(additionalProperties, "pool_id")
+		delete(additionalProperties, "pool_name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePoolInfo struct {

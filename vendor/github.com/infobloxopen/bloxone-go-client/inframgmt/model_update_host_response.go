@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateHostResponse{}
 
 // UpdateHostResponse struct for UpdateHostResponse
 type UpdateHostResponse struct {
-	Result *Host `json:"result,omitempty"`
+	Result               *Host `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateHostResponse UpdateHostResponse
 
 // NewUpdateHostResponse instantiates a new UpdateHostResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateHostResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateHostResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateHostResponse := _UpdateHostResponse{}
+
+	err = json.Unmarshal(data, &varUpdateHostResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateHostResponse(varUpdateHostResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateHostResponse struct {

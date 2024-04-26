@@ -26,8 +26,11 @@ type AuthZoneConfig struct {
 	// Optional. BloxOne DDI hosts acting as internal secondaries. Order is not significant.
 	InternalSecondaries []InternalSecondary `json:"internal_secondaries,omitempty"`
 	// The resource identifier.
-	Nsgs []string `json:"nsgs,omitempty"`
+	Nsgs                 []string `json:"nsgs,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AuthZoneConfig AuthZoneConfig
 
 // NewAuthZoneConfig instantiates a new AuthZoneConfig object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,36 @@ func (o AuthZoneConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Nsgs) {
 		toSerialize["nsgs"] = o.Nsgs
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AuthZoneConfig) UnmarshalJSON(data []byte) (err error) {
+	varAuthZoneConfig := _AuthZoneConfig{}
+
+	err = json.Unmarshal(data, &varAuthZoneConfig)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AuthZoneConfig(varAuthZoneConfig)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "external_primaries")
+		delete(additionalProperties, "external_secondaries")
+		delete(additionalProperties, "internal_secondaries")
+		delete(additionalProperties, "nsgs")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAuthZoneConfig struct {

@@ -55,8 +55,11 @@ type ForwardZone struct {
 	// The resource identifier.
 	View *string `json:"view,omitempty"`
 	// The list of a forward zone warnings.
-	Warnings []Warning `json:"warnings,omitempty"`
+	Warnings             []Warning `json:"warnings,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ForwardZone ForwardZone
 
 // NewForwardZone instantiates a new ForwardZone object
 // This constructor will assign default values to properties that have it defined,
@@ -715,7 +718,50 @@ func (o ForwardZone) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Warnings) {
 		toSerialize["warnings"] = o.Warnings
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ForwardZone) UnmarshalJSON(data []byte) (err error) {
+	varForwardZone := _ForwardZone{}
+
+	err = json.Unmarshal(data, &varForwardZone)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ForwardZone(varForwardZone)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "disabled")
+		delete(additionalProperties, "external_forwarders")
+		delete(additionalProperties, "forward_only")
+		delete(additionalProperties, "fqdn")
+		delete(additionalProperties, "hosts")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "internal_forwarders")
+		delete(additionalProperties, "mapped_subnet")
+		delete(additionalProperties, "mapping")
+		delete(additionalProperties, "nsgs")
+		delete(additionalProperties, "parent")
+		delete(additionalProperties, "protocol_fqdn")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "view")
+		delete(additionalProperties, "warnings")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableForwardZone struct {

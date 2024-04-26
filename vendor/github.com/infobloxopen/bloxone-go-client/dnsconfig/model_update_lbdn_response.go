@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateLBDNResponse{}
 
 // UpdateLBDNResponse The __LBDN__ object update response format.
 type UpdateLBDNResponse struct {
-	Result *LBDN `json:"result,omitempty"`
+	Result               *LBDN `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateLBDNResponse UpdateLBDNResponse
 
 // NewUpdateLBDNResponse instantiates a new UpdateLBDNResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateLBDNResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateLBDNResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateLBDNResponse := _UpdateLBDNResponse{}
+
+	err = json.Unmarshal(data, &varUpdateLBDNResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateLBDNResponse(varUpdateLBDNResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateLBDNResponse struct {

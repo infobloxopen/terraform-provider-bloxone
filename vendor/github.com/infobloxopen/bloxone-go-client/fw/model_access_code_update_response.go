@@ -19,8 +19,11 @@ var _ MappedNullable = &AccessCodeUpdateResponse{}
 
 // AccessCodeUpdateResponse struct for AccessCodeUpdateResponse
 type AccessCodeUpdateResponse struct {
-	Results *AccessCode `json:"results,omitempty"`
+	Results              *AccessCode `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AccessCodeUpdateResponse AccessCodeUpdateResponse
 
 // NewAccessCodeUpdateResponse instantiates a new AccessCodeUpdateResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o AccessCodeUpdateResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AccessCodeUpdateResponse) UnmarshalJSON(data []byte) (err error) {
+	varAccessCodeUpdateResponse := _AccessCodeUpdateResponse{}
+
+	err = json.Unmarshal(data, &varAccessCodeUpdateResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AccessCodeUpdateResponse(varAccessCodeUpdateResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAccessCodeUpdateResponse struct {

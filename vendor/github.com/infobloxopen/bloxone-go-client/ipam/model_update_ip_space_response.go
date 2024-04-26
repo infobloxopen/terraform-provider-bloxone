@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateIPSpaceResponse{}
 
 // UpdateIPSpaceResponse The response format to update the __IPSpace__ object.
 type UpdateIPSpaceResponse struct {
-	Result *IPSpace `json:"result,omitempty"`
+	Result               *IPSpace `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateIPSpaceResponse UpdateIPSpaceResponse
 
 // NewUpdateIPSpaceResponse instantiates a new UpdateIPSpaceResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateIPSpaceResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateIPSpaceResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateIPSpaceResponse := _UpdateIPSpaceResponse{}
+
+	err = json.Unmarshal(data, &varUpdateIPSpaceResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateIPSpaceResponse(varUpdateIPSpaceResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateIPSpaceResponse struct {

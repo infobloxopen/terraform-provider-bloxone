@@ -22,8 +22,11 @@ type HAGroupHeartbeats struct {
 	// The name of the peer.
 	Peer *string `json:"peer,omitempty"`
 	// The timestamp as a string of the last successful heartbeat received from the peer above.
-	SuccessfulHeartbeat *string `json:"successful_heartbeat,omitempty"`
+	SuccessfulHeartbeat  *string `json:"successful_heartbeat,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _HAGroupHeartbeats HAGroupHeartbeats
 
 // NewHAGroupHeartbeats instantiates a new HAGroupHeartbeats object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o HAGroupHeartbeats) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.SuccessfulHeartbeat) {
 		toSerialize["successful_heartbeat"] = o.SuccessfulHeartbeat
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *HAGroupHeartbeats) UnmarshalJSON(data []byte) (err error) {
+	varHAGroupHeartbeats := _HAGroupHeartbeats{}
+
+	err = json.Unmarshal(data, &varHAGroupHeartbeats)
+
+	if err != nil {
+		return err
+	}
+
+	*o = HAGroupHeartbeats(varHAGroupHeartbeats)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "peer")
+		delete(additionalProperties, "successful_heartbeat")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableHAGroupHeartbeats struct {

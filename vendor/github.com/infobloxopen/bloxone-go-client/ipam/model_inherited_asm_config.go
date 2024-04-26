@@ -19,14 +19,17 @@ var _ MappedNullable = &InheritedASMConfig{}
 
 // InheritedASMConfig The inheritance configuration for the __ASMConfig__ object.
 type InheritedASMConfig struct {
-	AsmEnableBlock *InheritedAsmEnableBlock    `json:"asm_enable_block,omitempty"`
-	AsmGrowthBlock *InheritedAsmGrowthBlock    `json:"asm_growth_block,omitempty"`
-	AsmThreshold   *InheritanceInheritedUInt32 `json:"asm_threshold,omitempty"`
-	ForecastPeriod *InheritanceInheritedUInt32 `json:"forecast_period,omitempty"`
-	History        *InheritanceInheritedUInt32 `json:"history,omitempty"`
-	MinTotal       *InheritanceInheritedUInt32 `json:"min_total,omitempty"`
-	MinUnused      *InheritanceInheritedUInt32 `json:"min_unused,omitempty"`
+	AsmEnableBlock       *InheritedAsmEnableBlock    `json:"asm_enable_block,omitempty"`
+	AsmGrowthBlock       *InheritedAsmGrowthBlock    `json:"asm_growth_block,omitempty"`
+	AsmThreshold         *InheritanceInheritedUInt32 `json:"asm_threshold,omitempty"`
+	ForecastPeriod       *InheritanceInheritedUInt32 `json:"forecast_period,omitempty"`
+	History              *InheritanceInheritedUInt32 `json:"history,omitempty"`
+	MinTotal             *InheritanceInheritedUInt32 `json:"min_total,omitempty"`
+	MinUnused            *InheritanceInheritedUInt32 `json:"min_unused,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InheritedASMConfig InheritedASMConfig
 
 // NewInheritedASMConfig instantiates a new InheritedASMConfig object
 // This constructor will assign default values to properties that have it defined,
@@ -300,7 +303,39 @@ func (o InheritedASMConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.MinUnused) {
 		toSerialize["min_unused"] = o.MinUnused
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritedASMConfig) UnmarshalJSON(data []byte) (err error) {
+	varInheritedASMConfig := _InheritedASMConfig{}
+
+	err = json.Unmarshal(data, &varInheritedASMConfig)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedASMConfig(varInheritedASMConfig)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "asm_enable_block")
+		delete(additionalProperties, "asm_growth_block")
+		delete(additionalProperties, "asm_threshold")
+		delete(additionalProperties, "forecast_period")
+		delete(additionalProperties, "history")
+		delete(additionalProperties, "min_total")
+		delete(additionalProperties, "min_unused")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedASMConfig struct {

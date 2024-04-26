@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -29,7 +28,8 @@ type TrustAnchor struct {
 	// Optional. Secure Entry Point flag.  Defaults to _true_.
 	Sep *bool `json:"sep,omitempty"`
 	// Zone FQDN.
-	Zone string `json:"zone"`
+	Zone                 string `json:"zone"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _TrustAnchor TrustAnchor
@@ -209,6 +209,11 @@ func (o TrustAnchor) ToMap() (map[string]interface{}, error) {
 		toSerialize["sep"] = o.Sep
 	}
 	toSerialize["zone"] = o.Zone
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -238,15 +243,24 @@ func (o *TrustAnchor) UnmarshalJSON(data []byte) (err error) {
 
 	varTrustAnchor := _TrustAnchor{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varTrustAnchor)
+	err = json.Unmarshal(data, &varTrustAnchor)
 
 	if err != nil {
 		return err
 	}
 
 	*o = TrustAnchor(varTrustAnchor)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "algorithm")
+		delete(additionalProperties, "protocol_zone")
+		delete(additionalProperties, "public_key")
+		delete(additionalProperties, "sep")
+		delete(additionalProperties, "zone")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

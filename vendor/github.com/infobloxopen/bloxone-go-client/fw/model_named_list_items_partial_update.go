@@ -25,7 +25,10 @@ type NamedListItemsPartialUpdate struct {
 	Id *int32 `json:"id,omitempty"`
 	// The List of ItemStructs structure which contains the item and its description
 	InsertedItemsDescribed []ItemStructs `json:"inserted_items_described,omitempty"`
+	AdditionalProperties   map[string]interface{}
 }
+
+type _NamedListItemsPartialUpdate NamedListItemsPartialUpdate
 
 // NewNamedListItemsPartialUpdate instantiates a new NamedListItemsPartialUpdate object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,35 @@ func (o NamedListItemsPartialUpdate) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.InsertedItemsDescribed) {
 		toSerialize["inserted_items_described"] = o.InsertedItemsDescribed
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NamedListItemsPartialUpdate) UnmarshalJSON(data []byte) (err error) {
+	varNamedListItemsPartialUpdate := _NamedListItemsPartialUpdate{}
+
+	err = json.Unmarshal(data, &varNamedListItemsPartialUpdate)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NamedListItemsPartialUpdate(varNamedListItemsPartialUpdate)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "deleted_items_described")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "inserted_items_described")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNamedListItemsPartialUpdate struct {

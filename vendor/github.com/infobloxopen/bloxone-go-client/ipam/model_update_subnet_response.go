@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateSubnetResponse{}
 
 // UpdateSubnetResponse The response format to update the __Subnet__ object.
 type UpdateSubnetResponse struct {
-	Result *Subnet `json:"result,omitempty"`
+	Result               *Subnet `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateSubnetResponse UpdateSubnetResponse
 
 // NewUpdateSubnetResponse instantiates a new UpdateSubnetResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateSubnetResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateSubnetResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateSubnetResponse := _UpdateSubnetResponse{}
+
+	err = json.Unmarshal(data, &varUpdateSubnetResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateSubnetResponse(varUpdateSubnetResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateSubnetResponse struct {

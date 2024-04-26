@@ -22,8 +22,11 @@ type DDNSHostnameBlock struct {
 	// Indicates if DDNS should generate a hostname when not supplied by the client.
 	DdnsGenerateName *bool `json:"ddns_generate_name,omitempty"`
 	// The prefix used in the generation of an FQDN.
-	DdnsGeneratedPrefix *string `json:"ddns_generated_prefix,omitempty"`
+	DdnsGeneratedPrefix  *string `json:"ddns_generated_prefix,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DDNSHostnameBlock DDNSHostnameBlock
 
 // NewDDNSHostnameBlock instantiates a new DDNSHostnameBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o DDNSHostnameBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DdnsGeneratedPrefix) {
 		toSerialize["ddns_generated_prefix"] = o.DdnsGeneratedPrefix
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DDNSHostnameBlock) UnmarshalJSON(data []byte) (err error) {
+	varDDNSHostnameBlock := _DDNSHostnameBlock{}
+
+	err = json.Unmarshal(data, &varDDNSHostnameBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DDNSHostnameBlock(varDDNSHostnameBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ddns_generate_name")
+		delete(additionalProperties, "ddns_generated_prefix")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDDNSHostnameBlock struct {

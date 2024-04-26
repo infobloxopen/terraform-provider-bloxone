@@ -20,8 +20,11 @@ var _ MappedNullable = &ListOptionFilterResponse{}
 // ListOptionFilterResponse The response format to retrieve __OptionFilter__ objects.
 type ListOptionFilterResponse struct {
 	// The list of OptionFilter objects.
-	Results []OptionFilter `json:"results,omitempty"`
+	Results              []OptionFilter `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListOptionFilterResponse ListOptionFilterResponse
 
 // NewListOptionFilterResponse instantiates a new ListOptionFilterResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListOptionFilterResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListOptionFilterResponse) UnmarshalJSON(data []byte) (err error) {
+	varListOptionFilterResponse := _ListOptionFilterResponse{}
+
+	err = json.Unmarshal(data, &varListOptionFilterResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListOptionFilterResponse(varListOptionFilterResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListOptionFilterResponse struct {

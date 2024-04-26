@@ -22,8 +22,11 @@ type DTCPolicy struct {
 	// __DTC Policy__ display name.
 	Name *string `json:"name,omitempty"`
 	// The resource identifier.
-	PolicyId *string `json:"policy_id,omitempty"`
+	PolicyId             *string `json:"policy_id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DTCPolicy DTCPolicy
 
 // NewDTCPolicy instantiates a new DTCPolicy object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o DTCPolicy) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.PolicyId) {
 		toSerialize["policy_id"] = o.PolicyId
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DTCPolicy) UnmarshalJSON(data []byte) (err error) {
+	varDTCPolicy := _DTCPolicy{}
+
+	err = json.Unmarshal(data, &varDTCPolicy)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DTCPolicy(varDTCPolicy)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "policy_id")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDTCPolicy struct {

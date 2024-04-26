@@ -19,8 +19,11 @@ var _ MappedNullable = &InfraServicesListDfpServices500Response{}
 
 // InfraServicesListDfpServices500Response struct for InfraServicesListDfpServices500Response
 type InfraServicesListDfpServices500Response struct {
-	Error *InfraServicesListDfpServices500ResponseError `json:"error,omitempty"`
+	Error                *InfraServicesListDfpServices500ResponseError `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InfraServicesListDfpServices500Response InfraServicesListDfpServices500Response
 
 // NewInfraServicesListDfpServices500Response instantiates a new InfraServicesListDfpServices500Response object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o InfraServicesListDfpServices500Response) ToMap() (map[string]interface{}
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InfraServicesListDfpServices500Response) UnmarshalJSON(data []byte) (err error) {
+	varInfraServicesListDfpServices500Response := _InfraServicesListDfpServices500Response{}
+
+	err = json.Unmarshal(data, &varInfraServicesListDfpServices500Response)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InfraServicesListDfpServices500Response(varInfraServicesListDfpServices500Response)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "error")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInfraServicesListDfpServices500Response struct {

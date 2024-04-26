@@ -26,8 +26,11 @@ type TypesConfigCheckResult struct {
 	// URI of the resource that was checked.
 	ResourceUri *string `json:"resource_uri,omitempty"`
 	// The check result.
-	ResultCode *string `json:"result_code,omitempty"`
+	ResultCode           *string `json:"result_code,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _TypesConfigCheckResult TypesConfigCheckResult
 
 // NewTypesConfigCheckResult instantiates a new TypesConfigCheckResult object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,36 @@ func (o TypesConfigCheckResult) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ResultCode) {
 		toSerialize["result_code"] = o.ResultCode
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *TypesConfigCheckResult) UnmarshalJSON(data []byte) (err error) {
+	varTypesConfigCheckResult := _TypesConfigCheckResult{}
+
+	err = json.Unmarshal(data, &varTypesConfigCheckResult)
+
+	if err != nil {
+		return err
+	}
+
+	*o = TypesConfigCheckResult(varTypesConfigCheckResult)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "additional_info")
+		delete(additionalProperties, "config_check_type")
+		delete(additionalProperties, "resource_uri")
+		delete(additionalProperties, "result_code")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableTypesConfigCheckResult struct {

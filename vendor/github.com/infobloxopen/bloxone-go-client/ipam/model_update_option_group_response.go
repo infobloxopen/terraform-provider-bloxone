@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateOptionGroupResponse{}
 
 // UpdateOptionGroupResponse The response format to update the __OptionGroup__ object.
 type UpdateOptionGroupResponse struct {
-	Result *OptionGroup `json:"result,omitempty"`
+	Result               *OptionGroup `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateOptionGroupResponse UpdateOptionGroupResponse
 
 // NewUpdateOptionGroupResponse instantiates a new UpdateOptionGroupResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateOptionGroupResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateOptionGroupResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateOptionGroupResponse := _UpdateOptionGroupResponse{}
+
+	err = json.Unmarshal(data, &varUpdateOptionGroupResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateOptionGroupResponse(varUpdateOptionGroupResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateOptionGroupResponse struct {

@@ -14,14 +14,42 @@ import (
 	"encoding/json"
 )
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_category_filters_delete_request.go
+// checks if the CategoryFiltersDeleteRequest type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &CategoryFiltersDeleteRequest{}
+
+// CategoryFiltersDeleteRequest The Category Filter delete request.
+type CategoryFiltersDeleteRequest struct {
+	// The list of Category Filter object identifiers.
+	Ids []int32 `json:"ids,omitempty"`
+}
+
+// NewCategoryFiltersDeleteRequest instantiates a new CategoryFiltersDeleteRequest object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewCategoryFiltersDeleteRequest() *CategoryFiltersDeleteRequest {
+	this := CategoryFiltersDeleteRequest{}
+	return &this
+}
+
+// NewCategoryFiltersDeleteRequestWithDefaults instantiates a new CategoryFiltersDeleteRequest object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewCategoryFiltersDeleteRequestWithDefaults() *CategoryFiltersDeleteRequest {
+	this := CategoryFiltersDeleteRequest{}
+========
 // checks if the NamedListsDeleteRequest type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &NamedListsDeleteRequest{}
 
 // NamedListsDeleteRequest The Named List delete request.
 type NamedListsDeleteRequest struct {
 	// The list of Named List object identifiers.
-	Ids []int32 `json:"ids,omitempty"`
+	Ids                  []int32 `json:"ids,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NamedListsDeleteRequest NamedListsDeleteRequest
 
 // NewNamedListsDeleteRequest instantiates a new NamedListsDeleteRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -37,11 +65,16 @@ func NewNamedListsDeleteRequest() *NamedListsDeleteRequest {
 // but it doesn't guarantee that properties required by API are set
 func NewNamedListsDeleteRequestWithDefaults() *NamedListsDeleteRequest {
 	this := NamedListsDeleteRequest{}
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_lists_delete_request.go
 	return &this
 }
 
 // GetIds returns the Ids field value if set, zero value otherwise.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_category_filters_delete_request.go
+func (o *CategoryFiltersDeleteRequest) GetIds() []int32 {
+========
 func (o *NamedListsDeleteRequest) GetIds() []int32 {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_lists_delete_request.go
 	if o == nil || IsNil(o.Ids) {
 		var ret []int32
 		return ret
@@ -51,7 +84,11 @@ func (o *NamedListsDeleteRequest) GetIds() []int32 {
 
 // GetIdsOk returns a tuple with the Ids field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_category_filters_delete_request.go
+func (o *CategoryFiltersDeleteRequest) GetIdsOk() ([]int32, bool) {
+========
 func (o *NamedListsDeleteRequest) GetIdsOk() ([]int32, bool) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_lists_delete_request.go
 	if o == nil || IsNil(o.Ids) {
 		return nil, false
 	}
@@ -59,7 +96,11 @@ func (o *NamedListsDeleteRequest) GetIdsOk() ([]int32, bool) {
 }
 
 // HasIds returns a boolean if a field has been set.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_category_filters_delete_request.go
+func (o *CategoryFiltersDeleteRequest) HasIds() bool {
+========
 func (o *NamedListsDeleteRequest) HasIds() bool {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_lists_delete_request.go
 	if o != nil && !IsNil(o.Ids) {
 		return true
 	}
@@ -68,11 +109,19 @@ func (o *NamedListsDeleteRequest) HasIds() bool {
 }
 
 // SetIds gets a reference to the given []int32 and assigns it to the Ids field.
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_category_filters_delete_request.go
+func (o *CategoryFiltersDeleteRequest) SetIds(v []int32) {
+	o.Ids = v
+}
+
+func (o CategoryFiltersDeleteRequest) MarshalJSON() ([]byte, error) {
+========
 func (o *NamedListsDeleteRequest) SetIds(v []int32) {
 	o.Ids = v
 }
 
 func (o NamedListsDeleteRequest) MarshalJSON() ([]byte, error) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_lists_delete_request.go
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -80,12 +129,54 @@ func (o NamedListsDeleteRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_category_filters_delete_request.go
+func (o CategoryFiltersDeleteRequest) ToMap() (map[string]interface{}, error) {
+========
 func (o NamedListsDeleteRequest) ToMap() (map[string]interface{}, error) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_lists_delete_request.go
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Ids) {
 		toSerialize["ids"] = o.Ids
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_category_filters_delete_request.go
+type NullableCategoryFiltersDeleteRequest struct {
+	value *CategoryFiltersDeleteRequest
+	isSet bool
+}
+
+func (v NullableCategoryFiltersDeleteRequest) Get() *CategoryFiltersDeleteRequest {
+	return v.value
+}
+
+func (v *NullableCategoryFiltersDeleteRequest) Set(val *CategoryFiltersDeleteRequest) {
+========
+func (o *NamedListsDeleteRequest) UnmarshalJSON(data []byte) (err error) {
+	varNamedListsDeleteRequest := _NamedListsDeleteRequest{}
+
+	err = json.Unmarshal(data, &varNamedListsDeleteRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NamedListsDeleteRequest(varNamedListsDeleteRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ids")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNamedListsDeleteRequest struct {
@@ -98,19 +189,39 @@ func (v NullableNamedListsDeleteRequest) Get() *NamedListsDeleteRequest {
 }
 
 func (v *NullableNamedListsDeleteRequest) Set(val *NamedListsDeleteRequest) {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_lists_delete_request.go
 	v.value = val
 	v.isSet = true
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_category_filters_delete_request.go
+func (v NullableCategoryFiltersDeleteRequest) IsSet() bool {
+	return v.isSet
+}
+
+func (v *NullableCategoryFiltersDeleteRequest) Unset() {
+========
 func (v NullableNamedListsDeleteRequest) IsSet() bool {
 	return v.isSet
 }
 
 func (v *NullableNamedListsDeleteRequest) Unset() {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_lists_delete_request.go
 	v.value = nil
 	v.isSet = false
 }
 
+<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_category_filters_delete_request.go
+func NewNullableCategoryFiltersDeleteRequest(val *CategoryFiltersDeleteRequest) *NullableCategoryFiltersDeleteRequest {
+	return &NullableCategoryFiltersDeleteRequest{value: val, isSet: true}
+}
+
+func (v NullableCategoryFiltersDeleteRequest) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
+func (v *NullableCategoryFiltersDeleteRequest) UnmarshalJSON(src []byte) error {
+========
 func NewNullableNamedListsDeleteRequest(val *NamedListsDeleteRequest) *NullableNamedListsDeleteRequest {
 	return &NullableNamedListsDeleteRequest{value: val, isSet: true}
 }
@@ -120,6 +231,7 @@ func (v NullableNamedListsDeleteRequest) MarshalJSON() ([]byte, error) {
 }
 
 func (v *NullableNamedListsDeleteRequest) UnmarshalJSON(src []byte) error {
+>>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_lists_delete_request.go
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

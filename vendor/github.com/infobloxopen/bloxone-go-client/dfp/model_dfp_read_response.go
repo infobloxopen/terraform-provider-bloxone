@@ -19,8 +19,11 @@ var _ MappedNullable = &DfpReadResponse{}
 
 // DfpReadResponse The DNS Forwarding Proxy read response.
 type DfpReadResponse struct {
-	Results *Dfp `json:"results,omitempty"`
+	Results              *Dfp `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DfpReadResponse DfpReadResponse
 
 // NewDfpReadResponse instantiates a new DfpReadResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o DfpReadResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DfpReadResponse) UnmarshalJSON(data []byte) (err error) {
+	varDfpReadResponse := _DfpReadResponse{}
+
+	err = json.Unmarshal(data, &varDfpReadResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DfpReadResponse(varDfpReadResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDfpReadResponse struct {

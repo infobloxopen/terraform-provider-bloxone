@@ -19,8 +19,11 @@ var _ MappedNullable = &CopyIPSpaceResponse{}
 
 // CopyIPSpaceResponse The response format to copy the __IPSpace__ object.
 type CopyIPSpaceResponse struct {
-	Result *CopyResponse `json:"result,omitempty"`
+	Result               *CopyResponse `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CopyIPSpaceResponse CopyIPSpaceResponse
 
 // NewCopyIPSpaceResponse instantiates a new CopyIPSpaceResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CopyIPSpaceResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CopyIPSpaceResponse) UnmarshalJSON(data []byte) (err error) {
+	varCopyIPSpaceResponse := _CopyIPSpaceResponse{}
+
+	err = json.Unmarshal(data, &varCopyIPSpaceResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CopyIPSpaceResponse(varCopyIPSpaceResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCopyIPSpaceResponse struct {

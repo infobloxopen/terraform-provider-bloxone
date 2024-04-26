@@ -19,8 +19,11 @@ var _ MappedNullable = &GenerateTSIGResponse{}
 
 // GenerateTSIGResponse The response format to generate the TSIG key.
 type GenerateTSIGResponse struct {
-	Result *GenerateTSIGResult `json:"result,omitempty"`
+	Result               *GenerateTSIGResult `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _GenerateTSIGResponse GenerateTSIGResponse
 
 // NewGenerateTSIGResponse instantiates a new GenerateTSIGResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o GenerateTSIGResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *GenerateTSIGResponse) UnmarshalJSON(data []byte) (err error) {
+	varGenerateTSIGResponse := _GenerateTSIGResponse{}
+
+	err = json.Unmarshal(data, &varGenerateTSIGResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = GenerateTSIGResponse(varGenerateTSIGResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableGenerateTSIGResponse struct {

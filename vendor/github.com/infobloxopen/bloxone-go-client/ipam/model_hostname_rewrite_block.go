@@ -25,7 +25,10 @@ type HostnameRewriteBlock struct {
 	HostnameRewriteEnabled *bool `json:"hostname_rewrite_enabled,omitempty"`
 	// The inheritance configuration for _hostname_rewrite_regex_ field.
 	HostnameRewriteRegex *string `json:"hostname_rewrite_regex,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _HostnameRewriteBlock HostnameRewriteBlock
 
 // NewHostnameRewriteBlock instantiates a new HostnameRewriteBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,35 @@ func (o HostnameRewriteBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.HostnameRewriteRegex) {
 		toSerialize["hostname_rewrite_regex"] = o.HostnameRewriteRegex
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *HostnameRewriteBlock) UnmarshalJSON(data []byte) (err error) {
+	varHostnameRewriteBlock := _HostnameRewriteBlock{}
+
+	err = json.Unmarshal(data, &varHostnameRewriteBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = HostnameRewriteBlock(varHostnameRewriteBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "hostname_rewrite_char")
+		delete(additionalProperties, "hostname_rewrite_enabled")
+		delete(additionalProperties, "hostname_rewrite_regex")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableHostnameRewriteBlock struct {

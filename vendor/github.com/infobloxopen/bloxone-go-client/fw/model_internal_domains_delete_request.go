@@ -20,8 +20,11 @@ var _ MappedNullable = &InternalDomainsDeleteRequest{}
 // InternalDomainsDeleteRequest The Internal Domains delete request.
 type InternalDomainsDeleteRequest struct {
 	// The list of InternalDomains object identifiers.
-	Ids []int32 `json:"ids,omitempty"`
+	Ids                  []int32 `json:"ids,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InternalDomainsDeleteRequest InternalDomainsDeleteRequest
 
 // NewInternalDomainsDeleteRequest instantiates a new InternalDomainsDeleteRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o InternalDomainsDeleteRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Ids) {
 		toSerialize["ids"] = o.Ids
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InternalDomainsDeleteRequest) UnmarshalJSON(data []byte) (err error) {
+	varInternalDomainsDeleteRequest := _InternalDomainsDeleteRequest{}
+
+	err = json.Unmarshal(data, &varInternalDomainsDeleteRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InternalDomainsDeleteRequest(varInternalDomainsDeleteRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ids")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInternalDomainsDeleteRequest struct {

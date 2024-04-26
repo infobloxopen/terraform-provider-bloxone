@@ -24,8 +24,11 @@ type CopyResponse struct {
 	// The resource identifier.
 	Id *string `json:"id,omitempty"`
 	// An Unique Id to identify copy operation.
-	JobId *string `json:"job_id,omitempty"`
+	JobId                *string `json:"job_id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CopyResponse CopyResponse
 
 // NewCopyResponse instantiates a new CopyResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,35 @@ func (o CopyResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.JobId) {
 		toSerialize["job_id"] = o.JobId
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CopyResponse) UnmarshalJSON(data []byte) (err error) {
+	varCopyResponse := _CopyResponse{}
+
+	err = json.Unmarshal(data, &varCopyResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CopyResponse(varCopyResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "job_id")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCopyResponse struct {
