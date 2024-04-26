@@ -22,7 +22,7 @@ TODO:
 
 func TestAccFixedAddressResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dhcp_fixed_address.test"
-	var v ipam.IpamsvcFixedAddress
+	var v ipam.FixedAddress
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -52,7 +52,7 @@ func TestAccFixedAddressResource_basic(t *testing.T) {
 
 func TestAccFixedAddressResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dhcp_fixed_address.test"
-	var v ipam.IpamsvcFixedAddress
+	var v ipam.FixedAddress
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -74,7 +74,7 @@ func TestAccFixedAddressResource_disappears(t *testing.T) {
 
 func TestAccFixedAddressResource_Address(t *testing.T) {
 	var resourceName = "bloxone_dhcp_fixed_address.test_address"
-	var v ipam.IpamsvcFixedAddress
+	var v ipam.FixedAddress
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -112,7 +112,7 @@ func TestAccFixedAddressResource_Address(t *testing.T) {
 
 func TestAccFixedAddressResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dhcp_fixed_address.test_comment"
-	var v ipam.IpamsvcFixedAddress
+	var v ipam.FixedAddress
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -142,7 +142,7 @@ func TestAccFixedAddressResource_Comment(t *testing.T) {
 
 func TestAccFixedAddressResource_DisableDhcp(t *testing.T) {
 	var resourceName = "bloxone_dhcp_fixed_address.test_disable_dhcp"
-	var v ipam.IpamsvcFixedAddress
+	var v ipam.FixedAddress
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -172,7 +172,7 @@ func TestAccFixedAddressResource_DisableDhcp(t *testing.T) {
 
 func TestAccFixedAddressResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_dhcp_fixed_address.test_dhcp_options"
-	var v1 ipam.IpamsvcFixedAddress
+	var v1 ipam.FixedAddress
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 	fixedAddressName := acctest.RandomNameWithPrefix("fa")
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
@@ -206,7 +206,7 @@ func TestAccFixedAddressResource_DhcpOptions(t *testing.T) {
 
 func TestAccFixedAddressResource_HeaderOptionFilename(t *testing.T) {
 	var resourceName = "bloxone_dhcp_fixed_address.test_header_option_filename"
-	var v ipam.IpamsvcFixedAddress
+	var v ipam.FixedAddress
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -236,7 +236,7 @@ func TestAccFixedAddressResource_HeaderOptionFilename(t *testing.T) {
 
 func TestAccFixedAddressResource_HeaderOptionServerAddress(t *testing.T) {
 	var resourceName = "bloxone_dhcp_fixed_address.test_header_option_server_address"
-	var v ipam.IpamsvcFixedAddress
+	var v ipam.FixedAddress
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -266,7 +266,7 @@ func TestAccFixedAddressResource_HeaderOptionServerAddress(t *testing.T) {
 
 func TestAccFixedAddressResource_HeaderOptionServerName(t *testing.T) {
 	var resourceName = "bloxone_dhcp_fixed_address.test_header_option_server_name"
-	var v ipam.IpamsvcFixedAddress
+	var v ipam.FixedAddress
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -296,7 +296,7 @@ func TestAccFixedAddressResource_HeaderOptionServerName(t *testing.T) {
 
 func TestAccFixedAddressResource_Hostname(t *testing.T) {
 	var resourceName = "bloxone_dhcp_fixed_address.test_hostname"
-	var v ipam.IpamsvcFixedAddress
+	var v ipam.FixedAddress
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -326,7 +326,7 @@ func TestAccFixedAddressResource_Hostname(t *testing.T) {
 
 func TestAccFixedAddressResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_dhcp_fixed_address.test_inheritance_sources"
-	var v ipam.IpamsvcFixedAddress
+	var v ipam.FixedAddress
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -360,7 +360,7 @@ func TestAccFixedAddressResource_InheritanceSources(t *testing.T) {
 
 func TestAccFixedAddressResource_IpSpace(t *testing.T) {
 	var resourceName = "bloxone_dhcp_fixed_address.test_ip_space"
-	var v1, v2 ipam.IpamsvcFixedAddress
+	var v1, v2 ipam.FixedAddress
 	spaceName1 := acctest.RandomNameWithPrefix("ip-space")
 	spaceName2 := acctest.RandomNameWithPrefix("ip-space")
 
@@ -392,7 +392,7 @@ func TestAccFixedAddressResource_IpSpace(t *testing.T) {
 
 func TestAccFixedAddressResource_MatchType_And_MatchValue(t *testing.T) {
 	var resourceName = "bloxone_dhcp_fixed_address.test_match_type"
-	var v ipam.IpamsvcFixedAddress
+	var v ipam.FixedAddress
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -464,7 +464,7 @@ func TestAccFixedAddressResource_MatchType_And_MatchValue(t *testing.T) {
 
 func TestAccFixedAddressResource_Name(t *testing.T) {
 	var resourceName = "bloxone_dhcp_fixed_address.test_name"
-	var v ipam.IpamsvcFixedAddress
+	var v ipam.FixedAddress
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -494,7 +494,7 @@ func TestAccFixedAddressResource_Name(t *testing.T) {
 
 func TestAccFixedAddressResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dhcp_fixed_address.test_tags"
-	var v ipam.IpamsvcFixedAddress
+	var v ipam.FixedAddress
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -536,7 +536,29 @@ func TestAccFixedAddressResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckFixedAddressExists(ctx context.Context, resourceName string, v *ipam.IpamsvcFixedAddress) resource.TestCheckFunc {
+func TestAccFixedAddressResource_NextAvailableId_Count(t *testing.T) {
+	var resourceName = "bloxone_dhcp_fixed_address.test_next_available_id_count"
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccFixedAddressNextAvailableIdCount(spaceName, 5),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrPair(resourceName+".0", "parent", "bloxone_ipam_subnet.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".1", "parent", "bloxone_ipam_subnet.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".2", "parent", "bloxone_ipam_subnet.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".3", "parent", "bloxone_ipam_subnet.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".4", "parent", "bloxone_ipam_subnet.test", "id"),
+				),
+			},
+		},
+	})
+}
+
+func testAccCheckFixedAddressExists(ctx context.Context, resourceName string, v *ipam.FixedAddress) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -545,7 +567,7 @@ func testAccCheckFixedAddressExists(ctx context.Context, resourceName string, v 
 		}
 		apiRes, _, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			FixedAddressAPI.
-			FixedAddressRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -558,12 +580,12 @@ func testAccCheckFixedAddressExists(ctx context.Context, resourceName string, v 
 	}
 }
 
-func testAccCheckFixedAddressDestroy(ctx context.Context, v *ipam.IpamsvcFixedAddress) resource.TestCheckFunc {
+func testAccCheckFixedAddressDestroy(ctx context.Context, v *ipam.FixedAddress) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			FixedAddressAPI.
-			FixedAddressRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -576,12 +598,12 @@ func testAccCheckFixedAddressDestroy(ctx context.Context, v *ipam.IpamsvcFixedAd
 	}
 }
 
-func testAccCheckFixedAddressDisappears(ctx context.Context, v *ipam.IpamsvcFixedAddress) resource.TestCheckFunc {
+func testAccCheckFixedAddressDisappears(ctx context.Context, v *ipam.FixedAddress) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			FixedAddressAPI.
-			FixedAddressDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err
@@ -848,5 +870,18 @@ resource "bloxone_dhcp_fixed_address" "test_inheritance_sources" {
 
 }
 `, address, matchType, matchValue, action)
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
+}
+
+func testAccFixedAddressNextAvailableIdCount(spaceName string, count int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_fixed_address" "test_next_available_id_count" {
+	next_available_id = bloxone_ipam_subnet.test.id
+	ip_space = bloxone_ipam_ip_space.test.id
+	count = %d
+	match_type = "mac"
+	match_value = "aa:aa:aa:aa:aa:${count.index + 10}"
+}   
+`, count)
 	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }

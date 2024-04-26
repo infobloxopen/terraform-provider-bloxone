@@ -12,8 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/infra_provision"
-
+	"github.com/infobloxopen/bloxone-go-client/infraprovision"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -106,7 +105,7 @@ var HostactivationJoinTokenResourceSchemaAttributes = map[string]schema.Attribut
 	},
 }
 
-func ExpandHostactivationJoinToken(ctx context.Context, o types.Object, diags *diag.Diagnostics) *infra_provision.HostactivationJoinToken {
+func ExpandHostactivationJoinToken(ctx context.Context, o types.Object, diags *diag.Diagnostics) *infraprovision.JoinToken {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -118,11 +117,11 @@ func ExpandHostactivationJoinToken(ctx context.Context, o types.Object, diags *d
 	return m.Expand(ctx, diags)
 }
 
-func (m *HostactivationJoinTokenModel) Expand(ctx context.Context, diags *diag.Diagnostics) *infra_provision.HostactivationJoinToken {
+func (m *HostactivationJoinTokenModel) Expand(ctx context.Context, diags *diag.Diagnostics) *infraprovision.JoinToken {
 	if m == nil {
 		return nil
 	}
-	to := &infra_provision.HostactivationJoinToken{
+	to := &infraprovision.JoinToken{
 		Description: flex.ExpandStringPointer(m.Description),
 		Name:        flex.ExpandStringPointer(m.Name),
 		Tags:        flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
@@ -131,7 +130,7 @@ func (m *HostactivationJoinTokenModel) Expand(ctx context.Context, diags *diag.D
 	return to
 }
 
-func FlattenHostactivationJoinToken(ctx context.Context, from *infra_provision.HostactivationJoinToken, diags *diag.Diagnostics) types.Object {
+func FlattenHostactivationJoinToken(ctx context.Context, from *infraprovision.JoinToken, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(HostactivationJoinTokenAttrTypes)
 	}
@@ -143,7 +142,7 @@ func FlattenHostactivationJoinToken(ctx context.Context, from *infra_provision.H
 	return t
 }
 
-func (m *HostactivationJoinTokenModel) Flatten(ctx context.Context, from *infra_provision.HostactivationJoinToken, diags *diag.Diagnostics) {
+func (m *HostactivationJoinTokenModel) Flatten(ctx context.Context, from *infraprovision.JoinToken, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
@@ -162,7 +161,7 @@ func (m *HostactivationJoinTokenModel) Flatten(ctx context.Context, from *infra_
 	m.Status = flattenStatus(from.Status)
 }
 
-func flattenStatus(from *infra_provision.JoinTokenJoinTokenStatus) types.String {
+func flattenStatus(from *infraprovision.JoinTokenJoinTokenStatus) types.String {
 	if from == nil {
 		return types.StringNull()
 	}

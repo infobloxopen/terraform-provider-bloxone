@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
+	"github.com/infobloxopen/bloxone-go-client/option"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/provider"
 )
 
@@ -66,15 +67,11 @@ func PreCheck(t *testing.T) {
 		t.Fatal("BLOXONE_API_KEY must be set for acceptance tests")
 	}
 
-	var err error
-	BloxOneClient, err = bloxoneclient.NewAPIClient(bloxoneclient.Configuration{
-		ClientName: "acceptance-test",
-		CSPURL:     cspURL,
-		APIKey:     apiKey,
-	})
-	if err != nil {
-		t.Fatal("Cannot create bloxone client")
-	}
+	BloxOneClient = bloxoneclient.NewAPIClient(
+		option.WithClientName("terraform-acceptance-tests"),
+		option.WithCSPUrl(cspURL),
+		option.WithAPIKey(apiKey),
+	)
 }
 
 func VerifyDefaultTag(resourceName string) resource.TestCheckFunc {

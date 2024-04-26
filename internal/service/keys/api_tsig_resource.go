@@ -78,7 +78,7 @@ func (r *TsigResource) Create(ctx context.Context, req resource.CreateRequest, r
 	if data.Secret.IsUnknown() {
 		apiRes, _, err := r.client.KeysAPI.
 			GenerateTsigAPI.
-			GenerateTsigGenerateTSIG(ctx).
+			GenerateTSIG(ctx).
 			Algorithm(data.Algorithm.ValueString()).
 			Execute()
 		if err != nil {
@@ -91,7 +91,7 @@ func (r *TsigResource) Create(ctx context.Context, req resource.CreateRequest, r
 
 	apiRes, _, err := r.client.KeysAPI.
 		TsigAPI.
-		TsigCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -118,7 +118,7 @@ func (r *TsigResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 
 	apiRes, httpRes, err := r.client.KeysAPI.
 		TsigAPI.
-		TsigRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -148,7 +148,7 @@ func (r *TsigResource) Update(ctx context.Context, req resource.UpdateRequest, r
 
 	apiRes, _, err := r.client.KeysAPI.
 		TsigAPI.
-		TsigUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -176,7 +176,7 @@ func (r *TsigResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 	err := retry.RetryContext(ctx, TsigKeyOperationTimeout, func() *retry.RetryError {
 		httpRes, err := r.client.KeysAPI.
 			TsigAPI.
-			TsigDelete(ctx, data.Id.ValueString()).
+			Delete(ctx, data.Id.ValueString()).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

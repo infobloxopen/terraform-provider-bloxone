@@ -19,7 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -470,7 +470,7 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigView(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigView {
+func ExpandConfigView(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.View {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -482,11 +482,11 @@ func ExpandConfigView(ctx context.Context, o types.Object, diags *diag.Diagnosti
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigViewModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigView {
+func (m *ConfigViewModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.View {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigView{
+	to := &dnsconfig.View{
 		AddEdnsOptionInOutgoingQuery:      flex.ExpandBoolPointer(m.AddEdnsOptionInOutgoingQuery),
 		Comment:                           flex.ExpandStringPointer(m.Comment),
 		CustomRootNs:                      flex.ExpandFrameworkListNestedBlock(ctx, m.CustomRootNs, diags, ExpandConfigRootNS),
@@ -535,7 +535,7 @@ func (m *ConfigViewModel) Expand(ctx context.Context, diags *diag.Diagnostics) *
 	return to
 }
 
-func FlattenConfigView(ctx context.Context, from *dns_config.ConfigView, diags *diag.Diagnostics) types.Object {
+func FlattenConfigView(ctx context.Context, from *dnsconfig.View, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigViewAttrTypes)
 	}
@@ -546,7 +546,7 @@ func FlattenConfigView(ctx context.Context, from *dns_config.ConfigView, diags *
 	return t
 }
 
-func (m *ConfigViewModel) Flatten(ctx context.Context, from *dns_config.ConfigView, diags *diag.Diagnostics) {
+func (m *ConfigViewModel) Flatten(ctx context.Context, from *dnsconfig.View, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

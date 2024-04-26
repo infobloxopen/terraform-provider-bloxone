@@ -15,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -93,11 +94,11 @@ var IpamsvcOptionSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *IpamsvcOptionSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcOptionSpace {
+func (m *IpamsvcOptionSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.OptionSpace {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcOptionSpace{
+	to := &ipam.OptionSpace{
 		Comment: flex.ExpandStringPointer(m.Comment),
 		Name:    flex.ExpandString(m.Name),
 		Tags:    flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
@@ -108,7 +109,7 @@ func (m *IpamsvcOptionSpaceModel) Expand(ctx context.Context, diags *diag.Diagno
 	return to
 }
 
-func FlattenIpamsvcOptionSpaceDataSource(ctx context.Context, from *ipam.IpamsvcOptionSpace, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcOptionSpaceDataSource(ctx context.Context, from *ipam.OptionSpace, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcOptionSpaceAttrTypes)
 	}
@@ -120,7 +121,7 @@ func FlattenIpamsvcOptionSpaceDataSource(ctx context.Context, from *ipam.Ipamsvc
 	return t
 }
 
-func (m *IpamsvcOptionSpaceModel) Flatten(ctx context.Context, from *ipam.IpamsvcOptionSpace, diags *diag.Diagnostics) {
+func (m *IpamsvcOptionSpaceModel) Flatten(ctx context.Context, from *ipam.OptionSpace, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

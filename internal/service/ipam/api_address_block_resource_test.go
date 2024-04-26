@@ -20,7 +20,7 @@ import (
 
 func TestAccAddressBlockResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -62,7 +62,7 @@ func TestAccAddressBlockResource_basic(t *testing.T) {
 
 func TestAccAddressBlockResource_disappears(t *testing.T) {
 	resourceName := "bloxone_ipam_address_block.test"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -84,7 +84,7 @@ func TestAccAddressBlockResource_disappears(t *testing.T) {
 
 func TestAccAddressBlockResource_Address(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test"
-	var v1, v2 ipam.IpamsvcAddressBlock
+	var v1, v2 ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -115,7 +115,7 @@ func TestAccAddressBlockResource_Address(t *testing.T) {
 
 func TestAccAddressBlockResource_AsmConfig(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_asm_config"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -163,7 +163,7 @@ func TestAccAddressBlockResource_AsmConfig(t *testing.T) {
 
 func TestAccAddressBlockResource_Cidr(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_cidr"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -193,7 +193,7 @@ func TestAccAddressBlockResource_Cidr(t *testing.T) {
 
 func TestAccAddressBlockResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_comment"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -223,7 +223,7 @@ func TestAccAddressBlockResource_Comment(t *testing.T) {
 
 func TestAccAddressBlockResource_DdnsClientUpdate(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_client_update"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -253,7 +253,7 @@ func TestAccAddressBlockResource_DdnsClientUpdate(t *testing.T) {
 
 func TestAccAddressBlockResource_DdnsDomain(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_domain"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -283,7 +283,7 @@ func TestAccAddressBlockResource_DdnsDomain(t *testing.T) {
 
 func TestAccAddressBlockResource_DdnsGenerateName(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_generate_name"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -313,7 +313,7 @@ func TestAccAddressBlockResource_DdnsGenerateName(t *testing.T) {
 
 func TestAccAddressBlockResource_DdnsGeneratedPrefix(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_generated_prefix"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -343,7 +343,7 @@ func TestAccAddressBlockResource_DdnsGeneratedPrefix(t *testing.T) {
 
 func TestAccAddressBlockResource_DdnsSendUpdates(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_send_updates"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -373,7 +373,7 @@ func TestAccAddressBlockResource_DdnsSendUpdates(t *testing.T) {
 
 func TestAccAddressBlockResource_DdnsTtlPercent(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_ttl_percent"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -403,7 +403,7 @@ func TestAccAddressBlockResource_DdnsTtlPercent(t *testing.T) {
 
 func TestAccAddressBlockResource_DdnsUpdateOnRenew(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_update_on_renew"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -433,7 +433,7 @@ func TestAccAddressBlockResource_DdnsUpdateOnRenew(t *testing.T) {
 
 func TestAccAddressBlockResource_DdnsUseConflictResolution(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_ddns_use_conflict_resolution"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -463,7 +463,7 @@ func TestAccAddressBlockResource_DdnsUseConflictResolution(t *testing.T) {
 
 func TestAccAddressBlockResource_DhcpConfig(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_dhcp_config"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -501,7 +501,7 @@ func TestAccAddressBlockResource_DhcpConfig(t *testing.T) {
 
 func TestAccAddressBlockResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_dhcp_options"
-	var v1 ipam.IpamsvcAddressBlock
+	var v1 ipam.AddressBlock
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
@@ -534,7 +534,7 @@ func TestAccAddressBlockResource_DhcpOptions(t *testing.T) {
 
 func TestAccAddressBlockResource_HeaderOptionFilename(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_header_option_filename"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -564,7 +564,7 @@ func TestAccAddressBlockResource_HeaderOptionFilename(t *testing.T) {
 
 func TestAccAddressBlockResource_HeaderOptionServerAddress(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_header_option_server_address"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -594,7 +594,7 @@ func TestAccAddressBlockResource_HeaderOptionServerAddress(t *testing.T) {
 
 func TestAccAddressBlockResource_HeaderOptionServerName(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_header_option_server_name"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -624,7 +624,7 @@ func TestAccAddressBlockResource_HeaderOptionServerName(t *testing.T) {
 
 func TestAccAddressBlockResource_HostnameRewriteChar(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_hostname_rewrite_char"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -654,7 +654,7 @@ func TestAccAddressBlockResource_HostnameRewriteChar(t *testing.T) {
 
 func TestAccAddressBlockResource_HostnameRewriteEnabled(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_hostname_rewrite_enabled"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -684,7 +684,7 @@ func TestAccAddressBlockResource_HostnameRewriteEnabled(t *testing.T) {
 
 func TestAccAddressBlockResource_HostnameRewriteRegex(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_hostname_rewrite_regex"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -714,7 +714,7 @@ func TestAccAddressBlockResource_HostnameRewriteRegex(t *testing.T) {
 
 func TestAccAddressBlockResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_inheritance_sources"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -779,7 +779,7 @@ func TestAccAddressBlockResource_InheritanceSources(t *testing.T) {
 
 func TestAccAddressBlockResource_Name(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_name"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -809,7 +809,7 @@ func TestAccAddressBlockResource_Name(t *testing.T) {
 
 func TestAccAddressBlockResource_Space(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_space"
-	var v1, v2 ipam.IpamsvcAddressBlock
+	var v1, v2 ipam.AddressBlock
 	spaceName1 := acctest.RandomNameWithPrefix("ip-space")
 	spaceName2 := acctest.RandomNameWithPrefix("ip-space")
 
@@ -841,7 +841,7 @@ func TestAccAddressBlockResource_Space(t *testing.T) {
 
 func TestAccAddressBlockResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_tags"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -884,10 +884,10 @@ func TestAccAddressBlockResource_Tags(t *testing.T) {
 	})
 }
 
-func TestAccAddressBlockResource_NextAvailable_AddressBlock(t *testing.T) {
-	var resourceName = "bloxone_ipam_address_block.test_next_available"
-	var v1 ipam.IpamsvcAddressBlock
-	var v2 ipam.IpamsvcAddressBlock
+func TestAccAddressBlockResource_NextAvailableId(t *testing.T) {
+	var resourceName = "bloxone_ipam_address_block.test_next_available_id"
+	var v1 ipam.AddressBlock
+	var v2 ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -896,7 +896,7 @@ func TestAccAddressBlockResource_NextAvailable_AddressBlock(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockNextAvailableInAB(spaceName, "10.0.0.0", 24, 26),
+				Config: testAccAddressBlockNextAvailableId(spaceName, "10.0.0.0", 24, 26),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_ipam_address_block.test", "id"),
@@ -908,7 +908,7 @@ func TestAccAddressBlockResource_NextAvailable_AddressBlock(t *testing.T) {
 			// Update and Read
 			// Update of next_available_id will destroy existing resource and create a new resource
 			{
-				Config: testAccAddressBlockNextAvailableInAB(spaceName, "12.0.0.0", 8, 16),
+				Config: testAccAddressBlockNextAvailableId(spaceName, "12.0.0.0", 8, 16),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockDestroy(context.Background(), &v1),
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v2),
@@ -923,7 +923,29 @@ func TestAccAddressBlockResource_NextAvailable_AddressBlock(t *testing.T) {
 	})
 }
 
-func testAccCheckAddressBlockExists(ctx context.Context, resourceName string, v *ipam.IpamsvcAddressBlock) resource.TestCheckFunc {
+func TestAccAddressBlockResource_NextAvailableId_Count(t *testing.T) {
+	var resourceName = "bloxone_ipam_address_block.test_next_available_id_count"
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccAddressBlockNextAvailableIdCount(spaceName, "bloxone_ipam_address_block.two", 24, 5),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrPair(resourceName+".0", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".1", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".2", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".3", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".4", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+				),
+			},
+		},
+	})
+}
+
+func testAccCheckAddressBlockExists(ctx context.Context, resourceName string, v *ipam.AddressBlock) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -932,7 +954,7 @@ func testAccCheckAddressBlockExists(ctx context.Context, resourceName string, v 
 		}
 		apiRes, _, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			AddressBlockAPI.
-			AddressBlockRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -945,12 +967,12 @@ func testAccCheckAddressBlockExists(ctx context.Context, resourceName string, v 
 	}
 }
 
-func testAccCheckAddressBlockDestroy(ctx context.Context, v *ipam.IpamsvcAddressBlock) resource.TestCheckFunc {
+func testAccCheckAddressBlockDestroy(ctx context.Context, v *ipam.AddressBlock) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			AddressBlockAPI.
-			AddressBlockRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -963,12 +985,12 @@ func testAccCheckAddressBlockDestroy(ctx context.Context, v *ipam.IpamsvcAddress
 	}
 }
 
-func testAccCheckAddressBlockDisappears(ctx context.Context, v *ipam.IpamsvcAddressBlock) resource.TestCheckFunc {
+func testAccCheckAddressBlockDisappears(ctx context.Context, v *ipam.AddressBlock) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			AddressBlockAPI.
-			AddressBlockDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err
@@ -1376,7 +1398,7 @@ resource "bloxone_ipam_address_block" "test_tags" {
 	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockNextAvailableInAB(spaceName, address string, cidr, wantedCidr int) string {
+func testAccAddressBlockNextAvailableId(spaceName, address string, cidr, wantedCidr int) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test" {
     address = %q
@@ -1384,12 +1406,30 @@ resource "bloxone_ipam_address_block" "test" {
     space = bloxone_ipam_ip_space.test.id
 }
 
-resource "bloxone_ipam_address_block" "test_next_available" {
+resource "bloxone_ipam_address_block" "test_next_available_id" {
     next_available_id = bloxone_ipam_address_block.test.id
     cidr = %d 
     space = bloxone_ipam_ip_space.test.id
     depends_on = [bloxone_ipam_address_block.test]
 }
 `, address, cidr, wantedCidr)
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
+}
+
+func testAccAddressBlockNextAvailableIdCount(spaceName string, addressBlockResourceName string, cidr int, count int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test" {
+	space = bloxone_ipam_ip_space.test.id
+	address = "10.0.0.0"
+	cidr = 16
+}
+
+resource "bloxone_ipam_address_block" "test_next_available_id_count" {
+	count = %d
+    next_available_id = %s.id
+    cidr = %d
+    space = bloxone_ipam_ip_space.test.id
+}
+`, count, addressBlockResourceName, cidr)
 	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }

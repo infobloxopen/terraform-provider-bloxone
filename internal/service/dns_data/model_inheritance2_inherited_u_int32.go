@@ -9,8 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_data"
-
+	"github.com/infobloxopen/bloxone-go-client/dnsdata"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -51,7 +50,7 @@ var Inheritance2InheritedUInt32ResourceSchemaAttributes = map[string]schema.Attr
 	},
 }
 
-func ExpandInheritance2InheritedUInt32(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_data.Inheritance2InheritedUInt32 {
+func ExpandInheritance2InheritedUInt32(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsdata.Inheritance2InheritedUInt32 {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -63,17 +62,17 @@ func ExpandInheritance2InheritedUInt32(ctx context.Context, o types.Object, diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *Inheritance2InheritedUInt32Model) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_data.Inheritance2InheritedUInt32 {
+func (m *Inheritance2InheritedUInt32Model) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsdata.Inheritance2InheritedUInt32 {
 	if m == nil {
 		return nil
 	}
-	to := &dns_data.Inheritance2InheritedUInt32{
+	to := &dnsdata.Inheritance2InheritedUInt32{
 		Action: flex.ExpandStringPointer(m.Action),
 	}
 	return to
 }
 
-func FlattenInheritance2InheritedUInt32(ctx context.Context, from *dns_data.Inheritance2InheritedUInt32, diags *diag.Diagnostics) types.Object {
+func FlattenInheritance2InheritedUInt32(ctx context.Context, from *dnsdata.Inheritance2InheritedUInt32, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(Inheritance2InheritedUInt32AttrTypes)
 	}
@@ -84,7 +83,7 @@ func FlattenInheritance2InheritedUInt32(ctx context.Context, from *dns_data.Inhe
 	return t
 }
 
-func (m *Inheritance2InheritedUInt32Model) Flatten(ctx context.Context, from *dns_data.Inheritance2InheritedUInt32, diags *diag.Diagnostics) {
+func (m *Inheritance2InheritedUInt32Model) Flatten(ctx context.Context, from *dnsdata.Inheritance2InheritedUInt32, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

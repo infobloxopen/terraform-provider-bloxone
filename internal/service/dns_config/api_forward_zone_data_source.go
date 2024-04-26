@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
@@ -37,7 +37,7 @@ type ConfigForwardZoneModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *ConfigForwardZoneModelWithFilter) FlattenResults(ctx context.Context, from []dns_config.ConfigForwardZone, diags *diag.Diagnostics) {
+func (m *ConfigForwardZoneModelWithFilter) FlattenResults(ctx context.Context, from []dnsconfig.ForwardZone, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -98,10 +98,10 @@ func (d *ForwardZoneDataSource) Read(ctx context.Context, req datasource.ReadReq
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]dns_config.ConfigForwardZone, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]dnsconfig.ForwardZone, error) {
 		apiRes, _, err := d.client.DNSConfigurationAPI.
 			ForwardZoneAPI.
-			ForwardZoneList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

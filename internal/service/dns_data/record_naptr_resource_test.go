@@ -8,13 +8,13 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_data"
+	"github.com/infobloxopen/bloxone-go-client/dnsdata"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccRecordNAPTRResource_Rdata(t *testing.T) {
 	var resourceName = "bloxone_dns_naptr_record.test_rdata"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -50,7 +50,7 @@ func TestAccRecordNAPTRResource_Rdata(t *testing.T) {
 
 func TestAccRecordNAPTRResource_Rdata_FlagsAndRegexp(t *testing.T) {
 	var resourceName = "bloxone_dns_naptr_record.test_rdata"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{

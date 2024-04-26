@@ -80,7 +80,7 @@ var IpamsvcDDNSZoneResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcDDNSZone(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcDDNSZone {
+func ExpandIpamsvcDDNSZone(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.DDNSZone {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -92,11 +92,11 @@ func ExpandIpamsvcDDNSZone(ctx context.Context, o types.Object, diags *diag.Diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcDDNSZoneModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcDDNSZone {
+func (m *IpamsvcDDNSZoneModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.DDNSZone {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcDDNSZone{
+	to := &ipam.DDNSZone{
 		Fqdn:           flex.ExpandStringPointer(m.Fqdn),
 		GssTsigEnabled: flex.ExpandBoolPointer(m.GssTsigEnabled),
 		Nameservers:    flex.ExpandFrameworkListNestedBlock(ctx, m.Nameservers, diags, ExpandIpamsvcNameserver),
@@ -108,7 +108,7 @@ func (m *IpamsvcDDNSZoneModel) Expand(ctx context.Context, diags *diag.Diagnosti
 	return to
 }
 
-func FlattenIpamsvcDDNSZone(ctx context.Context, from *ipam.IpamsvcDDNSZone, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcDDNSZone(ctx context.Context, from *ipam.DDNSZone, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcDDNSZoneAttrTypes)
 	}
@@ -119,7 +119,7 @@ func FlattenIpamsvcDDNSZone(ctx context.Context, from *ipam.IpamsvcDDNSZone, dia
 	return t
 }
 
-func (m *IpamsvcDDNSZoneModel) Flatten(ctx context.Context, from *ipam.IpamsvcDDNSZone, diags *diag.Diagnostics) {
+func (m *IpamsvcDDNSZoneModel) Flatten(ctx context.Context, from *ipam.DDNSZone, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

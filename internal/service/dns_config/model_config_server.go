@@ -16,7 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -435,7 +435,7 @@ var ConfigServerResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigServer(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigServer {
+func ExpandConfigServer(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.Server {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -447,11 +447,11 @@ func ExpandConfigServer(ctx context.Context, o types.Object, diags *diag.Diagnos
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigServerModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigServer {
+func (m *ConfigServerModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.Server {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigServer{
+	to := &dnsconfig.Server{
 		AddEdnsOptionInOutgoingQuery:      flex.ExpandBoolPointer(m.AddEdnsOptionInOutgoingQuery),
 		AutoSortViews:                     flex.ExpandBoolPointer(m.AutoSortViews),
 		Comment:                           flex.ExpandStringPointer(m.Comment),
@@ -500,7 +500,7 @@ func (m *ConfigServerModel) Expand(ctx context.Context, diags *diag.Diagnostics)
 	return to
 }
 
-func DataSourceFlattenConfigServer(ctx context.Context, from *dns_config.ConfigServer, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigServer(ctx context.Context, from *dnsconfig.Server, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigServerAttrTypes)
 	}
@@ -512,7 +512,7 @@ func DataSourceFlattenConfigServer(ctx context.Context, from *dns_config.ConfigS
 	return t
 }
 
-func (m *ConfigServerModel) Flatten(ctx context.Context, from *dns_config.ConfigServer, diags *diag.Diagnostics) {
+func (m *ConfigServerModel) Flatten(ctx context.Context, from *dnsconfig.Server, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

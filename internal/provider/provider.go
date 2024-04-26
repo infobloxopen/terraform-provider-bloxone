@@ -10,8 +10,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
+	"github.com/infobloxopen/bloxone-go-client/option"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_data"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/fw"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_mgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_provision"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/ipam"
@@ -78,16 +80,12 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 		return
 	}
 
-	client, err := bloxoneclient.NewAPIClient(bloxoneclient.Configuration{
-		ClientName:  fmt.Sprintf("terraform/%s#%s", p.version, p.commit),
-		APIKey:      data.APIKey.ValueString(),
-		CSPURL:      data.CSPUrl.ValueString(),
-		DefaultTags: dfTags,
-	})
-
-	if err != nil {
-		resp.Diagnostics.AddError("Client error", fmt.Sprintf("Unable to create new API client: %s", err))
-	}
+	client := bloxoneclient.NewAPIClient(
+		option.WithClientName(fmt.Sprintf("terraform/%s#%s", p.version, p.commit)),
+		option.WithAPIKey(data.APIKey.ValueString()),
+		option.WithCSPUrl(data.CSPUrl.ValueString()),
+		option.WithDefaultTags(dfTags),
+	)
 
 	resp.DataSourceData = client
 	resp.ResourceData = client
@@ -138,6 +136,11 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		infra_mgmt.NewServicesResource,
 
 		keys.NewTsigResource,
+
+		fw.NewAccessCodesResource,
+		fw.NewNamedListsResource,
+		fw.NewNetworkListsResource,
+		fw.NewInternalDomainListsResource,
 	}
 }
 
@@ -192,6 +195,12 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 
 		keys.NewTsigDataSource,
 		keys.NewKerberosDataSource,
+
+		fw.NewAccessCodesDataSource,
+		fw.NewNamedListsDataSource,
+		fw.NewNetworkListsDataSource,
+		fw.NewInternalDomainListsDataSource,
+		fw.NewPoPRegionsDataSource,
 	}
 }
 

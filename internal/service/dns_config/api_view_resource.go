@@ -68,7 +68,7 @@ func (r *ViewResource) Create(ctx context.Context, req resource.CreateRequest, r
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
 		ViewAPI.
-		ViewCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Inherit(inheritanceType).
 		Execute()
@@ -96,7 +96,7 @@ func (r *ViewResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 
 	apiRes, httpRes, err := r.client.DNSConfigurationAPI.
 		ViewAPI.
-		ViewRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
@@ -127,7 +127,7 @@ func (r *ViewResource) Update(ctx context.Context, req resource.UpdateRequest, r
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
 		ViewAPI.
-		ViewUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Inherit(inheritanceType).
 		Execute()
@@ -155,7 +155,7 @@ func (r *ViewResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 
 	httpRes, err := r.client.DNSConfigurationAPI.
 		ViewAPI.
-		ViewDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

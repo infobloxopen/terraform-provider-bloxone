@@ -72,7 +72,7 @@ func testAccCheckKerberosExists(ctx context.Context, dataSourceName string, v *k
 		}
 		apiRes, _, err := acctest.BloxOneClient.KeysAPI.
 			KerberosAPI.
-			KerberosRead(ctx, rs.Primary.Attributes["results.0.id"]).
+			Read(ctx, rs.Primary.Attributes["results.0.id"]).
 			Execute()
 		if err != nil {
 			return err

@@ -7,14 +7,14 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/bloxone-go-client/infra_provision"
+	"github.com/infobloxopen/bloxone-go-client/infraprovision"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccUIJoinTokenDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_infra_join_tokens.test"
 	resourceName := "bloxone_infra_join_token.test"
-	var v infra_provision.HostactivationJoinToken
+	var v infraprovision.JoinToken
 	name := acctest.RandomNameWithPrefix("jt")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -38,7 +38,7 @@ func TestAccUIJoinTokenDataSource_Filters(t *testing.T) {
 func TestAccUIJoinTokenDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_infra_join_tokens.test"
 	resourceName := "bloxone_infra_join_token.test"
-	var v infra_provision.HostactivationJoinToken
+	var v infraprovision.JoinToken
 	name := acctest.RandomNameWithPrefix("jt")
 	tagValue := acctest.RandomNameWithPrefix("tag ")
 

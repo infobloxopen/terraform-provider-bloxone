@@ -89,7 +89,7 @@ func (r *RecordResource) Create(ctx context.Context, req resource.CreateRequest,
 	err := retry.RetryContext(ctx, RecordOperationTimeout, func() *retry.RetryError {
 		apiRes, _, err := r.client.DNSDataAPI.
 			RecordAPI.
-			RecordCreate(ctx).
+			Create(ctx).
 			Body(*data.Expand(ctx, &resp.Diagnostics, true, r.impl)).
 			Inherit(inheritanceType).
 			Execute()
@@ -126,7 +126,7 @@ func (r *RecordResource) Read(ctx context.Context, req resource.ReadRequest, res
 
 	apiRes, httpRes, err := r.client.DNSDataAPI.
 		RecordAPI.
-		RecordRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
@@ -157,7 +157,7 @@ func (r *RecordResource) Update(ctx context.Context, req resource.UpdateRequest,
 	err := retry.RetryContext(ctx, RecordOperationTimeout, func() *retry.RetryError {
 		apiRes, _, err := r.client.DNSDataAPI.
 			RecordAPI.
-			RecordUpdate(ctx, data.Id.ValueString()).
+			Update(ctx, data.Id.ValueString()).
 			Body(*data.Expand(ctx, &resp.Diagnostics, false, r.impl)).
 			Inherit(inheritanceType).
 			Execute()
@@ -194,7 +194,7 @@ func (r *RecordResource) Delete(ctx context.Context, req resource.DeleteRequest,
 
 	httpRes, err := r.client.DNSDataAPI.
 		RecordAPI.
-		RecordDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

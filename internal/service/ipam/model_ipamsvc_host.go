@@ -10,7 +10,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -114,7 +116,7 @@ var IpamsvcHostResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcHost {
+func ExpandIpamsvcHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.Host {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -126,11 +128,11 @@ func ExpandIpamsvcHost(ctx context.Context, o types.Object, diags *diag.Diagnost
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcHost {
+func (m *IpamsvcHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.Host {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcHost{
+	to := &ipam.Host{
 		AssociatedServer: ExpandIpamsvcHostAssociatedServer(ctx, m.AssociatedServer, diags),
 		IpSpace:          flex.ExpandStringPointer(m.IpSpace),
 		Server:           flex.ExpandStringPointer(m.Server),
@@ -139,7 +141,7 @@ func (m *IpamsvcHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) 
 	return to
 }
 
-func FlattenIpamsvcHostDataSource(ctx context.Context, from *ipam.IpamsvcHost, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcHostDataSource(ctx context.Context, from *ipam.Host, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcHostAttrTypes)
 	}
@@ -151,7 +153,7 @@ func FlattenIpamsvcHostDataSource(ctx context.Context, from *ipam.IpamsvcHost, d
 	return t
 }
 
-func (m *IpamsvcHostModel) Flatten(ctx context.Context, from *ipam.IpamsvcHost, diags *diag.Diagnostics) {
+func (m *IpamsvcHostModel) Flatten(ctx context.Context, from *ipam.Host, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

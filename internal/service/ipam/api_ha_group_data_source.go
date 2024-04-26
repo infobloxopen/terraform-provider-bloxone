@@ -38,7 +38,7 @@ type IpamsvcHAGroupModelWithFilter struct {
 	Results      types.List `tfsdk:"results"`
 }
 
-func (m *IpamsvcHAGroupModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamsvcHAGroup, diags *diag.Diagnostics) {
+func (m *IpamsvcHAGroupModelWithFilter) FlattenResults(ctx context.Context, from []ipam.HAGroup, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -103,10 +103,10 @@ func (d *HaGroupDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IpamsvcHAGroup, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.HAGroup, error) {
 		apiRes, _, err := d.client.IPAddressManagementAPI.
 			HaGroupAPI.
-			HaGroupList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

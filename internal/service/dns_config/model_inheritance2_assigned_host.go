@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -41,7 +41,7 @@ var Inheritance2AssignedHostResourceSchemaAttributes = map[string]schema.Attribu
 	},
 }
 
-func ExpandInheritance2AssignedHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.Inheritance2AssignedHost {
+func ExpandInheritance2AssignedHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.Inheritance2AssignedHost {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -53,17 +53,17 @@ func ExpandInheritance2AssignedHost(ctx context.Context, o types.Object, diags *
 	return m.Expand(ctx, diags)
 }
 
-func (m *Inheritance2AssignedHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.Inheritance2AssignedHost {
+func (m *Inheritance2AssignedHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.Inheritance2AssignedHost {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.Inheritance2AssignedHost{
+	to := &dnsconfig.Inheritance2AssignedHost{
 		Host: flex.ExpandStringPointer(m.Host),
 	}
 	return to
 }
 
-func FlattenInheritance2AssignedHost(ctx context.Context, from *dns_config.Inheritance2AssignedHost, diags *diag.Diagnostics) types.Object {
+func FlattenInheritance2AssignedHost(ctx context.Context, from *dnsconfig.Inheritance2AssignedHost, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(Inheritance2AssignedHostAttrTypes)
 	}
@@ -74,7 +74,7 @@ func FlattenInheritance2AssignedHost(ctx context.Context, from *dns_config.Inher
 	return t
 }
 
-func (m *Inheritance2AssignedHostModel) Flatten(ctx context.Context, from *dns_config.Inheritance2AssignedHost, diags *diag.Diagnostics) {
+func (m *Inheritance2AssignedHostModel) Flatten(ctx context.Context, from *dnsconfig.Inheritance2AssignedHost, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

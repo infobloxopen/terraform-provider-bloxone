@@ -17,7 +17,7 @@ import (
     "github.com/hashicorp/terraform-plugin-framework/schema/validator"
     "github.com/hashicorp/terraform-plugin-framework/types"
 
-    "github.com/infobloxopen/bloxone-go-client/dns_data"
+    "github.com/infobloxopen/bloxone-go-client/dnsdata"
 
     "github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -254,11 +254,11 @@ func recordCommonSchema() map[string]schema.Attribute {
     }
 }
 
-func (m *dataRecordModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool, impl recordModelCommon) *dns_data.DataRecord {
+func (m *dataRecordModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool, impl recordModelCommon) *dnsdata.Record {
     if m == nil {
         return nil
     }
-    to := &dns_data.DataRecord{
+    to := &dnsdata.Record{
         AbsoluteNameSpec:   flex.ExpandStringPointer(m.AbsoluteNameSpec),
         Comment:            flex.ExpandStringPointer(m.Comment),
         Disabled:           flex.ExpandBoolPointer(m.Disabled),
@@ -284,7 +284,7 @@ func (m *dataRecordModel) Expand(ctx context.Context, diags *diag.Diagnostics, i
     return to
 }
 
-func (m *dataRecordModel) Flatten(ctx context.Context, from *dns_data.DataRecord, diags *diag.Diagnostics, impl recordModelCommon) {
+func (m *dataRecordModel) Flatten(ctx context.Context, from *dnsdata.Record, diags *diag.Diagnostics, impl recordModelCommon) {
     if from == nil {
         return
     }

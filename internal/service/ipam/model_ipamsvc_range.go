@@ -16,6 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -208,7 +209,7 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcRange(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcRange {
+func ExpandIpamsvcRange(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.Range {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -220,11 +221,11 @@ func ExpandIpamsvcRange(ctx context.Context, o types.Object, diags *diag.Diagnos
 	return m.Expand(ctx, diags, true)
 }
 
-func (m *IpamsvcRangeModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcRange {
+func (m *IpamsvcRangeModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.Range {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcRange{
+	to := &ipam.Range{
 		End:                flex.ExpandString(m.End),
 		Start:              flex.ExpandString(m.Start),
 		Comment:            flex.ExpandStringPointer(m.Comment),
@@ -248,7 +249,7 @@ func (m *IpamsvcRangeModel) Expand(ctx context.Context, diags *diag.Diagnostics,
 	return to
 }
 
-func FlattenIpamsvcRangeDataSource(ctx context.Context, from *ipam.IpamsvcRange, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcRangeDataSource(ctx context.Context, from *ipam.Range, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcRangeAttrTypes)
 	}
@@ -260,7 +261,7 @@ func FlattenIpamsvcRangeDataSource(ctx context.Context, from *ipam.IpamsvcRange,
 	return t
 }
 
-func (m *IpamsvcRangeModel) Flatten(ctx context.Context, from *ipam.IpamsvcRange, diags *diag.Diagnostics) {
+func (m *IpamsvcRangeModel) Flatten(ctx context.Context, from *ipam.Range, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
