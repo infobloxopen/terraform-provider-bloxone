@@ -870,8 +870,8 @@ func TestAccAddressBlockResource_Tags(t *testing.T) {
 	})
 }
 
-func TestAccAddressBlockResource_NextAvailable_AddressBlock(t *testing.T) {
-	var resourceName = "bloxone_ipam_address_block.test_next_available"
+func TestAccAddressBlockResource_NextAvailableId(t *testing.T) {
+	var resourceName = "bloxone_ipam_address_block.test_next_available_id"
 	var v1 ipam.AddressBlock
 	var v2 ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
@@ -882,7 +882,7 @@ func TestAccAddressBlockResource_NextAvailable_AddressBlock(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAddressBlockNextAvailableInAB(spaceName, "10.0.0.0", 24, 26),
+				Config: testAccAddressBlockNextAvailableId(spaceName, "10.0.0.0", 24, 26),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_ipam_address_block.test", "id"),
@@ -894,7 +894,7 @@ func TestAccAddressBlockResource_NextAvailable_AddressBlock(t *testing.T) {
 			// Update and Read
 			// Update of next_available_id will destroy existing resource and create a new resource
 			{
-				Config: testAccAddressBlockNextAvailableInAB(spaceName, "12.0.0.0", 8, 16),
+				Config: testAccAddressBlockNextAvailableId(spaceName, "12.0.0.0", 8, 16),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockDestroy(context.Background(), &v1),
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v2),
@@ -905,6 +905,28 @@ func TestAccAddressBlockResource_NextAvailable_AddressBlock(t *testing.T) {
 				),
 			},
 			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccAddressBlockResource_NextAvailableId_Count(t *testing.T) {
+	var resourceName = "bloxone_ipam_address_block.test_next_available_id_count"
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccAddressBlockNextAvailableIdCount(spaceName, "bloxone_ipam_address_block.two", 24, 5),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrPair(resourceName+".0", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".1", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".2", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".3", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".4", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+				),
+			},
 		},
 	})
 }
@@ -1362,7 +1384,7 @@ resource "bloxone_ipam_address_block" "test_tags" {
 	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
-func testAccAddressBlockNextAvailableInAB(spaceName, address string, cidr, wantedCidr int) string {
+func testAccAddressBlockNextAvailableId(spaceName, address string, cidr, wantedCidr int) string {
 	config := fmt.Sprintf(`
 resource "bloxone_ipam_address_block" "test" {
     address = %q
@@ -1370,12 +1392,30 @@ resource "bloxone_ipam_address_block" "test" {
     space = bloxone_ipam_ip_space.test.id
 }
 
-resource "bloxone_ipam_address_block" "test_next_available" {
+resource "bloxone_ipam_address_block" "test_next_available_id" {
     next_available_id = bloxone_ipam_address_block.test.id
     cidr = %d 
     space = bloxone_ipam_ip_space.test.id
     depends_on = [bloxone_ipam_address_block.test]
 }
 `, address, cidr, wantedCidr)
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
+}
+
+func testAccAddressBlockNextAvailableIdCount(spaceName string, addressBlockResourceName string, cidr int, count int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test" {
+	space = bloxone_ipam_ip_space.test.id
+	address = "10.0.0.0"
+	cidr = 16
+}
+
+resource "bloxone_ipam_address_block" "test_next_available_id_count" {
+	count = %d
+    next_available_id = %s.id
+    cidr = %d
+    space = bloxone_ipam_ip_space.test.id
+}
+`, count, addressBlockResourceName, cidr)
 	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }

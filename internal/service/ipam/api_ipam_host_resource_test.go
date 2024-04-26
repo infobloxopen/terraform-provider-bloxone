@@ -205,6 +205,28 @@ func TestAccIpamHostResource_Addresses(t *testing.T) {
 	})
 }
 
+func TestAccIpamHostResource_Addresses_NextAvailableId_Count(t *testing.T) {
+	var resourceName = "bloxone_ipam_host.test_next_available_id_count"
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccIpamHostAddressesNextAvailableIdCount(spaceName, 5),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrPair(resourceName+".0", "addresses.0.space", "bloxone_ipam_ip_space.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".1", "addresses.0.space", "bloxone_ipam_ip_space.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".2", "addresses.0.space", "bloxone_ipam_ip_space.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".3", "addresses.0.space", "bloxone_ipam_ip_space.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".4", "addresses.0.space", "bloxone_ipam_ip_space.test", "id"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckIpamHostExists(ctx context.Context, resourceName string, v *ipam.IpamHost) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
@@ -370,4 +392,19 @@ func testAccMultipleIPSpaceAndSubnet(spaceName1, spaceName2, spaceName3 string) 
 		space = bloxone_ipam_ip_space.test2.id
 	}
 `, spaceName1, spaceName2, spaceName3)
+}
+
+func testAccIpamHostAddressesNextAvailableIdCount(spaceName string, count int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_host" "test_next_available_id_count" {
+	count = %d
+    name = "host-${count.index}"
+	addresses = [
+		{
+			next_available_id = bloxone_ipam_subnet.test.id
+		}
+	]
+}
+`, count)
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }

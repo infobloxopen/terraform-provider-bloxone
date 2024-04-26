@@ -14,7 +14,9 @@ type ClientOption func(configuration *internal.Configuration)
 // Optional. Default is https://csp.infoblox.com
 func WithCSPUrl(cspURL string) ClientOption {
 	return func(configuration *internal.Configuration) {
-		configuration.CSPURL = cspURL
+		if cspURL != "" {
+			configuration.CSPURL = cspURL
+		}
 	}
 }
 
@@ -27,7 +29,9 @@ func WithCSPUrl(cspURL string) ClientOption {
 // Required.
 func WithAPIKey(apiKey string) ClientOption {
 	return func(configuration *internal.Configuration) {
-		configuration.APIKey = apiKey
+		if apiKey != "" {
+			configuration.APIKey = apiKey
+		}
 	}
 }
 
@@ -35,7 +39,9 @@ func WithAPIKey(apiKey string) ClientOption {
 // Optional. The default HTTPClient will be used if not provided.
 func WithHTTPClient(httpClient *http.Client) ClientOption {
 	return func(configuration *internal.Configuration) {
-		configuration.HTTPClient = httpClient
+		if httpClient != nil {
+			configuration.HTTPClient = httpClient
+		}
 	}
 }
 
@@ -52,7 +58,9 @@ func WithDefaultTags(defaultTags map[string]string) ClientOption {
 // Optional. If not provided, the client name will be set to "bloxone-go-client".
 func WithClientName(clientName string) ClientOption {
 	return func(configuration *internal.Configuration) {
-		configuration.ClientName = clientName
+		if clientName != "" {
+			configuration.ClientName = clientName
+		}
 	}
 }
 
