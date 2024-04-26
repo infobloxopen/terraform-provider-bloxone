@@ -45,7 +45,10 @@ type ViewInheritance struct {
 	UpdateAcl                         *InheritedACLItems              `json:"update_acl,omitempty"`
 	UseForwardersForSubzones          *Inheritance2InheritedBool      `json:"use_forwarders_for_subzones,omitempty"`
 	ZoneAuthority                     *InheritedZoneAuthority         `json:"zone_authority,omitempty"`
+	AdditionalProperties              map[string]interface{}
 }
+
+type _ViewInheritance ViewInheritance
 
 // NewViewInheritance instantiates a new ViewInheritance object
 // This constructor will assign default values to properties that have it defined,
@@ -984,7 +987,58 @@ func (o ViewInheritance) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ZoneAuthority) {
 		toSerialize["zone_authority"] = o.ZoneAuthority
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ViewInheritance) UnmarshalJSON(data []byte) (err error) {
+	varViewInheritance := _ViewInheritance{}
+
+	err = json.Unmarshal(data, &varViewInheritance)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ViewInheritance(varViewInheritance)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "add_edns_option_in_outgoing_query")
+		delete(additionalProperties, "custom_root_ns_block")
+		delete(additionalProperties, "dnssec_validation_block")
+		delete(additionalProperties, "dtc_config")
+		delete(additionalProperties, "ecs_block")
+		delete(additionalProperties, "edns_udp_size")
+		delete(additionalProperties, "filter_aaaa_acl")
+		delete(additionalProperties, "filter_aaaa_on_v4")
+		delete(additionalProperties, "forwarders_block")
+		delete(additionalProperties, "gss_tsig_enabled")
+		delete(additionalProperties, "lame_ttl")
+		delete(additionalProperties, "match_recursive_only")
+		delete(additionalProperties, "max_cache_ttl")
+		delete(additionalProperties, "max_negative_ttl")
+		delete(additionalProperties, "max_udp_size")
+		delete(additionalProperties, "minimal_responses")
+		delete(additionalProperties, "notify")
+		delete(additionalProperties, "query_acl")
+		delete(additionalProperties, "recursion_acl")
+		delete(additionalProperties, "recursion_enabled")
+		delete(additionalProperties, "sort_list")
+		delete(additionalProperties, "synthesize_address_records_from_https")
+		delete(additionalProperties, "transfer_acl")
+		delete(additionalProperties, "update_acl")
+		delete(additionalProperties, "use_forwarders_for_subzones")
+		delete(additionalProperties, "zone_authority")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableViewInheritance struct {

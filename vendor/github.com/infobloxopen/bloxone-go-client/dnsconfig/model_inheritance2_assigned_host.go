@@ -24,8 +24,11 @@ type Inheritance2AssignedHost struct {
 	// The resource identifier.
 	Host *string `json:"host,omitempty"`
 	// The on-prem host ID.
-	Ophid *string `json:"ophid,omitempty"`
+	Ophid                *string `json:"ophid,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Inheritance2AssignedHost Inheritance2AssignedHost
 
 // NewInheritance2AssignedHost instantiates a new Inheritance2AssignedHost object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,35 @@ func (o Inheritance2AssignedHost) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Ophid) {
 		toSerialize["ophid"] = o.Ophid
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Inheritance2AssignedHost) UnmarshalJSON(data []byte) (err error) {
+	varInheritance2AssignedHost := _Inheritance2AssignedHost{}
+
+	err = json.Unmarshal(data, &varInheritance2AssignedHost)
+
+	if err != nil {
+		return err
+	}
+
+	*o = Inheritance2AssignedHost(varInheritance2AssignedHost)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "host")
+		delete(additionalProperties, "ophid")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritance2AssignedHost struct {

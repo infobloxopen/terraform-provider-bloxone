@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadOptionFilterResponse{}
 
 // ReadOptionFilterResponse The response format to retrieve the __OptionFilter__ object.
 type ReadOptionFilterResponse struct {
-	Result *OptionFilter `json:"result,omitempty"`
+	Result               *OptionFilter `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadOptionFilterResponse ReadOptionFilterResponse
 
 // NewReadOptionFilterResponse instantiates a new ReadOptionFilterResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadOptionFilterResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadOptionFilterResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadOptionFilterResponse := _ReadOptionFilterResponse{}
+
+	err = json.Unmarshal(data, &varReadOptionFilterResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadOptionFilterResponse(varReadOptionFilterResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadOptionFilterResponse struct {

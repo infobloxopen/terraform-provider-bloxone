@@ -25,8 +25,11 @@ type ShortServiceStatus struct {
 	// Status of the Service (`started`, `starting`, `stopping`, `stopped`, `error`).
 	Status *string `json:"status,omitempty"`
 	// Timestamp of the latest status update of Service.
-	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	UpdatedAt            *time.Time `json:"updated_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ShortServiceStatus ShortServiceStatus
 
 // NewShortServiceStatus instantiates a new ShortServiceStatus object
 // This constructor will assign default values to properties that have it defined,
@@ -160,7 +163,35 @@ func (o ShortServiceStatus) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ShortServiceStatus) UnmarshalJSON(data []byte) (err error) {
+	varShortServiceStatus := _ShortServiceStatus{}
+
+	err = json.Unmarshal(data, &varShortServiceStatus)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ShortServiceStatus(varShortServiceStatus)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableShortServiceStatus struct {

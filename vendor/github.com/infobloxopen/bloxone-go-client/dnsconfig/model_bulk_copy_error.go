@@ -24,8 +24,11 @@ type BulkCopyError struct {
 	// The resource identifier.
 	Id *string `json:"id,omitempty"`
 	// The reason why the copy failed.
-	Message *string `json:"message,omitempty"`
+	Message              *string `json:"message,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _BulkCopyError BulkCopyError
 
 // NewBulkCopyError instantiates a new BulkCopyError object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,35 @@ func (o BulkCopyError) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Message) {
 		toSerialize["message"] = o.Message
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *BulkCopyError) UnmarshalJSON(data []byte) (err error) {
+	varBulkCopyError := _BulkCopyError{}
+
+	err = json.Unmarshal(data, &varBulkCopyError)
+
+	if err != nil {
+		return err
+	}
+
+	*o = BulkCopyError(varBulkCopyError)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "message")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBulkCopyError struct {

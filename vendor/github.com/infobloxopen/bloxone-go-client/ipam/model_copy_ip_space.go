@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -30,7 +29,8 @@ type CopyIPSpace struct {
 	// The name for the copied IP space. Must contain 1 to 256 characters. Can include UTF-8.
 	Name string `json:"name"`
 	// Indicates whether copying should skip an object in case of error and continue with next, or abort copying in case of error.  Defaults to _false_.
-	SkipOnError *bool `json:"skip_on_error,omitempty"`
+	SkipOnError          *bool `json:"skip_on_error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CopyIPSpace CopyIPSpace
@@ -228,6 +228,11 @@ func (o CopyIPSpace) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.SkipOnError) {
 		toSerialize["skip_on_error"] = o.SkipOnError
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -255,15 +260,24 @@ func (o *CopyIPSpace) UnmarshalJSON(data []byte) (err error) {
 
 	varCopyIPSpace := _CopyIPSpace{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCopyIPSpace)
+	err = json.Unmarshal(data, &varCopyIPSpace)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CopyIPSpace(varCopyIPSpace)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "copy_dhcp_options")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "skip_on_error")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

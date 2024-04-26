@@ -34,8 +34,11 @@ type Utilization struct {
 	// The number of IP addresses used in the scope of the object.
 	Used *string `json:"used,omitempty"`
 	// The percentage of used IP addresses relative to the total IP addresses available in the scope of the object.
-	Utilization *int64 `json:"utilization,omitempty"`
+	Utilization          *int64 `json:"utilization,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Utilization Utilization
 
 // NewUtilization instantiates a new Utilization object
 // This constructor will assign default values to properties that have it defined,
@@ -344,7 +347,40 @@ func (o Utilization) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Utilization) {
 		toSerialize["utilization"] = o.Utilization
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Utilization) UnmarshalJSON(data []byte) (err error) {
+	varUtilization := _Utilization{}
+
+	err = json.Unmarshal(data, &varUtilization)
+
+	if err != nil {
+		return err
+	}
+
+	*o = Utilization(varUtilization)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "abandon_utilization")
+		delete(additionalProperties, "abandoned")
+		delete(additionalProperties, "dynamic")
+		delete(additionalProperties, "free")
+		delete(additionalProperties, "static")
+		delete(additionalProperties, "total")
+		delete(additionalProperties, "used")
+		delete(additionalProperties, "utilization")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUtilization struct {

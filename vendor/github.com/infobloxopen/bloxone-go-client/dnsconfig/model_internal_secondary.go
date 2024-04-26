@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -22,7 +21,8 @@ var _ MappedNullable = &InternalSecondary{}
 // InternalSecondary BloxOne DDI host acting as DNS secondary.
 type InternalSecondary struct {
 	// The resource identifier.
-	Host string `json:"host"`
+	Host                 string `json:"host"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _InternalSecondary InternalSecondary
@@ -80,6 +80,11 @@ func (o InternalSecondary) MarshalJSON() ([]byte, error) {
 func (o InternalSecondary) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["host"] = o.Host
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -107,15 +112,20 @@ func (o *InternalSecondary) UnmarshalJSON(data []byte) (err error) {
 
 	varInternalSecondary := _InternalSecondary{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varInternalSecondary)
+	err = json.Unmarshal(data, &varInternalSecondary)
 
 	if err != nil {
 		return err
 	}
 
 	*o = InternalSecondary(varInternalSecondary)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "host")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

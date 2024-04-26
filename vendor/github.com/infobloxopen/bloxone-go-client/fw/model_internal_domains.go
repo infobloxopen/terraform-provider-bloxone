@@ -35,8 +35,11 @@ type InternalDomains struct {
 	// Enables tag support for resource where tags attribute contains user-defined key value pairs
 	Tags map[string]interface{} `json:"tags,omitempty"`
 	// The time when this Internal domain lists object was last updated.
-	UpdatedTime *time.Time `json:"updated_time,omitempty"`
+	UpdatedTime          *time.Time `json:"updated_time,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InternalDomains InternalDomains
 
 // NewInternalDomains instantiates a new InternalDomains object
 // This constructor will assign default values to properties that have it defined,
@@ -345,7 +348,40 @@ func (o InternalDomains) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedTime) {
 		toSerialize["updated_time"] = o.UpdatedTime
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InternalDomains) UnmarshalJSON(data []byte) (err error) {
+	varInternalDomains := _InternalDomains{}
+
+	err = json.Unmarshal(data, &varInternalDomains)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InternalDomains(varInternalDomains)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_time")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "internal_domains")
+		delete(additionalProperties, "is_default")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "updated_time")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInternalDomains struct {

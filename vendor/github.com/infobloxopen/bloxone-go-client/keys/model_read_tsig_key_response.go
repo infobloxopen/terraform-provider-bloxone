@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadTSIGKeyResponse{}
 
 // ReadTSIGKeyResponse The response format to retrieve the __TSIGKey__ object.
 type ReadTSIGKeyResponse struct {
-	Result *TSIGKey `json:"result,omitempty"`
+	Result               *TSIGKey `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadTSIGKeyResponse ReadTSIGKeyResponse
 
 // NewReadTSIGKeyResponse instantiates a new ReadTSIGKeyResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadTSIGKeyResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadTSIGKeyResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadTSIGKeyResponse := _ReadTSIGKeyResponse{}
+
+	err = json.Unmarshal(data, &varReadTSIGKeyResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadTSIGKeyResponse(varReadTSIGKeyResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadTSIGKeyResponse struct {

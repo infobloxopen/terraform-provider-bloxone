@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadIpamHostResponse{}
 
 // ReadIpamHostResponse The response format to retrieve the __IpamHost__ object.
 type ReadIpamHostResponse struct {
-	Result *IpamHost `json:"result,omitempty"`
+	Result               *IpamHost `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadIpamHostResponse ReadIpamHostResponse
 
 // NewReadIpamHostResponse instantiates a new ReadIpamHostResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadIpamHostResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadIpamHostResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadIpamHostResponse := _ReadIpamHostResponse{}
+
+	err = json.Unmarshal(data, &varReadIpamHostResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadIpamHostResponse(varReadIpamHostResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadIpamHostResponse struct {

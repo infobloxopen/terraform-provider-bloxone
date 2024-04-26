@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateTSIGKeyResponse{}
 
 // UpdateTSIGKeyResponse The response format to update __TSIGKey__ object.
 type UpdateTSIGKeyResponse struct {
-	Result *TSIGKey `json:"result,omitempty"`
+	Result               *TSIGKey `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateTSIGKeyResponse UpdateTSIGKeyResponse
 
 // NewUpdateTSIGKeyResponse instantiates a new UpdateTSIGKeyResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateTSIGKeyResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateTSIGKeyResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateTSIGKeyResponse := _UpdateTSIGKeyResponse{}
+
+	err = json.Unmarshal(data, &varUpdateTSIGKeyResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateTSIGKeyResponse(varUpdateTSIGKeyResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateTSIGKeyResponse struct {

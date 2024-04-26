@@ -20,8 +20,11 @@ var _ MappedNullable = &ListDNSUsageResponse{}
 // ListDNSUsageResponse The response format to retrieve __DNSUsage__ objects.
 type ListDNSUsageResponse struct {
 	// The list of DNSUsage objects.
-	Results []DNSUsage `json:"results,omitempty"`
+	Results              []DNSUsage `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListDNSUsageResponse ListDNSUsageResponse
 
 // NewListDNSUsageResponse instantiates a new ListDNSUsageResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListDNSUsageResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListDNSUsageResponse) UnmarshalJSON(data []byte) (err error) {
+	varListDNSUsageResponse := _ListDNSUsageResponse{}
+
+	err = json.Unmarshal(data, &varListDNSUsageResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListDNSUsageResponse(varListDNSUsageResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListDNSUsageResponse struct {

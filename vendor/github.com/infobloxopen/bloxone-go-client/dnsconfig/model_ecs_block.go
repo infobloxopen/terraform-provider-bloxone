@@ -28,8 +28,11 @@ type ECSBlock struct {
 	// Optional. Field config for _ecs_prefix_v6_ field.
 	EcsPrefixV6 *int64 `json:"ecs_prefix_v6,omitempty"`
 	// Optional. Field config for _ecs_zones_ field.
-	EcsZones []ECSZone `json:"ecs_zones,omitempty"`
+	EcsZones             []ECSZone `json:"ecs_zones,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ECSBlock ECSBlock
 
 // NewECSBlock instantiates a new ECSBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -233,7 +236,37 @@ func (o ECSBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.EcsZones) {
 		toSerialize["ecs_zones"] = o.EcsZones
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ECSBlock) UnmarshalJSON(data []byte) (err error) {
+	varECSBlock := _ECSBlock{}
+
+	err = json.Unmarshal(data, &varECSBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ECSBlock(varECSBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ecs_enabled")
+		delete(additionalProperties, "ecs_forwarding")
+		delete(additionalProperties, "ecs_prefix_v4")
+		delete(additionalProperties, "ecs_prefix_v6")
+		delete(additionalProperties, "ecs_zones")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableECSBlock struct {

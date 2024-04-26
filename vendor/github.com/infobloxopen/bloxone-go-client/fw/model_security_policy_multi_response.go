@@ -20,8 +20,11 @@ var _ MappedNullable = &SecurityPolicyMultiResponse{}
 // SecurityPolicyMultiResponse The Security Policy list response.
 type SecurityPolicyMultiResponse struct {
 	// The list of Security Policy objects.
-	Results []SecurityPolicy `json:"results,omitempty"`
+	Results              []SecurityPolicy `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SecurityPolicyMultiResponse SecurityPolicyMultiResponse
 
 // NewSecurityPolicyMultiResponse instantiates a new SecurityPolicyMultiResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o SecurityPolicyMultiResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *SecurityPolicyMultiResponse) UnmarshalJSON(data []byte) (err error) {
+	varSecurityPolicyMultiResponse := _SecurityPolicyMultiResponse{}
+
+	err = json.Unmarshal(data, &varSecurityPolicyMultiResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = SecurityPolicyMultiResponse(varSecurityPolicyMultiResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSecurityPolicyMultiResponse struct {

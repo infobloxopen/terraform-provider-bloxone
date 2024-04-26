@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -60,7 +59,8 @@ type FixedAddress struct {
 	// The tags for the fixed address in JSON format.
 	Tags map[string]interface{} `json:"tags,omitempty"`
 	// Time when the object has been updated. Equals to _created_at_ if not updated after creation.
-	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	UpdatedAt            *time.Time `json:"updated_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _FixedAddress FixedAddress
@@ -765,6 +765,11 @@ func (o FixedAddress) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -794,15 +799,39 @@ func (o *FixedAddress) UnmarshalJSON(data []byte) (err error) {
 
 	varFixedAddress := _FixedAddress{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varFixedAddress)
+	err = json.Unmarshal(data, &varFixedAddress)
 
 	if err != nil {
 		return err
 	}
 
 	*o = FixedAddress(varFixedAddress)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "dhcp_options")
+		delete(additionalProperties, "disable_dhcp")
+		delete(additionalProperties, "header_option_filename")
+		delete(additionalProperties, "header_option_server_address")
+		delete(additionalProperties, "header_option_server_name")
+		delete(additionalProperties, "hostname")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "inheritance_assigned_hosts")
+		delete(additionalProperties, "inheritance_parent")
+		delete(additionalProperties, "inheritance_sources")
+		delete(additionalProperties, "ip_space")
+		delete(additionalProperties, "match_type")
+		delete(additionalProperties, "match_value")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "parent")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

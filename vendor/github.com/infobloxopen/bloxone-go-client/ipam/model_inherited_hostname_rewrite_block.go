@@ -24,9 +24,12 @@ type InheritedHostnameRewriteBlock struct {
 	// The human-readable display name for the object referred to by _source_.
 	DisplayName *string `json:"display_name,omitempty"`
 	// The resource identifier.
-	Source *string               `json:"source,omitempty"`
-	Value  *HostnameRewriteBlock `json:"value,omitempty"`
+	Source               *string               `json:"source,omitempty"`
+	Value                *HostnameRewriteBlock `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InheritedHostnameRewriteBlock InheritedHostnameRewriteBlock
 
 // NewInheritedHostnameRewriteBlock instantiates a new InheritedHostnameRewriteBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -195,7 +198,36 @@ func (o InheritedHostnameRewriteBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritedHostnameRewriteBlock) UnmarshalJSON(data []byte) (err error) {
+	varInheritedHostnameRewriteBlock := _InheritedHostnameRewriteBlock{}
+
+	err = json.Unmarshal(data, &varInheritedHostnameRewriteBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedHostnameRewriteBlock(varInheritedHostnameRewriteBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedHostnameRewriteBlock struct {

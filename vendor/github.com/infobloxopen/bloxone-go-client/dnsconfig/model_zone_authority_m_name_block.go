@@ -24,8 +24,11 @@ type ZoneAuthorityMNameBlock struct {
 	// Optional. Master name server in punycode.  Defaults to empty.
 	ProtocolMname *string `json:"protocol_mname,omitempty"`
 	// Optional. Use default value for master name server.  Defaults to true.
-	UseDefaultMname *bool `json:"use_default_mname,omitempty"`
+	UseDefaultMname      *bool `json:"use_default_mname,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ZoneAuthorityMNameBlock ZoneAuthorityMNameBlock
 
 // NewZoneAuthorityMNameBlock instantiates a new ZoneAuthorityMNameBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,35 @@ func (o ZoneAuthorityMNameBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UseDefaultMname) {
 		toSerialize["use_default_mname"] = o.UseDefaultMname
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ZoneAuthorityMNameBlock) UnmarshalJSON(data []byte) (err error) {
+	varZoneAuthorityMNameBlock := _ZoneAuthorityMNameBlock{}
+
+	err = json.Unmarshal(data, &varZoneAuthorityMNameBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ZoneAuthorityMNameBlock(varZoneAuthorityMNameBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "mname")
+		delete(additionalProperties, "protocol_mname")
+		delete(additionalProperties, "use_default_mname")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableZoneAuthorityMNameBlock struct {

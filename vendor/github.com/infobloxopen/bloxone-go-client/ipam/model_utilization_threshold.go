@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -26,7 +25,8 @@ type UtilizationThreshold struct {
 	// The high threshold value for the percentage of used IP addresses relative to the total IP addresses available in the scope of the object. Thresholds are inclusive in the comparison test.
 	High int64 `json:"high"`
 	// The low threshold value for the percentage of used IP addresses relative to the total IP addresses available in the scope of the object. Thresholds are inclusive in the comparison test.
-	Low int64 `json:"low"`
+	Low                  int64 `json:"low"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UtilizationThreshold UtilizationThreshold
@@ -136,6 +136,11 @@ func (o UtilizationThreshold) ToMap() (map[string]interface{}, error) {
 	toSerialize["enabled"] = o.Enabled
 	toSerialize["high"] = o.High
 	toSerialize["low"] = o.Low
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -165,15 +170,22 @@ func (o *UtilizationThreshold) UnmarshalJSON(data []byte) (err error) {
 
 	varUtilizationThreshold := _UtilizationThreshold{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varUtilizationThreshold)
+	err = json.Unmarshal(data, &varUtilizationThreshold)
 
 	if err != nil {
 		return err
 	}
 
 	*o = UtilizationThreshold(varUtilizationThreshold)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "enabled")
+		delete(additionalProperties, "high")
+		delete(additionalProperties, "low")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

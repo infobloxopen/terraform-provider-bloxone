@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadDelegationResponse{}
 
 // ReadDelegationResponse The Delegation object read response format.
 type ReadDelegationResponse struct {
-	Result *Delegation `json:"result,omitempty"`
+	Result               *Delegation `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadDelegationResponse ReadDelegationResponse
 
 // NewReadDelegationResponse instantiates a new ReadDelegationResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadDelegationResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadDelegationResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadDelegationResponse := _ReadDelegationResponse{}
+
+	err = json.Unmarshal(data, &varReadDelegationResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadDelegationResponse(varReadDelegationResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadDelegationResponse struct {

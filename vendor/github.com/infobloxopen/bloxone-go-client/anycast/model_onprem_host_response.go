@@ -19,8 +19,11 @@ var _ MappedNullable = &OnpremHostResponse{}
 
 // OnpremHostResponse struct for OnpremHostResponse
 type OnpremHostResponse struct {
-	Results *OnpremHost `json:"results,omitempty"`
+	Results              *OnpremHost `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _OnpremHostResponse OnpremHostResponse
 
 // NewOnpremHostResponse instantiates a new OnpremHostResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o OnpremHostResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *OnpremHostResponse) UnmarshalJSON(data []byte) (err error) {
+	varOnpremHostResponse := _OnpremHostResponse{}
+
+	err = json.Unmarshal(data, &varOnpremHostResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = OnpremHostResponse(varOnpremHostResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableOnpremHostResponse struct {

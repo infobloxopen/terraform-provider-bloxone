@@ -19,10 +19,13 @@ var _ MappedNullable = &PopRegionsReadPoPRegion404ResponseError{}
 
 // PopRegionsReadPoPRegion404ResponseError struct for PopRegionsReadPoPRegion404ResponseError
 type PopRegionsReadPoPRegion404ResponseError struct {
-	Code    *string `json:"code,omitempty"`
-	Message *string `json:"message,omitempty"`
-	Status  *string `json:"status,omitempty"`
+	Code                 *string `json:"code,omitempty"`
+	Message              *string `json:"message,omitempty"`
+	Status               *string `json:"status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PopRegionsReadPoPRegion404ResponseError PopRegionsReadPoPRegion404ResponseError
 
 // NewPopRegionsReadPoPRegion404ResponseError instantiates a new PopRegionsReadPoPRegion404ResponseError object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o PopRegionsReadPoPRegion404ResponseError) ToMap() (map[string]interface{}
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *PopRegionsReadPoPRegion404ResponseError) UnmarshalJSON(data []byte) (err error) {
+	varPopRegionsReadPoPRegion404ResponseError := _PopRegionsReadPoPRegion404ResponseError{}
+
+	err = json.Unmarshal(data, &varPopRegionsReadPoPRegion404ResponseError)
+
+	if err != nil {
+		return err
+	}
+
+	*o = PopRegionsReadPoPRegion404ResponseError(varPopRegionsReadPoPRegion404ResponseError)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "code")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePopRegionsReadPoPRegion404ResponseError struct {

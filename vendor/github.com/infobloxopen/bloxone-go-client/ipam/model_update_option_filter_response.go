@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateOptionFilterResponse{}
 
 // UpdateOptionFilterResponse The response format to update the __OptionFilter__ object.
 type UpdateOptionFilterResponse struct {
-	Result *OptionFilter `json:"result,omitempty"`
+	Result               *OptionFilter `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateOptionFilterResponse UpdateOptionFilterResponse
 
 // NewUpdateOptionFilterResponse instantiates a new UpdateOptionFilterResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateOptionFilterResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateOptionFilterResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateOptionFilterResponse := _UpdateOptionFilterResponse{}
+
+	err = json.Unmarshal(data, &varUpdateOptionFilterResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateOptionFilterResponse(varUpdateOptionFilterResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateOptionFilterResponse struct {

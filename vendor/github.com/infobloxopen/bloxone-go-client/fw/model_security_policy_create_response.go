@@ -19,8 +19,11 @@ var _ MappedNullable = &SecurityPolicyCreateResponse{}
 
 // SecurityPolicyCreateResponse The Security Policy create response.
 type SecurityPolicyCreateResponse struct {
-	Results *SecurityPolicy `json:"results,omitempty"`
+	Results              *SecurityPolicy `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SecurityPolicyCreateResponse SecurityPolicyCreateResponse
 
 // NewSecurityPolicyCreateResponse instantiates a new SecurityPolicyCreateResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o SecurityPolicyCreateResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *SecurityPolicyCreateResponse) UnmarshalJSON(data []byte) (err error) {
+	varSecurityPolicyCreateResponse := _SecurityPolicyCreateResponse{}
+
+	err = json.Unmarshal(data, &varSecurityPolicyCreateResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = SecurityPolicyCreateResponse(varSecurityPolicyCreateResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSecurityPolicyCreateResponse struct {

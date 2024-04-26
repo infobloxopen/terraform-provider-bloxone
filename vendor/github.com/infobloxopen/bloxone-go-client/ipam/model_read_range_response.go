@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadRangeResponse{}
 
 // ReadRangeResponse The response format to retrieve the __Range__ object.
 type ReadRangeResponse struct {
-	Result *Range `json:"result,omitempty"`
+	Result               *Range `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadRangeResponse ReadRangeResponse
 
 // NewReadRangeResponse instantiates a new ReadRangeResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadRangeResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadRangeResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadRangeResponse := _ReadRangeResponse{}
+
+	err = json.Unmarshal(data, &varReadRangeResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadRangeResponse(varReadRangeResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadRangeResponse struct {

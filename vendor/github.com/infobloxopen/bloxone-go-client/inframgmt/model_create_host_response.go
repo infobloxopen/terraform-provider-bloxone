@@ -19,8 +19,11 @@ var _ MappedNullable = &CreateHostResponse{}
 
 // CreateHostResponse struct for CreateHostResponse
 type CreateHostResponse struct {
-	Result *Host `json:"result,omitempty"`
+	Result               *Host `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateHostResponse CreateHostResponse
 
 // NewCreateHostResponse instantiates a new CreateHostResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CreateHostResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateHostResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateHostResponse := _CreateHostResponse{}
+
+	err = json.Unmarshal(data, &varCreateHostResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateHostResponse(varCreateHostResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateHostResponse struct {

@@ -19,8 +19,11 @@ var _ MappedNullable = &ApproveCSRRequest{}
 
 // ApproveCSRRequest struct for ApproveCSRRequest
 type ApproveCSRRequest struct {
-	ActivationCode *string `json:"activation_code,omitempty"`
+	ActivationCode       *string `json:"activation_code,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ApproveCSRRequest ApproveCSRRequest
 
 // NewApproveCSRRequest instantiates a new ApproveCSRRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ApproveCSRRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ActivationCode) {
 		toSerialize["activation_code"] = o.ActivationCode
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ApproveCSRRequest) UnmarshalJSON(data []byte) (err error) {
+	varApproveCSRRequest := _ApproveCSRRequest{}
+
+	err = json.Unmarshal(data, &varApproveCSRRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ApproveCSRRequest(varApproveCSRRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "activation_code")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableApproveCSRRequest struct {

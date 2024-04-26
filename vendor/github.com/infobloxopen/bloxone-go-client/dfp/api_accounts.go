@@ -24,7 +24,7 @@ type AccountsAPI interface {
 	/*
 		CheckConfig Check Config.
 
-		Use this method to check config
+		Use this method to check configuration
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 		@return AccountsAPICheckConfigRequest
@@ -57,7 +57,7 @@ func (r AccountsAPICheckConfigRequest) Execute() (*TypesConfigCheckResponse, *ht
 /*
 CheckConfig Check Config.
 
-Use this method to check config
+Use this method to check configuration
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return AccountsAPICheckConfigRequest

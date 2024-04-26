@@ -19,8 +19,11 @@ var _ MappedNullable = &CreateDelegationResponse{}
 
 // CreateDelegationResponse The Delegation object create response format.
 type CreateDelegationResponse struct {
-	Result *Delegation `json:"result,omitempty"`
+	Result               *Delegation `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateDelegationResponse CreateDelegationResponse
 
 // NewCreateDelegationResponse instantiates a new CreateDelegationResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CreateDelegationResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateDelegationResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateDelegationResponse := _CreateDelegationResponse{}
+
+	err = json.Unmarshal(data, &varCreateDelegationResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateDelegationResponse(varCreateDelegationResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateDelegationResponse struct {

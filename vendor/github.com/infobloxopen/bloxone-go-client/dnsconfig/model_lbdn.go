@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -38,7 +37,8 @@ type LBDN struct {
 	// Optional. Time to live value (in seconds) to be used for records in DTC response. Unsigned integer, min: 0, max 2147483647 (31-bits per RFC-2181).
 	Ttl *int64 `json:"ttl,omitempty"`
 	// The resource identifier.
-	View string `json:"view"`
+	View                 string `json:"view"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _LBDN LBDN
@@ -402,6 +402,11 @@ func (o LBDN) ToMap() (map[string]interface{}, error) {
 		toSerialize["ttl"] = o.Ttl
 	}
 	toSerialize["view"] = o.View
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -430,15 +435,29 @@ func (o *LBDN) UnmarshalJSON(data []byte) (err error) {
 
 	varLBDN := _LBDN{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varLBDN)
+	err = json.Unmarshal(data, &varLBDN)
 
 	if err != nil {
 		return err
 	}
 
 	*o = LBDN(varLBDN)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "disabled")
+		delete(additionalProperties, "dtc_policy")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "inheritance_sources")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "precedence")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "ttl")
+		delete(additionalProperties, "view")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

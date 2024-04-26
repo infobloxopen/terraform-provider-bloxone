@@ -25,7 +25,10 @@ type ForwardersBlock struct {
 	ForwardersOnly *bool `json:"forwarders_only,omitempty"`
 	// Optional. Field config for _use_root_forwarders_for_local_resolution_with_b1td_ field.
 	UseRootForwardersForLocalResolutionWithB1td *bool `json:"use_root_forwarders_for_local_resolution_with_b1td,omitempty"`
+	AdditionalProperties                        map[string]interface{}
 }
+
+type _ForwardersBlock ForwardersBlock
 
 // NewForwardersBlock instantiates a new ForwardersBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,35 @@ func (o ForwardersBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UseRootForwardersForLocalResolutionWithB1td) {
 		toSerialize["use_root_forwarders_for_local_resolution_with_b1td"] = o.UseRootForwardersForLocalResolutionWithB1td
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ForwardersBlock) UnmarshalJSON(data []byte) (err error) {
+	varForwardersBlock := _ForwardersBlock{}
+
+	err = json.Unmarshal(data, &varForwardersBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ForwardersBlock(varForwardersBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "forwarders")
+		delete(additionalProperties, "forwarders_only")
+		delete(additionalProperties, "use_root_forwarders_for_local_resolution_with_b1td")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableForwardersBlock struct {

@@ -19,9 +19,12 @@ var _ MappedNullable = &AppApprovalsReplaceRequest{}
 
 // AppApprovalsReplaceRequest struct for AppApprovalsReplaceRequest
 type AppApprovalsReplaceRequest struct {
-	Approvals []AppApproval      `json:"approvals,omitempty"`
-	Fields    *ProtobufFieldMask `json:"fields,omitempty"`
+	Approvals            []AppApproval      `json:"approvals,omitempty"`
+	Fields               *ProtobufFieldMask `json:"fields,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AppApprovalsReplaceRequest AppApprovalsReplaceRequest
 
 // NewAppApprovalsReplaceRequest instantiates a new AppApprovalsReplaceRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +123,34 @@ func (o AppApprovalsReplaceRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Fields) {
 		toSerialize["fields"] = o.Fields
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AppApprovalsReplaceRequest) UnmarshalJSON(data []byte) (err error) {
+	varAppApprovalsReplaceRequest := _AppApprovalsReplaceRequest{}
+
+	err = json.Unmarshal(data, &varAppApprovalsReplaceRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AppApprovalsReplaceRequest(varAppApprovalsReplaceRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "approvals")
+		delete(additionalProperties, "fields")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAppApprovalsReplaceRequest struct {

@@ -26,14 +26,17 @@ type CSR struct {
 	Csr            *string         `json:"csr,omitempty"`
 	HostSerial     *string         `json:"host_serial,omitempty"`
 	// The resource identifier.
-	Id        *string         `json:"id,omitempty"`
-	JoinToken *JoinToken      `json:"join_token,omitempty"`
-	Ophid     *string         `json:"ophid,omitempty"`
-	Signature *string         `json:"signature,omitempty"`
-	SrcIp     *TypesInetValue `json:"src_ip,omitempty"`
-	State     *CSRState       `json:"state,omitempty"`
-	UpdatedAt *time.Time      `json:"updated_at,omitempty"`
+	Id                   *string         `json:"id,omitempty"`
+	JoinToken            *JoinToken      `json:"join_token,omitempty"`
+	Ophid                *string         `json:"ophid,omitempty"`
+	Signature            *string         `json:"signature,omitempty"`
+	SrcIp                *TypesInetValue `json:"src_ip,omitempty"`
+	State                *CSRState       `json:"state,omitempty"`
+	UpdatedAt            *time.Time      `json:"updated_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CSR CSR
 
 // NewCSR instantiates a new CSR object
 // This constructor will assign default values to properties that have it defined,
@@ -486,7 +489,44 @@ func (o CSR) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CSR) UnmarshalJSON(data []byte) (err error) {
+	varCSR := _CSR{}
+
+	err = json.Unmarshal(data, &varCSR)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CSR(varCSR)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "activation_code")
+		delete(additionalProperties, "client_ip")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "csr")
+		delete(additionalProperties, "host_serial")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "join_token")
+		delete(additionalProperties, "ophid")
+		delete(additionalProperties, "signature")
+		delete(additionalProperties, "src_ip")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCSR struct {

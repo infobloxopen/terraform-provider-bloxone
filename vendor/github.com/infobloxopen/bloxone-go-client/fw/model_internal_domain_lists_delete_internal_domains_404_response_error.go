@@ -19,10 +19,13 @@ var _ MappedNullable = &InternalDomainListsDeleteInternalDomains404ResponseError
 
 // InternalDomainListsDeleteInternalDomains404ResponseError struct for InternalDomainListsDeleteInternalDomains404ResponseError
 type InternalDomainListsDeleteInternalDomains404ResponseError struct {
-	Code    *string `json:"code,omitempty"`
-	Message *string `json:"message,omitempty"`
-	Status  *string `json:"status,omitempty"`
+	Code                 *string `json:"code,omitempty"`
+	Message              *string `json:"message,omitempty"`
+	Status               *string `json:"status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InternalDomainListsDeleteInternalDomains404ResponseError InternalDomainListsDeleteInternalDomains404ResponseError
 
 // NewInternalDomainListsDeleteInternalDomains404ResponseError instantiates a new InternalDomainListsDeleteInternalDomains404ResponseError object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o InternalDomainListsDeleteInternalDomains404ResponseError) ToMap() (map[s
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InternalDomainListsDeleteInternalDomains404ResponseError) UnmarshalJSON(data []byte) (err error) {
+	varInternalDomainListsDeleteInternalDomains404ResponseError := _InternalDomainListsDeleteInternalDomains404ResponseError{}
+
+	err = json.Unmarshal(data, &varInternalDomainListsDeleteInternalDomains404ResponseError)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InternalDomainListsDeleteInternalDomains404ResponseError(varInternalDomainListsDeleteInternalDomains404ResponseError)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "code")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInternalDomainListsDeleteInternalDomains404ResponseError struct {

@@ -26,8 +26,11 @@ type DHCPUtilization struct {
 	// The total IP addresses marked as used in the DHCP ranges in the scope of this object.
 	DhcpUsed *string `json:"dhcp_used,omitempty"`
 	// The percentage of used IP addresses relative to the total IP addresses available in the DHCP ranges in the scope of this object.
-	DhcpUtilization *int64 `json:"dhcp_utilization,omitempty"`
+	DhcpUtilization      *int64 `json:"dhcp_utilization,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DHCPUtilization DHCPUtilization
 
 // NewDHCPUtilization instantiates a new DHCPUtilization object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,36 @@ func (o DHCPUtilization) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DhcpUtilization) {
 		toSerialize["dhcp_utilization"] = o.DhcpUtilization
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DHCPUtilization) UnmarshalJSON(data []byte) (err error) {
+	varDHCPUtilization := _DHCPUtilization{}
+
+	err = json.Unmarshal(data, &varDHCPUtilization)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DHCPUtilization(varDHCPUtilization)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "dhcp_free")
+		delete(additionalProperties, "dhcp_total")
+		delete(additionalProperties, "dhcp_used")
+		delete(additionalProperties, "dhcp_utilization")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDHCPUtilization struct {

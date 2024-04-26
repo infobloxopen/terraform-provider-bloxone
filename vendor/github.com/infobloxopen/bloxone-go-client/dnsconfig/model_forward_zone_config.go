@@ -26,8 +26,11 @@ type ForwardZoneConfig struct {
 	// The resource identifier.
 	InternalForwarders []string `json:"internal_forwarders,omitempty"`
 	// The resource identifier.
-	Nsgs []string `json:"nsgs,omitempty"`
+	Nsgs                 []string `json:"nsgs,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ForwardZoneConfig ForwardZoneConfig
 
 // NewForwardZoneConfig instantiates a new ForwardZoneConfig object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,36 @@ func (o ForwardZoneConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Nsgs) {
 		toSerialize["nsgs"] = o.Nsgs
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ForwardZoneConfig) UnmarshalJSON(data []byte) (err error) {
+	varForwardZoneConfig := _ForwardZoneConfig{}
+
+	err = json.Unmarshal(data, &varForwardZoneConfig)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ForwardZoneConfig(varForwardZoneConfig)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "external_forwarders")
+		delete(additionalProperties, "hosts")
+		delete(additionalProperties, "internal_forwarders")
+		delete(additionalProperties, "nsgs")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableForwardZoneConfig struct {

@@ -24,9 +24,12 @@ type InheritedForwardersBlock struct {
 	// Human-readable display name for the object referred to by _source_.
 	DisplayName *string `json:"display_name,omitempty"`
 	// The resource identifier.
-	Source *string          `json:"source,omitempty"`
-	Value  *ForwardersBlock `json:"value,omitempty"`
+	Source               *string          `json:"source,omitempty"`
+	Value                *ForwardersBlock `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InheritedForwardersBlock InheritedForwardersBlock
 
 // NewInheritedForwardersBlock instantiates a new InheritedForwardersBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -195,7 +198,36 @@ func (o InheritedForwardersBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritedForwardersBlock) UnmarshalJSON(data []byte) (err error) {
+	varInheritedForwardersBlock := _InheritedForwardersBlock{}
+
+	err = json.Unmarshal(data, &varInheritedForwardersBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedForwardersBlock(varInheritedForwardersBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedForwardersBlock struct {

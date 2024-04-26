@@ -11,7 +11,6 @@ API version: v1
 package dnsdata
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -72,7 +71,8 @@ type Record struct {
 	// The display name of the DNS view that contains the parent zone of the DNS resource record.
 	ViewName *string `json:"view_name,omitempty"`
 	// The resource identifier.
-	Zone *string `json:"zone,omitempty"`
+	Zone                 *string `json:"zone,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _Record Record
@@ -1005,6 +1005,11 @@ func (o Record) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Zone) {
 		toSerialize["zone"] = o.Zone
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -1032,15 +1037,45 @@ func (o *Record) UnmarshalJSON(data []byte) (err error) {
 
 	varRecord := _Record{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varRecord)
+	err = json.Unmarshal(data, &varRecord)
 
 	if err != nil {
 		return err
 	}
 
 	*o = Record(varRecord)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "absolute_name_spec")
+		delete(additionalProperties, "absolute_zone_name")
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "delegation")
+		delete(additionalProperties, "disabled")
+		delete(additionalProperties, "dns_absolute_name_spec")
+		delete(additionalProperties, "dns_absolute_zone_name")
+		delete(additionalProperties, "dns_name_in_zone")
+		delete(additionalProperties, "dns_rdata")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "inheritance_sources")
+		delete(additionalProperties, "ipam_host")
+		delete(additionalProperties, "name_in_zone")
+		delete(additionalProperties, "options")
+		delete(additionalProperties, "provider_metadata")
+		delete(additionalProperties, "rdata")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "subtype")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "ttl")
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "view")
+		delete(additionalProperties, "view_name")
+		delete(additionalProperties, "zone")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

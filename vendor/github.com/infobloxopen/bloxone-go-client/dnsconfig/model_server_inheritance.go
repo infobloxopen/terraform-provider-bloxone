@@ -48,7 +48,10 @@ type ServerInheritance struct {
 	TransferAcl                       *InheritedACLItems              `json:"transfer_acl,omitempty"`
 	UpdateAcl                         *InheritedACLItems              `json:"update_acl,omitempty"`
 	UseForwardersForSubzones          *Inheritance2InheritedBool      `json:"use_forwarders_for_subzones,omitempty"`
+	AdditionalProperties              map[string]interface{}
 }
+
+type _ServerInheritance ServerInheritance
 
 // NewServerInheritance instantiates a new ServerInheritance object
 // This constructor will assign default values to properties that have it defined,
@@ -1092,7 +1095,61 @@ func (o ServerInheritance) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UseForwardersForSubzones) {
 		toSerialize["use_forwarders_for_subzones"] = o.UseForwardersForSubzones
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ServerInheritance) UnmarshalJSON(data []byte) (err error) {
+	varServerInheritance := _ServerInheritance{}
+
+	err = json.Unmarshal(data, &varServerInheritance)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ServerInheritance(varServerInheritance)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "add_edns_option_in_outgoing_query")
+		delete(additionalProperties, "custom_root_ns_block")
+		delete(additionalProperties, "dnssec_validation_block")
+		delete(additionalProperties, "ecs_block")
+		delete(additionalProperties, "filter_aaaa_acl")
+		delete(additionalProperties, "filter_aaaa_on_v4")
+		delete(additionalProperties, "forwarders_block")
+		delete(additionalProperties, "gss_tsig_enabled")
+		delete(additionalProperties, "kerberos_keys")
+		delete(additionalProperties, "lame_ttl")
+		delete(additionalProperties, "log_query_response")
+		delete(additionalProperties, "match_recursive_only")
+		delete(additionalProperties, "max_cache_ttl")
+		delete(additionalProperties, "max_negative_ttl")
+		delete(additionalProperties, "minimal_responses")
+		delete(additionalProperties, "notify")
+		delete(additionalProperties, "query_acl")
+		delete(additionalProperties, "query_port")
+		delete(additionalProperties, "recursion_acl")
+		delete(additionalProperties, "recursion_enabled")
+		delete(additionalProperties, "recursive_clients")
+		delete(additionalProperties, "resolver_query_timeout")
+		delete(additionalProperties, "secondary_axfr_query_limit")
+		delete(additionalProperties, "secondary_soa_query_limit")
+		delete(additionalProperties, "sort_list")
+		delete(additionalProperties, "synthesize_address_records_from_https")
+		delete(additionalProperties, "transfer_acl")
+		delete(additionalProperties, "update_acl")
+		delete(additionalProperties, "use_forwarders_for_subzones")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableServerInheritance struct {

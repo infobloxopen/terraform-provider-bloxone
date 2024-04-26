@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -36,7 +35,8 @@ type AuthNSG struct {
 	// The resource identifier.
 	Nsgs []string `json:"nsgs,omitempty"`
 	// Tagging specifics.
-	Tags map[string]interface{} `json:"tags,omitempty"`
+	Tags                 map[string]interface{} `json:"tags,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _AuthNSG AuthNSG
@@ -339,6 +339,11 @@ func (o AuthNSG) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -366,15 +371,27 @@ func (o *AuthNSG) UnmarshalJSON(data []byte) (err error) {
 
 	varAuthNSG := _AuthNSG{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varAuthNSG)
+	err = json.Unmarshal(data, &varAuthNSG)
 
 	if err != nil {
 		return err
 	}
 
 	*o = AuthNSG(varAuthNSG)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "external_primaries")
+		delete(additionalProperties, "external_secondaries")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "internal_secondaries")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "nsgs")
+		delete(additionalProperties, "tags")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -19,8 +19,11 @@ var _ MappedNullable = &InternalDomainListsInternalDomainsItemsPartialUpdate400R
 
 // InternalDomainListsInternalDomainsItemsPartialUpdate400Response struct for InternalDomainListsInternalDomainsItemsPartialUpdate400Response
 type InternalDomainListsInternalDomainsItemsPartialUpdate400Response struct {
-	Error *InternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError `json:"error,omitempty"`
+	Error                *InternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InternalDomainListsInternalDomainsItemsPartialUpdate400Response InternalDomainListsInternalDomainsItemsPartialUpdate400Response
 
 // NewInternalDomainListsInternalDomainsItemsPartialUpdate400Response instantiates a new InternalDomainListsInternalDomainsItemsPartialUpdate400Response object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o InternalDomainListsInternalDomainsItemsPartialUpdate400Response) ToMap()
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InternalDomainListsInternalDomainsItemsPartialUpdate400Response) UnmarshalJSON(data []byte) (err error) {
+	varInternalDomainListsInternalDomainsItemsPartialUpdate400Response := _InternalDomainListsInternalDomainsItemsPartialUpdate400Response{}
+
+	err = json.Unmarshal(data, &varInternalDomainListsInternalDomainsItemsPartialUpdate400Response)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InternalDomainListsInternalDomainsItemsPartialUpdate400Response(varInternalDomainListsInternalDomainsItemsPartialUpdate400Response)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "error")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInternalDomainListsInternalDomainsItemsPartialUpdate400Response struct {

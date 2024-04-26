@@ -30,8 +30,11 @@ type DHCPPacketStats struct {
 	// The number of DHCP requests received.
 	DhcpReqReceived *string `json:"dhcp_req_received,omitempty"`
 	// The number of DHCP V6 requests received.
-	DhcpReqReceivedV6 *string `json:"dhcp_req_received_v6,omitempty"`
+	DhcpReqReceivedV6    *string `json:"dhcp_req_received_v6,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DHCPPacketStats DHCPPacketStats
 
 // NewDHCPPacketStats instantiates a new DHCPPacketStats object
 // This constructor will assign default values to properties that have it defined,
@@ -270,7 +273,38 @@ func (o DHCPPacketStats) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DhcpReqReceivedV6) {
 		toSerialize["dhcp_req_received_v6"] = o.DhcpReqReceivedV6
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DHCPPacketStats) UnmarshalJSON(data []byte) (err error) {
+	varDHCPPacketStats := _DHCPPacketStats{}
+
+	err = json.Unmarshal(data, &varDHCPPacketStats)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DHCPPacketStats(varDHCPPacketStats)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "dhcp_pkt_received")
+		delete(additionalProperties, "dhcp_pkt_received_v6")
+		delete(additionalProperties, "dhcp_pkt_sent")
+		delete(additionalProperties, "dhcp_pkt_sent_v6")
+		delete(additionalProperties, "dhcp_req_received")
+		delete(additionalProperties, "dhcp_req_received_v6")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDHCPPacketStats struct {

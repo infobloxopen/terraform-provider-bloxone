@@ -20,8 +20,11 @@ var _ MappedNullable = &ListServerResponse{}
 // ListServerResponse The Server object list response format.
 type ListServerResponse struct {
 	// List of Server objects.
-	Results []Server `json:"results,omitempty"`
+	Results              []Server `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListServerResponse ListServerResponse
 
 // NewListServerResponse instantiates a new ListServerResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListServerResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListServerResponse) UnmarshalJSON(data []byte) (err error) {
+	varListServerResponse := _ListServerResponse{}
+
+	err = json.Unmarshal(data, &varListServerResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListServerResponse(varListServerResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListServerResponse struct {

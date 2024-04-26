@@ -19,8 +19,11 @@ var _ MappedNullable = &ApplicationFilterReadResponse{}
 
 // ApplicationFilterReadResponse The Application Filter read response.
 type ApplicationFilterReadResponse struct {
-	Results *ApplicationFilter `json:"results,omitempty"`
+	Results              *ApplicationFilter `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ApplicationFilterReadResponse ApplicationFilterReadResponse
 
 // NewApplicationFilterReadResponse instantiates a new ApplicationFilterReadResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ApplicationFilterReadResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ApplicationFilterReadResponse) UnmarshalJSON(data []byte) (err error) {
+	varApplicationFilterReadResponse := _ApplicationFilterReadResponse{}
+
+	err = json.Unmarshal(data, &varApplicationFilterReadResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ApplicationFilterReadResponse(varApplicationFilterReadResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableApplicationFilterReadResponse struct {

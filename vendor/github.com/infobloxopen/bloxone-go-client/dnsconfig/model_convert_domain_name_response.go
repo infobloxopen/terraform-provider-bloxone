@@ -19,8 +19,11 @@ var _ MappedNullable = &ConvertDomainNameResponse{}
 
 // ConvertDomainNameResponse The ConvertDomainName object convert response format.
 type ConvertDomainNameResponse struct {
-	Result *ConvertDomainName `json:"result,omitempty"`
+	Result               *ConvertDomainName `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ConvertDomainNameResponse ConvertDomainNameResponse
 
 // NewConvertDomainNameResponse instantiates a new ConvertDomainNameResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ConvertDomainNameResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ConvertDomainNameResponse) UnmarshalJSON(data []byte) (err error) {
+	varConvertDomainNameResponse := _ConvertDomainNameResponse{}
+
+	err = json.Unmarshal(data, &varConvertDomainNameResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ConvertDomainNameResponse(varConvertDomainNameResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableConvertDomainNameResponse struct {

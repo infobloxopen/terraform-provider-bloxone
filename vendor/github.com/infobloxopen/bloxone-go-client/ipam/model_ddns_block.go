@@ -44,8 +44,11 @@ type DDNSBlock struct {
 	// Determines which protocol is used to establish the security context with the external DNS servers, TCP or UDP.  Defaults to _tcp_.
 	KerberosTkeyProtocol *string `json:"kerberos_tkey_protocol,omitempty"`
 	// The Kerberos principal name of the external DNS server that will receive updates.  Defaults to empty.
-	ServerPrincipal *string `json:"server_principal,omitempty"`
+	ServerPrincipal      *string `json:"server_principal,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DDNSBlock DDNSBlock
 
 // NewDDNSBlock instantiates a new DDNSBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -529,7 +532,45 @@ func (o DDNSBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ServerPrincipal) {
 		toSerialize["server_principal"] = o.ServerPrincipal
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DDNSBlock) UnmarshalJSON(data []byte) (err error) {
+	varDDNSBlock := _DDNSBlock{}
+
+	err = json.Unmarshal(data, &varDDNSBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DDNSBlock(varDDNSBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "client_principal")
+		delete(additionalProperties, "ddns_domain")
+		delete(additionalProperties, "ddns_enabled")
+		delete(additionalProperties, "ddns_send_updates")
+		delete(additionalProperties, "ddns_zones")
+		delete(additionalProperties, "gss_tsig_fallback")
+		delete(additionalProperties, "kerberos_kdc")
+		delete(additionalProperties, "kerberos_keys")
+		delete(additionalProperties, "kerberos_rekey_interval")
+		delete(additionalProperties, "kerberos_retry_interval")
+		delete(additionalProperties, "kerberos_tkey_lifetime")
+		delete(additionalProperties, "kerberos_tkey_protocol")
+		delete(additionalProperties, "server_principal")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDDNSBlock struct {

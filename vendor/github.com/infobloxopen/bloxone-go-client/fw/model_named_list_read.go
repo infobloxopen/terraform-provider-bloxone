@@ -41,8 +41,11 @@ type NamedListRead struct {
 	// The type of the named list, that can be \"custom_list\", \"threat_insight\", \"fast_flux\", \"dga\", \"dnsm\", \"threat_insight_nde\", \"default_allow\", \"default_block\".
 	Type *string `json:"type,omitempty"`
 	// The time when this Named List object was last updated.
-	UpdatedTime *time.Time `json:"updated_time,omitempty"`
+	UpdatedTime          *time.Time `json:"updated_time,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NamedListRead NamedListRead
 
 // NewNamedListRead instantiates a new NamedListRead object
 // This constructor will assign default values to properties that have it defined,
@@ -456,7 +459,43 @@ func (o NamedListRead) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedTime) {
 		toSerialize["updated_time"] = o.UpdatedTime
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NamedListRead) UnmarshalJSON(data []byte) (err error) {
+	varNamedListRead := _NamedListRead{}
+
+	err = json.Unmarshal(data, &varNamedListRead)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NamedListRead(varNamedListRead)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "confidence_level")
+		delete(additionalProperties, "created_time")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "item_count")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "policies")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "threat_level")
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "updated_time")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNamedListRead struct {

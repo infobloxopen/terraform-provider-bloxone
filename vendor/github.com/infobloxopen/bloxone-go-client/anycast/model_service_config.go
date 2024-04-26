@@ -19,8 +19,11 @@ var _ MappedNullable = &ServiceConfig{}
 
 // ServiceConfig struct for ServiceConfig
 type ServiceConfig struct {
-	Config *ServiceConfigObject `json:"config,omitempty"`
+	Config               *ServiceConfigObject `json:"config,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ServiceConfig ServiceConfig
 
 // NewServiceConfig instantiates a new ServiceConfig object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ServiceConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Config) {
 		toSerialize["config"] = o.Config
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ServiceConfig) UnmarshalJSON(data []byte) (err error) {
+	varServiceConfig := _ServiceConfig{}
+
+	err = json.Unmarshal(data, &varServiceConfig)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ServiceConfig(varServiceConfig)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "config")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableServiceConfig struct {

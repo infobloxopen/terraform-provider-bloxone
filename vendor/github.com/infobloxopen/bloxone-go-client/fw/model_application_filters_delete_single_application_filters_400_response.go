@@ -19,8 +19,11 @@ var _ MappedNullable = &ApplicationFiltersDeleteSingleApplicationFilters400Respo
 
 // ApplicationFiltersDeleteSingleApplicationFilters400Response struct for ApplicationFiltersDeleteSingleApplicationFilters400Response
 type ApplicationFiltersDeleteSingleApplicationFilters400Response struct {
-	Error *ApplicationFiltersDeleteSingleApplicationFilters400ResponseError `json:"error,omitempty"`
+	Error                *ApplicationFiltersDeleteSingleApplicationFilters400ResponseError `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ApplicationFiltersDeleteSingleApplicationFilters400Response ApplicationFiltersDeleteSingleApplicationFilters400Response
 
 // NewApplicationFiltersDeleteSingleApplicationFilters400Response instantiates a new ApplicationFiltersDeleteSingleApplicationFilters400Response object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ApplicationFiltersDeleteSingleApplicationFilters400Response) ToMap() (ma
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ApplicationFiltersDeleteSingleApplicationFilters400Response) UnmarshalJSON(data []byte) (err error) {
+	varApplicationFiltersDeleteSingleApplicationFilters400Response := _ApplicationFiltersDeleteSingleApplicationFilters400Response{}
+
+	err = json.Unmarshal(data, &varApplicationFiltersDeleteSingleApplicationFilters400Response)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ApplicationFiltersDeleteSingleApplicationFilters400Response(varApplicationFiltersDeleteSingleApplicationFilters400Response)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "error")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableApplicationFiltersDeleteSingleApplicationFilters400Response struct {

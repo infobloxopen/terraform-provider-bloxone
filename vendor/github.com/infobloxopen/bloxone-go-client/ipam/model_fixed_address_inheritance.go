@@ -23,7 +23,10 @@ type FixedAddressInheritance struct {
 	HeaderOptionFilename      *InheritanceInheritedString `json:"header_option_filename,omitempty"`
 	HeaderOptionServerAddress *InheritanceInheritedString `json:"header_option_server_address,omitempty"`
 	HeaderOptionServerName    *InheritanceInheritedString `json:"header_option_server_name,omitempty"`
+	AdditionalProperties      map[string]interface{}
 }
+
+type _FixedAddressInheritance FixedAddressInheritance
 
 // NewFixedAddressInheritance instantiates a new FixedAddressInheritance object
 // This constructor will assign default values to properties that have it defined,
@@ -192,7 +195,36 @@ func (o FixedAddressInheritance) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.HeaderOptionServerName) {
 		toSerialize["header_option_server_name"] = o.HeaderOptionServerName
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *FixedAddressInheritance) UnmarshalJSON(data []byte) (err error) {
+	varFixedAddressInheritance := _FixedAddressInheritance{}
+
+	err = json.Unmarshal(data, &varFixedAddressInheritance)
+
+	if err != nil {
+		return err
+	}
+
+	*o = FixedAddressInheritance(varFixedAddressInheritance)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "dhcp_options")
+		delete(additionalProperties, "header_option_filename")
+		delete(additionalProperties, "header_option_server_address")
+		delete(additionalProperties, "header_option_server_name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableFixedAddressInheritance struct {

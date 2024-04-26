@@ -22,8 +22,11 @@ type ReplaceHostRequest struct {
 	// The resource identifier.
 	From *string `json:"from,omitempty"`
 	// The resource identifier.
-	To *string `json:"to,omitempty"`
+	To                   *string `json:"to,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReplaceHostRequest ReplaceHostRequest
 
 // NewReplaceHostRequest instantiates a new ReplaceHostRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o ReplaceHostRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.To) {
 		toSerialize["to"] = o.To
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReplaceHostRequest) UnmarshalJSON(data []byte) (err error) {
+	varReplaceHostRequest := _ReplaceHostRequest{}
+
+	err = json.Unmarshal(data, &varReplaceHostRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReplaceHostRequest(varReplaceHostRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "from")
+		delete(additionalProperties, "to")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReplaceHostRequest struct {

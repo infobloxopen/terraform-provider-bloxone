@@ -30,7 +30,10 @@ type InheritedDHCPConfig struct {
 	IgnoreList             *InheritedDHCPConfigIgnoreItemList `json:"ignore_list,omitempty"`
 	LeaseTime              *InheritanceInheritedUInt32        `json:"lease_time,omitempty"`
 	LeaseTimeV6            *InheritanceInheritedUInt32        `json:"lease_time_v6,omitempty"`
+	AdditionalProperties   map[string]interface{}
 }
+
+type _InheritedDHCPConfig InheritedDHCPConfig
 
 // NewInheritedDHCPConfig instantiates a new InheritedDHCPConfig object
 // This constructor will assign default values to properties that have it defined,
@@ -444,7 +447,43 @@ func (o InheritedDHCPConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.LeaseTimeV6) {
 		toSerialize["lease_time_v6"] = o.LeaseTimeV6
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritedDHCPConfig) UnmarshalJSON(data []byte) (err error) {
+	varInheritedDHCPConfig := _InheritedDHCPConfig{}
+
+	err = json.Unmarshal(data, &varInheritedDHCPConfig)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedDHCPConfig(varInheritedDHCPConfig)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "abandoned_reclaim_time")
+		delete(additionalProperties, "abandoned_reclaim_time_v6")
+		delete(additionalProperties, "allow_unknown")
+		delete(additionalProperties, "allow_unknown_v6")
+		delete(additionalProperties, "echo_client_id")
+		delete(additionalProperties, "filters")
+		delete(additionalProperties, "filters_v6")
+		delete(additionalProperties, "ignore_client_uid")
+		delete(additionalProperties, "ignore_list")
+		delete(additionalProperties, "lease_time")
+		delete(additionalProperties, "lease_time_v6")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedDHCPConfig struct {

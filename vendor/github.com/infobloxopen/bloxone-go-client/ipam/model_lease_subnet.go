@@ -20,8 +20,11 @@ var _ MappedNullable = &LeaseSubnet{}
 // LeaseSubnet struct for LeaseSubnet
 type LeaseSubnet struct {
 	// The resource identifier.
-	Id *string `json:"id,omitempty"`
+	Id                   *string `json:"id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _LeaseSubnet LeaseSubnet
 
 // NewLeaseSubnet instantiates a new LeaseSubnet object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o LeaseSubnet) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *LeaseSubnet) UnmarshalJSON(data []byte) (err error) {
+	varLeaseSubnet := _LeaseSubnet{}
+
+	err = json.Unmarshal(data, &varLeaseSubnet)
+
+	if err != nil {
+		return err
+	}
+
+	*o = LeaseSubnet(varLeaseSubnet)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableLeaseSubnet struct {

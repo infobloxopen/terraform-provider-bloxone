@@ -19,8 +19,11 @@ var _ MappedNullable = &InternalDomainsCreateResponse{}
 
 // InternalDomainsCreateResponse The Internal Domains create response.
 type InternalDomainsCreateResponse struct {
-	Results *InternalDomains `json:"results,omitempty"`
+	Results              *InternalDomains `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InternalDomainsCreateResponse InternalDomainsCreateResponse
 
 // NewInternalDomainsCreateResponse instantiates a new InternalDomainsCreateResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o InternalDomainsCreateResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InternalDomainsCreateResponse) UnmarshalJSON(data []byte) (err error) {
+	varInternalDomainsCreateResponse := _InternalDomainsCreateResponse{}
+
+	err = json.Unmarshal(data, &varInternalDomainsCreateResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InternalDomainsCreateResponse(varInternalDomainsCreateResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInternalDomainsCreateResponse struct {

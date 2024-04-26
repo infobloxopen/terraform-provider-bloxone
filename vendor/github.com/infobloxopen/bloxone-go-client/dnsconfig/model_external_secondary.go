@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -30,8 +29,9 @@ type ExternalSecondary struct {
 	// If enabled, the NS record and glue record will NOT be automatically generated according to secondaries nameserver assignment.  Default: _false_
 	Stealth *bool `json:"stealth,omitempty"`
 	// If enabled, secondaries will use the configured TSIG key when requesting a zone transfer.  Default: _false_
-	TsigEnabled *bool    `json:"tsig_enabled,omitempty"`
-	TsigKey     *TSIGKey `json:"tsig_key,omitempty"`
+	TsigEnabled          *bool    `json:"tsig_enabled,omitempty"`
+	TsigKey              *TSIGKey `json:"tsig_key,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ExternalSecondary ExternalSecondary
@@ -255,6 +255,11 @@ func (o ExternalSecondary) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.TsigKey) {
 		toSerialize["tsig_key"] = o.TsigKey
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -283,15 +288,25 @@ func (o *ExternalSecondary) UnmarshalJSON(data []byte) (err error) {
 
 	varExternalSecondary := _ExternalSecondary{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varExternalSecondary)
+	err = json.Unmarshal(data, &varExternalSecondary)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ExternalSecondary(varExternalSecondary)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "fqdn")
+		delete(additionalProperties, "protocol_fqdn")
+		delete(additionalProperties, "stealth")
+		delete(additionalProperties, "tsig_enabled")
+		delete(additionalProperties, "tsig_key")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

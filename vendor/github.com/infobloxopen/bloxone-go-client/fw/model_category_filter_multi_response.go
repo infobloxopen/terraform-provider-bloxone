@@ -20,8 +20,11 @@ var _ MappedNullable = &CategoryFilterMultiResponse{}
 // CategoryFilterMultiResponse The Category Filter list response.
 type CategoryFilterMultiResponse struct {
 	// The list of Category Filter objects.
-	Results []CategoryFilter `json:"results,omitempty"`
+	Results              []CategoryFilter `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CategoryFilterMultiResponse CategoryFilterMultiResponse
 
 // NewCategoryFilterMultiResponse instantiates a new CategoryFilterMultiResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o CategoryFilterMultiResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CategoryFilterMultiResponse) UnmarshalJSON(data []byte) (err error) {
+	varCategoryFilterMultiResponse := _CategoryFilterMultiResponse{}
+
+	err = json.Unmarshal(data, &varCategoryFilterMultiResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CategoryFilterMultiResponse(varCategoryFilterMultiResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCategoryFilterMultiResponse struct {

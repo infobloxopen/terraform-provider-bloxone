@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -118,7 +117,8 @@ type Server struct {
 	// _use_root_forwarders_for_local_resolution_with_b1td_ allows DNS recursive queries sent to root forwarders for local resolution when deployed alongside BloxOne Thread Defense. Defaults to _false_.
 	UseRootForwardersForLocalResolutionWithB1td *bool `json:"use_root_forwarders_for_local_resolution_with_b1td,omitempty"`
 	// Optional. Ordered list of _dns/display_view_ objects served by any of _dns/host_ assigned to a particular DNS Config Profile. Automatically determined. Allows re-ordering only.
-	Views []DisplayView `json:"views,omitempty"`
+	Views                []DisplayView `json:"views,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _Server Server
@@ -1856,6 +1856,11 @@ func (o Server) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Views) {
 		toSerialize["views"] = o.Views
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -1883,15 +1888,68 @@ func (o *Server) UnmarshalJSON(data []byte) (err error) {
 
 	varServer := _Server{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varServer)
+	err = json.Unmarshal(data, &varServer)
 
 	if err != nil {
 		return err
 	}
 
 	*o = Server(varServer)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "add_edns_option_in_outgoing_query")
+		delete(additionalProperties, "auto_sort_views")
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "custom_root_ns")
+		delete(additionalProperties, "custom_root_ns_enabled")
+		delete(additionalProperties, "dnssec_enable_validation")
+		delete(additionalProperties, "dnssec_enabled")
+		delete(additionalProperties, "dnssec_root_keys")
+		delete(additionalProperties, "dnssec_trust_anchors")
+		delete(additionalProperties, "dnssec_validate_expiry")
+		delete(additionalProperties, "ecs_enabled")
+		delete(additionalProperties, "ecs_forwarding")
+		delete(additionalProperties, "ecs_prefix_v4")
+		delete(additionalProperties, "ecs_prefix_v6")
+		delete(additionalProperties, "ecs_zones")
+		delete(additionalProperties, "filter_aaaa_acl")
+		delete(additionalProperties, "filter_aaaa_on_v4")
+		delete(additionalProperties, "forwarders")
+		delete(additionalProperties, "forwarders_only")
+		delete(additionalProperties, "gss_tsig_enabled")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "inheritance_sources")
+		delete(additionalProperties, "kerberos_keys")
+		delete(additionalProperties, "lame_ttl")
+		delete(additionalProperties, "log_query_response")
+		delete(additionalProperties, "match_recursive_only")
+		delete(additionalProperties, "max_cache_ttl")
+		delete(additionalProperties, "max_negative_ttl")
+		delete(additionalProperties, "minimal_responses")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "notify")
+		delete(additionalProperties, "query_acl")
+		delete(additionalProperties, "query_port")
+		delete(additionalProperties, "recursion_acl")
+		delete(additionalProperties, "recursion_enabled")
+		delete(additionalProperties, "recursive_clients")
+		delete(additionalProperties, "resolver_query_timeout")
+		delete(additionalProperties, "secondary_axfr_query_limit")
+		delete(additionalProperties, "secondary_soa_query_limit")
+		delete(additionalProperties, "sort_list")
+		delete(additionalProperties, "synthesize_address_records_from_https")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "transfer_acl")
+		delete(additionalProperties, "update_acl")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "use_forwarders_for_subzones")
+		delete(additionalProperties, "use_root_forwarders_for_local_resolution_with_b1td")
+		delete(additionalProperties, "views")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

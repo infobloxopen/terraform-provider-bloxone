@@ -19,8 +19,11 @@ var _ MappedNullable = &TypesInetValue{}
 
 // TypesInetValue struct for TypesInetValue
 type TypesInetValue struct {
-	Value *string `json:"value,omitempty"`
+	Value                *string `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _TypesInetValue TypesInetValue
 
 // NewTypesInetValue instantiates a new TypesInetValue object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o TypesInetValue) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *TypesInetValue) UnmarshalJSON(data []byte) (err error) {
+	varTypesInetValue := _TypesInetValue{}
+
+	err = json.Unmarshal(data, &varTypesInetValue)
+
+	if err != nil {
+		return err
+	}
+
+	*o = TypesInetValue(varTypesInetValue)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableTypesInetValue struct {

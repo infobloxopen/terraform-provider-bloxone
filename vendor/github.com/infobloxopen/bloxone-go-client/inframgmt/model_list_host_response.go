@@ -19,9 +19,12 @@ var _ MappedNullable = &ListHostResponse{}
 
 // ListHostResponse struct for ListHostResponse
 type ListHostResponse struct {
-	Page    *ApiPageInfo `json:"page,omitempty"`
-	Results []Host       `json:"results,omitempty"`
+	Page                 *ApiPageInfo `json:"page,omitempty"`
+	Results              []Host       `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListHostResponse ListHostResponse
 
 // NewListHostResponse instantiates a new ListHostResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +123,34 @@ func (o ListHostResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListHostResponse) UnmarshalJSON(data []byte) (err error) {
+	varListHostResponse := _ListHostResponse{}
+
+	err = json.Unmarshal(data, &varListHostResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListHostResponse(varListHostResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "page")
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListHostResponse struct {

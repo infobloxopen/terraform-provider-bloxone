@@ -20,8 +20,11 @@ var _ MappedNullable = &AccessCodeDeleteRequest{}
 // AccessCodeDeleteRequest struct for AccessCodeDeleteRequest
 type AccessCodeDeleteRequest struct {
 	// The Bypass Code identifier.
-	Ids []string `json:"ids,omitempty"`
+	Ids                  []string `json:"ids,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AccessCodeDeleteRequest AccessCodeDeleteRequest
 
 // NewAccessCodeDeleteRequest instantiates a new AccessCodeDeleteRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o AccessCodeDeleteRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Ids) {
 		toSerialize["ids"] = o.Ids
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AccessCodeDeleteRequest) UnmarshalJSON(data []byte) (err error) {
+	varAccessCodeDeleteRequest := _AccessCodeDeleteRequest{}
+
+	err = json.Unmarshal(data, &varAccessCodeDeleteRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AccessCodeDeleteRequest(varAccessCodeDeleteRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ids")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAccessCodeDeleteRequest struct {

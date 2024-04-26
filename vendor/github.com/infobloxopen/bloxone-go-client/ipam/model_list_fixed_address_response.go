@@ -20,8 +20,11 @@ var _ MappedNullable = &ListFixedAddressResponse{}
 // ListFixedAddressResponse The response format to retrieve __FixedAddress__ objects.
 type ListFixedAddressResponse struct {
 	// The list of FixedAddress objects.
-	Results []FixedAddress `json:"results,omitempty"`
+	Results              []FixedAddress `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListFixedAddressResponse ListFixedAddressResponse
 
 // NewListFixedAddressResponse instantiates a new ListFixedAddressResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListFixedAddressResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListFixedAddressResponse) UnmarshalJSON(data []byte) (err error) {
+	varListFixedAddressResponse := _ListFixedAddressResponse{}
+
+	err = json.Unmarshal(data, &varListFixedAddressResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListFixedAddressResponse(varListFixedAddressResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListFixedAddressResponse struct {

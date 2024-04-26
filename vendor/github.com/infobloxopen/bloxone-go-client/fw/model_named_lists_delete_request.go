@@ -20,8 +20,11 @@ var _ MappedNullable = &NamedListsDeleteRequest{}
 // NamedListsDeleteRequest The Named List delete request.
 type NamedListsDeleteRequest struct {
 	// The list of Named List object identifiers.
-	Ids []int32 `json:"ids,omitempty"`
+	Ids                  []int32 `json:"ids,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NamedListsDeleteRequest NamedListsDeleteRequest
 
 // NewNamedListsDeleteRequest instantiates a new NamedListsDeleteRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o NamedListsDeleteRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Ids) {
 		toSerialize["ids"] = o.Ids
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NamedListsDeleteRequest) UnmarshalJSON(data []byte) (err error) {
+	varNamedListsDeleteRequest := _NamedListsDeleteRequest{}
+
+	err = json.Unmarshal(data, &varNamedListsDeleteRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NamedListsDeleteRequest(varNamedListsDeleteRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ids")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNamedListsDeleteRequest struct {

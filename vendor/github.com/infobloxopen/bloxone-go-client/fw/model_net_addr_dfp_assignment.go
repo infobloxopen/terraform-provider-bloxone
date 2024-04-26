@@ -33,8 +33,11 @@ type NetAddrDfpAssignment struct {
 	IpSpaceId *string                        `json:"ip_space_id,omitempty"`
 	ScopeType *NetAddrDfpAssignmentScopeType `json:"scope_type,omitempty"`
 	// Start and end pair of addresses used for range scope type
-	Start *string `json:"start,omitempty"`
+	Start                *string `json:"start,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NetAddrDfpAssignment NetAddrDfpAssignment
 
 // NewNetAddrDfpAssignment instantiates a new NetAddrDfpAssignment object
 // This constructor will assign default values to properties that have it defined,
@@ -382,7 +385,41 @@ func (o NetAddrDfpAssignment) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Start) {
 		toSerialize["start"] = o.Start
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NetAddrDfpAssignment) UnmarshalJSON(data []byte) (err error) {
+	varNetAddrDfpAssignment := _NetAddrDfpAssignment{}
+
+	err = json.Unmarshal(data, &varNetAddrDfpAssignment)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NetAddrDfpAssignment(varNetAddrDfpAssignment)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "addr_net")
+		delete(additionalProperties, "dfp_ids")
+		delete(additionalProperties, "dfp_service_ids")
+		delete(additionalProperties, "end")
+		delete(additionalProperties, "external_scope_id")
+		delete(additionalProperties, "host_id")
+		delete(additionalProperties, "ip_space_id")
+		delete(additionalProperties, "scope_type")
+		delete(additionalProperties, "start")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNetAddrDfpAssignment struct {

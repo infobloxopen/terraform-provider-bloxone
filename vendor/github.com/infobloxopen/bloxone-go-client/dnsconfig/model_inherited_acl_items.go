@@ -26,8 +26,11 @@ type InheritedACLItems struct {
 	// The resource identifier.
 	Source *string `json:"source,omitempty"`
 	// Inherited value.
-	Value []ACLItem `json:"value,omitempty"`
+	Value                []ACLItem `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InheritedACLItems InheritedACLItems
 
 // NewInheritedACLItems instantiates a new InheritedACLItems object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,36 @@ func (o InheritedACLItems) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritedACLItems) UnmarshalJSON(data []byte) (err error) {
+	varInheritedACLItems := _InheritedACLItems{}
+
+	err = json.Unmarshal(data, &varInheritedACLItems)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedACLItems(varInheritedACLItems)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedACLItems struct {

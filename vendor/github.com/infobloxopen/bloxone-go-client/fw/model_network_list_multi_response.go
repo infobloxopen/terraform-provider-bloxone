@@ -20,8 +20,11 @@ var _ MappedNullable = &NetworkListMultiResponse{}
 // NetworkListMultiResponse The Network List list response.
 type NetworkListMultiResponse struct {
 	// The list of Network List objects.
-	Results []NetworkList `json:"results,omitempty"`
+	Results              []NetworkList `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NetworkListMultiResponse NetworkListMultiResponse
 
 // NewNetworkListMultiResponse instantiates a new NetworkListMultiResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o NetworkListMultiResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NetworkListMultiResponse) UnmarshalJSON(data []byte) (err error) {
+	varNetworkListMultiResponse := _NetworkListMultiResponse{}
+
+	err = json.Unmarshal(data, &varNetworkListMultiResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NetworkListMultiResponse(varNetworkListMultiResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNetworkListMultiResponse struct {

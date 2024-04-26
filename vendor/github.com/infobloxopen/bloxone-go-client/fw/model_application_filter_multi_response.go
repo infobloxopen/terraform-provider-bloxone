@@ -20,8 +20,11 @@ var _ MappedNullable = &ApplicationFilterMultiResponse{}
 // ApplicationFilterMultiResponse The Application Filter list response.
 type ApplicationFilterMultiResponse struct {
 	// The list of Application Filter objects.
-	Results []ApplicationFilter `json:"results,omitempty"`
+	Results              []ApplicationFilter `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ApplicationFilterMultiResponse ApplicationFilterMultiResponse
 
 // NewApplicationFilterMultiResponse instantiates a new ApplicationFilterMultiResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ApplicationFilterMultiResponse) ToMap() (map[string]interface{}, error) 
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ApplicationFilterMultiResponse) UnmarshalJSON(data []byte) (err error) {
+	varApplicationFilterMultiResponse := _ApplicationFilterMultiResponse{}
+
+	err = json.Unmarshal(data, &varApplicationFilterMultiResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ApplicationFilterMultiResponse(varApplicationFilterMultiResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableApplicationFilterMultiResponse struct {

@@ -24,8 +24,11 @@ type HostAssociationsResponse struct {
 	HaGroups []HAGroup `json:"ha_groups,omitempty"`
 	Host     *Host     `json:"host,omitempty"`
 	// The list of subnets.
-	Subnets []Subnet `json:"subnets,omitempty"`
+	Subnets              []Subnet `json:"subnets,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _HostAssociationsResponse HostAssociationsResponse
 
 // NewHostAssociationsResponse instantiates a new HostAssociationsResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -194,7 +197,36 @@ func (o HostAssociationsResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Subnets) {
 		toSerialize["subnets"] = o.Subnets
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *HostAssociationsResponse) UnmarshalJSON(data []byte) (err error) {
+	varHostAssociationsResponse := _HostAssociationsResponse{}
+
+	err = json.Unmarshal(data, &varHostAssociationsResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = HostAssociationsResponse(varHostAssociationsResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "dhcp_pkt_stats")
+		delete(additionalProperties, "ha_groups")
+		delete(additionalProperties, "host")
+		delete(additionalProperties, "subnets")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableHostAssociationsResponse struct {

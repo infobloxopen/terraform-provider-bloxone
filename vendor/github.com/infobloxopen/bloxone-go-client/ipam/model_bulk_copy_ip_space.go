@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -30,7 +29,8 @@ type BulkCopyIPSpace struct {
 	// Indicates whether copying should skip object in case of error and continue with next, or abort copying in case of error.  Defaults to _false_.
 	SkipOnError *bool `json:"skip_on_error,omitempty"`
 	// The resource identifier.
-	Target string `json:"target"`
+	Target               string `json:"target"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _BulkCopyIPSpace BulkCopyIPSpace
@@ -219,6 +219,11 @@ func (o BulkCopyIPSpace) ToMap() (map[string]interface{}, error) {
 		toSerialize["skip_on_error"] = o.SkipOnError
 	}
 	toSerialize["target"] = o.Target
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -247,15 +252,24 @@ func (o *BulkCopyIPSpace) UnmarshalJSON(data []byte) (err error) {
 
 	varBulkCopyIPSpace := _BulkCopyIPSpace{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varBulkCopyIPSpace)
+	err = json.Unmarshal(data, &varBulkCopyIPSpace)
 
 	if err != nil {
 		return err
 	}
 
 	*o = BulkCopyIPSpace(varBulkCopyIPSpace)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "copy_dhcp_options")
+		delete(additionalProperties, "copy_objects")
+		delete(additionalProperties, "recursive")
+		delete(additionalProperties, "skip_on_error")
+		delete(additionalProperties, "target")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

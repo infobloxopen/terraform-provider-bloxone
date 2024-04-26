@@ -20,8 +20,11 @@ var _ MappedNullable = &SecurityPolicyDeleteRequest{}
 // SecurityPolicyDeleteRequest The Security Policy delete request.
 type SecurityPolicyDeleteRequest struct {
 	// The list of Security Policy object identifiers.
-	Ids []int32 `json:"ids,omitempty"`
+	Ids                  []int32 `json:"ids,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SecurityPolicyDeleteRequest SecurityPolicyDeleteRequest
 
 // NewSecurityPolicyDeleteRequest instantiates a new SecurityPolicyDeleteRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o SecurityPolicyDeleteRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Ids) {
 		toSerialize["ids"] = o.Ids
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *SecurityPolicyDeleteRequest) UnmarshalJSON(data []byte) (err error) {
+	varSecurityPolicyDeleteRequest := _SecurityPolicyDeleteRequest{}
+
+	err = json.Unmarshal(data, &varSecurityPolicyDeleteRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = SecurityPolicyDeleteRequest(varSecurityPolicyDeleteRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ids")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSecurityPolicyDeleteRequest struct {

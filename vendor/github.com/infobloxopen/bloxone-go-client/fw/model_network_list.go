@@ -33,8 +33,11 @@ type NetworkList struct {
 	// The identifier of the security policy with which the network list is associated.
 	PolicyId *int32 `json:"policy_id,omitempty"`
 	// The time when this Network List object was last updated.
-	UpdatedTime *time.Time `json:"updated_time,omitempty"`
+	UpdatedTime          *time.Time `json:"updated_time,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NetworkList NetworkList
 
 // NewNetworkList instantiates a new NetworkList object
 // This constructor will assign default values to properties that have it defined,
@@ -308,7 +311,39 @@ func (o NetworkList) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedTime) {
 		toSerialize["updated_time"] = o.UpdatedTime
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NetworkList) UnmarshalJSON(data []byte) (err error) {
+	varNetworkList := _NetworkList{}
+
+	err = json.Unmarshal(data, &varNetworkList)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NetworkList(varNetworkList)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_time")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "items")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "policy_id")
+		delete(additionalProperties, "updated_time")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNetworkList struct {

@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateIpamHostResponse{}
 
 // UpdateIpamHostResponse The response format to update the _IpamHost__ object.
 type UpdateIpamHostResponse struct {
-	Result *IpamHost `json:"result,omitempty"`
+	Result               *IpamHost `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateIpamHostResponse UpdateIpamHostResponse
 
 // NewUpdateIpamHostResponse instantiates a new UpdateIpamHostResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateIpamHostResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateIpamHostResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateIpamHostResponse := _UpdateIpamHostResponse{}
+
+	err = json.Unmarshal(data, &varUpdateIpamHostResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateIpamHostResponse(varUpdateIpamHostResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateIpamHostResponse struct {

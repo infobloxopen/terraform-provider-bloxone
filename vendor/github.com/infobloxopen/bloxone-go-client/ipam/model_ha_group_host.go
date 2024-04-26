@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -32,7 +31,8 @@ type HAGroupHost struct {
 	// The role of this host in the HA relationship: _active_ or _passive_.
 	Role *string `json:"role,omitempty"`
 	// The state of DHCP on the host. This field is set when the _collect_stats_ is set to _true_ in the _GET_ _/dhcp/ha_group_ request.
-	State *string `json:"state,omitempty"`
+	State                *string `json:"state,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _HAGroupHost HAGroupHost
@@ -265,6 +265,11 @@ func (o HAGroupHost) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.State) {
 		toSerialize["state"] = o.State
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -292,15 +297,25 @@ func (o *HAGroupHost) UnmarshalJSON(data []byte) (err error) {
 
 	varHAGroupHost := _HAGroupHost{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varHAGroupHost)
+	err = json.Unmarshal(data, &varHAGroupHost)
 
 	if err != nil {
 		return err
 	}
 
 	*o = HAGroupHost(varHAGroupHost)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "heartbeats")
+		delete(additionalProperties, "host")
+		delete(additionalProperties, "port")
+		delete(additionalProperties, "role")
+		delete(additionalProperties, "state")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

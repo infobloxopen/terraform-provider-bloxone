@@ -19,8 +19,11 @@ var _ MappedNullable = &DfpCreateOrUpdateResponse{}
 
 // DfpCreateOrUpdateResponse The DNS Forwarding Proxy update response.
 type DfpCreateOrUpdateResponse struct {
-	Results *Dfp `json:"results,omitempty"`
+	Results              *Dfp `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DfpCreateOrUpdateResponse DfpCreateOrUpdateResponse
 
 // NewDfpCreateOrUpdateResponse instantiates a new DfpCreateOrUpdateResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o DfpCreateOrUpdateResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DfpCreateOrUpdateResponse) UnmarshalJSON(data []byte) (err error) {
+	varDfpCreateOrUpdateResponse := _DfpCreateOrUpdateResponse{}
+
+	err = json.Unmarshal(data, &varDfpCreateOrUpdateResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DfpCreateOrUpdateResponse(varDfpCreateOrUpdateResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDfpCreateOrUpdateResponse struct {

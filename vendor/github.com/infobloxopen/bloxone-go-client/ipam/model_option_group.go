@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -37,7 +36,8 @@ type OptionGroup struct {
 	// The tags for the option group in JSON format.
 	Tags map[string]interface{} `json:"tags,omitempty"`
 	// Time when the object has been updated. Equals to _created_at_ if not updated after creation.
-	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	UpdatedAt            *time.Time `json:"updated_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _OptionGroup OptionGroup
@@ -340,6 +340,11 @@ func (o OptionGroup) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -367,15 +372,27 @@ func (o *OptionGroup) UnmarshalJSON(data []byte) (err error) {
 
 	varOptionGroup := _OptionGroup{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varOptionGroup)
+	err = json.Unmarshal(data, &varOptionGroup)
 
 	if err != nil {
 		return err
 	}
 
 	*o = OptionGroup(varOptionGroup)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "dhcp_options")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "protocol")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

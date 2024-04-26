@@ -19,8 +19,11 @@ var _ MappedNullable = &SOASerialIncrementResponse{}
 
 // SOASerialIncrementResponse The SOA Record object serial increment response format.
 type SOASerialIncrementResponse struct {
-	Result *Record `json:"result,omitempty"`
+	Result               *Record `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SOASerialIncrementResponse SOASerialIncrementResponse
 
 // NewSOASerialIncrementResponse instantiates a new SOASerialIncrementResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o SOASerialIncrementResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *SOASerialIncrementResponse) UnmarshalJSON(data []byte) (err error) {
+	varSOASerialIncrementResponse := _SOASerialIncrementResponse{}
+
+	err = json.Unmarshal(data, &varSOASerialIncrementResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = SOASerialIncrementResponse(varSOASerialIncrementResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSOASerialIncrementResponse struct {

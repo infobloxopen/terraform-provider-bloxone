@@ -20,8 +20,11 @@ var _ MappedNullable = &NamedListReadMultiResponse{}
 // NamedListReadMultiResponse The Named List list response.
 type NamedListReadMultiResponse struct {
 	// The list of Named List objects.
-	Results []NamedListRead `json:"results,omitempty"`
+	Results              []NamedListRead `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NamedListReadMultiResponse NamedListReadMultiResponse
 
 // NewNamedListReadMultiResponse instantiates a new NamedListReadMultiResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o NamedListReadMultiResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NamedListReadMultiResponse) UnmarshalJSON(data []byte) (err error) {
+	varNamedListReadMultiResponse := _NamedListReadMultiResponse{}
+
+	err = json.Unmarshal(data, &varNamedListReadMultiResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NamedListReadMultiResponse(varNamedListReadMultiResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNamedListReadMultiResponse struct {

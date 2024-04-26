@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -26,7 +25,8 @@ type DHCPUtilizationThreshold struct {
 	// The high threshold value for DHCP utilization in percentage.
 	High int64 `json:"high"`
 	// The low threshold value for DHCP utilization in percentage.
-	Low int64 `json:"low"`
+	Low                  int64 `json:"low"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _DHCPUtilizationThreshold DHCPUtilizationThreshold
@@ -136,6 +136,11 @@ func (o DHCPUtilizationThreshold) ToMap() (map[string]interface{}, error) {
 	toSerialize["enabled"] = o.Enabled
 	toSerialize["high"] = o.High
 	toSerialize["low"] = o.Low
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -165,15 +170,22 @@ func (o *DHCPUtilizationThreshold) UnmarshalJSON(data []byte) (err error) {
 
 	varDHCPUtilizationThreshold := _DHCPUtilizationThreshold{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varDHCPUtilizationThreshold)
+	err = json.Unmarshal(data, &varDHCPUtilizationThreshold)
 
 	if err != nil {
 		return err
 	}
 
 	*o = DHCPUtilizationThreshold(varDHCPUtilizationThreshold)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "enabled")
+		delete(additionalProperties, "high")
+		delete(additionalProperties, "low")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

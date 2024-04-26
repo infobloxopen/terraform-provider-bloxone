@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateHAGroupResponse{}
 
 // UpdateHAGroupResponse The response format to update the __HAGroup__ object.
 type UpdateHAGroupResponse struct {
-	Result *HAGroup `json:"result,omitempty"`
+	Result               *HAGroup `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateHAGroupResponse UpdateHAGroupResponse
 
 // NewUpdateHAGroupResponse instantiates a new UpdateHAGroupResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateHAGroupResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateHAGroupResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateHAGroupResponse := _UpdateHAGroupResponse{}
+
+	err = json.Unmarshal(data, &varUpdateHAGroupResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateHAGroupResponse(varUpdateHAGroupResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateHAGroupResponse struct {

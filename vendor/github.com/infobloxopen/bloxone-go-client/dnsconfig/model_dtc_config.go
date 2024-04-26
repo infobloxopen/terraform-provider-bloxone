@@ -20,8 +20,11 @@ var _ MappedNullable = &DTCConfig{}
 // DTCConfig Construct for fields: _default_ttl_.
 type DTCConfig struct {
 	// Optional. Default TTL for synthesized DTC records (value in seconds).  Defaults to 300.
-	DefaultTtl *int64 `json:"default_ttl,omitempty"`
+	DefaultTtl           *int64 `json:"default_ttl,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DTCConfig DTCConfig
 
 // NewDTCConfig instantiates a new DTCConfig object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o DTCConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DefaultTtl) {
 		toSerialize["default_ttl"] = o.DefaultTtl
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DTCConfig) UnmarshalJSON(data []byte) (err error) {
+	varDTCConfig := _DTCConfig{}
+
+	err = json.Unmarshal(data, &varDTCConfig)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DTCConfig(varDTCConfig)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "default_ttl")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDTCConfig struct {

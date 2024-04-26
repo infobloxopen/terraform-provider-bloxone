@@ -20,8 +20,11 @@ var _ MappedNullable = &ListRangeResponse{}
 // ListRangeResponse The response format to retrieve __Range__ objects.
 type ListRangeResponse struct {
 	// The list of Range objects.
-	Results []Range `json:"results,omitempty"`
+	Results              []Range `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListRangeResponse ListRangeResponse
 
 // NewListRangeResponse instantiates a new ListRangeResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListRangeResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListRangeResponse) UnmarshalJSON(data []byte) (err error) {
+	varListRangeResponse := _ListRangeResponse{}
+
+	err = json.Unmarshal(data, &varListRangeResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListRangeResponse(varListRangeResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListRangeResponse struct {

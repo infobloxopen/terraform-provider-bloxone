@@ -19,10 +19,13 @@ var _ MappedNullable = &AppApprovalsUpdateRequest{}
 
 // AppApprovalsUpdateRequest struct for AppApprovalsUpdateRequest
 type AppApprovalsUpdateRequest struct {
-	Fields            *ProtobufFieldMask          `json:"fields,omitempty"`
-	InsertedApprovals []AppApproval               `json:"inserted_approvals,omitempty"`
-	RemovedApprovals  []AppApprovalRemovalRequest `json:"removed_approvals,omitempty"`
+	Fields               *ProtobufFieldMask          `json:"fields,omitempty"`
+	InsertedApprovals    []AppApproval               `json:"inserted_approvals,omitempty"`
+	RemovedApprovals     []AppApprovalRemovalRequest `json:"removed_approvals,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AppApprovalsUpdateRequest AppApprovalsUpdateRequest
 
 // NewAppApprovalsUpdateRequest instantiates a new AppApprovalsUpdateRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o AppApprovalsUpdateRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RemovedApprovals) {
 		toSerialize["removed_approvals"] = o.RemovedApprovals
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AppApprovalsUpdateRequest) UnmarshalJSON(data []byte) (err error) {
+	varAppApprovalsUpdateRequest := _AppApprovalsUpdateRequest{}
+
+	err = json.Unmarshal(data, &varAppApprovalsUpdateRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AppApprovalsUpdateRequest(varAppApprovalsUpdateRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "fields")
+		delete(additionalProperties, "inserted_approvals")
+		delete(additionalProperties, "removed_approvals")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAppApprovalsUpdateRequest struct {

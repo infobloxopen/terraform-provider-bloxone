@@ -22,8 +22,11 @@ type AsmGrowthBlock struct {
 	// Either the number or percentage of addresses to grow by.
 	GrowthFactor *int64 `json:"growth_factor,omitempty"`
 	// The type of factor to use: _percent_ or _count_.
-	GrowthType *string `json:"growth_type,omitempty"`
+	GrowthType           *string `json:"growth_type,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AsmGrowthBlock AsmGrowthBlock
 
 // NewAsmGrowthBlock instantiates a new AsmGrowthBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o AsmGrowthBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.GrowthType) {
 		toSerialize["growth_type"] = o.GrowthType
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AsmGrowthBlock) UnmarshalJSON(data []byte) (err error) {
+	varAsmGrowthBlock := _AsmGrowthBlock{}
+
+	err = json.Unmarshal(data, &varAsmGrowthBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AsmGrowthBlock(varAsmGrowthBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "growth_factor")
+		delete(additionalProperties, "growth_type")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAsmGrowthBlock struct {

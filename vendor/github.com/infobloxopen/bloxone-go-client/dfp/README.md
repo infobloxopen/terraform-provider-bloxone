@@ -92,26 +92,26 @@ All URIs are relative to *https://csp.infoblox.com/api/atcdfp/v1*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *AccountsAPI* | [**CheckConfig**](docs/AccountsAPI.md#checkconfig) | **Post** /config/check | Check Config.
-*DfpAPI* | [**CreateOrUpdateDfp**](docs/DfpAPI.md#createorupdatedfp) | **Put** /dfps/{id} | Update DNS Forwarding Proxy resolvers.
-*DfpAPI* | [**ListDfp**](docs/DfpAPI.md#listdfp) | **Get** /dfp_services | List DNS Forwarding Proxies.
-*DfpAPI* | [**ReadDfp**](docs/DfpAPI.md#readdfp) | **Get** /dfps/{id} | Read DNS Forwarding Proxy.
+*InfraServicesAPI* | [**CreateOrUpdateDfpService**](docs/InfraServicesAPI.md#createorupdatedfpservice) | **Put** /dfp_services/{payload.service_id} | Update DNS Forwarding Proxy services.
+*InfraServicesAPI* | [**ListDfpServices**](docs/InfraServicesAPI.md#listdfpservices) | **Get** /dfp_services | List DNS Forwarding Proxy services.
+*InfraServicesAPI* | [**ReadDfpService**](docs/InfraServicesAPI.md#readdfpservice) | **Get** /dfp_services/{service_id} | Read DNS Forwarding Proxy services.
 
 
 ## Documentation For Models
 
  - [DNSProtocol](docs/DNSProtocol.md)
  - [Dfp](docs/Dfp.md)
- - [DfpCreateOrUpdateDfp400Response](docs/DfpCreateOrUpdateDfp400Response.md)
- - [DfpCreateOrUpdateDfp400ResponseError](docs/DfpCreateOrUpdateDfp400ResponseError.md)
  - [DfpCreateOrUpdatePayload](docs/DfpCreateOrUpdatePayload.md)
  - [DfpCreateOrUpdateResponse](docs/DfpCreateOrUpdateResponse.md)
  - [DfpHost](docs/DfpHost.md)
- - [DfpListDfp500Response](docs/DfpListDfp500Response.md)
- - [DfpListDfp500ResponseError](docs/DfpListDfp500ResponseError.md)
  - [DfpListResponse](docs/DfpListResponse.md)
- - [DfpReadDfp404Response](docs/DfpReadDfp404Response.md)
- - [DfpReadDfp404ResponseError](docs/DfpReadDfp404ResponseError.md)
  - [DfpReadResponse](docs/DfpReadResponse.md)
+ - [InfraServicesCreateOrUpdateDfpService400Response](docs/InfraServicesCreateOrUpdateDfpService400Response.md)
+ - [InfraServicesCreateOrUpdateDfpService400ResponseError](docs/InfraServicesCreateOrUpdateDfpService400ResponseError.md)
+ - [InfraServicesCreateOrUpdateDfpService404Response](docs/InfraServicesCreateOrUpdateDfpService404Response.md)
+ - [InfraServicesCreateOrUpdateDfpService404ResponseError](docs/InfraServicesCreateOrUpdateDfpService404ResponseError.md)
+ - [InfraServicesListDfpServices500Response](docs/InfraServicesListDfpServices500Response.md)
+ - [InfraServicesListDfpServices500ResponseError](docs/InfraServicesListDfpServices500ResponseError.md)
  - [NetAddrPolicyAssignment](docs/NetAddrPolicyAssignment.md)
  - [Resolver](docs/Resolver.md)
  - [TypesConfigCheckRequest](docs/TypesConfigCheckRequest.md)

@@ -26,8 +26,11 @@ type InheritedSortListItems struct {
 	// The resource identifier.
 	Source *string `json:"source,omitempty"`
 	// Inherited value.
-	Value []SortListItem `json:"value,omitempty"`
+	Value                []SortListItem `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InheritedSortListItems InheritedSortListItems
 
 // NewInheritedSortListItems instantiates a new InheritedSortListItems object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,36 @@ func (o InheritedSortListItems) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritedSortListItems) UnmarshalJSON(data []byte) (err error) {
+	varInheritedSortListItems := _InheritedSortListItems{}
+
+	err = json.Unmarshal(data, &varInheritedSortListItems)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedSortListItems(varInheritedSortListItems)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedSortListItems struct {

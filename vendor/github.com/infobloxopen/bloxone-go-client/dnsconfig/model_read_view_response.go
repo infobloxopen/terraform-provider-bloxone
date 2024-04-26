@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadViewResponse{}
 
 // ReadViewResponse The View object read response format.
 type ReadViewResponse struct {
-	Result *View `json:"result,omitempty"`
+	Result               *View `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadViewResponse ReadViewResponse
 
 // NewReadViewResponse instantiates a new ReadViewResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadViewResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadViewResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadViewResponse := _ReadViewResponse{}
+
+	err = json.Unmarshal(data, &varReadViewResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadViewResponse(varReadViewResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadViewResponse struct {

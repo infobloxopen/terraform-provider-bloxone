@@ -22,8 +22,11 @@ type InheritedDHCPOptionList struct {
 	// The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.
 	Action *string `json:"action,omitempty"`
 	// The inherited DHCP option values.
-	Value []InheritedDHCPOption `json:"value,omitempty"`
+	Value                []InheritedDHCPOption `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InheritedDHCPOptionList InheritedDHCPOptionList
 
 // NewInheritedDHCPOptionList instantiates a new InheritedDHCPOptionList object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o InheritedDHCPOptionList) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritedDHCPOptionList) UnmarshalJSON(data []byte) (err error) {
+	varInheritedDHCPOptionList := _InheritedDHCPOptionList{}
+
+	err = json.Unmarshal(data, &varInheritedDHCPOptionList)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedDHCPOptionList(varInheritedDHCPOptionList)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedDHCPOptionList struct {

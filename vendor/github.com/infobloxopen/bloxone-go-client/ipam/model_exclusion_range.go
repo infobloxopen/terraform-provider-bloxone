@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -26,7 +25,8 @@ type ExclusionRange struct {
 	// The end address of the exclusion range.
 	End string `json:"end"`
 	// The start address of the exclusion range.
-	Start string `json:"start"`
+	Start                string `json:"start"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ExclusionRange ExclusionRange
@@ -145,6 +145,11 @@ func (o ExclusionRange) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["end"] = o.End
 	toSerialize["start"] = o.Start
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -173,15 +178,22 @@ func (o *ExclusionRange) UnmarshalJSON(data []byte) (err error) {
 
 	varExclusionRange := _ExclusionRange{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varExclusionRange)
+	err = json.Unmarshal(data, &varExclusionRange)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ExclusionRange(varExclusionRange)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "end")
+		delete(additionalProperties, "start")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

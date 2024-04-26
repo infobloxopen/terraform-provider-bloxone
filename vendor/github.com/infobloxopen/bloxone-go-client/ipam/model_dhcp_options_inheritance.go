@@ -19,8 +19,11 @@ var _ MappedNullable = &DHCPOptionsInheritance{}
 
 // DHCPOptionsInheritance The inheritance configuration that specifies how the _dhcp_options_ field is inherited from the parent object.
 type DHCPOptionsInheritance struct {
-	DhcpOptions *InheritedDHCPOptionList `json:"dhcp_options,omitempty"`
+	DhcpOptions          *InheritedDHCPOptionList `json:"dhcp_options,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DHCPOptionsInheritance DHCPOptionsInheritance
 
 // NewDHCPOptionsInheritance instantiates a new DHCPOptionsInheritance object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o DHCPOptionsInheritance) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DhcpOptions) {
 		toSerialize["dhcp_options"] = o.DhcpOptions
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DHCPOptionsInheritance) UnmarshalJSON(data []byte) (err error) {
+	varDHCPOptionsInheritance := _DHCPOptionsInheritance{}
+
+	err = json.Unmarshal(data, &varDHCPOptionsInheritance)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DHCPOptionsInheritance(varDHCPOptionsInheritance)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "dhcp_options")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDHCPOptionsInheritance struct {

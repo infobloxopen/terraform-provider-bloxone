@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -26,7 +25,8 @@ type DelegationServer struct {
 	// Required. FQDN of nameserver.
 	Fqdn string `json:"fqdn"`
 	// FQDN of nameserver in punycode.
-	ProtocolFqdn *string `json:"protocol_fqdn,omitempty"`
+	ProtocolFqdn         *string `json:"protocol_fqdn,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _DelegationServer DelegationServer
@@ -154,6 +154,11 @@ func (o DelegationServer) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ProtocolFqdn) {
 		toSerialize["protocol_fqdn"] = o.ProtocolFqdn
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -181,15 +186,22 @@ func (o *DelegationServer) UnmarshalJSON(data []byte) (err error) {
 
 	varDelegationServer := _DelegationServer{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varDelegationServer)
+	err = json.Unmarshal(data, &varDelegationServer)
 
 	if err != nil {
 		return err
 	}
 
 	*o = DelegationServer(varDelegationServer)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "fqdn")
+		delete(additionalProperties, "protocol_fqdn")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

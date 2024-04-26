@@ -34,7 +34,10 @@ type DHCPInheritance struct {
 	HeaderOptionServerAddress  *InheritanceInheritedString    `json:"header_option_server_address,omitempty"`
 	HeaderOptionServerName     *InheritanceInheritedString    `json:"header_option_server_name,omitempty"`
 	HostnameRewriteBlock       *InheritedHostnameRewriteBlock `json:"hostname_rewrite_block,omitempty"`
+	AdditionalProperties       map[string]interface{}
 }
+
+type _DHCPInheritance DHCPInheritance
 
 // NewDHCPInheritance instantiates a new DHCPInheritance object
 // This constructor will assign default values to properties that have it defined,
@@ -588,7 +591,47 @@ func (o DHCPInheritance) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.HostnameRewriteBlock) {
 		toSerialize["hostname_rewrite_block"] = o.HostnameRewriteBlock
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DHCPInheritance) UnmarshalJSON(data []byte) (err error) {
+	varDHCPInheritance := _DHCPInheritance{}
+
+	err = json.Unmarshal(data, &varDHCPInheritance)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DHCPInheritance(varDHCPInheritance)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "asm_config")
+		delete(additionalProperties, "ddns_client_update")
+		delete(additionalProperties, "ddns_conflict_resolution_mode")
+		delete(additionalProperties, "ddns_enabled")
+		delete(additionalProperties, "ddns_hostname_block")
+		delete(additionalProperties, "ddns_ttl_percent")
+		delete(additionalProperties, "ddns_update_block")
+		delete(additionalProperties, "ddns_update_on_renew")
+		delete(additionalProperties, "ddns_use_conflict_resolution")
+		delete(additionalProperties, "dhcp_config")
+		delete(additionalProperties, "dhcp_options")
+		delete(additionalProperties, "header_option_filename")
+		delete(additionalProperties, "header_option_server_address")
+		delete(additionalProperties, "header_option_server_name")
+		delete(additionalProperties, "hostname_rewrite_block")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDHCPInheritance struct {

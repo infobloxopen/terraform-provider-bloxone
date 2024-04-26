@@ -19,8 +19,11 @@ var _ MappedNullable = &CategoryFilterReadResponse{}
 
 // CategoryFilterReadResponse The Category Filter read response.
 type CategoryFilterReadResponse struct {
-	Results *CategoryFilter `json:"results,omitempty"`
+	Results              *CategoryFilter `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CategoryFilterReadResponse CategoryFilterReadResponse
 
 // NewCategoryFilterReadResponse instantiates a new CategoryFilterReadResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CategoryFilterReadResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CategoryFilterReadResponse) UnmarshalJSON(data []byte) (err error) {
+	varCategoryFilterReadResponse := _CategoryFilterReadResponse{}
+
+	err = json.Unmarshal(data, &varCategoryFilterReadResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CategoryFilterReadResponse(varCategoryFilterReadResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCategoryFilterReadResponse struct {

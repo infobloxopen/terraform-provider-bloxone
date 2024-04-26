@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadOptionCodeResponse{}
 
 // ReadOptionCodeResponse The response format to retrieve the __OptionCode__ object.
 type ReadOptionCodeResponse struct {
-	Result *OptionCode `json:"result,omitempty"`
+	Result               *OptionCode `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadOptionCodeResponse ReadOptionCodeResponse
 
 // NewReadOptionCodeResponse instantiates a new ReadOptionCodeResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadOptionCodeResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadOptionCodeResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadOptionCodeResponse := _ReadOptionCodeResponse{}
+
+	err = json.Unmarshal(data, &varReadOptionCodeResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadOptionCodeResponse(varReadOptionCodeResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadOptionCodeResponse struct {

@@ -24,9 +24,12 @@ type InheritedZoneAuthorityMNameBlock struct {
 	// Human-readable display name for the object referred to by _source_.
 	DisplayName *string `json:"display_name,omitempty"`
 	// The resource identifier.
-	Source *string                  `json:"source,omitempty"`
-	Value  *ZoneAuthorityMNameBlock `json:"value,omitempty"`
+	Source               *string                  `json:"source,omitempty"`
+	Value                *ZoneAuthorityMNameBlock `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InheritedZoneAuthorityMNameBlock InheritedZoneAuthorityMNameBlock
 
 // NewInheritedZoneAuthorityMNameBlock instantiates a new InheritedZoneAuthorityMNameBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -195,7 +198,36 @@ func (o InheritedZoneAuthorityMNameBlock) ToMap() (map[string]interface{}, error
 	if !IsNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritedZoneAuthorityMNameBlock) UnmarshalJSON(data []byte) (err error) {
+	varInheritedZoneAuthorityMNameBlock := _InheritedZoneAuthorityMNameBlock{}
+
+	err = json.Unmarshal(data, &varInheritedZoneAuthorityMNameBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedZoneAuthorityMNameBlock(varInheritedZoneAuthorityMNameBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedZoneAuthorityMNameBlock struct {

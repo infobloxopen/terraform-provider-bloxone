@@ -26,8 +26,11 @@ type InheritedKerberosKeys struct {
 	// The resource identifier.
 	Source *string `json:"source,omitempty"`
 	// Inherited value.
-	Value []KerberosKey `json:"value,omitempty"`
+	Value                []KerberosKey `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InheritedKerberosKeys InheritedKerberosKeys
 
 // NewInheritedKerberosKeys instantiates a new InheritedKerberosKeys object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,36 @@ func (o InheritedKerberosKeys) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritedKerberosKeys) UnmarshalJSON(data []byte) (err error) {
+	varInheritedKerberosKeys := _InheritedKerberosKeys{}
+
+	err = json.Unmarshal(data, &varInheritedKerberosKeys)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedKerberosKeys(varInheritedKerberosKeys)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedKerberosKeys struct {

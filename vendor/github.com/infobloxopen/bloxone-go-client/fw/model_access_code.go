@@ -36,8 +36,11 @@ type AccessCode struct {
 	// The list of selected security rules
 	Rules []AccessCodeRule `json:"rules,omitempty"`
 	// The time when the Bypass Code object was last updated.
-	UpdatedTime *time.Time `json:"updated_time,omitempty"`
+	UpdatedTime          *time.Time `json:"updated_time,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AccessCode AccessCode
 
 // NewAccessCode instantiates a new AccessCode object
 // This constructor will assign default values to properties that have it defined,
@@ -381,7 +384,41 @@ func (o AccessCode) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedTime) {
 		toSerialize["updated_time"] = o.UpdatedTime
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AccessCode) UnmarshalJSON(data []byte) (err error) {
+	varAccessCode := _AccessCode{}
+
+	err = json.Unmarshal(data, &varAccessCode)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AccessCode(varAccessCode)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "access_key")
+		delete(additionalProperties, "activation")
+		delete(additionalProperties, "created_time")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "expiration")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "policy_ids")
+		delete(additionalProperties, "rules")
+		delete(additionalProperties, "updated_time")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAccessCode struct {

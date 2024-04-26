@@ -20,8 +20,11 @@ var _ MappedNullable = &CreateNextAvailableABResponse{}
 // CreateNextAvailableABResponse The Next Available Address Block object create response format.
 type CreateNextAvailableABResponse struct {
 	// The list of Next Available Address Block objects.
-	Results []AddressBlock `json:"results,omitempty"`
+	Results              []AddressBlock `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateNextAvailableABResponse CreateNextAvailableABResponse
 
 // NewCreateNextAvailableABResponse instantiates a new CreateNextAvailableABResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o CreateNextAvailableABResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateNextAvailableABResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateNextAvailableABResponse := _CreateNextAvailableABResponse{}
+
+	err = json.Unmarshal(data, &varCreateNextAvailableABResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateNextAvailableABResponse(varCreateNextAvailableABResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateNextAvailableABResponse struct {

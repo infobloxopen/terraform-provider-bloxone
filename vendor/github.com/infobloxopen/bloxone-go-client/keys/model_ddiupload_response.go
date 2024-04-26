@@ -21,8 +21,11 @@ var _ MappedNullable = &DdiuploadResponse{}
 type DdiuploadResponse struct {
 	KerberosKeys *KerberosKeys `json:"kerberos_keys,omitempty"`
 	// May contain any non-critical warning messages after processing the content.
-	Warning *string `json:"warning,omitempty"`
+	Warning              *string `json:"warning,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DdiuploadResponse DdiuploadResponse
 
 // NewDdiuploadResponse instantiates a new DdiuploadResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -121,7 +124,34 @@ func (o DdiuploadResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Warning) {
 		toSerialize["warning"] = o.Warning
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DdiuploadResponse) UnmarshalJSON(data []byte) (err error) {
+	varDdiuploadResponse := _DdiuploadResponse{}
+
+	err = json.Unmarshal(data, &varDdiuploadResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DdiuploadResponse(varDdiuploadResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "kerberos_keys")
+		delete(additionalProperties, "warning")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDdiuploadResponse struct {

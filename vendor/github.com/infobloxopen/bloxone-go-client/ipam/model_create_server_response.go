@@ -19,8 +19,11 @@ var _ MappedNullable = &CreateServerResponse{}
 
 // CreateServerResponse The response format to create the __Server__ object.
 type CreateServerResponse struct {
-	Result *Server `json:"result,omitempty"`
+	Result               *Server `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateServerResponse CreateServerResponse
 
 // NewCreateServerResponse instantiates a new CreateServerResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CreateServerResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateServerResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateServerResponse := _CreateServerResponse{}
+
+	err = json.Unmarshal(data, &varCreateServerResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateServerResponse(varCreateServerResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateServerResponse struct {

@@ -24,8 +24,11 @@ type ApiPageInfo struct {
 	// The service response should contain a string to indicate the next page of resources. A null value indicates no more pages.
 	PageToken *string `json:"page_token,omitempty"`
 	// The service may optionally include the total number of resources being paged.
-	Size *int32 `json:"size,omitempty"`
+	Size                 *int32 `json:"size,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ApiPageInfo ApiPageInfo
 
 // NewApiPageInfo instantiates a new ApiPageInfo object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,35 @@ func (o ApiPageInfo) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Size) {
 		toSerialize["size"] = o.Size
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ApiPageInfo) UnmarshalJSON(data []byte) (err error) {
+	varApiPageInfo := _ApiPageInfo{}
+
+	err = json.Unmarshal(data, &varApiPageInfo)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ApiPageInfo(varApiPageInfo)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "page_token")
+		delete(additionalProperties, "size")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableApiPageInfo struct {

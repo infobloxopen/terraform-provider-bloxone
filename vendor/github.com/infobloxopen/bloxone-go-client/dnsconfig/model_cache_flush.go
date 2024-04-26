@@ -30,8 +30,11 @@ type CacheFlush struct {
 	// Optional. The time in seconds the command is valid for. Command is executed on the onprem host only if it takes less than this time for the command to be transmitted to the host. Otherwise the onprem host discards this command.  Defaults to 120 (2 min).
 	Ttl *int64 `json:"ttl,omitempty"`
 	// Optional, If provided, flushes the server's cache for a view.
-	ViewName *string `json:"view_name,omitempty"`
+	ViewName             *string `json:"view_name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CacheFlush CacheFlush
 
 // NewCacheFlush instantiates a new CacheFlush object
 // This constructor will assign default values to properties that have it defined,
@@ -270,7 +273,38 @@ func (o CacheFlush) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ViewName) {
 		toSerialize["view_name"] = o.ViewName
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CacheFlush) UnmarshalJSON(data []byte) (err error) {
+	varCacheFlush := _CacheFlush{}
+
+	err = json.Unmarshal(data, &varCacheFlush)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CacheFlush(varCacheFlush)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "flush_subdomains")
+		delete(additionalProperties, "fqdn")
+		delete(additionalProperties, "ophid")
+		delete(additionalProperties, "service_id")
+		delete(additionalProperties, "ttl")
+		delete(additionalProperties, "view_name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCacheFlush struct {

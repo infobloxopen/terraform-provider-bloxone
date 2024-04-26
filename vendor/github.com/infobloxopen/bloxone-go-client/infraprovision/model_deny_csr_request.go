@@ -19,8 +19,11 @@ var _ MappedNullable = &DenyCSRRequest{}
 
 // DenyCSRRequest struct for DenyCSRRequest
 type DenyCSRRequest struct {
-	ActivationCode *string `json:"activation_code,omitempty"`
+	ActivationCode       *string `json:"activation_code,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DenyCSRRequest DenyCSRRequest
 
 // NewDenyCSRRequest instantiates a new DenyCSRRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o DenyCSRRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ActivationCode) {
 		toSerialize["activation_code"] = o.ActivationCode
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DenyCSRRequest) UnmarshalJSON(data []byte) (err error) {
+	varDenyCSRRequest := _DenyCSRRequest{}
+
+	err = json.Unmarshal(data, &varDenyCSRRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DenyCSRRequest(varDenyCSRRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "activation_code")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDenyCSRRequest struct {

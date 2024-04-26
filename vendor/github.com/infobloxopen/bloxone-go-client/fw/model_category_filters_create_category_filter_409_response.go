@@ -19,8 +19,11 @@ var _ MappedNullable = &CategoryFiltersCreateCategoryFilter409Response{}
 
 // CategoryFiltersCreateCategoryFilter409Response struct for CategoryFiltersCreateCategoryFilter409Response
 type CategoryFiltersCreateCategoryFilter409Response struct {
-	Error *CategoryFiltersCreateCategoryFilter409ResponseError `json:"error,omitempty"`
+	Error                *CategoryFiltersCreateCategoryFilter409ResponseError `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CategoryFiltersCreateCategoryFilter409Response CategoryFiltersCreateCategoryFilter409Response
 
 // NewCategoryFiltersCreateCategoryFilter409Response instantiates a new CategoryFiltersCreateCategoryFilter409Response object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CategoryFiltersCreateCategoryFilter409Response) ToMap() (map[string]inte
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CategoryFiltersCreateCategoryFilter409Response) UnmarshalJSON(data []byte) (err error) {
+	varCategoryFiltersCreateCategoryFilter409Response := _CategoryFiltersCreateCategoryFilter409Response{}
+
+	err = json.Unmarshal(data, &varCategoryFiltersCreateCategoryFilter409Response)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CategoryFiltersCreateCategoryFilter409Response(varCategoryFiltersCreateCategoryFilter409Response)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "error")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCategoryFiltersCreateCategoryFilter409Response struct {

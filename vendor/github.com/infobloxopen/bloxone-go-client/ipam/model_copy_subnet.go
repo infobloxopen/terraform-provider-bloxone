@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -34,7 +33,8 @@ type CopySubnet struct {
 	// Indicates whether copying should skip object in case of error and continue with next, or abort copying in case of error.  Defaults to _false_.
 	SkipOnError *bool `json:"skip_on_error,omitempty"`
 	// The resource identifier.
-	Space string `json:"space"`
+	Space                string `json:"space"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CopySubnet CopySubnet
@@ -302,6 +302,11 @@ func (o CopySubnet) ToMap() (map[string]interface{}, error) {
 		toSerialize["skip_on_error"] = o.SkipOnError
 	}
 	toSerialize["space"] = o.Space
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -329,15 +334,26 @@ func (o *CopySubnet) UnmarshalJSON(data []byte) (err error) {
 
 	varCopySubnet := _CopySubnet{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCopySubnet)
+	err = json.Unmarshal(data, &varCopySubnet)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CopySubnet(varCopySubnet)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "copy_dhcp_options")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "recursive")
+		delete(additionalProperties, "skip_on_error")
+		delete(additionalProperties, "space")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

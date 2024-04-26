@@ -19,8 +19,11 @@ var _ MappedNullable = &GetAnycastConfigListResponse{}
 
 // GetAnycastConfigListResponse struct for GetAnycastConfigListResponse
 type GetAnycastConfigListResponse struct {
-	Results []AnycastConfig `json:"results,omitempty"`
+	Results              []AnycastConfig `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _GetAnycastConfigListResponse GetAnycastConfigListResponse
 
 // NewGetAnycastConfigListResponse instantiates a new GetAnycastConfigListResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o GetAnycastConfigListResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *GetAnycastConfigListResponse) UnmarshalJSON(data []byte) (err error) {
+	varGetAnycastConfigListResponse := _GetAnycastConfigListResponse{}
+
+	err = json.Unmarshal(data, &varGetAnycastConfigListResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = GetAnycastConfigListResponse(varGetAnycastConfigListResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableGetAnycastConfigListResponse struct {

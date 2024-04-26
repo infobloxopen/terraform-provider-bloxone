@@ -20,8 +20,11 @@ var _ MappedNullable = &ListHardwareFilterResponse{}
 // ListHardwareFilterResponse The response format to retrieve __HardwareFilter__ objects.
 type ListHardwareFilterResponse struct {
 	// The list of HardwareFilter objects.
-	Results []HardwareFilter `json:"results,omitempty"`
+	Results              []HardwareFilter `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListHardwareFilterResponse ListHardwareFilterResponse
 
 // NewListHardwareFilterResponse instantiates a new ListHardwareFilterResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListHardwareFilterResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListHardwareFilterResponse) UnmarshalJSON(data []byte) (err error) {
+	varListHardwareFilterResponse := _ListHardwareFilterResponse{}
+
+	err = json.Unmarshal(data, &varListHardwareFilterResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListHardwareFilterResponse(varListHardwareFilterResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListHardwareFilterResponse struct {

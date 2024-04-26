@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadDNSUsageResponse{}
 
 // ReadDNSUsageResponse The response format to retrieve the __DNSUsage__ object.
 type ReadDNSUsageResponse struct {
-	Result *DNSUsage `json:"result,omitempty"`
+	Result               *DNSUsage `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadDNSUsageResponse ReadDNSUsageResponse
 
 // NewReadDNSUsageResponse instantiates a new ReadDNSUsageResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadDNSUsageResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadDNSUsageResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadDNSUsageResponse := _ReadDNSUsageResponse{}
+
+	err = json.Unmarshal(data, &varReadDNSUsageResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadDNSUsageResponse(varReadDNSUsageResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadDNSUsageResponse struct {

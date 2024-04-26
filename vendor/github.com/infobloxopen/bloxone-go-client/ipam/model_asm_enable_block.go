@@ -25,8 +25,11 @@ type AsmEnableBlock struct {
 	// Indicates whether sending notifications to the users is enabled or not.
 	EnableNotification *bool `json:"enable_notification,omitempty"`
 	// The date at which notifications will be re-enabled automatically.
-	ReenableDate *time.Time `json:"reenable_date,omitempty"`
+	ReenableDate         *time.Time `json:"reenable_date,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AsmEnableBlock AsmEnableBlock
 
 // NewAsmEnableBlock instantiates a new AsmEnableBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -160,7 +163,35 @@ func (o AsmEnableBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ReenableDate) {
 		toSerialize["reenable_date"] = o.ReenableDate
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AsmEnableBlock) UnmarshalJSON(data []byte) (err error) {
+	varAsmEnableBlock := _AsmEnableBlock{}
+
+	err = json.Unmarshal(data, &varAsmEnableBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AsmEnableBlock(varAsmEnableBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "enable")
+		delete(additionalProperties, "enable_notification")
+		delete(additionalProperties, "reenable_date")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAsmEnableBlock struct {

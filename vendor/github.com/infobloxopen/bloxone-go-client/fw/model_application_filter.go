@@ -37,8 +37,11 @@ type ApplicationFilter struct {
 	// Enables tag support for resource where tags attribute contains user-defined key value pairs
 	Tags map[string]interface{} `json:"tags,omitempty"`
 	// The time when this Application Filter object was last updated.
-	UpdatedTime *time.Time `json:"updated_time,omitempty"`
+	UpdatedTime          *time.Time `json:"updated_time,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ApplicationFilter ApplicationFilter
 
 // NewApplicationFilter instantiates a new ApplicationFilter object
 // This constructor will assign default values to properties that have it defined,
@@ -382,7 +385,41 @@ func (o ApplicationFilter) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedTime) {
 		toSerialize["updated_time"] = o.UpdatedTime
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ApplicationFilter) UnmarshalJSON(data []byte) (err error) {
+	varApplicationFilter := _ApplicationFilter{}
+
+	err = json.Unmarshal(data, &varApplicationFilter)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ApplicationFilter(varApplicationFilter)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_time")
+		delete(additionalProperties, "criteria")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "policies")
+		delete(additionalProperties, "readonly")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "updated_time")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableApplicationFilter struct {

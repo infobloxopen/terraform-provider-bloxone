@@ -37,9 +37,12 @@ type ASMConfig struct {
 	// The minimum size of range needed for ASM to run on this subnet.
 	MinTotal *int64 `json:"min_total,omitempty"`
 	// The minimum percentage of addresses that must be available outside of the DHCP ranges and fixed addresses when making a suggested change..
-	MinUnused    *int64     `json:"min_unused,omitempty"`
-	ReenableDate *time.Time `json:"reenable_date,omitempty"`
+	MinUnused            *int64     `json:"min_unused,omitempty"`
+	ReenableDate         *time.Time `json:"reenable_date,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ASMConfig ASMConfig
 
 // NewASMConfig instantiates a new ASMConfig object
 // This constructor will assign default values to properties that have it defined,
@@ -454,7 +457,42 @@ func (o ASMConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ReenableDate) {
 		toSerialize["reenable_date"] = o.ReenableDate
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ASMConfig) UnmarshalJSON(data []byte) (err error) {
+	varASMConfig := _ASMConfig{}
+
+	err = json.Unmarshal(data, &varASMConfig)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ASMConfig(varASMConfig)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "asm_threshold")
+		delete(additionalProperties, "enable")
+		delete(additionalProperties, "enable_notification")
+		delete(additionalProperties, "forecast_period")
+		delete(additionalProperties, "growth_factor")
+		delete(additionalProperties, "growth_type")
+		delete(additionalProperties, "history")
+		delete(additionalProperties, "min_total")
+		delete(additionalProperties, "min_unused")
+		delete(additionalProperties, "reenable_date")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableASMConfig struct {

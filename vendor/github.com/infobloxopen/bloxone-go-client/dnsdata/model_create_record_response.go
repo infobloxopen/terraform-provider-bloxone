@@ -19,8 +19,11 @@ var _ MappedNullable = &CreateRecordResponse{}
 
 // CreateRecordResponse The response format to create the __Record__ object.
 type CreateRecordResponse struct {
-	Result *Record `json:"result,omitempty"`
+	Result               *Record `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateRecordResponse CreateRecordResponse
 
 // NewCreateRecordResponse instantiates a new CreateRecordResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CreateRecordResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateRecordResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateRecordResponse := _CreateRecordResponse{}
+
+	err = json.Unmarshal(data, &varCreateRecordResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateRecordResponse(varCreateRecordResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateRecordResponse struct {

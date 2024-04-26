@@ -19,8 +19,11 @@ var _ MappedNullable = &ApplicationFiltersDeleteApplicationFilters400Response{}
 
 // ApplicationFiltersDeleteApplicationFilters400Response struct for ApplicationFiltersDeleteApplicationFilters400Response
 type ApplicationFiltersDeleteApplicationFilters400Response struct {
-	Error *ApplicationFiltersDeleteApplicationFilters400ResponseError `json:"error,omitempty"`
+	Error                *ApplicationFiltersDeleteApplicationFilters400ResponseError `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ApplicationFiltersDeleteApplicationFilters400Response ApplicationFiltersDeleteApplicationFilters400Response
 
 // NewApplicationFiltersDeleteApplicationFilters400Response instantiates a new ApplicationFiltersDeleteApplicationFilters400Response object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ApplicationFiltersDeleteApplicationFilters400Response) ToMap() (map[stri
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ApplicationFiltersDeleteApplicationFilters400Response) UnmarshalJSON(data []byte) (err error) {
+	varApplicationFiltersDeleteApplicationFilters400Response := _ApplicationFiltersDeleteApplicationFilters400Response{}
+
+	err = json.Unmarshal(data, &varApplicationFiltersDeleteApplicationFilters400Response)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ApplicationFiltersDeleteApplicationFilters400Response(varApplicationFiltersDeleteApplicationFilters400Response)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "error")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableApplicationFiltersDeleteApplicationFilters400Response struct {

@@ -19,8 +19,11 @@ var _ MappedNullable = &CreateAuthZoneResponse{}
 
 // CreateAuthZoneResponse The Authoritative Zone object create response format.
 type CreateAuthZoneResponse struct {
-	Result *AuthZone `json:"result,omitempty"`
+	Result               *AuthZone `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateAuthZoneResponse CreateAuthZoneResponse
 
 // NewCreateAuthZoneResponse instantiates a new CreateAuthZoneResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CreateAuthZoneResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateAuthZoneResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateAuthZoneResponse := _CreateAuthZoneResponse{}
+
+	err = json.Unmarshal(data, &varCreateAuthZoneResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateAuthZoneResponse(varCreateAuthZoneResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateAuthZoneResponse struct {

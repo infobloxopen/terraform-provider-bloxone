@@ -32,8 +32,11 @@ type Filter struct {
 	// The tags for the DHCP filter in JSON format.
 	Tags map[string]interface{} `json:"tags,omitempty"`
 	// The type of DHCP filter (_hardware_ or _option_).
-	Type *string `json:"type,omitempty"`
+	Type                 *string `json:"type,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Filter Filter
 
 // NewFilter instantiates a new Filter object
 // This constructor will assign default values to properties that have it defined,
@@ -307,7 +310,39 @@ func (o Filter) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Type) {
 		toSerialize["type"] = o.Type
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Filter) UnmarshalJSON(data []byte) (err error) {
+	varFilter := _Filter{}
+
+	err = json.Unmarshal(data, &varFilter)
+
+	if err != nil {
+		return err
+	}
+
+	*o = Filter(varFilter)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "protocol")
+		delete(additionalProperties, "role")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "type")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableFilter struct {

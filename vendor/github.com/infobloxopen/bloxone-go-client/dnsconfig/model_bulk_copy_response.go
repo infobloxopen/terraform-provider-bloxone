@@ -19,9 +19,12 @@ var _ MappedNullable = &BulkCopyResponse{}
 
 // BulkCopyResponse struct for BulkCopyResponse
 type BulkCopyResponse struct {
-	Errors  []BulkCopyError `json:"errors,omitempty"`
-	Results []CopyResponse  `json:"results,omitempty"`
+	Errors               []BulkCopyError `json:"errors,omitempty"`
+	Results              []CopyResponse  `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _BulkCopyResponse BulkCopyResponse
 
 // NewBulkCopyResponse instantiates a new BulkCopyResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +123,34 @@ func (o BulkCopyResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *BulkCopyResponse) UnmarshalJSON(data []byte) (err error) {
+	varBulkCopyResponse := _BulkCopyResponse{}
+
+	err = json.Unmarshal(data, &varBulkCopyResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = BulkCopyResponse(varBulkCopyResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "errors")
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBulkCopyResponse struct {

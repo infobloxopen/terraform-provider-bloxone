@@ -19,8 +19,11 @@ var _ MappedNullable = &CreateFixedAddressResponse{}
 
 // CreateFixedAddressResponse The response format to create the __FixedAddress__ object.
 type CreateFixedAddressResponse struct {
-	Result *FixedAddress `json:"result,omitempty"`
+	Result               *FixedAddress `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateFixedAddressResponse CreateFixedAddressResponse
 
 // NewCreateFixedAddressResponse instantiates a new CreateFixedAddressResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CreateFixedAddressResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateFixedAddressResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateFixedAddressResponse := _CreateFixedAddressResponse{}
+
+	err = json.Unmarshal(data, &varCreateFixedAddressResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateFixedAddressResponse(varCreateFixedAddressResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateFixedAddressResponse struct {

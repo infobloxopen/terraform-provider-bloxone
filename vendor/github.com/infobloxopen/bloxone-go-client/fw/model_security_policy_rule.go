@@ -32,8 +32,11 @@ type SecurityPolicyRule struct {
 	// The name of the redirect address for redirect actions that can be either IPv4 address or a domain name.
 	RedirectName *string `json:"redirect_name,omitempty"`
 	// The policy rule type that can be either \"named_feed\" or \"custom_list\" or \"category_filter\" or \"application_filter\".
-	Type *string `json:"type,omitempty"`
+	Type                 *string `json:"type,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SecurityPolicyRule SecurityPolicyRule
 
 // NewSecurityPolicyRule instantiates a new SecurityPolicyRule object
 // This constructor will assign default values to properties that have it defined,
@@ -307,7 +310,39 @@ func (o SecurityPolicyRule) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Type) {
 		toSerialize["type"] = o.Type
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *SecurityPolicyRule) UnmarshalJSON(data []byte) (err error) {
+	varSecurityPolicyRule := _SecurityPolicyRule{}
+
+	err = json.Unmarshal(data, &varSecurityPolicyRule)
+
+	if err != nil {
+		return err
+	}
+
+	*o = SecurityPolicyRule(varSecurityPolicyRule)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "list_id")
+		delete(additionalProperties, "policy_id")
+		delete(additionalProperties, "policy_name")
+		delete(additionalProperties, "redirect_name")
+		delete(additionalProperties, "type")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSecurityPolicyRule struct {
