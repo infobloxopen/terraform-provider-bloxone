@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadOptionGroupResponse{}
 
 // ReadOptionGroupResponse The response format to retrieve the __OptionGroup__ object.
 type ReadOptionGroupResponse struct {
-	Result *OptionGroup `json:"result,omitempty"`
+	Result               *OptionGroup `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadOptionGroupResponse ReadOptionGroupResponse
 
 // NewReadOptionGroupResponse instantiates a new ReadOptionGroupResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadOptionGroupResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadOptionGroupResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadOptionGroupResponse := _ReadOptionGroupResponse{}
+
+	err = json.Unmarshal(data, &varReadOptionGroupResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadOptionGroupResponse(varReadOptionGroupResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadOptionGroupResponse struct {

@@ -20,8 +20,11 @@ var _ MappedNullable = &CategoryFiltersDeleteRequest{}
 // CategoryFiltersDeleteRequest The Category Filter delete request.
 type CategoryFiltersDeleteRequest struct {
 	// The list of Category Filter object identifiers.
-	Ids []int32 `json:"ids,omitempty"`
+	Ids                  []int32 `json:"ids,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CategoryFiltersDeleteRequest CategoryFiltersDeleteRequest
 
 // NewCategoryFiltersDeleteRequest instantiates a new CategoryFiltersDeleteRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o CategoryFiltersDeleteRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Ids) {
 		toSerialize["ids"] = o.Ids
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CategoryFiltersDeleteRequest) UnmarshalJSON(data []byte) (err error) {
+	varCategoryFiltersDeleteRequest := _CategoryFiltersDeleteRequest{}
+
+	err = json.Unmarshal(data, &varCategoryFiltersDeleteRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CategoryFiltersDeleteRequest(varCategoryFiltersDeleteRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ids")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCategoryFiltersDeleteRequest struct {

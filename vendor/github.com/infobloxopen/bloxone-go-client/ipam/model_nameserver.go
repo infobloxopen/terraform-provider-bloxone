@@ -33,8 +33,11 @@ type Nameserver struct {
 	KerberosTkeyProtocol *string `json:"kerberos_tkey_protocol,omitempty"`
 	Nameserver           *string `json:"nameserver,omitempty"`
 	// The Kerberos principal name of this DNS server that will receive updates.  Defaults to empty.
-	ServerPrincipal *string `json:"server_principal,omitempty"`
+	ServerPrincipal      *string `json:"server_principal,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Nameserver Nameserver
 
 // NewNameserver instantiates a new Nameserver object
 // This constructor will assign default values to properties that have it defined,
@@ -343,7 +346,40 @@ func (o Nameserver) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ServerPrincipal) {
 		toSerialize["server_principal"] = o.ServerPrincipal
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Nameserver) UnmarshalJSON(data []byte) (err error) {
+	varNameserver := _Nameserver{}
+
+	err = json.Unmarshal(data, &varNameserver)
+
+	if err != nil {
+		return err
+	}
+
+	*o = Nameserver(varNameserver)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "client_principal")
+		delete(additionalProperties, "gss_tsig_fallback")
+		delete(additionalProperties, "kerberos_rekey_interval")
+		delete(additionalProperties, "kerberos_retry_interval")
+		delete(additionalProperties, "kerberos_tkey_lifetime")
+		delete(additionalProperties, "kerberos_tkey_protocol")
+		delete(additionalProperties, "nameserver")
+		delete(additionalProperties, "server_principal")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNameserver struct {

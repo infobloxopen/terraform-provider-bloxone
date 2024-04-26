@@ -36,7 +36,10 @@ type IPSpaceInheritance struct {
 	HeaderOptionServerName          *InheritanceInheritedString     `json:"header_option_server_name,omitempty"`
 	HostnameRewriteBlock            *InheritedHostnameRewriteBlock  `json:"hostname_rewrite_block,omitempty"`
 	VendorSpecificOptionOptionSpace *InheritanceInheritedIdentifier `json:"vendor_specific_option_option_space,omitempty"`
+	AdditionalProperties            map[string]interface{}
 }
+
+type _IPSpaceInheritance IPSpaceInheritance
 
 // NewIPSpaceInheritance instantiates a new IPSpaceInheritance object
 // This constructor will assign default values to properties that have it defined,
@@ -660,7 +663,49 @@ func (o IPSpaceInheritance) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.VendorSpecificOptionOptionSpace) {
 		toSerialize["vendor_specific_option_option_space"] = o.VendorSpecificOptionOptionSpace
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *IPSpaceInheritance) UnmarshalJSON(data []byte) (err error) {
+	varIPSpaceInheritance := _IPSpaceInheritance{}
+
+	err = json.Unmarshal(data, &varIPSpaceInheritance)
+
+	if err != nil {
+		return err
+	}
+
+	*o = IPSpaceInheritance(varIPSpaceInheritance)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "asm_config")
+		delete(additionalProperties, "ddns_client_update")
+		delete(additionalProperties, "ddns_conflict_resolution_mode")
+		delete(additionalProperties, "ddns_enabled")
+		delete(additionalProperties, "ddns_hostname_block")
+		delete(additionalProperties, "ddns_ttl_percent")
+		delete(additionalProperties, "ddns_update_block")
+		delete(additionalProperties, "ddns_update_on_renew")
+		delete(additionalProperties, "ddns_use_conflict_resolution")
+		delete(additionalProperties, "dhcp_config")
+		delete(additionalProperties, "dhcp_options")
+		delete(additionalProperties, "dhcp_options_v6")
+		delete(additionalProperties, "header_option_filename")
+		delete(additionalProperties, "header_option_server_address")
+		delete(additionalProperties, "header_option_server_name")
+		delete(additionalProperties, "hostname_rewrite_block")
+		delete(additionalProperties, "vendor_specific_option_option_space")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableIPSpaceInheritance struct {

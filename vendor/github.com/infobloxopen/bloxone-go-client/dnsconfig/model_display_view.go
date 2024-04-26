@@ -24,8 +24,11 @@ type DisplayView struct {
 	// DNS view name.
 	Name *string `json:"name,omitempty"`
 	// The resource identifier.
-	View *string `json:"view,omitempty"`
+	View                 *string `json:"view,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DisplayView DisplayView
 
 // NewDisplayView instantiates a new DisplayView object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,35 @@ func (o DisplayView) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.View) {
 		toSerialize["view"] = o.View
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DisplayView) UnmarshalJSON(data []byte) (err error) {
+	varDisplayView := _DisplayView{}
+
+	err = json.Unmarshal(data, &varDisplayView)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DisplayView(varDisplayView)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "view")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDisplayView struct {

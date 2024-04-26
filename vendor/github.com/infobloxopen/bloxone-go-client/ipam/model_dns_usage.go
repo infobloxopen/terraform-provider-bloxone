@@ -38,8 +38,11 @@ type DNSUsage struct {
 	// The resource identifier.
 	View *string `json:"view,omitempty"`
 	// The resource identifier.
-	Zone *string `json:"zone,omitempty"`
+	Zone                 *string `json:"zone,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DNSUsage DNSUsage
 
 // NewDNSUsage instantiates a new DNSUsage object
 // This constructor will assign default values to properties that have it defined,
@@ -418,7 +421,42 @@ func (o DNSUsage) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Zone) {
 		toSerialize["zone"] = o.Zone
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DNSUsage) UnmarshalJSON(data []byte) (err error) {
+	varDNSUsage := _DNSUsage{}
+
+	err = json.Unmarshal(data, &varDNSUsage)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DNSUsage(varDNSUsage)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "absolute_name")
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "dns_rdata")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "record")
+		delete(additionalProperties, "space")
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "view")
+		delete(additionalProperties, "zone")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDNSUsage struct {

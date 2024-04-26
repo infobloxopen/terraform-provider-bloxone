@@ -26,8 +26,11 @@ type DfpHost struct {
 	// The On-Prem Host identifier.
 	Ophid *string `json:"ophid,omitempty"`
 	// The DNS Forwarding Proxy site identifier that is appended to DNS queries originating from this DNS Forwarding Proxy and subsequently used for policy lookup purposes.
-	SiteId *string `json:"site_id,omitempty"`
+	SiteId               *string `json:"site_id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DfpHost DfpHost
 
 // NewDfpHost instantiates a new DfpHost object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,36 @@ func (o DfpHost) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.SiteId) {
 		toSerialize["site_id"] = o.SiteId
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DfpHost) UnmarshalJSON(data []byte) (err error) {
+	varDfpHost := _DfpHost{}
+
+	err = json.Unmarshal(data, &varDfpHost)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DfpHost(varDfpHost)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "legacy_host_id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "ophid")
+		delete(additionalProperties, "site_id")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDfpHost struct {

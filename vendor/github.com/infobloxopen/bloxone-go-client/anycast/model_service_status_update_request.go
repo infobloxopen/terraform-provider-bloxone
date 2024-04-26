@@ -19,12 +19,15 @@ var _ MappedNullable = &ServiceStatusUpdateRequest{}
 
 // ServiceStatusUpdateRequest struct for ServiceStatusUpdateRequest
 type ServiceStatusUpdateRequest struct {
-	AppName    *string            `json:"appName,omitempty"`
-	Message    *string            `json:"message,omitempty"`
-	Ophid      *string            `json:"ophid,omitempty"`
-	StatusCode *ServiceStatusCode `json:"statusCode,omitempty"`
-	Version    *string            `json:"version,omitempty"`
+	AppName              *string            `json:"appName,omitempty"`
+	Message              *string            `json:"message,omitempty"`
+	Ophid                *string            `json:"ophid,omitempty"`
+	StatusCode           *ServiceStatusCode `json:"statusCode,omitempty"`
+	Version              *string            `json:"version,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ServiceStatusUpdateRequest ServiceStatusUpdateRequest
 
 // NewServiceStatusUpdateRequest instantiates a new ServiceStatusUpdateRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -232,7 +235,37 @@ func (o ServiceStatusUpdateRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Version) {
 		toSerialize["version"] = o.Version
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ServiceStatusUpdateRequest) UnmarshalJSON(data []byte) (err error) {
+	varServiceStatusUpdateRequest := _ServiceStatusUpdateRequest{}
+
+	err = json.Unmarshal(data, &varServiceStatusUpdateRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ServiceStatusUpdateRequest(varServiceStatusUpdateRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "appName")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "ophid")
+		delete(additionalProperties, "statusCode")
+		delete(additionalProperties, "version")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableServiceStatusUpdateRequest struct {

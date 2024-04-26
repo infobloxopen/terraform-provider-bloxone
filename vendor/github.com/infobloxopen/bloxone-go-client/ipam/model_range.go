@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -59,9 +58,10 @@ type Range struct {
 	Tags      map[string]interface{} `json:"tags,omitempty"`
 	Threshold *UtilizationThreshold  `json:"threshold,omitempty"`
 	// Time when the object has been updated. Equals to _created_at_ if not updated after creation.
-	UpdatedAt     *time.Time     `json:"updated_at,omitempty"`
-	Utilization   *Utilization   `json:"utilization,omitempty"`
-	UtilizationV6 *UtilizationV6 `json:"utilization_v6,omitempty"`
+	UpdatedAt            *time.Time     `json:"updated_at,omitempty"`
+	Utilization          *Utilization   `json:"utilization,omitempty"`
+	UtilizationV6        *UtilizationV6 `json:"utilization_v6,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _Range Range
@@ -845,6 +845,11 @@ func (o Range) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UtilizationV6) {
 		toSerialize["utilization_v6"] = o.UtilizationV6
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -873,15 +878,41 @@ func (o *Range) UnmarshalJSON(data []byte) (err error) {
 
 	varRange := _Range{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varRange)
+	err = json.Unmarshal(data, &varRange)
 
 	if err != nil {
 		return err
 	}
 
 	*o = Range(varRange)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "dhcp_host")
+		delete(additionalProperties, "dhcp_options")
+		delete(additionalProperties, "disable_dhcp")
+		delete(additionalProperties, "end")
+		delete(additionalProperties, "exclusion_ranges")
+		delete(additionalProperties, "filters")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "inheritance_assigned_hosts")
+		delete(additionalProperties, "inheritance_parent")
+		delete(additionalProperties, "inheritance_sources")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "parent")
+		delete(additionalProperties, "protocol")
+		delete(additionalProperties, "space")
+		delete(additionalProperties, "start")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "threshold")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "utilization")
+		delete(additionalProperties, "utilization_v6")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

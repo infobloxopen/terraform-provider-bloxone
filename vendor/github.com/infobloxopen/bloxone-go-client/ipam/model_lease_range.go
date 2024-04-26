@@ -20,8 +20,11 @@ var _ MappedNullable = &LeaseRange{}
 // LeaseRange struct for LeaseRange
 type LeaseRange struct {
 	// The resource identifier.
-	Id *string `json:"id,omitempty"`
+	Id                   *string `json:"id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _LeaseRange LeaseRange
 
 // NewLeaseRange instantiates a new LeaseRange object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o LeaseRange) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *LeaseRange) UnmarshalJSON(data []byte) (err error) {
+	varLeaseRange := _LeaseRange{}
+
+	err = json.Unmarshal(data, &varLeaseRange)
+
+	if err != nil {
+		return err
+	}
+
+	*o = LeaseRange(varLeaseRange)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableLeaseRange struct {

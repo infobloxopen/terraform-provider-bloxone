@@ -20,21 +20,24 @@ var _ MappedNullable = &AnycastConfig{}
 
 // AnycastConfig struct for AnycastConfig
 type AnycastConfig struct {
-	AccountId          *int64                 `json:"account_id,omitempty"`
-	AnycastIpAddress   *string                `json:"anycast_ip_address,omitempty"`
-	AnycastIpv6Address *string                `json:"anycast_ipv6_address,omitempty"`
-	CreatedAt          *time.Time             `json:"created_at,omitempty"`
-	Description        *string                `json:"description,omitempty"`
-	Fields             *BufFieldMask          `json:"fields,omitempty"`
-	Id                 *int64                 `json:"id,omitempty"`
-	IsConfigured       *bool                  `json:"is_configured,omitempty"`
-	Name               *string                `json:"name,omitempty"`
-	OnpremHosts        []OnpremHostRef        `json:"onprem_hosts,omitempty"`
-	RuntimeStatus      *string                `json:"runtime_status,omitempty"`
-	Service            *string                `json:"service,omitempty"`
-	Tags               map[string]interface{} `json:"tags,omitempty"`
-	UpdatedAt          *time.Time             `json:"updated_at,omitempty"`
+	AccountId            *int64                 `json:"account_id,omitempty"`
+	AnycastIpAddress     *string                `json:"anycast_ip_address,omitempty"`
+	AnycastIpv6Address   *string                `json:"anycast_ipv6_address,omitempty"`
+	CreatedAt            *time.Time             `json:"created_at,omitempty"`
+	Description          *string                `json:"description,omitempty"`
+	Fields               *BufFieldMask          `json:"fields,omitempty"`
+	Id                   *int64                 `json:"id,omitempty"`
+	IsConfigured         *bool                  `json:"is_configured,omitempty"`
+	Name                 *string                `json:"name,omitempty"`
+	OnpremHosts          []OnpremHostRef        `json:"onprem_hosts,omitempty"`
+	RuntimeStatus        *string                `json:"runtime_status,omitempty"`
+	Service              *string                `json:"service,omitempty"`
+	Tags                 map[string]interface{} `json:"tags,omitempty"`
+	UpdatedAt            *time.Time             `json:"updated_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AnycastConfig AnycastConfig
 
 // NewAnycastConfig instantiates a new AnycastConfig object
 // This constructor will assign default values to properties that have it defined,
@@ -553,7 +556,46 @@ func (o AnycastConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AnycastConfig) UnmarshalJSON(data []byte) (err error) {
+	varAnycastConfig := _AnycastConfig{}
+
+	err = json.Unmarshal(data, &varAnycastConfig)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AnycastConfig(varAnycastConfig)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "account_id")
+		delete(additionalProperties, "anycast_ip_address")
+		delete(additionalProperties, "anycast_ipv6_address")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "fields")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "is_configured")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "onprem_hosts")
+		delete(additionalProperties, "runtime_status")
+		delete(additionalProperties, "service")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAnycastConfig struct {

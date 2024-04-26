@@ -28,8 +28,11 @@ type BgpConfig struct {
 	LinkDetect    *bool         `json:"link_detect,omitempty"`
 	Neighbors     []BgpNeighbor `json:"neighbors,omitempty"`
 	// Any predefined BGP configuration, with embedded new lines; the preamble will be prepended to the generated BGP configuration.
-	Preamble *string `json:"preamble,omitempty"`
+	Preamble             *string `json:"preamble,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _BgpConfig BgpConfig
 
 // NewBgpConfig instantiates a new BgpConfig object
 // This constructor will assign default values to properties that have it defined,
@@ -338,7 +341,40 @@ func (o BgpConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Preamble) {
 		toSerialize["preamble"] = o.Preamble
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *BgpConfig) UnmarshalJSON(data []byte) (err error) {
+	varBgpConfig := _BgpConfig{}
+
+	err = json.Unmarshal(data, &varBgpConfig)
+
+	if err != nil {
+		return err
+	}
+
+	*o = BgpConfig(varBgpConfig)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "asn")
+		delete(additionalProperties, "asn_text")
+		delete(additionalProperties, "fields")
+		delete(additionalProperties, "holddown_secs")
+		delete(additionalProperties, "keep_alive_secs")
+		delete(additionalProperties, "link_detect")
+		delete(additionalProperties, "neighbors")
+		delete(additionalProperties, "preamble")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBgpConfig struct {

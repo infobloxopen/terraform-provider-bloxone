@@ -49,8 +49,11 @@ type DetailService struct {
 	// Tags associated with this Service.
 	Tags map[string]interface{} `json:"tags,omitempty"`
 	// Timestamp of the latest update on Service.
-	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	UpdatedAt            *time.Time `json:"updated_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DetailService DetailService
 
 // NewDetailService instantiates a new DetailService object
 // This constructor will assign default values to properties that have it defined,
@@ -639,7 +642,48 @@ func (o DetailService) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DetailService) UnmarshalJSON(data []byte) (err error) {
+	varDetailService := _DetailService{}
+
+	err = json.Unmarshal(data, &varDetailService)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DetailService(varDetailService)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "composite_state")
+		delete(additionalProperties, "composite_status")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "current_version")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "desired_state")
+		delete(additionalProperties, "desired_version")
+		delete(additionalProperties, "hosts")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "interface_labels")
+		delete(additionalProperties, "location")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "pool")
+		delete(additionalProperties, "service_type")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDetailService struct {

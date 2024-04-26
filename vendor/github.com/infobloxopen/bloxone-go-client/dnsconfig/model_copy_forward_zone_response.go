@@ -19,8 +19,11 @@ var _ MappedNullable = &CopyForwardZoneResponse{}
 
 // CopyForwardZoneResponse The __ForwardZone__ object copy response format.
 type CopyForwardZoneResponse struct {
-	Result *CopyResponse `json:"result,omitempty"`
+	Result               *CopyResponse `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CopyForwardZoneResponse CopyForwardZoneResponse
 
 // NewCopyForwardZoneResponse instantiates a new CopyForwardZoneResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CopyForwardZoneResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CopyForwardZoneResponse) UnmarshalJSON(data []byte) (err error) {
+	varCopyForwardZoneResponse := _CopyForwardZoneResponse{}
+
+	err = json.Unmarshal(data, &varCopyForwardZoneResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CopyForwardZoneResponse(varCopyForwardZoneResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCopyForwardZoneResponse struct {

@@ -29,8 +29,11 @@ type ThreatFeed struct {
 	Name   *string           `json:"name,omitempty"`
 	Source *ThreatFeedSource `json:"source,omitempty"`
 	// The Threat Level of the Feed.
-	ThreatLevel *string `json:"threat_level,omitempty"`
+	ThreatLevel          *string `json:"threat_level,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ThreatFeed ThreatFeed
 
 // NewThreatFeed instantiates a new ThreatFeed object
 // This constructor will assign default values to properties that have it defined,
@@ -273,7 +276,38 @@ func (o ThreatFeed) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ThreatLevel) {
 		toSerialize["threat_level"] = o.ThreatLevel
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ThreatFeed) UnmarshalJSON(data []byte) (err error) {
+	varThreatFeed := _ThreatFeed{}
+
+	err = json.Unmarshal(data, &varThreatFeed)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ThreatFeed(varThreatFeed)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "confidence_level")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "threat_level")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableThreatFeed struct {

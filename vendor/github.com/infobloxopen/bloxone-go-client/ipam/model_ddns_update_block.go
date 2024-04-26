@@ -22,8 +22,11 @@ type DDNSUpdateBlock struct {
 	// The domain name for DDNS.
 	DdnsDomain *string `json:"ddns_domain,omitempty"`
 	// Determines if DDNS updates are enabled at this level.
-	DdnsSendUpdates *bool `json:"ddns_send_updates,omitempty"`
+	DdnsSendUpdates      *bool `json:"ddns_send_updates,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DDNSUpdateBlock DDNSUpdateBlock
 
 // NewDDNSUpdateBlock instantiates a new DDNSUpdateBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o DDNSUpdateBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DdnsSendUpdates) {
 		toSerialize["ddns_send_updates"] = o.DdnsSendUpdates
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DDNSUpdateBlock) UnmarshalJSON(data []byte) (err error) {
+	varDDNSUpdateBlock := _DDNSUpdateBlock{}
+
+	err = json.Unmarshal(data, &varDDNSUpdateBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DDNSUpdateBlock(varDDNSUpdateBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ddns_domain")
+		delete(additionalProperties, "ddns_send_updates")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDDNSUpdateBlock struct {

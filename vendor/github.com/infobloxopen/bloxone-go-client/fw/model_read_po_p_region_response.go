@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadPoPRegionResponse{}
 
 // ReadPoPRegionResponse struct for ReadPoPRegionResponse
 type ReadPoPRegionResponse struct {
-	Result *PoPRegion `json:"result,omitempty"`
+	Result               *PoPRegion `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadPoPRegionResponse ReadPoPRegionResponse
 
 // NewReadPoPRegionResponse instantiates a new ReadPoPRegionResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadPoPRegionResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadPoPRegionResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadPoPRegionResponse := _ReadPoPRegionResponse{}
+
+	err = json.Unmarshal(data, &varReadPoPRegionResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadPoPRegionResponse(varReadPoPRegionResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadPoPRegionResponse struct {

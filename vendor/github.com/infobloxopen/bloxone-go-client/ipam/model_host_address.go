@@ -24,8 +24,11 @@ type HostAddress struct {
 	// The resource identifier.
 	Ref *string `json:"ref,omitempty"`
 	// The resource identifier.
-	Space *string `json:"space,omitempty"`
+	Space                *string `json:"space,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _HostAddress HostAddress
 
 // NewHostAddress instantiates a new HostAddress object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,35 @@ func (o HostAddress) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Space) {
 		toSerialize["space"] = o.Space
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *HostAddress) UnmarshalJSON(data []byte) (err error) {
+	varHostAddress := _HostAddress{}
+
+	err = json.Unmarshal(data, &varHostAddress)
+
+	if err != nil {
+		return err
+	}
+
+	*o = HostAddress(varHostAddress)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "ref")
+		delete(additionalProperties, "space")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableHostAddress struct {

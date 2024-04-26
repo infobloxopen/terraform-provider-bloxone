@@ -19,12 +19,15 @@ var _ MappedNullable = &AccessCodeRule{}
 
 // AccessCodeRule struct for AccessCodeRule
 type AccessCodeRule struct {
-	Action       *string `json:"action,omitempty"`
-	Data         *string `json:"data,omitempty"`
-	Description  *string `json:"description,omitempty"`
-	RedirectName *string `json:"redirect_name,omitempty"`
-	Type         *string `json:"type,omitempty"`
+	Action               *string `json:"action,omitempty"`
+	Data                 *string `json:"data,omitempty"`
+	Description          *string `json:"description,omitempty"`
+	RedirectName         *string `json:"redirect_name,omitempty"`
+	Type                 *string `json:"type,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AccessCodeRule AccessCodeRule
 
 // NewAccessCodeRule instantiates a new AccessCodeRule object
 // This constructor will assign default values to properties that have it defined,
@@ -228,7 +231,37 @@ func (o AccessCodeRule) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Type) {
 		toSerialize["type"] = o.Type
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AccessCodeRule) UnmarshalJSON(data []byte) (err error) {
+	varAccessCodeRule := _AccessCodeRule{}
+
+	err = json.Unmarshal(data, &varAccessCodeRule)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AccessCodeRule(varAccessCodeRule)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "redirect_name")
+		delete(additionalProperties, "type")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAccessCodeRule struct {

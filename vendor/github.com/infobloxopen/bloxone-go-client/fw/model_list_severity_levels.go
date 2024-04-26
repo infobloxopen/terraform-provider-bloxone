@@ -26,8 +26,11 @@ type ListSeverityLevels struct {
 	// Enables tag support for resource where tags attribute contains user-defined key value pairs
 	Tags map[string]interface{} `json:"tags,omitempty"`
 	// The threat level for a TI list. The possible values are [\"INFO\", \"LOW\", \"MEDIUM\", \"HIGH\"]
-	ThreatLevel *string `json:"threat_level,omitempty"`
+	ThreatLevel          *string `json:"threat_level,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListSeverityLevels ListSeverityLevels
 
 // NewListSeverityLevels instantiates a new ListSeverityLevels object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,36 @@ func (o ListSeverityLevels) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ThreatLevel) {
 		toSerialize["threat_level"] = o.ThreatLevel
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListSeverityLevels) UnmarshalJSON(data []byte) (err error) {
+	varListSeverityLevels := _ListSeverityLevels{}
+
+	err = json.Unmarshal(data, &varListSeverityLevels)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListSeverityLevels(varListSeverityLevels)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "confidence_level")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "threat_level")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListSeverityLevels struct {

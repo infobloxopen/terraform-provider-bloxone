@@ -19,8 +19,11 @@ var _ MappedNullable = &CreateAuthNSGResponse{}
 
 // CreateAuthNSGResponse The AuthNSG object create response format.
 type CreateAuthNSGResponse struct {
-	Result *AuthNSG `json:"result,omitempty"`
+	Result               *AuthNSG `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateAuthNSGResponse CreateAuthNSGResponse
 
 // NewCreateAuthNSGResponse instantiates a new CreateAuthNSGResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CreateAuthNSGResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateAuthNSGResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateAuthNSGResponse := _CreateAuthNSGResponse{}
+
+	err = json.Unmarshal(data, &varCreateAuthNSGResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateAuthNSGResponse(varCreateAuthNSGResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateAuthNSGResponse struct {

@@ -19,8 +19,11 @@ var _ MappedNullable = &CopySubnetResponse{}
 
 // CopySubnetResponse The response format to copy the __Subnet__ object.
 type CopySubnetResponse struct {
-	Result *CopyResponse `json:"result,omitempty"`
+	Result               *CopyResponse `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CopySubnetResponse CopySubnetResponse
 
 // NewCopySubnetResponse instantiates a new CopySubnetResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CopySubnetResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CopySubnetResponse) UnmarshalJSON(data []byte) (err error) {
+	varCopySubnetResponse := _CopySubnetResponse{}
+
+	err = json.Unmarshal(data, &varCopySubnetResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CopySubnetResponse(varCopySubnetResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCopySubnetResponse struct {

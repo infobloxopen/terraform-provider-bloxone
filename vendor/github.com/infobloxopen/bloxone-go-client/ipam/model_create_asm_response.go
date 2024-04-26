@@ -19,8 +19,11 @@ var _ MappedNullable = &CreateASMResponse{}
 
 // CreateASMResponse The response format to update subnet and range for ASM.
 type CreateASMResponse struct {
-	Result *ASM `json:"result,omitempty"`
+	Result               *ASM `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateASMResponse CreateASMResponse
 
 // NewCreateASMResponse instantiates a new CreateASMResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CreateASMResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateASMResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateASMResponse := _CreateASMResponse{}
+
+	err = json.Unmarshal(data, &varCreateASMResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateASMResponse(varCreateASMResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateASMResponse struct {

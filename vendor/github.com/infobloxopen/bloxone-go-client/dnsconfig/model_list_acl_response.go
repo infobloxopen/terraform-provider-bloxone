@@ -20,8 +20,11 @@ var _ MappedNullable = &ListACLResponse{}
 // ListACLResponse The ACL object list response format.
 type ListACLResponse struct {
 	// List of ACL objects.
-	Results []ACL `json:"results,omitempty"`
+	Results              []ACL `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListACLResponse ListACLResponse
 
 // NewListACLResponse instantiates a new ListACLResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListACLResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListACLResponse) UnmarshalJSON(data []byte) (err error) {
+	varListACLResponse := _ListACLResponse{}
+
+	err = json.Unmarshal(data, &varListACLResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListACLResponse(varListACLResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListACLResponse struct {

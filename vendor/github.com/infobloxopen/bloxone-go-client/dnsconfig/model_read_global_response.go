@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadGlobalResponse{}
 
 // ReadGlobalResponse The Global object read response format.
 type ReadGlobalResponse struct {
-	Result *Global `json:"result,omitempty"`
+	Result               *Global `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadGlobalResponse ReadGlobalResponse
 
 // NewReadGlobalResponse instantiates a new ReadGlobalResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadGlobalResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadGlobalResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadGlobalResponse := _ReadGlobalResponse{}
+
+	err = json.Unmarshal(data, &varReadGlobalResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadGlobalResponse(varReadGlobalResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadGlobalResponse struct {

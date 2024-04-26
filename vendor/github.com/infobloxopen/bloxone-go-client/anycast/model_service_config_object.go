@@ -19,10 +19,13 @@ var _ MappedNullable = &ServiceConfigObject{}
 
 // ServiceConfigObject struct for ServiceConfigObject
 type ServiceConfigObject struct {
-	ConfigBody *string `json:"configBody,omitempty"`
-	Ophid      *string `json:"ophid,omitempty"`
-	Version    *string `json:"version,omitempty"`
+	ConfigBody           *string `json:"configBody,omitempty"`
+	Ophid                *string `json:"ophid,omitempty"`
+	Version              *string `json:"version,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ServiceConfigObject ServiceConfigObject
 
 // NewServiceConfigObject instantiates a new ServiceConfigObject object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o ServiceConfigObject) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Version) {
 		toSerialize["version"] = o.Version
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ServiceConfigObject) UnmarshalJSON(data []byte) (err error) {
+	varServiceConfigObject := _ServiceConfigObject{}
+
+	err = json.Unmarshal(data, &varServiceConfigObject)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ServiceConfigObject(varServiceConfigObject)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "configBody")
+		delete(additionalProperties, "ophid")
+		delete(additionalProperties, "version")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableServiceConfigObject struct {

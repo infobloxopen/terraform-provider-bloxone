@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateHardwareFilterResponse{}
 
 // UpdateHardwareFilterResponse The response format to update the __HardwareFilter__ object.
 type UpdateHardwareFilterResponse struct {
-	Result *HardwareFilter `json:"result,omitempty"`
+	Result               *HardwareFilter `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateHardwareFilterResponse UpdateHardwareFilterResponse
 
 // NewUpdateHardwareFilterResponse instantiates a new UpdateHardwareFilterResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateHardwareFilterResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateHardwareFilterResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateHardwareFilterResponse := _UpdateHardwareFilterResponse{}
+
+	err = json.Unmarshal(data, &varUpdateHardwareFilterResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateHardwareFilterResponse(varUpdateHardwareFilterResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateHardwareFilterResponse struct {

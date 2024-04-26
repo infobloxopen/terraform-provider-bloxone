@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -26,7 +25,8 @@ type RootNS struct {
 	// FQDN.
 	Fqdn string `json:"fqdn"`
 	// FQDN in punycode.
-	ProtocolFqdn *string `json:"protocol_fqdn,omitempty"`
+	ProtocolFqdn         *string `json:"protocol_fqdn,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _RootNS RootNS
@@ -145,6 +145,11 @@ func (o RootNS) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ProtocolFqdn) {
 		toSerialize["protocol_fqdn"] = o.ProtocolFqdn
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -173,15 +178,22 @@ func (o *RootNS) UnmarshalJSON(data []byte) (err error) {
 
 	varRootNS := _RootNS{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varRootNS)
+	err = json.Unmarshal(data, &varRootNS)
 
 	if err != nil {
 		return err
 	}
 
 	*o = RootNS(varRootNS)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "fqdn")
+		delete(additionalProperties, "protocol_fqdn")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

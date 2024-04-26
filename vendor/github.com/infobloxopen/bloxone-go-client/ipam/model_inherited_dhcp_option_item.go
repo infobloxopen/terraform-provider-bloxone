@@ -21,8 +21,11 @@ var _ MappedNullable = &InheritedDHCPOptionItem{}
 type InheritedDHCPOptionItem struct {
 	Option *OptionItem `json:"option,omitempty"`
 	// The resource identifier.
-	OverridingGroup *string `json:"overriding_group,omitempty"`
+	OverridingGroup      *string `json:"overriding_group,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InheritedDHCPOptionItem InheritedDHCPOptionItem
 
 // NewInheritedDHCPOptionItem instantiates a new InheritedDHCPOptionItem object
 // This constructor will assign default values to properties that have it defined,
@@ -121,7 +124,34 @@ func (o InheritedDHCPOptionItem) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.OverridingGroup) {
 		toSerialize["overriding_group"] = o.OverridingGroup
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritedDHCPOptionItem) UnmarshalJSON(data []byte) (err error) {
+	varInheritedDHCPOptionItem := _InheritedDHCPOptionItem{}
+
+	err = json.Unmarshal(data, &varInheritedDHCPOptionItem)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedDHCPOptionItem(varInheritedDHCPOptionItem)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "option")
+		delete(additionalProperties, "overriding_group")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedDHCPOptionItem struct {

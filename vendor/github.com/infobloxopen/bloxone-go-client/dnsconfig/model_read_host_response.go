@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadHostResponse{}
 
 // ReadHostResponse The DNS Host object read response format.
 type ReadHostResponse struct {
-	Result *Host `json:"result,omitempty"`
+	Result               *Host `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadHostResponse ReadHostResponse
 
 // NewReadHostResponse instantiates a new ReadHostResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadHostResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadHostResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadHostResponse := _ReadHostResponse{}
+
+	err = json.Unmarshal(data, &varReadHostResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadHostResponse(varReadHostResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadHostResponse struct {

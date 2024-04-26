@@ -43,8 +43,11 @@ type Host struct {
 	// The tags of the on-prem host in JSON format.
 	Tags map[string]interface{} `json:"tags,omitempty"`
 	// Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services.  * _microsoft_active_directory_: host type is Microsoft Active Directory.
-	Type *string `json:"type,omitempty"`
+	Type                 *string `json:"type,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Host Host
 
 // NewHost instantiates a new Host object
 // This constructor will assign default values to properties that have it defined,
@@ -528,7 +531,45 @@ func (o Host) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Type) {
 		toSerialize["type"] = o.Type
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Host) UnmarshalJSON(data []byte) (err error) {
+	varHost := _Host{}
+
+	err = json.Unmarshal(data, &varHost)
+
+	if err != nil {
+		return err
+	}
+
+	*o = Host(varHost)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "anycast_addresses")
+		delete(additionalProperties, "associated_server")
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "current_version")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "ip_space")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "ophid")
+		delete(additionalProperties, "provider_id")
+		delete(additionalProperties, "server")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "type")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableHost struct {

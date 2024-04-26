@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -28,7 +27,8 @@ type LeasesCommand struct {
 	// The list of ranges to execute the \"command\" on. For now it is limited to 1 range.
 	Range []LeaseRange `json:"range,omitempty"`
 	// The list of subnets to execute the \"command\" on. For now it is limited to 1 subnet.
-	Subnet []LeaseSubnet `json:"subnet,omitempty"`
+	Subnet               []LeaseSubnet `json:"subnet,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _LeasesCommand LeasesCommand
@@ -191,6 +191,11 @@ func (o LeasesCommand) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Subnet) {
 		toSerialize["subnet"] = o.Subnet
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -218,15 +223,23 @@ func (o *LeasesCommand) UnmarshalJSON(data []byte) (err error) {
 
 	varLeasesCommand := _LeasesCommand{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varLeasesCommand)
+	err = json.Unmarshal(data, &varLeasesCommand)
 
 	if err != nil {
 		return err
 	}
 
 	*o = LeasesCommand(varLeasesCommand)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "command")
+		delete(additionalProperties, "range")
+		delete(additionalProperties, "subnet")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

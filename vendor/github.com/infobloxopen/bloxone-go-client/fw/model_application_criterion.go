@@ -22,9 +22,12 @@ type ApplicationCriterion struct {
 	Category *string `json:"category,omitempty"`
 	Id       *string `json:"id,omitempty"`
 	// Name for the application. Since the name of application is unique it may be used as alternate key for the application. The 'name' is used for import-export workflow and should be resolved to the 'id' before continue processing Create/Update operations.
-	Name        *string `json:"name,omitempty"`
-	Subcategory *string `json:"subcategory,omitempty"`
+	Name                 *string `json:"name,omitempty"`
+	Subcategory          *string `json:"subcategory,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ApplicationCriterion ApplicationCriterion
 
 // NewApplicationCriterion instantiates a new ApplicationCriterion object
 // This constructor will assign default values to properties that have it defined,
@@ -193,7 +196,36 @@ func (o ApplicationCriterion) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Subcategory) {
 		toSerialize["subcategory"] = o.Subcategory
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ApplicationCriterion) UnmarshalJSON(data []byte) (err error) {
+	varApplicationCriterion := _ApplicationCriterion{}
+
+	err = json.Unmarshal(data, &varApplicationCriterion)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ApplicationCriterion(varApplicationCriterion)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "category")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "subcategory")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableApplicationCriterion struct {

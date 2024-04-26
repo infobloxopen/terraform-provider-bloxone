@@ -22,8 +22,11 @@ type ConvertDomainName struct {
 	// IDN domain name representation.
 	Idn *string `json:"idn,omitempty"`
 	// punycode domain name representation.
-	Punycode *string `json:"punycode,omitempty"`
+	Punycode             *string `json:"punycode,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ConvertDomainName ConvertDomainName
 
 // NewConvertDomainName instantiates a new ConvertDomainName object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o ConvertDomainName) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Punycode) {
 		toSerialize["punycode"] = o.Punycode
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ConvertDomainName) UnmarshalJSON(data []byte) (err error) {
+	varConvertDomainName := _ConvertDomainName{}
+
+	err = json.Unmarshal(data, &varConvertDomainName)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ConvertDomainName(varConvertDomainName)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "idn")
+		delete(additionalProperties, "punycode")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableConvertDomainName struct {

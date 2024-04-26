@@ -29,10 +29,13 @@ type OnpremHost struct {
 	// IPv4 address of the on-prem host
 	IpAddress *string `json:"ip_address,omitempty"`
 	// IPv6 address of the on-prem host
-	Ipv6Address *string    `json:"ipv6_address,omitempty"`
-	Name        *string    `json:"name,omitempty"`
-	UpdatedAt   *time.Time `json:"updated_at,omitempty"`
+	Ipv6Address          *string    `json:"ipv6_address,omitempty"`
+	Name                 *string    `json:"name,omitempty"`
+	UpdatedAt            *time.Time `json:"updated_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _OnpremHost OnpremHost
 
 // NewOnpremHost instantiates a new OnpremHost object
 // This constructor will assign default values to properties that have it defined,
@@ -411,7 +414,42 @@ func (o OnpremHost) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *OnpremHost) UnmarshalJSON(data []byte) (err error) {
+	varOnpremHost := _OnpremHost{}
+
+	err = json.Unmarshal(data, &varOnpremHost)
+
+	if err != nil {
+		return err
+	}
+
+	*o = OnpremHost(varOnpremHost)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "anycast_config_refs")
+		delete(additionalProperties, "config_bgp")
+		delete(additionalProperties, "config_ospf")
+		delete(additionalProperties, "config_ospfv3")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "ip_address")
+		delete(additionalProperties, "ipv6_address")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableOnpremHost struct {

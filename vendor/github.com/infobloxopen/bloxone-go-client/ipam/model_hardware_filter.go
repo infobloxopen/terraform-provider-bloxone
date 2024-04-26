@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -50,6 +49,7 @@ type HardwareFilter struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	// The resource identifier.
 	VendorSpecificOptionOptionSpace *string `json:"vendor_specific_option_option_space,omitempty"`
+	AdditionalProperties            map[string]interface{}
 }
 
 type _HardwareFilter HardwareFilter
@@ -562,6 +562,11 @@ func (o HardwareFilter) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.VendorSpecificOptionOptionSpace) {
 		toSerialize["vendor_specific_option_option_space"] = o.VendorSpecificOptionOptionSpace
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -589,15 +594,33 @@ func (o *HardwareFilter) UnmarshalJSON(data []byte) (err error) {
 
 	varHardwareFilter := _HardwareFilter{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varHardwareFilter)
+	err = json.Unmarshal(data, &varHardwareFilter)
 
 	if err != nil {
 		return err
 	}
 
 	*o = HardwareFilter(varHardwareFilter)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "addresses")
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "dhcp_options")
+		delete(additionalProperties, "header_option_filename")
+		delete(additionalProperties, "header_option_server_address")
+		delete(additionalProperties, "header_option_server_name")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "lease_time")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "role")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "vendor_specific_option_option_space")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -19,8 +19,11 @@ var _ MappedNullable = &SecurityPoliciesCreateSecurityPolicy400Response{}
 
 // SecurityPoliciesCreateSecurityPolicy400Response struct for SecurityPoliciesCreateSecurityPolicy400Response
 type SecurityPoliciesCreateSecurityPolicy400Response struct {
-	Error *SecurityPoliciesCreateSecurityPolicy400ResponseError `json:"error,omitempty"`
+	Error                *SecurityPoliciesCreateSecurityPolicy400ResponseError `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SecurityPoliciesCreateSecurityPolicy400Response SecurityPoliciesCreateSecurityPolicy400Response
 
 // NewSecurityPoliciesCreateSecurityPolicy400Response instantiates a new SecurityPoliciesCreateSecurityPolicy400Response object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o SecurityPoliciesCreateSecurityPolicy400Response) ToMap() (map[string]int
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *SecurityPoliciesCreateSecurityPolicy400Response) UnmarshalJSON(data []byte) (err error) {
+	varSecurityPoliciesCreateSecurityPolicy400Response := _SecurityPoliciesCreateSecurityPolicy400Response{}
+
+	err = json.Unmarshal(data, &varSecurityPoliciesCreateSecurityPolicy400Response)
+
+	if err != nil {
+		return err
+	}
+
+	*o = SecurityPoliciesCreateSecurityPolicy400Response(varSecurityPoliciesCreateSecurityPolicy400Response)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "error")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSecurityPoliciesCreateSecurityPolicy400Response struct {

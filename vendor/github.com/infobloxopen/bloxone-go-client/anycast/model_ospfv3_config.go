@@ -25,10 +25,13 @@ type Ospfv3Config struct {
 	DeadInterval  *int64  `json:"dead_interval,omitempty"`
 	HelloInterval *int64  `json:"hello_interval,omitempty"`
 	// Name of the interface that is configured with external IP address of the host
-	Interface          *string `json:"interface,omitempty"`
-	RetransmitInterval *int64  `json:"retransmit_interval,omitempty"`
-	TransmitDelay      *int64  `json:"transmit_delay,omitempty"`
+	Interface            *string `json:"interface,omitempty"`
+	RetransmitInterval   *int64  `json:"retransmit_interval,omitempty"`
+	TransmitDelay        *int64  `json:"transmit_delay,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Ospfv3Config Ospfv3Config
 
 // NewOspfv3Config instantiates a new Ospfv3Config object
 // This constructor will assign default values to properties that have it defined,
@@ -302,7 +305,39 @@ func (o Ospfv3Config) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.TransmitDelay) {
 		toSerialize["transmit_delay"] = o.TransmitDelay
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Ospfv3Config) UnmarshalJSON(data []byte) (err error) {
+	varOspfv3Config := _Ospfv3Config{}
+
+	err = json.Unmarshal(data, &varOspfv3Config)
+
+	if err != nil {
+		return err
+	}
+
+	*o = Ospfv3Config(varOspfv3Config)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "area")
+		delete(additionalProperties, "cost")
+		delete(additionalProperties, "dead_interval")
+		delete(additionalProperties, "hello_interval")
+		delete(additionalProperties, "interface")
+		delete(additionalProperties, "retransmit_interval")
+		delete(additionalProperties, "transmit_delay")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableOspfv3Config struct {

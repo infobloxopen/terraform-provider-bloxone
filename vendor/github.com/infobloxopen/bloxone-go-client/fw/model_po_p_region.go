@@ -26,8 +26,11 @@ type PoPRegion struct {
 	// PoP Region's location
 	Location *string `json:"location,omitempty"`
 	// PoP Region's name
-	Region *string `json:"region,omitempty"`
+	Region               *string `json:"region,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PoPRegion PoPRegion
 
 // NewPoPRegion instantiates a new PoPRegion object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,36 @@ func (o PoPRegion) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Region) {
 		toSerialize["region"] = o.Region
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *PoPRegion) UnmarshalJSON(data []byte) (err error) {
+	varPoPRegion := _PoPRegion{}
+
+	err = json.Unmarshal(data, &varPoPRegion)
+
+	if err != nil {
+		return err
+	}
+
+	*o = PoPRegion(varPoPRegion)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "addresses")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "location")
+		delete(additionalProperties, "region")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePoPRegion struct {

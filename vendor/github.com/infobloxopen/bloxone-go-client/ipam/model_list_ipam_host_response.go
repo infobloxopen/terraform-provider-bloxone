@@ -20,8 +20,11 @@ var _ MappedNullable = &ListIpamHostResponse{}
 // ListIpamHostResponse The response format to retrieve __IpamHost__ objects.
 type ListIpamHostResponse struct {
 	// The list of IpamHost objects.
-	Results []IpamHost `json:"results,omitempty"`
+	Results              []IpamHost `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListIpamHostResponse ListIpamHostResponse
 
 // NewListIpamHostResponse instantiates a new ListIpamHostResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListIpamHostResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListIpamHostResponse) UnmarshalJSON(data []byte) (err error) {
+	varListIpamHostResponse := _ListIpamHostResponse{}
+
+	err = json.Unmarshal(data, &varListIpamHostResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListIpamHostResponse(varListIpamHostResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListIpamHostResponse struct {

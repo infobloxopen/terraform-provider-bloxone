@@ -20,8 +20,11 @@ var _ MappedNullable = &InternalDomainsMultiResponse{}
 // InternalDomainsMultiResponse The Internal domains list response.
 type InternalDomainsMultiResponse struct {
 	// The list of Internal Domains objects.
-	Results []InternalDomains `json:"results,omitempty"`
+	Results              []InternalDomains `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InternalDomainsMultiResponse InternalDomainsMultiResponse
 
 // NewInternalDomainsMultiResponse instantiates a new InternalDomainsMultiResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o InternalDomainsMultiResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InternalDomainsMultiResponse) UnmarshalJSON(data []byte) (err error) {
+	varInternalDomainsMultiResponse := _InternalDomainsMultiResponse{}
+
+	err = json.Unmarshal(data, &varInternalDomainsMultiResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InternalDomainsMultiResponse(varInternalDomainsMultiResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInternalDomainsMultiResponse struct {

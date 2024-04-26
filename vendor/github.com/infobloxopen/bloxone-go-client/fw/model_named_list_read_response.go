@@ -19,8 +19,11 @@ var _ MappedNullable = &NamedListReadResponse{}
 
 // NamedListReadResponse The Named List read response.
 type NamedListReadResponse struct {
-	Results *NamedList `json:"results,omitempty"`
+	Results              *NamedList `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NamedListReadResponse NamedListReadResponse
 
 // NewNamedListReadResponse instantiates a new NamedListReadResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o NamedListReadResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NamedListReadResponse) UnmarshalJSON(data []byte) (err error) {
+	varNamedListReadResponse := _NamedListReadResponse{}
+
+	err = json.Unmarshal(data, &varNamedListReadResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NamedListReadResponse(varNamedListReadResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNamedListReadResponse struct {

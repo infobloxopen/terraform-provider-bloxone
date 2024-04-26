@@ -19,9 +19,12 @@ var _ MappedNullable = &ListDetailHostsResponse{}
 
 // ListDetailHostsResponse struct for ListDetailHostsResponse
 type ListDetailHostsResponse struct {
-	Page    *ApiPageInfo `json:"page,omitempty"`
-	Results []DetailHost `json:"results,omitempty"`
+	Page                 *ApiPageInfo `json:"page,omitempty"`
+	Results              []DetailHost `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListDetailHostsResponse ListDetailHostsResponse
 
 // NewListDetailHostsResponse instantiates a new ListDetailHostsResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +123,34 @@ func (o ListDetailHostsResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListDetailHostsResponse) UnmarshalJSON(data []byte) (err error) {
+	varListDetailHostsResponse := _ListDetailHostsResponse{}
+
+	err = json.Unmarshal(data, &varListDetailHostsResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListDetailHostsResponse(varListDetailHostsResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "page")
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListDetailHostsResponse struct {

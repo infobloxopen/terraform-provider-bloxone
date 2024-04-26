@@ -20,8 +20,11 @@ var _ MappedNullable = &NetworkListsDeleteRequest{}
 // NetworkListsDeleteRequest The Network List delete request.
 type NetworkListsDeleteRequest struct {
 	// The list of Network List object identifiers.
-	Ids []int32 `json:"ids,omitempty"`
+	Ids                  []int32 `json:"ids,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NetworkListsDeleteRequest NetworkListsDeleteRequest
 
 // NewNetworkListsDeleteRequest instantiates a new NetworkListsDeleteRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o NetworkListsDeleteRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Ids) {
 		toSerialize["ids"] = o.Ids
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NetworkListsDeleteRequest) UnmarshalJSON(data []byte) (err error) {
+	varNetworkListsDeleteRequest := _NetworkListsDeleteRequest{}
+
+	err = json.Unmarshal(data, &varNetworkListsDeleteRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NetworkListsDeleteRequest(varNetworkListsDeleteRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ids")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNetworkListsDeleteRequest struct {

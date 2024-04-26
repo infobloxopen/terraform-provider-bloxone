@@ -19,8 +19,11 @@ var _ MappedNullable = &CreateForwardNSGResponse{}
 
 // CreateForwardNSGResponse The ForwardNSG object create response format.
 type CreateForwardNSGResponse struct {
-	Result *ForwardNSG `json:"result,omitempty"`
+	Result               *ForwardNSG `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateForwardNSGResponse CreateForwardNSGResponse
 
 // NewCreateForwardNSGResponse instantiates a new CreateForwardNSGResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CreateForwardNSGResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateForwardNSGResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateForwardNSGResponse := _CreateForwardNSGResponse{}
+
+	err = json.Unmarshal(data, &varCreateForwardNSGResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateForwardNSGResponse(varCreateForwardNSGResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateForwardNSGResponse struct {

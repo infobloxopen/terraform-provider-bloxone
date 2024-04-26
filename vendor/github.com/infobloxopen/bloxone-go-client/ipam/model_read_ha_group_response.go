@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadHAGroupResponse{}
 
 // ReadHAGroupResponse The response format to retrieve the __HAGroup__ object.
 type ReadHAGroupResponse struct {
-	Result *HAGroup `json:"result,omitempty"`
+	Result               *HAGroup `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadHAGroupResponse ReadHAGroupResponse
 
 // NewReadHAGroupResponse instantiates a new ReadHAGroupResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadHAGroupResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadHAGroupResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadHAGroupResponse := _ReadHAGroupResponse{}
+
+	err = json.Unmarshal(data, &varReadHAGroupResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadHAGroupResponse(varReadHAGroupResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadHAGroupResponse struct {

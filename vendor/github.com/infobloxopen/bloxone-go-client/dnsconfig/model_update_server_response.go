@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateServerResponse{}
 
 // UpdateServerResponse The Server object update response format.
 type UpdateServerResponse struct {
-	Result *Server `json:"result,omitempty"`
+	Result               *Server `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateServerResponse UpdateServerResponse
 
 // NewUpdateServerResponse instantiates a new UpdateServerResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateServerResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateServerResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateServerResponse := _UpdateServerResponse{}
+
+	err = json.Unmarshal(data, &varUpdateServerResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateServerResponse(varUpdateServerResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateServerResponse struct {

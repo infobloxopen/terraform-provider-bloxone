@@ -22,8 +22,6 @@ var _ MappedNullable = &Dfp{}
 type Dfp struct {
 	// The time when this DNS Forwarding Proxy object was created.
 	CreatedTime *time.Time `json:"created_time,omitempty"`
-	// The list of default DNS resolvers that will be used in case if the BloxOne Cloud is unreachable.  Deprecated DO NOT USE. Use resolvers_all.
-	DefaultResolvers []string `json:"default_resolvers,omitempty"`
 	// The list of internal or local DNS servers' IPv4 or IPv6 addresses that are used as ELB IPs.
 	ElbIpList        []string `json:"elb_ip_list,omitempty"`
 	ForwardingPolicy *string  `json:"forwarding_policy,omitempty"`
@@ -42,9 +40,7 @@ type Dfp struct {
 	// The identifier of the security policy with which the DNS Forwarding Proxy is associated.
 	PolicyId *int32 `json:"policy_id,omitempty"`
 	// Point of Presence (PoP) region
-	PopRegionId *int32 `json:"pop_region_id,omitempty"`
-	// The list of internal or local DNS servers' IPv4 or IPv6 addresses that are used as DNS resolvers. Deprecated DO NOT USE. Use resolvers_all.
-	Resolvers    []string   `json:"resolvers,omitempty"`
+	PopRegionId  *int32     `json:"pop_region_id,omitempty"`
 	ResolversAll []Resolver `json:"resolvers_all,omitempty"`
 	// The On-Prem Application Service identifier. For internal Use only
 	ServiceId *string `json:"service_id,omitempty"`
@@ -53,8 +49,11 @@ type Dfp struct {
 	// The DNS Forwarding Proxy site identifier that is appended to DNS queries originating from this DNS Forwarding Proxy and subsequently used for policy lookup purposes.
 	SiteId *string `json:"site_id,omitempty"`
 	// The time when this DNS Forwarding Proxy object was last updated.
-	UpdatedTime *time.Time `json:"updated_time,omitempty"`
+	UpdatedTime          *time.Time `json:"updated_time,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Dfp Dfp
 
 // NewDfp instantiates a new Dfp object
 // This constructor will assign default values to properties that have it defined,
@@ -103,38 +102,6 @@ func (o *Dfp) HasCreatedTime() bool {
 // SetCreatedTime gets a reference to the given time.Time and assigns it to the CreatedTime field.
 func (o *Dfp) SetCreatedTime(v time.Time) {
 	o.CreatedTime = &v
-}
-
-// GetDefaultResolvers returns the DefaultResolvers field value if set, zero value otherwise.
-func (o *Dfp) GetDefaultResolvers() []string {
-	if o == nil || IsNil(o.DefaultResolvers) {
-		var ret []string
-		return ret
-	}
-	return o.DefaultResolvers
-}
-
-// GetDefaultResolversOk returns a tuple with the DefaultResolvers field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Dfp) GetDefaultResolversOk() ([]string, bool) {
-	if o == nil || IsNil(o.DefaultResolvers) {
-		return nil, false
-	}
-	return o.DefaultResolvers, true
-}
-
-// HasDefaultResolvers returns a boolean if a field has been set.
-func (o *Dfp) HasDefaultResolvers() bool {
-	if o != nil && !IsNil(o.DefaultResolvers) {
-		return true
-	}
-
-	return false
-}
-
-// SetDefaultResolvers gets a reference to the given []string and assigns it to the DefaultResolvers field.
-func (o *Dfp) SetDefaultResolvers(v []string) {
-	o.DefaultResolvers = v
 }
 
 // GetElbIpList returns the ElbIpList field value if set, zero value otherwise.
@@ -457,38 +424,6 @@ func (o *Dfp) SetPopRegionId(v int32) {
 	o.PopRegionId = &v
 }
 
-// GetResolvers returns the Resolvers field value if set, zero value otherwise.
-func (o *Dfp) GetResolvers() []string {
-	if o == nil || IsNil(o.Resolvers) {
-		var ret []string
-		return ret
-	}
-	return o.Resolvers
-}
-
-// GetResolversOk returns a tuple with the Resolvers field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Dfp) GetResolversOk() ([]string, bool) {
-	if o == nil || IsNil(o.Resolvers) {
-		return nil, false
-	}
-	return o.Resolvers, true
-}
-
-// HasResolvers returns a boolean if a field has been set.
-func (o *Dfp) HasResolvers() bool {
-	if o != nil && !IsNil(o.Resolvers) {
-		return true
-	}
-
-	return false
-}
-
-// SetResolvers gets a reference to the given []string and assigns it to the Resolvers field.
-func (o *Dfp) SetResolvers(v []string) {
-	o.Resolvers = v
-}
-
 // GetResolversAll returns the ResolversAll field value if set, zero value otherwise.
 func (o *Dfp) GetResolversAll() []Resolver {
 	if o == nil || IsNil(o.ResolversAll) {
@@ -662,9 +597,6 @@ func (o Dfp) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.CreatedTime) {
 		toSerialize["created_time"] = o.CreatedTime
 	}
-	if !IsNil(o.DefaultResolvers) {
-		toSerialize["default_resolvers"] = o.DefaultResolvers
-	}
 	if !IsNil(o.ElbIpList) {
 		toSerialize["elb_ip_list"] = o.ElbIpList
 	}
@@ -695,9 +627,6 @@ func (o Dfp) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.PopRegionId) {
 		toSerialize["pop_region_id"] = o.PopRegionId
 	}
-	if !IsNil(o.Resolvers) {
-		toSerialize["resolvers"] = o.Resolvers
-	}
 	if !IsNil(o.ResolversAll) {
 		toSerialize["resolvers_all"] = o.ResolversAll
 	}
@@ -713,7 +642,48 @@ func (o Dfp) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedTime) {
 		toSerialize["updated_time"] = o.UpdatedTime
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Dfp) UnmarshalJSON(data []byte) (err error) {
+	varDfp := _Dfp{}
+
+	err = json.Unmarshal(data, &varDfp)
+
+	if err != nil {
+		return err
+	}
+
+	*o = Dfp(varDfp)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "created_time")
+		delete(additionalProperties, "elb_ip_list")
+		delete(additionalProperties, "forwarding_policy")
+		delete(additionalProperties, "host")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "internal_domain_lists")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "net_addr_policy_ids")
+		delete(additionalProperties, "ophid")
+		delete(additionalProperties, "policy_id")
+		delete(additionalProperties, "pop_region_id")
+		delete(additionalProperties, "resolvers_all")
+		delete(additionalProperties, "service_id")
+		delete(additionalProperties, "service_name")
+		delete(additionalProperties, "site_id")
+		delete(additionalProperties, "updated_time")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDfp struct {

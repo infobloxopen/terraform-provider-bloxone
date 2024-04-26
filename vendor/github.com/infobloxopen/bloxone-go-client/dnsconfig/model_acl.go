@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -30,7 +29,8 @@ type ACL struct {
 	// ACL object name.
 	Name string `json:"name"`
 	// Tagging specifics.
-	Tags map[string]interface{} `json:"tags,omitempty"`
+	Tags                 map[string]interface{} `json:"tags,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ACL ACL
@@ -228,6 +228,11 @@ func (o ACL) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -255,15 +260,24 @@ func (o *ACL) UnmarshalJSON(data []byte) (err error) {
 
 	varACL := _ACL{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varACL)
+	err = json.Unmarshal(data, &varACL)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ACL(varACL)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "list")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "tags")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

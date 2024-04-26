@@ -19,8 +19,11 @@ var _ MappedNullable = &RecordInheritance{}
 
 // RecordInheritance The inheritance configuration specifies how the _Record_ object inherits the _ttl_ field.
 type RecordInheritance struct {
-	Ttl *Inheritance2InheritedUInt32 `json:"ttl,omitempty"`
+	Ttl                  *Inheritance2InheritedUInt32 `json:"ttl,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _RecordInheritance RecordInheritance
 
 // NewRecordInheritance instantiates a new RecordInheritance object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o RecordInheritance) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Ttl) {
 		toSerialize["ttl"] = o.Ttl
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *RecordInheritance) UnmarshalJSON(data []byte) (err error) {
+	varRecordInheritance := _RecordInheritance{}
+
+	err = json.Unmarshal(data, &varRecordInheritance)
+
+	if err != nil {
+		return err
+	}
+
+	*o = RecordInheritance(varRecordInheritance)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ttl")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableRecordInheritance struct {

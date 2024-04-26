@@ -28,8 +28,11 @@ type DetailLocation struct {
 	// Longitude of the Location.
 	Longitude *float64 `json:"longitude,omitempty"`
 	// The metadata of the Location which could contain other info such as attributions.
-	Metadata map[string]interface{} `json:"metadata,omitempty"`
+	Metadata             map[string]interface{} `json:"metadata,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DetailLocation DetailLocation
 
 // NewDetailLocation instantiates a new DetailLocation object
 // This constructor will assign default values to properties that have it defined,
@@ -233,7 +236,37 @@ func (o DetailLocation) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Metadata) {
 		toSerialize["metadata"] = o.Metadata
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DetailLocation) UnmarshalJSON(data []byte) (err error) {
+	varDetailLocation := _DetailLocation{}
+
+	err = json.Unmarshal(data, &varDetailLocation)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DetailLocation(varDetailLocation)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "latitude")
+		delete(additionalProperties, "longitude")
+		delete(additionalProperties, "metadata")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDetailLocation struct {

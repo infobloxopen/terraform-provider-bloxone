@@ -24,8 +24,11 @@ type ContentCategory struct {
 	// The name of the category.
 	CategoryName *string `json:"category_name,omitempty"`
 	// The functional group name of the category.
-	FunctionalGroup *string `json:"functional_group,omitempty"`
+	FunctionalGroup      *string `json:"functional_group,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ContentCategory ContentCategory
 
 // NewContentCategory instantiates a new ContentCategory object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,35 @@ func (o ContentCategory) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.FunctionalGroup) {
 		toSerialize["functional_group"] = o.FunctionalGroup
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ContentCategory) UnmarshalJSON(data []byte) (err error) {
+	varContentCategory := _ContentCategory{}
+
+	err = json.Unmarshal(data, &varContentCategory)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ContentCategory(varContentCategory)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "category_code")
+		delete(additionalProperties, "category_name")
+		delete(additionalProperties, "functional_group")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableContentCategory struct {

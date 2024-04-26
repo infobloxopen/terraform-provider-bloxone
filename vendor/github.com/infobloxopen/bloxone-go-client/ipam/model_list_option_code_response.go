@@ -20,8 +20,11 @@ var _ MappedNullable = &ListOptionCodeResponse{}
 // ListOptionCodeResponse The response format to retrieve __OptionCode__ objects.
 type ListOptionCodeResponse struct {
 	// The list of OptionCode objects.
-	Results []OptionCode `json:"results,omitempty"`
+	Results              []OptionCode `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListOptionCodeResponse ListOptionCodeResponse
 
 // NewListOptionCodeResponse instantiates a new ListOptionCodeResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListOptionCodeResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListOptionCodeResponse) UnmarshalJSON(data []byte) (err error) {
+	varListOptionCodeResponse := _ListOptionCodeResponse{}
+
+	err = json.Unmarshal(data, &varListOptionCodeResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListOptionCodeResponse(varListOptionCodeResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListOptionCodeResponse struct {

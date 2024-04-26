@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -28,7 +27,8 @@ type HostName struct {
 	// When _true_, the name field is treated as primary name. There must be one and only one primary name in the list of host names. The primary name will be treated as the canonical name for all the aliases. PTR record will be generated only for the primary name.
 	PrimaryName *bool `json:"primary_name,omitempty"`
 	// The resource identifier.
-	Zone string `json:"zone"`
+	Zone                 string `json:"zone"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _HostName HostName
@@ -182,6 +182,11 @@ func (o HostName) ToMap() (map[string]interface{}, error) {
 		toSerialize["primary_name"] = o.PrimaryName
 	}
 	toSerialize["zone"] = o.Zone
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -210,15 +215,23 @@ func (o *HostName) UnmarshalJSON(data []byte) (err error) {
 
 	varHostName := _HostName{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varHostName)
+	err = json.Unmarshal(data, &varHostName)
 
 	if err != nil {
 		return err
 	}
 
 	*o = HostName(varHostName)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "alias")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "primary_name")
+		delete(additionalProperties, "zone")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -33,8 +33,11 @@ type ServiceHostConfig struct {
 	// The type of the Service deployed on the Host (`dns`, `cdc`, etc.).
 	ServiceType *string `json:"service_type,omitempty"`
 	// The timestamp of the latest upgrade of the Host-specific Service configuration.
-	UpgradedAt *time.Time `json:"upgraded_at,omitempty"`
+	UpgradedAt           *time.Time `json:"upgraded_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ServiceHostConfig ServiceHostConfig
 
 // NewServiceHostConfig instantiates a new ServiceHostConfig object
 // This constructor will assign default values to properties that have it defined,
@@ -308,7 +311,39 @@ func (o ServiceHostConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpgradedAt) {
 		toSerialize["upgraded_at"] = o.UpgradedAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ServiceHostConfig) UnmarshalJSON(data []byte) (err error) {
+	varServiceHostConfig := _ServiceHostConfig{}
+
+	err = json.Unmarshal(data, &varServiceHostConfig)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ServiceHostConfig(varServiceHostConfig)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "current_version")
+		delete(additionalProperties, "extra_data")
+		delete(additionalProperties, "host_id")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "service_id")
+		delete(additionalProperties, "service_type")
+		delete(additionalProperties, "upgraded_at")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableServiceHostConfig struct {

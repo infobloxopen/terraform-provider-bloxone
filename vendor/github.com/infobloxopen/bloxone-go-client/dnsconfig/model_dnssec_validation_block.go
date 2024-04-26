@@ -27,7 +27,10 @@ type DNSSECValidationBlock struct {
 	DnssecTrustAnchors []TrustAnchor `json:"dnssec_trust_anchors,omitempty"`
 	// Optional. Field config for _dnssec_validate_expiry_ field.
 	DnssecValidateExpiry *bool `json:"dnssec_validate_expiry,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DNSSECValidationBlock DNSSECValidationBlock
 
 // NewDNSSECValidationBlock instantiates a new DNSSECValidationBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,36 @@ func (o DNSSECValidationBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DnssecValidateExpiry) {
 		toSerialize["dnssec_validate_expiry"] = o.DnssecValidateExpiry
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DNSSECValidationBlock) UnmarshalJSON(data []byte) (err error) {
+	varDNSSECValidationBlock := _DNSSECValidationBlock{}
+
+	err = json.Unmarshal(data, &varDNSSECValidationBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DNSSECValidationBlock(varDNSSECValidationBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "dnssec_enable_validation")
+		delete(additionalProperties, "dnssec_enabled")
+		delete(additionalProperties, "dnssec_trust_anchors")
+		delete(additionalProperties, "dnssec_validate_expiry")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDNSSECValidationBlock struct {

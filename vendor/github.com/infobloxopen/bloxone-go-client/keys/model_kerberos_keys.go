@@ -19,8 +19,11 @@ var _ MappedNullable = &KerberosKeys{}
 
 // KerberosKeys The list of __Key__ objects.
 type KerberosKeys struct {
-	Items []KerberosKey `json:"items,omitempty"`
+	Items                []KerberosKey `json:"items,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _KerberosKeys KerberosKeys
 
 // NewKerberosKeys instantiates a new KerberosKeys object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o KerberosKeys) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Items) {
 		toSerialize["items"] = o.Items
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *KerberosKeys) UnmarshalJSON(data []byte) (err error) {
+	varKerberosKeys := _KerberosKeys{}
+
+	err = json.Unmarshal(data, &varKerberosKeys)
+
+	if err != nil {
+		return err
+	}
+
+	*o = KerberosKeys(varKerberosKeys)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "items")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableKerberosKeys struct {

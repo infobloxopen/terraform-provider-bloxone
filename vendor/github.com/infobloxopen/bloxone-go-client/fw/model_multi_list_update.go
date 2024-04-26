@@ -23,7 +23,10 @@ type MultiListUpdate struct {
 	Ids []int32 `json:"ids,omitempty"`
 	// The List of ItemStructs structure which contains the item and its description
 	InsertedItemsDescribed []ItemStructs `json:"inserted_items_described,omitempty"`
+	AdditionalProperties   map[string]interface{}
 }
+
+type _MultiListUpdate MultiListUpdate
 
 // NewMultiListUpdate instantiates a new MultiListUpdate object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o MultiListUpdate) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.InsertedItemsDescribed) {
 		toSerialize["inserted_items_described"] = o.InsertedItemsDescribed
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *MultiListUpdate) UnmarshalJSON(data []byte) (err error) {
+	varMultiListUpdate := _MultiListUpdate{}
+
+	err = json.Unmarshal(data, &varMultiListUpdate)
+
+	if err != nil {
+		return err
+	}
+
+	*o = MultiListUpdate(varMultiListUpdate)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ids")
+		delete(additionalProperties, "inserted_items_described")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableMultiListUpdate struct {

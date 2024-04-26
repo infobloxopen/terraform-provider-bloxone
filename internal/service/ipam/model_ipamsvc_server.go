@@ -216,7 +216,7 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 			"abandoned_reclaim_time_v6": types.Int64Value(3600),
 			"allow_unknown":             types.BoolValue(true),
 			"allow_unknown_v6":          types.BoolValue(true),
-			"echo_client_id":            types.BoolValue(false),
+			"echo_client_id":            types.BoolValue(true),
 			"filters":                   types.ListNull(types.StringType),
 			"filters_v6":                types.ListNull(types.StringType),
 			"ignore_client_uid":         types.BoolValue(true),

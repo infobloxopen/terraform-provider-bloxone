@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -51,6 +50,7 @@ type OptionFilter struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	// The resource identifier.
 	VendorSpecificOptionOptionSpace *string `json:"vendor_specific_option_option_space,omitempty"`
+	AdditionalProperties            map[string]interface{}
 }
 
 type _OptionFilter OptionFilter
@@ -589,6 +589,11 @@ func (o OptionFilter) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.VendorSpecificOptionOptionSpace) {
 		toSerialize["vendor_specific_option_option_space"] = o.VendorSpecificOptionOptionSpace
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -617,15 +622,34 @@ func (o *OptionFilter) UnmarshalJSON(data []byte) (err error) {
 
 	varOptionFilter := _OptionFilter{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varOptionFilter)
+	err = json.Unmarshal(data, &varOptionFilter)
 
 	if err != nil {
 		return err
 	}
 
 	*o = OptionFilter(varOptionFilter)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "dhcp_options")
+		delete(additionalProperties, "header_option_filename")
+		delete(additionalProperties, "header_option_server_address")
+		delete(additionalProperties, "header_option_server_name")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "lease_time")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "protocol")
+		delete(additionalProperties, "role")
+		delete(additionalProperties, "rules")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "vendor_specific_option_option_space")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

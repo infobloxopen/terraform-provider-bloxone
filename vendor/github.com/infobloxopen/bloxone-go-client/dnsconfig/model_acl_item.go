@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -28,8 +27,9 @@ type ACLItem struct {
 	// Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
 	Address *string `json:"address,omitempty"`
 	// Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
-	Element string   `json:"element"`
-	TsigKey *TSIGKey `json:"tsig_key,omitempty"`
+	Element              string   `json:"element"`
+	TsigKey              *TSIGKey `json:"tsig_key,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ACLItem ACLItem
@@ -218,6 +218,11 @@ func (o ACLItem) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.TsigKey) {
 		toSerialize["tsig_key"] = o.TsigKey
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -246,15 +251,24 @@ func (o *ACLItem) UnmarshalJSON(data []byte) (err error) {
 
 	varACLItem := _ACLItem{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varACLItem)
+	err = json.Unmarshal(data, &varACLItem)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ACLItem(varACLItem)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "access")
+		delete(additionalProperties, "acl")
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "element")
+		delete(additionalProperties, "tsig_key")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

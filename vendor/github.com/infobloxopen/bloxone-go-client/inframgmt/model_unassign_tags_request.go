@@ -20,9 +20,12 @@ var _ MappedNullable = &UnassignTagsRequest{}
 // UnassignTagsRequest struct for UnassignTagsRequest
 type UnassignTagsRequest struct {
 	// The resource identifier.
-	Ids  []string `json:"ids,omitempty"`
-	Keys []string `json:"keys,omitempty"`
+	Ids                  []string `json:"ids,omitempty"`
+	Keys                 []string `json:"keys,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UnassignTagsRequest UnassignTagsRequest
 
 // NewUnassignTagsRequest instantiates a new UnassignTagsRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -121,7 +124,34 @@ func (o UnassignTagsRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Keys) {
 		toSerialize["keys"] = o.Keys
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UnassignTagsRequest) UnmarshalJSON(data []byte) (err error) {
+	varUnassignTagsRequest := _UnassignTagsRequest{}
+
+	err = json.Unmarshal(data, &varUnassignTagsRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UnassignTagsRequest(varUnassignTagsRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ids")
+		delete(additionalProperties, "keys")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUnassignTagsRequest struct {

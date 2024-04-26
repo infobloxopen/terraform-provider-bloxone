@@ -19,10 +19,13 @@ var _ MappedNullable = &AccessCodesDeleteSingleAccessCodes400ResponseError{}
 
 // AccessCodesDeleteSingleAccessCodes400ResponseError struct for AccessCodesDeleteSingleAccessCodes400ResponseError
 type AccessCodesDeleteSingleAccessCodes400ResponseError struct {
-	Code    *string `json:"code,omitempty"`
-	Message *string `json:"message,omitempty"`
-	Status  *string `json:"status,omitempty"`
+	Code                 *string `json:"code,omitempty"`
+	Message              *string `json:"message,omitempty"`
+	Status               *string `json:"status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AccessCodesDeleteSingleAccessCodes400ResponseError AccessCodesDeleteSingleAccessCodes400ResponseError
 
 // NewAccessCodesDeleteSingleAccessCodes400ResponseError instantiates a new AccessCodesDeleteSingleAccessCodes400ResponseError object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o AccessCodesDeleteSingleAccessCodes400ResponseError) ToMap() (map[string]
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AccessCodesDeleteSingleAccessCodes400ResponseError) UnmarshalJSON(data []byte) (err error) {
+	varAccessCodesDeleteSingleAccessCodes400ResponseError := _AccessCodesDeleteSingleAccessCodes400ResponseError{}
+
+	err = json.Unmarshal(data, &varAccessCodesDeleteSingleAccessCodes400ResponseError)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AccessCodesDeleteSingleAccessCodes400ResponseError(varAccessCodesDeleteSingleAccessCodes400ResponseError)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "code")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAccessCodesDeleteSingleAccessCodes400ResponseError struct {

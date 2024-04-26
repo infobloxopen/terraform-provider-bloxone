@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -68,7 +67,8 @@ type ASM struct {
 	// The object to update.  Valid values are: * _range_ * _subnet_ * _none_
 	Update *string `json:"update,omitempty"`
 	// The utilization of DHCP addresses in the subnet.
-	Utilization *int64 `json:"utilization,omitempty"`
+	Utilization          *int64 `json:"utilization,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ASM ASM
@@ -931,6 +931,11 @@ func (o ASM) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Utilization) {
 		toSerialize["utilization"] = o.Utilization
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -958,15 +963,43 @@ func (o *ASM) UnmarshalJSON(data []byte) (err error) {
 
 	varASM := _ASM{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varASM)
+	err = json.Unmarshal(data, &varASM)
 
 	if err != nil {
 		return err
 	}
 
 	*o = ASM(varASM)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "back_end")
+		delete(additionalProperties, "back_start")
+		delete(additionalProperties, "both_end")
+		delete(additionalProperties, "both_start")
+		delete(additionalProperties, "front_end")
+		delete(additionalProperties, "front_start")
+		delete(additionalProperties, "growth")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "lookahead")
+		delete(additionalProperties, "range_end")
+		delete(additionalProperties, "range_id")
+		delete(additionalProperties, "range_start")
+		delete(additionalProperties, "subnet_address")
+		delete(additionalProperties, "subnet_cidr")
+		delete(additionalProperties, "subnet_direction")
+		delete(additionalProperties, "subnet_id")
+		delete(additionalProperties, "subnet_range")
+		delete(additionalProperties, "subnet_range_end")
+		delete(additionalProperties, "subnet_range_start")
+		delete(additionalProperties, "suppress")
+		delete(additionalProperties, "suppress_time")
+		delete(additionalProperties, "threshold_utilization")
+		delete(additionalProperties, "update")
+		delete(additionalProperties, "utilization")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

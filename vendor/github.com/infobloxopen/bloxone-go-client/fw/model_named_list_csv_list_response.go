@@ -20,8 +20,11 @@ var _ MappedNullable = &NamedListCSVListResponse{}
 // NamedListCSVListResponse The Named List CSV list response
 type NamedListCSVListResponse struct {
 	// Named Lists for csv file
-	Results []string `json:"results,omitempty"`
+	Results              []string `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NamedListCSVListResponse NamedListCSVListResponse
 
 // NewNamedListCSVListResponse instantiates a new NamedListCSVListResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o NamedListCSVListResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NamedListCSVListResponse) UnmarshalJSON(data []byte) (err error) {
+	varNamedListCSVListResponse := _NamedListCSVListResponse{}
+
+	err = json.Unmarshal(data, &varNamedListCSVListResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NamedListCSVListResponse(varNamedListCSVListResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNamedListCSVListResponse struct {

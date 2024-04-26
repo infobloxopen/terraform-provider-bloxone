@@ -24,8 +24,11 @@ type NamedListItemsDeleteRequest struct {
 	// The list of the FQDN or IPv4/IPv6 addresses or IPv4/IPv6 CIDRs to define whitelists and blacklists for additional protection.
 	Items []string `json:"items,omitempty"`
 	// The List of ItemStructs structure which contains the item and its description
-	ItemsDescribed []ItemStructs `json:"items_described,omitempty"`
+	ItemsDescribed       []ItemStructs `json:"items_described,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NamedListItemsDeleteRequest NamedListItemsDeleteRequest
 
 // NewNamedListItemsDeleteRequest instantiates a new NamedListItemsDeleteRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,35 @@ func (o NamedListItemsDeleteRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ItemsDescribed) {
 		toSerialize["items_described"] = o.ItemsDescribed
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NamedListItemsDeleteRequest) UnmarshalJSON(data []byte) (err error) {
+	varNamedListItemsDeleteRequest := _NamedListItemsDeleteRequest{}
+
+	err = json.Unmarshal(data, &varNamedListItemsDeleteRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NamedListItemsDeleteRequest(varNamedListItemsDeleteRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "items")
+		delete(additionalProperties, "items_described")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNamedListItemsDeleteRequest struct {

@@ -24,9 +24,12 @@ type InheritedCustomRootNSBlock struct {
 	// Human-readable display name for the object referred to by _source_.
 	DisplayName *string `json:"display_name,omitempty"`
 	// The resource identifier.
-	Source *string            `json:"source,omitempty"`
-	Value  *CustomRootNSBlock `json:"value,omitempty"`
+	Source               *string            `json:"source,omitempty"`
+	Value                *CustomRootNSBlock `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InheritedCustomRootNSBlock InheritedCustomRootNSBlock
 
 // NewInheritedCustomRootNSBlock instantiates a new InheritedCustomRootNSBlock object
 // This constructor will assign default values to properties that have it defined,
@@ -195,7 +198,36 @@ func (o InheritedCustomRootNSBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritedCustomRootNSBlock) UnmarshalJSON(data []byte) (err error) {
+	varInheritedCustomRootNSBlock := _InheritedCustomRootNSBlock{}
+
+	err = json.Unmarshal(data, &varInheritedCustomRootNSBlock)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedCustomRootNSBlock(varInheritedCustomRootNSBlock)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedCustomRootNSBlock struct {

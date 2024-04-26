@@ -20,8 +20,11 @@ var _ MappedNullable = &ListViewResponse{}
 // ListViewResponse The View object list response format.
 type ListViewResponse struct {
 	// List of View objects.
-	Results []View `json:"results,omitempty"`
+	Results              []View `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListViewResponse ListViewResponse
 
 // NewListViewResponse instantiates a new ListViewResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListViewResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListViewResponse) UnmarshalJSON(data []byte) (err error) {
+	varListViewResponse := _ListViewResponse{}
+
+	err = json.Unmarshal(data, &varListViewResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListViewResponse(varListViewResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListViewResponse struct {

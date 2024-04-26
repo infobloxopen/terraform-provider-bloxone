@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -32,7 +31,8 @@ type TSIGKey struct {
 	// The TSIG key name in punycode.
 	ProtocolName *string `json:"protocol_name,omitempty"`
 	// The TSIG key secret, base64 string.
-	Secret *string `json:"secret,omitempty"`
+	Secret               *string `json:"secret,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _TSIGKey TSIGKey
@@ -265,6 +265,11 @@ func (o TSIGKey) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Secret) {
 		toSerialize["secret"] = o.Secret
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -292,15 +297,25 @@ func (o *TSIGKey) UnmarshalJSON(data []byte) (err error) {
 
 	varTSIGKey := _TSIGKey{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varTSIGKey)
+	err = json.Unmarshal(data, &varTSIGKey)
 
 	if err != nil {
 		return err
 	}
 
 	*o = TSIGKey(varTSIGKey)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "algorithm")
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "protocol_name")
+		delete(additionalProperties, "secret")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

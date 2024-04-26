@@ -20,8 +20,11 @@ var _ MappedNullable = &ListRecordResponse{}
 // ListRecordResponse The response format to retrieve __Record__ objects.
 type ListRecordResponse struct {
 	// The list of Record objects.
-	Results []Record `json:"results,omitempty"`
+	Results              []Record `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListRecordResponse ListRecordResponse
 
 // NewListRecordResponse instantiates a new ListRecordResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListRecordResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListRecordResponse) UnmarshalJSON(data []byte) (err error) {
+	varListRecordResponse := _ListRecordResponse{}
+
+	err = json.Unmarshal(data, &varListRecordResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListRecordResponse(varListRecordResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListRecordResponse struct {

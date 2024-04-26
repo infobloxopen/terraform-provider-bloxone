@@ -20,8 +20,11 @@ var _ MappedNullable = &ListOptionSpaceResponse{}
 // ListOptionSpaceResponse The response format to retrieve __OptionSpace__ objects.
 type ListOptionSpaceResponse struct {
 	// The list of OptionSpace objects.
-	Results []OptionSpace `json:"results,omitempty"`
+	Results              []OptionSpace `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListOptionSpaceResponse ListOptionSpaceResponse
 
 // NewListOptionSpaceResponse instantiates a new ListOptionSpaceResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListOptionSpaceResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListOptionSpaceResponse) UnmarshalJSON(data []byte) (err error) {
+	varListOptionSpaceResponse := _ListOptionSpaceResponse{}
+
+	err = json.Unmarshal(data, &varListOptionSpaceResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListOptionSpaceResponse(varListOptionSpaceResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListOptionSpaceResponse struct {

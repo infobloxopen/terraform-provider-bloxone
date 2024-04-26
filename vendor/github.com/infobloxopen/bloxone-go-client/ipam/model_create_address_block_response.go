@@ -19,8 +19,11 @@ var _ MappedNullable = &CreateAddressBlockResponse{}
 
 // CreateAddressBlockResponse The response format to create the __AddressBlock__ object.
 type CreateAddressBlockResponse struct {
-	Result *AddressBlock `json:"result,omitempty"`
+	Result               *AddressBlock `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateAddressBlockResponse CreateAddressBlockResponse
 
 // NewCreateAddressBlockResponse instantiates a new CreateAddressBlockResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CreateAddressBlockResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateAddressBlockResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateAddressBlockResponse := _CreateAddressBlockResponse{}
+
+	err = json.Unmarshal(data, &varCreateAddressBlockResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateAddressBlockResponse(varCreateAddressBlockResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateAddressBlockResponse struct {

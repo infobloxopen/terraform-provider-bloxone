@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateJoinTokenResponse{}
 
 // UpdateJoinTokenResponse struct for UpdateJoinTokenResponse
 type UpdateJoinTokenResponse struct {
-	Result *JoinToken `json:"result,omitempty"`
+	Result               *JoinToken `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateJoinTokenResponse UpdateJoinTokenResponse
 
 // NewUpdateJoinTokenResponse instantiates a new UpdateJoinTokenResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateJoinTokenResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateJoinTokenResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateJoinTokenResponse := _UpdateJoinTokenResponse{}
+
+	err = json.Unmarshal(data, &varUpdateJoinTokenResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateJoinTokenResponse(varUpdateJoinTokenResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateJoinTokenResponse struct {

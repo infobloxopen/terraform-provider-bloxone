@@ -20,8 +20,11 @@ var _ MappedNullable = &ThreatFeedMultiResponse{}
 // ThreatFeedMultiResponse The Threat Feed list response.
 type ThreatFeedMultiResponse struct {
 	// The list of Threat Feed objects.
-	Results []ThreatFeed `json:"results,omitempty"`
+	Results              []ThreatFeed `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ThreatFeedMultiResponse ThreatFeedMultiResponse
 
 // NewThreatFeedMultiResponse instantiates a new ThreatFeedMultiResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ThreatFeedMultiResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ThreatFeedMultiResponse) UnmarshalJSON(data []byte) (err error) {
+	varThreatFeedMultiResponse := _ThreatFeedMultiResponse{}
+
+	err = json.Unmarshal(data, &varThreatFeedMultiResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ThreatFeedMultiResponse(varThreatFeedMultiResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableThreatFeedMultiResponse struct {

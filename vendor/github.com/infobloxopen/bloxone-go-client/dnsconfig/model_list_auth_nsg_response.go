@@ -20,8 +20,11 @@ var _ MappedNullable = &ListAuthNSGResponse{}
 // ListAuthNSGResponse The AuthNSG object list response format.
 type ListAuthNSGResponse struct {
 	// List of AuthNSG objects.
-	Results []AuthNSG `json:"results,omitempty"`
+	Results              []AuthNSG `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListAuthNSGResponse ListAuthNSGResponse
 
 // NewListAuthNSGResponse instantiates a new ListAuthNSGResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListAuthNSGResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListAuthNSGResponse) UnmarshalJSON(data []byte) (err error) {
+	varListAuthNSGResponse := _ListAuthNSGResponse{}
+
+	err = json.Unmarshal(data, &varListAuthNSGResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListAuthNSGResponse(varListAuthNSGResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListAuthNSGResponse struct {

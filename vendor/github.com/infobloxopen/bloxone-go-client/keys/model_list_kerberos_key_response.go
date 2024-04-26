@@ -20,8 +20,11 @@ var _ MappedNullable = &ListKerberosKeyResponse{}
 // ListKerberosKeyResponse The response format to retrieve __KerberosKey__ resources extracted from the uploaded keytab file.
 type ListKerberosKeyResponse struct {
 	// The list of KerberosKey objects.
-	Results []KerberosKey `json:"results,omitempty"`
+	Results              []KerberosKey `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListKerberosKeyResponse ListKerberosKeyResponse
 
 // NewListKerberosKeyResponse instantiates a new ListKerberosKeyResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListKerberosKeyResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListKerberosKeyResponse) UnmarshalJSON(data []byte) (err error) {
+	varListKerberosKeyResponse := _ListKerberosKeyResponse{}
+
+	err = json.Unmarshal(data, &varListKerberosKeyResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListKerberosKeyResponse(varListKerberosKeyResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListKerberosKeyResponse struct {

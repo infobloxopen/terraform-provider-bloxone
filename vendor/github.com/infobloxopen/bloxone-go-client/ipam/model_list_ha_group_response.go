@@ -20,8 +20,11 @@ var _ MappedNullable = &ListHAGroupResponse{}
 // ListHAGroupResponse The response format to retrieve __HAGroup__ objects.
 type ListHAGroupResponse struct {
 	// The list of HAGroup objects.
-	Results []HAGroup `json:"results,omitempty"`
+	Results              []HAGroup `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListHAGroupResponse ListHAGroupResponse
 
 // NewListHAGroupResponse instantiates a new ListHAGroupResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListHAGroupResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListHAGroupResponse) UnmarshalJSON(data []byte) (err error) {
+	varListHAGroupResponse := _ListHAGroupResponse{}
+
+	err = json.Unmarshal(data, &varListHAGroupResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListHAGroupResponse(varListHAGroupResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListHAGroupResponse struct {

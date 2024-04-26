@@ -22,8 +22,11 @@ type LeaseAddress struct {
 	// The IP address for the DHCP lease in IPv4 or IPv6 format within the IP space specified by _space_ field.
 	Address *string `json:"address,omitempty"`
 	// The resource identifier.
-	Space *string `json:"space,omitempty"`
+	Space                *string `json:"space,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _LeaseAddress LeaseAddress
 
 // NewLeaseAddress instantiates a new LeaseAddress object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o LeaseAddress) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Space) {
 		toSerialize["space"] = o.Space
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *LeaseAddress) UnmarshalJSON(data []byte) (err error) {
+	varLeaseAddress := _LeaseAddress{}
+
+	err = json.Unmarshal(data, &varLeaseAddress)
+
+	if err != nil {
+		return err
+	}
+
+	*o = LeaseAddress(varLeaseAddress)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "address")
+		delete(additionalProperties, "space")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableLeaseAddress struct {

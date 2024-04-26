@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadForwardNSGResponse{}
 
 // ReadForwardNSGResponse The ForwardNSG object read response format.
 type ReadForwardNSGResponse struct {
-	Result *ForwardNSG `json:"result,omitempty"`
+	Result               *ForwardNSG `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadForwardNSGResponse ReadForwardNSGResponse
 
 // NewReadForwardNSGResponse instantiates a new ReadForwardNSGResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadForwardNSGResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadForwardNSGResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadForwardNSGResponse := _ReadForwardNSGResponse{}
+
+	err = json.Unmarshal(data, &varReadForwardNSGResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadForwardNSGResponse(varReadForwardNSGResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadForwardNSGResponse struct {

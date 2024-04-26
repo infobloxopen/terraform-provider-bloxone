@@ -23,8 +23,11 @@ type SOASerialIncrementRequest struct {
 	// The resource identifier.
 	Id *string `json:"id,omitempty"`
 	// Default increment SOA serial number by 1,000.
-	SerialIncrement *int64 `json:"serial_increment,omitempty"`
+	SerialIncrement      *int64 `json:"serial_increment,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SOASerialIncrementRequest SOASerialIncrementRequest
 
 // NewSOASerialIncrementRequest instantiates a new SOASerialIncrementRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -158,7 +161,35 @@ func (o SOASerialIncrementRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.SerialIncrement) {
 		toSerialize["serial_increment"] = o.SerialIncrement
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *SOASerialIncrementRequest) UnmarshalJSON(data []byte) (err error) {
+	varSOASerialIncrementRequest := _SOASerialIncrementRequest{}
+
+	err = json.Unmarshal(data, &varSOASerialIncrementRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = SOASerialIncrementRequest(varSOASerialIncrementRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "fields")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "serial_increment")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSOASerialIncrementRequest struct {

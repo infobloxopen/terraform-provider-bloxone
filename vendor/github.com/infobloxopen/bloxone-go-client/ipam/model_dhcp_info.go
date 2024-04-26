@@ -43,8 +43,11 @@ type DHCPInfo struct {
 	// Indicates the status of this IP address from a DHCP protocol standpoint as:   * _none_: Address is not under DHCP control.   * _free_: Address is under DHCP control but has no lease currently assigned.   * _leased_: Address is under DHCP control and has a lease currently assigned. The lease details are contained in the matching _dhcp/lease_ resource.
 	State *string `json:"state,omitempty"`
 	// The timestamp at which the _state_ was last reported.
-	StateTs *time.Time `json:"state_ts,omitempty"`
+	StateTs              *time.Time `json:"state_ts,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DHCPInfo DHCPInfo
 
 // NewDHCPInfo instantiates a new DHCPInfo object
 // This constructor will assign default values to properties that have it defined,
@@ -493,7 +496,44 @@ func (o DHCPInfo) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.StateTs) {
 		toSerialize["state_ts"] = o.StateTs
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DHCPInfo) UnmarshalJSON(data []byte) (err error) {
+	varDHCPInfo := _DHCPInfo{}
+
+	err = json.Unmarshal(data, &varDHCPInfo)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DHCPInfo(varDHCPInfo)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "client_hostname")
+		delete(additionalProperties, "client_hwaddr")
+		delete(additionalProperties, "client_id")
+		delete(additionalProperties, "end")
+		delete(additionalProperties, "fingerprint")
+		delete(additionalProperties, "iaid")
+		delete(additionalProperties, "lease_type")
+		delete(additionalProperties, "preferred_lifetime")
+		delete(additionalProperties, "remain")
+		delete(additionalProperties, "start")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "state_ts")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDHCPInfo struct {

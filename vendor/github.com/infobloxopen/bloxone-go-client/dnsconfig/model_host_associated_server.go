@@ -22,8 +22,11 @@ type HostAssociatedServer struct {
 	// The resource identifier.
 	Id *string `json:"id,omitempty"`
 	// DNS server name.
-	Name *string `json:"name,omitempty"`
+	Name                 *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _HostAssociatedServer HostAssociatedServer
 
 // NewHostAssociatedServer instantiates a new HostAssociatedServer object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o HostAssociatedServer) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Name) {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *HostAssociatedServer) UnmarshalJSON(data []byte) (err error) {
+	varHostAssociatedServer := _HostAssociatedServer{}
+
+	err = json.Unmarshal(data, &varHostAssociatedServer)
+
+	if err != nil {
+		return err
+	}
+
+	*o = HostAssociatedServer(varHostAssociatedServer)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableHostAssociatedServer struct {

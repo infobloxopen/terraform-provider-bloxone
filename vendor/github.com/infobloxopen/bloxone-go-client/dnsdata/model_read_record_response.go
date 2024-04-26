@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadRecordResponse{}
 
 // ReadRecordResponse The response format to retrieve the __Record__ object.
 type ReadRecordResponse struct {
-	Result *Record `json:"result,omitempty"`
+	Result               *Record `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadRecordResponse ReadRecordResponse
 
 // NewReadRecordResponse instantiates a new ReadRecordResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadRecordResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadRecordResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadRecordResponse := _ReadRecordResponse{}
+
+	err = json.Unmarshal(data, &varReadRecordResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadRecordResponse(varReadRecordResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadRecordResponse struct {

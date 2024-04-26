@@ -19,8 +19,11 @@ var _ MappedNullable = &InheritedDtcConfig{}
 
 // InheritedDtcConfig Inheritance configuration for a field of type _DTCConfig_.
 type InheritedDtcConfig struct {
-	DefaultTtl *Inheritance2InheritedUInt32 `json:"default_ttl,omitempty"`
+	DefaultTtl           *Inheritance2InheritedUInt32 `json:"default_ttl,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InheritedDtcConfig InheritedDtcConfig
 
 // NewInheritedDtcConfig instantiates a new InheritedDtcConfig object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o InheritedDtcConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DefaultTtl) {
 		toSerialize["default_ttl"] = o.DefaultTtl
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritedDtcConfig) UnmarshalJSON(data []byte) (err error) {
+	varInheritedDtcConfig := _InheritedDtcConfig{}
+
+	err = json.Unmarshal(data, &varInheritedDtcConfig)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedDtcConfig(varInheritedDtcConfig)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "default_ttl")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedDtcConfig struct {

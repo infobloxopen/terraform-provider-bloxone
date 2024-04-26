@@ -19,8 +19,11 @@ var _ MappedNullable = &AnycastConfigResponse{}
 
 // AnycastConfigResponse struct for AnycastConfigResponse
 type AnycastConfigResponse struct {
-	Results *AnycastConfig `json:"results,omitempty"`
+	Results              *AnycastConfig `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AnycastConfigResponse AnycastConfigResponse
 
 // NewAnycastConfigResponse instantiates a new AnycastConfigResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o AnycastConfigResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AnycastConfigResponse) UnmarshalJSON(data []byte) (err error) {
+	varAnycastConfigResponse := _AnycastConfigResponse{}
+
+	err = json.Unmarshal(data, &varAnycastConfigResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AnycastConfigResponse(varAnycastConfigResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAnycastConfigResponse struct {

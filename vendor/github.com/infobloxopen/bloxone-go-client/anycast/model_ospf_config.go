@@ -31,10 +31,13 @@ type OspfConfig struct {
 	// Name of the interface that is configured with external IP address of the host
 	Interface *string `json:"interface,omitempty"`
 	// Any predefined OSPF configuration, with embedded new lines; the preamble will be prepended to the generated BGP configuration.
-	Preamble           *string `json:"preamble,omitempty"`
-	RetransmitInterval *int64  `json:"retransmit_interval,omitempty"`
-	TransmitDelay      *int64  `json:"transmit_delay,omitempty"`
+	Preamble             *string `json:"preamble,omitempty"`
+	RetransmitInterval   *int64  `json:"retransmit_interval,omitempty"`
+	TransmitDelay        *int64  `json:"transmit_delay,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _OspfConfig OspfConfig
 
 // NewOspfConfig instantiates a new OspfConfig object
 // This constructor will assign default values to properties that have it defined,
@@ -483,7 +486,44 @@ func (o OspfConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.TransmitDelay) {
 		toSerialize["transmit_delay"] = o.TransmitDelay
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *OspfConfig) UnmarshalJSON(data []byte) (err error) {
+	varOspfConfig := _OspfConfig{}
+
+	err = json.Unmarshal(data, &varOspfConfig)
+
+	if err != nil {
+		return err
+	}
+
+	*o = OspfConfig(varOspfConfig)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "area")
+		delete(additionalProperties, "area_type")
+		delete(additionalProperties, "authentication_key")
+		delete(additionalProperties, "authentication_key_id")
+		delete(additionalProperties, "authentication_type")
+		delete(additionalProperties, "cost")
+		delete(additionalProperties, "dead_interval")
+		delete(additionalProperties, "hello_interval")
+		delete(additionalProperties, "interface")
+		delete(additionalProperties, "preamble")
+		delete(additionalProperties, "retransmit_interval")
+		delete(additionalProperties, "transmit_delay")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableOspfConfig struct {

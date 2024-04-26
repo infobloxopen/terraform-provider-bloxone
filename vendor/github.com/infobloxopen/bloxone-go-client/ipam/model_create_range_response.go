@@ -19,8 +19,11 @@ var _ MappedNullable = &CreateRangeResponse{}
 
 // CreateRangeResponse The response format to create the __Range__ object.
 type CreateRangeResponse struct {
-	Result *Range `json:"result,omitempty"`
+	Result               *Range `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateRangeResponse CreateRangeResponse
 
 // NewCreateRangeResponse instantiates a new CreateRangeResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CreateRangeResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateRangeResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateRangeResponse := _CreateRangeResponse{}
+
+	err = json.Unmarshal(data, &varCreateRangeResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateRangeResponse(varCreateRangeResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateRangeResponse struct {

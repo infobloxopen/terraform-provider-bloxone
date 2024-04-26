@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateGlobalResponse{}
 
 // UpdateGlobalResponse The Global object update response format.
 type UpdateGlobalResponse struct {
-	Result *Global `json:"result,omitempty"`
+	Result               *Global `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateGlobalResponse UpdateGlobalResponse
 
 // NewUpdateGlobalResponse instantiates a new UpdateGlobalResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateGlobalResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateGlobalResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateGlobalResponse := _UpdateGlobalResponse{}
+
+	err = json.Unmarshal(data, &varUpdateGlobalResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateGlobalResponse(varUpdateGlobalResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateGlobalResponse struct {

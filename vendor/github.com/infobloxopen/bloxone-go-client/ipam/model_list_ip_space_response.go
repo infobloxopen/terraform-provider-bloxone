@@ -20,8 +20,11 @@ var _ MappedNullable = &ListIPSpaceResponse{}
 // ListIPSpaceResponse The response format to retrieve __IPSpace__ objects.
 type ListIPSpaceResponse struct {
 	// The list of IPSpace objects.
-	Results []IPSpace `json:"results,omitempty"`
+	Results              []IPSpace `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListIPSpaceResponse ListIPSpaceResponse
 
 // NewListIPSpaceResponse instantiates a new ListIPSpaceResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListIPSpaceResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListIPSpaceResponse) UnmarshalJSON(data []byte) (err error) {
+	varListIPSpaceResponse := _ListIPSpaceResponse{}
+
+	err = json.Unmarshal(data, &varListIPSpaceResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListIPSpaceResponse(varListIPSpaceResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListIPSpaceResponse struct {

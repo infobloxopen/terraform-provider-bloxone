@@ -25,7 +25,10 @@ type InternalDomainsItems struct {
 	Id *int32 `json:"id,omitempty"`
 	// The List of ItemStructs structure which contains the item and its description
 	InsertedItemsDescribed []ItemStructs `json:"inserted_items_described,omitempty"`
+	AdditionalProperties   map[string]interface{}
 }
+
+type _InternalDomainsItems InternalDomainsItems
 
 // NewInternalDomainsItems instantiates a new InternalDomainsItems object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,35 @@ func (o InternalDomainsItems) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.InsertedItemsDescribed) {
 		toSerialize["inserted_items_described"] = o.InsertedItemsDescribed
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InternalDomainsItems) UnmarshalJSON(data []byte) (err error) {
+	varInternalDomainsItems := _InternalDomainsItems{}
+
+	err = json.Unmarshal(data, &varInternalDomainsItems)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InternalDomainsItems(varInternalDomainsItems)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "deleted_items_described")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "inserted_items_described")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInternalDomainsItems struct {

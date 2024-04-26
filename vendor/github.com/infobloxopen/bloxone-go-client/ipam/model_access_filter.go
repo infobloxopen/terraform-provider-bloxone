@@ -11,7 +11,6 @@ API version: v1
 package ipam
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -26,7 +25,8 @@ type AccessFilter struct {
 	// The resource identifier.
 	HardwareFilterId *string `json:"hardware_filter_id,omitempty"`
 	// The resource identifier.
-	OptionFilterId *string `json:"option_filter_id,omitempty"`
+	OptionFilterId       *string `json:"option_filter_id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _AccessFilter AccessFilter
@@ -154,6 +154,11 @@ func (o AccessFilter) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.OptionFilterId) {
 		toSerialize["option_filter_id"] = o.OptionFilterId
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -181,15 +186,22 @@ func (o *AccessFilter) UnmarshalJSON(data []byte) (err error) {
 
 	varAccessFilter := _AccessFilter{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varAccessFilter)
+	err = json.Unmarshal(data, &varAccessFilter)
 
 	if err != nil {
 		return err
 	}
 
 	*o = AccessFilter(varAccessFilter)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "access")
+		delete(additionalProperties, "hardware_filter_id")
+		delete(additionalProperties, "option_filter_id")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

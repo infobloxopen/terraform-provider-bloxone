@@ -11,7 +11,6 @@ API version: v1
 package inframgmt
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -68,7 +67,8 @@ type Host struct {
 	// The timezone of the Host.
 	Timezone *string `json:"timezone,omitempty"`
 	// The timestamp of the latest update on Host.
-	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	UpdatedAt            *time.Time `json:"updated_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _Host Host
@@ -931,6 +931,11 @@ func (o Host) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -958,15 +963,43 @@ func (o *Host) UnmarshalJSON(data []byte) (err error) {
 
 	varHost := _Host{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varHost)
+	err = json.Unmarshal(data, &varHost)
 
 	if err != nil {
 		return err
 	}
 
 	*o = Host(varHost)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "configs")
+		delete(additionalProperties, "connectivity_monitor")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "created_by")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "host_subtype")
+		delete(additionalProperties, "host_type")
+		delete(additionalProperties, "host_version")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "ip_address")
+		delete(additionalProperties, "ip_space")
+		delete(additionalProperties, "legacy_id")
+		delete(additionalProperties, "location_id")
+		delete(additionalProperties, "mac_address")
+		delete(additionalProperties, "maintenance_mode")
+		delete(additionalProperties, "nat_ip")
+		delete(additionalProperties, "noa_cluster")
+		delete(additionalProperties, "ophid")
+		delete(additionalProperties, "pool_id")
+		delete(additionalProperties, "serial_number")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "timezone")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

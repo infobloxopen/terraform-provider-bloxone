@@ -19,10 +19,13 @@ var _ MappedNullable = &SecurityPoliciesCreateSecurityPolicy409ResponseError{}
 
 // SecurityPoliciesCreateSecurityPolicy409ResponseError struct for SecurityPoliciesCreateSecurityPolicy409ResponseError
 type SecurityPoliciesCreateSecurityPolicy409ResponseError struct {
-	Code    *string `json:"code,omitempty"`
-	Message *string `json:"message,omitempty"`
-	Status  *string `json:"status,omitempty"`
+	Code                 *string `json:"code,omitempty"`
+	Message              *string `json:"message,omitempty"`
+	Status               *string `json:"status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SecurityPoliciesCreateSecurityPolicy409ResponseError SecurityPoliciesCreateSecurityPolicy409ResponseError
 
 // NewSecurityPoliciesCreateSecurityPolicy409ResponseError instantiates a new SecurityPoliciesCreateSecurityPolicy409ResponseError object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o SecurityPoliciesCreateSecurityPolicy409ResponseError) ToMap() (map[strin
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *SecurityPoliciesCreateSecurityPolicy409ResponseError) UnmarshalJSON(data []byte) (err error) {
+	varSecurityPoliciesCreateSecurityPolicy409ResponseError := _SecurityPoliciesCreateSecurityPolicy409ResponseError{}
+
+	err = json.Unmarshal(data, &varSecurityPoliciesCreateSecurityPolicy409ResponseError)
+
+	if err != nil {
+		return err
+	}
+
+	*o = SecurityPoliciesCreateSecurityPolicy409ResponseError(varSecurityPoliciesCreateSecurityPolicy409ResponseError)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "code")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSecurityPoliciesCreateSecurityPolicy409ResponseError struct {

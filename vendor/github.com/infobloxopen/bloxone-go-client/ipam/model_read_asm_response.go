@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadASMResponse{}
 
 // ReadASMResponse The response format to retrieve the __ASM__ object.
 type ReadASMResponse struct {
-	Result *ASM `json:"result,omitempty"`
+	Result               *ASM `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadASMResponse ReadASMResponse
 
 // NewReadASMResponse instantiates a new ReadASMResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadASMResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadASMResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadASMResponse := _ReadASMResponse{}
+
+	err = json.Unmarshal(data, &varReadASMResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadASMResponse(varReadASMResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadASMResponse struct {

@@ -20,8 +20,11 @@ var _ MappedNullable = &ListASMResponse{}
 // ListASMResponse The response format to retrieve __ASM__ objects.
 type ListASMResponse struct {
 	// The list of ASM objects.
-	Results []ASM `json:"results,omitempty"`
+	Results              []ASM `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListASMResponse ListASMResponse
 
 // NewListASMResponse instantiates a new ListASMResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListASMResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListASMResponse) UnmarshalJSON(data []byte) (err error) {
+	varListASMResponse := _ListASMResponse{}
+
+	err = json.Unmarshal(data, &varListASMResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListASMResponse(varListASMResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListASMResponse struct {

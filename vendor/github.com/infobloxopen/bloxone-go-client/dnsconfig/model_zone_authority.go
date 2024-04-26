@@ -38,8 +38,11 @@ type ZoneAuthority struct {
 	// Optional. ZoneAuthority rname.  Defaults to empty.
 	Rname *string `json:"rname,omitempty"`
 	// Optional. Use default value for master name server.  Defaults to true.
-	UseDefaultMname *bool `json:"use_default_mname,omitempty"`
+	UseDefaultMname      *bool `json:"use_default_mname,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ZoneAuthority ZoneAuthority
 
 // NewZoneAuthority instantiates a new ZoneAuthority object
 // This constructor will assign default values to properties that have it defined,
@@ -418,7 +421,42 @@ func (o ZoneAuthority) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UseDefaultMname) {
 		toSerialize["use_default_mname"] = o.UseDefaultMname
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ZoneAuthority) UnmarshalJSON(data []byte) (err error) {
+	varZoneAuthority := _ZoneAuthority{}
+
+	err = json.Unmarshal(data, &varZoneAuthority)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ZoneAuthority(varZoneAuthority)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "default_ttl")
+		delete(additionalProperties, "expire")
+		delete(additionalProperties, "mname")
+		delete(additionalProperties, "negative_ttl")
+		delete(additionalProperties, "protocol_mname")
+		delete(additionalProperties, "protocol_rname")
+		delete(additionalProperties, "refresh")
+		delete(additionalProperties, "retry")
+		delete(additionalProperties, "rname")
+		delete(additionalProperties, "use_default_mname")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableZoneAuthority struct {

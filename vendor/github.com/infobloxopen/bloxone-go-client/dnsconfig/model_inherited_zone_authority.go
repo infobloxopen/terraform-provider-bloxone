@@ -19,15 +19,18 @@ var _ MappedNullable = &InheritedZoneAuthority{}
 
 // InheritedZoneAuthority Inheritance configuration for a field of type _ZoneAuthority_.
 type InheritedZoneAuthority struct {
-	DefaultTtl    *Inheritance2InheritedUInt32      `json:"default_ttl,omitempty"`
-	Expire        *Inheritance2InheritedUInt32      `json:"expire,omitempty"`
-	MnameBlock    *InheritedZoneAuthorityMNameBlock `json:"mname_block,omitempty"`
-	NegativeTtl   *Inheritance2InheritedUInt32      `json:"negative_ttl,omitempty"`
-	ProtocolRname *Inheritance2InheritedString      `json:"protocol_rname,omitempty"`
-	Refresh       *Inheritance2InheritedUInt32      `json:"refresh,omitempty"`
-	Retry         *Inheritance2InheritedUInt32      `json:"retry,omitempty"`
-	Rname         *Inheritance2InheritedString      `json:"rname,omitempty"`
+	DefaultTtl           *Inheritance2InheritedUInt32      `json:"default_ttl,omitempty"`
+	Expire               *Inheritance2InheritedUInt32      `json:"expire,omitempty"`
+	MnameBlock           *InheritedZoneAuthorityMNameBlock `json:"mname_block,omitempty"`
+	NegativeTtl          *Inheritance2InheritedUInt32      `json:"negative_ttl,omitempty"`
+	ProtocolRname        *Inheritance2InheritedString      `json:"protocol_rname,omitempty"`
+	Refresh              *Inheritance2InheritedUInt32      `json:"refresh,omitempty"`
+	Retry                *Inheritance2InheritedUInt32      `json:"retry,omitempty"`
+	Rname                *Inheritance2InheritedString      `json:"rname,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InheritedZoneAuthority InheritedZoneAuthority
 
 // NewInheritedZoneAuthority instantiates a new InheritedZoneAuthority object
 // This constructor will assign default values to properties that have it defined,
@@ -336,7 +339,40 @@ func (o InheritedZoneAuthority) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Rname) {
 		toSerialize["rname"] = o.Rname
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritedZoneAuthority) UnmarshalJSON(data []byte) (err error) {
+	varInheritedZoneAuthority := _InheritedZoneAuthority{}
+
+	err = json.Unmarshal(data, &varInheritedZoneAuthority)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedZoneAuthority(varInheritedZoneAuthority)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "default_ttl")
+		delete(additionalProperties, "expire")
+		delete(additionalProperties, "mname_block")
+		delete(additionalProperties, "negative_ttl")
+		delete(additionalProperties, "protocol_rname")
+		delete(additionalProperties, "refresh")
+		delete(additionalProperties, "retry")
+		delete(additionalProperties, "rname")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedZoneAuthority struct {

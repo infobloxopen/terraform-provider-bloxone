@@ -20,8 +20,11 @@ var _ MappedNullable = &ListFilterResponse{}
 // ListFilterResponse The response format to retrieve DHCP __Filter__ objects.
 type ListFilterResponse struct {
 	// The list of DHCP Filter objects.
-	Results []Filter `json:"results,omitempty"`
+	Results              []Filter `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListFilterResponse ListFilterResponse
 
 // NewListFilterResponse instantiates a new ListFilterResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListFilterResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListFilterResponse) UnmarshalJSON(data []byte) (err error) {
+	varListFilterResponse := _ListFilterResponse{}
+
+	err = json.Unmarshal(data, &varListFilterResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListFilterResponse(varListFilterResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListFilterResponse struct {

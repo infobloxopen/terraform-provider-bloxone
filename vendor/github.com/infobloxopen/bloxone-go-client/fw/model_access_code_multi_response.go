@@ -20,8 +20,11 @@ var _ MappedNullable = &AccessCodeMultiResponse{}
 // AccessCodeMultiResponse struct for AccessCodeMultiResponse
 type AccessCodeMultiResponse struct {
 	// The list of Bypass Code objects.
-	Results []AccessCode `json:"results,omitempty"`
+	Results              []AccessCode `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AccessCodeMultiResponse AccessCodeMultiResponse
 
 // NewAccessCodeMultiResponse instantiates a new AccessCodeMultiResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o AccessCodeMultiResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AccessCodeMultiResponse) UnmarshalJSON(data []byte) (err error) {
+	varAccessCodeMultiResponse := _AccessCodeMultiResponse{}
+
+	err = json.Unmarshal(data, &varAccessCodeMultiResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AccessCodeMultiResponse(varAccessCodeMultiResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAccessCodeMultiResponse struct {

@@ -22,8 +22,11 @@ type NetAddrPolicyAssignment struct {
 	// network address in IPv4 CIDR (address/bitmask length) string format
 	AddrNet *string `json:"addr_net,omitempty"`
 	// Identifier of the security policy associated with this address block
-	PolicyId *int32 `json:"policy_id,omitempty"`
+	PolicyId             *int32 `json:"policy_id,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NetAddrPolicyAssignment NetAddrPolicyAssignment
 
 // NewNetAddrPolicyAssignment instantiates a new NetAddrPolicyAssignment object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,34 @@ func (o NetAddrPolicyAssignment) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.PolicyId) {
 		toSerialize["policy_id"] = o.PolicyId
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NetAddrPolicyAssignment) UnmarshalJSON(data []byte) (err error) {
+	varNetAddrPolicyAssignment := _NetAddrPolicyAssignment{}
+
+	err = json.Unmarshal(data, &varNetAddrPolicyAssignment)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NetAddrPolicyAssignment(varNetAddrPolicyAssignment)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "addr_net")
+		delete(additionalProperties, "policy_id")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNetAddrPolicyAssignment struct {

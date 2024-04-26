@@ -19,8 +19,11 @@ var _ MappedNullable = &CopyAuthZoneResponse{}
 
 // CopyAuthZoneResponse The Authoritative Zone object copy response format.
 type CopyAuthZoneResponse struct {
-	Result *CopyResponse `json:"result,omitempty"`
+	Result               *CopyResponse `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CopyAuthZoneResponse CopyAuthZoneResponse
 
 // NewCopyAuthZoneResponse instantiates a new CopyAuthZoneResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o CopyAuthZoneResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CopyAuthZoneResponse) UnmarshalJSON(data []byte) (err error) {
+	varCopyAuthZoneResponse := _CopyAuthZoneResponse{}
+
+	err = json.Unmarshal(data, &varCopyAuthZoneResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CopyAuthZoneResponse(varCopyAuthZoneResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCopyAuthZoneResponse struct {

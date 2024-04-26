@@ -24,8 +24,11 @@ type AuthZoneExternalProvider struct {
 	// The name of the external provider.
 	Name *string `json:"name,omitempty"`
 	// Defines the type of external provider. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services,  * _microsoft_active_directory_: host type is Microsoft Active Directory,  * _google_cloud_platform_: host type is Google Cloud Platform.
-	Type *string `json:"type,omitempty"`
+	Type                 *string `json:"type,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AuthZoneExternalProvider AuthZoneExternalProvider
 
 // NewAuthZoneExternalProvider instantiates a new AuthZoneExternalProvider object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,35 @@ func (o AuthZoneExternalProvider) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Type) {
 		toSerialize["type"] = o.Type
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AuthZoneExternalProvider) UnmarshalJSON(data []byte) (err error) {
+	varAuthZoneExternalProvider := _AuthZoneExternalProvider{}
+
+	err = json.Unmarshal(data, &varAuthZoneExternalProvider)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AuthZoneExternalProvider(varAuthZoneExternalProvider)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "type")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAuthZoneExternalProvider struct {

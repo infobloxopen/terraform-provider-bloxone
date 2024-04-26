@@ -26,9 +26,12 @@ type OnpremHostRef struct {
 	Ipv6Address *string `json:"ipv6_address,omitempty"`
 	Name        *string `json:"name,omitempty"`
 	// Unique 32-character string identifier assigned to the host
-	Ophid         *string `json:"ophid,omitempty"`
-	RuntimeStatus *string `json:"runtime_status,omitempty"`
+	Ophid                *string `json:"ophid,omitempty"`
+	RuntimeStatus        *string `json:"runtime_status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _OnpremHostRef OnpremHostRef
 
 // NewOnpremHostRef instantiates a new OnpremHostRef object
 // This constructor will assign default values to properties that have it defined,
@@ -267,7 +270,38 @@ func (o OnpremHostRef) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RuntimeStatus) {
 		toSerialize["runtime_status"] = o.RuntimeStatus
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *OnpremHostRef) UnmarshalJSON(data []byte) (err error) {
+	varOnpremHostRef := _OnpremHostRef{}
+
+	err = json.Unmarshal(data, &varOnpremHostRef)
+
+	if err != nil {
+		return err
+	}
+
+	*o = OnpremHostRef(varOnpremHostRef)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "ip_address")
+		delete(additionalProperties, "ipv6_address")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "ophid")
+		delete(additionalProperties, "runtime_status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableOnpremHostRef struct {

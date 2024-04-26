@@ -19,10 +19,13 @@ var _ MappedNullable = &NamedListsUpdateNamedListPartial400ResponseError{}
 
 // NamedListsUpdateNamedListPartial400ResponseError struct for NamedListsUpdateNamedListPartial400ResponseError
 type NamedListsUpdateNamedListPartial400ResponseError struct {
-	Code    *string `json:"code,omitempty"`
-	Message *string `json:"message,omitempty"`
-	Status  *string `json:"status,omitempty"`
+	Code                 *string `json:"code,omitempty"`
+	Message              *string `json:"message,omitempty"`
+	Status               *string `json:"status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NamedListsUpdateNamedListPartial400ResponseError NamedListsUpdateNamedListPartial400ResponseError
 
 // NewNamedListsUpdateNamedListPartial400ResponseError instantiates a new NamedListsUpdateNamedListPartial400ResponseError object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o NamedListsUpdateNamedListPartial400ResponseError) ToMap() (map[string]in
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NamedListsUpdateNamedListPartial400ResponseError) UnmarshalJSON(data []byte) (err error) {
+	varNamedListsUpdateNamedListPartial400ResponseError := _NamedListsUpdateNamedListPartial400ResponseError{}
+
+	err = json.Unmarshal(data, &varNamedListsUpdateNamedListPartial400ResponseError)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NamedListsUpdateNamedListPartial400ResponseError(varNamedListsUpdateNamedListPartial400ResponseError)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "code")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNamedListsUpdateNamedListPartial400ResponseError struct {

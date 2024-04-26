@@ -19,8 +19,11 @@ var _ MappedNullable = &ReadACLResponse{}
 
 // ReadACLResponse The ACL object read response format.
 type ReadACLResponse struct {
-	Result *ACL `json:"result,omitempty"`
+	Result               *ACL `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReadACLResponse ReadACLResponse
 
 // NewReadACLResponse instantiates a new ReadACLResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ReadACLResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReadACLResponse) UnmarshalJSON(data []byte) (err error) {
+	varReadACLResponse := _ReadACLResponse{}
+
+	err = json.Unmarshal(data, &varReadACLResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ReadACLResponse(varReadACLResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReadACLResponse struct {

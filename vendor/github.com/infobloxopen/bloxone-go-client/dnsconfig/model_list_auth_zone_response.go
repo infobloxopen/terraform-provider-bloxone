@@ -20,8 +20,11 @@ var _ MappedNullable = &ListAuthZoneResponse{}
 // ListAuthZoneResponse The Authoritative Zone object list response format.
 type ListAuthZoneResponse struct {
 	// The list of Auth Zone objects.
-	Results []AuthZone `json:"results,omitempty"`
+	Results              []AuthZone `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListAuthZoneResponse ListAuthZoneResponse
 
 // NewListAuthZoneResponse instantiates a new ListAuthZoneResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListAuthZoneResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListAuthZoneResponse) UnmarshalJSON(data []byte) (err error) {
+	varListAuthZoneResponse := _ListAuthZoneResponse{}
+
+	err = json.Unmarshal(data, &varListAuthZoneResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListAuthZoneResponse(varListAuthZoneResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListAuthZoneResponse struct {

@@ -20,9 +20,12 @@ var _ MappedNullable = &AppApproval{}
 // AppApproval struct for AppApproval
 type AppApproval struct {
 	// The name of the application, should be unique and is used as Application Identifier
-	AppName *string `json:"app_name,omitempty"`
-	Status  *string `json:"status,omitempty"`
+	AppName              *string `json:"app_name,omitempty"`
+	Status               *string `json:"status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AppApproval AppApproval
 
 // NewAppApproval instantiates a new AppApproval object
 // This constructor will assign default values to properties that have it defined,
@@ -121,7 +124,34 @@ func (o AppApproval) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AppApproval) UnmarshalJSON(data []byte) (err error) {
+	varAppApproval := _AppApproval{}
+
+	err = json.Unmarshal(data, &varAppApproval)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AppApproval(varAppApproval)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "app_name")
+		delete(additionalProperties, "status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAppApproval struct {

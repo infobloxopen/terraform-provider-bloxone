@@ -20,8 +20,11 @@ var _ MappedNullable = &CreateNextAvailableIPResponse{}
 // CreateNextAvailableIPResponse The response format to allocate the next available IP address.
 type CreateNextAvailableIPResponse struct {
 	// The list of allocated IP address objects.
-	Results []Address `json:"results,omitempty"`
+	Results              []Address `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CreateNextAvailableIPResponse CreateNextAvailableIPResponse
 
 // NewCreateNextAvailableIPResponse instantiates a new CreateNextAvailableIPResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o CreateNextAvailableIPResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CreateNextAvailableIPResponse) UnmarshalJSON(data []byte) (err error) {
+	varCreateNextAvailableIPResponse := _CreateNextAvailableIPResponse{}
+
+	err = json.Unmarshal(data, &varCreateNextAvailableIPResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CreateNextAvailableIPResponse(varCreateNextAvailableIPResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCreateNextAvailableIPResponse struct {

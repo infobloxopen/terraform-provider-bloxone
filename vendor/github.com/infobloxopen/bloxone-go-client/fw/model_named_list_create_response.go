@@ -19,8 +19,11 @@ var _ MappedNullable = &NamedListCreateResponse{}
 
 // NamedListCreateResponse The Named List create response.
 type NamedListCreateResponse struct {
-	Results *NamedList `json:"results,omitempty"`
+	Results              *NamedList `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NamedListCreateResponse NamedListCreateResponse
 
 // NewNamedListCreateResponse instantiates a new NamedListCreateResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o NamedListCreateResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NamedListCreateResponse) UnmarshalJSON(data []byte) (err error) {
+	varNamedListCreateResponse := _NamedListCreateResponse{}
+
+	err = json.Unmarshal(data, &varNamedListCreateResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NamedListCreateResponse(varNamedListCreateResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNamedListCreateResponse struct {

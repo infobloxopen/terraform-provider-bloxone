@@ -19,8 +19,11 @@ var _ MappedNullable = &ApplicationsResponse{}
 
 // ApplicationsResponse Applications response.
 type ApplicationsResponse struct {
-	Results *Applications `json:"results,omitempty"`
+	Results              *Applications `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ApplicationsResponse ApplicationsResponse
 
 // NewApplicationsResponse instantiates a new ApplicationsResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o ApplicationsResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ApplicationsResponse) UnmarshalJSON(data []byte) (err error) {
+	varApplicationsResponse := _ApplicationsResponse{}
+
+	err = json.Unmarshal(data, &varApplicationsResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ApplicationsResponse(varApplicationsResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableApplicationsResponse struct {

@@ -20,8 +20,11 @@ var _ MappedNullable = &ListAddressBlockResponse{}
 // ListAddressBlockResponse The response format to retrieve __AddressBlock__ objects.
 type ListAddressBlockResponse struct {
 	// A list of AddressBlock objects.
-	Results []AddressBlock `json:"results,omitempty"`
+	Results              []AddressBlock `json:"results,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ListAddressBlockResponse ListAddressBlockResponse
 
 // NewListAddressBlockResponse instantiates a new ListAddressBlockResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,33 @@ func (o ListAddressBlockResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ListAddressBlockResponse) UnmarshalJSON(data []byte) (err error) {
+	varListAddressBlockResponse := _ListAddressBlockResponse{}
+
+	err = json.Unmarshal(data, &varListAddressBlockResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ListAddressBlockResponse(varListAddressBlockResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableListAddressBlockResponse struct {

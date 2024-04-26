@@ -20,10 +20,13 @@ var _ MappedNullable = &AssignTagsRequest{}
 // AssignTagsRequest struct for AssignTagsRequest
 type AssignTagsRequest struct {
 	// The resource identifier.
-	Ids      []string               `json:"ids,omitempty"`
-	Override *bool                  `json:"override,omitempty"`
-	Tags     map[string]interface{} `json:"tags,omitempty"`
+	Ids                  []string               `json:"ids,omitempty"`
+	Override             *bool                  `json:"override,omitempty"`
+	Tags                 map[string]interface{} `json:"tags,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AssignTagsRequest AssignTagsRequest
 
 // NewAssignTagsRequest instantiates a new AssignTagsRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -157,7 +160,35 @@ func (o AssignTagsRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AssignTagsRequest) UnmarshalJSON(data []byte) (err error) {
+	varAssignTagsRequest := _AssignTagsRequest{}
+
+	err = json.Unmarshal(data, &varAssignTagsRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AssignTagsRequest(varAssignTagsRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ids")
+		delete(additionalProperties, "override")
+		delete(additionalProperties, "tags")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAssignTagsRequest struct {

@@ -19,8 +19,11 @@ var _ MappedNullable = &UpdateViewResponse{}
 
 // UpdateViewResponse The View object update response format.
 type UpdateViewResponse struct {
-	Result *View `json:"result,omitempty"`
+	Result               *View `json:"result,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateViewResponse UpdateViewResponse
 
 // NewUpdateViewResponse instantiates a new UpdateViewResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o UpdateViewResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateViewResponse) UnmarshalJSON(data []byte) (err error) {
+	varUpdateViewResponse := _UpdateViewResponse{}
+
+	err = json.Unmarshal(data, &varUpdateViewResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateViewResponse(varUpdateViewResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateViewResponse struct {

@@ -11,7 +11,6 @@ API version: v1
 package dnsconfig
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -38,7 +37,8 @@ type CopyAuthZone struct {
 	// Indicates whether copying should skip object in case of error and continue with next, or abort copying in case of error.  Defaults to _false_.
 	SkipOnError *bool `json:"skip_on_error,omitempty"`
 	// The resource identifier.
-	TargetView string `json:"target_view"`
+	TargetView           string `json:"target_view"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CopyAuthZone CopyAuthZone
@@ -376,6 +376,11 @@ func (o CopyAuthZone) ToMap() (map[string]interface{}, error) {
 		toSerialize["skip_on_error"] = o.SkipOnError
 	}
 	toSerialize["target_view"] = o.TargetView
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -403,15 +408,28 @@ func (o *CopyAuthZone) UnmarshalJSON(data []byte) (err error) {
 
 	varCopyAuthZone := _CopyAuthZone{}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varCopyAuthZone)
+	err = json.Unmarshal(data, &varCopyAuthZone)
 
 	if err != nil {
 		return err
 	}
 
 	*o = CopyAuthZone(varCopyAuthZone)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "external_primaries")
+		delete(additionalProperties, "external_secondaries")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "internal_secondaries")
+		delete(additionalProperties, "nsgs")
+		delete(additionalProperties, "recursive")
+		delete(additionalProperties, "skip_on_error")
+		delete(additionalProperties, "target_view")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

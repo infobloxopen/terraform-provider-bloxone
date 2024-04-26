@@ -61,8 +61,11 @@ type SecurityPolicy struct {
 	// The time when this Security Policy object was last updated.
 	UpdatedTime *time.Time `json:"updated_time,omitempty"`
 	// List of user groups associated with this policy
-	UserGroups []string `json:"user_groups,omitempty"`
+	UserGroups           []string `json:"user_groups,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SecurityPolicy SecurityPolicy
 
 // NewSecurityPolicy instantiates a new SecurityPolicy object
 // This constructor will assign default values to properties that have it defined,
@@ -826,7 +829,53 @@ func (o SecurityPolicy) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UserGroups) {
 		toSerialize["user_groups"] = o.UserGroups
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *SecurityPolicy) UnmarshalJSON(data []byte) (err error) {
+	varSecurityPolicy := _SecurityPolicy{}
+
+	err = json.Unmarshal(data, &varSecurityPolicy)
+
+	if err != nil {
+		return err
+	}
+
+	*o = SecurityPolicy(varSecurityPolicy)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "access_codes")
+		delete(additionalProperties, "created_time")
+		delete(additionalProperties, "default_action")
+		delete(additionalProperties, "default_redirect_name")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "dfp_services")
+		delete(additionalProperties, "dfps")
+		delete(additionalProperties, "ecs")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "is_default")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "net_address_dfps")
+		delete(additionalProperties, "network_lists")
+		delete(additionalProperties, "onprem_resolve")
+		delete(additionalProperties, "precedence")
+		delete(additionalProperties, "roaming_device_groups")
+		delete(additionalProperties, "rules")
+		delete(additionalProperties, "safe_search")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "updated_time")
+		delete(additionalProperties, "user_groups")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSecurityPolicy struct {
