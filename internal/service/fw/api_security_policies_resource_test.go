@@ -461,7 +461,7 @@ func testAccCheckSecurityPoliciesExists(ctx context.Context, resourceName string
 		}
 		apiRes, _, err := acctest.BloxOneClient.FWAPI.
 			SecurityPoliciesAPI.
-			SecurityPoliciesReadSecurityPolicy(ctx, int32(id)).
+			ReadSecurityPolicy(ctx, int32(id)).
 			Execute()
 		if err != nil {
 			return err
@@ -479,7 +479,7 @@ func testAccCheckSecurityPoliciesDestroy(ctx context.Context, v *fw.SecurityPoli
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.FWAPI.
 			SecurityPoliciesAPI.
-			SecurityPoliciesReadSecurityPolicy(ctx, *v.Id).
+			ReadSecurityPolicy(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -497,7 +497,7 @@ func testAccCheckSecurityPoliciesDisappears(ctx context.Context, v *fw.SecurityP
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.FWAPI.
 			SecurityPoliciesAPI.
-			SecurityPoliciesDeleteSingleSecurityPolicy(ctx, *v.Id).
+			DeleteSingleSecurityPolicy(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err
