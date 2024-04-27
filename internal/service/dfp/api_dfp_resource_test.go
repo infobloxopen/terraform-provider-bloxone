@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 	"net/http"
 	"testing"
 
@@ -126,7 +127,7 @@ func TestAccDfpResource_InternalDomainLists(t *testing.T) {
 	var v dfp.Dfp
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -160,7 +161,7 @@ func testAccCheckDfpExists(ctx context.Context, resourceName string, v *dfp.Dfp)
 		}
 		apiRes, _, err := acctest.BloxOneClient.DNSForwardingProxyAPI.
 			InfraServicesAPI.
-			ReadDfpService(ctx, rs.Primary.ID).
+			ReadDfpService(ctx, utils.ExtractResourceId(rs.Primary.Attributes["service_id"])).
 			Execute()
 		if err != nil {
 			return err
@@ -222,7 +223,7 @@ resource "bloxone_infra_service" "example" {
 
 }
 
-resource "bloxone_dfp_service" "example" {
+resource "bloxone_dfp_service" "test" {
   service_id = bloxone_infra_service.example.id
 }
 `)

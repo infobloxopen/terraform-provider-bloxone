@@ -14,44 +14,16 @@ import (
 	"encoding/json"
 )
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-// checks if the InheritedAsmGrowthBlock type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &InheritedAsmGrowthBlock{}
-
-// InheritedAsmGrowthBlock The inheritance block for ASM fields: _growth_factor_ and _growth_type_.
-type InheritedAsmGrowthBlock struct {
-========
 // checks if the InheritedHostnameRewriteBlock type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &InheritedHostnameRewriteBlock{}
 
 // InheritedHostnameRewriteBlock The inheritance block for fields: _hostname_rewrite_enabled_, _hostname_rewrite_regex_, _hostname_rewrite_char_.
 type InheritedHostnameRewriteBlock struct {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	// The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
 	Action *string `json:"action,omitempty"`
 	// The human-readable display name for the object referred to by _source_.
 	DisplayName *string `json:"display_name,omitempty"`
 	// The resource identifier.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-	Source *string         `json:"source,omitempty"`
-	Value  *AsmGrowthBlock `json:"value,omitempty"`
-}
-
-// NewInheritedAsmGrowthBlock instantiates a new InheritedAsmGrowthBlock object
-// This constructor will assign default values to properties that have it defined,
-// and makes sure properties required by API are set, but the set of arguments
-// will change when the set of required properties is changed
-func NewInheritedAsmGrowthBlock() *InheritedAsmGrowthBlock {
-	this := InheritedAsmGrowthBlock{}
-	return &this
-}
-
-// NewInheritedAsmGrowthBlockWithDefaults instantiates a new InheritedAsmGrowthBlock object
-// This constructor will only assign default values to properties that have it defined,
-// but it doesn't guarantee that properties required by API are set
-func NewInheritedAsmGrowthBlockWithDefaults() *InheritedAsmGrowthBlock {
-	this := InheritedAsmGrowthBlock{}
-========
 	Source               *string               `json:"source,omitempty"`
 	Value                *HostnameRewriteBlock `json:"value,omitempty"`
 	AdditionalProperties map[string]interface{}
@@ -73,16 +45,11 @@ func NewInheritedHostnameRewriteBlock() *InheritedHostnameRewriteBlock {
 // but it doesn't guarantee that properties required by API are set
 func NewInheritedHostnameRewriteBlockWithDefaults() *InheritedHostnameRewriteBlock {
 	this := InheritedHostnameRewriteBlock{}
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	return &this
 }
 
 // GetAction returns the Action field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o *InheritedAsmGrowthBlock) GetAction() string {
-========
 func (o *InheritedHostnameRewriteBlock) GetAction() string {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	if o == nil || IsNil(o.Action) {
 		var ret string
 		return ret
@@ -92,11 +59,7 @@ func (o *InheritedHostnameRewriteBlock) GetAction() string {
 
 // GetActionOk returns a tuple with the Action field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o *InheritedAsmGrowthBlock) GetActionOk() (*string, bool) {
-========
 func (o *InheritedHostnameRewriteBlock) GetActionOk() (*string, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	if o == nil || IsNil(o.Action) {
 		return nil, false
 	}
@@ -104,11 +67,7 @@ func (o *InheritedHostnameRewriteBlock) GetActionOk() (*string, bool) {
 }
 
 // HasAction returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o *InheritedAsmGrowthBlock) HasAction() bool {
-========
 func (o *InheritedHostnameRewriteBlock) HasAction() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	if o != nil && !IsNil(o.Action) {
 		return true
 	}
@@ -117,20 +76,12 @@ func (o *InheritedHostnameRewriteBlock) HasAction() bool {
 }
 
 // SetAction gets a reference to the given string and assigns it to the Action field.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o *InheritedAsmGrowthBlock) SetAction(v string) {
-========
 func (o *InheritedHostnameRewriteBlock) SetAction(v string) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	o.Action = &v
 }
 
 // GetDisplayName returns the DisplayName field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o *InheritedAsmGrowthBlock) GetDisplayName() string {
-========
 func (o *InheritedHostnameRewriteBlock) GetDisplayName() string {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	if o == nil || IsNil(o.DisplayName) {
 		var ret string
 		return ret
@@ -140,11 +91,7 @@ func (o *InheritedHostnameRewriteBlock) GetDisplayName() string {
 
 // GetDisplayNameOk returns a tuple with the DisplayName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o *InheritedAsmGrowthBlock) GetDisplayNameOk() (*string, bool) {
-========
 func (o *InheritedHostnameRewriteBlock) GetDisplayNameOk() (*string, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	if o == nil || IsNil(o.DisplayName) {
 		return nil, false
 	}
@@ -152,11 +99,7 @@ func (o *InheritedHostnameRewriteBlock) GetDisplayNameOk() (*string, bool) {
 }
 
 // HasDisplayName returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o *InheritedAsmGrowthBlock) HasDisplayName() bool {
-========
 func (o *InheritedHostnameRewriteBlock) HasDisplayName() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	if o != nil && !IsNil(o.DisplayName) {
 		return true
 	}
@@ -165,20 +108,12 @@ func (o *InheritedHostnameRewriteBlock) HasDisplayName() bool {
 }
 
 // SetDisplayName gets a reference to the given string and assigns it to the DisplayName field.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o *InheritedAsmGrowthBlock) SetDisplayName(v string) {
-========
 func (o *InheritedHostnameRewriteBlock) SetDisplayName(v string) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	o.DisplayName = &v
 }
 
 // GetSource returns the Source field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o *InheritedAsmGrowthBlock) GetSource() string {
-========
 func (o *InheritedHostnameRewriteBlock) GetSource() string {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	if o == nil || IsNil(o.Source) {
 		var ret string
 		return ret
@@ -188,11 +123,7 @@ func (o *InheritedHostnameRewriteBlock) GetSource() string {
 
 // GetSourceOk returns a tuple with the Source field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o *InheritedAsmGrowthBlock) GetSourceOk() (*string, bool) {
-========
 func (o *InheritedHostnameRewriteBlock) GetSourceOk() (*string, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	if o == nil || IsNil(o.Source) {
 		return nil, false
 	}
@@ -200,11 +131,7 @@ func (o *InheritedHostnameRewriteBlock) GetSourceOk() (*string, bool) {
 }
 
 // HasSource returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o *InheritedAsmGrowthBlock) HasSource() bool {
-========
 func (o *InheritedHostnameRewriteBlock) HasSource() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	if o != nil && !IsNil(o.Source) {
 		return true
 	}
@@ -213,24 +140,14 @@ func (o *InheritedHostnameRewriteBlock) HasSource() bool {
 }
 
 // SetSource gets a reference to the given string and assigns it to the Source field.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o *InheritedAsmGrowthBlock) SetSource(v string) {
-========
 func (o *InheritedHostnameRewriteBlock) SetSource(v string) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	o.Source = &v
 }
 
 // GetValue returns the Value field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o *InheritedAsmGrowthBlock) GetValue() AsmGrowthBlock {
-	if o == nil || IsNil(o.Value) {
-		var ret AsmGrowthBlock
-========
 func (o *InheritedHostnameRewriteBlock) GetValue() HostnameRewriteBlock {
 	if o == nil || IsNil(o.Value) {
 		var ret HostnameRewriteBlock
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 		return ret
 	}
 	return *o.Value
@@ -238,11 +155,7 @@ func (o *InheritedHostnameRewriteBlock) GetValue() HostnameRewriteBlock {
 
 // GetValueOk returns a tuple with the Value field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o *InheritedAsmGrowthBlock) GetValueOk() (*AsmGrowthBlock, bool) {
-========
 func (o *InheritedHostnameRewriteBlock) GetValueOk() (*HostnameRewriteBlock, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	if o == nil || IsNil(o.Value) {
 		return nil, false
 	}
@@ -250,11 +163,7 @@ func (o *InheritedHostnameRewriteBlock) GetValueOk() (*HostnameRewriteBlock, boo
 }
 
 // HasValue returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o *InheritedAsmGrowthBlock) HasValue() bool {
-========
 func (o *InheritedHostnameRewriteBlock) HasValue() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	if o != nil && !IsNil(o.Value) {
 		return true
 	}
@@ -262,21 +171,12 @@ func (o *InheritedHostnameRewriteBlock) HasValue() bool {
 	return false
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-// SetValue gets a reference to the given AsmGrowthBlock and assigns it to the Value field.
-func (o *InheritedAsmGrowthBlock) SetValue(v AsmGrowthBlock) {
-	o.Value = &v
-}
-
-func (o InheritedAsmGrowthBlock) MarshalJSON() ([]byte, error) {
-========
 // SetValue gets a reference to the given HostnameRewriteBlock and assigns it to the Value field.
 func (o *InheritedHostnameRewriteBlock) SetValue(v HostnameRewriteBlock) {
 	o.Value = &v
 }
 
 func (o InheritedHostnameRewriteBlock) MarshalJSON() ([]byte, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -284,11 +184,7 @@ func (o InheritedHostnameRewriteBlock) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (o InheritedAsmGrowthBlock) ToMap() (map[string]interface{}, error) {
-========
 func (o InheritedHostnameRewriteBlock) ToMap() (map[string]interface{}, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Action) {
 		toSerialize["action"] = o.Action
@@ -310,18 +206,6 @@ func (o InheritedHostnameRewriteBlock) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-type NullableInheritedAsmGrowthBlock struct {
-	value *InheritedAsmGrowthBlock
-	isSet bool
-}
-
-func (v NullableInheritedAsmGrowthBlock) Get() *InheritedAsmGrowthBlock {
-	return v.value
-}
-
-func (v *NullableInheritedAsmGrowthBlock) Set(val *InheritedAsmGrowthBlock) {
-========
 func (o *InheritedHostnameRewriteBlock) UnmarshalJSON(data []byte) (err error) {
 	varInheritedHostnameRewriteBlock := _InheritedHostnameRewriteBlock{}
 
@@ -356,39 +240,19 @@ func (v NullableInheritedHostnameRewriteBlock) Get() *InheritedHostnameRewriteBl
 }
 
 func (v *NullableInheritedHostnameRewriteBlock) Set(val *InheritedHostnameRewriteBlock) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	v.value = val
 	v.isSet = true
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func (v NullableInheritedAsmGrowthBlock) IsSet() bool {
-	return v.isSet
-}
-
-func (v *NullableInheritedAsmGrowthBlock) Unset() {
-========
 func (v NullableInheritedHostnameRewriteBlock) IsSet() bool {
 	return v.isSet
 }
 
 func (v *NullableInheritedHostnameRewriteBlock) Unset() {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	v.value = nil
 	v.isSet = false
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_asm_growth_block.go
-func NewNullableInheritedAsmGrowthBlock(val *InheritedAsmGrowthBlock) *NullableInheritedAsmGrowthBlock {
-	return &NullableInheritedAsmGrowthBlock{value: val, isSet: true}
-}
-
-func (v NullableInheritedAsmGrowthBlock) MarshalJSON() ([]byte, error) {
-	return json.Marshal(v.value)
-}
-
-func (v *NullableInheritedAsmGrowthBlock) UnmarshalJSON(src []byte) error {
-========
 func NewNullableInheritedHostnameRewriteBlock(val *InheritedHostnameRewriteBlock) *NullableInheritedHostnameRewriteBlock {
 	return &NullableInheritedHostnameRewriteBlock{value: val, isSet: true}
 }
@@ -398,7 +262,6 @@ func (v NullableInheritedHostnameRewriteBlock) MarshalJSON() ([]byte, error) {
 }
 
 func (v *NullableInheritedHostnameRewriteBlock) UnmarshalJSON(src []byte) error {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_hostname_rewrite_block.go
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

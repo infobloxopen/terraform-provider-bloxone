@@ -14,30 +14,6 @@ import (
 	"encoding/json"
 )
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_update_response.go
-// checks if the ApplicationFilterUpdateResponse type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &ApplicationFilterUpdateResponse{}
-
-// ApplicationFilterUpdateResponse The Application Filter update response.
-type ApplicationFilterUpdateResponse struct {
-	Results *ApplicationFilter `json:"results,omitempty"`
-}
-
-// NewApplicationFilterUpdateResponse instantiates a new ApplicationFilterUpdateResponse object
-// This constructor will assign default values to properties that have it defined,
-// and makes sure properties required by API are set, but the set of arguments
-// will change when the set of required properties is changed
-func NewApplicationFilterUpdateResponse() *ApplicationFilterUpdateResponse {
-	this := ApplicationFilterUpdateResponse{}
-	return &this
-}
-
-// NewApplicationFilterUpdateResponseWithDefaults instantiates a new ApplicationFilterUpdateResponse object
-// This constructor will only assign default values to properties that have it defined,
-// but it doesn't guarantee that properties required by API are set
-func NewApplicationFilterUpdateResponseWithDefaults() *ApplicationFilterUpdateResponse {
-	this := ApplicationFilterUpdateResponse{}
-========
 // checks if the ApplicationFilterCreateResponse type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ApplicationFilterCreateResponse{}
 
@@ -63,16 +39,11 @@ func NewApplicationFilterCreateResponse() *ApplicationFilterCreateResponse {
 // but it doesn't guarantee that properties required by API are set
 func NewApplicationFilterCreateResponseWithDefaults() *ApplicationFilterCreateResponse {
 	this := ApplicationFilterCreateResponse{}
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
 	return &this
 }
 
 // GetResults returns the Results field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_update_response.go
-func (o *ApplicationFilterUpdateResponse) GetResults() ApplicationFilter {
-========
 func (o *ApplicationFilterCreateResponse) GetResults() ApplicationFilter {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
 	if o == nil || IsNil(o.Results) {
 		var ret ApplicationFilter
 		return ret
@@ -82,11 +53,7 @@ func (o *ApplicationFilterCreateResponse) GetResults() ApplicationFilter {
 
 // GetResultsOk returns a tuple with the Results field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_update_response.go
-func (o *ApplicationFilterUpdateResponse) GetResultsOk() (*ApplicationFilter, bool) {
-========
 func (o *ApplicationFilterCreateResponse) GetResultsOk() (*ApplicationFilter, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
 	if o == nil || IsNil(o.Results) {
 		return nil, false
 	}
@@ -94,11 +61,7 @@ func (o *ApplicationFilterCreateResponse) GetResultsOk() (*ApplicationFilter, bo
 }
 
 // HasResults returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_update_response.go
-func (o *ApplicationFilterUpdateResponse) HasResults() bool {
-========
 func (o *ApplicationFilterCreateResponse) HasResults() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
 	if o != nil && !IsNil(o.Results) {
 		return true
 	}
@@ -107,19 +70,11 @@ func (o *ApplicationFilterCreateResponse) HasResults() bool {
 }
 
 // SetResults gets a reference to the given ApplicationFilter and assigns it to the Results field.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_update_response.go
-func (o *ApplicationFilterUpdateResponse) SetResults(v ApplicationFilter) {
-	o.Results = &v
-}
-
-func (o ApplicationFilterUpdateResponse) MarshalJSON() ([]byte, error) {
-========
 func (o *ApplicationFilterCreateResponse) SetResults(v ApplicationFilter) {
 	o.Results = &v
 }
 
 func (o ApplicationFilterCreateResponse) MarshalJSON() ([]byte, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -127,11 +82,7 @@ func (o ApplicationFilterCreateResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_update_response.go
-func (o ApplicationFilterUpdateResponse) ToMap() (map[string]interface{}, error) {
-========
 func (o ApplicationFilterCreateResponse) ToMap() (map[string]interface{}, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
@@ -144,18 +95,6 @@ func (o ApplicationFilterCreateResponse) ToMap() (map[string]interface{}, error)
 	return toSerialize, nil
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_update_response.go
-type NullableApplicationFilterUpdateResponse struct {
-	value *ApplicationFilterUpdateResponse
-	isSet bool
-}
-
-func (v NullableApplicationFilterUpdateResponse) Get() *ApplicationFilterUpdateResponse {
-	return v.value
-}
-
-func (v *NullableApplicationFilterUpdateResponse) Set(val *ApplicationFilterUpdateResponse) {
-========
 func (o *ApplicationFilterCreateResponse) UnmarshalJSON(data []byte) (err error) {
 	varApplicationFilterCreateResponse := _ApplicationFilterCreateResponse{}
 
@@ -187,39 +126,19 @@ func (v NullableApplicationFilterCreateResponse) Get() *ApplicationFilterCreateR
 }
 
 func (v *NullableApplicationFilterCreateResponse) Set(val *ApplicationFilterCreateResponse) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
 	v.value = val
 	v.isSet = true
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_update_response.go
-func (v NullableApplicationFilterUpdateResponse) IsSet() bool {
-	return v.isSet
-}
-
-func (v *NullableApplicationFilterUpdateResponse) Unset() {
-========
 func (v NullableApplicationFilterCreateResponse) IsSet() bool {
 	return v.isSet
 }
 
 func (v *NullableApplicationFilterCreateResponse) Unset() {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
 	v.value = nil
 	v.isSet = false
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_update_response.go
-func NewNullableApplicationFilterUpdateResponse(val *ApplicationFilterUpdateResponse) *NullableApplicationFilterUpdateResponse {
-	return &NullableApplicationFilterUpdateResponse{value: val, isSet: true}
-}
-
-func (v NullableApplicationFilterUpdateResponse) MarshalJSON() ([]byte, error) {
-	return json.Marshal(v.value)
-}
-
-func (v *NullableApplicationFilterUpdateResponse) UnmarshalJSON(src []byte) error {
-========
 func NewNullableApplicationFilterCreateResponse(val *ApplicationFilterCreateResponse) *NullableApplicationFilterCreateResponse {
 	return &NullableApplicationFilterCreateResponse{value: val, isSet: true}
 }
@@ -229,7 +148,6 @@ func (v NullableApplicationFilterCreateResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (v *NullableApplicationFilterCreateResponse) UnmarshalJSON(src []byte) error {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

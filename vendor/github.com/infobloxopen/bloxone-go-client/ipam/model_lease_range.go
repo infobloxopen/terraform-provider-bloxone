@@ -14,40 +14,16 @@ import (
 	"encoding/json"
 )
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_subnet.go
-// checks if the LeaseSubnet type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &LeaseSubnet{}
-
-// LeaseSubnet struct for LeaseSubnet
-type LeaseSubnet struct {
-========
 // checks if the LeaseRange type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &LeaseRange{}
 
 // LeaseRange struct for LeaseRange
 type LeaseRange struct {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_range.go
 	// The resource identifier.
 	Id                   *string `json:"id,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_subnet.go
-// NewLeaseSubnet instantiates a new LeaseSubnet object
-// This constructor will assign default values to properties that have it defined,
-// and makes sure properties required by API are set, but the set of arguments
-// will change when the set of required properties is changed
-func NewLeaseSubnet() *LeaseSubnet {
-	this := LeaseSubnet{}
-	return &this
-}
-
-// NewLeaseSubnetWithDefaults instantiates a new LeaseSubnet object
-// This constructor will only assign default values to properties that have it defined,
-// but it doesn't guarantee that properties required by API are set
-func NewLeaseSubnetWithDefaults() *LeaseSubnet {
-	this := LeaseSubnet{}
-========
 type _LeaseRange LeaseRange
 
 // NewLeaseRange instantiates a new LeaseRange object
@@ -64,16 +40,11 @@ func NewLeaseRange() *LeaseRange {
 // but it doesn't guarantee that properties required by API are set
 func NewLeaseRangeWithDefaults() *LeaseRange {
 	this := LeaseRange{}
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_range.go
 	return &this
 }
 
 // GetId returns the Id field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_subnet.go
-func (o *LeaseSubnet) GetId() string {
-========
 func (o *LeaseRange) GetId() string {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_range.go
 	if o == nil || IsNil(o.Id) {
 		var ret string
 		return ret
@@ -83,11 +54,7 @@ func (o *LeaseRange) GetId() string {
 
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_subnet.go
-func (o *LeaseSubnet) GetIdOk() (*string, bool) {
-========
 func (o *LeaseRange) GetIdOk() (*string, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_range.go
 	if o == nil || IsNil(o.Id) {
 		return nil, false
 	}
@@ -95,11 +62,7 @@ func (o *LeaseRange) GetIdOk() (*string, bool) {
 }
 
 // HasId returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_subnet.go
-func (o *LeaseSubnet) HasId() bool {
-========
 func (o *LeaseRange) HasId() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_range.go
 	if o != nil && !IsNil(o.Id) {
 		return true
 	}
@@ -108,19 +71,11 @@ func (o *LeaseRange) HasId() bool {
 }
 
 // SetId gets a reference to the given string and assigns it to the Id field.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_subnet.go
-func (o *LeaseSubnet) SetId(v string) {
-	o.Id = &v
-}
-
-func (o LeaseSubnet) MarshalJSON() ([]byte, error) {
-========
 func (o *LeaseRange) SetId(v string) {
 	o.Id = &v
 }
 
 func (o LeaseRange) MarshalJSON() ([]byte, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_range.go
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -128,11 +83,7 @@ func (o LeaseRange) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_subnet.go
-func (o LeaseSubnet) ToMap() (map[string]interface{}, error) {
-========
 func (o LeaseRange) ToMap() (map[string]interface{}, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_range.go
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Id) {
 		toSerialize["id"] = o.Id
@@ -145,18 +96,6 @@ func (o LeaseRange) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_subnet.go
-type NullableLeaseSubnet struct {
-	value *LeaseSubnet
-	isSet bool
-}
-
-func (v NullableLeaseSubnet) Get() *LeaseSubnet {
-	return v.value
-}
-
-func (v *NullableLeaseSubnet) Set(val *LeaseSubnet) {
-========
 func (o *LeaseRange) UnmarshalJSON(data []byte) (err error) {
 	varLeaseRange := _LeaseRange{}
 
@@ -188,39 +127,19 @@ func (v NullableLeaseRange) Get() *LeaseRange {
 }
 
 func (v *NullableLeaseRange) Set(val *LeaseRange) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_range.go
 	v.value = val
 	v.isSet = true
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_subnet.go
-func (v NullableLeaseSubnet) IsSet() bool {
-	return v.isSet
-}
-
-func (v *NullableLeaseSubnet) Unset() {
-========
 func (v NullableLeaseRange) IsSet() bool {
 	return v.isSet
 }
 
 func (v *NullableLeaseRange) Unset() {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_range.go
 	v.value = nil
 	v.isSet = false
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_subnet.go
-func NewNullableLeaseSubnet(val *LeaseSubnet) *NullableLeaseSubnet {
-	return &NullableLeaseSubnet{value: val, isSet: true}
-}
-
-func (v NullableLeaseSubnet) MarshalJSON() ([]byte, error) {
-	return json.Marshal(v.value)
-}
-
-func (v *NullableLeaseSubnet) UnmarshalJSON(src []byte) error {
-========
 func NewNullableLeaseRange(val *LeaseRange) *NullableLeaseRange {
 	return &NullableLeaseRange{value: val, isSet: true}
 }
@@ -230,7 +149,6 @@ func (v NullableLeaseRange) MarshalJSON() ([]byte, error) {
 }
 
 func (v *NullableLeaseRange) UnmarshalJSON(src []byte) error {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_lease_range.go
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

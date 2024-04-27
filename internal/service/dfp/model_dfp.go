@@ -87,6 +87,7 @@ var DfpResourceSchemaAttributes = map[string]schema.Attribute{
 	"internal_domain_lists": schema.ListAttribute{
 		ElementType:         types.Int64Type,
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The list of internal domains list IDs that are associated with this DFP",
 	},
 	"name": schema.StringAttribute{
@@ -210,7 +211,7 @@ func (m *DfpModel) Flatten(ctx context.Context, from *dfp.Dfp, diags *diag.Diagn
 	m.PolicyId = flex.FlattenInt32Pointer(from.PolicyId)
 	m.PopRegionId = flex.FlattenInt32Pointer(from.PopRegionId)
 	m.ResolversAll = flex.FlattenFrameworkListNestedBlock(ctx, from.ResolversAll, ResolverAttrTypes, diags, FlattenResolver)
-	m.ServiceId = flex.FlattenStringPointer(from.ServiceId)
+	//m.ServiceId = flex.FlattenStringPointer(from.ServiceId)
 	m.ServiceName = flex.FlattenStringPointer(from.ServiceName)
 	m.SiteId = flex.FlattenStringPointer(from.SiteId)
 	m.UpdatedTime = timetypes.NewRFC3339TimePointerValue(from.UpdatedTime)

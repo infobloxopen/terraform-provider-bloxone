@@ -14,31 +14,6 @@ import (
 	"encoding/json"
 )
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_multi_response.go
-// checks if the InternalDomainsMultiResponse type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &InternalDomainsMultiResponse{}
-
-// InternalDomainsMultiResponse The Internal domains list response.
-type InternalDomainsMultiResponse struct {
-	// The list of Internal Domains objects.
-	Results []InternalDomains `json:"results,omitempty"`
-}
-
-// NewInternalDomainsMultiResponse instantiates a new InternalDomainsMultiResponse object
-// This constructor will assign default values to properties that have it defined,
-// and makes sure properties required by API are set, but the set of arguments
-// will change when the set of required properties is changed
-func NewInternalDomainsMultiResponse() *InternalDomainsMultiResponse {
-	this := InternalDomainsMultiResponse{}
-	return &this
-}
-
-// NewInternalDomainsMultiResponseWithDefaults instantiates a new InternalDomainsMultiResponse object
-// This constructor will only assign default values to properties that have it defined,
-// but it doesn't guarantee that properties required by API are set
-func NewInternalDomainsMultiResponseWithDefaults() *InternalDomainsMultiResponse {
-	this := InternalDomainsMultiResponse{}
-========
 // checks if the AccessCodeMultiResponse type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &AccessCodeMultiResponse{}
 
@@ -65,20 +40,13 @@ func NewAccessCodeMultiResponse() *AccessCodeMultiResponse {
 // but it doesn't guarantee that properties required by API are set
 func NewAccessCodeMultiResponseWithDefaults() *AccessCodeMultiResponse {
 	this := AccessCodeMultiResponse{}
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_access_code_multi_response.go
 	return &this
 }
 
 // GetResults returns the Results field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_multi_response.go
-func (o *InternalDomainsMultiResponse) GetResults() []InternalDomains {
-	if o == nil || IsNil(o.Results) {
-		var ret []InternalDomains
-========
 func (o *AccessCodeMultiResponse) GetResults() []AccessCode {
 	if o == nil || IsNil(o.Results) {
 		var ret []AccessCode
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_access_code_multi_response.go
 		return ret
 	}
 	return o.Results
@@ -86,11 +54,7 @@ func (o *AccessCodeMultiResponse) GetResults() []AccessCode {
 
 // GetResultsOk returns a tuple with the Results field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_multi_response.go
-func (o *InternalDomainsMultiResponse) GetResultsOk() ([]InternalDomains, bool) {
-========
 func (o *AccessCodeMultiResponse) GetResultsOk() ([]AccessCode, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_access_code_multi_response.go
 	if o == nil || IsNil(o.Results) {
 		return nil, false
 	}
@@ -98,11 +62,7 @@ func (o *AccessCodeMultiResponse) GetResultsOk() ([]AccessCode, bool) {
 }
 
 // HasResults returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_multi_response.go
-func (o *InternalDomainsMultiResponse) HasResults() bool {
-========
 func (o *AccessCodeMultiResponse) HasResults() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_access_code_multi_response.go
 	if o != nil && !IsNil(o.Results) {
 		return true
 	}
@@ -110,21 +70,12 @@ func (o *AccessCodeMultiResponse) HasResults() bool {
 	return false
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_multi_response.go
-// SetResults gets a reference to the given []InternalDomains and assigns it to the Results field.
-func (o *InternalDomainsMultiResponse) SetResults(v []InternalDomains) {
-	o.Results = v
-}
-
-func (o InternalDomainsMultiResponse) MarshalJSON() ([]byte, error) {
-========
 // SetResults gets a reference to the given []AccessCode and assigns it to the Results field.
 func (o *AccessCodeMultiResponse) SetResults(v []AccessCode) {
 	o.Results = v
 }
 
 func (o AccessCodeMultiResponse) MarshalJSON() ([]byte, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_access_code_multi_response.go
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -132,11 +83,7 @@ func (o AccessCodeMultiResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_multi_response.go
-func (o InternalDomainsMultiResponse) ToMap() (map[string]interface{}, error) {
-========
 func (o AccessCodeMultiResponse) ToMap() (map[string]interface{}, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_access_code_multi_response.go
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
@@ -149,18 +96,6 @@ func (o AccessCodeMultiResponse) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_multi_response.go
-type NullableInternalDomainsMultiResponse struct {
-	value *InternalDomainsMultiResponse
-	isSet bool
-}
-
-func (v NullableInternalDomainsMultiResponse) Get() *InternalDomainsMultiResponse {
-	return v.value
-}
-
-func (v *NullableInternalDomainsMultiResponse) Set(val *InternalDomainsMultiResponse) {
-========
 func (o *AccessCodeMultiResponse) UnmarshalJSON(data []byte) (err error) {
 	varAccessCodeMultiResponse := _AccessCodeMultiResponse{}
 
@@ -192,39 +127,19 @@ func (v NullableAccessCodeMultiResponse) Get() *AccessCodeMultiResponse {
 }
 
 func (v *NullableAccessCodeMultiResponse) Set(val *AccessCodeMultiResponse) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_access_code_multi_response.go
 	v.value = val
 	v.isSet = true
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_multi_response.go
-func (v NullableInternalDomainsMultiResponse) IsSet() bool {
-	return v.isSet
-}
-
-func (v *NullableInternalDomainsMultiResponse) Unset() {
-========
 func (v NullableAccessCodeMultiResponse) IsSet() bool {
 	return v.isSet
 }
 
 func (v *NullableAccessCodeMultiResponse) Unset() {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_access_code_multi_response.go
 	v.value = nil
 	v.isSet = false
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_multi_response.go
-func NewNullableInternalDomainsMultiResponse(val *InternalDomainsMultiResponse) *NullableInternalDomainsMultiResponse {
-	return &NullableInternalDomainsMultiResponse{value: val, isSet: true}
-}
-
-func (v NullableInternalDomainsMultiResponse) MarshalJSON() ([]byte, error) {
-	return json.Marshal(v.value)
-}
-
-func (v *NullableInternalDomainsMultiResponse) UnmarshalJSON(src []byte) error {
-========
 func NewNullableAccessCodeMultiResponse(val *AccessCodeMultiResponse) *NullableAccessCodeMultiResponse {
 	return &NullableAccessCodeMultiResponse{value: val, isSet: true}
 }
@@ -234,7 +149,6 @@ func (v NullableAccessCodeMultiResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (v *NullableAccessCodeMultiResponse) UnmarshalJSON(src []byte) error {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_access_code_multi_response.go
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

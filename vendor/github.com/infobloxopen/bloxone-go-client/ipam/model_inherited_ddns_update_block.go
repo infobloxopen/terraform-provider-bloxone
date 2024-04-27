@@ -14,44 +14,16 @@ import (
 	"encoding/json"
 )
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-// checks if the InheritedDDNSBlock type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &InheritedDDNSBlock{}
-
-// InheritedDDNSBlock The inheritance configuration block for dynamic DNS.
-type InheritedDDNSBlock struct {
-========
 // checks if the InheritedDDNSUpdateBlock type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &InheritedDDNSUpdateBlock{}
 
 // InheritedDDNSUpdateBlock The inheritance configuration for ddns_domain and ddns_send_updates.
 type InheritedDDNSUpdateBlock struct {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	// The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
 	Action *string `json:"action,omitempty"`
 	// The human-readable display name for the object referred to by _source_.
 	DisplayName *string `json:"display_name,omitempty"`
 	// The resource identifier.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-	Source *string    `json:"source,omitempty"`
-	Value  *DDNSBlock `json:"value,omitempty"`
-}
-
-// NewInheritedDDNSBlock instantiates a new InheritedDDNSBlock object
-// This constructor will assign default values to properties that have it defined,
-// and makes sure properties required by API are set, but the set of arguments
-// will change when the set of required properties is changed
-func NewInheritedDDNSBlock() *InheritedDDNSBlock {
-	this := InheritedDDNSBlock{}
-	return &this
-}
-
-// NewInheritedDDNSBlockWithDefaults instantiates a new InheritedDDNSBlock object
-// This constructor will only assign default values to properties that have it defined,
-// but it doesn't guarantee that properties required by API are set
-func NewInheritedDDNSBlockWithDefaults() *InheritedDDNSBlock {
-	this := InheritedDDNSBlock{}
-========
 	Source               *string          `json:"source,omitempty"`
 	Value                *DDNSUpdateBlock `json:"value,omitempty"`
 	AdditionalProperties map[string]interface{}
@@ -73,16 +45,11 @@ func NewInheritedDDNSUpdateBlock() *InheritedDDNSUpdateBlock {
 // but it doesn't guarantee that properties required by API are set
 func NewInheritedDDNSUpdateBlockWithDefaults() *InheritedDDNSUpdateBlock {
 	this := InheritedDDNSUpdateBlock{}
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	return &this
 }
 
 // GetAction returns the Action field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o *InheritedDDNSBlock) GetAction() string {
-========
 func (o *InheritedDDNSUpdateBlock) GetAction() string {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	if o == nil || IsNil(o.Action) {
 		var ret string
 		return ret
@@ -92,11 +59,7 @@ func (o *InheritedDDNSUpdateBlock) GetAction() string {
 
 // GetActionOk returns a tuple with the Action field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o *InheritedDDNSBlock) GetActionOk() (*string, bool) {
-========
 func (o *InheritedDDNSUpdateBlock) GetActionOk() (*string, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	if o == nil || IsNil(o.Action) {
 		return nil, false
 	}
@@ -104,11 +67,7 @@ func (o *InheritedDDNSUpdateBlock) GetActionOk() (*string, bool) {
 }
 
 // HasAction returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o *InheritedDDNSBlock) HasAction() bool {
-========
 func (o *InheritedDDNSUpdateBlock) HasAction() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	if o != nil && !IsNil(o.Action) {
 		return true
 	}
@@ -117,20 +76,12 @@ func (o *InheritedDDNSUpdateBlock) HasAction() bool {
 }
 
 // SetAction gets a reference to the given string and assigns it to the Action field.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o *InheritedDDNSBlock) SetAction(v string) {
-========
 func (o *InheritedDDNSUpdateBlock) SetAction(v string) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	o.Action = &v
 }
 
 // GetDisplayName returns the DisplayName field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o *InheritedDDNSBlock) GetDisplayName() string {
-========
 func (o *InheritedDDNSUpdateBlock) GetDisplayName() string {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	if o == nil || IsNil(o.DisplayName) {
 		var ret string
 		return ret
@@ -140,11 +91,7 @@ func (o *InheritedDDNSUpdateBlock) GetDisplayName() string {
 
 // GetDisplayNameOk returns a tuple with the DisplayName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o *InheritedDDNSBlock) GetDisplayNameOk() (*string, bool) {
-========
 func (o *InheritedDDNSUpdateBlock) GetDisplayNameOk() (*string, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	if o == nil || IsNil(o.DisplayName) {
 		return nil, false
 	}
@@ -152,11 +99,7 @@ func (o *InheritedDDNSUpdateBlock) GetDisplayNameOk() (*string, bool) {
 }
 
 // HasDisplayName returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o *InheritedDDNSBlock) HasDisplayName() bool {
-========
 func (o *InheritedDDNSUpdateBlock) HasDisplayName() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	if o != nil && !IsNil(o.DisplayName) {
 		return true
 	}
@@ -165,20 +108,12 @@ func (o *InheritedDDNSUpdateBlock) HasDisplayName() bool {
 }
 
 // SetDisplayName gets a reference to the given string and assigns it to the DisplayName field.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o *InheritedDDNSBlock) SetDisplayName(v string) {
-========
 func (o *InheritedDDNSUpdateBlock) SetDisplayName(v string) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	o.DisplayName = &v
 }
 
 // GetSource returns the Source field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o *InheritedDDNSBlock) GetSource() string {
-========
 func (o *InheritedDDNSUpdateBlock) GetSource() string {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	if o == nil || IsNil(o.Source) {
 		var ret string
 		return ret
@@ -188,11 +123,7 @@ func (o *InheritedDDNSUpdateBlock) GetSource() string {
 
 // GetSourceOk returns a tuple with the Source field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o *InheritedDDNSBlock) GetSourceOk() (*string, bool) {
-========
 func (o *InheritedDDNSUpdateBlock) GetSourceOk() (*string, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	if o == nil || IsNil(o.Source) {
 		return nil, false
 	}
@@ -200,11 +131,7 @@ func (o *InheritedDDNSUpdateBlock) GetSourceOk() (*string, bool) {
 }
 
 // HasSource returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o *InheritedDDNSBlock) HasSource() bool {
-========
 func (o *InheritedDDNSUpdateBlock) HasSource() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	if o != nil && !IsNil(o.Source) {
 		return true
 	}
@@ -213,24 +140,14 @@ func (o *InheritedDDNSUpdateBlock) HasSource() bool {
 }
 
 // SetSource gets a reference to the given string and assigns it to the Source field.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o *InheritedDDNSBlock) SetSource(v string) {
-========
 func (o *InheritedDDNSUpdateBlock) SetSource(v string) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	o.Source = &v
 }
 
 // GetValue returns the Value field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o *InheritedDDNSBlock) GetValue() DDNSBlock {
-	if o == nil || IsNil(o.Value) {
-		var ret DDNSBlock
-========
 func (o *InheritedDDNSUpdateBlock) GetValue() DDNSUpdateBlock {
 	if o == nil || IsNil(o.Value) {
 		var ret DDNSUpdateBlock
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 		return ret
 	}
 	return *o.Value
@@ -238,11 +155,7 @@ func (o *InheritedDDNSUpdateBlock) GetValue() DDNSUpdateBlock {
 
 // GetValueOk returns a tuple with the Value field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o *InheritedDDNSBlock) GetValueOk() (*DDNSBlock, bool) {
-========
 func (o *InheritedDDNSUpdateBlock) GetValueOk() (*DDNSUpdateBlock, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	if o == nil || IsNil(o.Value) {
 		return nil, false
 	}
@@ -250,11 +163,7 @@ func (o *InheritedDDNSUpdateBlock) GetValueOk() (*DDNSUpdateBlock, bool) {
 }
 
 // HasValue returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o *InheritedDDNSBlock) HasValue() bool {
-========
 func (o *InheritedDDNSUpdateBlock) HasValue() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	if o != nil && !IsNil(o.Value) {
 		return true
 	}
@@ -262,21 +171,12 @@ func (o *InheritedDDNSUpdateBlock) HasValue() bool {
 	return false
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-// SetValue gets a reference to the given DDNSBlock and assigns it to the Value field.
-func (o *InheritedDDNSBlock) SetValue(v DDNSBlock) {
-	o.Value = &v
-}
-
-func (o InheritedDDNSBlock) MarshalJSON() ([]byte, error) {
-========
 // SetValue gets a reference to the given DDNSUpdateBlock and assigns it to the Value field.
 func (o *InheritedDDNSUpdateBlock) SetValue(v DDNSUpdateBlock) {
 	o.Value = &v
 }
 
 func (o InheritedDDNSUpdateBlock) MarshalJSON() ([]byte, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -284,11 +184,7 @@ func (o InheritedDDNSUpdateBlock) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (o InheritedDDNSBlock) ToMap() (map[string]interface{}, error) {
-========
 func (o InheritedDDNSUpdateBlock) ToMap() (map[string]interface{}, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Action) {
 		toSerialize["action"] = o.Action
@@ -310,18 +206,6 @@ func (o InheritedDDNSUpdateBlock) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-type NullableInheritedDDNSBlock struct {
-	value *InheritedDDNSBlock
-	isSet bool
-}
-
-func (v NullableInheritedDDNSBlock) Get() *InheritedDDNSBlock {
-	return v.value
-}
-
-func (v *NullableInheritedDDNSBlock) Set(val *InheritedDDNSBlock) {
-========
 func (o *InheritedDDNSUpdateBlock) UnmarshalJSON(data []byte) (err error) {
 	varInheritedDDNSUpdateBlock := _InheritedDDNSUpdateBlock{}
 
@@ -356,39 +240,19 @@ func (v NullableInheritedDDNSUpdateBlock) Get() *InheritedDDNSUpdateBlock {
 }
 
 func (v *NullableInheritedDDNSUpdateBlock) Set(val *InheritedDDNSUpdateBlock) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	v.value = val
 	v.isSet = true
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func (v NullableInheritedDDNSBlock) IsSet() bool {
-	return v.isSet
-}
-
-func (v *NullableInheritedDDNSBlock) Unset() {
-========
 func (v NullableInheritedDDNSUpdateBlock) IsSet() bool {
 	return v.isSet
 }
 
 func (v *NullableInheritedDDNSUpdateBlock) Unset() {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	v.value = nil
 	v.isSet = false
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_block.go
-func NewNullableInheritedDDNSBlock(val *InheritedDDNSBlock) *NullableInheritedDDNSBlock {
-	return &NullableInheritedDDNSBlock{value: val, isSet: true}
-}
-
-func (v NullableInheritedDDNSBlock) MarshalJSON() ([]byte, error) {
-	return json.Marshal(v.value)
-}
-
-func (v *NullableInheritedDDNSBlock) UnmarshalJSON(src []byte) error {
-========
 func NewNullableInheritedDDNSUpdateBlock(val *InheritedDDNSUpdateBlock) *NullableInheritedDDNSUpdateBlock {
 	return &NullableInheritedDDNSUpdateBlock{value: val, isSet: true}
 }
@@ -398,7 +262,6 @@ func (v NullableInheritedDDNSUpdateBlock) MarshalJSON() ([]byte, error) {
 }
 
 func (v *NullableInheritedDDNSUpdateBlock) UnmarshalJSON(src []byte) error {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_update_block.go
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

@@ -14,30 +14,6 @@ import (
 	"encoding/json"
 )
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
-// checks if the ApplicationFilterCreateResponse type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &ApplicationFilterCreateResponse{}
-
-// ApplicationFilterCreateResponse The Application Filter create response.
-type ApplicationFilterCreateResponse struct {
-	Results *ApplicationFilter `json:"results,omitempty"`
-}
-
-// NewApplicationFilterCreateResponse instantiates a new ApplicationFilterCreateResponse object
-// This constructor will assign default values to properties that have it defined,
-// and makes sure properties required by API are set, but the set of arguments
-// will change when the set of required properties is changed
-func NewApplicationFilterCreateResponse() *ApplicationFilterCreateResponse {
-	this := ApplicationFilterCreateResponse{}
-	return &this
-}
-
-// NewApplicationFilterCreateResponseWithDefaults instantiates a new ApplicationFilterCreateResponse object
-// This constructor will only assign default values to properties that have it defined,
-// but it doesn't guarantee that properties required by API are set
-func NewApplicationFilterCreateResponseWithDefaults() *ApplicationFilterCreateResponse {
-	this := ApplicationFilterCreateResponse{}
-========
 // checks if the NamedListReadResponse type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &NamedListReadResponse{}
 
@@ -63,20 +39,13 @@ func NewNamedListReadResponse() *NamedListReadResponse {
 // but it doesn't guarantee that properties required by API are set
 func NewNamedListReadResponseWithDefaults() *NamedListReadResponse {
 	this := NamedListReadResponse{}
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_list_read_response.go
 	return &this
 }
 
 // GetResults returns the Results field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
-func (o *ApplicationFilterCreateResponse) GetResults() ApplicationFilter {
-	if o == nil || IsNil(o.Results) {
-		var ret ApplicationFilter
-========
 func (o *NamedListReadResponse) GetResults() NamedList {
 	if o == nil || IsNil(o.Results) {
 		var ret NamedList
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_list_read_response.go
 		return ret
 	}
 	return *o.Results
@@ -84,11 +53,7 @@ func (o *NamedListReadResponse) GetResults() NamedList {
 
 // GetResultsOk returns a tuple with the Results field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
-func (o *ApplicationFilterCreateResponse) GetResultsOk() (*ApplicationFilter, bool) {
-========
 func (o *NamedListReadResponse) GetResultsOk() (*NamedList, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_list_read_response.go
 	if o == nil || IsNil(o.Results) {
 		return nil, false
 	}
@@ -96,11 +61,7 @@ func (o *NamedListReadResponse) GetResultsOk() (*NamedList, bool) {
 }
 
 // HasResults returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
-func (o *ApplicationFilterCreateResponse) HasResults() bool {
-========
 func (o *NamedListReadResponse) HasResults() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_list_read_response.go
 	if o != nil && !IsNil(o.Results) {
 		return true
 	}
@@ -108,21 +69,12 @@ func (o *NamedListReadResponse) HasResults() bool {
 	return false
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
-// SetResults gets a reference to the given ApplicationFilter and assigns it to the Results field.
-func (o *ApplicationFilterCreateResponse) SetResults(v ApplicationFilter) {
-	o.Results = &v
-}
-
-func (o ApplicationFilterCreateResponse) MarshalJSON() ([]byte, error) {
-========
 // SetResults gets a reference to the given NamedList and assigns it to the Results field.
 func (o *NamedListReadResponse) SetResults(v NamedList) {
 	o.Results = &v
 }
 
 func (o NamedListReadResponse) MarshalJSON() ([]byte, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_list_read_response.go
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -130,11 +82,7 @@ func (o NamedListReadResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
-func (o ApplicationFilterCreateResponse) ToMap() (map[string]interface{}, error) {
-========
 func (o NamedListReadResponse) ToMap() (map[string]interface{}, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_list_read_response.go
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
@@ -147,18 +95,6 @@ func (o NamedListReadResponse) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
-type NullableApplicationFilterCreateResponse struct {
-	value *ApplicationFilterCreateResponse
-	isSet bool
-}
-
-func (v NullableApplicationFilterCreateResponse) Get() *ApplicationFilterCreateResponse {
-	return v.value
-}
-
-func (v *NullableApplicationFilterCreateResponse) Set(val *ApplicationFilterCreateResponse) {
-========
 func (o *NamedListReadResponse) UnmarshalJSON(data []byte) (err error) {
 	varNamedListReadResponse := _NamedListReadResponse{}
 
@@ -190,39 +126,19 @@ func (v NullableNamedListReadResponse) Get() *NamedListReadResponse {
 }
 
 func (v *NullableNamedListReadResponse) Set(val *NamedListReadResponse) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_list_read_response.go
 	v.value = val
 	v.isSet = true
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
-func (v NullableApplicationFilterCreateResponse) IsSet() bool {
-	return v.isSet
-}
-
-func (v *NullableApplicationFilterCreateResponse) Unset() {
-========
 func (v NullableNamedListReadResponse) IsSet() bool {
 	return v.isSet
 }
 
 func (v *NullableNamedListReadResponse) Unset() {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_list_read_response.go
 	v.value = nil
 	v.isSet = false
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_application_filter_create_response.go
-func NewNullableApplicationFilterCreateResponse(val *ApplicationFilterCreateResponse) *NullableApplicationFilterCreateResponse {
-	return &NullableApplicationFilterCreateResponse{value: val, isSet: true}
-}
-
-func (v NullableApplicationFilterCreateResponse) MarshalJSON() ([]byte, error) {
-	return json.Marshal(v.value)
-}
-
-func (v *NullableApplicationFilterCreateResponse) UnmarshalJSON(src []byte) error {
-========
 func NewNullableNamedListReadResponse(val *NamedListReadResponse) *NullableNamedListReadResponse {
 	return &NullableNamedListReadResponse{value: val, isSet: true}
 }
@@ -232,7 +148,6 @@ func (v NullableNamedListReadResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (v *NullableNamedListReadResponse) UnmarshalJSON(src []byte) error {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_named_list_read_response.go
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

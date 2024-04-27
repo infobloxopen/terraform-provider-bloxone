@@ -14,30 +14,6 @@ import (
 	"encoding/json"
 )
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_update_response.go
-// checks if the InternalDomainsUpdateResponse type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &InternalDomainsUpdateResponse{}
-
-// InternalDomainsUpdateResponse The Internal domains update response.
-type InternalDomainsUpdateResponse struct {
-	Results *InternalDomains `json:"results,omitempty"`
-}
-
-// NewInternalDomainsUpdateResponse instantiates a new InternalDomainsUpdateResponse object
-// This constructor will assign default values to properties that have it defined,
-// and makes sure properties required by API are set, but the set of arguments
-// will change when the set of required properties is changed
-func NewInternalDomainsUpdateResponse() *InternalDomainsUpdateResponse {
-	this := InternalDomainsUpdateResponse{}
-	return &this
-}
-
-// NewInternalDomainsUpdateResponseWithDefaults instantiates a new InternalDomainsUpdateResponse object
-// This constructor will only assign default values to properties that have it defined,
-// but it doesn't guarantee that properties required by API are set
-func NewInternalDomainsUpdateResponseWithDefaults() *InternalDomainsUpdateResponse {
-	this := InternalDomainsUpdateResponse{}
-========
 // checks if the InternalDomainsCreateResponse type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &InternalDomainsCreateResponse{}
 
@@ -63,16 +39,11 @@ func NewInternalDomainsCreateResponse() *InternalDomainsCreateResponse {
 // but it doesn't guarantee that properties required by API are set
 func NewInternalDomainsCreateResponseWithDefaults() *InternalDomainsCreateResponse {
 	this := InternalDomainsCreateResponse{}
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_create_response.go
 	return &this
 }
 
 // GetResults returns the Results field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_update_response.go
-func (o *InternalDomainsUpdateResponse) GetResults() InternalDomains {
-========
 func (o *InternalDomainsCreateResponse) GetResults() InternalDomains {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_create_response.go
 	if o == nil || IsNil(o.Results) {
 		var ret InternalDomains
 		return ret
@@ -82,11 +53,7 @@ func (o *InternalDomainsCreateResponse) GetResults() InternalDomains {
 
 // GetResultsOk returns a tuple with the Results field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_update_response.go
-func (o *InternalDomainsUpdateResponse) GetResultsOk() (*InternalDomains, bool) {
-========
 func (o *InternalDomainsCreateResponse) GetResultsOk() (*InternalDomains, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_create_response.go
 	if o == nil || IsNil(o.Results) {
 		return nil, false
 	}
@@ -94,11 +61,7 @@ func (o *InternalDomainsCreateResponse) GetResultsOk() (*InternalDomains, bool) 
 }
 
 // HasResults returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_update_response.go
-func (o *InternalDomainsUpdateResponse) HasResults() bool {
-========
 func (o *InternalDomainsCreateResponse) HasResults() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_create_response.go
 	if o != nil && !IsNil(o.Results) {
 		return true
 	}
@@ -107,19 +70,11 @@ func (o *InternalDomainsCreateResponse) HasResults() bool {
 }
 
 // SetResults gets a reference to the given InternalDomains and assigns it to the Results field.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_update_response.go
-func (o *InternalDomainsUpdateResponse) SetResults(v InternalDomains) {
-	o.Results = &v
-}
-
-func (o InternalDomainsUpdateResponse) MarshalJSON() ([]byte, error) {
-========
 func (o *InternalDomainsCreateResponse) SetResults(v InternalDomains) {
 	o.Results = &v
 }
 
 func (o InternalDomainsCreateResponse) MarshalJSON() ([]byte, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_create_response.go
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -127,11 +82,7 @@ func (o InternalDomainsCreateResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_update_response.go
-func (o InternalDomainsUpdateResponse) ToMap() (map[string]interface{}, error) {
-========
 func (o InternalDomainsCreateResponse) ToMap() (map[string]interface{}, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_create_response.go
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Results) {
 		toSerialize["results"] = o.Results
@@ -144,18 +95,6 @@ func (o InternalDomainsCreateResponse) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_update_response.go
-type NullableInternalDomainsUpdateResponse struct {
-	value *InternalDomainsUpdateResponse
-	isSet bool
-}
-
-func (v NullableInternalDomainsUpdateResponse) Get() *InternalDomainsUpdateResponse {
-	return v.value
-}
-
-func (v *NullableInternalDomainsUpdateResponse) Set(val *InternalDomainsUpdateResponse) {
-========
 func (o *InternalDomainsCreateResponse) UnmarshalJSON(data []byte) (err error) {
 	varInternalDomainsCreateResponse := _InternalDomainsCreateResponse{}
 
@@ -187,39 +126,19 @@ func (v NullableInternalDomainsCreateResponse) Get() *InternalDomainsCreateRespo
 }
 
 func (v *NullableInternalDomainsCreateResponse) Set(val *InternalDomainsCreateResponse) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_create_response.go
 	v.value = val
 	v.isSet = true
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_update_response.go
-func (v NullableInternalDomainsUpdateResponse) IsSet() bool {
-	return v.isSet
-}
-
-func (v *NullableInternalDomainsUpdateResponse) Unset() {
-========
 func (v NullableInternalDomainsCreateResponse) IsSet() bool {
 	return v.isSet
 }
 
 func (v *NullableInternalDomainsCreateResponse) Unset() {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_create_response.go
 	v.value = nil
 	v.isSet = false
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_update_response.go
-func NewNullableInternalDomainsUpdateResponse(val *InternalDomainsUpdateResponse) *NullableInternalDomainsUpdateResponse {
-	return &NullableInternalDomainsUpdateResponse{value: val, isSet: true}
-}
-
-func (v NullableInternalDomainsUpdateResponse) MarshalJSON() ([]byte, error) {
-	return json.Marshal(v.value)
-}
-
-func (v *NullableInternalDomainsUpdateResponse) UnmarshalJSON(src []byte) error {
-========
 func NewNullableInternalDomainsCreateResponse(val *InternalDomainsCreateResponse) *NullableInternalDomainsCreateResponse {
 	return &NullableInternalDomainsCreateResponse{value: val, isSet: true}
 }
@@ -229,7 +148,6 @@ func (v NullableInternalDomainsCreateResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (v *NullableInternalDomainsCreateResponse) UnmarshalJSON(src []byte) error {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/fw/model_internal_domains_create_response.go
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

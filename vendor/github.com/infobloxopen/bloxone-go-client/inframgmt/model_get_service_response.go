@@ -14,30 +14,6 @@ import (
 	"encoding/json"
 )
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_update_service_response.go
-// checks if the UpdateServiceResponse type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &UpdateServiceResponse{}
-
-// UpdateServiceResponse struct for UpdateServiceResponse
-type UpdateServiceResponse struct {
-	Result *Service `json:"result,omitempty"`
-}
-
-// NewUpdateServiceResponse instantiates a new UpdateServiceResponse object
-// This constructor will assign default values to properties that have it defined,
-// and makes sure properties required by API are set, but the set of arguments
-// will change when the set of required properties is changed
-func NewUpdateServiceResponse() *UpdateServiceResponse {
-	this := UpdateServiceResponse{}
-	return &this
-}
-
-// NewUpdateServiceResponseWithDefaults instantiates a new UpdateServiceResponse object
-// This constructor will only assign default values to properties that have it defined,
-// but it doesn't guarantee that properties required by API are set
-func NewUpdateServiceResponseWithDefaults() *UpdateServiceResponse {
-	this := UpdateServiceResponse{}
-========
 // checks if the GetServiceResponse type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &GetServiceResponse{}
 
@@ -63,16 +39,11 @@ func NewGetServiceResponse() *GetServiceResponse {
 // but it doesn't guarantee that properties required by API are set
 func NewGetServiceResponseWithDefaults() *GetServiceResponse {
 	this := GetServiceResponse{}
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_get_service_response.go
 	return &this
 }
 
 // GetResult returns the Result field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_update_service_response.go
-func (o *UpdateServiceResponse) GetResult() Service {
-========
 func (o *GetServiceResponse) GetResult() Service {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_get_service_response.go
 	if o == nil || IsNil(o.Result) {
 		var ret Service
 		return ret
@@ -82,11 +53,7 @@ func (o *GetServiceResponse) GetResult() Service {
 
 // GetResultOk returns a tuple with the Result field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_update_service_response.go
-func (o *UpdateServiceResponse) GetResultOk() (*Service, bool) {
-========
 func (o *GetServiceResponse) GetResultOk() (*Service, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_get_service_response.go
 	if o == nil || IsNil(o.Result) {
 		return nil, false
 	}
@@ -94,11 +61,7 @@ func (o *GetServiceResponse) GetResultOk() (*Service, bool) {
 }
 
 // HasResult returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_update_service_response.go
-func (o *UpdateServiceResponse) HasResult() bool {
-========
 func (o *GetServiceResponse) HasResult() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_get_service_response.go
 	if o != nil && !IsNil(o.Result) {
 		return true
 	}
@@ -107,19 +70,11 @@ func (o *GetServiceResponse) HasResult() bool {
 }
 
 // SetResult gets a reference to the given Service and assigns it to the Result field.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_update_service_response.go
-func (o *UpdateServiceResponse) SetResult(v Service) {
-	o.Result = &v
-}
-
-func (o UpdateServiceResponse) MarshalJSON() ([]byte, error) {
-========
 func (o *GetServiceResponse) SetResult(v Service) {
 	o.Result = &v
 }
 
 func (o GetServiceResponse) MarshalJSON() ([]byte, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_get_service_response.go
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -127,11 +82,7 @@ func (o GetServiceResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_update_service_response.go
-func (o UpdateServiceResponse) ToMap() (map[string]interface{}, error) {
-========
 func (o GetServiceResponse) ToMap() (map[string]interface{}, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_get_service_response.go
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Result) {
 		toSerialize["result"] = o.Result
@@ -144,18 +95,6 @@ func (o GetServiceResponse) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_update_service_response.go
-type NullableUpdateServiceResponse struct {
-	value *UpdateServiceResponse
-	isSet bool
-}
-
-func (v NullableUpdateServiceResponse) Get() *UpdateServiceResponse {
-	return v.value
-}
-
-func (v *NullableUpdateServiceResponse) Set(val *UpdateServiceResponse) {
-========
 func (o *GetServiceResponse) UnmarshalJSON(data []byte) (err error) {
 	varGetServiceResponse := _GetServiceResponse{}
 
@@ -187,39 +126,19 @@ func (v NullableGetServiceResponse) Get() *GetServiceResponse {
 }
 
 func (v *NullableGetServiceResponse) Set(val *GetServiceResponse) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_get_service_response.go
 	v.value = val
 	v.isSet = true
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_update_service_response.go
-func (v NullableUpdateServiceResponse) IsSet() bool {
-	return v.isSet
-}
-
-func (v *NullableUpdateServiceResponse) Unset() {
-========
 func (v NullableGetServiceResponse) IsSet() bool {
 	return v.isSet
 }
 
 func (v *NullableGetServiceResponse) Unset() {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_get_service_response.go
 	v.value = nil
 	v.isSet = false
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_update_service_response.go
-func NewNullableUpdateServiceResponse(val *UpdateServiceResponse) *NullableUpdateServiceResponse {
-	return &NullableUpdateServiceResponse{value: val, isSet: true}
-}
-
-func (v NullableUpdateServiceResponse) MarshalJSON() ([]byte, error) {
-	return json.Marshal(v.value)
-}
-
-func (v *NullableUpdateServiceResponse) UnmarshalJSON(src []byte) error {
-========
 func NewNullableGetServiceResponse(val *GetServiceResponse) *NullableGetServiceResponse {
 	return &NullableGetServiceResponse{value: val, isSet: true}
 }
@@ -229,7 +148,6 @@ func (v NullableGetServiceResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (v *NullableGetServiceResponse) UnmarshalJSON(src []byte) error {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/inframgmt/model_get_service_response.go
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

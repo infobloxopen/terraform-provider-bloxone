@@ -14,45 +14,16 @@ import (
 	"encoding/json"
 )
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-// checks if the InheritedDDNSHostnameBlock type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &InheritedDDNSHostnameBlock{}
-
-// InheritedDDNSHostnameBlock The inheritance configuration block for dynamic DNS hostname.
-type InheritedDDNSHostnameBlock struct {
-	// The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _override_: Use the value set in the object.  Defaults to _inherit_.
-========
 // checks if the InheritedDHCPOption type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &InheritedDHCPOption{}
 
 // InheritedDHCPOption The inheritance configuration for a field of type of _OptionItem_.
 type InheritedDHCPOption struct {
 	// The inheritance setting.  Valid values are: * _inherit_: Use the inherited value. * _block_: Don't use the inherited value.  Defaults to _inherit_.
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	Action *string `json:"action,omitempty"`
 	// The human-readable display name for the object referred to by _source_.
 	DisplayName *string `json:"display_name,omitempty"`
 	// The resource identifier.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-	Source *string            `json:"source,omitempty"`
-	Value  *DDNSHostnameBlock `json:"value,omitempty"`
-}
-
-// NewInheritedDDNSHostnameBlock instantiates a new InheritedDDNSHostnameBlock object
-// This constructor will assign default values to properties that have it defined,
-// and makes sure properties required by API are set, but the set of arguments
-// will change when the set of required properties is changed
-func NewInheritedDDNSHostnameBlock() *InheritedDDNSHostnameBlock {
-	this := InheritedDDNSHostnameBlock{}
-	return &this
-}
-
-// NewInheritedDDNSHostnameBlockWithDefaults instantiates a new InheritedDDNSHostnameBlock object
-// This constructor will only assign default values to properties that have it defined,
-// but it doesn't guarantee that properties required by API are set
-func NewInheritedDDNSHostnameBlockWithDefaults() *InheritedDDNSHostnameBlock {
-	this := InheritedDDNSHostnameBlock{}
-========
 	Source               *string                  `json:"source,omitempty"`
 	Value                *InheritedDHCPOptionItem `json:"value,omitempty"`
 	AdditionalProperties map[string]interface{}
@@ -74,16 +45,11 @@ func NewInheritedDHCPOption() *InheritedDHCPOption {
 // but it doesn't guarantee that properties required by API are set
 func NewInheritedDHCPOptionWithDefaults() *InheritedDHCPOption {
 	this := InheritedDHCPOption{}
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	return &this
 }
 
 // GetAction returns the Action field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o *InheritedDDNSHostnameBlock) GetAction() string {
-========
 func (o *InheritedDHCPOption) GetAction() string {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	if o == nil || IsNil(o.Action) {
 		var ret string
 		return ret
@@ -93,11 +59,7 @@ func (o *InheritedDHCPOption) GetAction() string {
 
 // GetActionOk returns a tuple with the Action field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o *InheritedDDNSHostnameBlock) GetActionOk() (*string, bool) {
-========
 func (o *InheritedDHCPOption) GetActionOk() (*string, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	if o == nil || IsNil(o.Action) {
 		return nil, false
 	}
@@ -105,11 +67,7 @@ func (o *InheritedDHCPOption) GetActionOk() (*string, bool) {
 }
 
 // HasAction returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o *InheritedDDNSHostnameBlock) HasAction() bool {
-========
 func (o *InheritedDHCPOption) HasAction() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	if o != nil && !IsNil(o.Action) {
 		return true
 	}
@@ -118,20 +76,12 @@ func (o *InheritedDHCPOption) HasAction() bool {
 }
 
 // SetAction gets a reference to the given string and assigns it to the Action field.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o *InheritedDDNSHostnameBlock) SetAction(v string) {
-========
 func (o *InheritedDHCPOption) SetAction(v string) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	o.Action = &v
 }
 
 // GetDisplayName returns the DisplayName field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o *InheritedDDNSHostnameBlock) GetDisplayName() string {
-========
 func (o *InheritedDHCPOption) GetDisplayName() string {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	if o == nil || IsNil(o.DisplayName) {
 		var ret string
 		return ret
@@ -141,11 +91,7 @@ func (o *InheritedDHCPOption) GetDisplayName() string {
 
 // GetDisplayNameOk returns a tuple with the DisplayName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o *InheritedDDNSHostnameBlock) GetDisplayNameOk() (*string, bool) {
-========
 func (o *InheritedDHCPOption) GetDisplayNameOk() (*string, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	if o == nil || IsNil(o.DisplayName) {
 		return nil, false
 	}
@@ -153,11 +99,7 @@ func (o *InheritedDHCPOption) GetDisplayNameOk() (*string, bool) {
 }
 
 // HasDisplayName returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o *InheritedDDNSHostnameBlock) HasDisplayName() bool {
-========
 func (o *InheritedDHCPOption) HasDisplayName() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	if o != nil && !IsNil(o.DisplayName) {
 		return true
 	}
@@ -166,20 +108,12 @@ func (o *InheritedDHCPOption) HasDisplayName() bool {
 }
 
 // SetDisplayName gets a reference to the given string and assigns it to the DisplayName field.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o *InheritedDDNSHostnameBlock) SetDisplayName(v string) {
-========
 func (o *InheritedDHCPOption) SetDisplayName(v string) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	o.DisplayName = &v
 }
 
 // GetSource returns the Source field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o *InheritedDDNSHostnameBlock) GetSource() string {
-========
 func (o *InheritedDHCPOption) GetSource() string {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	if o == nil || IsNil(o.Source) {
 		var ret string
 		return ret
@@ -189,11 +123,7 @@ func (o *InheritedDHCPOption) GetSource() string {
 
 // GetSourceOk returns a tuple with the Source field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o *InheritedDDNSHostnameBlock) GetSourceOk() (*string, bool) {
-========
 func (o *InheritedDHCPOption) GetSourceOk() (*string, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	if o == nil || IsNil(o.Source) {
 		return nil, false
 	}
@@ -201,11 +131,7 @@ func (o *InheritedDHCPOption) GetSourceOk() (*string, bool) {
 }
 
 // HasSource returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o *InheritedDDNSHostnameBlock) HasSource() bool {
-========
 func (o *InheritedDHCPOption) HasSource() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	if o != nil && !IsNil(o.Source) {
 		return true
 	}
@@ -214,24 +140,14 @@ func (o *InheritedDHCPOption) HasSource() bool {
 }
 
 // SetSource gets a reference to the given string and assigns it to the Source field.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o *InheritedDDNSHostnameBlock) SetSource(v string) {
-========
 func (o *InheritedDHCPOption) SetSource(v string) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	o.Source = &v
 }
 
 // GetValue returns the Value field value if set, zero value otherwise.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o *InheritedDDNSHostnameBlock) GetValue() DDNSHostnameBlock {
-	if o == nil || IsNil(o.Value) {
-		var ret DDNSHostnameBlock
-========
 func (o *InheritedDHCPOption) GetValue() InheritedDHCPOptionItem {
 	if o == nil || IsNil(o.Value) {
 		var ret InheritedDHCPOptionItem
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 		return ret
 	}
 	return *o.Value
@@ -239,11 +155,7 @@ func (o *InheritedDHCPOption) GetValue() InheritedDHCPOptionItem {
 
 // GetValueOk returns a tuple with the Value field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o *InheritedDDNSHostnameBlock) GetValueOk() (*DDNSHostnameBlock, bool) {
-========
 func (o *InheritedDHCPOption) GetValueOk() (*InheritedDHCPOptionItem, bool) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	if o == nil || IsNil(o.Value) {
 		return nil, false
 	}
@@ -251,11 +163,7 @@ func (o *InheritedDHCPOption) GetValueOk() (*InheritedDHCPOptionItem, bool) {
 }
 
 // HasValue returns a boolean if a field has been set.
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o *InheritedDDNSHostnameBlock) HasValue() bool {
-========
 func (o *InheritedDHCPOption) HasValue() bool {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	if o != nil && !IsNil(o.Value) {
 		return true
 	}
@@ -263,21 +171,12 @@ func (o *InheritedDHCPOption) HasValue() bool {
 	return false
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-// SetValue gets a reference to the given DDNSHostnameBlock and assigns it to the Value field.
-func (o *InheritedDDNSHostnameBlock) SetValue(v DDNSHostnameBlock) {
-	o.Value = &v
-}
-
-func (o InheritedDDNSHostnameBlock) MarshalJSON() ([]byte, error) {
-========
 // SetValue gets a reference to the given InheritedDHCPOptionItem and assigns it to the Value field.
 func (o *InheritedDHCPOption) SetValue(v InheritedDHCPOptionItem) {
 	o.Value = &v
 }
 
 func (o InheritedDHCPOption) MarshalJSON() ([]byte, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -285,11 +184,7 @@ func (o InheritedDHCPOption) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (o InheritedDDNSHostnameBlock) ToMap() (map[string]interface{}, error) {
-========
 func (o InheritedDHCPOption) ToMap() (map[string]interface{}, error) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Action) {
 		toSerialize["action"] = o.Action
@@ -311,18 +206,6 @@ func (o InheritedDHCPOption) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-type NullableInheritedDDNSHostnameBlock struct {
-	value *InheritedDDNSHostnameBlock
-	isSet bool
-}
-
-func (v NullableInheritedDDNSHostnameBlock) Get() *InheritedDDNSHostnameBlock {
-	return v.value
-}
-
-func (v *NullableInheritedDDNSHostnameBlock) Set(val *InheritedDDNSHostnameBlock) {
-========
 func (o *InheritedDHCPOption) UnmarshalJSON(data []byte) (err error) {
 	varInheritedDHCPOption := _InheritedDHCPOption{}
 
@@ -357,39 +240,19 @@ func (v NullableInheritedDHCPOption) Get() *InheritedDHCPOption {
 }
 
 func (v *NullableInheritedDHCPOption) Set(val *InheritedDHCPOption) {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	v.value = val
 	v.isSet = true
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func (v NullableInheritedDDNSHostnameBlock) IsSet() bool {
-	return v.isSet
-}
-
-func (v *NullableInheritedDDNSHostnameBlock) Unset() {
-========
 func (v NullableInheritedDHCPOption) IsSet() bool {
 	return v.isSet
 }
 
 func (v *NullableInheritedDHCPOption) Unset() {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	v.value = nil
 	v.isSet = false
 }
 
-<<<<<<<< HEAD:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_ddns_hostname_block.go
-func NewNullableInheritedDDNSHostnameBlock(val *InheritedDDNSHostnameBlock) *NullableInheritedDDNSHostnameBlock {
-	return &NullableInheritedDDNSHostnameBlock{value: val, isSet: true}
-}
-
-func (v NullableInheritedDDNSHostnameBlock) MarshalJSON() ([]byte, error) {
-	return json.Marshal(v.value)
-}
-
-func (v *NullableInheritedDDNSHostnameBlock) UnmarshalJSON(src []byte) error {
-========
 func NewNullableInheritedDHCPOption(val *InheritedDHCPOption) *NullableInheritedDHCPOption {
 	return &NullableInheritedDHCPOption{value: val, isSet: true}
 }
@@ -399,7 +262,6 @@ func (v NullableInheritedDHCPOption) MarshalJSON() ([]byte, error) {
 }
 
 func (v *NullableInheritedDHCPOption) UnmarshalJSON(src []byte) error {
->>>>>>>> 2be6b8d0d1f652a60c6afe42a36d891d3d0d27d7:vendor/github.com/infobloxopen/bloxone-go-client/ipam/model_inherited_dhcp_option.go
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
