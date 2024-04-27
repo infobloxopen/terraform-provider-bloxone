@@ -68,7 +68,7 @@ func (r *SecurityPoliciesResource) Create(ctx context.Context, req resource.Crea
 
 	apiRes, _, err := r.client.FWAPI.
 		SecurityPoliciesAPI.
-		SecurityPoliciesCreateSecurityPolicy(ctx).
+		CreateSecurityPolicy(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -95,7 +95,7 @@ func (r *SecurityPoliciesResource) Read(ctx context.Context, req resource.ReadRe
 
 	apiRes, httpRes, err := r.client.FWAPI.
 		SecurityPoliciesAPI.
-		SecurityPoliciesReadSecurityPolicy(ctx, int32(data.Id.ValueInt64())).
+		ReadSecurityPolicy(ctx, int32(data.Id.ValueInt64())).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *SecurityPoliciesResource) Update(ctx context.Context, req resource.Upda
 
 	apiRes, _, err := r.client.FWAPI.
 		SecurityPoliciesAPI.
-		SecurityPoliciesUpdateSecurityPolicy(ctx, int32(data.Id.ValueInt64())).
+		UpdateSecurityPolicy(ctx, int32(data.Id.ValueInt64())).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *SecurityPoliciesResource) Delete(ctx context.Context, req resource.Dele
 
 	httpRes, err := r.client.FWAPI.
 		SecurityPoliciesAPI.
-		SecurityPoliciesDeleteSingleSecurityPolicy(ctx, int32(data.Id.ValueInt64())).
+		DeleteSingleSecurityPolicy(ctx, int32(data.Id.ValueInt64())).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

@@ -37,7 +37,7 @@ type AtcfwSecurityPolicyModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *AtcfwSecurityPolicyModelWithFilter) FlattenResults(ctx context.Context, from []fw.AtcfwSecurityPolicy, diags *diag.Diagnostics) {
+func (m *AtcfwSecurityPolicyModelWithFilter) FlattenResults(ctx context.Context, from []fw.SecurityPolicy, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -100,7 +100,7 @@ func (d *SecurityPoliciesDataSource) Read(ctx context.Context, req datasource.Re
 
 	apiRes, _, err := d.client.FWAPI.
 		SecurityPoliciesAPI.
-		SecurityPoliciesListSecurityPolicies(ctx).
+		ListSecurityPolicies(ctx).
 		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 		Execute()

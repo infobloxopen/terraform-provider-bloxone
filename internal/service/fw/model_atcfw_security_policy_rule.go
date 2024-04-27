@@ -70,7 +70,7 @@ var AtcfwSecurityPolicyRuleResourceSchemaAttributes = map[string]schema.Attribut
 	},
 }
 
-func ExpandAtcfwSecurityPolicyRule(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.AtcfwSecurityPolicyRule {
+func ExpandAtcfwSecurityPolicyRule(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.SecurityPolicyRule {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -82,11 +82,11 @@ func ExpandAtcfwSecurityPolicyRule(ctx context.Context, o types.Object, diags *d
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcfwSecurityPolicyRuleModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.AtcfwSecurityPolicyRule {
+func (m *AtcfwSecurityPolicyRuleModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.SecurityPolicyRule {
 	if m == nil {
 		return nil
 	}
-	to := &fw.AtcfwSecurityPolicyRule{
+	to := &fw.SecurityPolicyRule{
 		Action:       flex.ExpandStringPointer(m.Action),
 		Data:         flex.ExpandStringPointer(m.Data),
 		PolicyName:   flex.ExpandStringPointer(m.PolicyName),
@@ -96,7 +96,7 @@ func (m *AtcfwSecurityPolicyRuleModel) Expand(ctx context.Context, diags *diag.D
 	return to
 }
 
-func FlattenAtcfwSecurityPolicyRule(ctx context.Context, from *fw.AtcfwSecurityPolicyRule, diags *diag.Diagnostics) types.Object {
+func FlattenAtcfwSecurityPolicyRule(ctx context.Context, from *fw.SecurityPolicyRule, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwSecurityPolicyRuleAttrTypes)
 	}
@@ -107,7 +107,7 @@ func FlattenAtcfwSecurityPolicyRule(ctx context.Context, from *fw.AtcfwSecurityP
 	return t
 }
 
-func (m *AtcfwSecurityPolicyRuleModel) Flatten(ctx context.Context, from *fw.AtcfwSecurityPolicyRule, diags *diag.Diagnostics) {
+func (m *AtcfwSecurityPolicyRuleModel) Flatten(ctx context.Context, from *fw.SecurityPolicyRule, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

@@ -77,7 +77,7 @@ var AtcfwNetAddrDfpAssignmentResourceSchemaAttributes = map[string]schema.Attrib
 	},
 }
 
-func ExpandAtcfwNetAddrDfpAssignment(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.AtcfwNetAddrDfpAssignment {
+func ExpandAtcfwNetAddrDfpAssignment(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.NetAddrDfpAssignment {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -89,7 +89,7 @@ func ExpandAtcfwNetAddrDfpAssignment(ctx context.Context, o types.Object, diags 
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcfwNetAddrDfpAssignmentModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.AtcfwNetAddrDfpAssignment {
+func (m *AtcfwNetAddrDfpAssignmentModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.NetAddrDfpAssignment {
 	if m == nil {
 		return nil
 	}
@@ -97,7 +97,7 @@ func (m *AtcfwNetAddrDfpAssignmentModel) Expand(ctx context.Context, diags *diag
 	if err != nil {
 		return nil
 	}
-	to := &fw.AtcfwNetAddrDfpAssignment{
+	to := &fw.NetAddrDfpAssignment{
 		AddrNet:         flex.ExpandStringPointer(m.AddrNet),
 		End:             flex.ExpandStringPointer(m.End),
 		ExternalScopeId: flex.ExpandStringPointer(m.ExternalScopeId),
@@ -109,7 +109,7 @@ func (m *AtcfwNetAddrDfpAssignmentModel) Expand(ctx context.Context, diags *diag
 	return to
 }
 
-func FlattenAtcfwNetAddrDfpAssignment(ctx context.Context, from *fw.AtcfwNetAddrDfpAssignment, diags *diag.Diagnostics) types.Object {
+func FlattenAtcfwNetAddrDfpAssignment(ctx context.Context, from *fw.NetAddrDfpAssignment, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwNetAddrDfpAssignmentAttrTypes)
 	}
@@ -120,7 +120,7 @@ func FlattenAtcfwNetAddrDfpAssignment(ctx context.Context, from *fw.AtcfwNetAddr
 	return t
 }
 
-func (m *AtcfwNetAddrDfpAssignmentModel) Flatten(ctx context.Context, from *fw.AtcfwNetAddrDfpAssignment, diags *diag.Diagnostics) {
+func (m *AtcfwNetAddrDfpAssignmentModel) Flatten(ctx context.Context, from *fw.NetAddrDfpAssignment, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

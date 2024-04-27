@@ -194,7 +194,7 @@ var AtcfwSecurityPolicyResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandAtcfwSecurityPolicy(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.AtcfwSecurityPolicy {
+func ExpandAtcfwSecurityPolicy(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.SecurityPolicy {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -206,11 +206,11 @@ func ExpandAtcfwSecurityPolicy(ctx context.Context, o types.Object, diags *diag.
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcfwSecurityPolicyModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.AtcfwSecurityPolicy {
+func (m *AtcfwSecurityPolicyModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.SecurityPolicy {
 	if m == nil {
 		return nil
 	}
-	to := &fw.AtcfwSecurityPolicy{
+	to := &fw.SecurityPolicy{
 		AccessCodes:         flex.ExpandFrameworkListString(ctx, m.AccessCodes, diags),
 		DefaultAction:       flex.ExpandStringPointer(m.DefaultAction),
 		DefaultRedirectName: flex.ExpandStringPointer(m.DefaultRedirectName),
@@ -232,7 +232,7 @@ func (m *AtcfwSecurityPolicyModel) Expand(ctx context.Context, diags *diag.Diagn
 	return to
 }
 
-func FlattenAtcfwSecurityPolicy(ctx context.Context, from *fw.AtcfwSecurityPolicy, diags *diag.Diagnostics) types.Object {
+func FlattenAtcfwSecurityPolicy(ctx context.Context, from *fw.SecurityPolicy, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwSecurityPolicyAttrTypes)
 	}
@@ -243,7 +243,7 @@ func FlattenAtcfwSecurityPolicy(ctx context.Context, from *fw.AtcfwSecurityPolic
 	return t
 }
 
-func (m *AtcfwSecurityPolicyModel) Flatten(ctx context.Context, from *fw.AtcfwSecurityPolicy, diags *diag.Diagnostics) {
+func (m *AtcfwSecurityPolicyModel) Flatten(ctx context.Context, from *fw.SecurityPolicy, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

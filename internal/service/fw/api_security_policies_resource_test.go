@@ -25,7 +25,7 @@ import (
 
 func TestAccSecurityPoliciesResource_basic(t *testing.T) {
 	var resourceName = "bloxone_td_security_policy.test"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.Test(t, resource.TestCase{
@@ -58,7 +58,7 @@ func TestAccSecurityPoliciesResource_basic(t *testing.T) {
 
 func TestAccSecurityPoliciesResource_disappears(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -80,7 +80,7 @@ func TestAccSecurityPoliciesResource_disappears(t *testing.T) {
 
 func TestAccSecurityPoliciesResource_Name(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_name"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	name1 := acctest.RandomNameWithPrefix("sec-policy")
 	name2 := acctest.RandomNameWithPrefix("sec-policy")
 
@@ -111,7 +111,7 @@ func TestAccSecurityPoliciesResource_Name(t *testing.T) {
 
 func TestAccSecurityPoliciesResource_Description(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_description"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -141,7 +141,7 @@ func TestAccSecurityPoliciesResource_Description(t *testing.T) {
 
 func TestAccSecurityPoliciesResource_AccessCodes(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_access_codes"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -171,7 +171,7 @@ func TestAccSecurityPoliciesResource_AccessCodes(t *testing.T) {
 
 func TestAccSecurityPoliciesResource_DefaultAction(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_default_action"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -201,7 +201,7 @@ func TestAccSecurityPoliciesResource_DefaultAction(t *testing.T) {
 
 func TestAccSecurityPoliciesResource_DefaultRedirectName(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_default_redirect_name"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -231,7 +231,7 @@ func TestAccSecurityPoliciesResource_DefaultRedirectName(t *testing.T) {
 
 func TestAccSecurityPoliciesResource_Ecs(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_ecs"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -261,7 +261,7 @@ func TestAccSecurityPoliciesResource_Ecs(t *testing.T) {
 
 func TestAccSecurityPoliciesResource_NetworkLists(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_network_lists"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -291,7 +291,7 @@ func TestAccSecurityPoliciesResource_NetworkLists(t *testing.T) {
 
 func TestAccSecurityPoliciesResource_OnpremResolve(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_onprem_resolve"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -321,7 +321,7 @@ func TestAccSecurityPoliciesResource_OnpremResolve(t *testing.T) {
 
 func TestAccSecurityPoliciesResource_Precedence(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_precedence"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -351,7 +351,7 @@ func TestAccSecurityPoliciesResource_Precedence(t *testing.T) {
 
 func TestAccSecurityPoliciesResource_Rules(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_rules"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -381,7 +381,7 @@ func TestAccSecurityPoliciesResource_Rules(t *testing.T) {
 
 func TestAccSecurityPoliciesResource_SafeSearch(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_safe_search"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -412,7 +412,7 @@ func TestAccSecurityPoliciesResource_SafeSearch(t *testing.T) {
 func TestAccSecurityPoliciesResource_Tags(t *testing.T) {
 	t.Skip()
 	resourceName := "bloxone_td_security_policy.test_tags"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -448,7 +448,7 @@ func TestAccSecurityPoliciesResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckSecurityPoliciesExists(ctx context.Context, resourceName string, v *fw.AtcfwSecurityPolicy) resource.TestCheckFunc {
+func testAccCheckSecurityPoliciesExists(ctx context.Context, resourceName string, v *fw.SecurityPolicy) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -474,7 +474,7 @@ func testAccCheckSecurityPoliciesExists(ctx context.Context, resourceName string
 	}
 }
 
-func testAccCheckSecurityPoliciesDestroy(ctx context.Context, v *fw.AtcfwSecurityPolicy) resource.TestCheckFunc {
+func testAccCheckSecurityPoliciesDestroy(ctx context.Context, v *fw.SecurityPolicy) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.FWAPI.
@@ -492,7 +492,7 @@ func testAccCheckSecurityPoliciesDestroy(ctx context.Context, v *fw.AtcfwSecurit
 	}
 }
 
-func testAccCheckSecurityPoliciesDisappears(ctx context.Context, v *fw.AtcfwSecurityPolicy) resource.TestCheckFunc {
+func testAccCheckSecurityPoliciesDisappears(ctx context.Context, v *fw.SecurityPolicy) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.FWAPI.

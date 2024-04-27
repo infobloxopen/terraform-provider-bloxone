@@ -14,7 +14,7 @@ import (
 func TestAccSecurityPoliciesDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_security_policies.test"
 	resourceName := "bloxone_td_security_policy.test"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.Test(t, resource.TestCase{
@@ -37,7 +37,7 @@ func TestAccSecurityPoliciesDataSource_Filters(t *testing.T) {
 func TestAccSecurityPoliciesDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_security_policies.test"
 	resourceName := "bloxone_td_security_policy.test"
-	var v fw.AtcfwSecurityPolicy
+	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
 	resource.Test(t, resource.TestCase{
