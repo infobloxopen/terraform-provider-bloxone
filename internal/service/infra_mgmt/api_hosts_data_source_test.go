@@ -7,14 +7,14 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/bloxone-go-client/infra_mgmt"
+	"github.com/infobloxopen/bloxone-go-client/inframgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccHostsDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_infra_hosts.test"
 	resourceName := "bloxone_infra_host.test"
-	var v infra_mgmt.InfraHost
+	var v inframgmt.Host
 	name := acctest.RandomNameWithPrefix("host")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -37,7 +37,7 @@ func TestAccHostsDataSource_Filters(t *testing.T) {
 func TestAccHostsDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_infra_hosts.test"
 	resourceName := "bloxone_infra_host.test"
-	var v infra_mgmt.InfraHost
+	var v inframgmt.Host
 	name := acctest.RandomNameWithPrefix("host")
 	tagValue := acctest.RandomNameWithPrefix("tag-value")
 

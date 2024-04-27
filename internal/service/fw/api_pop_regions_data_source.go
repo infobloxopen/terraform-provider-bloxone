@@ -3,10 +3,12 @@ package fw
 import (
 	"context"
 	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/fw"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -34,7 +36,7 @@ type AtcfwPoPRegionModelWithFilter struct {
 	Results types.List `tfsdk:"results"`
 }
 
-func (m *AtcfwPoPRegionModelWithFilter) FlattenResults(ctx context.Context, from []fw.AtcfwPoPRegion, diags *diag.Diagnostics) {
+func (m *AtcfwPoPRegionModelWithFilter) FlattenResults(ctx context.Context, from []fw.PoPRegion, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -90,10 +92,10 @@ func (d *PoPRegionsDataSource) Read(ctx context.Context, req datasource.ReadRequ
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]fw.AtcfwPoPRegion, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]fw.PoPRegion, error) {
 		apiRes, _, err := d.client.FWAPI.
 			PopRegionsAPI.
-			PopRegionsListPoPRegions(ctx).
+			ListPoPRegions(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Offset(offset).
 			Limit(limit).

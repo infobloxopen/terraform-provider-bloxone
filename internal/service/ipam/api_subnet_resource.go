@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -66,9 +67,16 @@ func (r *SubnetResource) Create(ctx context.Context, req resource.CreateRequest,
 		return
 	}
 
+	if !data.NextAvailableId.IsUnknown() && !data.NextAvailableId.IsNull() {
+		// Lock the mutex to serialize operations with the same key
+		// This is necessary to prevent the same block being returned.
+		utils.GlobalMutexStore.Lock(data.NextAvailableId.ValueString())
+		defer utils.GlobalMutexStore.Unlock(data.NextAvailableId.ValueString())
+	}
+
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		SubnetAPI.
-		SubnetCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
 		Inherit(inheritanceType).
 		Execute()
@@ -96,7 +104,7 @@ func (r *SubnetResource) Read(ctx context.Context, req resource.ReadRequest, res
 
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		SubnetAPI.
-		SubnetRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
@@ -127,7 +135,7 @@ func (r *SubnetResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		SubnetAPI.
-		SubnetUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
 		Inherit(inheritanceType).
 		Execute()
@@ -155,7 +163,7 @@ func (r *SubnetResource) Delete(ctx context.Context, req resource.DeleteRequest,
 
 	httpRes, err := r.client.IPAddressManagementAPI.
 		SubnetAPI.
-		SubnetDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

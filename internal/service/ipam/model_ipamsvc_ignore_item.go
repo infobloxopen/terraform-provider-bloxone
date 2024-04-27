@@ -38,7 +38,7 @@ var IpamsvcIgnoreItemResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcIgnoreItem(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcIgnoreItem {
+func ExpandIpamsvcIgnoreItem(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IgnoreItem {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -50,18 +50,18 @@ func ExpandIpamsvcIgnoreItem(ctx context.Context, o types.Object, diags *diag.Di
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcIgnoreItemModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcIgnoreItem {
+func (m *IpamsvcIgnoreItemModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IgnoreItem {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcIgnoreItem{
+	to := &ipam.IgnoreItem{
 		Type:  m.Type.ValueString(),
 		Value: m.Value.ValueString(),
 	}
 	return to
 }
 
-func FlattenIpamsvcIgnoreItem(ctx context.Context, from *ipam.IpamsvcIgnoreItem, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcIgnoreItem(ctx context.Context, from *ipam.IgnoreItem, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcIgnoreItemAttrTypes)
 	}
@@ -72,7 +72,7 @@ func FlattenIpamsvcIgnoreItem(ctx context.Context, from *ipam.IpamsvcIgnoreItem,
 	return t
 }
 
-func (m *IpamsvcIgnoreItemModel) Flatten(ctx context.Context, from *ipam.IpamsvcIgnoreItem, diags *diag.Diagnostics) {
+func (m *IpamsvcIgnoreItemModel) Flatten(ctx context.Context, from *ipam.IgnoreItem, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

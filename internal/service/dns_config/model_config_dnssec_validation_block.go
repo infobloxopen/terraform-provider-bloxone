@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -50,7 +50,7 @@ var ConfigDNSSECValidationBlockResourceSchemaAttributes = map[string]schema.Attr
 	},
 }
 
-func ExpandConfigDNSSECValidationBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigDNSSECValidationBlock {
+func ExpandConfigDNSSECValidationBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.DNSSECValidationBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -62,11 +62,11 @@ func ExpandConfigDNSSECValidationBlock(ctx context.Context, o types.Object, diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigDNSSECValidationBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigDNSSECValidationBlock {
+func (m *ConfigDNSSECValidationBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.DNSSECValidationBlock {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigDNSSECValidationBlock{
+	to := &dnsconfig.DNSSECValidationBlock{
 		DnssecEnableValidation: flex.ExpandBoolPointer(m.DnssecEnableValidation),
 		DnssecEnabled:          flex.ExpandBoolPointer(m.DnssecEnabled),
 		DnssecTrustAnchors:     flex.ExpandFrameworkListNestedBlock(ctx, m.DnssecTrustAnchors, diags, ExpandConfigTrustAnchor),
@@ -75,7 +75,7 @@ func (m *ConfigDNSSECValidationBlockModel) Expand(ctx context.Context, diags *di
 	return to
 }
 
-func FlattenConfigDNSSECValidationBlock(ctx context.Context, from *dns_config.ConfigDNSSECValidationBlock, diags *diag.Diagnostics) types.Object {
+func FlattenConfigDNSSECValidationBlock(ctx context.Context, from *dnsconfig.DNSSECValidationBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigDNSSECValidationBlockAttrTypes)
 	}
@@ -86,7 +86,7 @@ func FlattenConfigDNSSECValidationBlock(ctx context.Context, from *dns_config.Co
 	return t
 }
 
-func (m *ConfigDNSSECValidationBlockModel) Flatten(ctx context.Context, from *dns_config.ConfigDNSSECValidationBlock, diags *diag.Diagnostics) {
+func (m *ConfigDNSSECValidationBlockModel) Flatten(ctx context.Context, from *dnsconfig.DNSSECValidationBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

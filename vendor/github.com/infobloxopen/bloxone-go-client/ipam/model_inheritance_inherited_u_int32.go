@@ -26,8 +26,11 @@ type InheritanceInheritedUInt32 struct {
 	// The resource identifier.
 	Source *string `json:"source,omitempty"`
 	// The inherited value.
-	Value *int64 `json:"value,omitempty"`
+	Value                *int64 `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InheritanceInheritedUInt32 InheritanceInheritedUInt32
 
 // NewInheritanceInheritedUInt32 instantiates a new InheritanceInheritedUInt32 object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,36 @@ func (o InheritanceInheritedUInt32) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritanceInheritedUInt32) UnmarshalJSON(data []byte) (err error) {
+	varInheritanceInheritedUInt32 := _InheritanceInheritedUInt32{}
+
+	err = json.Unmarshal(data, &varInheritanceInheritedUInt32)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritanceInheritedUInt32(varInheritanceInheritedUInt32)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritanceInheritedUInt32 struct {

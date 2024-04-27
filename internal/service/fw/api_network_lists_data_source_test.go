@@ -14,7 +14,7 @@ import (
 func TestAccNetworkListsDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_network_lists.test"
 	resourceName := "bloxone_td_network_list.test"
-	var v fw.AtcfwNetworkList
+	var v fw.NetworkList
 	name := acctest.RandomNameWithPrefix("nl")
 
 	resource.Test(t, resource.TestCase{

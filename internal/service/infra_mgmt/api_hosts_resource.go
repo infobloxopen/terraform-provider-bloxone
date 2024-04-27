@@ -68,7 +68,7 @@ func (r *HostsResource) Create(ctx context.Context, req resource.CreateRequest, 
 
 	apiRes, _, err := r.client.InfraManagementAPI.
 		HostsAPI.
-		HostsCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -95,7 +95,7 @@ func (r *HostsResource) Read(ctx context.Context, req resource.ReadRequest, resp
 
 	apiRes, httpRes, err := r.client.InfraManagementAPI.
 		HostsAPI.
-		HostsRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *HostsResource) Update(ctx context.Context, req resource.UpdateRequest, 
 
 	apiRes, _, err := r.client.InfraManagementAPI.
 		HostsAPI.
-		HostsUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *HostsResource) Delete(ctx context.Context, req resource.DeleteRequest, 
 
 	httpRes, err := r.client.InfraManagementAPI.
 		HostsAPI.
-		HostsDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

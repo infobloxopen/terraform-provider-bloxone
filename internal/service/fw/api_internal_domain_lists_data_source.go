@@ -3,11 +3,13 @@ package fw
 import (
 	"context"
 	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/fw"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -36,7 +38,7 @@ type ModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *ModelWithFilter) FlattenResults(ctx context.Context, from []fw.AtcfwInternalDomains, diags *diag.Diagnostics) {
+func (m *ModelWithFilter) FlattenResults(ctx context.Context, from []fw.InternalDomains, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -97,10 +99,10 @@ func (d *InternalDomainListsDataSource) Read(ctx context.Context, req datasource
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]fw.AtcfwInternalDomains, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]fw.InternalDomains, error) {
 		apiRes, _, err := d.client.FWAPI.
 			InternalDomainListsAPI.
-			InternalDomainListsListInternalDomains(ctx).
+			ListInternalDomains(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

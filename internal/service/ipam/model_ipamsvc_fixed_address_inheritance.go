@@ -49,7 +49,7 @@ var IpamsvcFixedAddressInheritanceResourceSchemaAttributes = map[string]schema.A
 	},
 }
 
-func ExpandIpamsvcFixedAddressInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcFixedAddressInheritance {
+func ExpandIpamsvcFixedAddressInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.FixedAddressInheritance {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -61,11 +61,11 @@ func ExpandIpamsvcFixedAddressInheritance(ctx context.Context, o types.Object, d
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcFixedAddressInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcFixedAddressInheritance {
+func (m *IpamsvcFixedAddressInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.FixedAddressInheritance {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcFixedAddressInheritance{
+	to := &ipam.FixedAddressInheritance{
 		DhcpOptions:               ExpandIpamsvcInheritedDHCPOptionList(ctx, m.DhcpOptions, diags),
 		HeaderOptionFilename:      ExpandInheritanceInheritedString(ctx, m.HeaderOptionFilename, diags),
 		HeaderOptionServerAddress: ExpandInheritanceInheritedString(ctx, m.HeaderOptionServerAddress, diags),
@@ -74,7 +74,7 @@ func (m *IpamsvcFixedAddressInheritanceModel) Expand(ctx context.Context, diags 
 	return to
 }
 
-func FlattenIpamsvcFixedAddressInheritance(ctx context.Context, from *ipam.IpamsvcFixedAddressInheritance, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcFixedAddressInheritance(ctx context.Context, from *ipam.FixedAddressInheritance, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcFixedAddressInheritanceAttrTypes)
 	}
@@ -85,7 +85,7 @@ func FlattenIpamsvcFixedAddressInheritance(ctx context.Context, from *ipam.Ipams
 	return t
 }
 
-func (m *IpamsvcFixedAddressInheritanceModel) Flatten(ctx context.Context, from *ipam.IpamsvcFixedAddressInheritance, diags *diag.Diagnostics) {
+func (m *IpamsvcFixedAddressInheritanceModel) Flatten(ctx context.Context, from *ipam.FixedAddressInheritance, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

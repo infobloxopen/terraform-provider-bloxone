@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -36,7 +36,7 @@ var ConfigHostAssociatedServerResourceSchemaAttributes = map[string]schema.Attri
 	},
 }
 
-func ExpandConfigHostAssociatedServer(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigHostAssociatedServer {
+func ExpandConfigHostAssociatedServer(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.HostAssociatedServer {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -48,15 +48,15 @@ func ExpandConfigHostAssociatedServer(ctx context.Context, o types.Object, diags
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigHostAssociatedServerModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigHostAssociatedServer {
+func (m *ConfigHostAssociatedServerModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.HostAssociatedServer {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigHostAssociatedServer{}
+	to := &dnsconfig.HostAssociatedServer{}
 	return to
 }
 
-func FlattenConfigHostAssociatedServer(ctx context.Context, from *dns_config.ConfigHostAssociatedServer, diags *diag.Diagnostics) types.Object {
+func FlattenConfigHostAssociatedServer(ctx context.Context, from *dnsconfig.HostAssociatedServer, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigHostAssociatedServerAttrTypes)
 	}
@@ -67,7 +67,7 @@ func FlattenConfigHostAssociatedServer(ctx context.Context, from *dns_config.Con
 	return t
 }
 
-func (m *ConfigHostAssociatedServerModel) Flatten(ctx context.Context, from *dns_config.ConfigHostAssociatedServer, diags *diag.Diagnostics) {
+func (m *ConfigHostAssociatedServerModel) Flatten(ctx context.Context, from *dnsconfig.HostAssociatedServer, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

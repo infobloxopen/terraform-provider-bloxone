@@ -7,14 +7,14 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccForwardNsgDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_forward_nsgs.test"
 	resourceName := "bloxone_dns_forward_nsg.test"
-	var v dns_config.ConfigForwardNSG
+	var v dnsconfig.ForwardNSG
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -36,7 +36,7 @@ func TestAccForwardNsgDataSource_Filters(t *testing.T) {
 func TestAccForwardNsgDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_forward_nsgs.test"
 	resourceName := "bloxone_dns_forward_nsg.test"
-	var v dns_config.ConfigForwardNSG
+	var v dnsconfig.ForwardNSG
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,

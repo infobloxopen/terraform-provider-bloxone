@@ -47,7 +47,7 @@ var IpamsvcHostNameResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcHostName(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcHostName {
+func ExpandIpamsvcHostName(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.HostName {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -59,11 +59,11 @@ func ExpandIpamsvcHostName(ctx context.Context, o types.Object, diags *diag.Diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcHostNameModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcHostName {
+func (m *IpamsvcHostNameModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.HostName {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcHostName{
+	to := &ipam.HostName{
 		Alias:       flex.ExpandBoolPointer(m.Alias),
 		Name:        flex.ExpandString(m.Name),
 		PrimaryName: flex.ExpandBoolPointer(m.PrimaryName),
@@ -72,7 +72,7 @@ func (m *IpamsvcHostNameModel) Expand(ctx context.Context, diags *diag.Diagnosti
 	return to
 }
 
-func FlattenIpamsvcHostName(ctx context.Context, from *ipam.IpamsvcHostName, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcHostName(ctx context.Context, from *ipam.HostName, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcHostNameAttrTypes)
 	}
@@ -83,7 +83,7 @@ func FlattenIpamsvcHostName(ctx context.Context, from *ipam.IpamsvcHostName, dia
 	return t
 }
 
-func (m *IpamsvcHostNameModel) Flatten(ctx context.Context, from *ipam.IpamsvcHostName, diags *diag.Diagnostics) {
+func (m *IpamsvcHostNameModel) Flatten(ctx context.Context, from *ipam.HostName, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

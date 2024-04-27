@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -18,8 +19,9 @@ func (c contextKey) String() string {
 }
 
 var (
-	// ContextAPIKeys takes a string apikey as authentication for the request
-	ContextAPIKeys = contextKey("apiKeys")
+	// The following context keys can be used to modify the server URL used by the client.
+	// However, we only support a single server configuration at the moment.
+	// This needs to be exposed to the user in the future when we support multiple server configurations.
 
 	// ContextServerIndex uses a server configuration from the index.
 	ContextServerIndex = contextKey("serverIndex")
@@ -33,18 +35,6 @@ var (
 	// ContextOperationServerVariables overrides a server configuration variables using operation specific values.
 	ContextOperationServerVariables = contextKey("serverOperationVariables")
 )
-
-// BasicAuth provides basic http authentication to a request passed via context using ContextBasicAuth
-type BasicAuth struct {
-	UserName string `json:"userName,omitempty"`
-	Password string `json:"password,omitempty"`
-}
-
-// APIKey provides API key based authentication to a request passed via context using ContextAPIKey
-type APIKey struct {
-	Key    string
-	Prefix string
-}
 
 // ServerVariable stores the information about a server variable
 type ServerVariable struct {
@@ -65,8 +55,9 @@ type ServerConfigurations []ServerConfiguration
 
 // Configuration stores the configuration of the API client
 type Configuration struct {
-	Host             string            `json:"host,omitempty"`
-	Scheme           string            `json:"scheme,omitempty"`
+	ClientName       string            `json:"clientName,omitempty"`
+	CSPURL           string            `json:"cspURL,omitempty"`
+	APIKey           string            `json:"apiKey,omitempty"`
 	DefaultHeader    map[string]string `json:"defaultHeader,omitempty"`
 	UserAgent        string            `json:"userAgent,omitempty"`
 	Debug            bool              `json:"debug,omitempty"`
@@ -76,19 +67,21 @@ type Configuration struct {
 	DefaultTags      map[string]string
 }
 
-// NewConfiguration returns a new Configuration object
+// NewConfiguration returns a new Configuration object.
+// The following default values are set:
+// - ClientName: "bloxone-go-client"
+// - CSPURL: "https://csp.infoblox.com"
+// - UserAgent: "bloxone-go-client/version"
+// - Debug: false
 func NewConfiguration() *Configuration {
 	cfg := &Configuration{
-		DefaultHeader: make(map[string]string),
-		UserAgent:     "OpenAPI-Generator/1.0.0/go",
-		Debug:         false,
-		Scheme:        "https",
-		Servers: ServerConfigurations{
-			{
-				URL:         "https://csp.infoblox.com/api/ddi/v1",
-				Description: "No description provided",
-			},
-		},
+		ClientName:       "bloxone-go-client",
+		CSPURL:           lookupEnv(envBloxOneCSPURL, "https://csp.infoblox.com"),
+		APIKey:           lookupEnv(envBloxOneAPIKey, ""),
+		DefaultHeader:    make(map[string]string),
+		Debug:            false,
+		UserAgent:        fmt.Sprintf("bloxone-%s/%s", sdkIdentifier, version),
+		Servers:          ServerConfigurations{},
 		OperationServers: map[string]ServerConfigurations{},
 		DefaultTags:      make(map[string]string),
 	}
@@ -207,4 +200,13 @@ func (c *Configuration) ServerURLWithContext(ctx context.Context, endpoint strin
 	}
 
 	return sc.URL(index, variables)
+}
+
+// lookupEnv is a function that returns the value of the environment variable named by the key
+// or the default value if the environment variable is not set.
+func lookupEnv(key, def string) string {
+	if v, ok := os.LookupEnv(key); ok {
+		return v
+	}
+	return def
 }

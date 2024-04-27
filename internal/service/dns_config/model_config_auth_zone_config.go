@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -57,7 +57,7 @@ var ConfigAuthZoneConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigAuthZoneConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigAuthZoneConfig {
+func ExpandConfigAuthZoneConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.AuthZoneConfig {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -69,11 +69,11 @@ func ExpandConfigAuthZoneConfig(ctx context.Context, o types.Object, diags *diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigAuthZoneConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigAuthZoneConfig {
+func (m *ConfigAuthZoneConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.AuthZoneConfig {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigAuthZoneConfig{
+	to := &dnsconfig.AuthZoneConfig{
 		ExternalPrimaries:   flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalPrimaries, diags, ExpandConfigExternalPrimary),
 		ExternalSecondaries: flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalSecondaries, diags, ExpandConfigExternalSecondary),
 		InternalSecondaries: flex.ExpandFrameworkListNestedBlock(ctx, m.InternalSecondaries, diags, ExpandConfigInternalSecondary),
@@ -82,7 +82,7 @@ func (m *ConfigAuthZoneConfigModel) Expand(ctx context.Context, diags *diag.Diag
 	return to
 }
 
-func FlattenConfigAuthZoneConfig(ctx context.Context, from *dns_config.ConfigAuthZoneConfig, diags *diag.Diagnostics) types.Object {
+func FlattenConfigAuthZoneConfig(ctx context.Context, from *dnsconfig.AuthZoneConfig, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigAuthZoneConfigAttrTypes)
 	}
@@ -93,7 +93,7 @@ func FlattenConfigAuthZoneConfig(ctx context.Context, from *dns_config.ConfigAut
 	return t
 }
 
-func (m *ConfigAuthZoneConfigModel) Flatten(ctx context.Context, from *dns_config.ConfigAuthZoneConfig, diags *diag.Diagnostics) {
+func (m *ConfigAuthZoneConfigModel) Flatten(ctx context.Context, from *dnsconfig.AuthZoneConfig, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

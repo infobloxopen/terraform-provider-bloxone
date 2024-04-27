@@ -19,10 +19,13 @@ var _ MappedNullable = &SecurityPoliciesReadSecurityPolicy404ResponseError{}
 
 // SecurityPoliciesReadSecurityPolicy404ResponseError struct for SecurityPoliciesReadSecurityPolicy404ResponseError
 type SecurityPoliciesReadSecurityPolicy404ResponseError struct {
-	Code    *string `json:"code,omitempty"`
-	Message *string `json:"message,omitempty"`
-	Status  *string `json:"status,omitempty"`
+	Code                 *string `json:"code,omitempty"`
+	Message              *string `json:"message,omitempty"`
+	Status               *string `json:"status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SecurityPoliciesReadSecurityPolicy404ResponseError SecurityPoliciesReadSecurityPolicy404ResponseError
 
 // NewSecurityPoliciesReadSecurityPolicy404ResponseError instantiates a new SecurityPoliciesReadSecurityPolicy404ResponseError object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o SecurityPoliciesReadSecurityPolicy404ResponseError) ToMap() (map[string]
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *SecurityPoliciesReadSecurityPolicy404ResponseError) UnmarshalJSON(data []byte) (err error) {
+	varSecurityPoliciesReadSecurityPolicy404ResponseError := _SecurityPoliciesReadSecurityPolicy404ResponseError{}
+
+	err = json.Unmarshal(data, &varSecurityPoliciesReadSecurityPolicy404ResponseError)
+
+	if err != nil {
+		return err
+	}
+
+	*o = SecurityPoliciesReadSecurityPolicy404ResponseError(varSecurityPoliciesReadSecurityPolicy404ResponseError)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "code")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSecurityPoliciesReadSecurityPolicy404ResponseError struct {

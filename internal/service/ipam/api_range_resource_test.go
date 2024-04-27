@@ -23,7 +23,7 @@ import (
 
 func TestAccRangeResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test"
-	var v ipam.IpamsvcRange
+	var v ipam.Range
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -56,7 +56,7 @@ func TestAccRangeResource_basic(t *testing.T) {
 
 func TestAccRangeResource_disappears(t *testing.T) {
 	resourceName := "bloxone_ipam_range.test"
-	var v ipam.IpamsvcRange
+	var v ipam.Range
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -78,7 +78,7 @@ func TestAccRangeResource_disappears(t *testing.T) {
 
 func TestAccRangeResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_comment"
-	var v ipam.IpamsvcRange
+	var v ipam.Range
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -108,7 +108,7 @@ func TestAccRangeResource_Comment(t *testing.T) {
 
 func TestAccRangeResource_DisableDhcp(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_disable_dhcp"
-	var v ipam.IpamsvcRange
+	var v ipam.Range
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -138,7 +138,7 @@ func TestAccRangeResource_DisableDhcp(t *testing.T) {
 
 func TestAccRangeResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_dhcp_options"
-	var v ipam.IpamsvcRange
+	var v ipam.Range
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
@@ -171,7 +171,7 @@ func TestAccRangeResource_DhcpOptions(t *testing.T) {
 
 func TestAccRangeResource_End(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_end"
-	var v ipam.IpamsvcRange
+	var v ipam.Range
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -201,7 +201,7 @@ func TestAccRangeResource_End(t *testing.T) {
 
 func TestAccRangeResource_ExclusionRanges(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_exclusion_ranges"
-	var v ipam.IpamsvcRange
+	var v ipam.Range
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -233,7 +233,7 @@ func TestAccRangeResource_ExclusionRanges(t *testing.T) {
 
 func TestAccRangeResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_inheritance_sources"
-	var v ipam.IpamsvcRange
+	var v ipam.Range
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -263,7 +263,7 @@ func TestAccRangeResource_InheritanceSources(t *testing.T) {
 
 func TestAccRangeResource_Name(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_name"
-	var v ipam.IpamsvcRange
+	var v ipam.Range
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -293,7 +293,7 @@ func TestAccRangeResource_Name(t *testing.T) {
 
 func TestAccRangeResource_Space(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_space"
-	var v1 ipam.IpamsvcRange
+	var v1 ipam.Range
 	spaceName1 := acctest.RandomNameWithPrefix("ip-space")
 	spaceName2 := acctest.RandomNameWithPrefix("ip-space")
 
@@ -324,7 +324,7 @@ func TestAccRangeResource_Space(t *testing.T) {
 
 func TestAccRangeResource_Start(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_start"
-	var v ipam.IpamsvcRange
+	var v ipam.Range
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -354,7 +354,7 @@ func TestAccRangeResource_Start(t *testing.T) {
 
 func TestAccRangeResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_ipam_range.test_tags"
-	var v ipam.IpamsvcRange
+	var v ipam.Range
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -386,7 +386,7 @@ func TestAccRangeResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckRangeExists(ctx context.Context, resourceName string, v *ipam.IpamsvcRange) resource.TestCheckFunc {
+func testAccCheckRangeExists(ctx context.Context, resourceName string, v *ipam.Range) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -395,7 +395,7 @@ func testAccCheckRangeExists(ctx context.Context, resourceName string, v *ipam.I
 		}
 		apiRes, _, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			RangeAPI.
-			RangeRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -408,12 +408,12 @@ func testAccCheckRangeExists(ctx context.Context, resourceName string, v *ipam.I
 	}
 }
 
-func testAccCheckRangeDestroy(ctx context.Context, v *ipam.IpamsvcRange) resource.TestCheckFunc {
+func testAccCheckRangeDestroy(ctx context.Context, v *ipam.Range) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			RangeAPI.
-			RangeRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -426,12 +426,12 @@ func testAccCheckRangeDestroy(ctx context.Context, v *ipam.IpamsvcRange) resourc
 	}
 }
 
-func testAccCheckRangeDisappears(ctx context.Context, v *ipam.IpamsvcRange) resource.TestCheckFunc {
+func testAccCheckRangeDisappears(ctx context.Context, v *ipam.Range) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			RangeAPI.
-			RangeDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

@@ -10,13 +10,14 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccAclResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_acl.test"
-	var v dns_config.ConfigACL
+	var v dnsconfig.ACL
 	var name = acctest.RandomNameWithPrefix("acl")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -40,7 +41,7 @@ func TestAccAclResource_basic(t *testing.T) {
 
 func TestAccAclResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dns_acl.test"
-	var v dns_config.ConfigACL
+	var v dnsconfig.ACL
 	var name = acctest.RandomNameWithPrefix("acl")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -62,7 +63,7 @@ func TestAccAclResource_disappears(t *testing.T) {
 
 func TestAccAclResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dns_acl.test_comment"
-	var v dns_config.ConfigACL
+	var v dnsconfig.ACL
 	var name = acctest.RandomNameWithPrefix("acl")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -92,7 +93,7 @@ func TestAccAclResource_Comment(t *testing.T) {
 
 func TestAccAclResource_List(t *testing.T) {
 	var resourceName = "bloxone_dns_acl.test_list"
-	var v dns_config.ConfigACL
+	var v dnsconfig.ACL
 	var name = acctest.RandomNameWithPrefix("acl")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -143,7 +144,7 @@ func TestAccAclResource_List(t *testing.T) {
 
 func TestAccAclResource_Name(t *testing.T) {
 	var resourceName = "bloxone_dns_acl.test_name"
-	var v dns_config.ConfigACL
+	var v dnsconfig.ACL
 	var name = acctest.RandomNameWithPrefix("acl")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -173,7 +174,7 @@ func TestAccAclResource_Name(t *testing.T) {
 
 func TestAccAclResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dns_acl.test_tags"
-	var v dns_config.ConfigACL
+	var v dnsconfig.ACL
 	var name = acctest.RandomNameWithPrefix("acl")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -209,7 +210,7 @@ func TestAccAclResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckAclExists(ctx context.Context, resourceName string, v *dns_config.ConfigACL) resource.TestCheckFunc {
+func testAccCheckAclExists(ctx context.Context, resourceName string, v *dnsconfig.ACL) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -218,7 +219,7 @@ func testAccCheckAclExists(ctx context.Context, resourceName string, v *dns_conf
 		}
 		apiRes, _, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			AclAPI.
-			AclRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -231,12 +232,12 @@ func testAccCheckAclExists(ctx context.Context, resourceName string, v *dns_conf
 	}
 }
 
-func testAccCheckAclDestroy(ctx context.Context, v *dns_config.ConfigACL) resource.TestCheckFunc {
+func testAccCheckAclDestroy(ctx context.Context, v *dnsconfig.ACL) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			AclAPI.
-			AclRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -249,12 +250,12 @@ func testAccCheckAclDestroy(ctx context.Context, v *dns_config.ConfigACL) resour
 	}
 }
 
-func testAccCheckAclDisappears(ctx context.Context, v *dns_config.ConfigACL) resource.TestCheckFunc {
+func testAccCheckAclDisappears(ctx context.Context, v *dnsconfig.ACL) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			AclAPI.
-			AclDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

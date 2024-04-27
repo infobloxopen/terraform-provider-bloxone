@@ -19,10 +19,13 @@ var _ MappedNullable = &CategoryFiltersReadCategoryFilter404ResponseError{}
 
 // CategoryFiltersReadCategoryFilter404ResponseError struct for CategoryFiltersReadCategoryFilter404ResponseError
 type CategoryFiltersReadCategoryFilter404ResponseError struct {
-	Code    *string `json:"code,omitempty"`
-	Message *string `json:"message,omitempty"`
-	Status  *string `json:"status,omitempty"`
+	Code                 *string `json:"code,omitempty"`
+	Message              *string `json:"message,omitempty"`
+	Status               *string `json:"status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CategoryFiltersReadCategoryFilter404ResponseError CategoryFiltersReadCategoryFilter404ResponseError
 
 // NewCategoryFiltersReadCategoryFilter404ResponseError instantiates a new CategoryFiltersReadCategoryFilter404ResponseError object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o CategoryFiltersReadCategoryFilter404ResponseError) ToMap() (map[string]i
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CategoryFiltersReadCategoryFilter404ResponseError) UnmarshalJSON(data []byte) (err error) {
+	varCategoryFiltersReadCategoryFilter404ResponseError := _CategoryFiltersReadCategoryFilter404ResponseError{}
+
+	err = json.Unmarshal(data, &varCategoryFiltersReadCategoryFilter404ResponseError)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CategoryFiltersReadCategoryFilter404ResponseError(varCategoryFiltersReadCategoryFilter404ResponseError)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "code")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCategoryFiltersReadCategoryFilter404ResponseError struct {

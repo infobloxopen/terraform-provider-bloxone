@@ -19,10 +19,13 @@ var _ MappedNullable = &InternalDomainListsInternalDomainsItemsPartialUpdate400R
 
 // InternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError struct for InternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError
 type InternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError struct {
-	Code    *string `json:"code,omitempty"`
-	Message *string `json:"message,omitempty"`
-	Status  *string `json:"status,omitempty"`
+	Code                 *string `json:"code,omitempty"`
+	Message              *string `json:"message,omitempty"`
+	Status               *string `json:"status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError InternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError
 
 // NewInternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError instantiates a new InternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o InternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError) To
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError) UnmarshalJSON(data []byte) (err error) {
+	varInternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError := _InternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError{}
+
+	err = json.Unmarshal(data, &varInternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError(varInternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "code")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInternalDomainListsInternalDomainsItemsPartialUpdate400ResponseError struct {

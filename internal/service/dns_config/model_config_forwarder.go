@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -44,7 +44,7 @@ func ConfigForwarderResourceSchemaAttributes(fqdnOptional bool) map[string]schem
 	}
 }
 
-func ExpandConfigForwarder(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigForwarder {
+func ExpandConfigForwarder(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.Forwarder {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -56,18 +56,18 @@ func ExpandConfigForwarder(ctx context.Context, o types.Object, diags *diag.Diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigForwarderModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigForwarder {
+func (m *ConfigForwarderModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.Forwarder {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigForwarder{
+	to := &dnsconfig.Forwarder{
 		Address: flex.ExpandString(m.Address),
 		Fqdn:    flex.ExpandStringPointer(m.Fqdn),
 	}
 	return to
 }
 
-func FlattenConfigForwarder(ctx context.Context, from *dns_config.ConfigForwarder, diags *diag.Diagnostics) types.Object {
+func FlattenConfigForwarder(ctx context.Context, from *dnsconfig.Forwarder, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigForwarderAttrTypes)
 	}
@@ -78,7 +78,7 @@ func FlattenConfigForwarder(ctx context.Context, from *dns_config.ConfigForwarde
 	return t
 }
 
-func (m *ConfigForwarderModel) Flatten(ctx context.Context, from *dns_config.ConfigForwarder, diags *diag.Diagnostics) {
+func (m *ConfigForwarderModel) Flatten(ctx context.Context, from *dnsconfig.Forwarder, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

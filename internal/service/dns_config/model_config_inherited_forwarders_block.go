@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -49,7 +49,7 @@ var ConfigInheritedForwardersBlockResourceSchemaAttributes = map[string]schema.A
 	},
 }
 
-func ExpandConfigInheritedForwardersBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigInheritedForwardersBlock {
+func ExpandConfigInheritedForwardersBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.InheritedForwardersBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -61,17 +61,17 @@ func ExpandConfigInheritedForwardersBlock(ctx context.Context, o types.Object, d
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigInheritedForwardersBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigInheritedForwardersBlock {
+func (m *ConfigInheritedForwardersBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.InheritedForwardersBlock {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigInheritedForwardersBlock{
+	to := &dnsconfig.InheritedForwardersBlock{
 		Action: flex.ExpandStringPointer(m.Action),
 	}
 	return to
 }
 
-func FlattenConfigInheritedForwardersBlock(ctx context.Context, from *dns_config.ConfigInheritedForwardersBlock, diags *diag.Diagnostics) types.Object {
+func FlattenConfigInheritedForwardersBlock(ctx context.Context, from *dnsconfig.InheritedForwardersBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigInheritedForwardersBlockAttrTypes)
 	}
@@ -82,7 +82,7 @@ func FlattenConfigInheritedForwardersBlock(ctx context.Context, from *dns_config
 	return t
 }
 
-func (m *ConfigInheritedForwardersBlockModel) Flatten(ctx context.Context, from *dns_config.ConfigInheritedForwardersBlock, diags *diag.Diagnostics) {
+func (m *ConfigInheritedForwardersBlockModel) Flatten(ctx context.Context, from *dnsconfig.InheritedForwardersBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

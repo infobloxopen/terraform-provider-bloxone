@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
@@ -37,7 +37,7 @@ type ConfigViewModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *ConfigViewModelWithFilter) FlattenResults(ctx context.Context, from []dns_config.ConfigView, diags *diag.Diagnostics) {
+func (m *ConfigViewModelWithFilter) FlattenResults(ctx context.Context, from []dnsconfig.View, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -98,10 +98,10 @@ func (d *ViewDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]dns_config.ConfigView, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]dnsconfig.View, error) {
 		apiRes, _, err := d.client.DNSConfigurationAPI.
 			ViewAPI.
-			ViewList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

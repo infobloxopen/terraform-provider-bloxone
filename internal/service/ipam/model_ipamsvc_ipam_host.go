@@ -103,7 +103,7 @@ var IpamsvcIpamHostResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcIpamHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcIpamHost {
+func ExpandIpamsvcIpamHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamHost {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -115,11 +115,11 @@ func ExpandIpamsvcIpamHost(ctx context.Context, o types.Object, diags *diag.Diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcIpamHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcIpamHost {
+func (m *IpamsvcIpamHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamHost {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcIpamHost{
+	to := &ipam.IpamHost{
 		Addresses:           flex.ExpandFrameworkListNestedBlock(ctx, m.Addresses, diags, ExpandIpamsvcHostAddress),
 		AutoGenerateRecords: flex.ExpandBoolPointer(m.AutoGenerateRecords),
 		Comment:             flex.ExpandStringPointer(m.Comment),
@@ -130,7 +130,7 @@ func (m *IpamsvcIpamHostModel) Expand(ctx context.Context, diags *diag.Diagnosti
 	return to
 }
 
-func FlattenIpamsvcIpamHost(ctx context.Context, from *ipam.IpamsvcIpamHost, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcIpamHost(ctx context.Context, from *ipam.IpamHost, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcIpamHostAttrTypes)
 	}
@@ -141,7 +141,7 @@ func FlattenIpamsvcIpamHost(ctx context.Context, from *ipam.IpamsvcIpamHost, dia
 	return t
 }
 
-func (m *IpamsvcIpamHostModel) Flatten(ctx context.Context, from *ipam.IpamsvcIpamHost, diags *diag.Diagnostics) {
+func (m *IpamsvcIpamHostModel) Flatten(ctx context.Context, from *ipam.IpamHost, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
