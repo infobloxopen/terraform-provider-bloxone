@@ -38,10 +38,12 @@ var ProtoBgpConfigAttrTypes = map[string]attr.Type{
 
 var ProtoBgpConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"asn": schema.Int64Attribute{
-		Optional: true,
+		Required: true,
 	},
 	"asn_text": schema.StringAttribute{
-		Optional:            true,
+		// TODO: keeping computed for now, but should verify if this can be provided as an alternative to asn
+		Optional: true,
+
 		MarkdownDescription: "Examples:     ASDOT        ASPLAIN     INTEGER     VALID/INVALID     0.1          1           1           Valid     1            1           1           Valid     65535        65535       65535       Valid     0.65535      65535       65535       Valid     1.0          65536       65536       Valid     1.1          65537       65537       Valid     1.65535      131071      131071      Valid     65535.0      4294901760  4294901760  Valid     65535.1      4294901761  4294901761  Valid     65535.65535  4294967295  4294967295  Valid      0.65536                              Invalid     65535.655536                         Invalid     65536.0                              Invalid     65536.65535                          Invalid                  4294967296              Invalid",
 	},
 	"fields": schema.SingleNestedAttribute{
@@ -49,10 +51,11 @@ var ProtoBgpConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:   true,
 	},
 	"holddown_secs": schema.Int64Attribute{
-		Optional: true,
+		Required: true,
 	},
 	"keep_alive_secs": schema.Int64Attribute{
 		Optional: true,
+		Computed: true,
 	},
 	"link_detect": schema.BoolAttribute{
 		Optional: true,

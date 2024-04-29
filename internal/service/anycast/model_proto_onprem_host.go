@@ -2,11 +2,12 @@ package anycast
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -47,6 +48,7 @@ var ProtoOnpremHostResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: ProtoAnycastConfigRefResourceSchemaAttributes,
 		},
 		Optional: true,
+		Computed: true,
 	},
 	"config_bgp": schema.SingleNestedAttribute{
 		Attributes: ProtoBgpConfigResourceSchemaAttributes,
@@ -62,25 +64,36 @@ var ProtoOnpremHostResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"created_at": schema.StringAttribute{
 		CustomType: timetypes.RFC3339Type{},
-		Optional:   true,
+		Computed:   true,
 	},
 	"id": schema.Int64Attribute{
-		Computed: true,
+		Required: true,
+		//Computed: true,
+		PlanModifiers: []planmodifier.Int64{
+			int64planmodifier.UseStateForUnknown(),
+		},
 	},
 	"ip_address": schema.StringAttribute{
-		Optional:            true,
+		Computed: true,
+		//Optional: true,
+		//PlanModifiers: []planmodifier.String{
+		//	stringplanmodifier.UseStateForUnknown(),
+		//},
 		MarkdownDescription: "IPv4 address of the on-prem host",
 	},
 	"ipv6_address": schema.StringAttribute{
-		Optional:            true,
+		Computed: true,
+		//PlanModifiers: []planmodifier.String{
+		//	stringplanmodifier.UseStateForUnknown(),
+		//},
 		MarkdownDescription: "IPv6 address of the on-prem host",
 	},
 	"name": schema.StringAttribute{
-		Optional: true,
+		Computed: true,
 	},
 	"updated_at": schema.StringAttribute{
 		CustomType: timetypes.RFC3339Type{},
-		Optional:   true,
+		Computed:   true,
 	},
 }
 

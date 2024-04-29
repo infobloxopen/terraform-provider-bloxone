@@ -35,8 +35,8 @@ var ProtoOnpremHostRefAttrTypes = map[string]attr.Type{
 
 var ProtoOnpremHostRefResourceSchemaAttributes = map[string]schema.Attribute{
 	"id": schema.Int64Attribute{
-		Optional:            true,
-		Computed:            true,
+		//Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The resource identifier.",
 		PlanModifiers: []planmodifier.Int64{
 			int64planmodifier.UseStateForUnknown(),

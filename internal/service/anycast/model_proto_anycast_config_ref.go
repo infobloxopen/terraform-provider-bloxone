@@ -26,11 +26,12 @@ var ProtoAnycastConfigRefAttrTypes = map[string]attr.Type{
 
 var ProtoAnycastConfigRefResourceSchemaAttributes = map[string]schema.Attribute{
 	"anycast_config_name": schema.StringAttribute{
-		Optional: true,
+		Computed: true,
 	},
 	"routing_protocols": schema.ListAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Routing protocols enabled for this anycast configuration, on a particular host. Valid protocol names are \"BGP\", \"OSPF\"/\"OSPFv2\", \"OSPFv3\".",
 	},
 }

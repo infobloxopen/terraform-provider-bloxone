@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"net/http"
 	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/infobloxopen/bloxone-go-client/anycast"
@@ -15,7 +16,7 @@ import (
 )
 
 func TestAccOnPremAnycastHostResource_basic(t *testing.T) {
-	var resourceName = "bloxone_anycast_ac_config.test"
+	var resourceName = "bloxone_anycast_host.test"
 	var v anycast.ProtoOnpremHost
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -24,7 +25,7 @@ func TestAccOnPremAnycastHostResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOnPremAnycastHostBasicConfig("anycast1", "DHCP", "10.0.0.7"),
+				Config: testAccOnPremAnycastHostBasicConfig(),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOnPremAnycastHostExists(context.Background(), resourceName, &v),
 					// TODO: check and validate these
@@ -32,7 +33,6 @@ func TestAccOnPremAnycastHostResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
-					resource.TestCheckResourceAttrSet(resourceName, "account_id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -50,7 +50,7 @@ func TestAccOnPremAnycastHostResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckOnPremAnycastHostDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOnPremAnycastHostBasicConfig("anycast_test", "DHCP", "10.0.0.7"),
+				Config: testAccOnPremAnycastHostBasicConfig(),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOnPremAnycastHostExists(context.Background(), resourceName, &v),
 					testAccCheckOnPremAnycastHostDisappears(context.Background(), &v),
@@ -313,27 +313,36 @@ func testAccCheckOnPremAnycastHostDisappears(ctx context.Context, v *anycast.Pro
 	}
 }
 
-func testAccOnPremAnycastHostBasicConfig(name, service, anycastIpAddress string) string {
-	// TODO: create basic resource with required fields
+func testAccBaseWithAnycastConfig() string {
 	return fmt.Sprintf(`
-data "bloxone_infra_services" "anycast_services" {
-    filters = {
-      service_type = "anycast"
-    }
-}
-
 data "bloxone_infra_hosts" "anycast_hosts" {
-    filters = {
-      pool_id = data.bloxone_infra_services.anycast_services.results.0.pool_id
-    }
+  filters = {
+    display_name = "anycast_real"
+  }
 }
 
-resource "bloxone_anycast_host "test" {
-    name = %q
-    service= %q
-    anycast_ip_address = %q
+resource "bloxone_anycast_ac_config" "test_onprem_hosts" {
+  anycast_ip_address = "10.10.0.1"
+  name               = "Anycast_Config_Example"
+  service            = "DNS"
+
+  onprem_hosts       = [
+    {
+      id   = data.bloxone_infra_hosts.anycast_hosts.results.0.legacy_id
+      name = data.bloxone_infra_hosts.anycast_hosts.results.0.display_name
+    }
+  ]
 }
-`, name, service, anycastIpAddress)
+`)
+}
+
+func testAccOnPremAnycastHostBasicConfig() string {
+	config := fmt.Sprintf(`
+resource "bloxone_anycast_host" "test" {
+  id = one(data.bloxone_infra_hosts.anycast_hosts.results).legacy_id
+}
+`)
+	return strings.Join([]string{testAccBaseWithAnycastConfig(), config}, "")
 }
 
 func testAccOnPremAnycastHostAnycastIpAddress(anycastIpAddress, name, service string) string {
