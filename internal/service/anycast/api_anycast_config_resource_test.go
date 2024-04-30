@@ -78,7 +78,7 @@ func TestAccOnPremAnycastManagerResource_AnycastIpAddress(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", anycastName),
-					resource.TestCheckResourceAttr(resourceName, "anycast_ip_address", "10.0.0.2"),
+					resource.TestCheckResourceAttr(resourceName, "anycast_config_name", "10.0.0.2"),
 				),
 			},
 			// Update and Read

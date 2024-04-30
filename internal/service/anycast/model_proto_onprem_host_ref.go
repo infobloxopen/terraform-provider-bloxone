@@ -53,7 +53,7 @@ var ProtoOnpremHostRefResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "IPv6 address of the host in string format",
 	},
 	"name": schema.StringAttribute{
-		Optional:            true,
+		//Optional:            true,
 		Computed:            true,
 		MarkdownDescription: `The name of the anycast.`,
 	},
