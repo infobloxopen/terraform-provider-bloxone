@@ -155,11 +155,11 @@ resource "bloxone_infra_service" "example" {
 }
 
 func testAccDfpBasicConfig(hostName string) string {
-	config := fmt.Sprintf(`
+	config := `
 resource "bloxone_dfp_service" "test" {
 	service_id = bloxone_infra_service.example.id
 }
-`)
+`
 	return strings.Join([]string{testAccBaseWithInfraService(hostName), config}, "")
 }
 
