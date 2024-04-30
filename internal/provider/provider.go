@@ -125,6 +125,7 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 
 		keys.NewTsigResource,
 
+		fw.NewSecurityPoliciesResource,
 		fw.NewAccessCodesResource,
 		fw.NewNamedListsResource,
 		fw.NewNetworkListsResource,
@@ -184,6 +185,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		keys.NewTsigDataSource,
 		keys.NewKerberosDataSource,
 
+		fw.NewSecurityPoliciesDataSource,
 		fw.NewAccessCodesDataSource,
 		fw.NewNamedListsDataSource,
 		fw.NewNetworkListsDataSource,
