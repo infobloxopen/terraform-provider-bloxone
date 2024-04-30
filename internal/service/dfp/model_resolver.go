@@ -31,7 +31,7 @@ var ResolverAttrTypes = map[string]attr.Type{
 var ResolverResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
 		Optional:            true,
-		MarkdownDescription: "address that can be used as resolver",
+		MarkdownDescription: "Address that can be used as resolver",
 	},
 	"is_fallback": schema.BoolAttribute{
 		Optional:            true,

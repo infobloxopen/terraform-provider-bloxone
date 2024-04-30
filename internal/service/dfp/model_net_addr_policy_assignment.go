@@ -27,7 +27,7 @@ var NetAddrPolicyAssignmentAttrTypes = map[string]attr.Type{
 var NetAddrPolicyAssignmentResourceSchemaAttributes = map[string]schema.Attribute{
 	"addr_net": schema.StringAttribute{
 		Optional:            true,
-		MarkdownDescription: "network address in IPv4 CIDR (address/bitmask length) string format",
+		MarkdownDescription: "Network address in IPv4 CIDR (address/bitmask length) string format",
 	},
 	"policy_id": schema.Int64Attribute{
 		Optional:            true,

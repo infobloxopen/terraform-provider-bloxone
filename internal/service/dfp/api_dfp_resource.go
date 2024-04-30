@@ -3,17 +3,14 @@ package dfp
 import (
 	"context"
 	"fmt"
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
-	"net/http"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
+	"net/http"
 )
-
-const HostSyncTimeout = 2 * time.Minute
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &DfpResource{}
@@ -34,7 +31,7 @@ func (r *DfpResource) Metadata(ctx context.Context, req resource.MetadataRequest
 
 func (r *DfpResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Manages a DNS Forwarding Proxy.",
+		MarkdownDescription: "Manages a DNS Forwarding Proxy Service.",
 		Attributes:          DfpResourceSchemaAttributes,
 	}
 }

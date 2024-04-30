@@ -2,6 +2,7 @@ package dfp
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -66,14 +67,14 @@ var DfpResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The list of internal or local DNS servers' IPv4 or IPv6 addresses that are used as ELB IPs.",
 	},
 	"forwarding_policy": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "Policy Identifier for DNS Forwarding Proxy.",
 	},
 	"host": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: DfpHostResourceSchemaAttributes,
 		},
-		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "host information. For internal Use only.",
 	},
@@ -117,7 +118,8 @@ var DfpResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ResolverResourceSchemaAttributes,
 		},
-		Optional: true,
+		Optional:            true,
+		MarkdownDescription: "List of DNS resolvers",
 	},
 	"service_id": schema.StringAttribute{
 		Required:            true,
@@ -211,7 +213,6 @@ func (m *DfpModel) Flatten(ctx context.Context, from *dfp.Dfp, diags *diag.Diagn
 	m.PolicyId = flex.FlattenInt32Pointer(from.PolicyId)
 	m.PopRegionId = flex.FlattenInt32Pointer(from.PopRegionId)
 	m.ResolversAll = flex.FlattenFrameworkListNestedBlock(ctx, from.ResolversAll, ResolverAttrTypes, diags, FlattenResolver)
-	//m.ServiceId = flex.FlattenStringPointer(from.ServiceId)
 	m.ServiceName = flex.FlattenStringPointer(from.ServiceName)
 	m.SiteId = flex.FlattenStringPointer(from.SiteId)
 	m.UpdatedTime = timetypes.NewRFC3339TimePointerValue(from.UpdatedTime)
