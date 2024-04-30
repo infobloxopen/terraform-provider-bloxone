@@ -57,7 +57,7 @@ var ProtoBgpNeighborResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandProtoBgpNeighbor(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.ProtoBgpNeighbor {
+func ExpandProtoBgpNeighbor(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.BgpNeighbor {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -69,11 +69,11 @@ func ExpandProtoBgpNeighbor(ctx context.Context, o types.Object, diags *diag.Dia
 	return m.Expand(ctx, diags)
 }
 
-func (m *ProtoBgpNeighborModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.ProtoBgpNeighbor {
+func (m *ProtoBgpNeighborModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.BgpNeighbor {
 	if m == nil {
 		return nil
 	}
-	to := &anycast.ProtoBgpNeighbor{
+	to := &anycast.BgpNeighbor{
 		Asn:         flex.ExpandInt64Pointer(m.Asn),
 		AsnText:     flex.ExpandStringPointer(m.AsnText),
 		IpAddress:   flex.ExpandStringPointer(m.IpAddress),
@@ -84,7 +84,7 @@ func (m *ProtoBgpNeighborModel) Expand(ctx context.Context, diags *diag.Diagnost
 	return to
 }
 
-func FlattenProtoBgpNeighbor(ctx context.Context, from *anycast.ProtoBgpNeighbor, diags *diag.Diagnostics) types.Object {
+func FlattenProtoBgpNeighbor(ctx context.Context, from *anycast.BgpNeighbor, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ProtoBgpNeighborAttrTypes)
 	}
@@ -95,7 +95,7 @@ func FlattenProtoBgpNeighbor(ctx context.Context, from *anycast.ProtoBgpNeighbor
 	return t
 }
 
-func (m *ProtoBgpNeighborModel) Flatten(ctx context.Context, from *anycast.ProtoBgpNeighbor, diags *diag.Diagnostics) {
+func (m *ProtoBgpNeighborModel) Flatten(ctx context.Context, from *anycast.BgpNeighbor, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

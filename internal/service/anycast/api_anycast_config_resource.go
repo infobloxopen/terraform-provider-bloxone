@@ -68,7 +68,7 @@ func (r *OnPremAnycastManagerResource) Create(ctx context.Context, req resource.
 
 	apiRes, _, err := r.client.AnycastAPI.
 		OnPremAnycastManagerAPI.
-		OnPremAnycastManagerCreateAnycastConfig(ctx).
+		CreateAnycastConfig(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -95,7 +95,7 @@ func (r *OnPremAnycastManagerResource) Read(ctx context.Context, req resource.Re
 
 	apiRes, httpRes, err := r.client.AnycastAPI.
 		OnPremAnycastManagerAPI.
-		OnPremAnycastManagerReadAnycastConfigWithRuntimeStatus(ctx, data.Id.ValueInt64()).
+		ReadAnycastConfigWithRuntimeStatus(ctx, data.Id.ValueInt64()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *OnPremAnycastManagerResource) Update(ctx context.Context, req resource.
 
 	apiRes, _, err := r.client.AnycastAPI.
 		OnPremAnycastManagerAPI.
-		OnPremAnycastManagerUpdateAnycastConfig(ctx, data.Id.ValueInt64()).
+		UpdateAnycastConfig(ctx, data.Id.ValueInt64()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *OnPremAnycastManagerResource) Delete(ctx context.Context, req resource.
 
 	_, httpRes, err := r.client.AnycastAPI.
 		OnPremAnycastManagerAPI.
-		OnPremAnycastManagerDeleteAnycastConfig(ctx, data.Id.ValueInt64()).
+		DeleteAnycastConfig(ctx, data.Id.ValueInt64()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

@@ -17,7 +17,7 @@ import (
 
 func TestAccOnPremAnycastHostResource_basic(t *testing.T) {
 	var resourceName = "bloxone_anycast_host.test"
-	var v anycast.ProtoOnpremHost
+	var v anycast.OnpremHost
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -41,7 +41,7 @@ func TestAccOnPremAnycastHostResource_basic(t *testing.T) {
 
 func TestAccOnPremAnycastHostResource_disappears(t *testing.T) {
 	resourceName := "bloxone_anycast_host.test"
-	var v anycast.ProtoOnpremHost
+	var v anycast.OnpremHost
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -62,7 +62,7 @@ func TestAccOnPremAnycastHostResource_disappears(t *testing.T) {
 
 func TestAccOnPremAnycastHostResource_enableRouting(t *testing.T) {
 	var resourceName = "bloxone_anycast_host.test"
-	var v anycast.ProtoOnpremHost
+	var v anycast.OnpremHost
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -99,7 +99,7 @@ func TestAccOnPremAnycastHostResource_enableRouting(t *testing.T) {
 
 func TestAccOnPremAnycastHostResource_BGP(t *testing.T) {
 	var resourceName = "bloxone_anycast_host.test"
-	var v anycast.ProtoOnpremHost
+	var v anycast.OnpremHost
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -130,7 +130,7 @@ func TestAccOnPremAnycastHostResource_BGP(t *testing.T) {
 
 func TestAccOnPremAnycastHostResource_OSPF(t *testing.T) {
 	var resourceName = "bloxone_anycast_host.test"
-	var v anycast.ProtoOnpremHost
+	var v anycast.OnpremHost
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -173,7 +173,7 @@ func TestAccOnPremAnycastHostResource_OSPF(t *testing.T) {
 	})
 }
 
-func testAccCheckOnPremAnycastHostExists(ctx context.Context, resourceName string, v *anycast.ProtoOnpremHost) resource.TestCheckFunc {
+func testAccCheckOnPremAnycastHostExists(ctx context.Context, resourceName string, v *anycast.OnpremHost) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -186,7 +186,7 @@ func testAccCheckOnPremAnycastHostExists(ctx context.Context, resourceName strin
 		}
 		apiRes, _, err := acctest.BloxOneClient.AnycastAPI.
 			OnPremAnycastManagerAPI.
-			OnPremAnycastManagerGetOnpremHost(ctx, id). //OnPremAnycastManagerReadAnycastConfigWithRuntimeStatus
+			GetOnpremHost(ctx, id).
 			Execute()
 		if err != nil {
 			return err
@@ -199,12 +199,12 @@ func testAccCheckOnPremAnycastHostExists(ctx context.Context, resourceName strin
 	}
 }
 
-func testAccCheckOnPremAnycastHostDestroy(ctx context.Context, v *anycast.ProtoOnpremHost) resource.TestCheckFunc {
+func testAccCheckOnPremAnycastHostDestroy(ctx context.Context, v *anycast.OnpremHost) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.AnycastAPI.
 			OnPremAnycastManagerAPI.
-			OnPremAnycastManagerGetOnpremHost(ctx, *v.Id). //OnPremAnycastManagerReadAnycastConfigWithRuntimeStatus
+			GetOnpremHost(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -217,12 +217,12 @@ func testAccCheckOnPremAnycastHostDestroy(ctx context.Context, v *anycast.ProtoO
 	}
 }
 
-func testAccCheckOnPremAnycastHostDisappears(ctx context.Context, v *anycast.ProtoOnpremHost) resource.TestCheckFunc {
+func testAccCheckOnPremAnycastHostDisappears(ctx context.Context, v *anycast.OnpremHost) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, _, err := acctest.BloxOneClient.AnycastAPI.
 			OnPremAnycastManagerAPI.
-			OnPremAnycastManagerDeleteOnpremHost(ctx, *v.Id). //testAccCheckOnPremAnycastHostDisappears
+			DeleteOnpremHost(ctx, *v.Id). //testAccCheckOnPremAnycastHostDisappears
 			Execute()
 		if err != nil {
 			return err

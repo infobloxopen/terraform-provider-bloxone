@@ -14,7 +14,7 @@ import (
 func TestAccOnPremAnycastManagerDataSource_Services(t *testing.T) {
 	dataSourceName := "data.bloxone_anycast_configs.test"
 	resourceName := "bloxone_anycast_config.test_onprem_hosts"
-	var v anycast.ProtoAnycastConfig
+	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
 	resource.Test(t, resource.TestCase{
@@ -39,7 +39,7 @@ func TestAccOnPremAnycastManagerDataSource_Services(t *testing.T) {
 func TestAccOnPremAnycastManagerDataSource_HostIDs(t *testing.T) {
 	dataSourceName := "data.bloxone_anycast_configs.test"
 	resourceName := "bloxone_anycast_config.test_onprem_hosts"
-	var v anycast.ProtoAnycastConfig
+	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
 	resource.Test(t, resource.TestCase{
@@ -61,10 +61,10 @@ func TestAccOnPremAnycastManagerDataSource_HostIDs(t *testing.T) {
 }
 
 func TestAccOnPremAnycastManagerDataSource_IsConfigured(t *testing.T) {
-	t.Skip("Skipping until ospf and bgp is implemented ")
+	//t.Skip("Skipping until ospf and bgp is implemented ")
 	dataSourceName := "data.bloxone_anycast_configs.test"
 	resourceName := "bloxone_anycast_config.test_onprem_hosts"
-	var v anycast.ProtoAnycastConfig
+	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
 	resource.Test(t, resource.TestCase{
@@ -88,7 +88,7 @@ func TestAccOnPremAnycastManagerDataSource_IsConfigured(t *testing.T) {
 func TestAccOnPremAnycastManagerDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_anycast_configs.test"
 	resourceName := "bloxone_anycast_config.test"
-	var v anycast.ProtoAnycastConfig
+	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
 	resource.Test(t, resource.TestCase{
@@ -147,12 +147,7 @@ resource "bloxone_anycast_config" "test_onprem_hosts" {
     anycast_ip_address = %q
     name = %q
     service = %q
-    onprem_hosts = [
-	{
-		id = data.bloxone_infra_hosts.anycast_hosts.results.0.legacy_id
-		name = data.bloxone_infra_hosts.anycast_hosts.results.0.display_name
-	}
-	]
+
 }
 data "bloxone_anycast_configs" "test" {
 	service = %q
@@ -179,12 +174,7 @@ resource "bloxone_anycast_config" "test_onprem_hosts" {
     anycast_ip_address = %q
     name = %q
     service = %q
-    onprem_hosts = [
-	{
-		id = data.bloxone_infra_hosts.anycast_hosts.results.0.legacy_id
-		name = data.bloxone_infra_hosts.anycast_hosts.results.0.display_name
-	}
-	]
+
 }
 data "bloxone_anycast_configs" "test" {
 	host_id = data.bloxone_infra_hosts.anycast_hosts.results.0.legacy_id
@@ -211,12 +201,7 @@ resource "bloxone_anycast_config" "test_onprem_hosts" {
     anycast_ip_address = %q
     name = %q
     service = %q
-    onprem_hosts = [
-	{
-		id = data.bloxone_infra_hosts.anycast_hosts.results.0.legacy_id
-		name = data.bloxone_infra_hosts.anycast_hosts.results.0.display_name
-	}
-	]
+
 }
 data "bloxone_anycast_configs" "test" {
 	is_configured = false

@@ -86,7 +86,7 @@ var ProtoOspfConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandProtoOspfConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.ProtoOspfConfig {
+func ExpandProtoOspfConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.OspfConfig {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -98,11 +98,11 @@ func ExpandProtoOspfConfig(ctx context.Context, o types.Object, diags *diag.Diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *ProtoOspfConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.ProtoOspfConfig {
+func (m *ProtoOspfConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.OspfConfig {
 	if m == nil {
 		return nil
 	}
-	to := &anycast.ProtoOspfConfig{
+	to := &anycast.OspfConfig{
 		Area:                flex.ExpandStringPointer(m.Area),
 		AreaType:            flex.ExpandStringPointer(m.AreaType),
 		AuthenticationKey:   flex.ExpandStringPointer(m.AuthenticationKey),
@@ -119,7 +119,7 @@ func (m *ProtoOspfConfigModel) Expand(ctx context.Context, diags *diag.Diagnosti
 	return to
 }
 
-func FlattenProtoOspfConfig(ctx context.Context, from *anycast.ProtoOspfConfig, diags *diag.Diagnostics) types.Object {
+func FlattenProtoOspfConfig(ctx context.Context, from *anycast.OspfConfig, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ProtoOspfConfigAttrTypes)
 	}
@@ -130,7 +130,7 @@ func FlattenProtoOspfConfig(ctx context.Context, from *anycast.ProtoOspfConfig, 
 	return t
 }
 
-func (m *ProtoOspfConfigModel) Flatten(ctx context.Context, from *anycast.ProtoOspfConfig, diags *diag.Diagnostics) {
+func (m *ProtoOspfConfigModel) Flatten(ctx context.Context, from *anycast.OspfConfig, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

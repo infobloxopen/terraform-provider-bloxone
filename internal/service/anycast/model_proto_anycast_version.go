@@ -33,7 +33,7 @@ var ProtoAnycastVersionResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandProtoAnycastVersion(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.ProtoAnycastVersion {
+func ExpandProtoAnycastVersion(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.AnycastVersion {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -45,18 +45,18 @@ func ExpandProtoAnycastVersion(ctx context.Context, o types.Object, diags *diag.
 	return m.Expand(ctx, diags)
 }
 
-func (m *ProtoAnycastVersionModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.ProtoAnycastVersion {
+func (m *ProtoAnycastVersionModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.AnycastVersion {
 	if m == nil {
 		return nil
 	}
-	to := &anycast.ProtoAnycastVersion{
+	to := &anycast.AnycastVersion{
 		AccountId: flex.ExpandInt64Pointer(m.AccountId),
 		Version:   flex.ExpandStringPointer(m.Version),
 	}
 	return to
 }
 
-func FlattenProtoAnycastVersion(ctx context.Context, from *anycast.ProtoAnycastVersion, diags *diag.Diagnostics) types.Object {
+func FlattenProtoAnycastVersion(ctx context.Context, from *anycast.AnycastVersion, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ProtoAnycastVersionAttrTypes)
 	}
@@ -67,7 +67,7 @@ func FlattenProtoAnycastVersion(ctx context.Context, from *anycast.ProtoAnycastV
 	return t
 }
 
-func (m *ProtoAnycastVersionModel) Flatten(ctx context.Context, from *anycast.ProtoAnycastVersion, diags *diag.Diagnostics) {
+func (m *ProtoAnycastVersionModel) Flatten(ctx context.Context, from *anycast.AnycastVersion, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

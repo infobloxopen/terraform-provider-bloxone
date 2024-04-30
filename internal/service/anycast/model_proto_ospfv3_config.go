@@ -60,7 +60,7 @@ var ProtoOspfv3ConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandProtoOspfv3Config(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.ProtoOspfv3Config {
+func ExpandProtoOspfv3Config(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.Ospfv3Config {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -72,11 +72,11 @@ func ExpandProtoOspfv3Config(ctx context.Context, o types.Object, diags *diag.Di
 	return m.Expand(ctx, diags)
 }
 
-func (m *ProtoOspfv3ConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.ProtoOspfv3Config {
+func (m *ProtoOspfv3ConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.Ospfv3Config {
 	if m == nil {
 		return nil
 	}
-	to := &anycast.ProtoOspfv3Config{
+	to := &anycast.Ospfv3Config{
 		Area:               flex.ExpandStringPointer(m.Area),
 		Cost:               flex.ExpandInt64Pointer(m.Cost),
 		DeadInterval:       flex.ExpandInt64Pointer(m.DeadInterval),
@@ -88,7 +88,7 @@ func (m *ProtoOspfv3ConfigModel) Expand(ctx context.Context, diags *diag.Diagnos
 	return to
 }
 
-func FlattenProtoOspfv3Config(ctx context.Context, from *anycast.ProtoOspfv3Config, diags *diag.Diagnostics) types.Object {
+func FlattenProtoOspfv3Config(ctx context.Context, from *anycast.Ospfv3Config, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ProtoOspfv3ConfigAttrTypes)
 	}
@@ -99,7 +99,7 @@ func FlattenProtoOspfv3Config(ctx context.Context, from *anycast.ProtoOspfv3Conf
 	return t
 }
 
-func (m *ProtoOspfv3ConfigModel) Flatten(ctx context.Context, from *anycast.ProtoOspfv3Config, diags *diag.Diagnostics) {
+func (m *ProtoOspfv3ConfigModel) Flatten(ctx context.Context, from *anycast.Ospfv3Config, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

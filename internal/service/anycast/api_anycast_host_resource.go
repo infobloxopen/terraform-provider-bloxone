@@ -74,7 +74,7 @@ func (r *OnPremAnycastHostResource) Create(ctx context.Context, req resource.Cre
 	// This is required, or any name set by the user is simply overwritten by the Host sync process.
 	hostRes, _, err := r.client.InfraManagementAPI.
 		HostsAPI.
-		HostsList(ctx).
+		List(ctx).
 		Filter(fmt.Sprintf("legacy_id == '%d'", data.Id.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create OnPremAnycastManager, got error: %s", err))
@@ -90,7 +90,7 @@ func (r *OnPremAnycastHostResource) Create(ctx context.Context, req resource.Cre
 	//now we call put call
 	apiRes, _, err := r.client.AnycastAPI.
 		OnPremAnycastManagerAPI.
-		OnPremAnycastManagerUpdateOnpremHost(ctx, data.Id.ValueInt64()).
+		UpdateOnpremHost(ctx, data.Id.ValueInt64()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -120,7 +120,7 @@ func (r *OnPremAnycastHostResource) Read(ctx context.Context, req resource.ReadR
 	//OnPremAnycastManagerReadAnycastConfigWithRuntimeStatus
 	apiRes, httpRes, err := r.client.AnycastAPI.
 		OnPremAnycastManagerAPI.
-		OnPremAnycastManagerGetOnpremHost(ctx, data.Id.ValueInt64()).
+		GetOnpremHost(ctx, data.Id.ValueInt64()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -151,7 +151,7 @@ func (r *OnPremAnycastHostResource) Update(ctx context.Context, req resource.Upd
 	//OnPremAnycastManagerUpdateAnycastConfig
 	apiRes, _, err := r.client.AnycastAPI.
 		OnPremAnycastManagerAPI.
-		OnPremAnycastManagerUpdateOnpremHost(ctx, data.Id.ValueInt64()).
+		UpdateOnpremHost(ctx, data.Id.ValueInt64()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -178,7 +178,7 @@ func (r *OnPremAnycastHostResource) Delete(ctx context.Context, req resource.Del
 	//OnPremAnycastManagerDeleteAnycastConfig
 	_, httpRes, err := r.client.AnycastAPI.
 		OnPremAnycastManagerAPI.
-		OnPremAnycastManagerDeleteOnpremHost(ctx, data.Id.ValueInt64()).
+		DeleteOnpremHost(ctx, data.Id.ValueInt64()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

@@ -66,7 +66,7 @@ var ProtoOnpremHostRefResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandProtoOnpremHostRef(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.ProtoOnpremHostRef {
+func ExpandProtoOnpremHostRef(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.OnpremHostRef {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -78,11 +78,11 @@ func ExpandProtoOnpremHostRef(ctx context.Context, o types.Object, diags *diag.D
 	return m.Expand(ctx, diags)
 }
 
-func (m *ProtoOnpremHostRefModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.ProtoOnpremHostRef {
+func (m *ProtoOnpremHostRefModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.OnpremHostRef {
 	if m == nil {
 		return nil
 	}
-	to := &anycast.ProtoOnpremHostRef{
+	to := &anycast.OnpremHostRef{
 		IpAddress:     flex.ExpandStringPointer(m.IpAddress),
 		Id:            flex.ExpandInt64Pointer(m.Id),
 		Ipv6Address:   flex.ExpandStringPointer(m.Ipv6Address),
@@ -92,7 +92,7 @@ func (m *ProtoOnpremHostRefModel) Expand(ctx context.Context, diags *diag.Diagno
 	return to
 }
 
-func FlattenProtoOnpremHostRef(ctx context.Context, from *anycast.ProtoOnpremHostRef, diags *diag.Diagnostics) types.Object {
+func FlattenProtoOnpremHostRef(ctx context.Context, from *anycast.OnpremHostRef, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ProtoOnpremHostRefAttrTypes)
 	}
@@ -103,7 +103,7 @@ func FlattenProtoOnpremHostRef(ctx context.Context, from *anycast.ProtoOnpremHos
 	return t
 }
 
-func (m *ProtoOnpremHostRefModel) Flatten(ctx context.Context, from *anycast.ProtoOnpremHostRef, diags *diag.Diagnostics) {
+func (m *ProtoOnpremHostRefModel) Flatten(ctx context.Context, from *anycast.OnpremHostRef, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

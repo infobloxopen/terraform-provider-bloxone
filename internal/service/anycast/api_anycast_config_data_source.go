@@ -28,7 +28,7 @@ type OnPremAnycastManagerDataSource struct {
 }
 
 func (d *OnPremAnycastManagerDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "anycast_ac_configs"
+	resp.TypeName = req.ProviderTypeName + "_" + "anycast_configs"
 }
 
 type ProtoAnycastConfigModelWithFilter struct {
@@ -40,7 +40,7 @@ type ProtoAnycastConfigModelWithFilter struct {
 	IsConfigued types.Bool   `tfsdk:"is_configured"`
 }
 
-func (m *ProtoAnycastConfigModelWithFilter) FlattenResults(ctx context.Context, from []anycast.ProtoAnycastConfig, diags *diag.Diagnostics) {
+func (m *ProtoAnycastConfigModelWithFilter) FlattenResults(ctx context.Context, from []anycast.AnycastConfig, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -115,7 +115,7 @@ func (d *OnPremAnycastManagerDataSource) Read(ctx context.Context, req datasourc
 
 	apiRes, _, err := d.client.AnycastAPI.
 		OnPremAnycastManagerAPI.
-		OnPremAnycastManagerGetAnycastConfigList(ctx).
+		GetAnycastConfigList(ctx).
 		Service(flex.ExpandString(data.Service)).
 		HostId(flex.ExpandInt64(data.HostID)).
 		IsConfigured(flex.ExpandBool(data.IsConfigued)).
