@@ -48,7 +48,7 @@ var ProtoOnpremHostResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: ProtoAnycastConfigRefResourceSchemaAttributes,
 		},
 		Optional: true,
-		Computed: true,
+		//Computed: true,
 	},
 	"config_bgp": schema.SingleNestedAttribute{
 		Attributes: ProtoBgpConfigResourceSchemaAttributes,

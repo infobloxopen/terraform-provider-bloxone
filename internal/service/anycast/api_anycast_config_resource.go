@@ -26,7 +26,7 @@ type OnPremAnycastManagerResource struct {
 }
 
 func (r *OnPremAnycastManagerResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "anycast_ac_config"
+	resp.TypeName = req.ProviderTypeName + "_" + "anycast_config"
 }
 
 func (r *OnPremAnycastManagerResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {

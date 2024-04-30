@@ -12,8 +12,8 @@ import (
 )
 
 func TestAccOnPremAnycastManagerDataSource_Services(t *testing.T) {
-	dataSourceName := "data.bloxone_anycast_ac_configs.test"
-	resourceName := "bloxone_anycast_ac_config.test_onprem_hosts"
+	dataSourceName := "data.bloxone_anycast_configs.test"
+	resourceName := "bloxone_anycast_config.test_onprem_hosts"
 	var v anycast.ProtoAnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
@@ -37,8 +37,8 @@ func TestAccOnPremAnycastManagerDataSource_Services(t *testing.T) {
 }
 
 func TestAccOnPremAnycastManagerDataSource_HostIDs(t *testing.T) {
-	dataSourceName := "data.bloxone_anycast_ac_configs.test"
-	resourceName := "bloxone_anycast_ac_config.test_onprem_hosts"
+	dataSourceName := "data.bloxone_anycast_configs.test"
+	resourceName := "bloxone_anycast_config.test_onprem_hosts"
 	var v anycast.ProtoAnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
@@ -62,8 +62,8 @@ func TestAccOnPremAnycastManagerDataSource_HostIDs(t *testing.T) {
 
 func TestAccOnPremAnycastManagerDataSource_IsConfigured(t *testing.T) {
 	t.Skip("Skipping until ospf and bgp is implemented ")
-	dataSourceName := "data.bloxone_anycast_ac_configs.test"
-	resourceName := "bloxone_anycast_ac_config.test_onprem_hosts"
+	dataSourceName := "data.bloxone_anycast_configs.test"
+	resourceName := "bloxone_anycast_config.test_onprem_hosts"
 	var v anycast.ProtoAnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
@@ -86,8 +86,8 @@ func TestAccOnPremAnycastManagerDataSource_IsConfigured(t *testing.T) {
 }
 
 func TestAccOnPremAnycastManagerDataSource_TagFilters(t *testing.T) {
-	dataSourceName := "data.bloxone_anycast_ac_configs.test"
-	resourceName := "bloxone_anycast_ac_config.test"
+	dataSourceName := "data.bloxone_anycast_configs.test"
+	resourceName := "bloxone_anycast_config.test"
 	var v anycast.ProtoAnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
@@ -143,7 +143,7 @@ data "bloxone_infra_hosts" "anycast_hosts" {
     }
 }
 
-resource "bloxone_anycast_ac_config" "test_onprem_hosts" {
+resource "bloxone_anycast_config" "test_onprem_hosts" {
     anycast_ip_address = %q
     name = %q
     service = %q
@@ -154,9 +154,9 @@ resource "bloxone_anycast_ac_config" "test_onprem_hosts" {
 	}
 	]
 }
-data "bloxone_anycast_ac_configs" "test" {
+data "bloxone_anycast_configs" "test" {
 	service = %q
-	depends_on = [bloxone_anycast_ac_config.test_onprem_hosts]
+	depends_on = [bloxone_anycast_config.test_onprem_hosts]
 }
 `, anycastIpAddress, name, service, service)
 }
@@ -175,7 +175,7 @@ data "bloxone_infra_hosts" "anycast_hosts" {
     }
 }
 
-resource "bloxone_anycast_ac_config" "test_onprem_hosts" {
+resource "bloxone_anycast_config" "test_onprem_hosts" {
     anycast_ip_address = %q
     name = %q
     service = %q
@@ -186,9 +186,9 @@ resource "bloxone_anycast_ac_config" "test_onprem_hosts" {
 	}
 	]
 }
-data "bloxone_anycast_ac_configs" "test" {
+data "bloxone_anycast_configs" "test" {
 	host_id = data.bloxone_infra_hosts.anycast_hosts.results.0.legacy_id
-	depends_on = [bloxone_anycast_ac_config.test_onprem_hosts]
+	depends_on = [bloxone_anycast_config.test_onprem_hosts]
 }
 `, anycastIpAddress, name, service)
 }
@@ -207,7 +207,7 @@ data "bloxone_infra_hosts" "anycast_hosts" {
     }
 }
 
-resource "bloxone_anycast_ac_config" "test_onprem_hosts" {
+resource "bloxone_anycast_config" "test_onprem_hosts" {
     anycast_ip_address = %q
     name = %q
     service = %q
@@ -218,16 +218,16 @@ resource "bloxone_anycast_ac_config" "test_onprem_hosts" {
 	}
 	]
 }
-data "bloxone_anycast_ac_configs" "test" {
+data "bloxone_anycast_configs" "test" {
 	is_configured = false
-	depends_on = [bloxone_anycast_ac_config.test_onprem_hosts]
+	depends_on = [bloxone_anycast_config.test_onprem_hosts]
 }
 `, anycastIpAddress, name, service)
 }
 
 func testAccOnPremAnycastManagerDataSourceConfigTagFilters(anycastIpAddress, name, service, tagValue string) string {
 	return fmt.Sprintf(`
-resource "bloxone_anycast_ac_config" "test" {
+resource "bloxone_anycast_config" "test" {
     anycast_ip_address = %q
     name = %q
     service = %q
@@ -236,9 +236,9 @@ resource "bloxone_anycast_ac_config" "test" {
   }
 }
 
-data "bloxone_anycast_ac_configs" "test" {
+data "bloxone_anycast_configs" "test" {
   tag_filters = {
-	tag1 = bloxone_anycast_ac_config.test.tags.tag1
+	tag1 = bloxone_anycast_config.test.tags.tag1
   }
 }
 `, anycastIpAddress, name, service, tagValue)

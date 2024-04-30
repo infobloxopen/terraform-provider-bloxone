@@ -99,7 +99,7 @@ var ProtoAnycastConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ProtoOnpremHostRefResourceSchemaAttributes,
 		},
-		Optional: true,
+		Computed: true,
 	},
 	"runtime_status": schema.StringAttribute{
 		Computed: true,
