@@ -2,7 +2,6 @@ package dfp_test
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"testing"
 
@@ -57,7 +56,7 @@ func testAccCheckDfpResourceAttrPair(resourceName, dataSourceName string) []reso
 }
 
 func testAccDfpDataSourceConfigFilters(hostName string) string {
-	config := fmt.Sprintf(`
+	config := `
 resource "bloxone_dfp_service" "test" {
   service_id = bloxone_infra_service.example.id
 }
@@ -66,6 +65,6 @@ data "bloxone_dfp_services" "test" {
 		service_name = bloxone_dfp_service.test.service_name
 	}
 }
-`)
+`
 	return strings.Join([]string{testAccBaseWithInfraService(hostName), config}, "")
 }
