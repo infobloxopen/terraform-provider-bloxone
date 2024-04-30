@@ -88,7 +88,7 @@ var AtcfwInternalDomainsResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandAtcfwInternalDomains(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.AtcfwInternalDomains {
+func ExpandAtcfwInternalDomains(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.InternalDomains {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -100,11 +100,11 @@ func ExpandAtcfwInternalDomains(ctx context.Context, o types.Object, diags *diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcfwInternalDomainsModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.AtcfwInternalDomains {
+func (m *AtcfwInternalDomainsModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.InternalDomains {
 	if m == nil {
 		return nil
 	}
-	to := &fw.AtcfwInternalDomains{
+	to := &fw.InternalDomains{
 		Description:     flex.ExpandStringPointer(m.Description),
 		InternalDomains: flex.ExpandFrameworkListString(ctx, m.InternalDomains, diags),
 		Name:            flex.ExpandStringPointer(m.Name),
@@ -114,7 +114,7 @@ func (m *AtcfwInternalDomainsModel) Expand(ctx context.Context, diags *diag.Diag
 	return to
 }
 
-func FlattenAtcfwInternalDomains(ctx context.Context, from *fw.AtcfwInternalDomains, diags *diag.Diagnostics) types.Object {
+func FlattenAtcfwInternalDomains(ctx context.Context, from *fw.InternalDomains, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwInternalDomainsAttrTypes)
 	}
@@ -125,7 +125,7 @@ func FlattenAtcfwInternalDomains(ctx context.Context, from *fw.AtcfwInternalDoma
 	return t
 }
 
-func (m *AtcfwInternalDomainsModel) Flatten(ctx context.Context, from *fw.AtcfwInternalDomains, diags *diag.Diagnostics) {
+func (m *AtcfwInternalDomainsModel) Flatten(ctx context.Context, from *fw.InternalDomains, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

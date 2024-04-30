@@ -11,13 +11,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/infra_provision"
+	"github.com/infobloxopen/bloxone-go-client/infraprovision"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccUIJoinTokenResource_basic(t *testing.T) {
 	var resourceName = "bloxone_infra_join_token.test"
-	var v infra_provision.HostactivationJoinToken
+	var v infraprovision.JoinToken
 	name := acctest.RandomNameWithPrefix("jt")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -44,7 +44,7 @@ func TestAccUIJoinTokenResource_basic(t *testing.T) {
 
 func TestAccUIJoinTokenResource_disappears(t *testing.T) {
 	resourceName := "bloxone_infra_join_token.test"
-	var v infra_provision.HostactivationJoinToken
+	var v infraprovision.JoinToken
 	name := acctest.RandomNameWithPrefix("jt")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -68,8 +68,8 @@ func TestAccUIJoinTokenResource_Description(t *testing.T) {
 	var resourceName = "bloxone_infra_join_token.test_description"
 	name1 := acctest.RandomNameWithPrefix("jt")
 	name2 := acctest.RandomNameWithPrefix("jt")
-	var v1 infra_provision.HostactivationJoinToken
-	var v2 infra_provision.HostactivationJoinToken
+	var v1 infraprovision.JoinToken
+	var v2 infraprovision.JoinToken
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -100,7 +100,7 @@ func TestAccUIJoinTokenResource_Description(t *testing.T) {
 
 func TestAccUIJoinTokenResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_infra_join_token.test_tags"
-	var v infra_provision.HostactivationJoinToken
+	var v infraprovision.JoinToken
 	name := acctest.RandomNameWithPrefix("jt")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -130,7 +130,7 @@ func TestAccUIJoinTokenResource_Tags(t *testing.T) {
 
 func TestAccUIJoinTokenResource_ExpiresAt(t *testing.T) {
 	var resourceName = "bloxone_infra_join_token.test_expires_at"
-	var v infra_provision.HostactivationJoinToken
+	var v infraprovision.JoinToken
 	name := acctest.RandomNameWithPrefix("jt")
 	expiresAt := time.Now().UTC().Add(24 * time.Hour)
 	expiresAtUpdated := expiresAt.Add(24 * time.Hour)
@@ -159,7 +159,7 @@ func TestAccUIJoinTokenResource_ExpiresAt(t *testing.T) {
 	})
 }
 
-func testAccCheckUIJoinTokenExists(ctx context.Context, resourceName string, v *infra_provision.HostactivationJoinToken) resource.TestCheckFunc {
+func testAccCheckUIJoinTokenExists(ctx context.Context, resourceName string, v *infraprovision.JoinToken) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -168,7 +168,7 @@ func testAccCheckUIJoinTokenExists(ctx context.Context, resourceName string, v *
 		}
 		apiRes, _, err := acctest.BloxOneClient.HostActivationAPI.
 			UIJoinTokenAPI.
-			UIJoinTokenRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -181,12 +181,12 @@ func testAccCheckUIJoinTokenExists(ctx context.Context, resourceName string, v *
 	}
 }
 
-func testAccCheckUIJoinTokenDestroy(ctx context.Context, v *infra_provision.HostactivationJoinToken) resource.TestCheckFunc {
+func testAccCheckUIJoinTokenDestroy(ctx context.Context, v *infraprovision.JoinToken) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.HostActivationAPI.
 			UIJoinTokenAPI.
-			UIJoinTokenRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -199,12 +199,12 @@ func testAccCheckUIJoinTokenDestroy(ctx context.Context, v *infra_provision.Host
 	}
 }
 
-func testAccCheckUIJoinTokenDisappears(ctx context.Context, v *infra_provision.HostactivationJoinToken) resource.TestCheckFunc {
+func testAccCheckUIJoinTokenDisappears(ctx context.Context, v *infraprovision.JoinToken) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.HostActivationAPI.
 			UIJoinTokenAPI.
-			UIJoinTokenDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

@@ -17,7 +17,7 @@ import (
 
 func TestAccOptionGroupResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_group.test"
-	var v ipam.IpamsvcOptionGroup
+	var v ipam.OptionGroup
 	optionGroupName := acctest.RandomNameWithPrefix("option-group")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -46,7 +46,7 @@ func TestAccOptionGroupResource_basic(t *testing.T) {
 
 func TestAccOptionGroupResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dhcp_option_group.test"
-	var v ipam.IpamsvcOptionGroup
+	var v ipam.OptionGroup
 	optionGroupName := acctest.RandomNameWithPrefix("option-group")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -68,7 +68,7 @@ func TestAccOptionGroupResource_disappears(t *testing.T) {
 
 func TestAccOptionGroupResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_group.test_comment"
-	var v ipam.IpamsvcOptionGroup
+	var v ipam.OptionGroup
 	optionGroupName := acctest.RandomNameWithPrefix("option-group")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -98,7 +98,7 @@ func TestAccOptionGroupResource_Comment(t *testing.T) {
 
 func TestAccOptionGroupResource_DhcpOptions(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_group.test_dhcp_options"
-	var v ipam.IpamsvcOptionGroup
+	var v ipam.OptionGroup
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 	optionGroupName := acctest.RandomNameWithPrefix("option-group")
 
@@ -133,7 +133,7 @@ func TestAccOptionGroupResource_DhcpOptions(t *testing.T) {
 
 func TestAccOptionGroupResource_Name(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_group.test_name"
-	var v ipam.IpamsvcOptionGroup
+	var v ipam.OptionGroup
 	optionGroupName := acctest.RandomNameWithPrefix("option-group")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -163,7 +163,7 @@ func TestAccOptionGroupResource_Name(t *testing.T) {
 
 func TestAccOptionGroupResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_group.test_tags"
-	var v ipam.IpamsvcOptionGroup
+	var v ipam.OptionGroup
 	optionGroupName := acctest.RandomNameWithPrefix("option-group")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -199,7 +199,7 @@ func TestAccOptionGroupResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckOptionGroupExists(ctx context.Context, resourceName string, v *ipam.IpamsvcOptionGroup) resource.TestCheckFunc {
+func testAccCheckOptionGroupExists(ctx context.Context, resourceName string, v *ipam.OptionGroup) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -208,7 +208,7 @@ func testAccCheckOptionGroupExists(ctx context.Context, resourceName string, v *
 		}
 		apiRes, _, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			OptionGroupAPI.
-			OptionGroupRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -221,12 +221,12 @@ func testAccCheckOptionGroupExists(ctx context.Context, resourceName string, v *
 	}
 }
 
-func testAccCheckOptionGroupDestroy(ctx context.Context, v *ipam.IpamsvcOptionGroup) resource.TestCheckFunc {
+func testAccCheckOptionGroupDestroy(ctx context.Context, v *ipam.OptionGroup) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			OptionGroupAPI.
-			OptionGroupRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -239,12 +239,12 @@ func testAccCheckOptionGroupDestroy(ctx context.Context, v *ipam.IpamsvcOptionGr
 	}
 }
 
-func testAccCheckOptionGroupDisappears(ctx context.Context, v *ipam.IpamsvcOptionGroup) resource.TestCheckFunc {
+func testAccCheckOptionGroupDisappears(ctx context.Context, v *ipam.OptionGroup) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			OptionGroupAPI.
-			OptionGroupDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

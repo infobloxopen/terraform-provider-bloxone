@@ -17,7 +17,7 @@ import (
 
 func TestAccInternalDomainListsResource_basic(t *testing.T) {
 	var resourceName = "bloxone_td_internal_domain_list.test"
-	var v fw.AtcfwInternalDomains
+	var v fw.InternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -43,7 +43,7 @@ func TestAccInternalDomainListsResource_basic(t *testing.T) {
 
 func TestAccInternalDomainListsResource_disappears(t *testing.T) {
 	resourceName := "bloxone_td_internal_domain_list.test"
-	var v fw.AtcfwInternalDomains
+	var v fw.InternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -65,7 +65,7 @@ func TestAccInternalDomainListsResource_disappears(t *testing.T) {
 
 func TestAccInternalDomainListsResource_Description(t *testing.T) {
 	resourceName := "bloxone_td_internal_domain_list.test_description"
-	var v fw.AtcfwInternalDomains
+	var v fw.InternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -95,7 +95,7 @@ func TestAccInternalDomainListsResource_Description(t *testing.T) {
 
 func TestAccInternalDomainListsResource_InternalDomains(t *testing.T) {
 	resourceName := "bloxone_td_internal_domain_list.test_internal_domain"
-	var v fw.AtcfwInternalDomains
+	var v fw.InternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -125,7 +125,7 @@ func TestAccInternalDomainListsResource_InternalDomains(t *testing.T) {
 
 func TestAccInternalDomainListsResource_Name(t *testing.T) {
 	resourceName := "bloxone_td_internal_domain_list.test_name"
-	var v1, v2 fw.AtcfwInternalDomains
+	var v1, v2 fw.InternalDomains
 	var name1 = acctest.RandomNameWithPrefix("td-internal_domain_list")
 	var name2 = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
@@ -157,7 +157,7 @@ func TestAccInternalDomainListsResource_Name(t *testing.T) {
 
 func TestAccInternalDomainListsResource_Tags(t *testing.T) {
 	resourceName := "bloxone_td_internal_domain_list.test_tags"
-	var v fw.AtcfwInternalDomains
+	var v fw.InternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -193,7 +193,7 @@ func TestAccInternalDomainListsResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckInternalDomainListsExists(ctx context.Context, resourceName string, v *fw.AtcfwInternalDomains) resource.TestCheckFunc {
+func testAccCheckInternalDomainListsExists(ctx context.Context, resourceName string, v *fw.InternalDomains) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -206,7 +206,7 @@ func testAccCheckInternalDomainListsExists(ctx context.Context, resourceName str
 		}
 		apiRes, _, err := acctest.BloxOneClient.FWAPI.
 			InternalDomainListsAPI.
-			InternalDomainListsReadInternalDomains(ctx, int32(id)).
+			ReadInternalDomains(ctx, int32(id)).
 			Execute()
 		if err != nil {
 			return err
@@ -219,12 +219,12 @@ func testAccCheckInternalDomainListsExists(ctx context.Context, resourceName str
 	}
 }
 
-func testAccCheckInternalDomainListsDestroy(ctx context.Context, v *fw.AtcfwInternalDomains) resource.TestCheckFunc {
+func testAccCheckInternalDomainListsDestroy(ctx context.Context, v *fw.InternalDomains) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.FWAPI.
 			InternalDomainListsAPI.
-			InternalDomainListsReadInternalDomains(ctx, *v.Id).
+			ReadInternalDomains(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -237,12 +237,12 @@ func testAccCheckInternalDomainListsDestroy(ctx context.Context, v *fw.AtcfwInte
 	}
 }
 
-func testAccCheckInternalDomainListsDisappears(ctx context.Context, v *fw.AtcfwInternalDomains) resource.TestCheckFunc {
+func testAccCheckInternalDomainListsDisappears(ctx context.Context, v *fw.InternalDomains) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.FWAPI.
 			InternalDomainListsAPI.
-			InternalDomainListsDeleteSingleInternalDomains(ctx, *v.Id).
+			DeleteSingleInternalDomains(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

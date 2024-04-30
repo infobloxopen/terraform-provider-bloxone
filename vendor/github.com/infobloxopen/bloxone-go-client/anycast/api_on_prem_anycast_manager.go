@@ -23,37 +23,37 @@ import (
 
 type OnPremAnycastManagerAPI interface {
 	/*
-			OnPremAnycastManagerCreateAnycastConfig Create Anycast Configuration
+			CreateAnycastConfig Create Anycast Configuration
 
 			Use this method to create anycast configuration, as per the specified payload.
 		@responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
 		@responses.500._error {"code": "INTERNAL", "message": "Internal Server Error", "status": 500}
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiOnPremAnycastManagerCreateAnycastConfigRequest
+			@return OnPremAnycastManagerAPICreateAnycastConfigRequest
 	*/
-	OnPremAnycastManagerCreateAnycastConfig(ctx context.Context) ApiOnPremAnycastManagerCreateAnycastConfigRequest
+	CreateAnycastConfig(ctx context.Context) OnPremAnycastManagerAPICreateAnycastConfigRequest
 
-	// OnPremAnycastManagerCreateAnycastConfigExecute executes the request
-	//  @return ProtoAnycastConfigResponse
-	OnPremAnycastManagerCreateAnycastConfigExecute(r ApiOnPremAnycastManagerCreateAnycastConfigRequest) (*ProtoAnycastConfigResponse, *http.Response, error)
+	// CreateAnycastConfigExecute executes the request
+	//  @return AnycastConfigResponse
+	CreateAnycastConfigExecute(r OnPremAnycastManagerAPICreateAnycastConfigRequest) (*AnycastConfigResponse, *http.Response, error)
 	/*
-			OnPremAnycastManagerCreateAnycastVersion Create Anycast Version
+			CreateAnycastVersion Create Anycast Version
 
 			Use this method to create anycast 2.0 version for the account ID
 		@responses.500._error {"code": "INTERNAL", "message": "Internal Server Error", "status": 500}
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id
-			@return ApiOnPremAnycastManagerCreateAnycastVersionRequest
+			@return OnPremAnycastManagerAPICreateAnycastVersionRequest
 	*/
-	OnPremAnycastManagerCreateAnycastVersion(ctx context.Context, id int64) ApiOnPremAnycastManagerCreateAnycastVersionRequest
+	CreateAnycastVersion(ctx context.Context, id int64) OnPremAnycastManagerAPICreateAnycastVersionRequest
 
-	// OnPremAnycastManagerCreateAnycastVersionExecute executes the request
+	// CreateAnycastVersionExecute executes the request
 	//  @return map[string]interface{}
-	OnPremAnycastManagerCreateAnycastVersionExecute(r ApiOnPremAnycastManagerCreateAnycastVersionRequest) (map[string]interface{}, *http.Response, error)
+	CreateAnycastVersionExecute(r OnPremAnycastManagerAPICreateAnycastVersionRequest) (map[string]interface{}, *http.Response, error)
 	/*
-			OnPremAnycastManagerDeleteAnycastConfig Delete Anycast Configuration
+			DeleteAnycastConfig Delete Anycast Configuration
 
 			Use this method to delete the addressed anycast configuration.
 		@responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -61,15 +61,15 @@ type OnPremAnycastManagerAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id
-			@return ApiOnPremAnycastManagerDeleteAnycastConfigRequest
+			@return OnPremAnycastManagerAPIDeleteAnycastConfigRequest
 	*/
-	OnPremAnycastManagerDeleteAnycastConfig(ctx context.Context, id int64) ApiOnPremAnycastManagerDeleteAnycastConfigRequest
+	DeleteAnycastConfig(ctx context.Context, id int64) OnPremAnycastManagerAPIDeleteAnycastConfigRequest
 
-	// OnPremAnycastManagerDeleteAnycastConfigExecute executes the request
+	// DeleteAnycastConfigExecute executes the request
 	//  @return map[string]interface{}
-	OnPremAnycastManagerDeleteAnycastConfigExecute(r ApiOnPremAnycastManagerDeleteAnycastConfigRequest) (map[string]interface{}, *http.Response, error)
+	DeleteAnycastConfigExecute(r OnPremAnycastManagerAPIDeleteAnycastConfigRequest) (map[string]interface{}, *http.Response, error)
 	/*
-			OnPremAnycastManagerDeleteAnycastVersion Delete anycast version
+			DeleteAnycastVersion Delete anycast version
 
 			Use this method to delete anycast 2.0 version associated with the given account id
 		@responses.404._error {"code": "NOT_FOUND", "message": "", "status": 404}
@@ -77,15 +77,15 @@ type OnPremAnycastManagerAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id
-			@return ApiOnPremAnycastManagerDeleteAnycastVersionRequest
+			@return OnPremAnycastManagerAPIDeleteAnycastVersionRequest
 	*/
-	OnPremAnycastManagerDeleteAnycastVersion(ctx context.Context, id int64) ApiOnPremAnycastManagerDeleteAnycastVersionRequest
+	DeleteAnycastVersion(ctx context.Context, id int64) OnPremAnycastManagerAPIDeleteAnycastVersionRequest
 
-	// OnPremAnycastManagerDeleteAnycastVersionExecute executes the request
+	// DeleteAnycastVersionExecute executes the request
 	//  @return map[string]interface{}
-	OnPremAnycastManagerDeleteAnycastVersionExecute(r ApiOnPremAnycastManagerDeleteAnycastVersionRequest) (map[string]interface{}, *http.Response, error)
+	DeleteAnycastVersionExecute(r OnPremAnycastManagerAPIDeleteAnycastVersionRequest) (map[string]interface{}, *http.Response, error)
 	/*
-			OnPremAnycastManagerDeleteOnpremHost Delete On-Prem Host
+			DeleteOnpremHost Delete On-Prem Host
 
 			Use this method to delete the addressed on-prem host.
 		@responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -94,15 +94,15 @@ type OnPremAnycastManagerAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id
-			@return ApiOnPremAnycastManagerDeleteOnpremHostRequest
+			@return OnPremAnycastManagerAPIDeleteOnpremHostRequest
 	*/
-	OnPremAnycastManagerDeleteOnpremHost(ctx context.Context, id int64) ApiOnPremAnycastManagerDeleteOnpremHostRequest
+	DeleteOnpremHost(ctx context.Context, id int64) OnPremAnycastManagerAPIDeleteOnpremHostRequest
 
-	// OnPremAnycastManagerDeleteOnpremHostExecute executes the request
+	// DeleteOnpremHostExecute executes the request
 	//  @return map[string]interface{}
-	OnPremAnycastManagerDeleteOnpremHostExecute(r ApiOnPremAnycastManagerDeleteOnpremHostRequest) (map[string]interface{}, *http.Response, error)
+	DeleteOnpremHostExecute(r OnPremAnycastManagerAPIDeleteOnpremHostRequest) (map[string]interface{}, *http.Response, error)
 	/*
-			OnPremAnycastManagerGetAnycastConfig Retrieve Anycast Configuration
+			GetAnycastConfig Retrieve Anycast Configuration
 
 			Use this method to retrieve the specified anycast configuration, together with the list of member hosts.
 		@responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -111,29 +111,29 @@ type OnPremAnycastManagerAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id
-			@return ApiOnPremAnycastManagerGetAnycastConfigRequest
+			@return OnPremAnycastManagerAPIGetAnycastConfigRequest
 	*/
-	OnPremAnycastManagerGetAnycastConfig(ctx context.Context, id int64) ApiOnPremAnycastManagerGetAnycastConfigRequest
+	GetAnycastConfig(ctx context.Context, id int64) OnPremAnycastManagerAPIGetAnycastConfigRequest
 
-	// OnPremAnycastManagerGetAnycastConfigExecute executes the request
-	//  @return ProtoAnycastConfigResponse
-	OnPremAnycastManagerGetAnycastConfigExecute(r ApiOnPremAnycastManagerGetAnycastConfigRequest) (*ProtoAnycastConfigResponse, *http.Response, error)
+	// GetAnycastConfigExecute executes the request
+	//  @return AnycastConfigResponse
+	GetAnycastConfigExecute(r OnPremAnycastManagerAPIGetAnycastConfigRequest) (*AnycastConfigResponse, *http.Response, error)
 	/*
-			OnPremAnycastManagerGetAnycastConfigList Retrieve Multiple Anycast Configurations
+			GetAnycastConfigList Retrieve Multiple Anycast Configurations
 
 			Without any filtering, use this method to retrieve all named anycast configurations for the account of authorization. Anycast configuration comprises common anycast configuration data that is defined in support of one service on a set of on-prem hosts. The anycast configurations resulting from this call will not include the list(s) of member hosts. Retrieving the list of member hosts requires the GET operation on single anycast configuration resource. If the account has no anycast configurations defined, the result of this call will be an empty list.
 		@responses.500._error {"code": "INTERNAL", "message": "Internal Server Error", "status": 500}
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiOnPremAnycastManagerGetAnycastConfigListRequest
+			@return OnPremAnycastManagerAPIGetAnycastConfigListRequest
 	*/
-	OnPremAnycastManagerGetAnycastConfigList(ctx context.Context) ApiOnPremAnycastManagerGetAnycastConfigListRequest
+	GetAnycastConfigList(ctx context.Context) OnPremAnycastManagerAPIGetAnycastConfigListRequest
 
-	// OnPremAnycastManagerGetAnycastConfigListExecute executes the request
-	//  @return ProtoGetAnycastConfigListResponse
-	OnPremAnycastManagerGetAnycastConfigListExecute(r ApiOnPremAnycastManagerGetAnycastConfigListRequest) (*ProtoGetAnycastConfigListResponse, *http.Response, error)
+	// GetAnycastConfigListExecute executes the request
+	//  @return GetAnycastConfigListResponse
+	GetAnycastConfigListExecute(r OnPremAnycastManagerAPIGetAnycastConfigListRequest) (*GetAnycastConfigListResponse, *http.Response, error)
 	/*
-			OnPremAnycastManagerGetAnycastVersion Retrieve Anycast Version
+			GetAnycastVersion Retrieve Anycast Version
 
 			Use this method to retrieve the anycast version for the given account id
 		@responses.404._error {"code": "NOT_FOUND", "message": "", "status": 404}
@@ -141,15 +141,15 @@ type OnPremAnycastManagerAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id
-			@return ApiOnPremAnycastManagerGetAnycastVersionRequest
+			@return OnPremAnycastManagerAPIGetAnycastVersionRequest
 	*/
-	OnPremAnycastManagerGetAnycastVersion(ctx context.Context, id int64) ApiOnPremAnycastManagerGetAnycastVersionRequest
+	GetAnycastVersion(ctx context.Context, id int64) OnPremAnycastManagerAPIGetAnycastVersionRequest
 
-	// OnPremAnycastManagerGetAnycastVersionExecute executes the request
-	//  @return ProtoAnycastVersion
-	OnPremAnycastManagerGetAnycastVersionExecute(r ApiOnPremAnycastManagerGetAnycastVersionRequest) (*ProtoAnycastVersion, *http.Response, error)
+	// GetAnycastVersionExecute executes the request
+	//  @return AnycastVersion
+	GetAnycastVersionExecute(r OnPremAnycastManagerAPIGetAnycastVersionRequest) (*AnycastVersion, *http.Response, error)
 	/*
-			OnPremAnycastManagerGetOnpremConfig Retrieve Generated, Per-Host Anycast Configuration
+			GetOnpremConfig Retrieve Generated, Per-Host Anycast Configuration
 
 			Use this method to retrieve generated anycast configuration for anycast-enabled on-prem host. Retrieved configuration includes both interface and routing configuration. See common config manager documentation for the description of the returned payload. "ophid" is the system-assigned unique character-string identifier of the host. "version" can be either the timestamp of the configuration version that is sought after, or the word "latest". "latest" signifies the most recent generated configuration for this host.
 		@responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -159,15 +159,15 @@ type OnPremAnycastManagerAPI interface {
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param ophid
 			@param version
-			@return ApiOnPremAnycastManagerGetOnpremConfigRequest
+			@return OnPremAnycastManagerAPIGetOnpremConfigRequest
 	*/
-	OnPremAnycastManagerGetOnpremConfig(ctx context.Context, ophid string, version string) ApiOnPremAnycastManagerGetOnpremConfigRequest
+	GetOnpremConfig(ctx context.Context, ophid string, version string) OnPremAnycastManagerAPIGetOnpremConfigRequest
 
-	// OnPremAnycastManagerGetOnpremConfigExecute executes the request
+	// GetOnpremConfigExecute executes the request
 	//  @return ServiceConfig
-	OnPremAnycastManagerGetOnpremConfigExecute(r ApiOnPremAnycastManagerGetOnpremConfigRequest) (*ServiceConfig, *http.Response, error)
+	GetOnpremConfigExecute(r OnPremAnycastManagerAPIGetOnpremConfigRequest) (*ServiceConfig, *http.Response, error)
 	/*
-			OnPremAnycastManagerGetOnpremConfig2 Retrieve Generated, Per-Host Anycast Configuration
+			GetOnpremConfig2 Retrieve Generated, Per-Host Anycast Configuration
 
 			Use this method to retrieve generated anycast configuration for anycast-enabled on-prem host. Retrieved configuration includes both interface and routing configuration. See common config manager documentation for the description of the returned payload. "ophid" is the system-assigned unique character-string identifier of the host. "version" can be either the timestamp of the configuration version that is sought after, or the word "latest". "latest" signifies the most recent generated configuration for this host.
 		@responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -177,15 +177,15 @@ type OnPremAnycastManagerAPI interface {
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param ophid
 			@param version
-			@return ApiOnPremAnycastManagerGetOnpremConfig2Request
+			@return OnPremAnycastManagerAPIGetOnpremConfig2Request
 	*/
-	OnPremAnycastManagerGetOnpremConfig2(ctx context.Context, ophid string, version string) ApiOnPremAnycastManagerGetOnpremConfig2Request
+	GetOnpremConfig2(ctx context.Context, ophid string, version string) OnPremAnycastManagerAPIGetOnpremConfig2Request
 
-	// OnPremAnycastManagerGetOnpremConfig2Execute executes the request
+	// GetOnpremConfig2Execute executes the request
 	//  @return ServiceConfig
-	OnPremAnycastManagerGetOnpremConfig2Execute(r ApiOnPremAnycastManagerGetOnpremConfig2Request) (*ServiceConfig, *http.Response, error)
+	GetOnpremConfig2Execute(r OnPremAnycastManagerAPIGetOnpremConfig2Request) (*ServiceConfig, *http.Response, error)
 	/*
-			OnPremAnycastManagerGetOnpremHost Retrieve On-Prem Host
+			GetOnpremHost Retrieve On-Prem Host
 
 			Use this method to retrieve the specified on-prem host from the anycast database.
 		@responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -194,15 +194,15 @@ type OnPremAnycastManagerAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id
-			@return ApiOnPremAnycastManagerGetOnpremHostRequest
+			@return OnPremAnycastManagerAPIGetOnpremHostRequest
 	*/
-	OnPremAnycastManagerGetOnpremHost(ctx context.Context, id int64) ApiOnPremAnycastManagerGetOnpremHostRequest
+	GetOnpremHost(ctx context.Context, id int64) OnPremAnycastManagerAPIGetOnpremHostRequest
 
-	// OnPremAnycastManagerGetOnpremHostExecute executes the request
-	//  @return ProtoOnpremHostResponse
-	OnPremAnycastManagerGetOnpremHostExecute(r ApiOnPremAnycastManagerGetOnpremHostRequest) (*ProtoOnpremHostResponse, *http.Response, error)
+	// GetOnpremHostExecute executes the request
+	//  @return OnpremHostResponse
+	GetOnpremHostExecute(r OnPremAnycastManagerAPIGetOnpremHostRequest) (*OnpremHostResponse, *http.Response, error)
 	/*
-			OnPremAnycastManagerGetStatus Retrieve Configuration Status
+			GetStatus Retrieve Configuration Status
 
 			Use this method to retrieve configuration status for the specified host. The configuration status is retrieved from the anycast service database.  "ophid" is the system-assigned unique character-string identifier of the host. "version" parameter can be either the timestamp of the configuration version that is sought after, or the word "latest". "latest' signifies the most recent generated configuration for this host.
 		@responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -211,15 +211,15 @@ type OnPremAnycastManagerAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param ophid
-			@return ApiOnPremAnycastManagerGetStatusRequest
+			@return OnPremAnycastManagerAPIGetStatusRequest
 	*/
-	OnPremAnycastManagerGetStatus(ctx context.Context, ophid string) ApiOnPremAnycastManagerGetStatusRequest
+	GetStatus(ctx context.Context, ophid string) OnPremAnycastManagerAPIGetStatusRequest
 
-	// OnPremAnycastManagerGetStatusExecute executes the request
+	// GetStatusExecute executes the request
 	//  @return ServiceStatusUpdateRequest
-	OnPremAnycastManagerGetStatusExecute(r ApiOnPremAnycastManagerGetStatusRequest) (*ServiceStatusUpdateRequest, *http.Response, error)
+	GetStatusExecute(r OnPremAnycastManagerAPIGetStatusRequest) (*ServiceStatusUpdateRequest, *http.Response, error)
 	/*
-			OnPremAnycastManagerGetStatus2 Retrieve Configuration Status
+			GetStatus2 Retrieve Configuration Status
 
 			Use this method to retrieve configuration status for the specified host. The configuration status is retrieved from the anycast service database.  "ophid" is the system-assigned unique character-string identifier of the host. "version" parameter can be either the timestamp of the configuration version that is sought after, or the word "latest". "latest' signifies the most recent generated configuration for this host.
 		@responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -228,29 +228,29 @@ type OnPremAnycastManagerAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param ophid
-			@return ApiOnPremAnycastManagerGetStatus2Request
+			@return OnPremAnycastManagerAPIGetStatus2Request
 	*/
-	OnPremAnycastManagerGetStatus2(ctx context.Context, ophid string) ApiOnPremAnycastManagerGetStatus2Request
+	GetStatus2(ctx context.Context, ophid string) OnPremAnycastManagerAPIGetStatus2Request
 
-	// OnPremAnycastManagerGetStatus2Execute executes the request
+	// GetStatus2Execute executes the request
 	//  @return ServiceStatusUpdateRequest
-	OnPremAnycastManagerGetStatus2Execute(r ApiOnPremAnycastManagerGetStatus2Request) (*ServiceStatusUpdateRequest, *http.Response, error)
+	GetStatus2Execute(r OnPremAnycastManagerAPIGetStatus2Request) (*ServiceStatusUpdateRequest, *http.Response, error)
 	/*
-			OnPremAnycastManagerListAnycastConfigsWithRuntimeStatus Read list of Anycast Configurations
+			ListAnycastConfigsWithRuntimeStatus Read list of Anycast Configurations
 
 			Without any filtering, use this method to retrieve all named anycast configurations for the account of authorization. Anycast configuration comprises common anycast configuration data that is defined in support of one service on a set of on-prem hosts. The anycast configurations resulting from this call will not include the list(s) of member hosts. Retrieving the list of member hosts requires the GET operation on single anycast configuration resource. If the account has no anycast configurations defined, the result of this call will be an empty list.
 		@responses.500._error {"code": "INTERNAL", "message": "Internal Server Error", "status": 500}
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest
+			@return OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest
 	*/
-	OnPremAnycastManagerListAnycastConfigsWithRuntimeStatus(ctx context.Context) ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest
+	ListAnycastConfigsWithRuntimeStatus(ctx context.Context) OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest
 
-	// OnPremAnycastManagerListAnycastConfigsWithRuntimeStatusExecute executes the request
-	//  @return ProtoGetAnycastConfigListResponse
-	OnPremAnycastManagerListAnycastConfigsWithRuntimeStatusExecute(r ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest) (*ProtoGetAnycastConfigListResponse, *http.Response, error)
+	// ListAnycastConfigsWithRuntimeStatusExecute executes the request
+	//  @return GetAnycastConfigListResponse
+	ListAnycastConfigsWithRuntimeStatusExecute(r OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest) (*GetAnycastConfigListResponse, *http.Response, error)
 	/*
-			OnPremAnycastManagerReadAnycastConfigWithRuntimeStatus Read Anycast Configuration
+			ReadAnycastConfigWithRuntimeStatus Read Anycast Configuration
 
 			Use this method to retrieve the specified anycast configuration, together with the list of member hosts.
 		@responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -259,15 +259,15 @@ type OnPremAnycastManagerAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id
-			@return ApiOnPremAnycastManagerReadAnycastConfigWithRuntimeStatusRequest
+			@return OnPremAnycastManagerAPIReadAnycastConfigWithRuntimeStatusRequest
 	*/
-	OnPremAnycastManagerReadAnycastConfigWithRuntimeStatus(ctx context.Context, id int64) ApiOnPremAnycastManagerReadAnycastConfigWithRuntimeStatusRequest
+	ReadAnycastConfigWithRuntimeStatus(ctx context.Context, id int64) OnPremAnycastManagerAPIReadAnycastConfigWithRuntimeStatusRequest
 
-	// OnPremAnycastManagerReadAnycastConfigWithRuntimeStatusExecute executes the request
-	//  @return ProtoAnycastConfigResponse
-	OnPremAnycastManagerReadAnycastConfigWithRuntimeStatusExecute(r ApiOnPremAnycastManagerReadAnycastConfigWithRuntimeStatusRequest) (*ProtoAnycastConfigResponse, *http.Response, error)
+	// ReadAnycastConfigWithRuntimeStatusExecute executes the request
+	//  @return AnycastConfigResponse
+	ReadAnycastConfigWithRuntimeStatusExecute(r OnPremAnycastManagerAPIReadAnycastConfigWithRuntimeStatusRequest) (*AnycastConfigResponse, *http.Response, error)
 	/*
-			OnPremAnycastManagerUpdateAnycastConfig Create or Update Anycast Configuration
+			UpdateAnycastConfig Create or Update Anycast Configuration
 
 			Use this method to replace the addressed anycast configuration with configuration from the payload. If the addressed configuration does not exist, it will be created. Anycast configuration specified in the payload may contain the list of on-prem hosts that are supposed to be established as members of the specified configuration. If the anycast service has no information about one or more hosts from this list, such hosts will be created in the anycast service database. Note that the anycast service includes a background capability that verifies the validity of host data entered this way. This capability will delete any hosts created in this way that are determined to be invalid.
 		@responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -275,15 +275,15 @@ type OnPremAnycastManagerAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id
-			@return ApiOnPremAnycastManagerUpdateAnycastConfigRequest
+			@return OnPremAnycastManagerAPIUpdateAnycastConfigRequest
 	*/
-	OnPremAnycastManagerUpdateAnycastConfig(ctx context.Context, id int64) ApiOnPremAnycastManagerUpdateAnycastConfigRequest
+	UpdateAnycastConfig(ctx context.Context, id int64) OnPremAnycastManagerAPIUpdateAnycastConfigRequest
 
-	// OnPremAnycastManagerUpdateAnycastConfigExecute executes the request
-	//  @return ProtoAnycastConfigResponse
-	OnPremAnycastManagerUpdateAnycastConfigExecute(r ApiOnPremAnycastManagerUpdateAnycastConfigRequest) (*ProtoAnycastConfigResponse, *http.Response, error)
+	// UpdateAnycastConfigExecute executes the request
+	//  @return AnycastConfigResponse
+	UpdateAnycastConfigExecute(r OnPremAnycastManagerAPIUpdateAnycastConfigRequest) (*AnycastConfigResponse, *http.Response, error)
 	/*
-			OnPremAnycastManagerUpdateOnpremHost Create or Update On-Prem Host
+			UpdateOnpremHost Create or Update On-Prem Host
 
 			Use this method to create or update the addressed host as per the specified payload. The payload is supposed to provide complete replacement for the host data. If the addressed host does not exist, it will be created.
 		@responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -291,45 +291,45 @@ type OnPremAnycastManagerAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id Numeric host identifier
-			@return ApiOnPremAnycastManagerUpdateOnpremHostRequest
+			@return OnPremAnycastManagerAPIUpdateOnpremHostRequest
 	*/
-	OnPremAnycastManagerUpdateOnpremHost(ctx context.Context, id int64) ApiOnPremAnycastManagerUpdateOnpremHostRequest
+	UpdateOnpremHost(ctx context.Context, id int64) OnPremAnycastManagerAPIUpdateOnpremHostRequest
 
-	// OnPremAnycastManagerUpdateOnpremHostExecute executes the request
-	//  @return ProtoOnpremHostResponse
-	OnPremAnycastManagerUpdateOnpremHostExecute(r ApiOnPremAnycastManagerUpdateOnpremHostRequest) (*ProtoOnpremHostResponse, *http.Response, error)
+	// UpdateOnpremHostExecute executes the request
+	//  @return OnpremHostResponse
+	UpdateOnpremHostExecute(r OnPremAnycastManagerAPIUpdateOnpremHostRequest) (*OnpremHostResponse, *http.Response, error)
 }
 
 // OnPremAnycastManagerAPIService OnPremAnycastManagerAPI service
 type OnPremAnycastManagerAPIService internal.Service
 
-type ApiOnPremAnycastManagerCreateAnycastConfigRequest struct {
+type OnPremAnycastManagerAPICreateAnycastConfigRequest struct {
 	ctx        context.Context
 	ApiService OnPremAnycastManagerAPI
-	body       *ProtoAnycastConfig
+	body       *AnycastConfig
 }
 
-func (r ApiOnPremAnycastManagerCreateAnycastConfigRequest) Body(body ProtoAnycastConfig) ApiOnPremAnycastManagerCreateAnycastConfigRequest {
+func (r OnPremAnycastManagerAPICreateAnycastConfigRequest) Body(body AnycastConfig) OnPremAnycastManagerAPICreateAnycastConfigRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiOnPremAnycastManagerCreateAnycastConfigRequest) Execute() (*ProtoAnycastConfigResponse, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerCreateAnycastConfigExecute(r)
+func (r OnPremAnycastManagerAPICreateAnycastConfigRequest) Execute() (*AnycastConfigResponse, *http.Response, error) {
+	return r.ApiService.CreateAnycastConfigExecute(r)
 }
 
 /*
-OnPremAnycastManagerCreateAnycastConfig Create Anycast Configuration
+CreateAnycastConfig Create Anycast Configuration
 
 Use this method to create anycast configuration, as per the specified payload.
 @responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
 @responses.500._error {"code": "INTERNAL", "message": "Internal Server Error", "status": 500}
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiOnPremAnycastManagerCreateAnycastConfigRequest
+	@return OnPremAnycastManagerAPICreateAnycastConfigRequest
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerCreateAnycastConfig(ctx context.Context) ApiOnPremAnycastManagerCreateAnycastConfigRequest {
-	return ApiOnPremAnycastManagerCreateAnycastConfigRequest{
+func (a *OnPremAnycastManagerAPIService) CreateAnycastConfig(ctx context.Context) OnPremAnycastManagerAPICreateAnycastConfigRequest {
+	return OnPremAnycastManagerAPICreateAnycastConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -337,16 +337,16 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerCreateAnycastConfig
 
 // Execute executes the request
 //
-//	@return ProtoAnycastConfigResponse
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerCreateAnycastConfigExecute(r ApiOnPremAnycastManagerCreateAnycastConfigRequest) (*ProtoAnycastConfigResponse, *http.Response, error) {
+//	@return AnycastConfigResponse
+func (a *OnPremAnycastManagerAPIService) CreateAnycastConfigExecute(r OnPremAnycastManagerAPICreateAnycastConfigRequest) (*AnycastConfigResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *ProtoAnycastConfigResponse
+		localVarReturnValue *AnycastConfigResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerCreateAnycastConfig")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.CreateAnycastConfig")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -379,20 +379,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerCreateAnycastConfig
 	}
 	// body params
 	localVarPostBody = r.body
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -423,28 +409,28 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerCreateAnycastConfig
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerCreateAnycastVersionRequest struct {
+type OnPremAnycastManagerAPICreateAnycastVersionRequest struct {
 	ctx        context.Context
 	ApiService OnPremAnycastManagerAPI
 	id         int64
 }
 
-func (r ApiOnPremAnycastManagerCreateAnycastVersionRequest) Execute() (map[string]interface{}, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerCreateAnycastVersionExecute(r)
+func (r OnPremAnycastManagerAPICreateAnycastVersionRequest) Execute() (map[string]interface{}, *http.Response, error) {
+	return r.ApiService.CreateAnycastVersionExecute(r)
 }
 
 /*
-OnPremAnycastManagerCreateAnycastVersion Create Anycast Version
+CreateAnycastVersion Create Anycast Version
 
 Use this method to create anycast 2.0 version for the account ID
 @responses.500._error {"code": "INTERNAL", "message": "Internal Server Error", "status": 500}
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id
-	@return ApiOnPremAnycastManagerCreateAnycastVersionRequest
+	@return OnPremAnycastManagerAPICreateAnycastVersionRequest
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerCreateAnycastVersion(ctx context.Context, id int64) ApiOnPremAnycastManagerCreateAnycastVersionRequest {
-	return ApiOnPremAnycastManagerCreateAnycastVersionRequest{
+func (a *OnPremAnycastManagerAPIService) CreateAnycastVersion(ctx context.Context, id int64) OnPremAnycastManagerAPICreateAnycastVersionRequest {
+	return OnPremAnycastManagerAPICreateAnycastVersionRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -454,7 +440,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerCreateAnycastVersio
 // Execute executes the request
 //
 //	@return map[string]interface{}
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerCreateAnycastVersionExecute(r ApiOnPremAnycastManagerCreateAnycastVersionRequest) (map[string]interface{}, *http.Response, error) {
+func (a *OnPremAnycastManagerAPIService) CreateAnycastVersionExecute(r OnPremAnycastManagerAPICreateAnycastVersionRequest) (map[string]interface{}, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -462,7 +448,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerCreateAnycastVersio
 		localVarReturnValue map[string]interface{}
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerCreateAnycastVersion")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.CreateAnycastVersion")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -491,20 +477,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerCreateAnycastVersio
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -535,18 +507,18 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerCreateAnycastVersio
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerDeleteAnycastConfigRequest struct {
+type OnPremAnycastManagerAPIDeleteAnycastConfigRequest struct {
 	ctx        context.Context
 	ApiService OnPremAnycastManagerAPI
 	id         int64
 }
 
-func (r ApiOnPremAnycastManagerDeleteAnycastConfigRequest) Execute() (map[string]interface{}, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerDeleteAnycastConfigExecute(r)
+func (r OnPremAnycastManagerAPIDeleteAnycastConfigRequest) Execute() (map[string]interface{}, *http.Response, error) {
+	return r.ApiService.DeleteAnycastConfigExecute(r)
 }
 
 /*
-OnPremAnycastManagerDeleteAnycastConfig Delete Anycast Configuration
+DeleteAnycastConfig Delete Anycast Configuration
 
 Use this method to delete the addressed anycast configuration.
 @responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -554,10 +526,10 @@ Use this method to delete the addressed anycast configuration.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id
-	@return ApiOnPremAnycastManagerDeleteAnycastConfigRequest
+	@return OnPremAnycastManagerAPIDeleteAnycastConfigRequest
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteAnycastConfig(ctx context.Context, id int64) ApiOnPremAnycastManagerDeleteAnycastConfigRequest {
-	return ApiOnPremAnycastManagerDeleteAnycastConfigRequest{
+func (a *OnPremAnycastManagerAPIService) DeleteAnycastConfig(ctx context.Context, id int64) OnPremAnycastManagerAPIDeleteAnycastConfigRequest {
+	return OnPremAnycastManagerAPIDeleteAnycastConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -567,7 +539,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteAnycastConfig
 // Execute executes the request
 //
 //	@return map[string]interface{}
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteAnycastConfigExecute(r ApiOnPremAnycastManagerDeleteAnycastConfigRequest) (map[string]interface{}, *http.Response, error) {
+func (a *OnPremAnycastManagerAPIService) DeleteAnycastConfigExecute(r OnPremAnycastManagerAPIDeleteAnycastConfigRequest) (map[string]interface{}, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodDelete
 		localVarPostBody    interface{}
@@ -575,7 +547,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteAnycastConfig
 		localVarReturnValue map[string]interface{}
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerDeleteAnycastConfig")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.DeleteAnycastConfig")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -604,20 +576,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteAnycastConfig
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -648,18 +606,18 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteAnycastConfig
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerDeleteAnycastVersionRequest struct {
+type OnPremAnycastManagerAPIDeleteAnycastVersionRequest struct {
 	ctx        context.Context
 	ApiService OnPremAnycastManagerAPI
 	id         int64
 }
 
-func (r ApiOnPremAnycastManagerDeleteAnycastVersionRequest) Execute() (map[string]interface{}, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerDeleteAnycastVersionExecute(r)
+func (r OnPremAnycastManagerAPIDeleteAnycastVersionRequest) Execute() (map[string]interface{}, *http.Response, error) {
+	return r.ApiService.DeleteAnycastVersionExecute(r)
 }
 
 /*
-OnPremAnycastManagerDeleteAnycastVersion Delete anycast version
+DeleteAnycastVersion Delete anycast version
 
 Use this method to delete anycast 2.0 version associated with the given account id
 @responses.404._error {"code": "NOT_FOUND", "message": "", "status": 404}
@@ -667,10 +625,10 @@ Use this method to delete anycast 2.0 version associated with the given account 
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id
-	@return ApiOnPremAnycastManagerDeleteAnycastVersionRequest
+	@return OnPremAnycastManagerAPIDeleteAnycastVersionRequest
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteAnycastVersion(ctx context.Context, id int64) ApiOnPremAnycastManagerDeleteAnycastVersionRequest {
-	return ApiOnPremAnycastManagerDeleteAnycastVersionRequest{
+func (a *OnPremAnycastManagerAPIService) DeleteAnycastVersion(ctx context.Context, id int64) OnPremAnycastManagerAPIDeleteAnycastVersionRequest {
+	return OnPremAnycastManagerAPIDeleteAnycastVersionRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -680,7 +638,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteAnycastVersio
 // Execute executes the request
 //
 //	@return map[string]interface{}
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteAnycastVersionExecute(r ApiOnPremAnycastManagerDeleteAnycastVersionRequest) (map[string]interface{}, *http.Response, error) {
+func (a *OnPremAnycastManagerAPIService) DeleteAnycastVersionExecute(r OnPremAnycastManagerAPIDeleteAnycastVersionRequest) (map[string]interface{}, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodDelete
 		localVarPostBody    interface{}
@@ -688,7 +646,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteAnycastVersio
 		localVarReturnValue map[string]interface{}
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerDeleteAnycastVersion")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.DeleteAnycastVersion")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -717,20 +675,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteAnycastVersio
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -761,18 +705,18 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteAnycastVersio
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerDeleteOnpremHostRequest struct {
+type OnPremAnycastManagerAPIDeleteOnpremHostRequest struct {
 	ctx        context.Context
 	ApiService OnPremAnycastManagerAPI
 	id         int64
 }
 
-func (r ApiOnPremAnycastManagerDeleteOnpremHostRequest) Execute() (map[string]interface{}, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerDeleteOnpremHostExecute(r)
+func (r OnPremAnycastManagerAPIDeleteOnpremHostRequest) Execute() (map[string]interface{}, *http.Response, error) {
+	return r.ApiService.DeleteOnpremHostExecute(r)
 }
 
 /*
-OnPremAnycastManagerDeleteOnpremHost Delete On-Prem Host
+DeleteOnpremHost Delete On-Prem Host
 
 Use this method to delete the addressed on-prem host.
 @responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -781,10 +725,10 @@ Use this method to delete the addressed on-prem host.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id
-	@return ApiOnPremAnycastManagerDeleteOnpremHostRequest
+	@return OnPremAnycastManagerAPIDeleteOnpremHostRequest
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteOnpremHost(ctx context.Context, id int64) ApiOnPremAnycastManagerDeleteOnpremHostRequest {
-	return ApiOnPremAnycastManagerDeleteOnpremHostRequest{
+func (a *OnPremAnycastManagerAPIService) DeleteOnpremHost(ctx context.Context, id int64) OnPremAnycastManagerAPIDeleteOnpremHostRequest {
+	return OnPremAnycastManagerAPIDeleteOnpremHostRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -794,7 +738,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteOnpremHost(ct
 // Execute executes the request
 //
 //	@return map[string]interface{}
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteOnpremHostExecute(r ApiOnPremAnycastManagerDeleteOnpremHostRequest) (map[string]interface{}, *http.Response, error) {
+func (a *OnPremAnycastManagerAPIService) DeleteOnpremHostExecute(r OnPremAnycastManagerAPIDeleteOnpremHostRequest) (map[string]interface{}, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodDelete
 		localVarPostBody    interface{}
@@ -802,7 +746,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteOnpremHostExe
 		localVarReturnValue map[string]interface{}
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerDeleteOnpremHost")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.DeleteOnpremHost")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -831,20 +775,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteOnpremHostExe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -875,18 +805,18 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerDeleteOnpremHostExe
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerGetAnycastConfigRequest struct {
+type OnPremAnycastManagerAPIGetAnycastConfigRequest struct {
 	ctx        context.Context
 	ApiService OnPremAnycastManagerAPI
 	id         int64
 }
 
-func (r ApiOnPremAnycastManagerGetAnycastConfigRequest) Execute() (*ProtoAnycastConfigResponse, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerGetAnycastConfigExecute(r)
+func (r OnPremAnycastManagerAPIGetAnycastConfigRequest) Execute() (*AnycastConfigResponse, *http.Response, error) {
+	return r.ApiService.GetAnycastConfigExecute(r)
 }
 
 /*
-OnPremAnycastManagerGetAnycastConfig Retrieve Anycast Configuration
+GetAnycastConfig Retrieve Anycast Configuration
 
 Use this method to retrieve the specified anycast configuration, together with the list of member hosts.
 @responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -895,10 +825,10 @@ Use this method to retrieve the specified anycast configuration, together with t
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id
-	@return ApiOnPremAnycastManagerGetAnycastConfigRequest
+	@return OnPremAnycastManagerAPIGetAnycastConfigRequest
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetAnycastConfig(ctx context.Context, id int64) ApiOnPremAnycastManagerGetAnycastConfigRequest {
-	return ApiOnPremAnycastManagerGetAnycastConfigRequest{
+func (a *OnPremAnycastManagerAPIService) GetAnycastConfig(ctx context.Context, id int64) OnPremAnycastManagerAPIGetAnycastConfigRequest {
+	return OnPremAnycastManagerAPIGetAnycastConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -907,16 +837,16 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetAnycastConfig(ct
 
 // Execute executes the request
 //
-//	@return ProtoAnycastConfigResponse
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetAnycastConfigExecute(r ApiOnPremAnycastManagerGetAnycastConfigRequest) (*ProtoAnycastConfigResponse, *http.Response, error) {
+//	@return AnycastConfigResponse
+func (a *OnPremAnycastManagerAPIService) GetAnycastConfigExecute(r OnPremAnycastManagerAPIGetAnycastConfigRequest) (*AnycastConfigResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *ProtoAnycastConfigResponse
+		localVarReturnValue *AnycastConfigResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerGetAnycastConfig")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.GetAnycastConfig")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -945,20 +875,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetAnycastConfigExe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -989,7 +905,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetAnycastConfigExe
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerGetAnycastConfigListRequest struct {
+type OnPremAnycastManagerAPIGetAnycastConfigListRequest struct {
 	ctx          context.Context
 	ApiService   OnPremAnycastManagerAPI
 	accountId    *int64
@@ -1001,56 +917,56 @@ type ApiOnPremAnycastManagerGetAnycastConfigListRequest struct {
 	torderBy     *string
 }
 
-func (r ApiOnPremAnycastManagerGetAnycastConfigListRequest) AccountId(accountId int64) ApiOnPremAnycastManagerGetAnycastConfigListRequest {
+func (r OnPremAnycastManagerAPIGetAnycastConfigListRequest) AccountId(accountId int64) OnPremAnycastManagerAPIGetAnycastConfigListRequest {
 	r.accountId = &accountId
 	return r
 }
 
-func (r ApiOnPremAnycastManagerGetAnycastConfigListRequest) Service(service string) ApiOnPremAnycastManagerGetAnycastConfigListRequest {
+func (r OnPremAnycastManagerAPIGetAnycastConfigListRequest) Service(service string) OnPremAnycastManagerAPIGetAnycastConfigListRequest {
 	r.service = &service
 	return r
 }
 
-func (r ApiOnPremAnycastManagerGetAnycastConfigListRequest) HostId(hostId int64) ApiOnPremAnycastManagerGetAnycastConfigListRequest {
+func (r OnPremAnycastManagerAPIGetAnycastConfigListRequest) HostId(hostId int64) OnPremAnycastManagerAPIGetAnycastConfigListRequest {
 	r.hostId = &hostId
 	return r
 }
 
-func (r ApiOnPremAnycastManagerGetAnycastConfigListRequest) Ophid(ophid string) ApiOnPremAnycastManagerGetAnycastConfigListRequest {
+func (r OnPremAnycastManagerAPIGetAnycastConfigListRequest) Ophid(ophid string) OnPremAnycastManagerAPIGetAnycastConfigListRequest {
 	r.ophid = &ophid
 	return r
 }
 
-func (r ApiOnPremAnycastManagerGetAnycastConfigListRequest) IsConfigured(isConfigured bool) ApiOnPremAnycastManagerGetAnycastConfigListRequest {
+func (r OnPremAnycastManagerAPIGetAnycastConfigListRequest) IsConfigured(isConfigured bool) OnPremAnycastManagerAPIGetAnycastConfigListRequest {
 	r.isConfigured = &isConfigured
 	return r
 }
 
-func (r ApiOnPremAnycastManagerGetAnycastConfigListRequest) Tfilter(tfilter string) ApiOnPremAnycastManagerGetAnycastConfigListRequest {
+func (r OnPremAnycastManagerAPIGetAnycastConfigListRequest) Tfilter(tfilter string) OnPremAnycastManagerAPIGetAnycastConfigListRequest {
 	r.tfilter = &tfilter
 	return r
 }
 
-func (r ApiOnPremAnycastManagerGetAnycastConfigListRequest) TorderBy(torderBy string) ApiOnPremAnycastManagerGetAnycastConfigListRequest {
+func (r OnPremAnycastManagerAPIGetAnycastConfigListRequest) TorderBy(torderBy string) OnPremAnycastManagerAPIGetAnycastConfigListRequest {
 	r.torderBy = &torderBy
 	return r
 }
 
-func (r ApiOnPremAnycastManagerGetAnycastConfigListRequest) Execute() (*ProtoGetAnycastConfigListResponse, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerGetAnycastConfigListExecute(r)
+func (r OnPremAnycastManagerAPIGetAnycastConfigListRequest) Execute() (*GetAnycastConfigListResponse, *http.Response, error) {
+	return r.ApiService.GetAnycastConfigListExecute(r)
 }
 
 /*
-OnPremAnycastManagerGetAnycastConfigList Retrieve Multiple Anycast Configurations
+GetAnycastConfigList Retrieve Multiple Anycast Configurations
 
 Without any filtering, use this method to retrieve all named anycast configurations for the account of authorization. Anycast configuration comprises common anycast configuration data that is defined in support of one service on a set of on-prem hosts. The anycast configurations resulting from this call will not include the list(s) of member hosts. Retrieving the list of member hosts requires the GET operation on single anycast configuration resource. If the account has no anycast configurations defined, the result of this call will be an empty list.
 @responses.500._error {"code": "INTERNAL", "message": "Internal Server Error", "status": 500}
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiOnPremAnycastManagerGetAnycastConfigListRequest
+	@return OnPremAnycastManagerAPIGetAnycastConfigListRequest
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetAnycastConfigList(ctx context.Context) ApiOnPremAnycastManagerGetAnycastConfigListRequest {
-	return ApiOnPremAnycastManagerGetAnycastConfigListRequest{
+func (a *OnPremAnycastManagerAPIService) GetAnycastConfigList(ctx context.Context) OnPremAnycastManagerAPIGetAnycastConfigListRequest {
+	return OnPremAnycastManagerAPIGetAnycastConfigListRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -1058,16 +974,16 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetAnycastConfigLis
 
 // Execute executes the request
 //
-//	@return ProtoGetAnycastConfigListResponse
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetAnycastConfigListExecute(r ApiOnPremAnycastManagerGetAnycastConfigListRequest) (*ProtoGetAnycastConfigListResponse, *http.Response, error) {
+//	@return GetAnycastConfigListResponse
+func (a *OnPremAnycastManagerAPIService) GetAnycastConfigListExecute(r OnPremAnycastManagerAPIGetAnycastConfigListRequest) (*GetAnycastConfigListResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *ProtoGetAnycastConfigListResponse
+		localVarReturnValue *GetAnycastConfigListResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerGetAnycastConfigList")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.GetAnycastConfigList")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -1116,20 +1032,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetAnycastConfigLis
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1160,18 +1062,18 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetAnycastConfigLis
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerGetAnycastVersionRequest struct {
+type OnPremAnycastManagerAPIGetAnycastVersionRequest struct {
 	ctx        context.Context
 	ApiService OnPremAnycastManagerAPI
 	id         int64
 }
 
-func (r ApiOnPremAnycastManagerGetAnycastVersionRequest) Execute() (*ProtoAnycastVersion, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerGetAnycastVersionExecute(r)
+func (r OnPremAnycastManagerAPIGetAnycastVersionRequest) Execute() (*AnycastVersion, *http.Response, error) {
+	return r.ApiService.GetAnycastVersionExecute(r)
 }
 
 /*
-OnPremAnycastManagerGetAnycastVersion Retrieve Anycast Version
+GetAnycastVersion Retrieve Anycast Version
 
 Use this method to retrieve the anycast version for the given account id
 @responses.404._error {"code": "NOT_FOUND", "message": "", "status": 404}
@@ -1179,10 +1081,10 @@ Use this method to retrieve the anycast version for the given account id
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id
-	@return ApiOnPremAnycastManagerGetAnycastVersionRequest
+	@return OnPremAnycastManagerAPIGetAnycastVersionRequest
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetAnycastVersion(ctx context.Context, id int64) ApiOnPremAnycastManagerGetAnycastVersionRequest {
-	return ApiOnPremAnycastManagerGetAnycastVersionRequest{
+func (a *OnPremAnycastManagerAPIService) GetAnycastVersion(ctx context.Context, id int64) OnPremAnycastManagerAPIGetAnycastVersionRequest {
+	return OnPremAnycastManagerAPIGetAnycastVersionRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -1191,16 +1093,16 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetAnycastVersion(c
 
 // Execute executes the request
 //
-//	@return ProtoAnycastVersion
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetAnycastVersionExecute(r ApiOnPremAnycastManagerGetAnycastVersionRequest) (*ProtoAnycastVersion, *http.Response, error) {
+//	@return AnycastVersion
+func (a *OnPremAnycastManagerAPIService) GetAnycastVersionExecute(r OnPremAnycastManagerAPIGetAnycastVersionRequest) (*AnycastVersion, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *ProtoAnycastVersion
+		localVarReturnValue *AnycastVersion
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerGetAnycastVersion")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.GetAnycastVersion")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -1229,20 +1131,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetAnycastVersionEx
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1273,7 +1161,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetAnycastVersionEx
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerGetOnpremConfigRequest struct {
+type OnPremAnycastManagerAPIGetOnpremConfigRequest struct {
 	ctx        context.Context
 	ApiService OnPremAnycastManagerAPI
 	ophid      string
@@ -1282,22 +1170,22 @@ type ApiOnPremAnycastManagerGetOnpremConfigRequest struct {
 	appVersion *string
 }
 
-func (r ApiOnPremAnycastManagerGetOnpremConfigRequest) AppName(appName string) ApiOnPremAnycastManagerGetOnpremConfigRequest {
+func (r OnPremAnycastManagerAPIGetOnpremConfigRequest) AppName(appName string) OnPremAnycastManagerAPIGetOnpremConfigRequest {
 	r.appName = &appName
 	return r
 }
 
-func (r ApiOnPremAnycastManagerGetOnpremConfigRequest) AppVersion(appVersion string) ApiOnPremAnycastManagerGetOnpremConfigRequest {
+func (r OnPremAnycastManagerAPIGetOnpremConfigRequest) AppVersion(appVersion string) OnPremAnycastManagerAPIGetOnpremConfigRequest {
 	r.appVersion = &appVersion
 	return r
 }
 
-func (r ApiOnPremAnycastManagerGetOnpremConfigRequest) Execute() (*ServiceConfig, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerGetOnpremConfigExecute(r)
+func (r OnPremAnycastManagerAPIGetOnpremConfigRequest) Execute() (*ServiceConfig, *http.Response, error) {
+	return r.ApiService.GetOnpremConfigExecute(r)
 }
 
 /*
-OnPremAnycastManagerGetOnpremConfig Retrieve Generated, Per-Host Anycast Configuration
+GetOnpremConfig Retrieve Generated, Per-Host Anycast Configuration
 
 Use this method to retrieve generated anycast configuration for anycast-enabled on-prem host. Retrieved configuration includes both interface and routing configuration. See common config manager documentation for the description of the returned payload. "ophid" is the system-assigned unique character-string identifier of the host. "version" can be either the timestamp of the configuration version that is sought after, or the word "latest". "latest" signifies the most recent generated configuration for this host.
 @responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -1307,10 +1195,10 @@ Use this method to retrieve generated anycast configuration for anycast-enabled 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param ophid
 	@param version
-	@return ApiOnPremAnycastManagerGetOnpremConfigRequest
+	@return OnPremAnycastManagerAPIGetOnpremConfigRequest
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremConfig(ctx context.Context, ophid string, version string) ApiOnPremAnycastManagerGetOnpremConfigRequest {
-	return ApiOnPremAnycastManagerGetOnpremConfigRequest{
+func (a *OnPremAnycastManagerAPIService) GetOnpremConfig(ctx context.Context, ophid string, version string) OnPremAnycastManagerAPIGetOnpremConfigRequest {
+	return OnPremAnycastManagerAPIGetOnpremConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
 		ophid:      ophid,
@@ -1321,7 +1209,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremConfig(ctx
 // Execute executes the request
 //
 //	@return ServiceConfig
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremConfigExecute(r ApiOnPremAnycastManagerGetOnpremConfigRequest) (*ServiceConfig, *http.Response, error) {
+func (a *OnPremAnycastManagerAPIService) GetOnpremConfigExecute(r OnPremAnycastManagerAPIGetOnpremConfigRequest) (*ServiceConfig, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -1329,7 +1217,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremConfigExec
 		localVarReturnValue *ServiceConfig
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerGetOnpremConfig")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.GetOnpremConfig")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -1365,20 +1253,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremConfigExec
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1409,7 +1283,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremConfigExec
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerGetOnpremConfig2Request struct {
+type OnPremAnycastManagerAPIGetOnpremConfig2Request struct {
 	ctx        context.Context
 	ApiService OnPremAnycastManagerAPI
 	ophid      string
@@ -1418,22 +1292,22 @@ type ApiOnPremAnycastManagerGetOnpremConfig2Request struct {
 	appVersion *string
 }
 
-func (r ApiOnPremAnycastManagerGetOnpremConfig2Request) AppName(appName string) ApiOnPremAnycastManagerGetOnpremConfig2Request {
+func (r OnPremAnycastManagerAPIGetOnpremConfig2Request) AppName(appName string) OnPremAnycastManagerAPIGetOnpremConfig2Request {
 	r.appName = &appName
 	return r
 }
 
-func (r ApiOnPremAnycastManagerGetOnpremConfig2Request) AppVersion(appVersion string) ApiOnPremAnycastManagerGetOnpremConfig2Request {
+func (r OnPremAnycastManagerAPIGetOnpremConfig2Request) AppVersion(appVersion string) OnPremAnycastManagerAPIGetOnpremConfig2Request {
 	r.appVersion = &appVersion
 	return r
 }
 
-func (r ApiOnPremAnycastManagerGetOnpremConfig2Request) Execute() (*ServiceConfig, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerGetOnpremConfig2Execute(r)
+func (r OnPremAnycastManagerAPIGetOnpremConfig2Request) Execute() (*ServiceConfig, *http.Response, error) {
+	return r.ApiService.GetOnpremConfig2Execute(r)
 }
 
 /*
-OnPremAnycastManagerGetOnpremConfig2 Retrieve Generated, Per-Host Anycast Configuration
+GetOnpremConfig2 Retrieve Generated, Per-Host Anycast Configuration
 
 Use this method to retrieve generated anycast configuration for anycast-enabled on-prem host. Retrieved configuration includes both interface and routing configuration. See common config manager documentation for the description of the returned payload. "ophid" is the system-assigned unique character-string identifier of the host. "version" can be either the timestamp of the configuration version that is sought after, or the word "latest". "latest" signifies the most recent generated configuration for this host.
 @responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -1443,10 +1317,10 @@ Use this method to retrieve generated anycast configuration for anycast-enabled 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param ophid
 	@param version
-	@return ApiOnPremAnycastManagerGetOnpremConfig2Request
+	@return OnPremAnycastManagerAPIGetOnpremConfig2Request
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremConfig2(ctx context.Context, ophid string, version string) ApiOnPremAnycastManagerGetOnpremConfig2Request {
-	return ApiOnPremAnycastManagerGetOnpremConfig2Request{
+func (a *OnPremAnycastManagerAPIService) GetOnpremConfig2(ctx context.Context, ophid string, version string) OnPremAnycastManagerAPIGetOnpremConfig2Request {
+	return OnPremAnycastManagerAPIGetOnpremConfig2Request{
 		ApiService: a,
 		ctx:        ctx,
 		ophid:      ophid,
@@ -1457,7 +1331,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremConfig2(ct
 // Execute executes the request
 //
 //	@return ServiceConfig
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremConfig2Execute(r ApiOnPremAnycastManagerGetOnpremConfig2Request) (*ServiceConfig, *http.Response, error) {
+func (a *OnPremAnycastManagerAPIService) GetOnpremConfig2Execute(r OnPremAnycastManagerAPIGetOnpremConfig2Request) (*ServiceConfig, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -1465,7 +1339,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremConfig2Exe
 		localVarReturnValue *ServiceConfig
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerGetOnpremConfig2")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.GetOnpremConfig2")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -1501,20 +1375,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremConfig2Exe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1545,18 +1405,18 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremConfig2Exe
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerGetOnpremHostRequest struct {
+type OnPremAnycastManagerAPIGetOnpremHostRequest struct {
 	ctx        context.Context
 	ApiService OnPremAnycastManagerAPI
 	id         int64
 }
 
-func (r ApiOnPremAnycastManagerGetOnpremHostRequest) Execute() (*ProtoOnpremHostResponse, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerGetOnpremHostExecute(r)
+func (r OnPremAnycastManagerAPIGetOnpremHostRequest) Execute() (*OnpremHostResponse, *http.Response, error) {
+	return r.ApiService.GetOnpremHostExecute(r)
 }
 
 /*
-OnPremAnycastManagerGetOnpremHost Retrieve On-Prem Host
+GetOnpremHost Retrieve On-Prem Host
 
 Use this method to retrieve the specified on-prem host from the anycast database.
 @responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -1565,10 +1425,10 @@ Use this method to retrieve the specified on-prem host from the anycast database
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id
-	@return ApiOnPremAnycastManagerGetOnpremHostRequest
+	@return OnPremAnycastManagerAPIGetOnpremHostRequest
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremHost(ctx context.Context, id int64) ApiOnPremAnycastManagerGetOnpremHostRequest {
-	return ApiOnPremAnycastManagerGetOnpremHostRequest{
+func (a *OnPremAnycastManagerAPIService) GetOnpremHost(ctx context.Context, id int64) OnPremAnycastManagerAPIGetOnpremHostRequest {
+	return OnPremAnycastManagerAPIGetOnpremHostRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -1577,16 +1437,16 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremHost(ctx c
 
 // Execute executes the request
 //
-//	@return ProtoOnpremHostResponse
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremHostExecute(r ApiOnPremAnycastManagerGetOnpremHostRequest) (*ProtoOnpremHostResponse, *http.Response, error) {
+//	@return OnpremHostResponse
+func (a *OnPremAnycastManagerAPIService) GetOnpremHostExecute(r OnPremAnycastManagerAPIGetOnpremHostRequest) (*OnpremHostResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *ProtoOnpremHostResponse
+		localVarReturnValue *OnpremHostResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerGetOnpremHost")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.GetOnpremHost")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -1615,20 +1475,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremHostExecut
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1659,18 +1505,18 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetOnpremHostExecut
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerGetStatusRequest struct {
+type OnPremAnycastManagerAPIGetStatusRequest struct {
 	ctx        context.Context
 	ApiService OnPremAnycastManagerAPI
 	ophid      string
 }
 
-func (r ApiOnPremAnycastManagerGetStatusRequest) Execute() (*ServiceStatusUpdateRequest, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerGetStatusExecute(r)
+func (r OnPremAnycastManagerAPIGetStatusRequest) Execute() (*ServiceStatusUpdateRequest, *http.Response, error) {
+	return r.ApiService.GetStatusExecute(r)
 }
 
 /*
-OnPremAnycastManagerGetStatus Retrieve Configuration Status
+GetStatus Retrieve Configuration Status
 
 Use this method to retrieve configuration status for the specified host. The configuration status is retrieved from the anycast service database.  "ophid" is the system-assigned unique character-string identifier of the host. "version" parameter can be either the timestamp of the configuration version that is sought after, or the word "latest". "latest' signifies the most recent generated configuration for this host.
 @responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -1679,10 +1525,10 @@ Use this method to retrieve configuration status for the specified host. The con
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param ophid
-	@return ApiOnPremAnycastManagerGetStatusRequest
+	@return OnPremAnycastManagerAPIGetStatusRequest
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetStatus(ctx context.Context, ophid string) ApiOnPremAnycastManagerGetStatusRequest {
-	return ApiOnPremAnycastManagerGetStatusRequest{
+func (a *OnPremAnycastManagerAPIService) GetStatus(ctx context.Context, ophid string) OnPremAnycastManagerAPIGetStatusRequest {
+	return OnPremAnycastManagerAPIGetStatusRequest{
 		ApiService: a,
 		ctx:        ctx,
 		ophid:      ophid,
@@ -1692,7 +1538,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetStatus(ctx conte
 // Execute executes the request
 //
 //	@return ServiceStatusUpdateRequest
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetStatusExecute(r ApiOnPremAnycastManagerGetStatusRequest) (*ServiceStatusUpdateRequest, *http.Response, error) {
+func (a *OnPremAnycastManagerAPIService) GetStatusExecute(r OnPremAnycastManagerAPIGetStatusRequest) (*ServiceStatusUpdateRequest, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -1700,7 +1546,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetStatusExecute(r 
 		localVarReturnValue *ServiceStatusUpdateRequest
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerGetStatus")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.GetStatus")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -1729,20 +1575,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetStatusExecute(r 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1773,18 +1605,18 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetStatusExecute(r 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerGetStatus2Request struct {
+type OnPremAnycastManagerAPIGetStatus2Request struct {
 	ctx        context.Context
 	ApiService OnPremAnycastManagerAPI
 	ophid      string
 }
 
-func (r ApiOnPremAnycastManagerGetStatus2Request) Execute() (*ServiceStatusUpdateRequest, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerGetStatus2Execute(r)
+func (r OnPremAnycastManagerAPIGetStatus2Request) Execute() (*ServiceStatusUpdateRequest, *http.Response, error) {
+	return r.ApiService.GetStatus2Execute(r)
 }
 
 /*
-OnPremAnycastManagerGetStatus2 Retrieve Configuration Status
+GetStatus2 Retrieve Configuration Status
 
 Use this method to retrieve configuration status for the specified host. The configuration status is retrieved from the anycast service database.  "ophid" is the system-assigned unique character-string identifier of the host. "version" parameter can be either the timestamp of the configuration version that is sought after, or the word "latest". "latest' signifies the most recent generated configuration for this host.
 @responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -1793,10 +1625,10 @@ Use this method to retrieve configuration status for the specified host. The con
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param ophid
-	@return ApiOnPremAnycastManagerGetStatus2Request
+	@return OnPremAnycastManagerAPIGetStatus2Request
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetStatus2(ctx context.Context, ophid string) ApiOnPremAnycastManagerGetStatus2Request {
-	return ApiOnPremAnycastManagerGetStatus2Request{
+func (a *OnPremAnycastManagerAPIService) GetStatus2(ctx context.Context, ophid string) OnPremAnycastManagerAPIGetStatus2Request {
+	return OnPremAnycastManagerAPIGetStatus2Request{
 		ApiService: a,
 		ctx:        ctx,
 		ophid:      ophid,
@@ -1806,7 +1638,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetStatus2(ctx cont
 // Execute executes the request
 //
 //	@return ServiceStatusUpdateRequest
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetStatus2Execute(r ApiOnPremAnycastManagerGetStatus2Request) (*ServiceStatusUpdateRequest, *http.Response, error) {
+func (a *OnPremAnycastManagerAPIService) GetStatus2Execute(r OnPremAnycastManagerAPIGetStatus2Request) (*ServiceStatusUpdateRequest, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -1814,7 +1646,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetStatus2Execute(r
 		localVarReturnValue *ServiceStatusUpdateRequest
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerGetStatus2")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.GetStatus2")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -1843,20 +1675,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetStatus2Execute(r
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1887,7 +1705,7 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerGetStatus2Execute(r
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest struct {
+type OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest struct {
 	ctx          context.Context
 	ApiService   OnPremAnycastManagerAPI
 	accountId    *int64
@@ -1899,56 +1717,56 @@ type ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest struct {
 	torderBy     *string
 }
 
-func (r ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest) AccountId(accountId int64) ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest {
+func (r OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest) AccountId(accountId int64) OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest {
 	r.accountId = &accountId
 	return r
 }
 
-func (r ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest) Service(service string) ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest {
+func (r OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest) Service(service string) OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest {
 	r.service = &service
 	return r
 }
 
-func (r ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest) HostId(hostId int64) ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest {
+func (r OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest) HostId(hostId int64) OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest {
 	r.hostId = &hostId
 	return r
 }
 
-func (r ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest) Ophid(ophid string) ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest {
+func (r OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest) Ophid(ophid string) OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest {
 	r.ophid = &ophid
 	return r
 }
 
-func (r ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest) IsConfigured(isConfigured bool) ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest {
+func (r OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest) IsConfigured(isConfigured bool) OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest {
 	r.isConfigured = &isConfigured
 	return r
 }
 
-func (r ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest) Tfilter(tfilter string) ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest {
+func (r OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest) Tfilter(tfilter string) OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest {
 	r.tfilter = &tfilter
 	return r
 }
 
-func (r ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest) TorderBy(torderBy string) ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest {
+func (r OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest) TorderBy(torderBy string) OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest {
 	r.torderBy = &torderBy
 	return r
 }
 
-func (r ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest) Execute() (*ProtoGetAnycastConfigListResponse, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerListAnycastConfigsWithRuntimeStatusExecute(r)
+func (r OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest) Execute() (*GetAnycastConfigListResponse, *http.Response, error) {
+	return r.ApiService.ListAnycastConfigsWithRuntimeStatusExecute(r)
 }
 
 /*
-OnPremAnycastManagerListAnycastConfigsWithRuntimeStatus Read list of Anycast Configurations
+ListAnycastConfigsWithRuntimeStatus Read list of Anycast Configurations
 
 Without any filtering, use this method to retrieve all named anycast configurations for the account of authorization. Anycast configuration comprises common anycast configuration data that is defined in support of one service on a set of on-prem hosts. The anycast configurations resulting from this call will not include the list(s) of member hosts. Retrieving the list of member hosts requires the GET operation on single anycast configuration resource. If the account has no anycast configurations defined, the result of this call will be an empty list.
 @responses.500._error {"code": "INTERNAL", "message": "Internal Server Error", "status": 500}
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest
+	@return OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerListAnycastConfigsWithRuntimeStatus(ctx context.Context) ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest {
-	return ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest{
+func (a *OnPremAnycastManagerAPIService) ListAnycastConfigsWithRuntimeStatus(ctx context.Context) OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest {
+	return OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -1956,16 +1774,16 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerListAnycastConfigsW
 
 // Execute executes the request
 //
-//	@return ProtoGetAnycastConfigListResponse
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerListAnycastConfigsWithRuntimeStatusExecute(r ApiOnPremAnycastManagerListAnycastConfigsWithRuntimeStatusRequest) (*ProtoGetAnycastConfigListResponse, *http.Response, error) {
+//	@return GetAnycastConfigListResponse
+func (a *OnPremAnycastManagerAPIService) ListAnycastConfigsWithRuntimeStatusExecute(r OnPremAnycastManagerAPIListAnycastConfigsWithRuntimeStatusRequest) (*GetAnycastConfigListResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *ProtoGetAnycastConfigListResponse
+		localVarReturnValue *GetAnycastConfigListResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerListAnycastConfigsWithRuntimeStatus")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.ListAnycastConfigsWithRuntimeStatus")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -2014,20 +1832,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerListAnycastConfigsW
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -2058,18 +1862,18 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerListAnycastConfigsW
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerReadAnycastConfigWithRuntimeStatusRequest struct {
+type OnPremAnycastManagerAPIReadAnycastConfigWithRuntimeStatusRequest struct {
 	ctx        context.Context
 	ApiService OnPremAnycastManagerAPI
 	id         int64
 }
 
-func (r ApiOnPremAnycastManagerReadAnycastConfigWithRuntimeStatusRequest) Execute() (*ProtoAnycastConfigResponse, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerReadAnycastConfigWithRuntimeStatusExecute(r)
+func (r OnPremAnycastManagerAPIReadAnycastConfigWithRuntimeStatusRequest) Execute() (*AnycastConfigResponse, *http.Response, error) {
+	return r.ApiService.ReadAnycastConfigWithRuntimeStatusExecute(r)
 }
 
 /*
-OnPremAnycastManagerReadAnycastConfigWithRuntimeStatus Read Anycast Configuration
+ReadAnycastConfigWithRuntimeStatus Read Anycast Configuration
 
 Use this method to retrieve the specified anycast configuration, together with the list of member hosts.
 @responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -2078,10 +1882,10 @@ Use this method to retrieve the specified anycast configuration, together with t
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id
-	@return ApiOnPremAnycastManagerReadAnycastConfigWithRuntimeStatusRequest
+	@return OnPremAnycastManagerAPIReadAnycastConfigWithRuntimeStatusRequest
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerReadAnycastConfigWithRuntimeStatus(ctx context.Context, id int64) ApiOnPremAnycastManagerReadAnycastConfigWithRuntimeStatusRequest {
-	return ApiOnPremAnycastManagerReadAnycastConfigWithRuntimeStatusRequest{
+func (a *OnPremAnycastManagerAPIService) ReadAnycastConfigWithRuntimeStatus(ctx context.Context, id int64) OnPremAnycastManagerAPIReadAnycastConfigWithRuntimeStatusRequest {
+	return OnPremAnycastManagerAPIReadAnycastConfigWithRuntimeStatusRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -2090,16 +1894,16 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerReadAnycastConfigWi
 
 // Execute executes the request
 //
-//	@return ProtoAnycastConfigResponse
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerReadAnycastConfigWithRuntimeStatusExecute(r ApiOnPremAnycastManagerReadAnycastConfigWithRuntimeStatusRequest) (*ProtoAnycastConfigResponse, *http.Response, error) {
+//	@return AnycastConfigResponse
+func (a *OnPremAnycastManagerAPIService) ReadAnycastConfigWithRuntimeStatusExecute(r OnPremAnycastManagerAPIReadAnycastConfigWithRuntimeStatusRequest) (*AnycastConfigResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *ProtoAnycastConfigResponse
+		localVarReturnValue *AnycastConfigResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerReadAnycastConfigWithRuntimeStatus")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.ReadAnycastConfigWithRuntimeStatus")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -2128,20 +1932,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerReadAnycastConfigWi
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -2172,24 +1962,24 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerReadAnycastConfigWi
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerUpdateAnycastConfigRequest struct {
+type OnPremAnycastManagerAPIUpdateAnycastConfigRequest struct {
 	ctx        context.Context
 	ApiService OnPremAnycastManagerAPI
 	id         int64
-	body       *ProtoAnycastConfig
+	body       *AnycastConfig
 }
 
-func (r ApiOnPremAnycastManagerUpdateAnycastConfigRequest) Body(body ProtoAnycastConfig) ApiOnPremAnycastManagerUpdateAnycastConfigRequest {
+func (r OnPremAnycastManagerAPIUpdateAnycastConfigRequest) Body(body AnycastConfig) OnPremAnycastManagerAPIUpdateAnycastConfigRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiOnPremAnycastManagerUpdateAnycastConfigRequest) Execute() (*ProtoAnycastConfigResponse, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerUpdateAnycastConfigExecute(r)
+func (r OnPremAnycastManagerAPIUpdateAnycastConfigRequest) Execute() (*AnycastConfigResponse, *http.Response, error) {
+	return r.ApiService.UpdateAnycastConfigExecute(r)
 }
 
 /*
-OnPremAnycastManagerUpdateAnycastConfig Create or Update Anycast Configuration
+UpdateAnycastConfig Create or Update Anycast Configuration
 
 Use this method to replace the addressed anycast configuration with configuration from the payload. If the addressed configuration does not exist, it will be created. Anycast configuration specified in the payload may contain the list of on-prem hosts that are supposed to be established as members of the specified configuration. If the anycast service has no information about one or more hosts from this list, such hosts will be created in the anycast service database. Note that the anycast service includes a background capability that verifies the validity of host data entered this way. This capability will delete any hosts created in this way that are determined to be invalid.
 @responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -2197,10 +1987,10 @@ Use this method to replace the addressed anycast configuration with configuratio
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id
-	@return ApiOnPremAnycastManagerUpdateAnycastConfigRequest
+	@return OnPremAnycastManagerAPIUpdateAnycastConfigRequest
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerUpdateAnycastConfig(ctx context.Context, id int64) ApiOnPremAnycastManagerUpdateAnycastConfigRequest {
-	return ApiOnPremAnycastManagerUpdateAnycastConfigRequest{
+func (a *OnPremAnycastManagerAPIService) UpdateAnycastConfig(ctx context.Context, id int64) OnPremAnycastManagerAPIUpdateAnycastConfigRequest {
+	return OnPremAnycastManagerAPIUpdateAnycastConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -2209,16 +1999,16 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerUpdateAnycastConfig
 
 // Execute executes the request
 //
-//	@return ProtoAnycastConfigResponse
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerUpdateAnycastConfigExecute(r ApiOnPremAnycastManagerUpdateAnycastConfigRequest) (*ProtoAnycastConfigResponse, *http.Response, error) {
+//	@return AnycastConfigResponse
+func (a *OnPremAnycastManagerAPIService) UpdateAnycastConfigExecute(r OnPremAnycastManagerAPIUpdateAnycastConfigRequest) (*AnycastConfigResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPut
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *ProtoAnycastConfigResponse
+		localVarReturnValue *AnycastConfigResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerUpdateAnycastConfig")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.UpdateAnycastConfig")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -2252,20 +2042,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerUpdateAnycastConfig
 	}
 	// body params
 	localVarPostBody = r.body
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -2296,24 +2072,24 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerUpdateAnycastConfig
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOnPremAnycastManagerUpdateOnpremHostRequest struct {
+type OnPremAnycastManagerAPIUpdateOnpremHostRequest struct {
 	ctx        context.Context
 	ApiService OnPremAnycastManagerAPI
 	id         int64
-	body       *ProtoOnpremHost
+	body       *OnpremHost
 }
 
-func (r ApiOnPremAnycastManagerUpdateOnpremHostRequest) Body(body ProtoOnpremHost) ApiOnPremAnycastManagerUpdateOnpremHostRequest {
+func (r OnPremAnycastManagerAPIUpdateOnpremHostRequest) Body(body OnpremHost) OnPremAnycastManagerAPIUpdateOnpremHostRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiOnPremAnycastManagerUpdateOnpremHostRequest) Execute() (*ProtoOnpremHostResponse, *http.Response, error) {
-	return r.ApiService.OnPremAnycastManagerUpdateOnpremHostExecute(r)
+func (r OnPremAnycastManagerAPIUpdateOnpremHostRequest) Execute() (*OnpremHostResponse, *http.Response, error) {
+	return r.ApiService.UpdateOnpremHostExecute(r)
 }
 
 /*
-OnPremAnycastManagerUpdateOnpremHost Create or Update On-Prem Host
+UpdateOnpremHost Create or Update On-Prem Host
 
 Use this method to create or update the addressed host as per the specified payload. The payload is supposed to provide complete replacement for the host data. If the addressed host does not exist, it will be created.
 @responses.400._error {"code": "INVALID_ARGUMENT", "message": "", "status": 400}
@@ -2321,10 +2097,10 @@ Use this method to create or update the addressed host as per the specified payl
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id Numeric host identifier
-	@return ApiOnPremAnycastManagerUpdateOnpremHostRequest
+	@return OnPremAnycastManagerAPIUpdateOnpremHostRequest
 */
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerUpdateOnpremHost(ctx context.Context, id int64) ApiOnPremAnycastManagerUpdateOnpremHostRequest {
-	return ApiOnPremAnycastManagerUpdateOnpremHostRequest{
+func (a *OnPremAnycastManagerAPIService) UpdateOnpremHost(ctx context.Context, id int64) OnPremAnycastManagerAPIUpdateOnpremHostRequest {
+	return OnPremAnycastManagerAPIUpdateOnpremHostRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -2333,16 +2109,16 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerUpdateOnpremHost(ct
 
 // Execute executes the request
 //
-//	@return ProtoOnpremHostResponse
-func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerUpdateOnpremHostExecute(r ApiOnPremAnycastManagerUpdateOnpremHostRequest) (*ProtoOnpremHostResponse, *http.Response, error) {
+//	@return OnpremHostResponse
+func (a *OnPremAnycastManagerAPIService) UpdateOnpremHostExecute(r OnPremAnycastManagerAPIUpdateOnpremHostRequest) (*OnpremHostResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPut
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *ProtoOnpremHostResponse
+		localVarReturnValue *OnpremHostResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.OnPremAnycastManagerUpdateOnpremHost")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OnPremAnycastManagerAPIService.UpdateOnpremHost")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -2376,20 +2152,6 @@ func (a *OnPremAnycastManagerAPIService) OnPremAnycastManagerUpdateOnpremHostExe
 	}
 	// body params
 	localVarPostBody = r.body
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

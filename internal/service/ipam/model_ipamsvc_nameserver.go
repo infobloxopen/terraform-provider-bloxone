@@ -71,7 +71,7 @@ var IpamsvcNameserverResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcNameserver(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcNameserver {
+func ExpandIpamsvcNameserver(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.Nameserver {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -83,11 +83,11 @@ func ExpandIpamsvcNameserver(ctx context.Context, o types.Object, diags *diag.Di
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcNameserverModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcNameserver {
+func (m *IpamsvcNameserverModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.Nameserver {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcNameserver{
+	to := &ipam.Nameserver{
 		ClientPrincipal:       m.ClientPrincipal.ValueStringPointer(),
 		GssTsigFallback:       m.GssTsigFallback.ValueBoolPointer(),
 		KerberosRekeyInterval: utils.Ptr(int64(m.KerberosRekeyInterval.ValueInt64())),
@@ -100,7 +100,7 @@ func (m *IpamsvcNameserverModel) Expand(ctx context.Context, diags *diag.Diagnos
 	return to
 }
 
-func FlattenIpamsvcNameserver(ctx context.Context, from *ipam.IpamsvcNameserver, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcNameserver(ctx context.Context, from *ipam.Nameserver, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcNameserverAttrTypes)
 	}
@@ -111,7 +111,7 @@ func FlattenIpamsvcNameserver(ctx context.Context, from *ipam.IpamsvcNameserver,
 	return t
 }
 
-func (m *IpamsvcNameserverModel) Flatten(ctx context.Context, from *ipam.IpamsvcNameserver, diags *diag.Diagnostics) {
+func (m *IpamsvcNameserverModel) Flatten(ctx context.Context, from *ipam.Nameserver, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

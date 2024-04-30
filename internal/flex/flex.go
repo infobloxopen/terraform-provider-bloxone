@@ -94,15 +94,6 @@ func ExpandFrameworkListString(ctx context.Context, tfList types.List, diags *di
 	return data
 }
 
-func FlattenFrameworkListString(ctx context.Context, l []string, diags *diag.Diagnostics) types.List {
-	if len(l) == 0 {
-		return types.ListNull(types.StringType)
-	}
-	tfList, d := types.ListValueFrom(ctx, types.StringType, l)
-	diags.Append(d...)
-	return tfList
-}
-
 func ExpandFrameworkListInt32(ctx context.Context, tfList types.List, diags *diag.Diagnostics) []int32 {
 	if tfList.IsNull() || tfList.IsUnknown() {
 		return nil
@@ -110,6 +101,15 @@ func ExpandFrameworkListInt32(ctx context.Context, tfList types.List, diags *dia
 	var data []int32
 	diags.Append(tfList.ElementsAs(ctx, &data, false)...)
 	return data
+}
+
+func FlattenFrameworkListString(ctx context.Context, l []string, diags *diag.Diagnostics) types.List {
+	if len(l) == 0 {
+		return types.ListNull(types.StringType)
+	}
+	tfList, d := types.ListValueFrom(ctx, types.StringType, l)
+	diags.Append(d...)
+	return tfList
 }
 
 func FlattenFrameworkListInt32(ctx context.Context, l []int32, diags *diag.Diagnostics) types.List {

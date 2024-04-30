@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -43,7 +43,7 @@ var ConfigECSZoneResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigECSZone(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigECSZone {
+func ExpandConfigECSZone(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.ECSZone {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -55,18 +55,18 @@ func ExpandConfigECSZone(ctx context.Context, o types.Object, diags *diag.Diagno
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigECSZoneModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigECSZone {
+func (m *ConfigECSZoneModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.ECSZone {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigECSZone{
+	to := &dnsconfig.ECSZone{
 		Access: flex.ExpandString(m.Access),
 		Fqdn:   flex.ExpandString(m.Fqdn),
 	}
 	return to
 }
 
-func FlattenConfigECSZone(ctx context.Context, from *dns_config.ConfigECSZone, diags *diag.Diagnostics) types.Object {
+func FlattenConfigECSZone(ctx context.Context, from *dnsconfig.ECSZone, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigECSZoneAttrTypes)
 	}
@@ -77,7 +77,7 @@ func FlattenConfigECSZone(ctx context.Context, from *dns_config.ConfigECSZone, d
 	return t
 }
 
-func (m *ConfigECSZoneModel) Flatten(ctx context.Context, from *dns_config.ConfigECSZone, diags *diag.Diagnostics) {
+func (m *ConfigECSZoneModel) Flatten(ctx context.Context, from *dnsconfig.ECSZone, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

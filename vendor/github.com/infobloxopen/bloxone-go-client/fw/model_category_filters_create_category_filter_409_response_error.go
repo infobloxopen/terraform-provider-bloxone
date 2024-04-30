@@ -19,10 +19,13 @@ var _ MappedNullable = &CategoryFiltersCreateCategoryFilter409ResponseError{}
 
 // CategoryFiltersCreateCategoryFilter409ResponseError struct for CategoryFiltersCreateCategoryFilter409ResponseError
 type CategoryFiltersCreateCategoryFilter409ResponseError struct {
-	Code    *string `json:"code,omitempty"`
-	Message *string `json:"message,omitempty"`
-	Status  *string `json:"status,omitempty"`
+	Code                 *string `json:"code,omitempty"`
+	Message              *string `json:"message,omitempty"`
+	Status               *string `json:"status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _CategoryFiltersCreateCategoryFilter409ResponseError CategoryFiltersCreateCategoryFilter409ResponseError
 
 // NewCategoryFiltersCreateCategoryFilter409ResponseError instantiates a new CategoryFiltersCreateCategoryFilter409ResponseError object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o CategoryFiltersCreateCategoryFilter409ResponseError) ToMap() (map[string
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *CategoryFiltersCreateCategoryFilter409ResponseError) UnmarshalJSON(data []byte) (err error) {
+	varCategoryFiltersCreateCategoryFilter409ResponseError := _CategoryFiltersCreateCategoryFilter409ResponseError{}
+
+	err = json.Unmarshal(data, &varCategoryFiltersCreateCategoryFilter409ResponseError)
+
+	if err != nil {
+		return err
+	}
+
+	*o = CategoryFiltersCreateCategoryFilter409ResponseError(varCategoryFiltersCreateCategoryFilter409ResponseError)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "code")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCategoryFiltersCreateCategoryFilter409ResponseError struct {

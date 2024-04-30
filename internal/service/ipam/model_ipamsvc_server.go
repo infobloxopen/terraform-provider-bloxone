@@ -208,7 +208,7 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 	},
 	"dhcp_config": schema.SingleNestedAttribute{
-		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes,
+		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes(false),
 		Optional:   true,
 		Computed:   true,
 		Default: objectdefault.StaticValue(types.ObjectValueMust(IpamsvcDHCPConfigAttrTypes, map[string]attr.Value{
@@ -216,6 +216,7 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 			"abandoned_reclaim_time_v6": types.Int64Value(3600),
 			"allow_unknown":             types.BoolValue(true),
 			"allow_unknown_v6":          types.BoolValue(true),
+			"echo_client_id":            types.BoolValue(true),
 			"filters":                   types.ListNull(types.StringType),
 			"filters_v6":                types.ListNull(types.StringType),
 			"ignore_client_uid":         types.BoolValue(true),
@@ -360,11 +361,11 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *IpamsvcServerModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcServer {
+func (m *IpamsvcServerModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.Server {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcServer{
+	to := &ipam.Server{
 		ClientPrincipal:                 flex.ExpandStringPointer(m.ClientPrincipal),
 		Comment:                         flex.ExpandStringPointer(m.Comment),
 		DdnsClientUpdate:                flex.ExpandStringPointer(m.DdnsClientUpdate),
@@ -403,7 +404,7 @@ func (m *IpamsvcServerModel) Expand(ctx context.Context, diags *diag.Diagnostics
 	return to
 }
 
-func FlattenIpamsvcServer(ctx context.Context, from *ipam.IpamsvcServer, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcServer(ctx context.Context, from *ipam.Server, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcServerAttrTypes)
 	}
@@ -414,7 +415,7 @@ func FlattenIpamsvcServer(ctx context.Context, from *ipam.IpamsvcServer, diags *
 	return t
 }
 
-func (m *IpamsvcServerModel) Flatten(ctx context.Context, from *ipam.IpamsvcServer, diags *diag.Diagnostics) {
+func (m *IpamsvcServerModel) Flatten(ctx context.Context, from *ipam.Server, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

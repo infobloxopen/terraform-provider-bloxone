@@ -76,7 +76,7 @@ func (r *IpSpaceResource) Create(ctx context.Context, req resource.CreateRequest
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		IpSpaceAPI.
-		IpSpaceCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Inherit(inheritanceType).
 		Execute()
@@ -104,7 +104,7 @@ func (r *IpSpaceResource) Read(ctx context.Context, req resource.ReadRequest, re
 
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		IpSpaceAPI.
-		IpSpaceRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
@@ -135,7 +135,7 @@ func (r *IpSpaceResource) Update(ctx context.Context, req resource.UpdateRequest
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		IpSpaceAPI.
-		IpSpaceUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Inherit(inheritanceType).
 		Execute()
@@ -164,7 +164,7 @@ func (r *IpSpaceResource) Delete(ctx context.Context, req resource.DeleteRequest
 	err := retry.RetryContext(ctx, IpSpaceOperationTimeout, func() *retry.RetryError {
 		httpRes, err := r.client.IPAddressManagementAPI.
 			IpSpaceAPI.
-			IpSpaceDelete(ctx, data.Id.ValueString()).
+			Delete(ctx, data.Id.ValueString()).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

@@ -8,13 +8,13 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_data"
+	"github.com/infobloxopen/bloxone-go-client/dnsdata"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccRecordAAAAResource_Rdata(t *testing.T) {
 	var resourceName = "bloxone_dns_aaaa_record.test_rdata"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -45,8 +45,8 @@ func TestAccRecordAAAAResource_Rdata(t *testing.T) {
 func TestAccRecordAAAAResource_Options(t *testing.T) {
 	var resourceName = "bloxone_dns_aaaa_record.test_options"
 	var datasourceName = "data.bloxone_dns_ptr_records.test"
-	var v1 dns_data.DataRecord
-	var v2 dns_data.DataRecord
+	var v1 dnsdata.Record
+	var v2 dnsdata.Record
 	viewName := acctest.RandomNameWithPrefix("view")
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 

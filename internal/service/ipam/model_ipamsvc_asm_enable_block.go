@@ -43,7 +43,7 @@ var IpamsvcAsmEnableBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcAsmEnableBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcAsmEnableBlock {
+func ExpandIpamsvcAsmEnableBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.AsmEnableBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -55,11 +55,11 @@ func ExpandIpamsvcAsmEnableBlock(ctx context.Context, o types.Object, diags *dia
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcAsmEnableBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcAsmEnableBlock {
+func (m *IpamsvcAsmEnableBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.AsmEnableBlock {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcAsmEnableBlock{
+	to := &ipam.AsmEnableBlock{
 		Enable:             m.Enable.ValueBoolPointer(),
 		EnableNotification: m.EnableNotification.ValueBoolPointer(),
 		ReenableDate:       flex.ExpandTimePointer(ctx, m.ReenableDate, diags),
@@ -67,7 +67,7 @@ func (m *IpamsvcAsmEnableBlockModel) Expand(ctx context.Context, diags *diag.Dia
 	return to
 }
 
-func FlattenIpamsvcAsmEnableBlock(ctx context.Context, from *ipam.IpamsvcAsmEnableBlock, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcAsmEnableBlock(ctx context.Context, from *ipam.AsmEnableBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcAsmEnableBlockAttrTypes)
 	}
@@ -78,7 +78,7 @@ func FlattenIpamsvcAsmEnableBlock(ctx context.Context, from *ipam.IpamsvcAsmEnab
 	return t
 }
 
-func (m *IpamsvcAsmEnableBlockModel) Flatten(ctx context.Context, from *ipam.IpamsvcAsmEnableBlock, diags *diag.Diagnostics) {
+func (m *IpamsvcAsmEnableBlockModel) Flatten(ctx context.Context, from *ipam.AsmEnableBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

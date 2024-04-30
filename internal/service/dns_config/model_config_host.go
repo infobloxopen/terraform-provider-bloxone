@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -154,7 +154,7 @@ var ConfigHostResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigHost {
+func ExpandConfigHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.Host {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -166,11 +166,11 @@ func ExpandConfigHost(ctx context.Context, o types.Object, diags *diag.Diagnosti
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigHost {
+func (m *ConfigHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.Host {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigHost{
+	to := &dnsconfig.Host{
 		AssociatedServer:   ExpandConfigHostAssociatedServer(ctx, m.AssociatedServer, diags),
 		InheritanceSources: ExpandConfigHostInheritance(ctx, m.InheritanceSources, diags),
 		KerberosKeys:       flex.ExpandFrameworkListNestedBlock(ctx, m.KerberosKeys, diags, ExpandConfigKerberosKey),
@@ -180,7 +180,7 @@ func (m *ConfigHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *
 	return to
 }
 
-func FlattenConfigHost(ctx context.Context, from *dns_config.ConfigHost, diags *diag.Diagnostics) types.Object {
+func FlattenConfigHost(ctx context.Context, from *dnsconfig.Host, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigHostAttrTypes)
 	}
@@ -191,7 +191,7 @@ func FlattenConfigHost(ctx context.Context, from *dns_config.ConfigHost, diags *
 	return t
 }
 
-func (m *ConfigHostModel) Flatten(ctx context.Context, from *dns_config.ConfigHost, diags *diag.Diagnostics) {
+func (m *ConfigHostModel) Flatten(ctx context.Context, from *dnsconfig.Host, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

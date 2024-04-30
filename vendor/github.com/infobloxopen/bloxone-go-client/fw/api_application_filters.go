@@ -23,7 +23,7 @@ import (
 
 type ApplicationFiltersAPI interface {
 	/*
-			ApplicationFiltersCreateApplicationFilter Create Application Filter.
+			CreateApplicationFilter Create Application Filter.
 
 			Use this method to create a Application Filter object.
 
@@ -33,15 +33,15 @@ type ApplicationFiltersAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiApplicationFiltersCreateApplicationFilterRequest
+			@return ApplicationFiltersAPICreateApplicationFilterRequest
 	*/
-	ApplicationFiltersCreateApplicationFilter(ctx context.Context) ApiApplicationFiltersCreateApplicationFilterRequest
+	CreateApplicationFilter(ctx context.Context) ApplicationFiltersAPICreateApplicationFilterRequest
 
-	// ApplicationFiltersCreateApplicationFilterExecute executes the request
-	//  @return AtcfwApplicationFilterCreateResponse
-	ApplicationFiltersCreateApplicationFilterExecute(r ApiApplicationFiltersCreateApplicationFilterRequest) (*AtcfwApplicationFilterCreateResponse, *http.Response, error)
+	// CreateApplicationFilterExecute executes the request
+	//  @return ApplicationFilterCreateResponse
+	CreateApplicationFilterExecute(r ApplicationFiltersAPICreateApplicationFilterRequest) (*ApplicationFilterCreateResponse, *http.Response, error)
 	/*
-			ApplicationFiltersDeleteApplicationFilters Delete Application Filters.
+			DeleteApplicationFilters Delete Application Filters.
 
 			Use this method to delete Application Filter objects. Deletion of multiple lists is an all-or-nothing operation (if any of the specified lists can not be deleted then none of the specified lists will be deleted).
 
@@ -51,43 +51,43 @@ type ApplicationFiltersAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiApplicationFiltersDeleteApplicationFiltersRequest
+			@return ApplicationFiltersAPIDeleteApplicationFiltersRequest
 	*/
-	ApplicationFiltersDeleteApplicationFilters(ctx context.Context) ApiApplicationFiltersDeleteApplicationFiltersRequest
+	DeleteApplicationFilters(ctx context.Context) ApplicationFiltersAPIDeleteApplicationFiltersRequest
 
-	// ApplicationFiltersDeleteApplicationFiltersExecute executes the request
-	ApplicationFiltersDeleteApplicationFiltersExecute(r ApiApplicationFiltersDeleteApplicationFiltersRequest) (*http.Response, error)
+	// DeleteApplicationFiltersExecute executes the request
+	DeleteApplicationFiltersExecute(r ApplicationFiltersAPIDeleteApplicationFiltersRequest) (*http.Response, error)
 	/*
-		ApplicationFiltersDeleteSingleApplicationFilters Delete Application Filter Object by ID.
+		DeleteSingleApplicationFilters Delete Application Filter Object by ID.
 
 		Use this method to delete single Application filter object by id.
 
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 		@param id The Application Filter object identifier.
-		@return ApiApplicationFiltersDeleteSingleApplicationFiltersRequest
+		@return ApplicationFiltersAPIDeleteSingleApplicationFiltersRequest
 	*/
-	ApplicationFiltersDeleteSingleApplicationFilters(ctx context.Context, id int32) ApiApplicationFiltersDeleteSingleApplicationFiltersRequest
+	DeleteSingleApplicationFilters(ctx context.Context, id int32) ApplicationFiltersAPIDeleteSingleApplicationFiltersRequest
 
-	// ApplicationFiltersDeleteSingleApplicationFiltersExecute executes the request
-	ApplicationFiltersDeleteSingleApplicationFiltersExecute(r ApiApplicationFiltersDeleteSingleApplicationFiltersRequest) (*http.Response, error)
+	// DeleteSingleApplicationFiltersExecute executes the request
+	DeleteSingleApplicationFiltersExecute(r ApplicationFiltersAPIDeleteSingleApplicationFiltersRequest) (*http.Response, error)
 	/*
-		ApplicationFiltersListApplicationFilters List Application Filters.
+		ListApplicationFilters List Application Filters.
 
 		Use this method to retrieve information on all Application Filter objects for the account.
 
 
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiApplicationFiltersListApplicationFiltersRequest
+		@return ApplicationFiltersAPIListApplicationFiltersRequest
 	*/
-	ApplicationFiltersListApplicationFilters(ctx context.Context) ApiApplicationFiltersListApplicationFiltersRequest
+	ListApplicationFilters(ctx context.Context) ApplicationFiltersAPIListApplicationFiltersRequest
 
-	// ApplicationFiltersListApplicationFiltersExecute executes the request
-	//  @return AtcfwApplicationFilterMultiResponse
-	ApplicationFiltersListApplicationFiltersExecute(r ApiApplicationFiltersListApplicationFiltersRequest) (*AtcfwApplicationFilterMultiResponse, *http.Response, error)
+	// ListApplicationFiltersExecute executes the request
+	//  @return ApplicationFilterMultiResponse
+	ListApplicationFiltersExecute(r ApplicationFiltersAPIListApplicationFiltersRequest) (*ApplicationFilterMultiResponse, *http.Response, error)
 	/*
-			ApplicationFiltersReadApplicationFilter Read Application Filter.
+			ReadApplicationFilter Read Application Filter.
 
 			Use this method to retrieve information on the specified Application Filter object.
 
@@ -97,15 +97,15 @@ type ApplicationFiltersAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Application Filter object identifier.
-			@return ApiApplicationFiltersReadApplicationFilterRequest
+			@return ApplicationFiltersAPIReadApplicationFilterRequest
 	*/
-	ApplicationFiltersReadApplicationFilter(ctx context.Context, id int32) ApiApplicationFiltersReadApplicationFilterRequest
+	ReadApplicationFilter(ctx context.Context, id int32) ApplicationFiltersAPIReadApplicationFilterRequest
 
-	// ApplicationFiltersReadApplicationFilterExecute executes the request
-	//  @return AtcfwApplicationFilterReadResponse
-	ApplicationFiltersReadApplicationFilterExecute(r ApiApplicationFiltersReadApplicationFilterRequest) (*AtcfwApplicationFilterReadResponse, *http.Response, error)
+	// ReadApplicationFilterExecute executes the request
+	//  @return ApplicationFilterReadResponse
+	ReadApplicationFilterExecute(r ApplicationFiltersAPIReadApplicationFilterRequest) (*ApplicationFilterReadResponse, *http.Response, error)
 	/*
-			ApplicationFiltersUpdateApplicationFilter Update Application Filter.
+			UpdateApplicationFilter Update Application Filter.
 
 			Use this method to update the specified Application Filter object.
 
@@ -119,36 +119,36 @@ type ApplicationFiltersAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Application Filter object identifier.
-			@return ApiApplicationFiltersUpdateApplicationFilterRequest
+			@return ApplicationFiltersAPIUpdateApplicationFilterRequest
 	*/
-	ApplicationFiltersUpdateApplicationFilter(ctx context.Context, id int32) ApiApplicationFiltersUpdateApplicationFilterRequest
+	UpdateApplicationFilter(ctx context.Context, id int32) ApplicationFiltersAPIUpdateApplicationFilterRequest
 
-	// ApplicationFiltersUpdateApplicationFilterExecute executes the request
-	//  @return AtcfwApplicationFilterUpdateResponse
-	ApplicationFiltersUpdateApplicationFilterExecute(r ApiApplicationFiltersUpdateApplicationFilterRequest) (*AtcfwApplicationFilterUpdateResponse, *http.Response, error)
+	// UpdateApplicationFilterExecute executes the request
+	//  @return ApplicationFilterUpdateResponse
+	UpdateApplicationFilterExecute(r ApplicationFiltersAPIUpdateApplicationFilterRequest) (*ApplicationFilterUpdateResponse, *http.Response, error)
 }
 
 // ApplicationFiltersAPIService ApplicationFiltersAPI service
 type ApplicationFiltersAPIService internal.Service
 
-type ApiApplicationFiltersCreateApplicationFilterRequest struct {
+type ApplicationFiltersAPICreateApplicationFilterRequest struct {
 	ctx        context.Context
 	ApiService ApplicationFiltersAPI
-	body       *AtcfwApplicationFilter
+	body       *ApplicationFilter
 }
 
 // The Application Filter object.
-func (r ApiApplicationFiltersCreateApplicationFilterRequest) Body(body AtcfwApplicationFilter) ApiApplicationFiltersCreateApplicationFilterRequest {
+func (r ApplicationFiltersAPICreateApplicationFilterRequest) Body(body ApplicationFilter) ApplicationFiltersAPICreateApplicationFilterRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiApplicationFiltersCreateApplicationFilterRequest) Execute() (*AtcfwApplicationFilterCreateResponse, *http.Response, error) {
-	return r.ApiService.ApplicationFiltersCreateApplicationFilterExecute(r)
+func (r ApplicationFiltersAPICreateApplicationFilterRequest) Execute() (*ApplicationFilterCreateResponse, *http.Response, error) {
+	return r.ApiService.CreateApplicationFilterExecute(r)
 }
 
 /*
-ApplicationFiltersCreateApplicationFilter Create Application Filter.
+CreateApplicationFilter Create Application Filter.
 
 Use this method to create a Application Filter object.
 
@@ -157,10 +157,10 @@ Required:
 - criteria
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiApplicationFiltersCreateApplicationFilterRequest
+	@return ApplicationFiltersAPICreateApplicationFilterRequest
 */
-func (a *ApplicationFiltersAPIService) ApplicationFiltersCreateApplicationFilter(ctx context.Context) ApiApplicationFiltersCreateApplicationFilterRequest {
-	return ApiApplicationFiltersCreateApplicationFilterRequest{
+func (a *ApplicationFiltersAPIService) CreateApplicationFilter(ctx context.Context) ApplicationFiltersAPICreateApplicationFilterRequest {
+	return ApplicationFiltersAPICreateApplicationFilterRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -168,16 +168,16 @@ func (a *ApplicationFiltersAPIService) ApplicationFiltersCreateApplicationFilter
 
 // Execute executes the request
 //
-//	@return AtcfwApplicationFilterCreateResponse
-func (a *ApplicationFiltersAPIService) ApplicationFiltersCreateApplicationFilterExecute(r ApiApplicationFiltersCreateApplicationFilterRequest) (*AtcfwApplicationFilterCreateResponse, *http.Response, error) {
+//	@return ApplicationFilterCreateResponse
+func (a *ApplicationFiltersAPIService) CreateApplicationFilterExecute(r ApplicationFiltersAPICreateApplicationFilterRequest) (*ApplicationFilterCreateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwApplicationFilterCreateResponse
+		localVarReturnValue *ApplicationFilterCreateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ApplicationFiltersAPIService.ApplicationFiltersCreateApplicationFilter")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ApplicationFiltersAPIService.CreateApplicationFilter")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -249,23 +249,23 @@ func (a *ApplicationFiltersAPIService) ApplicationFiltersCreateApplicationFilter
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiApplicationFiltersDeleteApplicationFiltersRequest struct {
+type ApplicationFiltersAPIDeleteApplicationFiltersRequest struct {
 	ctx        context.Context
 	ApiService ApplicationFiltersAPI
-	body       *AtcfwApplicationFiltersDeleteRequest
+	body       *ApplicationFiltersDeleteRequest
 }
 
-func (r ApiApplicationFiltersDeleteApplicationFiltersRequest) Body(body AtcfwApplicationFiltersDeleteRequest) ApiApplicationFiltersDeleteApplicationFiltersRequest {
+func (r ApplicationFiltersAPIDeleteApplicationFiltersRequest) Body(body ApplicationFiltersDeleteRequest) ApplicationFiltersAPIDeleteApplicationFiltersRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiApplicationFiltersDeleteApplicationFiltersRequest) Execute() (*http.Response, error) {
-	return r.ApiService.ApplicationFiltersDeleteApplicationFiltersExecute(r)
+func (r ApplicationFiltersAPIDeleteApplicationFiltersRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteApplicationFiltersExecute(r)
 }
 
 /*
-ApplicationFiltersDeleteApplicationFilters Delete Application Filters.
+DeleteApplicationFilters Delete Application Filters.
 
 Use this method to delete Application Filter objects. Deletion of multiple lists is an all-or-nothing operation (if any of the specified lists can not be deleted then none of the specified lists will be deleted).
 
@@ -273,24 +273,24 @@ Required:
 - ids
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiApplicationFiltersDeleteApplicationFiltersRequest
+	@return ApplicationFiltersAPIDeleteApplicationFiltersRequest
 */
-func (a *ApplicationFiltersAPIService) ApplicationFiltersDeleteApplicationFilters(ctx context.Context) ApiApplicationFiltersDeleteApplicationFiltersRequest {
-	return ApiApplicationFiltersDeleteApplicationFiltersRequest{
+func (a *ApplicationFiltersAPIService) DeleteApplicationFilters(ctx context.Context) ApplicationFiltersAPIDeleteApplicationFiltersRequest {
+	return ApplicationFiltersAPIDeleteApplicationFiltersRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-func (a *ApplicationFiltersAPIService) ApplicationFiltersDeleteApplicationFiltersExecute(r ApiApplicationFiltersDeleteApplicationFiltersRequest) (*http.Response, error) {
+func (a *ApplicationFiltersAPIService) DeleteApplicationFiltersExecute(r ApplicationFiltersAPIDeleteApplicationFiltersRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ApplicationFiltersAPIService.ApplicationFiltersDeleteApplicationFilters")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ApplicationFiltersAPIService.DeleteApplicationFilters")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -367,27 +367,27 @@ func (a *ApplicationFiltersAPIService) ApplicationFiltersDeleteApplicationFilter
 	return localVarHTTPResponse, nil
 }
 
-type ApiApplicationFiltersDeleteSingleApplicationFiltersRequest struct {
+type ApplicationFiltersAPIDeleteSingleApplicationFiltersRequest struct {
 	ctx        context.Context
 	ApiService ApplicationFiltersAPI
 	id         int32
 }
 
-func (r ApiApplicationFiltersDeleteSingleApplicationFiltersRequest) Execute() (*http.Response, error) {
-	return r.ApiService.ApplicationFiltersDeleteSingleApplicationFiltersExecute(r)
+func (r ApplicationFiltersAPIDeleteSingleApplicationFiltersRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteSingleApplicationFiltersExecute(r)
 }
 
 /*
-ApplicationFiltersDeleteSingleApplicationFilters Delete Application Filter Object by ID.
+DeleteSingleApplicationFilters Delete Application Filter Object by ID.
 
 Use this method to delete single Application filter object by id.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Application Filter object identifier.
-	@return ApiApplicationFiltersDeleteSingleApplicationFiltersRequest
+	@return ApplicationFiltersAPIDeleteSingleApplicationFiltersRequest
 */
-func (a *ApplicationFiltersAPIService) ApplicationFiltersDeleteSingleApplicationFilters(ctx context.Context, id int32) ApiApplicationFiltersDeleteSingleApplicationFiltersRequest {
-	return ApiApplicationFiltersDeleteSingleApplicationFiltersRequest{
+func (a *ApplicationFiltersAPIService) DeleteSingleApplicationFilters(ctx context.Context, id int32) ApplicationFiltersAPIDeleteSingleApplicationFiltersRequest {
+	return ApplicationFiltersAPIDeleteSingleApplicationFiltersRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -395,14 +395,14 @@ func (a *ApplicationFiltersAPIService) ApplicationFiltersDeleteSingleApplication
 }
 
 // Execute executes the request
-func (a *ApplicationFiltersAPIService) ApplicationFiltersDeleteSingleApplicationFiltersExecute(r ApiApplicationFiltersDeleteSingleApplicationFiltersRequest) (*http.Response, error) {
+func (a *ApplicationFiltersAPIService) DeleteSingleApplicationFiltersExecute(r ApplicationFiltersAPIDeleteSingleApplicationFiltersRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ApplicationFiltersAPIService.ApplicationFiltersDeleteSingleApplicationFilters")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ApplicationFiltersAPIService.DeleteSingleApplicationFilters")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -475,7 +475,7 @@ func (a *ApplicationFiltersAPIService) ApplicationFiltersDeleteSingleApplication
 	return localVarHTTPResponse, nil
 }
 
-type ApiApplicationFiltersListApplicationFiltersRequest struct {
+type ApplicationFiltersAPIListApplicationFiltersRequest struct {
 	ctx        context.Context
 	ApiService ApplicationFiltersAPI
 	filter     *string
@@ -488,61 +488,61 @@ type ApiApplicationFiltersListApplicationFiltersRequest struct {
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;.  You can filter by following fields:  | Name                    | type   | Supported Op                | | ----------------------- | ------ | --------------------------- | | name                    | string | !&#x3D;, &#x3D;&#x3D;, ~, !~, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D; |  In addition grouping operators are supported:  | Op  | Description          | | --- | -------------------- | | and | Logical AND          | | or  | Logical OR           | | not | Logical NOT          | | ()  | Groupping Operators  |  Allowed sets of parameters that can be groupped in one query:  - name  Example: &#x60;&#x60;&#x60; ?_filter&#x3D;\&quot;((name&#x3D;&#x3D;&#39;app_list1&#39;)or(name~&#39;app_list2&#39;))\&quot; &#x60;&#x60;&#x60;
-func (r ApiApplicationFiltersListApplicationFiltersRequest) Filter(filter string) ApiApplicationFiltersListApplicationFiltersRequest {
+func (r ApplicationFiltersAPIListApplicationFiltersRequest) Filter(filter string) ApplicationFiltersAPIListApplicationFiltersRequest {
 	r.filter = &filter
 	return r
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiApplicationFiltersListApplicationFiltersRequest) Fields(fields string) ApiApplicationFiltersListApplicationFiltersRequest {
+func (r ApplicationFiltersAPIListApplicationFiltersRequest) Fields(fields string) ApplicationFiltersAPIListApplicationFiltersRequest {
 	r.fields = &fields
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiApplicationFiltersListApplicationFiltersRequest) Offset(offset int32) ApiApplicationFiltersListApplicationFiltersRequest {
+func (r ApplicationFiltersAPIListApplicationFiltersRequest) Offset(offset int32) ApplicationFiltersAPIListApplicationFiltersRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiApplicationFiltersListApplicationFiltersRequest) Limit(limit int32) ApiApplicationFiltersListApplicationFiltersRequest {
+func (r ApplicationFiltersAPIListApplicationFiltersRequest) Limit(limit int32) ApplicationFiltersAPIListApplicationFiltersRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiApplicationFiltersListApplicationFiltersRequest) PageToken(pageToken string) ApiApplicationFiltersListApplicationFiltersRequest {
+func (r ApplicationFiltersAPIListApplicationFiltersRequest) PageToken(pageToken string) ApplicationFiltersAPIListApplicationFiltersRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
 // Filtering by tags.
-func (r ApiApplicationFiltersListApplicationFiltersRequest) Tfilter(tfilter string) ApiApplicationFiltersListApplicationFiltersRequest {
+func (r ApplicationFiltersAPIListApplicationFiltersRequest) Tfilter(tfilter string) ApplicationFiltersAPIListApplicationFiltersRequest {
 	r.tfilter = &tfilter
 	return r
 }
 
 // Sorting by tags.
-func (r ApiApplicationFiltersListApplicationFiltersRequest) TorderBy(torderBy string) ApiApplicationFiltersListApplicationFiltersRequest {
+func (r ApplicationFiltersAPIListApplicationFiltersRequest) TorderBy(torderBy string) ApplicationFiltersAPIListApplicationFiltersRequest {
 	r.torderBy = &torderBy
 	return r
 }
 
-func (r ApiApplicationFiltersListApplicationFiltersRequest) Execute() (*AtcfwApplicationFilterMultiResponse, *http.Response, error) {
-	return r.ApiService.ApplicationFiltersListApplicationFiltersExecute(r)
+func (r ApplicationFiltersAPIListApplicationFiltersRequest) Execute() (*ApplicationFilterMultiResponse, *http.Response, error) {
+	return r.ApiService.ListApplicationFiltersExecute(r)
 }
 
 /*
-ApplicationFiltersListApplicationFilters List Application Filters.
+ListApplicationFilters List Application Filters.
 
 Use this method to retrieve information on all Application Filter objects for the account.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiApplicationFiltersListApplicationFiltersRequest
+	@return ApplicationFiltersAPIListApplicationFiltersRequest
 */
-func (a *ApplicationFiltersAPIService) ApplicationFiltersListApplicationFilters(ctx context.Context) ApiApplicationFiltersListApplicationFiltersRequest {
-	return ApiApplicationFiltersListApplicationFiltersRequest{
+func (a *ApplicationFiltersAPIService) ListApplicationFilters(ctx context.Context) ApplicationFiltersAPIListApplicationFiltersRequest {
+	return ApplicationFiltersAPIListApplicationFiltersRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -550,16 +550,16 @@ func (a *ApplicationFiltersAPIService) ApplicationFiltersListApplicationFilters(
 
 // Execute executes the request
 //
-//	@return AtcfwApplicationFilterMultiResponse
-func (a *ApplicationFiltersAPIService) ApplicationFiltersListApplicationFiltersExecute(r ApiApplicationFiltersListApplicationFiltersRequest) (*AtcfwApplicationFilterMultiResponse, *http.Response, error) {
+//	@return ApplicationFilterMultiResponse
+func (a *ApplicationFiltersAPIService) ListApplicationFiltersExecute(r ApplicationFiltersAPIListApplicationFiltersRequest) (*ApplicationFilterMultiResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwApplicationFilterMultiResponse
+		localVarReturnValue *ApplicationFilterMultiResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ApplicationFiltersAPIService.ApplicationFiltersListApplicationFilters")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ApplicationFiltersAPIService.ListApplicationFilters")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -647,7 +647,7 @@ func (a *ApplicationFiltersAPIService) ApplicationFiltersListApplicationFiltersE
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiApplicationFiltersReadApplicationFilterRequest struct {
+type ApplicationFiltersAPIReadApplicationFilterRequest struct {
 	ctx        context.Context
 	ApiService ApplicationFiltersAPI
 	id         int32
@@ -656,23 +656,23 @@ type ApiApplicationFiltersReadApplicationFilterRequest struct {
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiApplicationFiltersReadApplicationFilterRequest) Fields(fields string) ApiApplicationFiltersReadApplicationFilterRequest {
+func (r ApplicationFiltersAPIReadApplicationFilterRequest) Fields(fields string) ApplicationFiltersAPIReadApplicationFilterRequest {
 	r.fields = &fields
 	return r
 }
 
 // The name of the application filter.
-func (r ApiApplicationFiltersReadApplicationFilterRequest) Name(name string) ApiApplicationFiltersReadApplicationFilterRequest {
+func (r ApplicationFiltersAPIReadApplicationFilterRequest) Name(name string) ApplicationFiltersAPIReadApplicationFilterRequest {
 	r.name = &name
 	return r
 }
 
-func (r ApiApplicationFiltersReadApplicationFilterRequest) Execute() (*AtcfwApplicationFilterReadResponse, *http.Response, error) {
-	return r.ApiService.ApplicationFiltersReadApplicationFilterExecute(r)
+func (r ApplicationFiltersAPIReadApplicationFilterRequest) Execute() (*ApplicationFilterReadResponse, *http.Response, error) {
+	return r.ApiService.ReadApplicationFilterExecute(r)
 }
 
 /*
-ApplicationFiltersReadApplicationFilter Read Application Filter.
+ReadApplicationFilter Read Application Filter.
 
 Use this method to retrieve information on the specified Application Filter object.
 
@@ -681,10 +681,10 @@ Required:
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Application Filter object identifier.
-	@return ApiApplicationFiltersReadApplicationFilterRequest
+	@return ApplicationFiltersAPIReadApplicationFilterRequest
 */
-func (a *ApplicationFiltersAPIService) ApplicationFiltersReadApplicationFilter(ctx context.Context, id int32) ApiApplicationFiltersReadApplicationFilterRequest {
-	return ApiApplicationFiltersReadApplicationFilterRequest{
+func (a *ApplicationFiltersAPIService) ReadApplicationFilter(ctx context.Context, id int32) ApplicationFiltersAPIReadApplicationFilterRequest {
+	return ApplicationFiltersAPIReadApplicationFilterRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -693,16 +693,16 @@ func (a *ApplicationFiltersAPIService) ApplicationFiltersReadApplicationFilter(c
 
 // Execute executes the request
 //
-//	@return AtcfwApplicationFilterReadResponse
-func (a *ApplicationFiltersAPIService) ApplicationFiltersReadApplicationFilterExecute(r ApiApplicationFiltersReadApplicationFilterRequest) (*AtcfwApplicationFilterReadResponse, *http.Response, error) {
+//	@return ApplicationFilterReadResponse
+func (a *ApplicationFiltersAPIService) ReadApplicationFilterExecute(r ApplicationFiltersAPIReadApplicationFilterRequest) (*ApplicationFilterReadResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwApplicationFilterReadResponse
+		localVarReturnValue *ApplicationFilterReadResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ApplicationFiltersAPIService.ApplicationFiltersReadApplicationFilter")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ApplicationFiltersAPIService.ReadApplicationFilter")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -776,25 +776,25 @@ func (a *ApplicationFiltersAPIService) ApplicationFiltersReadApplicationFilterEx
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiApplicationFiltersUpdateApplicationFilterRequest struct {
+type ApplicationFiltersAPIUpdateApplicationFilterRequest struct {
 	ctx        context.Context
 	ApiService ApplicationFiltersAPI
 	id         int32
-	body       *AtcfwApplicationFilter
+	body       *ApplicationFilter
 }
 
 // The Application Filter object.
-func (r ApiApplicationFiltersUpdateApplicationFilterRequest) Body(body AtcfwApplicationFilter) ApiApplicationFiltersUpdateApplicationFilterRequest {
+func (r ApplicationFiltersAPIUpdateApplicationFilterRequest) Body(body ApplicationFilter) ApplicationFiltersAPIUpdateApplicationFilterRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiApplicationFiltersUpdateApplicationFilterRequest) Execute() (*AtcfwApplicationFilterUpdateResponse, *http.Response, error) {
-	return r.ApiService.ApplicationFiltersUpdateApplicationFilterExecute(r)
+func (r ApplicationFiltersAPIUpdateApplicationFilterRequest) Execute() (*ApplicationFilterUpdateResponse, *http.Response, error) {
+	return r.ApiService.UpdateApplicationFilterExecute(r)
 }
 
 /*
-ApplicationFiltersUpdateApplicationFilter Update Application Filter.
+UpdateApplicationFilter Update Application Filter.
 
 Use this method to update the specified Application Filter object.
 
@@ -807,10 +807,10 @@ Required:
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Application Filter object identifier.
-	@return ApiApplicationFiltersUpdateApplicationFilterRequest
+	@return ApplicationFiltersAPIUpdateApplicationFilterRequest
 */
-func (a *ApplicationFiltersAPIService) ApplicationFiltersUpdateApplicationFilter(ctx context.Context, id int32) ApiApplicationFiltersUpdateApplicationFilterRequest {
-	return ApiApplicationFiltersUpdateApplicationFilterRequest{
+func (a *ApplicationFiltersAPIService) UpdateApplicationFilter(ctx context.Context, id int32) ApplicationFiltersAPIUpdateApplicationFilterRequest {
+	return ApplicationFiltersAPIUpdateApplicationFilterRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -819,16 +819,16 @@ func (a *ApplicationFiltersAPIService) ApplicationFiltersUpdateApplicationFilter
 
 // Execute executes the request
 //
-//	@return AtcfwApplicationFilterUpdateResponse
-func (a *ApplicationFiltersAPIService) ApplicationFiltersUpdateApplicationFilterExecute(r ApiApplicationFiltersUpdateApplicationFilterRequest) (*AtcfwApplicationFilterUpdateResponse, *http.Response, error) {
+//	@return ApplicationFilterUpdateResponse
+func (a *ApplicationFiltersAPIService) UpdateApplicationFilterExecute(r ApplicationFiltersAPIUpdateApplicationFilterRequest) (*ApplicationFilterUpdateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPut
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwApplicationFilterUpdateResponse
+		localVarReturnValue *ApplicationFilterUpdateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ApplicationFiltersAPIService.ApplicationFiltersUpdateApplicationFilter")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "ApplicationFiltersAPIService.UpdateApplicationFilter")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}

@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 )
 
 type ConfigViewInheritanceModel struct {
@@ -203,7 +203,7 @@ var ConfigViewInheritanceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigViewInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigViewInheritance {
+func ExpandConfigViewInheritance(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.ViewInheritance {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -215,11 +215,11 @@ func ExpandConfigViewInheritance(ctx context.Context, o types.Object, diags *dia
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigViewInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigViewInheritance {
+func (m *ConfigViewInheritanceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.ViewInheritance {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigViewInheritance{
+	to := &dnsconfig.ViewInheritance{
 		AddEdnsOptionInOutgoingQuery:      ExpandInheritance2InheritedBool(ctx, m.AddEdnsOptionInOutgoingQuery, diags),
 		CustomRootNsBlock:                 ExpandConfigInheritedCustomRootNSBlock(ctx, m.CustomRootNsBlock, diags),
 		DnssecValidationBlock:             ExpandConfigInheritedDNSSECValidationBlock(ctx, m.DnssecValidationBlock, diags),
@@ -250,7 +250,7 @@ func (m *ConfigViewInheritanceModel) Expand(ctx context.Context, diags *diag.Dia
 	return to
 }
 
-func FlattenConfigViewInheritance(ctx context.Context, from *dns_config.ConfigViewInheritance, diags *diag.Diagnostics) types.Object {
+func FlattenConfigViewInheritance(ctx context.Context, from *dnsconfig.ViewInheritance, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigViewInheritanceAttrTypes)
 	}
@@ -261,7 +261,7 @@ func FlattenConfigViewInheritance(ctx context.Context, from *dns_config.ConfigVi
 	return t
 }
 
-func (m *ConfigViewInheritanceModel) Flatten(ctx context.Context, from *dns_config.ConfigViewInheritance, diags *diag.Diagnostics) {
+func (m *ConfigViewInheritanceModel) Flatten(ctx context.Context, from *dnsconfig.ViewInheritance, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

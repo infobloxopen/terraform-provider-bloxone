@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -52,7 +52,7 @@ var ConfigInheritedACLItemsResourceSchemaAttributes = map[string]schema.Attribut
 	},
 }
 
-func ExpandConfigInheritedACLItems(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigInheritedACLItems {
+func ExpandConfigInheritedACLItems(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.InheritedACLItems {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -64,17 +64,17 @@ func ExpandConfigInheritedACLItems(ctx context.Context, o types.Object, diags *d
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigInheritedACLItemsModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigInheritedACLItems {
+func (m *ConfigInheritedACLItemsModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.InheritedACLItems {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigInheritedACLItems{
+	to := &dnsconfig.InheritedACLItems{
 		Action: flex.ExpandStringPointer(m.Action),
 	}
 	return to
 }
 
-func FlattenConfigInheritedACLItems(ctx context.Context, from *dns_config.ConfigInheritedACLItems, diags *diag.Diagnostics) types.Object {
+func FlattenConfigInheritedACLItems(ctx context.Context, from *dnsconfig.InheritedACLItems, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigInheritedACLItemsAttrTypes)
 	}
@@ -85,7 +85,7 @@ func FlattenConfigInheritedACLItems(ctx context.Context, from *dns_config.Config
 	return t
 }
 
-func (m *ConfigInheritedACLItemsModel) Flatten(ctx context.Context, from *dns_config.ConfigInheritedACLItems, diags *diag.Diagnostics) {
+func (m *ConfigInheritedACLItemsModel) Flatten(ctx context.Context, from *dnsconfig.InheritedACLItems, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

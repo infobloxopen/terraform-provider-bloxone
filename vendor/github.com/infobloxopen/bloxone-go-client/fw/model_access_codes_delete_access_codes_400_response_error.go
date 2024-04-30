@@ -19,10 +19,13 @@ var _ MappedNullable = &AccessCodesDeleteAccessCodes400ResponseError{}
 
 // AccessCodesDeleteAccessCodes400ResponseError struct for AccessCodesDeleteAccessCodes400ResponseError
 type AccessCodesDeleteAccessCodes400ResponseError struct {
-	Code    *string `json:"code,omitempty"`
-	Message *string `json:"message,omitempty"`
-	Status  *string `json:"status,omitempty"`
+	Code                 *string `json:"code,omitempty"`
+	Message              *string `json:"message,omitempty"`
+	Status               *string `json:"status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _AccessCodesDeleteAccessCodes400ResponseError AccessCodesDeleteAccessCodes400ResponseError
 
 // NewAccessCodesDeleteAccessCodes400ResponseError instantiates a new AccessCodesDeleteAccessCodes400ResponseError object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o AccessCodesDeleteAccessCodes400ResponseError) ToMap() (map[string]interf
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *AccessCodesDeleteAccessCodes400ResponseError) UnmarshalJSON(data []byte) (err error) {
+	varAccessCodesDeleteAccessCodes400ResponseError := _AccessCodesDeleteAccessCodes400ResponseError{}
+
+	err = json.Unmarshal(data, &varAccessCodesDeleteAccessCodes400ResponseError)
+
+	if err != nil {
+		return err
+	}
+
+	*o = AccessCodesDeleteAccessCodes400ResponseError(varAccessCodesDeleteAccessCodes400ResponseError)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "code")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAccessCodesDeleteAccessCodes400ResponseError struct {

@@ -23,41 +23,41 @@ import (
 
 type PopRegionsAPI interface {
 	/*
-		PopRegionsListPoPRegions List PoP Regions.
+		ListPoPRegions List PoP Regions.
 
 		Use this method to retrieve information on all Point of Presence (PoP) regions availablein the database.
 
 
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiPopRegionsListPoPRegionsRequest
+		@return PopRegionsAPIListPoPRegionsRequest
 	*/
-	PopRegionsListPoPRegions(ctx context.Context) ApiPopRegionsListPoPRegionsRequest
+	ListPoPRegions(ctx context.Context) PopRegionsAPIListPoPRegionsRequest
 
-	// PopRegionsListPoPRegionsExecute executes the request
-	//  @return AtcfwListPoPRegionsResponse
-	PopRegionsListPoPRegionsExecute(r ApiPopRegionsListPoPRegionsRequest) (*AtcfwListPoPRegionsResponse, *http.Response, error)
+	// ListPoPRegionsExecute executes the request
+	//  @return ListPoPRegionsResponse
+	ListPoPRegionsExecute(r PopRegionsAPIListPoPRegionsRequest) (*ListPoPRegionsResponse, *http.Response, error)
 	/*
-		PopRegionsReadPoPRegion Read PoP Region.
+		ReadPoPRegion Read PoP Region.
 
 		Use this method to retrieve information on the specified PoP region object.
 
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 		@param id The PoP region object identifier
-		@return ApiPopRegionsReadPoPRegionRequest
+		@return PopRegionsAPIReadPoPRegionRequest
 	*/
-	PopRegionsReadPoPRegion(ctx context.Context, id int32) ApiPopRegionsReadPoPRegionRequest
+	ReadPoPRegion(ctx context.Context, id int32) PopRegionsAPIReadPoPRegionRequest
 
-	// PopRegionsReadPoPRegionExecute executes the request
-	//  @return AtcfwReadPoPRegionResponse
-	PopRegionsReadPoPRegionExecute(r ApiPopRegionsReadPoPRegionRequest) (*AtcfwReadPoPRegionResponse, *http.Response, error)
+	// ReadPoPRegionExecute executes the request
+	//  @return ReadPoPRegionResponse
+	ReadPoPRegionExecute(r PopRegionsAPIReadPoPRegionRequest) (*ReadPoPRegionResponse, *http.Response, error)
 }
 
 // PopRegionsAPIService PopRegionsAPI service
 type PopRegionsAPIService internal.Service
 
-type ApiPopRegionsListPoPRegionsRequest struct {
+type PopRegionsAPIListPoPRegionsRequest struct {
 	ctx        context.Context
 	ApiService PopRegionsAPI
 	filter     *string
@@ -70,61 +70,61 @@ type ApiPopRegionsListPoPRegionsRequest struct {
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;.  You can filter by following fields:  | Name               | type   | Supported Ops    | | ------------------ | ------ | ---------------- | | region             | string | &#x3D;&#x3D;, !&#x3D;           | | location           | string | ~, !~            |  Grouping operators (and, or, not, ()) are not supported between different fields.
-func (r ApiPopRegionsListPoPRegionsRequest) Filter(filter string) ApiPopRegionsListPoPRegionsRequest {
+func (r PopRegionsAPIListPoPRegionsRequest) Filter(filter string) PopRegionsAPIListPoPRegionsRequest {
 	r.filter = &filter
 	return r
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiPopRegionsListPoPRegionsRequest) Fields(fields string) ApiPopRegionsListPoPRegionsRequest {
+func (r PopRegionsAPIListPoPRegionsRequest) Fields(fields string) PopRegionsAPIListPoPRegionsRequest {
 	r.fields = &fields
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiPopRegionsListPoPRegionsRequest) Offset(offset int32) ApiPopRegionsListPoPRegionsRequest {
+func (r PopRegionsAPIListPoPRegionsRequest) Offset(offset int32) PopRegionsAPIListPoPRegionsRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiPopRegionsListPoPRegionsRequest) Limit(limit int32) ApiPopRegionsListPoPRegionsRequest {
+func (r PopRegionsAPIListPoPRegionsRequest) Limit(limit int32) PopRegionsAPIListPoPRegionsRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiPopRegionsListPoPRegionsRequest) PageToken(pageToken string) ApiPopRegionsListPoPRegionsRequest {
+func (r PopRegionsAPIListPoPRegionsRequest) PageToken(pageToken string) PopRegionsAPIListPoPRegionsRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
 // Filtering by tags.
-func (r ApiPopRegionsListPoPRegionsRequest) Tfilter(tfilter string) ApiPopRegionsListPoPRegionsRequest {
+func (r PopRegionsAPIListPoPRegionsRequest) Tfilter(tfilter string) PopRegionsAPIListPoPRegionsRequest {
 	r.tfilter = &tfilter
 	return r
 }
 
 // Sorting by tags.
-func (r ApiPopRegionsListPoPRegionsRequest) TorderBy(torderBy string) ApiPopRegionsListPoPRegionsRequest {
+func (r PopRegionsAPIListPoPRegionsRequest) TorderBy(torderBy string) PopRegionsAPIListPoPRegionsRequest {
 	r.torderBy = &torderBy
 	return r
 }
 
-func (r ApiPopRegionsListPoPRegionsRequest) Execute() (*AtcfwListPoPRegionsResponse, *http.Response, error) {
-	return r.ApiService.PopRegionsListPoPRegionsExecute(r)
+func (r PopRegionsAPIListPoPRegionsRequest) Execute() (*ListPoPRegionsResponse, *http.Response, error) {
+	return r.ApiService.ListPoPRegionsExecute(r)
 }
 
 /*
-PopRegionsListPoPRegions List PoP Regions.
+ListPoPRegions List PoP Regions.
 
 Use this method to retrieve information on all Point of Presence (PoP) regions availablein the database.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiPopRegionsListPoPRegionsRequest
+	@return PopRegionsAPIListPoPRegionsRequest
 */
-func (a *PopRegionsAPIService) PopRegionsListPoPRegions(ctx context.Context) ApiPopRegionsListPoPRegionsRequest {
-	return ApiPopRegionsListPoPRegionsRequest{
+func (a *PopRegionsAPIService) ListPoPRegions(ctx context.Context) PopRegionsAPIListPoPRegionsRequest {
+	return PopRegionsAPIListPoPRegionsRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -132,16 +132,16 @@ func (a *PopRegionsAPIService) PopRegionsListPoPRegions(ctx context.Context) Api
 
 // Execute executes the request
 //
-//	@return AtcfwListPoPRegionsResponse
-func (a *PopRegionsAPIService) PopRegionsListPoPRegionsExecute(r ApiPopRegionsListPoPRegionsRequest) (*AtcfwListPoPRegionsResponse, *http.Response, error) {
+//	@return ListPoPRegionsResponse
+func (a *PopRegionsAPIService) ListPoPRegionsExecute(r PopRegionsAPIListPoPRegionsRequest) (*ListPoPRegionsResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwListPoPRegionsResponse
+		localVarReturnValue *ListPoPRegionsResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "PopRegionsAPIService.PopRegionsListPoPRegions")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "PopRegionsAPIService.ListPoPRegions")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -229,27 +229,27 @@ func (a *PopRegionsAPIService) PopRegionsListPoPRegionsExecute(r ApiPopRegionsLi
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiPopRegionsReadPoPRegionRequest struct {
+type PopRegionsAPIReadPoPRegionRequest struct {
 	ctx        context.Context
 	ApiService PopRegionsAPI
 	id         int32
 }
 
-func (r ApiPopRegionsReadPoPRegionRequest) Execute() (*AtcfwReadPoPRegionResponse, *http.Response, error) {
-	return r.ApiService.PopRegionsReadPoPRegionExecute(r)
+func (r PopRegionsAPIReadPoPRegionRequest) Execute() (*ReadPoPRegionResponse, *http.Response, error) {
+	return r.ApiService.ReadPoPRegionExecute(r)
 }
 
 /*
-PopRegionsReadPoPRegion Read PoP Region.
+ReadPoPRegion Read PoP Region.
 
 Use this method to retrieve information on the specified PoP region object.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The PoP region object identifier
-	@return ApiPopRegionsReadPoPRegionRequest
+	@return PopRegionsAPIReadPoPRegionRequest
 */
-func (a *PopRegionsAPIService) PopRegionsReadPoPRegion(ctx context.Context, id int32) ApiPopRegionsReadPoPRegionRequest {
-	return ApiPopRegionsReadPoPRegionRequest{
+func (a *PopRegionsAPIService) ReadPoPRegion(ctx context.Context, id int32) PopRegionsAPIReadPoPRegionRequest {
+	return PopRegionsAPIReadPoPRegionRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -258,16 +258,16 @@ func (a *PopRegionsAPIService) PopRegionsReadPoPRegion(ctx context.Context, id i
 
 // Execute executes the request
 //
-//	@return AtcfwReadPoPRegionResponse
-func (a *PopRegionsAPIService) PopRegionsReadPoPRegionExecute(r ApiPopRegionsReadPoPRegionRequest) (*AtcfwReadPoPRegionResponse, *http.Response, error) {
+//	@return ReadPoPRegionResponse
+func (a *PopRegionsAPIService) ReadPoPRegionExecute(r PopRegionsAPIReadPoPRegionRequest) (*ReadPoPRegionResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwReadPoPRegionResponse
+		localVarReturnValue *ReadPoPRegionResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "PopRegionsAPIService.PopRegionsReadPoPRegion")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "PopRegionsAPIService.ReadPoPRegion")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}

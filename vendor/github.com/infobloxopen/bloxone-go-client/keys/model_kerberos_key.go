@@ -34,8 +34,11 @@ type KerberosKey struct {
 	// Upload time for the key.
 	UploadedAt *string `json:"uploaded_at,omitempty"`
 	// The version number (KVNO) of the key.
-	Version *int64 `json:"version,omitempty"`
+	Version              *int64 `json:"version,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _KerberosKey KerberosKey
 
 // NewKerberosKey instantiates a new KerberosKey object
 // This constructor will assign default values to properties that have it defined,
@@ -344,7 +347,40 @@ func (o KerberosKey) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Version) {
 		toSerialize["version"] = o.Version
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *KerberosKey) UnmarshalJSON(data []byte) (err error) {
+	varKerberosKey := _KerberosKey{}
+
+	err = json.Unmarshal(data, &varKerberosKey)
+
+	if err != nil {
+		return err
+	}
+
+	*o = KerberosKey(varKerberosKey)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "algorithm")
+		delete(additionalProperties, "comment")
+		delete(additionalProperties, "domain")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "principal")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "uploaded_at")
+		delete(additionalProperties, "version")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableKerberosKey struct {

@@ -22,18 +22,18 @@ import (
 
 type AppApprovalsAPI interface {
 	/*
-		AppApprovalsListAppApprovals Method for AppApprovalsListAppApprovals
+		ListAppApprovals Method for ListAppApprovals
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiAppApprovalsListAppApprovalsRequest
+		@return AppApprovalsAPIListAppApprovalsRequest
 	*/
-	AppApprovalsListAppApprovals(ctx context.Context) ApiAppApprovalsListAppApprovalsRequest
+	ListAppApprovals(ctx context.Context) AppApprovalsAPIListAppApprovalsRequest
 
-	// AppApprovalsListAppApprovalsExecute executes the request
-	//  @return AtcfwAppApprovalMultiResponse
-	AppApprovalsListAppApprovalsExecute(r ApiAppApprovalsListAppApprovalsRequest) (*AtcfwAppApprovalMultiResponse, *http.Response, error)
+	// ListAppApprovalsExecute executes the request
+	//  @return AppApprovalMultiResponse
+	ListAppApprovalsExecute(r AppApprovalsAPIListAppApprovalsRequest) (*AppApprovalMultiResponse, *http.Response, error)
 	/*
-			AppApprovalsReplaceAppApprovals Update Application Approval.
+			ReplaceAppApprovals Update Application Approval.
 
 			Use this method to update the specified Application Approved object.
 
@@ -44,53 +44,53 @@ type AppApprovalsAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiAppApprovalsReplaceAppApprovalsRequest
+			@return AppApprovalsAPIReplaceAppApprovalsRequest
 	*/
-	AppApprovalsReplaceAppApprovals(ctx context.Context) ApiAppApprovalsReplaceAppApprovalsRequest
+	ReplaceAppApprovals(ctx context.Context) AppApprovalsAPIReplaceAppApprovalsRequest
 
-	// AppApprovalsReplaceAppApprovalsExecute executes the request
-	//  @return AtcfwAppApprovalMultiResponse
-	AppApprovalsReplaceAppApprovalsExecute(r ApiAppApprovalsReplaceAppApprovalsRequest) (*AtcfwAppApprovalMultiResponse, *http.Response, error)
+	// ReplaceAppApprovalsExecute executes the request
+	//  @return AppApprovalMultiResponse
+	ReplaceAppApprovalsExecute(r AppApprovalsAPIReplaceAppApprovalsRequest) (*AppApprovalMultiResponse, *http.Response, error)
 	/*
-		AppApprovalsUpdateAppApprovals Method for AppApprovalsUpdateAppApprovals
+		UpdateAppApprovals Method for UpdateAppApprovals
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiAppApprovalsUpdateAppApprovalsRequest
+		@return AppApprovalsAPIUpdateAppApprovalsRequest
 	*/
-	AppApprovalsUpdateAppApprovals(ctx context.Context) ApiAppApprovalsUpdateAppApprovalsRequest
+	UpdateAppApprovals(ctx context.Context) AppApprovalsAPIUpdateAppApprovalsRequest
 
-	// AppApprovalsUpdateAppApprovalsExecute executes the request
-	//  @return AtcfwAppApprovalMultiResponse
-	AppApprovalsUpdateAppApprovalsExecute(r ApiAppApprovalsUpdateAppApprovalsRequest) (*AtcfwAppApprovalMultiResponse, *http.Response, error)
+	// UpdateAppApprovalsExecute executes the request
+	//  @return AppApprovalMultiResponse
+	UpdateAppApprovalsExecute(r AppApprovalsAPIUpdateAppApprovalsRequest) (*AppApprovalMultiResponse, *http.Response, error)
 }
 
 // AppApprovalsAPIService AppApprovalsAPI service
 type AppApprovalsAPIService internal.Service
 
-type ApiAppApprovalsListAppApprovalsRequest struct {
+type AppApprovalsAPIListAppApprovalsRequest struct {
 	ctx        context.Context
 	ApiService AppApprovalsAPI
 	filter     *string
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;. The following operators are commonly used in filter expressions:  |  Op   |  Description               |  |  --   |  -----------               |  |  &#x3D;&#x3D;   |  Equal                     |  |  !&#x3D;   |  Not Equal                 |  |  &gt;    |  Greater Than              |  |   &gt;&#x3D;  |  Greater Than or Equal To  |  |  &lt;    |  Less Than                 |  |  &lt;&#x3D;   |  Less Than or Equal To     |  |  and  |  Logical AND               |  |  ~    |  Matches Regex             |  |  !~   |  Does Not Match Regex      |  |  or   |  Logical OR                |  |  not  |  Logical NOT               |  |  ()   |  Groupping Operators       |
-func (r ApiAppApprovalsListAppApprovalsRequest) Filter(filter string) ApiAppApprovalsListAppApprovalsRequest {
+func (r AppApprovalsAPIListAppApprovalsRequest) Filter(filter string) AppApprovalsAPIListAppApprovalsRequest {
 	r.filter = &filter
 	return r
 }
 
-func (r ApiAppApprovalsListAppApprovalsRequest) Execute() (*AtcfwAppApprovalMultiResponse, *http.Response, error) {
-	return r.ApiService.AppApprovalsListAppApprovalsExecute(r)
+func (r AppApprovalsAPIListAppApprovalsRequest) Execute() (*AppApprovalMultiResponse, *http.Response, error) {
+	return r.ApiService.ListAppApprovalsExecute(r)
 }
 
 /*
-AppApprovalsListAppApprovals Method for AppApprovalsListAppApprovals
+ListAppApprovals Method for ListAppApprovals
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiAppApprovalsListAppApprovalsRequest
+	@return AppApprovalsAPIListAppApprovalsRequest
 */
-func (a *AppApprovalsAPIService) AppApprovalsListAppApprovals(ctx context.Context) ApiAppApprovalsListAppApprovalsRequest {
-	return ApiAppApprovalsListAppApprovalsRequest{
+func (a *AppApprovalsAPIService) ListAppApprovals(ctx context.Context) AppApprovalsAPIListAppApprovalsRequest {
+	return AppApprovalsAPIListAppApprovalsRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -98,16 +98,16 @@ func (a *AppApprovalsAPIService) AppApprovalsListAppApprovals(ctx context.Contex
 
 // Execute executes the request
 //
-//	@return AtcfwAppApprovalMultiResponse
-func (a *AppApprovalsAPIService) AppApprovalsListAppApprovalsExecute(r ApiAppApprovalsListAppApprovalsRequest) (*AtcfwAppApprovalMultiResponse, *http.Response, error) {
+//	@return AppApprovalMultiResponse
+func (a *AppApprovalsAPIService) ListAppApprovalsExecute(r AppApprovalsAPIListAppApprovalsRequest) (*AppApprovalMultiResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwAppApprovalMultiResponse
+		localVarReturnValue *AppApprovalMultiResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AppApprovalsAPIService.AppApprovalsListAppApprovals")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AppApprovalsAPIService.ListAppApprovals")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -168,23 +168,23 @@ func (a *AppApprovalsAPIService) AppApprovalsListAppApprovalsExecute(r ApiAppApp
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiAppApprovalsReplaceAppApprovalsRequest struct {
+type AppApprovalsAPIReplaceAppApprovalsRequest struct {
 	ctx        context.Context
 	ApiService AppApprovalsAPI
-	body       *AtcfwAppApprovalsReplaceRequest
+	body       *AppApprovalsReplaceRequest
 }
 
-func (r ApiAppApprovalsReplaceAppApprovalsRequest) Body(body AtcfwAppApprovalsReplaceRequest) ApiAppApprovalsReplaceAppApprovalsRequest {
+func (r AppApprovalsAPIReplaceAppApprovalsRequest) Body(body AppApprovalsReplaceRequest) AppApprovalsAPIReplaceAppApprovalsRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiAppApprovalsReplaceAppApprovalsRequest) Execute() (*AtcfwAppApprovalMultiResponse, *http.Response, error) {
-	return r.ApiService.AppApprovalsReplaceAppApprovalsExecute(r)
+func (r AppApprovalsAPIReplaceAppApprovalsRequest) Execute() (*AppApprovalMultiResponse, *http.Response, error) {
+	return r.ApiService.ReplaceAppApprovalsExecute(r)
 }
 
 /*
-AppApprovalsReplaceAppApprovals Update Application Approval.
+ReplaceAppApprovals Update Application Approval.
 
 Use this method to update the specified Application Approved object.
 
@@ -193,10 +193,10 @@ Required: an array of approvals
 - app_name
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiAppApprovalsReplaceAppApprovalsRequest
+	@return AppApprovalsAPIReplaceAppApprovalsRequest
 */
-func (a *AppApprovalsAPIService) AppApprovalsReplaceAppApprovals(ctx context.Context) ApiAppApprovalsReplaceAppApprovalsRequest {
-	return ApiAppApprovalsReplaceAppApprovalsRequest{
+func (a *AppApprovalsAPIService) ReplaceAppApprovals(ctx context.Context) AppApprovalsAPIReplaceAppApprovalsRequest {
+	return AppApprovalsAPIReplaceAppApprovalsRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -204,16 +204,16 @@ func (a *AppApprovalsAPIService) AppApprovalsReplaceAppApprovals(ctx context.Con
 
 // Execute executes the request
 //
-//	@return AtcfwAppApprovalMultiResponse
-func (a *AppApprovalsAPIService) AppApprovalsReplaceAppApprovalsExecute(r ApiAppApprovalsReplaceAppApprovalsRequest) (*AtcfwAppApprovalMultiResponse, *http.Response, error) {
+//	@return AppApprovalMultiResponse
+func (a *AppApprovalsAPIService) ReplaceAppApprovalsExecute(r AppApprovalsAPIReplaceAppApprovalsRequest) (*AppApprovalMultiResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPut
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwAppApprovalMultiResponse
+		localVarReturnValue *AppApprovalMultiResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AppApprovalsAPIService.AppApprovalsReplaceAppApprovals")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AppApprovalsAPIService.ReplaceAppApprovals")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -285,29 +285,29 @@ func (a *AppApprovalsAPIService) AppApprovalsReplaceAppApprovalsExecute(r ApiApp
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiAppApprovalsUpdateAppApprovalsRequest struct {
+type AppApprovalsAPIUpdateAppApprovalsRequest struct {
 	ctx        context.Context
 	ApiService AppApprovalsAPI
-	body       *AtcfwAppApprovalsUpdateRequest
+	body       *AppApprovalsUpdateRequest
 }
 
-func (r ApiAppApprovalsUpdateAppApprovalsRequest) Body(body AtcfwAppApprovalsUpdateRequest) ApiAppApprovalsUpdateAppApprovalsRequest {
+func (r AppApprovalsAPIUpdateAppApprovalsRequest) Body(body AppApprovalsUpdateRequest) AppApprovalsAPIUpdateAppApprovalsRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiAppApprovalsUpdateAppApprovalsRequest) Execute() (*AtcfwAppApprovalMultiResponse, *http.Response, error) {
-	return r.ApiService.AppApprovalsUpdateAppApprovalsExecute(r)
+func (r AppApprovalsAPIUpdateAppApprovalsRequest) Execute() (*AppApprovalMultiResponse, *http.Response, error) {
+	return r.ApiService.UpdateAppApprovalsExecute(r)
 }
 
 /*
-AppApprovalsUpdateAppApprovals Method for AppApprovalsUpdateAppApprovals
+UpdateAppApprovals Method for UpdateAppApprovals
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiAppApprovalsUpdateAppApprovalsRequest
+	@return AppApprovalsAPIUpdateAppApprovalsRequest
 */
-func (a *AppApprovalsAPIService) AppApprovalsUpdateAppApprovals(ctx context.Context) ApiAppApprovalsUpdateAppApprovalsRequest {
-	return ApiAppApprovalsUpdateAppApprovalsRequest{
+func (a *AppApprovalsAPIService) UpdateAppApprovals(ctx context.Context) AppApprovalsAPIUpdateAppApprovalsRequest {
+	return AppApprovalsAPIUpdateAppApprovalsRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -315,16 +315,16 @@ func (a *AppApprovalsAPIService) AppApprovalsUpdateAppApprovals(ctx context.Cont
 
 // Execute executes the request
 //
-//	@return AtcfwAppApprovalMultiResponse
-func (a *AppApprovalsAPIService) AppApprovalsUpdateAppApprovalsExecute(r ApiAppApprovalsUpdateAppApprovalsRequest) (*AtcfwAppApprovalMultiResponse, *http.Response, error) {
+//	@return AppApprovalMultiResponse
+func (a *AppApprovalsAPIService) UpdateAppApprovalsExecute(r AppApprovalsAPIUpdateAppApprovalsRequest) (*AppApprovalMultiResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPatch
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwAppApprovalMultiResponse
+		localVarReturnValue *AppApprovalMultiResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AppApprovalsAPIService.AppApprovalsUpdateAppApprovals")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AppApprovalsAPIService.UpdateAppApprovals")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}

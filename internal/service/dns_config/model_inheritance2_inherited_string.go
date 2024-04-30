@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -51,7 +51,7 @@ var Inheritance2InheritedStringResourceSchemaAttributes = map[string]schema.Attr
 	},
 }
 
-func ExpandInheritance2InheritedString(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.Inheritance2InheritedString {
+func ExpandInheritance2InheritedString(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.Inheritance2InheritedString {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -63,17 +63,17 @@ func ExpandInheritance2InheritedString(ctx context.Context, o types.Object, diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *Inheritance2InheritedStringModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.Inheritance2InheritedString {
+func (m *Inheritance2InheritedStringModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.Inheritance2InheritedString {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.Inheritance2InheritedString{
+	to := &dnsconfig.Inheritance2InheritedString{
 		Action: flex.ExpandStringPointer(m.Action),
 	}
 	return to
 }
 
-func FlattenInheritance2InheritedString(ctx context.Context, from *dns_config.Inheritance2InheritedString, diags *diag.Diagnostics) types.Object {
+func FlattenInheritance2InheritedString(ctx context.Context, from *dnsconfig.Inheritance2InheritedString, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(Inheritance2InheritedStringAttrTypes)
 	}
@@ -84,7 +84,7 @@ func FlattenInheritance2InheritedString(ctx context.Context, from *dns_config.In
 	return t
 }
 
-func (m *Inheritance2InheritedStringModel) Flatten(ctx context.Context, from *dns_config.Inheritance2InheritedString, diags *diag.Diagnostics) {
+func (m *Inheritance2InheritedStringModel) Flatten(ctx context.Context, from *dnsconfig.Inheritance2InheritedString, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

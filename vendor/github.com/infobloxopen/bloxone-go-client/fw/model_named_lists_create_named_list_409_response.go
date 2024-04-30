@@ -19,8 +19,11 @@ var _ MappedNullable = &NamedListsCreateNamedList409Response{}
 
 // NamedListsCreateNamedList409Response struct for NamedListsCreateNamedList409Response
 type NamedListsCreateNamedList409Response struct {
-	Error *NamedListsCreateNamedList409ResponseError `json:"error,omitempty"`
+	Error                *NamedListsCreateNamedList409ResponseError `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NamedListsCreateNamedList409Response NamedListsCreateNamedList409Response
 
 // NewNamedListsCreateNamedList409Response instantiates a new NamedListsCreateNamedList409Response object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o NamedListsCreateNamedList409Response) ToMap() (map[string]interface{}, e
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NamedListsCreateNamedList409Response) UnmarshalJSON(data []byte) (err error) {
+	varNamedListsCreateNamedList409Response := _NamedListsCreateNamedList409Response{}
+
+	err = json.Unmarshal(data, &varNamedListsCreateNamedList409Response)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NamedListsCreateNamedList409Response(varNamedListsCreateNamedList409Response)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "error")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNamedListsCreateNamedList409Response struct {

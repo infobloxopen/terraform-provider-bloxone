@@ -68,7 +68,7 @@ func (r *HaGroupResource) Create(ctx context.Context, req resource.CreateRequest
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		HaGroupAPI.
-		HaGroupCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -95,7 +95,7 @@ func (r *HaGroupResource) Read(ctx context.Context, req resource.ReadRequest, re
 
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		HaGroupAPI.
-		HaGroupRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		CollectStats(data.CollectStats.ValueBool()).
 		Execute()
 	if err != nil {
@@ -126,7 +126,7 @@ func (r *HaGroupResource) Update(ctx context.Context, req resource.UpdateRequest
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		HaGroupAPI.
-		HaGroupUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -153,7 +153,7 @@ func (r *HaGroupResource) Delete(ctx context.Context, req resource.DeleteRequest
 
 	httpRes, err := r.client.IPAddressManagementAPI.
 		HaGroupAPI.
-		HaGroupDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

@@ -23,7 +23,7 @@ import (
 
 type InternalDomainListsAPI interface {
 	/*
-			InternalDomainListsCreateInternalDomains Create Internal Domains.
+			CreateInternalDomains Create Internal Domains.
 
 			Use this method to create Internal Domains objects for the account.
 
@@ -40,15 +40,15 @@ type InternalDomainListsAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiInternalDomainListsCreateInternalDomainsRequest
+			@return InternalDomainListsAPICreateInternalDomainsRequest
 	*/
-	InternalDomainListsCreateInternalDomains(ctx context.Context) ApiInternalDomainListsCreateInternalDomainsRequest
+	CreateInternalDomains(ctx context.Context) InternalDomainListsAPICreateInternalDomainsRequest
 
-	// InternalDomainListsCreateInternalDomainsExecute executes the request
-	//  @return AtcfwInternalDomainsCreateResponse
-	InternalDomainListsCreateInternalDomainsExecute(r ApiInternalDomainListsCreateInternalDomainsRequest) (*AtcfwInternalDomainsCreateResponse, *http.Response, error)
+	// CreateInternalDomainsExecute executes the request
+	//  @return InternalDomainsCreateResponse
+	CreateInternalDomainsExecute(r InternalDomainListsAPICreateInternalDomainsRequest) (*InternalDomainsCreateResponse, *http.Response, error)
 	/*
-			InternalDomainListsDeleteInternalDomains Delete Internal Domains.
+			DeleteInternalDomains Delete Internal Domains.
 
 			Use this method to delete Internal Domains objects for the account by a given list of internal domain list ids.
 
@@ -62,14 +62,14 @@ type InternalDomainListsAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiInternalDomainListsDeleteInternalDomainsRequest
+			@return InternalDomainListsAPIDeleteInternalDomainsRequest
 	*/
-	InternalDomainListsDeleteInternalDomains(ctx context.Context) ApiInternalDomainListsDeleteInternalDomainsRequest
+	DeleteInternalDomains(ctx context.Context) InternalDomainListsAPIDeleteInternalDomainsRequest
 
-	// InternalDomainListsDeleteInternalDomainsExecute executes the request
-	InternalDomainListsDeleteInternalDomainsExecute(r ApiInternalDomainListsDeleteInternalDomainsRequest) (*http.Response, error)
+	// DeleteInternalDomainsExecute executes the request
+	DeleteInternalDomainsExecute(r InternalDomainListsAPIDeleteInternalDomainsRequest) (*http.Response, error)
 	/*
-			InternalDomainListsDeleteSingleInternalDomains Delete Internal Domains.
+			DeleteSingleInternalDomains Delete Internal Domains.
 
 			Use this method to delete Internal Domains objects for the account by a given internal domain list id.
 
@@ -83,14 +83,14 @@ type InternalDomainListsAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Internal Domains object identifiers.
-			@return ApiInternalDomainListsDeleteSingleInternalDomainsRequest
+			@return InternalDomainListsAPIDeleteSingleInternalDomainsRequest
 	*/
-	InternalDomainListsDeleteSingleInternalDomains(ctx context.Context, id int32) ApiInternalDomainListsDeleteSingleInternalDomainsRequest
+	DeleteSingleInternalDomains(ctx context.Context, id int32) InternalDomainListsAPIDeleteSingleInternalDomainsRequest
 
-	// InternalDomainListsDeleteSingleInternalDomainsExecute executes the request
-	InternalDomainListsDeleteSingleInternalDomainsExecute(r ApiInternalDomainListsDeleteSingleInternalDomainsRequest) (*http.Response, error)
+	// DeleteSingleInternalDomainsExecute executes the request
+	DeleteSingleInternalDomainsExecute(r InternalDomainListsAPIDeleteSingleInternalDomainsRequest) (*http.Response, error)
 	/*
-			InternalDomainListsInternalDomainsItemsPartialUpdate Patch Internal Domains.
+			InternalDomainsItemsPartialUpdate Patch Internal Domains.
 
 			Use this method to insert ot delete items  for a specified Named List object. Note that duplicated items are silently skipped and only new items are appended to the named list.
 		Note that DNSM, TI, Fast Flux, custom lists and DGA lists cannot be updated. Only Internal Domains items can be updated.
@@ -100,15 +100,15 @@ type InternalDomainListsAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Internal Domain List object identifier.
-			@return ApiInternalDomainListsInternalDomainsItemsPartialUpdateRequest
+			@return InternalDomainListsAPIInternalDomainsItemsPartialUpdateRequest
 	*/
-	InternalDomainListsInternalDomainsItemsPartialUpdate(ctx context.Context, id int32) ApiInternalDomainListsInternalDomainsItemsPartialUpdateRequest
+	InternalDomainsItemsPartialUpdate(ctx context.Context, id int32) InternalDomainListsAPIInternalDomainsItemsPartialUpdateRequest
 
-	// InternalDomainListsInternalDomainsItemsPartialUpdateExecute executes the request
+	// InternalDomainsItemsPartialUpdateExecute executes the request
 	//  @return map[string]interface{}
-	InternalDomainListsInternalDomainsItemsPartialUpdateExecute(r ApiInternalDomainListsInternalDomainsItemsPartialUpdateRequest) (map[string]interface{}, *http.Response, error)
+	InternalDomainsItemsPartialUpdateExecute(r InternalDomainListsAPIInternalDomainsItemsPartialUpdateRequest) (map[string]interface{}, *http.Response, error)
 	/*
-			InternalDomainListsListInternalDomains List Internal Domains.
+			ListInternalDomains List Internal Domains.
 
 			Use this method to retrieve information on all Internal Domains objects for the account.
 
@@ -120,15 +120,15 @@ type InternalDomainListsAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiInternalDomainListsListInternalDomainsRequest
+			@return InternalDomainListsAPIListInternalDomainsRequest
 	*/
-	InternalDomainListsListInternalDomains(ctx context.Context) ApiInternalDomainListsListInternalDomainsRequest
+	ListInternalDomains(ctx context.Context) InternalDomainListsAPIListInternalDomainsRequest
 
-	// InternalDomainListsListInternalDomainsExecute executes the request
-	//  @return AtcfwInternalDomainsMultiResponse
-	InternalDomainListsListInternalDomainsExecute(r ApiInternalDomainListsListInternalDomainsRequest) (*AtcfwInternalDomainsMultiResponse, *http.Response, error)
+	// ListInternalDomainsExecute executes the request
+	//  @return InternalDomainsMultiResponse
+	ListInternalDomainsExecute(r InternalDomainListsAPIListInternalDomainsRequest) (*InternalDomainsMultiResponse, *http.Response, error)
 	/*
-			InternalDomainListsReadInternalDomains Read Internal Domains.
+			ReadInternalDomains Read Internal Domains.
 
 			Use this method to read Internal Domains objects for the account by a internal domain list id.
 
@@ -140,15 +140,15 @@ type InternalDomainListsAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Internal Domains object identifier.
-			@return ApiInternalDomainListsReadInternalDomainsRequest
+			@return InternalDomainListsAPIReadInternalDomainsRequest
 	*/
-	InternalDomainListsReadInternalDomains(ctx context.Context, id int32) ApiInternalDomainListsReadInternalDomainsRequest
+	ReadInternalDomains(ctx context.Context, id int32) InternalDomainListsAPIReadInternalDomainsRequest
 
-	// InternalDomainListsReadInternalDomainsExecute executes the request
-	//  @return AtcfwInternalDomainsReadResponse
-	InternalDomainListsReadInternalDomainsExecute(r ApiInternalDomainListsReadInternalDomainsRequest) (*AtcfwInternalDomainsReadResponse, *http.Response, error)
+	// ReadInternalDomainsExecute executes the request
+	//  @return InternalDomainsReadResponse
+	ReadInternalDomainsExecute(r InternalDomainListsAPIReadInternalDomainsRequest) (*InternalDomainsReadResponse, *http.Response, error)
 	/*
-			InternalDomainListsUpdateInternalDomains Update Internal Domains.
+			UpdateInternalDomains Update Internal Domains.
 
 			Use this method to update Internal Domains objects for the account by a internal domain list id.
 
@@ -164,36 +164,36 @@ type InternalDomainListsAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Internal Domain object identifier.
-			@return ApiInternalDomainListsUpdateInternalDomainsRequest
+			@return InternalDomainListsAPIUpdateInternalDomainsRequest
 	*/
-	InternalDomainListsUpdateInternalDomains(ctx context.Context, id int32) ApiInternalDomainListsUpdateInternalDomainsRequest
+	UpdateInternalDomains(ctx context.Context, id int32) InternalDomainListsAPIUpdateInternalDomainsRequest
 
-	// InternalDomainListsUpdateInternalDomainsExecute executes the request
-	//  @return AtcfwInternalDomainsUpdateResponse
-	InternalDomainListsUpdateInternalDomainsExecute(r ApiInternalDomainListsUpdateInternalDomainsRequest) (*AtcfwInternalDomainsUpdateResponse, *http.Response, error)
+	// UpdateInternalDomainsExecute executes the request
+	//  @return InternalDomainsUpdateResponse
+	UpdateInternalDomainsExecute(r InternalDomainListsAPIUpdateInternalDomainsRequest) (*InternalDomainsUpdateResponse, *http.Response, error)
 }
 
 // InternalDomainListsAPIService InternalDomainListsAPI service
 type InternalDomainListsAPIService internal.Service
 
-type ApiInternalDomainListsCreateInternalDomainsRequest struct {
+type InternalDomainListsAPICreateInternalDomainsRequest struct {
 	ctx        context.Context
 	ApiService InternalDomainListsAPI
-	body       *AtcfwInternalDomains
+	body       *InternalDomains
 }
 
 // The Internal Domains object.
-func (r ApiInternalDomainListsCreateInternalDomainsRequest) Body(body AtcfwInternalDomains) ApiInternalDomainListsCreateInternalDomainsRequest {
+func (r InternalDomainListsAPICreateInternalDomainsRequest) Body(body InternalDomains) InternalDomainListsAPICreateInternalDomainsRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiInternalDomainListsCreateInternalDomainsRequest) Execute() (*AtcfwInternalDomainsCreateResponse, *http.Response, error) {
-	return r.ApiService.InternalDomainListsCreateInternalDomainsExecute(r)
+func (r InternalDomainListsAPICreateInternalDomainsRequest) Execute() (*InternalDomainsCreateResponse, *http.Response, error) {
+	return r.ApiService.CreateInternalDomainsExecute(r)
 }
 
 /*
-InternalDomainListsCreateInternalDomains Create Internal Domains.
+CreateInternalDomains Create Internal Domains.
 
 Use this method to create Internal Domains objects for the account.
 
@@ -207,10 +207,10 @@ Required:
 - internal_domains
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiInternalDomainListsCreateInternalDomainsRequest
+	@return InternalDomainListsAPICreateInternalDomainsRequest
 */
-func (a *InternalDomainListsAPIService) InternalDomainListsCreateInternalDomains(ctx context.Context) ApiInternalDomainListsCreateInternalDomainsRequest {
-	return ApiInternalDomainListsCreateInternalDomainsRequest{
+func (a *InternalDomainListsAPIService) CreateInternalDomains(ctx context.Context) InternalDomainListsAPICreateInternalDomainsRequest {
+	return InternalDomainListsAPICreateInternalDomainsRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -218,16 +218,16 @@ func (a *InternalDomainListsAPIService) InternalDomainListsCreateInternalDomains
 
 // Execute executes the request
 //
-//	@return AtcfwInternalDomainsCreateResponse
-func (a *InternalDomainListsAPIService) InternalDomainListsCreateInternalDomainsExecute(r ApiInternalDomainListsCreateInternalDomainsRequest) (*AtcfwInternalDomainsCreateResponse, *http.Response, error) {
+//	@return InternalDomainsCreateResponse
+func (a *InternalDomainListsAPIService) CreateInternalDomainsExecute(r InternalDomainListsAPICreateInternalDomainsRequest) (*InternalDomainsCreateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwInternalDomainsCreateResponse
+		localVarReturnValue *InternalDomainsCreateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "InternalDomainListsAPIService.InternalDomainListsCreateInternalDomains")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "InternalDomainListsAPIService.CreateInternalDomains")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -319,23 +319,23 @@ func (a *InternalDomainListsAPIService) InternalDomainListsCreateInternalDomains
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiInternalDomainListsDeleteInternalDomainsRequest struct {
+type InternalDomainListsAPIDeleteInternalDomainsRequest struct {
 	ctx        context.Context
 	ApiService InternalDomainListsAPI
-	body       *AtcfwInternalDomainsDeleteRequest
+	body       *InternalDomainsDeleteRequest
 }
 
-func (r ApiInternalDomainListsDeleteInternalDomainsRequest) Body(body AtcfwInternalDomainsDeleteRequest) ApiInternalDomainListsDeleteInternalDomainsRequest {
+func (r InternalDomainListsAPIDeleteInternalDomainsRequest) Body(body InternalDomainsDeleteRequest) InternalDomainListsAPIDeleteInternalDomainsRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiInternalDomainListsDeleteInternalDomainsRequest) Execute() (*http.Response, error) {
-	return r.ApiService.InternalDomainListsDeleteInternalDomainsExecute(r)
+func (r InternalDomainListsAPIDeleteInternalDomainsRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteInternalDomainsExecute(r)
 }
 
 /*
-InternalDomainListsDeleteInternalDomains Delete Internal Domains.
+DeleteInternalDomains Delete Internal Domains.
 
 Use this method to delete Internal Domains objects for the account by a given list of internal domain list ids.
 
@@ -348,24 +348,24 @@ Required:
 - ids
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiInternalDomainListsDeleteInternalDomainsRequest
+	@return InternalDomainListsAPIDeleteInternalDomainsRequest
 */
-func (a *InternalDomainListsAPIService) InternalDomainListsDeleteInternalDomains(ctx context.Context) ApiInternalDomainListsDeleteInternalDomainsRequest {
-	return ApiInternalDomainListsDeleteInternalDomainsRequest{
+func (a *InternalDomainListsAPIService) DeleteInternalDomains(ctx context.Context) InternalDomainListsAPIDeleteInternalDomainsRequest {
+	return InternalDomainListsAPIDeleteInternalDomainsRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-func (a *InternalDomainListsAPIService) InternalDomainListsDeleteInternalDomainsExecute(r ApiInternalDomainListsDeleteInternalDomainsRequest) (*http.Response, error) {
+func (a *InternalDomainListsAPIService) DeleteInternalDomainsExecute(r InternalDomainListsAPIDeleteInternalDomainsRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "InternalDomainListsAPIService.InternalDomainListsDeleteInternalDomains")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "InternalDomainListsAPIService.DeleteInternalDomains")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -452,18 +452,18 @@ func (a *InternalDomainListsAPIService) InternalDomainListsDeleteInternalDomains
 	return localVarHTTPResponse, nil
 }
 
-type ApiInternalDomainListsDeleteSingleInternalDomainsRequest struct {
+type InternalDomainListsAPIDeleteSingleInternalDomainsRequest struct {
 	ctx        context.Context
 	ApiService InternalDomainListsAPI
 	id         int32
 }
 
-func (r ApiInternalDomainListsDeleteSingleInternalDomainsRequest) Execute() (*http.Response, error) {
-	return r.ApiService.InternalDomainListsDeleteSingleInternalDomainsExecute(r)
+func (r InternalDomainListsAPIDeleteSingleInternalDomainsRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteSingleInternalDomainsExecute(r)
 }
 
 /*
-InternalDomainListsDeleteSingleInternalDomains Delete Internal Domains.
+DeleteSingleInternalDomains Delete Internal Domains.
 
 Use this method to delete Internal Domains objects for the account by a given internal domain list id.
 
@@ -474,10 +474,10 @@ Once attached to ATEP, atep login endpoint will return the values under all asso
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Internal Domains object identifiers.
-	@return ApiInternalDomainListsDeleteSingleInternalDomainsRequest
+	@return InternalDomainListsAPIDeleteSingleInternalDomainsRequest
 */
-func (a *InternalDomainListsAPIService) InternalDomainListsDeleteSingleInternalDomains(ctx context.Context, id int32) ApiInternalDomainListsDeleteSingleInternalDomainsRequest {
-	return ApiInternalDomainListsDeleteSingleInternalDomainsRequest{
+func (a *InternalDomainListsAPIService) DeleteSingleInternalDomains(ctx context.Context, id int32) InternalDomainListsAPIDeleteSingleInternalDomainsRequest {
+	return InternalDomainListsAPIDeleteSingleInternalDomainsRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -485,14 +485,14 @@ func (a *InternalDomainListsAPIService) InternalDomainListsDeleteSingleInternalD
 }
 
 // Execute executes the request
-func (a *InternalDomainListsAPIService) InternalDomainListsDeleteSingleInternalDomainsExecute(r ApiInternalDomainListsDeleteSingleInternalDomainsRequest) (*http.Response, error) {
+func (a *InternalDomainListsAPIService) DeleteSingleInternalDomainsExecute(r InternalDomainListsAPIDeleteSingleInternalDomainsRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "InternalDomainListsAPIService.InternalDomainListsDeleteSingleInternalDomains")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "InternalDomainListsAPIService.DeleteSingleInternalDomains")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -575,25 +575,25 @@ func (a *InternalDomainListsAPIService) InternalDomainListsDeleteSingleInternalD
 	return localVarHTTPResponse, nil
 }
 
-type ApiInternalDomainListsInternalDomainsItemsPartialUpdateRequest struct {
+type InternalDomainListsAPIInternalDomainsItemsPartialUpdateRequest struct {
 	ctx        context.Context
 	ApiService InternalDomainListsAPI
 	id         int32
-	body       *AtcfwInternalDomainsItems
+	body       *InternalDomainsItems
 }
 
 // The Internal Domains Items Patch object.
-func (r ApiInternalDomainListsInternalDomainsItemsPartialUpdateRequest) Body(body AtcfwInternalDomainsItems) ApiInternalDomainListsInternalDomainsItemsPartialUpdateRequest {
+func (r InternalDomainListsAPIInternalDomainsItemsPartialUpdateRequest) Body(body InternalDomainsItems) InternalDomainListsAPIInternalDomainsItemsPartialUpdateRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiInternalDomainListsInternalDomainsItemsPartialUpdateRequest) Execute() (map[string]interface{}, *http.Response, error) {
-	return r.ApiService.InternalDomainListsInternalDomainsItemsPartialUpdateExecute(r)
+func (r InternalDomainListsAPIInternalDomainsItemsPartialUpdateRequest) Execute() (map[string]interface{}, *http.Response, error) {
+	return r.ApiService.InternalDomainsItemsPartialUpdateExecute(r)
 }
 
 /*
-InternalDomainListsInternalDomainsItemsPartialUpdate Patch Internal Domains.
+InternalDomainsItemsPartialUpdate Patch Internal Domains.
 
 Use this method to insert ot delete items  for a specified Named List object. Note that duplicated items are silently skipped and only new items are appended to the named list.
 Note that DNSM, TI, Fast Flux, custom lists and DGA lists cannot be updated. Only Internal Domains items can be updated.
@@ -602,10 +602,10 @@ The Internal Domains Items represent the list of the FQDN or IPv4 addresses to d
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Internal Domain List object identifier.
-	@return ApiInternalDomainListsInternalDomainsItemsPartialUpdateRequest
+	@return InternalDomainListsAPIInternalDomainsItemsPartialUpdateRequest
 */
-func (a *InternalDomainListsAPIService) InternalDomainListsInternalDomainsItemsPartialUpdate(ctx context.Context, id int32) ApiInternalDomainListsInternalDomainsItemsPartialUpdateRequest {
-	return ApiInternalDomainListsInternalDomainsItemsPartialUpdateRequest{
+func (a *InternalDomainListsAPIService) InternalDomainsItemsPartialUpdate(ctx context.Context, id int32) InternalDomainListsAPIInternalDomainsItemsPartialUpdateRequest {
+	return InternalDomainListsAPIInternalDomainsItemsPartialUpdateRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -615,7 +615,7 @@ func (a *InternalDomainListsAPIService) InternalDomainListsInternalDomainsItemsP
 // Execute executes the request
 //
 //	@return map[string]interface{}
-func (a *InternalDomainListsAPIService) InternalDomainListsInternalDomainsItemsPartialUpdateExecute(r ApiInternalDomainListsInternalDomainsItemsPartialUpdateRequest) (map[string]interface{}, *http.Response, error) {
+func (a *InternalDomainListsAPIService) InternalDomainsItemsPartialUpdateExecute(r InternalDomainListsAPIInternalDomainsItemsPartialUpdateRequest) (map[string]interface{}, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPatch
 		localVarPostBody    interface{}
@@ -623,7 +623,7 @@ func (a *InternalDomainListsAPIService) InternalDomainListsInternalDomainsItemsP
 		localVarReturnValue map[string]interface{}
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "InternalDomainListsAPIService.InternalDomainListsInternalDomainsItemsPartialUpdate")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "InternalDomainListsAPIService.InternalDomainsItemsPartialUpdate")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -716,7 +716,7 @@ func (a *InternalDomainListsAPIService) InternalDomainListsInternalDomainsItemsP
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiInternalDomainListsListInternalDomainsRequest struct {
+type InternalDomainListsAPIListInternalDomainsRequest struct {
 	ctx        context.Context
 	ApiService InternalDomainListsAPI
 	filter     *string
@@ -729,53 +729,53 @@ type ApiInternalDomainListsListInternalDomainsRequest struct {
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;.  You can filter by following fields:  | Name               | type   | Supported Op                | | ------------------ | ------ | --------------------------- | | id                 | int32  | !&#x3D;, &#x3D;&#x3D;, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D;        | | name               | string | !&#x3D;, &#x3D;&#x3D;, ~, !~, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D; | | description        | string | !&#x3D;, &#x3D;&#x3D;, ~, !~, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D; | | items              | string | ~, !~                       | | is_default         | bool   | !&#x3D;, &#x3D;&#x3D;                      |  In addition grouping operators are supported:  | Op  | Description          | | --- | -------------------- | | and | Logical AND          | | or  | Logical OR           | | not | Logical NOT          | | ()  | Grouping Operators  |  Example: &#x60;&#x60;&#x60; ?_filter&#x3D;\&quot;((name&#x3D;&#x3D;&#39;internal_dom_a&#39;)or(name~&#39;internal_dom_b&#39;))\&quot; &#x60;&#x60;&#x60;
-func (r ApiInternalDomainListsListInternalDomainsRequest) Filter(filter string) ApiInternalDomainListsListInternalDomainsRequest {
+func (r InternalDomainListsAPIListInternalDomainsRequest) Filter(filter string) InternalDomainListsAPIListInternalDomainsRequest {
 	r.filter = &filter
 	return r
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiInternalDomainListsListInternalDomainsRequest) Fields(fields string) ApiInternalDomainListsListInternalDomainsRequest {
+func (r InternalDomainListsAPIListInternalDomainsRequest) Fields(fields string) InternalDomainListsAPIListInternalDomainsRequest {
 	r.fields = &fields
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiInternalDomainListsListInternalDomainsRequest) Offset(offset int32) ApiInternalDomainListsListInternalDomainsRequest {
+func (r InternalDomainListsAPIListInternalDomainsRequest) Offset(offset int32) InternalDomainListsAPIListInternalDomainsRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiInternalDomainListsListInternalDomainsRequest) Limit(limit int32) ApiInternalDomainListsListInternalDomainsRequest {
+func (r InternalDomainListsAPIListInternalDomainsRequest) Limit(limit int32) InternalDomainListsAPIListInternalDomainsRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiInternalDomainListsListInternalDomainsRequest) PageToken(pageToken string) ApiInternalDomainListsListInternalDomainsRequest {
+func (r InternalDomainListsAPIListInternalDomainsRequest) PageToken(pageToken string) InternalDomainListsAPIListInternalDomainsRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
 // Filtering by tags.
-func (r ApiInternalDomainListsListInternalDomainsRequest) Tfilter(tfilter string) ApiInternalDomainListsListInternalDomainsRequest {
+func (r InternalDomainListsAPIListInternalDomainsRequest) Tfilter(tfilter string) InternalDomainListsAPIListInternalDomainsRequest {
 	r.tfilter = &tfilter
 	return r
 }
 
 // Sorting by tags.
-func (r ApiInternalDomainListsListInternalDomainsRequest) TorderBy(torderBy string) ApiInternalDomainListsListInternalDomainsRequest {
+func (r InternalDomainListsAPIListInternalDomainsRequest) TorderBy(torderBy string) InternalDomainListsAPIListInternalDomainsRequest {
 	r.torderBy = &torderBy
 	return r
 }
 
-func (r ApiInternalDomainListsListInternalDomainsRequest) Execute() (*AtcfwInternalDomainsMultiResponse, *http.Response, error) {
-	return r.ApiService.InternalDomainListsListInternalDomainsExecute(r)
+func (r InternalDomainListsAPIListInternalDomainsRequest) Execute() (*InternalDomainsMultiResponse, *http.Response, error) {
+	return r.ApiService.ListInternalDomainsExecute(r)
 }
 
 /*
-InternalDomainListsListInternalDomains List Internal Domains.
+ListInternalDomains List Internal Domains.
 
 Use this method to retrieve information on all Internal Domains objects for the account.
 
@@ -785,10 +785,10 @@ Once attached to DFP, dfp configuration endpoints will return the values under a
 Once attached to ATEP, atep login endpoint will return the values under all associated lists as internal_domain_lists.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiInternalDomainListsListInternalDomainsRequest
+	@return InternalDomainListsAPIListInternalDomainsRequest
 */
-func (a *InternalDomainListsAPIService) InternalDomainListsListInternalDomains(ctx context.Context) ApiInternalDomainListsListInternalDomainsRequest {
-	return ApiInternalDomainListsListInternalDomainsRequest{
+func (a *InternalDomainListsAPIService) ListInternalDomains(ctx context.Context) InternalDomainListsAPIListInternalDomainsRequest {
+	return InternalDomainListsAPIListInternalDomainsRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -796,16 +796,16 @@ func (a *InternalDomainListsAPIService) InternalDomainListsListInternalDomains(c
 
 // Execute executes the request
 //
-//	@return AtcfwInternalDomainsMultiResponse
-func (a *InternalDomainListsAPIService) InternalDomainListsListInternalDomainsExecute(r ApiInternalDomainListsListInternalDomainsRequest) (*AtcfwInternalDomainsMultiResponse, *http.Response, error) {
+//	@return InternalDomainsMultiResponse
+func (a *InternalDomainListsAPIService) ListInternalDomainsExecute(r InternalDomainListsAPIListInternalDomainsRequest) (*InternalDomainsMultiResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwInternalDomainsMultiResponse
+		localVarReturnValue *InternalDomainsMultiResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "InternalDomainListsAPIService.InternalDomainListsListInternalDomains")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "InternalDomainListsAPIService.ListInternalDomains")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -893,7 +893,7 @@ func (a *InternalDomainListsAPIService) InternalDomainListsListInternalDomainsEx
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiInternalDomainListsReadInternalDomainsRequest struct {
+type InternalDomainListsAPIReadInternalDomainsRequest struct {
 	ctx        context.Context
 	ApiService InternalDomainListsAPI
 	id         int32
@@ -905,41 +905,41 @@ type ApiInternalDomainListsReadInternalDomainsRequest struct {
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiInternalDomainListsReadInternalDomainsRequest) Fields(fields string) ApiInternalDomainListsReadInternalDomainsRequest {
+func (r InternalDomainListsAPIReadInternalDomainsRequest) Fields(fields string) InternalDomainListsAPIReadInternalDomainsRequest {
 	r.fields = &fields
 	return r
 }
 
 // The name of InternalDomains object. Used if id&#x3D;&#x3D;0.
-func (r ApiInternalDomainListsReadInternalDomainsRequest) Name(name string) ApiInternalDomainListsReadInternalDomainsRequest {
+func (r InternalDomainListsAPIReadInternalDomainsRequest) Name(name string) InternalDomainListsAPIReadInternalDomainsRequest {
 	r.name = &name
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiInternalDomainListsReadInternalDomainsRequest) Offset(offset int32) ApiInternalDomainListsReadInternalDomainsRequest {
+func (r InternalDomainListsAPIReadInternalDomainsRequest) Offset(offset int32) InternalDomainListsAPIReadInternalDomainsRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiInternalDomainListsReadInternalDomainsRequest) Limit(limit int32) ApiInternalDomainListsReadInternalDomainsRequest {
+func (r InternalDomainListsAPIReadInternalDomainsRequest) Limit(limit int32) InternalDomainListsAPIReadInternalDomainsRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiInternalDomainListsReadInternalDomainsRequest) PageToken(pageToken string) ApiInternalDomainListsReadInternalDomainsRequest {
+func (r InternalDomainListsAPIReadInternalDomainsRequest) PageToken(pageToken string) InternalDomainListsAPIReadInternalDomainsRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
-func (r ApiInternalDomainListsReadInternalDomainsRequest) Execute() (*AtcfwInternalDomainsReadResponse, *http.Response, error) {
-	return r.ApiService.InternalDomainListsReadInternalDomainsExecute(r)
+func (r InternalDomainListsAPIReadInternalDomainsRequest) Execute() (*InternalDomainsReadResponse, *http.Response, error) {
+	return r.ApiService.ReadInternalDomainsExecute(r)
 }
 
 /*
-InternalDomainListsReadInternalDomains Read Internal Domains.
+ReadInternalDomains Read Internal Domains.
 
 Use this method to read Internal Domains objects for the account by a internal domain list id.
 
@@ -950,10 +950,10 @@ Once attached to ATEP, atep login endpoint will return the values under all asso
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Internal Domains object identifier.
-	@return ApiInternalDomainListsReadInternalDomainsRequest
+	@return InternalDomainListsAPIReadInternalDomainsRequest
 */
-func (a *InternalDomainListsAPIService) InternalDomainListsReadInternalDomains(ctx context.Context, id int32) ApiInternalDomainListsReadInternalDomainsRequest {
-	return ApiInternalDomainListsReadInternalDomainsRequest{
+func (a *InternalDomainListsAPIService) ReadInternalDomains(ctx context.Context, id int32) InternalDomainListsAPIReadInternalDomainsRequest {
+	return InternalDomainListsAPIReadInternalDomainsRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -962,16 +962,16 @@ func (a *InternalDomainListsAPIService) InternalDomainListsReadInternalDomains(c
 
 // Execute executes the request
 //
-//	@return AtcfwInternalDomainsReadResponse
-func (a *InternalDomainListsAPIService) InternalDomainListsReadInternalDomainsExecute(r ApiInternalDomainListsReadInternalDomainsRequest) (*AtcfwInternalDomainsReadResponse, *http.Response, error) {
+//	@return InternalDomainsReadResponse
+func (a *InternalDomainListsAPIService) ReadInternalDomainsExecute(r InternalDomainListsAPIReadInternalDomainsRequest) (*InternalDomainsReadResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwInternalDomainsReadResponse
+		localVarReturnValue *InternalDomainsReadResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "InternalDomainListsAPIService.InternalDomainListsReadInternalDomains")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "InternalDomainListsAPIService.ReadInternalDomains")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -1064,25 +1064,25 @@ func (a *InternalDomainListsAPIService) InternalDomainListsReadInternalDomainsEx
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiInternalDomainListsUpdateInternalDomainsRequest struct {
+type InternalDomainListsAPIUpdateInternalDomainsRequest struct {
 	ctx        context.Context
 	ApiService InternalDomainListsAPI
 	id         int32
-	body       *AtcfwInternalDomains
+	body       *InternalDomains
 }
 
 // The Internal Domains object.
-func (r ApiInternalDomainListsUpdateInternalDomainsRequest) Body(body AtcfwInternalDomains) ApiInternalDomainListsUpdateInternalDomainsRequest {
+func (r InternalDomainListsAPIUpdateInternalDomainsRequest) Body(body InternalDomains) InternalDomainListsAPIUpdateInternalDomainsRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiInternalDomainListsUpdateInternalDomainsRequest) Execute() (*AtcfwInternalDomainsUpdateResponse, *http.Response, error) {
-	return r.ApiService.InternalDomainListsUpdateInternalDomainsExecute(r)
+func (r InternalDomainListsAPIUpdateInternalDomainsRequest) Execute() (*InternalDomainsUpdateResponse, *http.Response, error) {
+	return r.ApiService.UpdateInternalDomainsExecute(r)
 }
 
 /*
-InternalDomainListsUpdateInternalDomains Update Internal Domains.
+UpdateInternalDomains Update Internal Domains.
 
 Use this method to update Internal Domains objects for the account by a internal domain list id.
 
@@ -1097,10 +1097,10 @@ Required:
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Internal Domain object identifier.
-	@return ApiInternalDomainListsUpdateInternalDomainsRequest
+	@return InternalDomainListsAPIUpdateInternalDomainsRequest
 */
-func (a *InternalDomainListsAPIService) InternalDomainListsUpdateInternalDomains(ctx context.Context, id int32) ApiInternalDomainListsUpdateInternalDomainsRequest {
-	return ApiInternalDomainListsUpdateInternalDomainsRequest{
+func (a *InternalDomainListsAPIService) UpdateInternalDomains(ctx context.Context, id int32) InternalDomainListsAPIUpdateInternalDomainsRequest {
+	return InternalDomainListsAPIUpdateInternalDomainsRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -1109,16 +1109,16 @@ func (a *InternalDomainListsAPIService) InternalDomainListsUpdateInternalDomains
 
 // Execute executes the request
 //
-//	@return AtcfwInternalDomainsUpdateResponse
-func (a *InternalDomainListsAPIService) InternalDomainListsUpdateInternalDomainsExecute(r ApiInternalDomainListsUpdateInternalDomainsRequest) (*AtcfwInternalDomainsUpdateResponse, *http.Response, error) {
+//	@return InternalDomainsUpdateResponse
+func (a *InternalDomainListsAPIService) UpdateInternalDomainsExecute(r InternalDomainListsAPIUpdateInternalDomainsRequest) (*InternalDomainsUpdateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPut
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwInternalDomainsUpdateResponse
+		localVarReturnValue *InternalDomainsUpdateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "InternalDomainListsAPIService.InternalDomainListsUpdateInternalDomains")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "InternalDomainListsAPIService.UpdateInternalDomains")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}

@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	internalplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -78,7 +78,7 @@ var ConfigExternalPrimaryResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigExternalPrimary(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigExternalPrimary {
+func ExpandConfigExternalPrimary(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.ExternalPrimary {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -90,11 +90,11 @@ func ExpandConfigExternalPrimary(ctx context.Context, o types.Object, diags *dia
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigExternalPrimaryModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigExternalPrimary {
+func (m *ConfigExternalPrimaryModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.ExternalPrimary {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigExternalPrimary{
+	to := &dnsconfig.ExternalPrimary{
 		Address:     flex.ExpandStringPointer(m.Address),
 		Fqdn:        flex.ExpandStringPointer(m.Fqdn),
 		Nsg:         flex.ExpandStringPointer(m.Nsg),
@@ -105,7 +105,7 @@ func (m *ConfigExternalPrimaryModel) Expand(ctx context.Context, diags *diag.Dia
 	return to
 }
 
-func FlattenConfigExternalPrimary(ctx context.Context, from *dns_config.ConfigExternalPrimary, diags *diag.Diagnostics) types.Object {
+func FlattenConfigExternalPrimary(ctx context.Context, from *dnsconfig.ExternalPrimary, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigExternalPrimaryAttrTypes)
 	}
@@ -116,7 +116,7 @@ func FlattenConfigExternalPrimary(ctx context.Context, from *dns_config.ConfigEx
 	return t
 }
 
-func (m *ConfigExternalPrimaryModel) Flatten(ctx context.Context, from *dns_config.ConfigExternalPrimary, diags *diag.Diagnostics) {
+func (m *ConfigExternalPrimaryModel) Flatten(ctx context.Context, from *dnsconfig.ExternalPrimary, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

@@ -8,8 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
-
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -40,17 +39,17 @@ var ConfigDisplayViewResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *ConfigDisplayViewModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigDisplayView {
+func (m *ConfigDisplayViewModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.DisplayView {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigDisplayView{
+	to := &dnsconfig.DisplayView{
 		View: flex.ExpandStringPointer(m.View),
 	}
 	return to
 }
 
-func FlattenConfigDisplayView(ctx context.Context, from *dns_config.ConfigDisplayView, diags *diag.Diagnostics) types.Object {
+func FlattenConfigDisplayView(ctx context.Context, from *dnsconfig.DisplayView, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigDisplayViewAttrTypes)
 	}
@@ -61,7 +60,7 @@ func FlattenConfigDisplayView(ctx context.Context, from *dns_config.ConfigDispla
 	return t
 }
 
-func (m *ConfigDisplayViewModel) Flatten(ctx context.Context, from *dns_config.ConfigDisplayView, diags *diag.Diagnostics) {
+func (m *ConfigDisplayViewModel) Flatten(ctx context.Context, from *dnsconfig.DisplayView, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

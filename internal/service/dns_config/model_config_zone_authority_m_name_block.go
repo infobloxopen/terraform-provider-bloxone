@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -41,7 +41,7 @@ var ConfigZoneAuthorityMNameBlockResourceSchemaAttributes = map[string]schema.At
 	},
 }
 
-func ExpandConfigZoneAuthorityMNameBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigZoneAuthorityMNameBlock {
+func ExpandConfigZoneAuthorityMNameBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.ZoneAuthorityMNameBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -53,18 +53,18 @@ func ExpandConfigZoneAuthorityMNameBlock(ctx context.Context, o types.Object, di
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigZoneAuthorityMNameBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigZoneAuthorityMNameBlock {
+func (m *ConfigZoneAuthorityMNameBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.ZoneAuthorityMNameBlock {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigZoneAuthorityMNameBlock{
+	to := &dnsconfig.ZoneAuthorityMNameBlock{
 		Mname:           flex.ExpandStringPointer(m.Mname),
 		UseDefaultMname: flex.ExpandBoolPointer(m.UseDefaultMname),
 	}
 	return to
 }
 
-func FlattenConfigZoneAuthorityMNameBlock(ctx context.Context, from *dns_config.ConfigZoneAuthorityMNameBlock, diags *diag.Diagnostics) types.Object {
+func FlattenConfigZoneAuthorityMNameBlock(ctx context.Context, from *dnsconfig.ZoneAuthorityMNameBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigZoneAuthorityMNameBlockAttrTypes)
 	}
@@ -75,7 +75,7 @@ func FlattenConfigZoneAuthorityMNameBlock(ctx context.Context, from *dns_config.
 	return t
 }
 
-func (m *ConfigZoneAuthorityMNameBlockModel) Flatten(ctx context.Context, from *dns_config.ConfigZoneAuthorityMNameBlock, diags *diag.Diagnostics) {
+func (m *ConfigZoneAuthorityMNameBlockModel) Flatten(ctx context.Context, from *dnsconfig.ZoneAuthorityMNameBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

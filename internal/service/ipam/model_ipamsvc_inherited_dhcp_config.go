@@ -17,6 +17,7 @@ type IpamsvcInheritedDHCPConfigModel struct {
 	AbandonedReclaimTimeV6 types.Object `tfsdk:"abandoned_reclaim_time_v6"`
 	AllowUnknown           types.Object `tfsdk:"allow_unknown"`
 	AllowUnknownV6         types.Object `tfsdk:"allow_unknown_v6"`
+	EchoClientId           types.Object `tfsdk:"echo_client_id"`
 	Filters                types.Object `tfsdk:"filters"`
 	FiltersV6              types.Object `tfsdk:"filters_v6"`
 	IgnoreClientUid        types.Object `tfsdk:"ignore_client_uid"`
@@ -30,6 +31,7 @@ var IpamsvcInheritedDHCPConfigAttrTypes = map[string]attr.Type{
 	"abandoned_reclaim_time_v6": types.ObjectType{AttrTypes: InheritanceInheritedUInt32AttrTypes},
 	"allow_unknown":             types.ObjectType{AttrTypes: InheritanceInheritedBoolAttrTypes},
 	"allow_unknown_v6":          types.ObjectType{AttrTypes: InheritanceInheritedBoolAttrTypes},
+	"echo_client_id":            types.ObjectType{AttrTypes: InheritanceInheritedBoolAttrTypes},
 	"filters":                   types.ObjectType{AttrTypes: InheritedDHCPConfigFilterListAttrTypes},
 	"filters_v6":                types.ObjectType{AttrTypes: InheritedDHCPConfigFilterListAttrTypes},
 	"ignore_client_uid":         types.ObjectType{AttrTypes: InheritanceInheritedBoolAttrTypes},
@@ -55,6 +57,11 @@ var IpamsvcInheritedDHCPConfigResourceSchemaAttributes = map[string]schema.Attri
 		Computed:   true,
 	},
 	"allow_unknown_v6": schema.SingleNestedAttribute{
+		Attributes: InheritanceInheritedBoolResourceSchemaAttributes,
+		Optional:   true,
+		Computed:   true,
+	},
+	"echo_client_id": schema.SingleNestedAttribute{
 		Attributes: InheritanceInheritedBoolResourceSchemaAttributes,
 		Optional:   true,
 		Computed:   true,
@@ -91,7 +98,7 @@ var IpamsvcInheritedDHCPConfigResourceSchemaAttributes = map[string]schema.Attri
 	},
 }
 
-func ExpandIpamsvcInheritedDHCPConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcInheritedDHCPConfig {
+func ExpandIpamsvcInheritedDHCPConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.InheritedDHCPConfig {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -103,15 +110,16 @@ func ExpandIpamsvcInheritedDHCPConfig(ctx context.Context, o types.Object, diags
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcInheritedDHCPConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcInheritedDHCPConfig {
+func (m *IpamsvcInheritedDHCPConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.InheritedDHCPConfig {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcInheritedDHCPConfig{
+	to := &ipam.InheritedDHCPConfig{
 		AbandonedReclaimTime:   ExpandInheritanceInheritedUInt32(ctx, m.AbandonedReclaimTime, diags),
 		AbandonedReclaimTimeV6: ExpandInheritanceInheritedUInt32(ctx, m.AbandonedReclaimTimeV6, diags),
 		AllowUnknown:           ExpandInheritanceInheritedBool(ctx, m.AllowUnknown, diags),
 		AllowUnknownV6:         ExpandInheritanceInheritedBool(ctx, m.AllowUnknownV6, diags),
+		EchoClientId:           ExpandInheritanceInheritedBool(ctx, m.EchoClientId, diags),
 		Filters:                ExpandInheritedDHCPConfigFilterList(ctx, m.Filters, diags),
 		FiltersV6:              ExpandInheritedDHCPConfigFilterList(ctx, m.FiltersV6, diags),
 		IgnoreClientUid:        ExpandInheritanceInheritedBool(ctx, m.IgnoreClientUid, diags),
@@ -122,7 +130,7 @@ func (m *IpamsvcInheritedDHCPConfigModel) Expand(ctx context.Context, diags *dia
 	return to
 }
 
-func FlattenIpamsvcInheritedDHCPConfig(ctx context.Context, from *ipam.IpamsvcInheritedDHCPConfig, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcInheritedDHCPConfig(ctx context.Context, from *ipam.InheritedDHCPConfig, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcInheritedDHCPConfigAttrTypes)
 	}
@@ -133,7 +141,7 @@ func FlattenIpamsvcInheritedDHCPConfig(ctx context.Context, from *ipam.IpamsvcIn
 	return t
 }
 
-func (m *IpamsvcInheritedDHCPConfigModel) Flatten(ctx context.Context, from *ipam.IpamsvcInheritedDHCPConfig, diags *diag.Diagnostics) {
+func (m *IpamsvcInheritedDHCPConfigModel) Flatten(ctx context.Context, from *ipam.InheritedDHCPConfig, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
@@ -144,6 +152,7 @@ func (m *IpamsvcInheritedDHCPConfigModel) Flatten(ctx context.Context, from *ipa
 	m.AbandonedReclaimTimeV6 = FlattenInheritanceInheritedUInt32(ctx, from.AbandonedReclaimTimeV6, diags)
 	m.AllowUnknown = FlattenInheritanceInheritedBool(ctx, from.AllowUnknown, diags)
 	m.AllowUnknownV6 = FlattenInheritanceInheritedBool(ctx, from.AllowUnknownV6, diags)
+	m.EchoClientId = FlattenInheritanceInheritedBool(ctx, from.EchoClientId, diags)
 	m.Filters = FlattenInheritedDHCPConfigFilterList(ctx, from.Filters, diags)
 	m.FiltersV6 = FlattenInheritedDHCPConfigFilterList(ctx, from.FiltersV6, diags)
 	m.IgnoreClientUid = FlattenInheritanceInheritedBool(ctx, from.IgnoreClientUid, diags)
