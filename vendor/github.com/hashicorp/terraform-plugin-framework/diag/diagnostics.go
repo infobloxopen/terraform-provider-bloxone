@@ -43,7 +43,12 @@ func (diags *Diagnostics) Append(in ...Diagnostic) {
 		if diags.Contains(diag) {
 			continue
 		}
-		*diags = append(*diags, diag)
+
+		if diags == nil {
+			*diags = Diagnostics{diag}
+		} else {
+			*diags = append(*diags, diag)
+		}
 	}
 }
 

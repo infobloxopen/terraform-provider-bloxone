@@ -6,10 +6,9 @@ package toproto6
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
-
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/internal/totftypes"
+	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 )
 
 // DiagnosticSeverity converts diag.Severity into tfprotov6.DiagnosticSeverity.

@@ -15,13 +15,6 @@ type ServerCapabilities struct {
 	// Terraform 1.6 or later.
 	GetProviderSchemaOptional bool
 
-	// MoveResourceState signals that the provider is ready for the
-	// MoveResourceState RPC.
-	//
-	// This should always be enabled in framework providers and requires
-	// Terraform 1.8 or later.
-	MoveResourceState bool
-
 	// PlanDestroy signals that the provider is ready for the
 	// PlanResourceChange RPC on resource destruction.
 	//
@@ -34,7 +27,6 @@ type ServerCapabilities struct {
 func (s *Server) ServerCapabilities() *ServerCapabilities {
 	return &ServerCapabilities{
 		GetProviderSchemaOptional: true,
-		MoveResourceState:         true,
 		PlanDestroy:               true,
 	}
 }

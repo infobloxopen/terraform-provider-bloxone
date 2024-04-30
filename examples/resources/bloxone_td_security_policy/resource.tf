@@ -5,11 +5,15 @@ resource "bloxone_td_security_policy" "example" {
   rules = [
     {
       action = "action_allow",
-      data   = "terraform_example",
+      data   = "custom_list_example",
       type   = "custom_list"
     }
   ]
-
-  description = "Example Security Policy"
-
+  description    = "Example Security Policy"
+  ecs            = true
+  onprem_resolve = true
+  safe_search    = false
+  tags = {
+    site = "Site A"
+  }
 }

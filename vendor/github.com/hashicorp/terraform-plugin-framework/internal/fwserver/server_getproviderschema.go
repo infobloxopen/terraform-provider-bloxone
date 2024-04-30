@@ -7,7 +7,6 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/function"
 	"github.com/hashicorp/terraform-plugin-framework/internal/fwschema"
 )
 
@@ -18,13 +17,12 @@ type GetProviderSchemaRequest struct{}
 // GetProviderSchemaResponse is the framework server response for the
 // GetProviderSchema RPC.
 type GetProviderSchemaResponse struct {
-	ServerCapabilities  *ServerCapabilities
-	Provider            fwschema.Schema
-	ProviderMeta        fwschema.Schema
-	ResourceSchemas     map[string]fwschema.Schema
-	DataSourceSchemas   map[string]fwschema.Schema
-	FunctionDefinitions map[string]function.Definition
-	Diagnostics         diag.Diagnostics
+	ServerCapabilities *ServerCapabilities
+	Provider           fwschema.Schema
+	ProviderMeta       fwschema.Schema
+	ResourceSchemas    map[string]fwschema.Schema
+	DataSourceSchemas  map[string]fwschema.Schema
+	Diagnostics        diag.Diagnostics
 }
 
 // GetProviderSchema implements the framework server GetProviderSchema RPC.
@@ -70,14 +68,4 @@ func (s *Server) GetProviderSchema(ctx context.Context, req *GetProviderSchemaRe
 	}
 
 	resp.DataSourceSchemas = dataSourceSchemas
-
-	functions, diags := s.FunctionDefinitions(ctx)
-
-	resp.Diagnostics.Append(diags...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	resp.FunctionDefinitions = functions
 }

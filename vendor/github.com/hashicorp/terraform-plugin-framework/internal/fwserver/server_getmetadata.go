@@ -18,7 +18,6 @@ type GetMetadataRequest struct{}
 type GetMetadataResponse struct {
 	DataSources        []DataSourceMetadata
 	Diagnostics        diag.Diagnostics
-	Functions          []FunctionMetadata
 	Resources          []ResourceMetadata
 	ServerCapabilities *ServerCapabilities
 }
@@ -28,13 +27,6 @@ type GetMetadataResponse struct {
 type DataSourceMetadata struct {
 	// TypeName is the name of the data resource.
 	TypeName string
-}
-
-// FunctionMetadata is the framework server equivalent of the
-// tfprotov5.FunctionMetadata and tfprotov6.FunctionMetadata types.
-type FunctionMetadata struct {
-	// Name is the name of the function.
-	Name string
 }
 
 // ResourceMetadata is the framework server equivalent of the
@@ -47,15 +39,10 @@ type ResourceMetadata struct {
 // GetMetadata implements the framework server GetMetadata RPC.
 func (s *Server) GetMetadata(ctx context.Context, req *GetMetadataRequest, resp *GetMetadataResponse) {
 	resp.DataSources = []DataSourceMetadata{}
-	resp.Functions = []FunctionMetadata{}
 	resp.Resources = []ResourceMetadata{}
 	resp.ServerCapabilities = s.ServerCapabilities()
 
 	datasourceMetadatas, diags := s.DataSourceMetadatas(ctx)
-
-	resp.Diagnostics.Append(diags...)
-
-	functionMetadatas, diags := s.FunctionMetadatas(ctx)
 
 	resp.Diagnostics.Append(diags...)
 
@@ -68,6 +55,5 @@ func (s *Server) GetMetadata(ctx context.Context, req *GetMetadataRequest, resp 
 	}
 
 	resp.DataSources = datasourceMetadatas
-	resp.Functions = functionMetadatas
 	resp.Resources = resourceMetadatas
 }

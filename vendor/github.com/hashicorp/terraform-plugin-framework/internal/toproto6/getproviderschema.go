@@ -18,10 +18,9 @@ func GetProviderSchemaResponse(ctx context.Context, fw *fwserver.GetProviderSche
 	}
 
 	protov6 := &tfprotov6.GetProviderSchemaResponse{
-		DataSourceSchemas:  make(map[string]*tfprotov6.Schema, len(fw.DataSourceSchemas)),
+		DataSourceSchemas:  map[string]*tfprotov6.Schema{},
 		Diagnostics:        Diagnostics(ctx, fw.Diagnostics),
-		Functions:          make(map[string]*tfprotov6.Function, len(fw.FunctionDefinitions)),
-		ResourceSchemas:    make(map[string]*tfprotov6.Schema, len(fw.ResourceSchemas)),
+		ResourceSchemas:    map[string]*tfprotov6.Schema{},
 		ServerCapabilities: ServerCapabilities(ctx, fw.ServerCapabilities),
 	}
 
@@ -63,10 +62,6 @@ func GetProviderSchemaResponse(ctx context.Context, fw *fwserver.GetProviderSche
 
 			return protov6
 		}
-	}
-
-	for name, functionDefinition := range fw.FunctionDefinitions {
-		protov6.Functions[name] = Function(ctx, functionDefinition)
 	}
 
 	for resourceType, resourceSchema := range fw.ResourceSchemas {
