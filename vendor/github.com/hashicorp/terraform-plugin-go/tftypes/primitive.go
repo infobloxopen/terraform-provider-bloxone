@@ -86,10 +86,7 @@ func (p primitive) MarshalJSON() ([]byte, error) {
 	case DynamicPseudoType.name:
 		return []byte(`"dynamic"`), nil
 	}
-
-	// MarshalJSON should always be error safe and reaching this panic implies
-	// a new primitive type was added that needs to be handled above.
-	panic(fmt.Sprintf("unimplemented tftypes.primitive type: %+v", p))
+	return nil, fmt.Errorf("unknown primitive type %q", p)
 }
 
 func (p primitive) supportedGoTypes() []string {

@@ -1,92 +1,98 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 package toproto
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6/internal/tfplugin6"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
-func AttributePath(in *tftypes.AttributePath) *tfplugin6.AttributePath {
+var ErrUnknownAttributePathStepType = errors.New("unknown type of AttributePath_Step")
+
+func AttributePath(in *tftypes.AttributePath) (*tfplugin6.AttributePath, error) {
 	if in == nil {
-		return nil
+		return nil, nil
 	}
-
-	resp := &tfplugin6.AttributePath{
-		Steps: AttributePath_Steps(in.Steps()),
+	steps, err := AttributePath_Steps(in.Steps())
+	if err != nil {
+		return nil, err
 	}
-
-	return resp
+	return &tfplugin6.AttributePath{
+		Steps: steps,
+	}, nil
 }
 
-func AttributePaths(in []*tftypes.AttributePath) []*tfplugin6.AttributePath {
+func AttributePaths(in []*tftypes.AttributePath) ([]*tfplugin6.AttributePath, error) {
 	resp := make([]*tfplugin6.AttributePath, 0, len(in))
-
 	for _, a := range in {
-		resp = append(resp, AttributePath(a))
+		if a == nil {
+			resp = append(resp, nil)
+			continue
+		}
+		attr, err := AttributePath(a)
+		if err != nil {
+			return resp, err
+		}
+		resp = append(resp, attr)
 	}
-
-	return resp
+	return resp, nil
 }
 
-func AttributePath_Step(step tftypes.AttributePathStep) *tfplugin6.AttributePath_Step {
-	if step == nil {
-		return nil
+func AttributePath_Step(step tftypes.AttributePathStep) (*tfplugin6.AttributePath_Step, error) {
+	var resp tfplugin6.AttributePath_Step
+	if name, ok := step.(tftypes.AttributeName); ok {
+		resp.Selector = &tfplugin6.AttributePath_Step_AttributeName{
+			AttributeName: string(name),
+		}
+		return &resp, nil
 	}
-
-	switch step := step.(type) {
-	case tftypes.AttributeName:
-		return &tfplugin6.AttributePath_Step{
-			Selector: &tfplugin6.AttributePath_Step_AttributeName{
-				AttributeName: string(step),
-			},
+	if key, ok := step.(tftypes.ElementKeyString); ok {
+		resp.Selector = &tfplugin6.AttributePath_Step_ElementKeyString{
+			ElementKeyString: string(key),
 		}
-	case tftypes.ElementKeyInt:
-		return &tfplugin6.AttributePath_Step{
-			Selector: &tfplugin6.AttributePath_Step_ElementKeyInt{
-				ElementKeyInt: int64(step),
-			},
-		}
-	case tftypes.ElementKeyString:
-		return &tfplugin6.AttributePath_Step{
-			Selector: &tfplugin6.AttributePath_Step_ElementKeyString{
-				ElementKeyString: string(step),
-			},
-		}
-	case tftypes.ElementKeyValue:
-		// The protocol has no equivalent of an ElementKeyValue, so this
-		// returns nil for the step to signal a step we cannot convey back
-		// to Terraform.
-		return nil
+		return &resp, nil
 	}
-
-	// It is not currently possible to create tftypes.AttributePathStep
-	// implementations outside the tftypes package and these implementations
-	// should rarely change, if ever, since they are critical to how
-	// Terraform understands attribute paths. If this panic was reached, it
-	// implies that a new step type was introduced and needs to be
-	// implemented as a new case above or that this logic needs to be
-	// otherwise changed to handle some new attribute path system.
-	panic(fmt.Sprintf("unimplemented tftypes.AttributePathStep type: %T", step))
+	if key, ok := step.(tftypes.ElementKeyInt); ok {
+		resp.Selector = &tfplugin6.AttributePath_Step_ElementKeyInt{
+			ElementKeyInt: int64(key),
+		}
+		return &resp, nil
+	}
+	if _, ok := step.(tftypes.ElementKeyValue); ok {
+		// the protocol has no equivalent of an ElementKeyValue, so we
+		// return nil for both the step and the error here, to signal
+		// that we've hit a step we can't convey back to Terraform
+		return nil, nil
+	}
+	return nil, ErrUnknownAttributePathStepType
 }
 
-func AttributePath_Steps(in []tftypes.AttributePathStep) []*tfplugin6.AttributePath_Step {
+func AttributePath_Steps(in []tftypes.AttributePathStep) ([]*tfplugin6.AttributePath_Step, error) {
 	resp := make([]*tfplugin6.AttributePath_Step, 0, len(in))
-
 	for _, step := range in {
-		s := AttributePath_Step(step)
-
-		// In the face of a ElementKeyValue or missing step, Terraform has no
-		// way to represent the attribute path, so only return the prefix.
-		if s == nil {
-			return resp
+		if step == nil {
+			resp = append(resp, nil)
+			continue
 		}
-
+		s, err := AttributePath_Step(step)
+		if err != nil {
+			return resp, err
+		}
+		// in the face of a set, the protocol has no way to represent
+		// the index, so we just bail and return the prefix we can
+		// return.
+		if s == nil {
+			return resp, nil
+		}
 		resp = append(resp, s)
 	}
-
-	return resp
+	return resp, nil
 }
+
+// we have to say this next thing to get golint to stop yelling at us about the
+// underscores in the function names. We want the function names to match
+// actually-generated code, so it feels like fair play. It's just a shame we
+// lose golint for the entire file.
+//
+// This file is not actually generated. You can edit it. Ignore this next line.
+// Code generated by hand ignore this next bit DO NOT EDIT.

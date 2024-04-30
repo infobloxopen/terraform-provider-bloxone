@@ -8,57 +8,136 @@ import (
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6/internal/tfplugin6"
 )
 
-func GetMetadataRequest(in *tfplugin6.GetMetadata_Request) *tfprotov6.GetMetadataRequest {
-	if in == nil {
-		return nil
-	}
-
-	resp := &tfprotov6.GetMetadataRequest{}
-
-	return resp
+func GetMetadataRequest(in *tfplugin6.GetMetadata_Request) (*tfprotov6.GetMetadataRequest, error) {
+	return &tfprotov6.GetMetadataRequest{}, nil
 }
 
-func GetProviderSchemaRequest(in *tfplugin6.GetProviderSchema_Request) *tfprotov6.GetProviderSchemaRequest {
+func GetMetadataResponse(in *tfplugin6.GetMetadata_Response) (*tfprotov6.GetMetadataResponse, error) {
 	if in == nil {
-		return nil
+		return nil, nil
 	}
 
-	resp := &tfprotov6.GetProviderSchemaRequest{}
+	resp := &tfprotov6.GetMetadataResponse{
+		DataSources:        make([]tfprotov6.DataSourceMetadata, 0, len(in.DataSources)),
+		Resources:          make([]tfprotov6.ResourceMetadata, 0, len(in.Resources)),
+		ServerCapabilities: ServerCapabilities(in.ServerCapabilities),
+	}
 
-	return resp
+	for _, datasource := range in.DataSources {
+		resp.DataSources = append(resp.DataSources, *DataSourceMetadata(datasource))
+	}
+
+	for _, resource := range in.Resources {
+		resp.Resources = append(resp.Resources, *ResourceMetadata(resource))
+	}
+
+	diags, err := Diagnostics(in.Diagnostics)
+
+	if err != nil {
+		return resp, err
+	}
+
+	resp.Diagnostics = diags
+
+	return resp, nil
 }
 
-func ValidateProviderConfigRequest(in *tfplugin6.ValidateProviderConfig_Request) *tfprotov6.ValidateProviderConfigRequest {
-	if in == nil {
-		return nil
-	}
-
-	resp := &tfprotov6.ValidateProviderConfigRequest{
-		Config: DynamicValue(in.Config),
-	}
-
-	return resp
+func GetProviderSchemaRequest(in *tfplugin6.GetProviderSchema_Request) (*tfprotov6.GetProviderSchemaRequest, error) {
+	return &tfprotov6.GetProviderSchemaRequest{}, nil
 }
 
-func ConfigureProviderRequest(in *tfplugin6.ConfigureProvider_Request) *tfprotov6.ConfigureProviderRequest {
-	if in == nil {
-		return nil
+func GetProviderSchemaResponse(in *tfplugin6.GetProviderSchema_Response) (*tfprotov6.GetProviderSchemaResponse, error) {
+	var resp tfprotov6.GetProviderSchemaResponse
+	if in.Provider != nil {
+		schema, err := Schema(in.Provider)
+		if err != nil {
+			return &resp, err
+		}
+		resp.Provider = schema
 	}
+	if in.ProviderMeta != nil {
+		schema, err := Schema(in.ProviderMeta)
+		if err != nil {
+			return &resp, err
+		}
+		resp.ProviderMeta = schema
+	}
+	resp.ResourceSchemas = make(map[string]*tfprotov6.Schema, len(in.ResourceSchemas))
+	for k, v := range in.ResourceSchemas {
+		if v == nil {
+			resp.ResourceSchemas[k] = nil
+			continue
+		}
+		schema, err := Schema(v)
+		if err != nil {
+			return &resp, err
+		}
+		resp.ResourceSchemas[k] = schema
+	}
+	resp.DataSourceSchemas = make(map[string]*tfprotov6.Schema, len(in.DataSourceSchemas))
+	for k, v := range in.DataSourceSchemas {
+		if v == nil {
+			resp.DataSourceSchemas[k] = nil
+			continue
+		}
+		schema, err := Schema(v)
+		if err != nil {
+			return &resp, err
+		}
+		resp.DataSourceSchemas[k] = schema
+	}
+	diags, err := Diagnostics(in.Diagnostics)
+	if err != nil {
+		return &resp, err
+	}
+	resp.Diagnostics = diags
+	return &resp, nil
+}
 
+func ValidateProviderConfigRequest(in *tfplugin6.ValidateProviderConfig_Request) (*tfprotov6.ValidateProviderConfigRequest, error) {
+	var resp tfprotov6.ValidateProviderConfigRequest
+	if in.Config != nil {
+		resp.Config = DynamicValue(in.Config)
+	}
+	return &resp, nil
+}
+
+func ValidateProviderConfigResponse(in *tfplugin6.ValidateProviderConfig_Response) (*tfprotov6.ValidateProviderConfigResponse, error) {
+	var resp tfprotov6.ValidateProviderConfigResponse
+	diags, err := Diagnostics(in.Diagnostics)
+	if err != nil {
+		return nil, err
+	}
+	resp.Diagnostics = diags
+	return &resp, nil
+}
+
+func ConfigureProviderRequest(in *tfplugin6.ConfigureProvider_Request) (*tfprotov6.ConfigureProviderRequest, error) {
 	resp := &tfprotov6.ConfigureProviderRequest{
-		Config:           DynamicValue(in.Config),
 		TerraformVersion: in.TerraformVersion,
 	}
-
-	return resp
+	if in.Config != nil {
+		resp.Config = DynamicValue(in.Config)
+	}
+	return resp, nil
 }
 
-func StopProviderRequest(in *tfplugin6.StopProvider_Request) *tfprotov6.StopProviderRequest {
-	if in == nil {
-		return nil
+func ConfigureProviderResponse(in *tfplugin6.ConfigureProvider_Response) (*tfprotov6.ConfigureProviderResponse, error) {
+	diags, err := Diagnostics(in.Diagnostics)
+	if err != nil {
+		return nil, err
 	}
+	return &tfprotov6.ConfigureProviderResponse{
+		Diagnostics: diags,
+	}, nil
+}
 
-	resp := &tfprotov6.StopProviderRequest{}
+func StopProviderRequest(in *tfplugin6.StopProvider_Request) (*tfprotov6.StopProviderRequest, error) {
+	return &tfprotov6.StopProviderRequest{}, nil
+}
 
-	return resp
+func StopProviderResponse(in *tfplugin6.StopProvider_Response) (*tfprotov6.StopProviderResponse, error) {
+	return &tfprotov6.StopProviderResponse{
+		Error: in.Error,
+	}, nil
 }

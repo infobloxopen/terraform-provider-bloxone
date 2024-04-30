@@ -4,7 +4,6 @@
 package tftypes
 
 import (
-	"bytes"
 	"fmt"
 )
 
@@ -111,15 +110,9 @@ func valueFromSet(typ Type, in interface{}) (Value, error) {
 //
 // Deprecated: this is not meant to be called by third-party code.
 func (s Set) MarshalJSON() ([]byte, error) {
-	var buf bytes.Buffer
-
-	buf.WriteString(`["set",`)
-
-	// MarshalJSON is always error safe
-	elementTypeBytes, _ := s.ElementType.MarshalJSON()
-
-	buf.Write(elementTypeBytes)
-	buf.WriteString(`]`)
-
-	return buf.Bytes(), nil
+	elementType, err := s.ElementType.MarshalJSON()
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling tftypes.Set's element type %T to JSON: %w", s.ElementType, err)
+	}
+	return []byte(`["set",` + string(elementType) + `]`), nil
 }

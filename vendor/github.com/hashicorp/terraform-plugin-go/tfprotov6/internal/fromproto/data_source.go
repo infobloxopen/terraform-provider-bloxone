@@ -8,29 +8,59 @@ import (
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6/internal/tfplugin6"
 )
 
-func ValidateDataResourceConfigRequest(in *tfplugin6.ValidateDataResourceConfig_Request) *tfprotov6.ValidateDataResourceConfigRequest {
+func DataSourceMetadata(in *tfplugin6.GetMetadata_DataSourceMetadata) *tfprotov6.DataSourceMetadata {
 	if in == nil {
 		return nil
 	}
 
-	resp := &tfprotov6.ValidateDataResourceConfigRequest{
-		Config:   DynamicValue(in.Config),
+	return &tfprotov6.DataSourceMetadata{
 		TypeName: in.TypeName,
 	}
-
-	return resp
 }
 
-func ReadDataSourceRequest(in *tfplugin6.ReadDataSource_Request) *tfprotov6.ReadDataSourceRequest {
-	if in == nil {
-		return nil
+func ValidateDataResourceConfigRequest(in *tfplugin6.ValidateDataResourceConfig_Request) (*tfprotov6.ValidateDataResourceConfigRequest, error) {
+	resp := &tfprotov6.ValidateDataResourceConfigRequest{
+		TypeName: in.TypeName,
 	}
+	if in.Config != nil {
+		resp.Config = DynamicValue(in.Config)
+	}
+	return resp, nil
+}
 
+func ValidateDataResourceConfigResponse(in *tfplugin6.ValidateDataResourceConfig_Response) (*tfprotov6.ValidateDataResourceConfigResponse, error) {
+	diags, err := Diagnostics(in.Diagnostics)
+	if err != nil {
+		return nil, err
+	}
+	return &tfprotov6.ValidateDataResourceConfigResponse{
+		Diagnostics: diags,
+	}, nil
+}
+
+func ReadDataSourceRequest(in *tfplugin6.ReadDataSource_Request) (*tfprotov6.ReadDataSourceRequest, error) {
 	resp := &tfprotov6.ReadDataSourceRequest{
-		Config:       DynamicValue(in.Config),
-		ProviderMeta: DynamicValue(in.ProviderMeta),
-		TypeName:     in.TypeName,
+		TypeName: in.TypeName,
 	}
+	if in.Config != nil {
+		resp.Config = DynamicValue(in.Config)
+	}
+	if in.ProviderMeta != nil {
+		resp.ProviderMeta = DynamicValue(in.ProviderMeta)
+	}
+	return resp, nil
+}
 
-	return resp
+func ReadDataSourceResponse(in *tfplugin6.ReadDataSource_Response) (*tfprotov6.ReadDataSourceResponse, error) {
+	diags, err := Diagnostics(in.Diagnostics)
+	if err != nil {
+		return nil, err
+	}
+	resp := &tfprotov6.ReadDataSourceResponse{
+		Diagnostics: diags,
+	}
+	if in.State != nil {
+		resp.State = DynamicValue(in.State)
+	}
+	return resp, nil
 }

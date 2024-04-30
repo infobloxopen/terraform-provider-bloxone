@@ -12,7 +12,6 @@ import (
 	"net"
 
 	hclog "github.com/hashicorp/go-hclog"
-	"github.com/hashicorp/go-plugin/internal/grpcmux"
 	"github.com/hashicorp/go-plugin/internal/plugin"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -62,8 +61,6 @@ type GRPCServer struct {
 	stdioServer *grpcStdioServer
 
 	logger hclog.Logger
-
-	muxer *grpcmux.GRPCServerMuxer
 }
 
 // ServerProtocol impl.
@@ -87,7 +84,7 @@ func (s *GRPCServer) Init() error {
 	// Register the broker service
 	brokerServer := newGRPCBrokerServer()
 	plugin.RegisterGRPCBrokerServer(s.server, brokerServer)
-	s.broker = newGRPCBroker(brokerServer, s.TLS, unixSocketConfigFromEnv(), nil, s.muxer)
+	s.broker = newGRPCBroker(brokerServer, s.TLS, unixSocketConfigFromEnv(), nil)
 	go s.broker.Run()
 
 	// Register the controller

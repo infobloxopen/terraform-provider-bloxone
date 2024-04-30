@@ -21,7 +21,6 @@ import (
 	"strings"
 
 	hclog "github.com/hashicorp/go-hclog"
-	"github.com/hashicorp/go-plugin/internal/grpcmux"
 	"google.golang.org/grpc"
 )
 
@@ -133,13 +132,6 @@ type ServeTestConfig struct {
 	// and SyncStdio functionality is fairly rare, so we default to the simple
 	// scenario.
 	SyncStdio bool
-}
-
-func unixSocketConfigFromEnv() UnixSocketConfig {
-	return UnixSocketConfig{
-		Group:     os.Getenv(EnvUnixSocketGroup),
-		socketDir: os.Getenv(EnvUnixSocketDir),
-	}
 }
 
 // protocolVersion determines the protocol version and plugin set to be used by
@@ -388,12 +380,6 @@ func Serve(opts *ServeConfig) {
 		}
 
 	case ProtocolGRPC:
-		var muxer *grpcmux.GRPCServerMuxer
-		if multiplex, _ := strconv.ParseBool(os.Getenv(envMultiplexGRPC)); multiplex {
-			muxer = grpcmux.NewGRPCServerMuxer(logger, listener)
-			listener = muxer
-		}
-
 		// Create the gRPC server
 		server = &GRPCServer{
 			Plugins: pluginSet,
@@ -403,7 +389,6 @@ func Serve(opts *ServeConfig) {
 			Stderr:  stderr_r,
 			DoneCh:  doneCh,
 			logger:  logger,
-			muxer:   muxer,
 		}
 
 	default:
@@ -422,27 +407,13 @@ func Serve(opts *ServeConfig) {
 	// bring it up. In test mode, we don't do this because clients will
 	// attach via a reattach config.
 	if opts.Test == nil {
-		const grpcBrokerMultiplexingSupported = true
-		protocolLine := fmt.Sprintf("%d|%d|%s|%s|%s|%s",
+		fmt.Printf("%d|%d|%s|%s|%s|%s\n",
 			CoreProtocolVersion,
 			protoVersion,
 			listener.Addr().Network(),
 			listener.Addr().String(),
 			protoType,
 			serverCert)
-
-		// Old clients will error with new plugins if we blindly append the
-		// seventh segment for gRPC broker multiplexing support, because old
-		// client code uses strings.SplitN(line, "|", 6), which means a seventh
-		// segment will get appended to the sixth segment as "sixthpart|true".
-		//
-		// If the environment variable is set, we assume the client is new enough
-		// to handle a seventh segment, as it should now use
-		// strings.Split(line, "|") and always handle each segment individually.
-		if os.Getenv(envMultiplexGRPC) != "" {
-			protocolLine += fmt.Sprintf("|%v", grpcBrokerMultiplexingSupported)
-		}
-		fmt.Printf("%s\n", protocolLine)
 		os.Stdout.Sync()
 	} else if ch := opts.Test.ReattachConfigCh; ch != nil {
 		// Send back the reattach config that can be used. This isn't
@@ -576,7 +547,7 @@ func serverListener_tcp() (net.Listener, error) {
 }
 
 func serverListener_unix(unixSocketCfg UnixSocketConfig) (net.Listener, error) {
-	tf, err := os.CreateTemp(unixSocketCfg.socketDir, "plugin")
+	tf, err := os.CreateTemp(unixSocketCfg.directory, "plugin")
 	if err != nil {
 		return nil, err
 	}
@@ -607,7 +578,10 @@ func serverListener_unix(unixSocketCfg UnixSocketConfig) (net.Listener, error) {
 
 	// Wrap the listener in rmListener so that the Unix domain socket file
 	// is removed on close.
-	return newDeleteFileListener(l, path), nil
+	return &rmListener{
+		Listener: l,
+		Path:     path,
+	}, nil
 }
 
 func setGroupWritable(path, groupString string, mode os.FileMode) error {
@@ -637,21 +611,11 @@ func setGroupWritable(path, groupString string, mode os.FileMode) error {
 }
 
 // rmListener is an implementation of net.Listener that forwards most
-// calls to the listener but also calls an additional close function. We
-// use this to cleanup the unix domain socket on close, as well as clean
-// up multiplexed listeners.
+// calls to the listener but also removes a file as part of the close. We
+// use this to cleanup the unix domain socket on close.
 type rmListener struct {
 	net.Listener
-	close func() error
-}
-
-func newDeleteFileListener(ln net.Listener, path string) *rmListener {
-	return &rmListener{
-		Listener: ln,
-		close: func() error {
-			return os.Remove(path)
-		},
-	}
+	Path string
 }
 
 func (l *rmListener) Close() error {
@@ -661,5 +625,5 @@ func (l *rmListener) Close() error {
 	}
 
 	// Remove the file
-	return l.close()
+	return os.Remove(l.Path)
 }

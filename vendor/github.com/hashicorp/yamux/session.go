@@ -2,7 +2,6 @@ package yamux
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -64,27 +63,24 @@ type Session struct {
 
 	// sendCh is used to mark a stream as ready to send,
 	// or to send a header out directly.
-	sendCh chan *sendReady
+	sendCh chan sendReady
 
 	// recvDoneCh is closed when recv() exits to avoid a race
 	// between stream registration and stream shutdown
 	recvDoneCh chan struct{}
-	sendDoneCh chan struct{}
 
 	// shutdown is used to safely close a session
-	shutdown        bool
-	shutdownErr     error
-	shutdownCh      chan struct{}
-	shutdownLock    sync.Mutex
-	shutdownErrLock sync.Mutex
+	shutdown     bool
+	shutdownErr  error
+	shutdownCh   chan struct{}
+	shutdownLock sync.Mutex
 }
 
 // sendReady is used to either mark a stream as ready
 // or to directly send a header
 type sendReady struct {
 	Hdr  []byte
-	mu   sync.Mutex // Protects Body from unsafe reads.
-	Body []byte
+	Body io.Reader
 	Err  chan error
 }
 
@@ -105,9 +101,8 @@ func newSession(config *Config, conn io.ReadWriteCloser, client bool) *Session {
 		inflight:   make(map[uint32]struct{}),
 		synCh:      make(chan struct{}, config.AcceptBacklog),
 		acceptCh:   make(chan *Stream, config.AcceptBacklog),
-		sendCh:     make(chan *sendReady, 64),
+		sendCh:     make(chan sendReady, 64),
 		recvDoneCh: make(chan struct{}),
-		sendDoneCh: make(chan struct{}),
 		shutdownCh: make(chan struct{}),
 	}
 	if client {
@@ -189,10 +184,6 @@ GET_ID:
 	s.inflight[id] = struct{}{}
 	s.streamLock.Unlock()
 
-	if s.config.StreamOpenTimeout > 0 {
-		go s.setOpenTimeout(stream)
-	}
-
 	// Send the window update to create
 	if err := stream.sendWindowUpdate(); err != nil {
 		select {
@@ -203,27 +194,6 @@ GET_ID:
 		return nil, err
 	}
 	return stream, nil
-}
-
-// setOpenTimeout implements a timeout for streams that are opened but not established.
-// If the StreamOpenTimeout is exceeded we assume the peer is unable to ACK,
-// and close the session.
-// The number of running timers is bounded by the capacity of the synCh.
-func (s *Session) setOpenTimeout(stream *Stream) {
-	timer := time.NewTimer(s.config.StreamOpenTimeout)
-	defer timer.Stop()
-
-	select {
-	case <-stream.establishCh:
-		return
-	case <-s.shutdownCh:
-		return
-	case <-timer.C:
-		// Timeout reached while waiting for ACK.
-		// Close the session to force connection re-establishment.
-		s.logger.Printf("[ERR] yamux: aborted stream open (destination=%s): %v", s.RemoteAddr().String(), ErrTimeout.err)
-		s.Close()
-	}
 }
 
 // Accept is used to block until the next available stream
@@ -260,15 +230,10 @@ func (s *Session) Close() error {
 		return nil
 	}
 	s.shutdown = true
-
-	s.shutdownErrLock.Lock()
 	if s.shutdownErr == nil {
 		s.shutdownErr = ErrSessionShutdown
 	}
-	s.shutdownErrLock.Unlock()
-
 	close(s.shutdownCh)
-
 	s.conn.Close()
 	<-s.recvDoneCh
 
@@ -277,18 +242,17 @@ func (s *Session) Close() error {
 	for _, stream := range s.streams {
 		stream.forceClose()
 	}
-	<-s.sendDoneCh
 	return nil
 }
 
 // exitErr is used to handle an error that is causing the
 // session to terminate.
 func (s *Session) exitErr(err error) {
-	s.shutdownErrLock.Lock()
+	s.shutdownLock.Lock()
 	if s.shutdownErr == nil {
 		s.shutdownErr = err
 	}
-	s.shutdownErrLock.Unlock()
+	s.shutdownLock.Unlock()
 	s.Close()
 }
 
@@ -363,7 +327,7 @@ func (s *Session) keepalive() {
 }
 
 // waitForSendErr waits to send a header, checking for a potential shutdown
-func (s *Session) waitForSend(hdr header, body []byte) error {
+func (s *Session) waitForSend(hdr header, body io.Reader) error {
 	errCh := make(chan error, 1)
 	return s.waitForSendErr(hdr, body, errCh)
 }
@@ -371,7 +335,7 @@ func (s *Session) waitForSend(hdr header, body []byte) error {
 // waitForSendErr waits to send a header with optional data, checking for a
 // potential shutdown. Since there's the expectation that sends can happen
 // in a timely manner, we enforce the connection write timeout here.
-func (s *Session) waitForSendErr(hdr header, body []byte, errCh chan error) error {
+func (s *Session) waitForSendErr(hdr header, body io.Reader, errCh chan error) error {
 	t := timerPool.Get()
 	timer := t.(*time.Timer)
 	timer.Reset(s.config.ConnectionWriteTimeout)
@@ -384,7 +348,7 @@ func (s *Session) waitForSendErr(hdr header, body []byte, errCh chan error) erro
 		timerPool.Put(t)
 	}()
 
-	ready := &sendReady{Hdr: hdr, Body: body, Err: errCh}
+	ready := sendReady{Hdr: hdr, Body: body, Err: errCh}
 	select {
 	case s.sendCh <- ready:
 	case <-s.shutdownCh:
@@ -393,34 +357,12 @@ func (s *Session) waitForSendErr(hdr header, body []byte, errCh chan error) erro
 		return ErrConnectionWriteTimeout
 	}
 
-	bodyCopy := func() {
-		if body == nil {
-			return // A nil body is ignored.
-		}
-
-		// In the event of session shutdown or connection write timeout,
-		// we need to prevent `send` from reading the body buffer after
-		// returning from this function since the caller may re-use the
-		// underlying array.
-		ready.mu.Lock()
-		defer ready.mu.Unlock()
-
-		if ready.Body == nil {
-			return // Body was already copied in `send`.
-		}
-		newBody := make([]byte, len(body))
-		copy(newBody, body)
-		ready.Body = newBody
-	}
-
 	select {
 	case err := <-errCh:
 		return err
 	case <-s.shutdownCh:
-		bodyCopy()
 		return ErrSessionShutdown
 	case <-timer.C:
-		bodyCopy()
 		return ErrConnectionWriteTimeout
 	}
 }
@@ -442,7 +384,7 @@ func (s *Session) sendNoWait(hdr header) error {
 	}()
 
 	select {
-	case s.sendCh <- &sendReady{Hdr: hdr}:
+	case s.sendCh <- sendReady{Hdr: hdr}:
 		return nil
 	case <-s.shutdownCh:
 		return ErrSessionShutdown
@@ -453,59 +395,39 @@ func (s *Session) sendNoWait(hdr header) error {
 
 // send is a long running goroutine that sends data
 func (s *Session) send() {
-	if err := s.sendLoop(); err != nil {
-		s.exitErr(err)
-	}
-}
-
-func (s *Session) sendLoop() error {
-	defer close(s.sendDoneCh)
-	var bodyBuf bytes.Buffer
 	for {
-		bodyBuf.Reset()
-
 		select {
 		case ready := <-s.sendCh:
 			// Send a header if ready
 			if ready.Hdr != nil {
-				_, err := s.conn.Write(ready.Hdr)
-				if err != nil {
-					s.logger.Printf("[ERR] yamux: Failed to write header: %v", err)
-					asyncSendErr(ready.Err, err)
-					return err
+				sent := 0
+				for sent < len(ready.Hdr) {
+					n, err := s.conn.Write(ready.Hdr[sent:])
+					if err != nil {
+						s.logger.Printf("[ERR] yamux: Failed to write header: %v", err)
+						asyncSendErr(ready.Err, err)
+						s.exitErr(err)
+						return
+					}
+					sent += n
 				}
 			}
 
-			ready.mu.Lock()
+			// Send data from a body if given
 			if ready.Body != nil {
-				// Copy the body into the buffer to avoid
-				// holding a mutex lock during the write.
-				_, err := bodyBuf.Write(ready.Body)
-				if err != nil {
-					ready.Body = nil
-					ready.mu.Unlock()
-					s.logger.Printf("[ERR] yamux: Failed to copy body into buffer: %v", err)
-					asyncSendErr(ready.Err, err)
-					return err
-				}
-				ready.Body = nil
-			}
-			ready.mu.Unlock()
-
-			if bodyBuf.Len() > 0 {
-				// Send data from a body if given
-				_, err := s.conn.Write(bodyBuf.Bytes())
+				_, err := io.Copy(s.conn, ready.Body)
 				if err != nil {
 					s.logger.Printf("[ERR] yamux: Failed to write body: %v", err)
 					asyncSendErr(ready.Err, err)
-					return err
+					s.exitErr(err)
+					return
 				}
 			}
 
 			// No error, successful send
 			asyncSendErr(ready.Err, nil)
 		case <-s.shutdownCh:
-			return nil
+			return
 		}
 	}
 }
@@ -692,9 +614,8 @@ func (s *Session) incomingStream(id uint32) error {
 		// Backlog exceeded! RST the stream
 		s.logger.Printf("[WARN] yamux: backlog exceeded, forcing connection reset")
 		delete(s.streams, id)
-		hdr := header(make([]byte, headerSize))
-		hdr.encode(typeWindowUpdate, flagRST, id, 0)
-		return s.sendNoWait(hdr)
+		stream.sendHdr.encode(typeWindowUpdate, flagRST, id, 0)
+		return s.sendNoWait(stream.sendHdr)
 	}
 }
 

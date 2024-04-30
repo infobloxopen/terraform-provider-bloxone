@@ -10,7 +10,6 @@ import (
 var (
 	interfaceType = reflect.TypeOf((*interface{})(nil)).Elem()
 	stringType    = reflect.TypeOf((*string)(nil)).Elem()
-	boolType      = reflect.TypeOf((*bool)(nil)).Elem()
 )
 
 var valueDecoders []decoderFunc
@@ -128,12 +127,12 @@ func ptrValueDecoder(typ reflect.Type) decoderFunc {
 	return func(d *Decoder, v reflect.Value) error {
 		if d.hasNilCode() {
 			if !v.IsNil() {
-				v.Set(d.newValue(typ).Elem())
+				v.Set(reflect.Zero(v.Type()))
 			}
 			return d.DecodeNil()
 		}
 		if v.IsNil() {
-			v.Set(d.newValue(typ.Elem()))
+			v.Set(reflect.New(v.Type().Elem()))
 		}
 		return decoder(d, v.Elem())
 	}
@@ -155,7 +154,7 @@ func nilAwareDecoder(typ reflect.Type, fn decoderFunc) decoderFunc {
 				return d.decodeNilValue(v)
 			}
 			if v.IsNil() {
-				v.Set(d.newValue(typ.Elem()))
+				v.Set(reflect.New(v.Type().Elem()))
 			}
 			return fn(d, v)
 		}

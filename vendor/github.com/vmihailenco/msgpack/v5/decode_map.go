@@ -13,8 +13,6 @@ var errArrayStruct = errors.New("msgpack: number of fields in array-encoded stru
 var (
 	mapStringStringPtrType = reflect.TypeOf((*map[string]string)(nil))
 	mapStringStringType    = mapStringStringPtrType.Elem()
-	mapStringBoolPtrType   = reflect.TypeOf((*map[string]bool)(nil))
-	mapStringBoolType      = mapStringBoolPtrType.Elem()
 )
 
 var (
@@ -35,11 +33,7 @@ func decodeMapValue(d *Decoder, v reflect.Value) error {
 	}
 
 	if v.IsNil() {
-		ln := n
-		if d.flags&disableAllocLimitFlag == 0 {
-			ln = min(ln, maxMapSize)
-		}
-		v.Set(reflect.MakeMapWithSize(typ, ln))
+		v.Set(reflect.MakeMap(typ))
 	}
 	if n == 0 {
 		return nil
@@ -110,11 +104,7 @@ func (d *Decoder) decodeMapStringStringPtr(ptr *map[string]string) error {
 
 	m := *ptr
 	if m == nil {
-		ln := size
-		if d.flags&disableAllocLimitFlag == 0 {
-			ln = min(size, maxMapSize)
-		}
-		*ptr = make(map[string]string, ln)
+		*ptr = make(map[string]string, min(size, maxMapSize))
 		m = *ptr
 	}
 
@@ -157,7 +147,7 @@ func (d *Decoder) DecodeMap() (map[string]interface{}, error) {
 		return nil, nil
 	}
 
-	m := make(map[string]interface{}, n)
+	m := make(map[string]interface{}, min(n, maxMapSize))
 
 	for i := 0; i < n; i++ {
 		mk, err := d.DecodeString()
@@ -184,7 +174,7 @@ func (d *Decoder) DecodeUntypedMap() (map[interface{}]interface{}, error) {
 		return nil, nil
 	}
 
-	m := make(map[interface{}]interface{}, n)
+	m := make(map[interface{}]interface{}, min(n, maxMapSize))
 
 	for i := 0; i < n; i++ {
 		mk, err := d.decodeInterfaceCond()
@@ -232,13 +222,7 @@ func (d *Decoder) DecodeTypedMap() (interface{}, error) {
 	}
 
 	mapType := reflect.MapOf(keyType, valueType)
-
-	ln := n
-	if d.flags&disableAllocLimitFlag == 0 {
-		ln = min(ln, maxMapSize)
-	}
-
-	mapValue := reflect.MakeMapWithSize(mapType, ln)
+	mapValue := reflect.MakeMap(mapType)
 	mapValue.SetMapIndex(reflect.ValueOf(key), reflect.ValueOf(value))
 
 	n--
@@ -250,18 +234,17 @@ func (d *Decoder) DecodeTypedMap() (interface{}, error) {
 }
 
 func (d *Decoder) decodeTypedMapValue(v reflect.Value, n int) error {
-	var (
-		typ       = v.Type()
-		keyType   = typ.Key()
-		valueType = typ.Elem()
-	)
+	typ := v.Type()
+	keyType := typ.Key()
+	valueType := typ.Elem()
+
 	for i := 0; i < n; i++ {
-		mk := d.newValue(keyType).Elem()
+		mk := reflect.New(keyType).Elem()
 		if err := d.DecodeValue(mk); err != nil {
 			return err
 		}
 
-		mv := d.newValue(valueType).Elem()
+		mv := reflect.New(valueType).Elem()
 		if err := d.DecodeValue(mv); err != nil {
 			return err
 		}

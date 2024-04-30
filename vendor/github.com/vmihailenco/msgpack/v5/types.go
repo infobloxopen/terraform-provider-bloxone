@@ -66,8 +66,8 @@ type structCache struct {
 }
 
 type structCacheKey struct {
-	typ reflect.Type
 	tag string
+	typ reflect.Type
 }
 
 func newStructCache() *structCache {
@@ -90,20 +90,19 @@ func (m *structCache) Fields(typ reflect.Type, tag string) *fields {
 //------------------------------------------------------------------------------
 
 type field struct {
-	encoder   encoderFunc
-	decoder   decoderFunc
 	name      string
 	index     []int
 	omitEmpty bool
+	encoder   encoderFunc
+	decoder   decoderFunc
 }
 
-func (f *field) Omit(e *Encoder, strct reflect.Value) bool {
+func (f *field) Omit(strct reflect.Value, forced bool) bool {
 	v, ok := fieldByIndex(strct, f.index)
 	if !ok {
 		return true
 	}
-	forced := e.flags&omitEmptyFlag != 0
-	return (f.omitEmpty || forced) && e.isEmptyValue(v)
+	return (f.omitEmpty || forced) && isEmptyValue(v)
 }
 
 func (f *field) EncodeValue(e *Encoder, strct reflect.Value) error {
@@ -153,8 +152,7 @@ func (fs *fields) warnIfFieldExists(name string) {
 	}
 }
 
-func (fs *fields) OmitEmpty(e *Encoder, strct reflect.Value) []*field {
-	forced := e.flags&omitEmptyFlag != 0
+func (fs *fields) OmitEmpty(strct reflect.Value, forced bool) []*field {
 	if !fs.hasOmitEmpty && !forced {
 		return fs.List
 	}
@@ -162,7 +160,7 @@ func (fs *fields) OmitEmpty(e *Encoder, strct reflect.Value) []*field {
 	fields := make([]*field, 0, len(fs.List))
 
 	for _, f := range fs.List {
-		if !f.Omit(e, strct) {
+		if !f.Omit(strct, forced) {
 			fields = append(fields, f)
 		}
 	}
@@ -319,7 +317,7 @@ type isZeroer interface {
 	IsZero() bool
 }
 
-func (e *Encoder) isEmptyValue(v reflect.Value) bool {
+func isEmptyValue(v reflect.Value) bool {
 	kind := v.Kind()
 
 	for kind == reflect.Interface {
@@ -337,10 +335,6 @@ func (e *Encoder) isEmptyValue(v reflect.Value) bool {
 	switch kind {
 	case reflect.Array, reflect.Map, reflect.Slice, reflect.String:
 		return v.Len() == 0
-	case reflect.Struct:
-		structFields := structs.Fields(v.Type(), e.structTag)
-		fields := structFields.OmitEmpty(e, v)
-		return len(fields) == 0
 	case reflect.Bool:
 		return !v.Bool()
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
@@ -405,7 +399,7 @@ func indirectNil(v reflect.Value) (reflect.Value, bool) {
 			if elemType.Kind() != reflect.Struct {
 				return v, false
 			}
-			v.Set(cachedValue(elemType))
+			v.Set(reflect.New(elemType))
 		}
 		v = v.Elem()
 	}

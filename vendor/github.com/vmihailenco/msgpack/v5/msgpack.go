@@ -43,8 +43,8 @@ func (m *RawMessage) DecodeMsgpack(dec *Decoder) error {
 //------------------------------------------------------------------------------
 
 type unexpectedCodeError struct {
-	hint string
 	code byte
+	hint string
 }
 
 func (err unexpectedCodeError) Error() string {

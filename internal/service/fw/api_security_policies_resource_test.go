@@ -410,7 +410,6 @@ func TestAccSecurityPoliciesResource_SafeSearch(t *testing.T) {
 }
 
 func TestAccSecurityPoliciesResource_Tags(t *testing.T) {
-	t.Skip()
 	resourceName := "bloxone_td_security_policy.test_tags"
 	var v fw.SecurityPolicy
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
