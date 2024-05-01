@@ -9,7 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -57,10 +56,6 @@ var ProtoAnycastConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"anycast_ip_address": schema.StringAttribute{
 		Required: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
-		},
-		MarkdownDescription: "IPv4 address of the host in string format.",
 	},
 	"anycast_ipv6_address": schema.StringAttribute{
 		Optional:            true,
