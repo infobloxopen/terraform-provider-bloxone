@@ -12,6 +12,8 @@ subcategory: "{{- $group := index (split .Name "_") 1 -}}
   Infrastructure
 {{- else if eq $group "keys" -}}
   Keys
+{{- else if eq $group "anycast" -}}
+  Anycast
 {{- else if eq $group "dfp" -}}
   Threat Defense
 {{- end -}}"
