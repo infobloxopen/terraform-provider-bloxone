@@ -63,7 +63,7 @@ func TestAccDfpResource_InternalDomainLists(t *testing.T) {
 				Config: testAccDfpInternalDomainLists(hostName, "test1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDfpExists(context.Background(), resourceName, &v),
-					//resource.TestCheckResourceAttrPair(resourceName, "internal_domain_lists.0", "bloxone_td_internal_domain_list.test1", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "internal_domain_lists.0", "bloxone_td_internal_domain_list.test1", "id"),
 				),
 			},
 			// Update and Read
@@ -71,7 +71,7 @@ func TestAccDfpResource_InternalDomainLists(t *testing.T) {
 				Config: testAccDfpInternalDomainLists(hostName, "test2"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDfpExists(context.Background(), resourceName, &v),
-					//resource.TestCheckResourceAttrPair(resourceName, "internal_domain_lists.0", "bloxone_td_internal_domain_list.test2", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "internal_domain_lists.0", "bloxone_td_internal_domain_list.test2", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
