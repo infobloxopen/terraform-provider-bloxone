@@ -69,7 +69,7 @@ var ProtoBgpConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandProtoBgpConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.ProtoBgpConfig {
+func ExpandProtoBgpConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.BgpConfig {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -81,11 +81,11 @@ func ExpandProtoBgpConfig(ctx context.Context, o types.Object, diags *diag.Diagn
 	return m.Expand(ctx, diags)
 }
 
-func (m *ProtoBgpConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.ProtoBgpConfig {
+func (m *ProtoBgpConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.BgpConfig {
 	if m == nil {
 		return nil
 	}
-	to := &anycast.ProtoBgpConfig{
+	to := &anycast.BgpConfig{
 		Asn:           flex.ExpandInt64Pointer(m.Asn),
 		AsnText:       flex.ExpandStringPointer(m.AsnText),
 		Fields:        ExpandProtobufFieldMask(ctx, m.Fields, diags),
@@ -98,7 +98,7 @@ func (m *ProtoBgpConfigModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenProtoBgpConfig(ctx context.Context, from *anycast.ProtoBgpConfig, diags *diag.Diagnostics) types.Object {
+func FlattenProtoBgpConfig(ctx context.Context, from *anycast.BgpConfig, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ProtoBgpConfigAttrTypes)
 	}
@@ -109,7 +109,7 @@ func FlattenProtoBgpConfig(ctx context.Context, from *anycast.ProtoBgpConfig, di
 	return t
 }
 
-func (m *ProtoBgpConfigModel) Flatten(ctx context.Context, from *anycast.ProtoBgpConfig, diags *diag.Diagnostics) {
+func (m *ProtoBgpConfigModel) Flatten(ctx context.Context, from *anycast.BgpConfig, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

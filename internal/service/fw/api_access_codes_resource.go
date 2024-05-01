@@ -68,7 +68,7 @@ func (r *AccessCodesResource) Create(ctx context.Context, req resource.CreateReq
 
 	apiRes, _, err := r.client.FWAPI.
 		AccessCodesAPI.
-		AccessCodesCreateAccessCode(ctx).
+		CreateAccessCode(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -95,7 +95,7 @@ func (r *AccessCodesResource) Read(ctx context.Context, req resource.ReadRequest
 
 	apiRes, httpRes, err := r.client.FWAPI.
 		AccessCodesAPI.
-		AccessCodesReadAccessCode(ctx, data.AccessKey.ValueString()).
+		ReadAccessCode(ctx, data.AccessKey.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *AccessCodesResource) Update(ctx context.Context, req resource.UpdateReq
 
 	apiRes, _, err := r.client.FWAPI.
 		AccessCodesAPI.
-		AccessCodesUpdateAccessCode(ctx, data.AccessKey.ValueString()).
+		UpdateAccessCode(ctx, data.AccessKey.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *AccessCodesResource) Delete(ctx context.Context, req resource.DeleteReq
 
 	httpRes, err := r.client.FWAPI.
 		AccessCodesAPI.
-		AccessCodesDeleteSingleAccessCodes(ctx, data.AccessKey.ValueString()).
+		DeleteSingleAccessCodes(ctx, data.AccessKey.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

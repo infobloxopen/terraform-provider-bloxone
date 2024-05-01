@@ -40,7 +40,7 @@ var IpamsvcAccessFilterResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcAccessFilter(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcAccessFilter {
+func ExpandIpamsvcAccessFilter(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.AccessFilter {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -52,11 +52,11 @@ func ExpandIpamsvcAccessFilter(ctx context.Context, o types.Object, diags *diag.
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcAccessFilterModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcAccessFilter {
+func (m *IpamsvcAccessFilterModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.AccessFilter {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcAccessFilter{
+	to := &ipam.AccessFilter{
 		Access:           flex.ExpandString(m.Access),
 		HardwareFilterId: flex.ExpandStringPointer(m.HardwareFilterId),
 		OptionFilterId:   flex.ExpandStringPointer(m.OptionFilterId),
@@ -64,7 +64,7 @@ func (m *IpamsvcAccessFilterModel) Expand(ctx context.Context, diags *diag.Diagn
 	return to
 }
 
-func FlattenIpamsvcAccessFilter(ctx context.Context, from *ipam.IpamsvcAccessFilter, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcAccessFilter(ctx context.Context, from *ipam.AccessFilter, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcAccessFilterAttrTypes)
 	}
@@ -75,7 +75,7 @@ func FlattenIpamsvcAccessFilter(ctx context.Context, from *ipam.IpamsvcAccessFil
 	return t
 }
 
-func (m *IpamsvcAccessFilterModel) Flatten(ctx context.Context, from *ipam.IpamsvcAccessFilter, diags *diag.Diagnostics) {
+func (m *IpamsvcAccessFilterModel) Flatten(ctx context.Context, from *ipam.AccessFilter, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

@@ -22,8 +22,11 @@ type TypesConfigCheckRequest struct {
 	AccountId       *int32  `json:"account_id,omitempty"`
 	ConfigCheckType *string `json:"config_check_type,omitempty"`
 	// Caller sets to false if wants to suppress notification.
-	Notify *bool `json:"notify,omitempty"`
+	Notify               *bool `json:"notify,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _TypesConfigCheckRequest TypesConfigCheckRequest
 
 // NewTypesConfigCheckRequest instantiates a new TypesConfigCheckRequest object
 // This constructor will assign default values to properties that have it defined,
@@ -157,7 +160,35 @@ func (o TypesConfigCheckRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Notify) {
 		toSerialize["notify"] = o.Notify
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *TypesConfigCheckRequest) UnmarshalJSON(data []byte) (err error) {
+	varTypesConfigCheckRequest := _TypesConfigCheckRequest{}
+
+	err = json.Unmarshal(data, &varTypesConfigCheckRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = TypesConfigCheckRequest(varTypesConfigCheckRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "account_id")
+		delete(additionalProperties, "config_check_type")
+		delete(additionalProperties, "notify")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableTypesConfigCheckRequest struct {

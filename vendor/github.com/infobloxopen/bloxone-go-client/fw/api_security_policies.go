@@ -23,7 +23,7 @@ import (
 
 type SecurityPoliciesAPI interface {
 	/*
-			SecurityPoliciesCreateSecurityPolicy Create Security Policy.
+			CreateSecurityPolicy Create Security Policy.
 
 			Use this method to create a Security Policy object. If no rule list is specified, the newly created Security Policy object will create these rules as a copy of default Security Policy rules ("Default Global Policy"). If rule list is provided it must contain at least the complete list of policy rules, including the rules based on all feeds that the account is entitled to. If no network list is specified, networking scope for this policy is empty, thus no action can be performed by this policy. Note that you are not allowed to add DNS Forwarding Proxies and Roaming Device Groups that are already assigned to a Security Policy different from "Default Global Policy", to assign them to this Security Policy object you should remove them from other Security Policy first.
 
@@ -37,15 +37,15 @@ type SecurityPoliciesAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiSecurityPoliciesCreateSecurityPolicyRequest
+			@return SecurityPoliciesAPICreateSecurityPolicyRequest
 	*/
-	SecurityPoliciesCreateSecurityPolicy(ctx context.Context) ApiSecurityPoliciesCreateSecurityPolicyRequest
+	CreateSecurityPolicy(ctx context.Context) SecurityPoliciesAPICreateSecurityPolicyRequest
 
-	// SecurityPoliciesCreateSecurityPolicyExecute executes the request
-	//  @return AtcfwSecurityPolicyCreateResponse
-	SecurityPoliciesCreateSecurityPolicyExecute(r ApiSecurityPoliciesCreateSecurityPolicyRequest) (*AtcfwSecurityPolicyCreateResponse, *http.Response, error)
+	// CreateSecurityPolicyExecute executes the request
+	//  @return SecurityPolicyCreateResponse
+	CreateSecurityPolicyExecute(r SecurityPoliciesAPICreateSecurityPolicyRequest) (*SecurityPolicyCreateResponse, *http.Response, error)
 	/*
-			SecurityPoliciesDeleteSecurityPolicy Delete Security Policies.
+			DeleteSecurityPolicy Delete Security Policies.
 
 			Use this method to delete Security Policy objects. Deletion of multiple lists is an all-or-nothing operation (if any of the specified lists can not be deleted then none of the specified lists will be deleted).
 
@@ -56,14 +56,14 @@ type SecurityPoliciesAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiSecurityPoliciesDeleteSecurityPolicyRequest
+			@return SecurityPoliciesAPIDeleteSecurityPolicyRequest
 	*/
-	SecurityPoliciesDeleteSecurityPolicy(ctx context.Context) ApiSecurityPoliciesDeleteSecurityPolicyRequest
+	DeleteSecurityPolicy(ctx context.Context) SecurityPoliciesAPIDeleteSecurityPolicyRequest
 
-	// SecurityPoliciesDeleteSecurityPolicyExecute executes the request
-	SecurityPoliciesDeleteSecurityPolicyExecute(r ApiSecurityPoliciesDeleteSecurityPolicyRequest) (*http.Response, error)
+	// DeleteSecurityPolicyExecute executes the request
+	DeleteSecurityPolicyExecute(r SecurityPoliciesAPIDeleteSecurityPolicyRequest) (*http.Response, error)
 	/*
-			SecurityPoliciesDeleteSingleSecurityPolicy Delete Security Policy.
+			DeleteSingleSecurityPolicy Delete Security Policy.
 
 			Use this method to delete Security Policy object by given Security Policy object id.
 
@@ -73,14 +73,14 @@ type SecurityPoliciesAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Security Policy object identifiers.
-			@return ApiSecurityPoliciesDeleteSingleSecurityPolicyRequest
+			@return SecurityPoliciesAPIDeleteSingleSecurityPolicyRequest
 	*/
-	SecurityPoliciesDeleteSingleSecurityPolicy(ctx context.Context, id int32) ApiSecurityPoliciesDeleteSingleSecurityPolicyRequest
+	DeleteSingleSecurityPolicy(ctx context.Context, id int32) SecurityPoliciesAPIDeleteSingleSecurityPolicyRequest
 
-	// SecurityPoliciesDeleteSingleSecurityPolicyExecute executes the request
-	SecurityPoliciesDeleteSingleSecurityPolicyExecute(r ApiSecurityPoliciesDeleteSingleSecurityPolicyRequest) (*http.Response, error)
+	// DeleteSingleSecurityPolicyExecute executes the request
+	DeleteSingleSecurityPolicyExecute(r SecurityPoliciesAPIDeleteSingleSecurityPolicyRequest) (*http.Response, error)
 	/*
-			SecurityPoliciesListSecurityPolicies List Security Policies.
+			ListSecurityPolicies List Security Policies.
 
 			Use this method to retrieve information on all Security Policy objects for the account.
 
@@ -89,15 +89,15 @@ type SecurityPoliciesAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiSecurityPoliciesListSecurityPoliciesRequest
+			@return SecurityPoliciesAPIListSecurityPoliciesRequest
 	*/
-	SecurityPoliciesListSecurityPolicies(ctx context.Context) ApiSecurityPoliciesListSecurityPoliciesRequest
+	ListSecurityPolicies(ctx context.Context) SecurityPoliciesAPIListSecurityPoliciesRequest
 
-	// SecurityPoliciesListSecurityPoliciesExecute executes the request
-	//  @return AtcfwSecurityPolicyMultiResponse
-	SecurityPoliciesListSecurityPoliciesExecute(r ApiSecurityPoliciesListSecurityPoliciesRequest) (*AtcfwSecurityPolicyMultiResponse, *http.Response, error)
+	// ListSecurityPoliciesExecute executes the request
+	//  @return SecurityPolicyMultiResponse
+	ListSecurityPoliciesExecute(r SecurityPoliciesAPIListSecurityPoliciesRequest) (*SecurityPolicyMultiResponse, *http.Response, error)
 	/*
-			SecurityPoliciesReadSecurityPolicy Read Security Policy.
+			ReadSecurityPolicy Read Security Policy.
 
 			Use this method to retrieve information on the specified Security Policy object.
 
@@ -106,15 +106,15 @@ type SecurityPoliciesAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Security Policy object identifier.
-			@return ApiSecurityPoliciesReadSecurityPolicyRequest
+			@return SecurityPoliciesAPIReadSecurityPolicyRequest
 	*/
-	SecurityPoliciesReadSecurityPolicy(ctx context.Context, id int32) ApiSecurityPoliciesReadSecurityPolicyRequest
+	ReadSecurityPolicy(ctx context.Context, id int32) SecurityPoliciesAPIReadSecurityPolicyRequest
 
-	// SecurityPoliciesReadSecurityPolicyExecute executes the request
-	//  @return AtcfwSecurityPolicyReadResponse
-	SecurityPoliciesReadSecurityPolicyExecute(r ApiSecurityPoliciesReadSecurityPolicyRequest) (*AtcfwSecurityPolicyReadResponse, *http.Response, error)
+	// ReadSecurityPolicyExecute executes the request
+	//  @return SecurityPolicyReadResponse
+	ReadSecurityPolicyExecute(r SecurityPoliciesAPIReadSecurityPolicyRequest) (*SecurityPolicyReadResponse, *http.Response, error)
 	/*
-			SecurityPoliciesUpdateSecurityPolicy Update Security Policy.
+			UpdateSecurityPolicy Update Security Policy.
 
 			Use this method to update a specified Network List object. The policy data supplied with the update request must have the complete list of policy rules, including the rules based on all feeds that the account is entitled to. If no network list is specified, networking scope for this policy is empty, thus no action can be performed by this policy. Note that you are not allowed to add DNS Forwarding Proxies and Roaming Device Groups that are already assigned to a Security Policy different from "Default Global Policy", to assign them to this Security Policy object you should remove them from other Security Policy first.
 
@@ -130,36 +130,36 @@ type SecurityPoliciesAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Security Policy object identifier.
-			@return ApiSecurityPoliciesUpdateSecurityPolicyRequest
+			@return SecurityPoliciesAPIUpdateSecurityPolicyRequest
 	*/
-	SecurityPoliciesUpdateSecurityPolicy(ctx context.Context, id int32) ApiSecurityPoliciesUpdateSecurityPolicyRequest
+	UpdateSecurityPolicy(ctx context.Context, id int32) SecurityPoliciesAPIUpdateSecurityPolicyRequest
 
-	// SecurityPoliciesUpdateSecurityPolicyExecute executes the request
-	//  @return AtcfwSecurityPolicyUpdateResponse
-	SecurityPoliciesUpdateSecurityPolicyExecute(r ApiSecurityPoliciesUpdateSecurityPolicyRequest) (*AtcfwSecurityPolicyUpdateResponse, *http.Response, error)
+	// UpdateSecurityPolicyExecute executes the request
+	//  @return SecurityPolicyUpdateResponse
+	UpdateSecurityPolicyExecute(r SecurityPoliciesAPIUpdateSecurityPolicyRequest) (*SecurityPolicyUpdateResponse, *http.Response, error)
 }
 
 // SecurityPoliciesAPIService SecurityPoliciesAPI service
 type SecurityPoliciesAPIService internal.Service
 
-type ApiSecurityPoliciesCreateSecurityPolicyRequest struct {
+type SecurityPoliciesAPICreateSecurityPolicyRequest struct {
 	ctx        context.Context
 	ApiService SecurityPoliciesAPI
-	body       *AtcfwSecurityPolicy
+	body       *SecurityPolicy
 }
 
 // The Security Policy object.
-func (r ApiSecurityPoliciesCreateSecurityPolicyRequest) Body(body AtcfwSecurityPolicy) ApiSecurityPoliciesCreateSecurityPolicyRequest {
+func (r SecurityPoliciesAPICreateSecurityPolicyRequest) Body(body SecurityPolicy) SecurityPoliciesAPICreateSecurityPolicyRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiSecurityPoliciesCreateSecurityPolicyRequest) Execute() (*AtcfwSecurityPolicyCreateResponse, *http.Response, error) {
-	return r.ApiService.SecurityPoliciesCreateSecurityPolicyExecute(r)
+func (r SecurityPoliciesAPICreateSecurityPolicyRequest) Execute() (*SecurityPolicyCreateResponse, *http.Response, error) {
+	return r.ApiService.CreateSecurityPolicyExecute(r)
 }
 
 /*
-SecurityPoliciesCreateSecurityPolicy Create Security Policy.
+CreateSecurityPolicy Create Security Policy.
 
 Use this method to create a Security Policy object. If no rule list is specified, the newly created Security Policy object will create these rules as a copy of default Security Policy rules ("Default Global Policy"). If rule list is provided it must contain at least the complete list of policy rules, including the rules based on all feeds that the account is entitled to. If no network list is specified, networking scope for this policy is empty, thus no action can be performed by this policy. Note that you are not allowed to add DNS Forwarding Proxies and Roaming Device Groups that are already assigned to a Security Policy different from "Default Global Policy", to assign them to this Security Policy object you should remove them from other Security Policy first.
 
@@ -169,10 +169,10 @@ Required:
 - name
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiSecurityPoliciesCreateSecurityPolicyRequest
+	@return SecurityPoliciesAPICreateSecurityPolicyRequest
 */
-func (a *SecurityPoliciesAPIService) SecurityPoliciesCreateSecurityPolicy(ctx context.Context) ApiSecurityPoliciesCreateSecurityPolicyRequest {
-	return ApiSecurityPoliciesCreateSecurityPolicyRequest{
+func (a *SecurityPoliciesAPIService) CreateSecurityPolicy(ctx context.Context) SecurityPoliciesAPICreateSecurityPolicyRequest {
+	return SecurityPoliciesAPICreateSecurityPolicyRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -180,16 +180,16 @@ func (a *SecurityPoliciesAPIService) SecurityPoliciesCreateSecurityPolicy(ctx co
 
 // Execute executes the request
 //
-//	@return AtcfwSecurityPolicyCreateResponse
-func (a *SecurityPoliciesAPIService) SecurityPoliciesCreateSecurityPolicyExecute(r ApiSecurityPoliciesCreateSecurityPolicyRequest) (*AtcfwSecurityPolicyCreateResponse, *http.Response, error) {
+//	@return SecurityPolicyCreateResponse
+func (a *SecurityPoliciesAPIService) CreateSecurityPolicyExecute(r SecurityPoliciesAPICreateSecurityPolicyRequest) (*SecurityPolicyCreateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwSecurityPolicyCreateResponse
+		localVarReturnValue *SecurityPolicyCreateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "SecurityPoliciesAPIService.SecurityPoliciesCreateSecurityPolicy")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "SecurityPoliciesAPIService.CreateSecurityPolicy")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -291,23 +291,23 @@ func (a *SecurityPoliciesAPIService) SecurityPoliciesCreateSecurityPolicyExecute
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiSecurityPoliciesDeleteSecurityPolicyRequest struct {
+type SecurityPoliciesAPIDeleteSecurityPolicyRequest struct {
 	ctx        context.Context
 	ApiService SecurityPoliciesAPI
-	body       *AtcfwSecurityPolicyDeleteRequest
+	body       *SecurityPolicyDeleteRequest
 }
 
-func (r ApiSecurityPoliciesDeleteSecurityPolicyRequest) Body(body AtcfwSecurityPolicyDeleteRequest) ApiSecurityPoliciesDeleteSecurityPolicyRequest {
+func (r SecurityPoliciesAPIDeleteSecurityPolicyRequest) Body(body SecurityPolicyDeleteRequest) SecurityPoliciesAPIDeleteSecurityPolicyRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiSecurityPoliciesDeleteSecurityPolicyRequest) Execute() (*http.Response, error) {
-	return r.ApiService.SecurityPoliciesDeleteSecurityPolicyExecute(r)
+func (r SecurityPoliciesAPIDeleteSecurityPolicyRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteSecurityPolicyExecute(r)
 }
 
 /*
-SecurityPoliciesDeleteSecurityPolicy Delete Security Policies.
+DeleteSecurityPolicy Delete Security Policies.
 
 Use this method to delete Security Policy objects. Deletion of multiple lists is an all-or-nothing operation (if any of the specified lists can not be deleted then none of the specified lists will be deleted).
 
@@ -317,24 +317,24 @@ Required:
 - ids
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiSecurityPoliciesDeleteSecurityPolicyRequest
+	@return SecurityPoliciesAPIDeleteSecurityPolicyRequest
 */
-func (a *SecurityPoliciesAPIService) SecurityPoliciesDeleteSecurityPolicy(ctx context.Context) ApiSecurityPoliciesDeleteSecurityPolicyRequest {
-	return ApiSecurityPoliciesDeleteSecurityPolicyRequest{
+func (a *SecurityPoliciesAPIService) DeleteSecurityPolicy(ctx context.Context) SecurityPoliciesAPIDeleteSecurityPolicyRequest {
+	return SecurityPoliciesAPIDeleteSecurityPolicyRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-func (a *SecurityPoliciesAPIService) SecurityPoliciesDeleteSecurityPolicyExecute(r ApiSecurityPoliciesDeleteSecurityPolicyRequest) (*http.Response, error) {
+func (a *SecurityPoliciesAPIService) DeleteSecurityPolicyExecute(r SecurityPoliciesAPIDeleteSecurityPolicyRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "SecurityPoliciesAPIService.SecurityPoliciesDeleteSecurityPolicy")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "SecurityPoliciesAPIService.DeleteSecurityPolicy")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -411,18 +411,18 @@ func (a *SecurityPoliciesAPIService) SecurityPoliciesDeleteSecurityPolicyExecute
 	return localVarHTTPResponse, nil
 }
 
-type ApiSecurityPoliciesDeleteSingleSecurityPolicyRequest struct {
+type SecurityPoliciesAPIDeleteSingleSecurityPolicyRequest struct {
 	ctx        context.Context
 	ApiService SecurityPoliciesAPI
 	id         int32
 }
 
-func (r ApiSecurityPoliciesDeleteSingleSecurityPolicyRequest) Execute() (*http.Response, error) {
-	return r.ApiService.SecurityPoliciesDeleteSingleSecurityPolicyExecute(r)
+func (r SecurityPoliciesAPIDeleteSingleSecurityPolicyRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteSingleSecurityPolicyExecute(r)
 }
 
 /*
-SecurityPoliciesDeleteSingleSecurityPolicy Delete Security Policy.
+DeleteSingleSecurityPolicy Delete Security Policy.
 
 Use this method to delete Security Policy object by given Security Policy object id.
 
@@ -430,10 +430,10 @@ A security policy defines a set of rules and actions that you define to balance 
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Security Policy object identifiers.
-	@return ApiSecurityPoliciesDeleteSingleSecurityPolicyRequest
+	@return SecurityPoliciesAPIDeleteSingleSecurityPolicyRequest
 */
-func (a *SecurityPoliciesAPIService) SecurityPoliciesDeleteSingleSecurityPolicy(ctx context.Context, id int32) ApiSecurityPoliciesDeleteSingleSecurityPolicyRequest {
-	return ApiSecurityPoliciesDeleteSingleSecurityPolicyRequest{
+func (a *SecurityPoliciesAPIService) DeleteSingleSecurityPolicy(ctx context.Context, id int32) SecurityPoliciesAPIDeleteSingleSecurityPolicyRequest {
+	return SecurityPoliciesAPIDeleteSingleSecurityPolicyRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -441,14 +441,14 @@ func (a *SecurityPoliciesAPIService) SecurityPoliciesDeleteSingleSecurityPolicy(
 }
 
 // Execute executes the request
-func (a *SecurityPoliciesAPIService) SecurityPoliciesDeleteSingleSecurityPolicyExecute(r ApiSecurityPoliciesDeleteSingleSecurityPolicyRequest) (*http.Response, error) {
+func (a *SecurityPoliciesAPIService) DeleteSingleSecurityPolicyExecute(r SecurityPoliciesAPIDeleteSingleSecurityPolicyRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "SecurityPoliciesAPIService.SecurityPoliciesDeleteSingleSecurityPolicy")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "SecurityPoliciesAPIService.DeleteSingleSecurityPolicy")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -521,7 +521,7 @@ func (a *SecurityPoliciesAPIService) SecurityPoliciesDeleteSingleSecurityPolicyE
 	return localVarHTTPResponse, nil
 }
 
-type ApiSecurityPoliciesListSecurityPoliciesRequest struct {
+type SecurityPoliciesAPIListSecurityPoliciesRequest struct {
 	ctx                context.Context
 	ApiService         SecurityPoliciesAPI
 	filter             *string
@@ -535,68 +535,68 @@ type ApiSecurityPoliciesListSecurityPoliciesRequest struct {
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;.  You can filter by following fields:  | Name               | type   | Supported Op                | | ------------------ | ------ | --------------------------- | | id                 | int32  | !&#x3D;, &#x3D;&#x3D;, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D;        | | name               | string | !&#x3D;, &#x3D;&#x3D;, ~, !~, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D; | | description        | string | !&#x3D;, &#x3D;&#x3D;, ~, !~, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D; | | is_default         | bool   | !&#x3D;, &#x3D;&#x3D;                      |  In addition grouping operators are supported:  | Op  | Description          | | --- | -------------------- | | and | Logical AND          | | or  | Logical OR           | | not | Logical NOT          | | ()  | Groupping Operators  |  Example: &#x60;&#x60;&#x60; ?_filter&#x3D;\&quot;((name&#x3D;&#x3D;&#39;sec_policy_a&#39;)or(name~&#39;policy_b&#39;))and(is_default!&#x3D;&#39;true&#39;)\&quot; &#x60;&#x60;&#x60;
-func (r ApiSecurityPoliciesListSecurityPoliciesRequest) Filter(filter string) ApiSecurityPoliciesListSecurityPoliciesRequest {
+func (r SecurityPoliciesAPIListSecurityPoliciesRequest) Filter(filter string) SecurityPoliciesAPIListSecurityPoliciesRequest {
 	r.filter = &filter
 	return r
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiSecurityPoliciesListSecurityPoliciesRequest) Fields(fields string) ApiSecurityPoliciesListSecurityPoliciesRequest {
+func (r SecurityPoliciesAPIListSecurityPoliciesRequest) Fields(fields string) SecurityPoliciesAPIListSecurityPoliciesRequest {
 	r.fields = &fields
 	return r
 }
 
-func (r ApiSecurityPoliciesListSecurityPoliciesRequest) IncludeAccessCodes(includeAccessCodes bool) ApiSecurityPoliciesListSecurityPoliciesRequest {
+func (r SecurityPoliciesAPIListSecurityPoliciesRequest) IncludeAccessCodes(includeAccessCodes bool) SecurityPoliciesAPIListSecurityPoliciesRequest {
 	r.includeAccessCodes = &includeAccessCodes
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiSecurityPoliciesListSecurityPoliciesRequest) Offset(offset int32) ApiSecurityPoliciesListSecurityPoliciesRequest {
+func (r SecurityPoliciesAPIListSecurityPoliciesRequest) Offset(offset int32) SecurityPoliciesAPIListSecurityPoliciesRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiSecurityPoliciesListSecurityPoliciesRequest) Limit(limit int32) ApiSecurityPoliciesListSecurityPoliciesRequest {
+func (r SecurityPoliciesAPIListSecurityPoliciesRequest) Limit(limit int32) SecurityPoliciesAPIListSecurityPoliciesRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiSecurityPoliciesListSecurityPoliciesRequest) PageToken(pageToken string) ApiSecurityPoliciesListSecurityPoliciesRequest {
+func (r SecurityPoliciesAPIListSecurityPoliciesRequest) PageToken(pageToken string) SecurityPoliciesAPIListSecurityPoliciesRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
 // Filtering by tags.
-func (r ApiSecurityPoliciesListSecurityPoliciesRequest) Tfilter(tfilter string) ApiSecurityPoliciesListSecurityPoliciesRequest {
+func (r SecurityPoliciesAPIListSecurityPoliciesRequest) Tfilter(tfilter string) SecurityPoliciesAPIListSecurityPoliciesRequest {
 	r.tfilter = &tfilter
 	return r
 }
 
 // Sorting by tags.
-func (r ApiSecurityPoliciesListSecurityPoliciesRequest) TorderBy(torderBy string) ApiSecurityPoliciesListSecurityPoliciesRequest {
+func (r SecurityPoliciesAPIListSecurityPoliciesRequest) TorderBy(torderBy string) SecurityPoliciesAPIListSecurityPoliciesRequest {
 	r.torderBy = &torderBy
 	return r
 }
 
-func (r ApiSecurityPoliciesListSecurityPoliciesRequest) Execute() (*AtcfwSecurityPolicyMultiResponse, *http.Response, error) {
-	return r.ApiService.SecurityPoliciesListSecurityPoliciesExecute(r)
+func (r SecurityPoliciesAPIListSecurityPoliciesRequest) Execute() (*SecurityPolicyMultiResponse, *http.Response, error) {
+	return r.ApiService.ListSecurityPoliciesExecute(r)
 }
 
 /*
-SecurityPoliciesListSecurityPolicies List Security Policies.
+ListSecurityPolicies List Security Policies.
 
 Use this method to retrieve information on all Security Policy objects for the account.
 
 A security policy defines a set of rules and actions that you define to balance access and constraints so you can mitigate malicious attacks and provide security for your networks. When you create a new security policy, you first define a network scope to which you add networks, DNS forwarding proxies, and BloxOne Endpoint groups. BloxOne Cloud applies the security policy to all the entities that you include in the network scope. You can also include DNS forwarding proxies to which you want to apply the security policy.  After you define the network scope, you can add custom lists and category filters to the security policy. You can also specify actions for the added lists and filters, and to determine the precedence order for the entities. Depending on your subscription level, each security policy also comes with a set of predefined threat intelligence feeds and Threat Insight rules that are inherited from the default global policy. You cannot delete the inherited feeds and rules, but you can change their precedence order. For each policy you can define policy-level action (Default Action) gets applied when none of the policy rules apply/match. If an user really needs access to some blocked domain (web page) via a browser - there is a possibility to assign special bypass code(s) (Bypass Code) to any policy.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiSecurityPoliciesListSecurityPoliciesRequest
+	@return SecurityPoliciesAPIListSecurityPoliciesRequest
 */
-func (a *SecurityPoliciesAPIService) SecurityPoliciesListSecurityPolicies(ctx context.Context) ApiSecurityPoliciesListSecurityPoliciesRequest {
-	return ApiSecurityPoliciesListSecurityPoliciesRequest{
+func (a *SecurityPoliciesAPIService) ListSecurityPolicies(ctx context.Context) SecurityPoliciesAPIListSecurityPoliciesRequest {
+	return SecurityPoliciesAPIListSecurityPoliciesRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -604,16 +604,16 @@ func (a *SecurityPoliciesAPIService) SecurityPoliciesListSecurityPolicies(ctx co
 
 // Execute executes the request
 //
-//	@return AtcfwSecurityPolicyMultiResponse
-func (a *SecurityPoliciesAPIService) SecurityPoliciesListSecurityPoliciesExecute(r ApiSecurityPoliciesListSecurityPoliciesRequest) (*AtcfwSecurityPolicyMultiResponse, *http.Response, error) {
+//	@return SecurityPolicyMultiResponse
+func (a *SecurityPoliciesAPIService) ListSecurityPoliciesExecute(r SecurityPoliciesAPIListSecurityPoliciesRequest) (*SecurityPolicyMultiResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwSecurityPolicyMultiResponse
+		localVarReturnValue *SecurityPolicyMultiResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "SecurityPoliciesAPIService.SecurityPoliciesListSecurityPolicies")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "SecurityPoliciesAPIService.ListSecurityPolicies")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -704,7 +704,7 @@ func (a *SecurityPoliciesAPIService) SecurityPoliciesListSecurityPoliciesExecute
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiSecurityPoliciesReadSecurityPolicyRequest struct {
+type SecurityPoliciesAPIReadSecurityPolicyRequest struct {
 	ctx        context.Context
 	ApiService SecurityPoliciesAPI
 	id         int32
@@ -713,22 +713,22 @@ type ApiSecurityPoliciesReadSecurityPolicyRequest struct {
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiSecurityPoliciesReadSecurityPolicyRequest) Fields(fields string) ApiSecurityPoliciesReadSecurityPolicyRequest {
+func (r SecurityPoliciesAPIReadSecurityPolicyRequest) Fields(fields string) SecurityPoliciesAPIReadSecurityPolicyRequest {
 	r.fields = &fields
 	return r
 }
 
-func (r ApiSecurityPoliciesReadSecurityPolicyRequest) Name(name string) ApiSecurityPoliciesReadSecurityPolicyRequest {
+func (r SecurityPoliciesAPIReadSecurityPolicyRequest) Name(name string) SecurityPoliciesAPIReadSecurityPolicyRequest {
 	r.name = &name
 	return r
 }
 
-func (r ApiSecurityPoliciesReadSecurityPolicyRequest) Execute() (*AtcfwSecurityPolicyReadResponse, *http.Response, error) {
-	return r.ApiService.SecurityPoliciesReadSecurityPolicyExecute(r)
+func (r SecurityPoliciesAPIReadSecurityPolicyRequest) Execute() (*SecurityPolicyReadResponse, *http.Response, error) {
+	return r.ApiService.ReadSecurityPolicyExecute(r)
 }
 
 /*
-SecurityPoliciesReadSecurityPolicy Read Security Policy.
+ReadSecurityPolicy Read Security Policy.
 
 Use this method to retrieve information on the specified Security Policy object.
 
@@ -736,10 +736,10 @@ A security policy defines a set of rules and actions that you define to balance 
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Security Policy object identifier.
-	@return ApiSecurityPoliciesReadSecurityPolicyRequest
+	@return SecurityPoliciesAPIReadSecurityPolicyRequest
 */
-func (a *SecurityPoliciesAPIService) SecurityPoliciesReadSecurityPolicy(ctx context.Context, id int32) ApiSecurityPoliciesReadSecurityPolicyRequest {
-	return ApiSecurityPoliciesReadSecurityPolicyRequest{
+func (a *SecurityPoliciesAPIService) ReadSecurityPolicy(ctx context.Context, id int32) SecurityPoliciesAPIReadSecurityPolicyRequest {
+	return SecurityPoliciesAPIReadSecurityPolicyRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -748,16 +748,16 @@ func (a *SecurityPoliciesAPIService) SecurityPoliciesReadSecurityPolicy(ctx cont
 
 // Execute executes the request
 //
-//	@return AtcfwSecurityPolicyReadResponse
-func (a *SecurityPoliciesAPIService) SecurityPoliciesReadSecurityPolicyExecute(r ApiSecurityPoliciesReadSecurityPolicyRequest) (*AtcfwSecurityPolicyReadResponse, *http.Response, error) {
+//	@return SecurityPolicyReadResponse
+func (a *SecurityPoliciesAPIService) ReadSecurityPolicyExecute(r SecurityPoliciesAPIReadSecurityPolicyRequest) (*SecurityPolicyReadResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwSecurityPolicyReadResponse
+		localVarReturnValue *SecurityPolicyReadResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "SecurityPoliciesAPIService.SecurityPoliciesReadSecurityPolicy")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "SecurityPoliciesAPIService.ReadSecurityPolicy")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -841,25 +841,25 @@ func (a *SecurityPoliciesAPIService) SecurityPoliciesReadSecurityPolicyExecute(r
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiSecurityPoliciesUpdateSecurityPolicyRequest struct {
+type SecurityPoliciesAPIUpdateSecurityPolicyRequest struct {
 	ctx        context.Context
 	ApiService SecurityPoliciesAPI
 	id         int32
-	body       *AtcfwSecurityPolicy
+	body       *SecurityPolicy
 }
 
 // The Security Policy object.
-func (r ApiSecurityPoliciesUpdateSecurityPolicyRequest) Body(body AtcfwSecurityPolicy) ApiSecurityPoliciesUpdateSecurityPolicyRequest {
+func (r SecurityPoliciesAPIUpdateSecurityPolicyRequest) Body(body SecurityPolicy) SecurityPoliciesAPIUpdateSecurityPolicyRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiSecurityPoliciesUpdateSecurityPolicyRequest) Execute() (*AtcfwSecurityPolicyUpdateResponse, *http.Response, error) {
-	return r.ApiService.SecurityPoliciesUpdateSecurityPolicyExecute(r)
+func (r SecurityPoliciesAPIUpdateSecurityPolicyRequest) Execute() (*SecurityPolicyUpdateResponse, *http.Response, error) {
+	return r.ApiService.UpdateSecurityPolicyExecute(r)
 }
 
 /*
-SecurityPoliciesUpdateSecurityPolicy Update Security Policy.
+UpdateSecurityPolicy Update Security Policy.
 
 Use this method to update a specified Network List object. The policy data supplied with the update request must have the complete list of policy rules, including the rules based on all feeds that the account is entitled to. If no network list is specified, networking scope for this policy is empty, thus no action can be performed by this policy. Note that you are not allowed to add DNS Forwarding Proxies and Roaming Device Groups that are already assigned to a Security Policy different from "Default Global Policy", to assign them to this Security Policy object you should remove them from other Security Policy first.
 
@@ -874,10 +874,10 @@ Required:
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Security Policy object identifier.
-	@return ApiSecurityPoliciesUpdateSecurityPolicyRequest
+	@return SecurityPoliciesAPIUpdateSecurityPolicyRequest
 */
-func (a *SecurityPoliciesAPIService) SecurityPoliciesUpdateSecurityPolicy(ctx context.Context, id int32) ApiSecurityPoliciesUpdateSecurityPolicyRequest {
-	return ApiSecurityPoliciesUpdateSecurityPolicyRequest{
+func (a *SecurityPoliciesAPIService) UpdateSecurityPolicy(ctx context.Context, id int32) SecurityPoliciesAPIUpdateSecurityPolicyRequest {
+	return SecurityPoliciesAPIUpdateSecurityPolicyRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -886,16 +886,16 @@ func (a *SecurityPoliciesAPIService) SecurityPoliciesUpdateSecurityPolicy(ctx co
 
 // Execute executes the request
 //
-//	@return AtcfwSecurityPolicyUpdateResponse
-func (a *SecurityPoliciesAPIService) SecurityPoliciesUpdateSecurityPolicyExecute(r ApiSecurityPoliciesUpdateSecurityPolicyRequest) (*AtcfwSecurityPolicyUpdateResponse, *http.Response, error) {
+//	@return SecurityPolicyUpdateResponse
+func (a *SecurityPoliciesAPIService) UpdateSecurityPolicyExecute(r SecurityPoliciesAPIUpdateSecurityPolicyRequest) (*SecurityPolicyUpdateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPut
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwSecurityPolicyUpdateResponse
+		localVarReturnValue *SecurityPolicyUpdateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "SecurityPoliciesAPIService.SecurityPoliciesUpdateSecurityPolicy")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "SecurityPoliciesAPIService.UpdateSecurityPolicy")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}

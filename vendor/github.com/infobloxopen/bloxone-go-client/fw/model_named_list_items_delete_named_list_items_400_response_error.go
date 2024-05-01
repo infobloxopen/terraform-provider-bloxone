@@ -19,10 +19,13 @@ var _ MappedNullable = &NamedListItemsDeleteNamedListItems400ResponseError{}
 
 // NamedListItemsDeleteNamedListItems400ResponseError struct for NamedListItemsDeleteNamedListItems400ResponseError
 type NamedListItemsDeleteNamedListItems400ResponseError struct {
-	Code    *string `json:"code,omitempty"`
-	Message *string `json:"message,omitempty"`
-	Status  *string `json:"status,omitempty"`
+	Code                 *string `json:"code,omitempty"`
+	Message              *string `json:"message,omitempty"`
+	Status               *string `json:"status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NamedListItemsDeleteNamedListItems400ResponseError NamedListItemsDeleteNamedListItems400ResponseError
 
 // NewNamedListItemsDeleteNamedListItems400ResponseError instantiates a new NamedListItemsDeleteNamedListItems400ResponseError object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o NamedListItemsDeleteNamedListItems400ResponseError) ToMap() (map[string]
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NamedListItemsDeleteNamedListItems400ResponseError) UnmarshalJSON(data []byte) (err error) {
+	varNamedListItemsDeleteNamedListItems400ResponseError := _NamedListItemsDeleteNamedListItems400ResponseError{}
+
+	err = json.Unmarshal(data, &varNamedListItemsDeleteNamedListItems400ResponseError)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NamedListItemsDeleteNamedListItems400ResponseError(varNamedListItemsDeleteNamedListItems400ResponseError)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "code")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNamedListItemsDeleteNamedListItems400ResponseError struct {

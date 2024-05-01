@@ -3,7 +3,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/anycast"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
@@ -12,6 +11,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
+	"github.com/infobloxopen/bloxone-go-client/option"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/anycast"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_data"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/fw"
@@ -69,14 +71,11 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 		return
 	}
 
-	client, err := bloxoneclient.NewAPIClient(bloxoneclient.Configuration{
-		ClientName: fmt.Sprintf("terraform/%s#%s", p.version, p.commit),
-		APIKey:     data.APIKey.ValueString(),
-		CSPURL:     data.CSPUrl.ValueString(),
-	})
-	if err != nil {
-		resp.Diagnostics.AddError("Client error", fmt.Sprintf("Unable to create new API client: %s", err))
-	}
+	client := bloxoneclient.NewAPIClient(
+		option.WithClientName(fmt.Sprintf("terraform/%s#%s", p.version, p.commit)),
+		option.WithAPIKey(data.APIKey.ValueString()),
+		option.WithCSPUrl(data.CSPUrl.ValueString()),
+	)
 
 	resp.DataSourceData = client
 	resp.ResourceData = client
@@ -128,6 +127,7 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 
 		keys.NewTsigResource,
 
+		fw.NewSecurityPoliciesResource,
 		anycast.NewAnycastConfigResource,
 
 		fw.NewAccessCodesResource,
@@ -192,6 +192,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 
 		anycast.NewAnycastConfigDataSource,
 
+		fw.NewSecurityPoliciesDataSource,
 		fw.NewAccessCodesDataSource,
 		fw.NewNamedListsDataSource,
 		fw.NewNetworkListsDataSource,

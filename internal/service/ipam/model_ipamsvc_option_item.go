@@ -67,7 +67,7 @@ var IpamsvcOptionItemResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcOptionItem(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcOptionItem {
+func ExpandIpamsvcOptionItem(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.OptionItem {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -79,11 +79,11 @@ func ExpandIpamsvcOptionItem(ctx context.Context, o types.Object, diags *diag.Di
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcOptionItemModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcOptionItem {
+func (m *IpamsvcOptionItemModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.OptionItem {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcOptionItem{
+	to := &ipam.OptionItem{
 		Group:       m.Group.ValueStringPointer(),
 		OptionCode:  m.OptionCode.ValueStringPointer(),
 		OptionValue: m.OptionValue.ValueStringPointer(),
@@ -92,7 +92,7 @@ func (m *IpamsvcOptionItemModel) Expand(ctx context.Context, diags *diag.Diagnos
 	return to
 }
 
-func FlattenIpamsvcOptionItem(ctx context.Context, from *ipam.IpamsvcOptionItem, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcOptionItem(ctx context.Context, from *ipam.OptionItem, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcOptionItemAttrTypes)
 	}
@@ -103,7 +103,7 @@ func FlattenIpamsvcOptionItem(ctx context.Context, from *ipam.IpamsvcOptionItem,
 	return t
 }
 
-func (m *IpamsvcOptionItemModel) Flatten(ctx context.Context, from *ipam.IpamsvcOptionItem, diags *diag.Diagnostics) {
+func (m *IpamsvcOptionItemModel) Flatten(ctx context.Context, from *ipam.OptionItem, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

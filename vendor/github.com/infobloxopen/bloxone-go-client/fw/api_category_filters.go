@@ -23,7 +23,7 @@ import (
 
 type CategoryFiltersAPI interface {
 	/*
-			CategoryFiltersCreateCategoryFilter Create Category Filter.
+			CreateCategoryFilter Create Category Filter.
 
 			Use this method to create a Category Filter object.
 
@@ -35,15 +35,15 @@ type CategoryFiltersAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiCategoryFiltersCreateCategoryFilterRequest
+			@return CategoryFiltersAPICreateCategoryFilterRequest
 	*/
-	CategoryFiltersCreateCategoryFilter(ctx context.Context) ApiCategoryFiltersCreateCategoryFilterRequest
+	CreateCategoryFilter(ctx context.Context) CategoryFiltersAPICreateCategoryFilterRequest
 
-	// CategoryFiltersCreateCategoryFilterExecute executes the request
-	//  @return AtcfwCategoryFilterCreateResponse
-	CategoryFiltersCreateCategoryFilterExecute(r ApiCategoryFiltersCreateCategoryFilterRequest) (*AtcfwCategoryFilterCreateResponse, *http.Response, error)
+	// CreateCategoryFilterExecute executes the request
+	//  @return CategoryFilterCreateResponse
+	CreateCategoryFilterExecute(r CategoryFiltersAPICreateCategoryFilterRequest) (*CategoryFilterCreateResponse, *http.Response, error)
 	/*
-			CategoryFiltersDeleteCategoryFilters Delete Category Filters By ID.
+			DeleteCategoryFilters Delete Category Filters By ID.
 
 			Use this method to delete Category Filter object.
 
@@ -55,14 +55,14 @@ type CategoryFiltersAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiCategoryFiltersDeleteCategoryFiltersRequest
+			@return CategoryFiltersAPIDeleteCategoryFiltersRequest
 	*/
-	CategoryFiltersDeleteCategoryFilters(ctx context.Context) ApiCategoryFiltersDeleteCategoryFiltersRequest
+	DeleteCategoryFilters(ctx context.Context) CategoryFiltersAPIDeleteCategoryFiltersRequest
 
-	// CategoryFiltersDeleteCategoryFiltersExecute executes the request
-	CategoryFiltersDeleteCategoryFiltersExecute(r ApiCategoryFiltersDeleteCategoryFiltersRequest) (*http.Response, error)
+	// DeleteCategoryFiltersExecute executes the request
+	DeleteCategoryFiltersExecute(r CategoryFiltersAPIDeleteCategoryFiltersRequest) (*http.Response, error)
 	/*
-			CategoryFiltersDeleteSingleCategoryFilters Delete Category Filters.
+			DeleteSingleCategoryFilters Delete Category Filters.
 
 			Use this method to delete Category Filter objects.
 
@@ -71,14 +71,14 @@ type CategoryFiltersAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Category Filter object identifier.
-			@return ApiCategoryFiltersDeleteSingleCategoryFiltersRequest
+			@return CategoryFiltersAPIDeleteSingleCategoryFiltersRequest
 	*/
-	CategoryFiltersDeleteSingleCategoryFilters(ctx context.Context, id int32) ApiCategoryFiltersDeleteSingleCategoryFiltersRequest
+	DeleteSingleCategoryFilters(ctx context.Context, id int32) CategoryFiltersAPIDeleteSingleCategoryFiltersRequest
 
-	// CategoryFiltersDeleteSingleCategoryFiltersExecute executes the request
-	CategoryFiltersDeleteSingleCategoryFiltersExecute(r ApiCategoryFiltersDeleteSingleCategoryFiltersRequest) (*http.Response, error)
+	// DeleteSingleCategoryFiltersExecute executes the request
+	DeleteSingleCategoryFiltersExecute(r CategoryFiltersAPIDeleteSingleCategoryFiltersRequest) (*http.Response, error)
 	/*
-			CategoryFiltersListCategoryFilters List Category Filters.
+			ListCategoryFilters List Category Filters.
 
 			Use this method to retrieve information on all Category Filter objects for the account.
 
@@ -87,15 +87,15 @@ type CategoryFiltersAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiCategoryFiltersListCategoryFiltersRequest
+			@return CategoryFiltersAPIListCategoryFiltersRequest
 	*/
-	CategoryFiltersListCategoryFilters(ctx context.Context) ApiCategoryFiltersListCategoryFiltersRequest
+	ListCategoryFilters(ctx context.Context) CategoryFiltersAPIListCategoryFiltersRequest
 
-	// CategoryFiltersListCategoryFiltersExecute executes the request
-	//  @return AtcfwCategoryFilterMultiResponse
-	CategoryFiltersListCategoryFiltersExecute(r ApiCategoryFiltersListCategoryFiltersRequest) (*AtcfwCategoryFilterMultiResponse, *http.Response, error)
+	// ListCategoryFiltersExecute executes the request
+	//  @return CategoryFilterMultiResponse
+	ListCategoryFiltersExecute(r CategoryFiltersAPIListCategoryFiltersRequest) (*CategoryFilterMultiResponse, *http.Response, error)
 	/*
-			CategoryFiltersReadCategoryFilter Read Category Filter.
+			ReadCategoryFilter Read Category Filter.
 
 			Use this method to retrieve information on the specified Category Filter object.
 
@@ -104,15 +104,15 @@ type CategoryFiltersAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Category Filter object identifier.
-			@return ApiCategoryFiltersReadCategoryFilterRequest
+			@return CategoryFiltersAPIReadCategoryFilterRequest
 	*/
-	CategoryFiltersReadCategoryFilter(ctx context.Context, id int32) ApiCategoryFiltersReadCategoryFilterRequest
+	ReadCategoryFilter(ctx context.Context, id int32) CategoryFiltersAPIReadCategoryFilterRequest
 
-	// CategoryFiltersReadCategoryFilterExecute executes the request
-	//  @return AtcfwCategoryFilterReadResponse
-	CategoryFiltersReadCategoryFilterExecute(r ApiCategoryFiltersReadCategoryFilterRequest) (*AtcfwCategoryFilterReadResponse, *http.Response, error)
+	// ReadCategoryFilterExecute executes the request
+	//  @return CategoryFilterReadResponse
+	ReadCategoryFilterExecute(r CategoryFiltersAPIReadCategoryFilterRequest) (*CategoryFilterReadResponse, *http.Response, error)
 	/*
-			CategoryFiltersUpdateCategoryFilter Update Category Filter.
+			UpdateCategoryFilter Update Category Filter.
 
 			Use this method to update the specified Category Filter object.
 
@@ -125,36 +125,36 @@ type CategoryFiltersAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Category Filter object identifier.
-			@return ApiCategoryFiltersUpdateCategoryFilterRequest
+			@return CategoryFiltersAPIUpdateCategoryFilterRequest
 	*/
-	CategoryFiltersUpdateCategoryFilter(ctx context.Context, id int32) ApiCategoryFiltersUpdateCategoryFilterRequest
+	UpdateCategoryFilter(ctx context.Context, id int32) CategoryFiltersAPIUpdateCategoryFilterRequest
 
-	// CategoryFiltersUpdateCategoryFilterExecute executes the request
-	//  @return AtcfwCategoryFilterUpdateResponse
-	CategoryFiltersUpdateCategoryFilterExecute(r ApiCategoryFiltersUpdateCategoryFilterRequest) (*AtcfwCategoryFilterUpdateResponse, *http.Response, error)
+	// UpdateCategoryFilterExecute executes the request
+	//  @return CategoryFilterUpdateResponse
+	UpdateCategoryFilterExecute(r CategoryFiltersAPIUpdateCategoryFilterRequest) (*CategoryFilterUpdateResponse, *http.Response, error)
 }
 
 // CategoryFiltersAPIService CategoryFiltersAPI service
 type CategoryFiltersAPIService internal.Service
 
-type ApiCategoryFiltersCreateCategoryFilterRequest struct {
+type CategoryFiltersAPICreateCategoryFilterRequest struct {
 	ctx        context.Context
 	ApiService CategoryFiltersAPI
-	body       *AtcfwCategoryFilter
+	body       *CategoryFilter
 }
 
 // The Category Filter object.
-func (r ApiCategoryFiltersCreateCategoryFilterRequest) Body(body AtcfwCategoryFilter) ApiCategoryFiltersCreateCategoryFilterRequest {
+func (r CategoryFiltersAPICreateCategoryFilterRequest) Body(body CategoryFilter) CategoryFiltersAPICreateCategoryFilterRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiCategoryFiltersCreateCategoryFilterRequest) Execute() (*AtcfwCategoryFilterCreateResponse, *http.Response, error) {
-	return r.ApiService.CategoryFiltersCreateCategoryFilterExecute(r)
+func (r CategoryFiltersAPICreateCategoryFilterRequest) Execute() (*CategoryFilterCreateResponse, *http.Response, error) {
+	return r.ApiService.CreateCategoryFilterExecute(r)
 }
 
 /*
-CategoryFiltersCreateCategoryFilter Create Category Filter.
+CreateCategoryFilter Create Category Filter.
 
 Use this method to create a Category Filter object.
 
@@ -165,10 +165,10 @@ Required:
 - categories
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCategoryFiltersCreateCategoryFilterRequest
+	@return CategoryFiltersAPICreateCategoryFilterRequest
 */
-func (a *CategoryFiltersAPIService) CategoryFiltersCreateCategoryFilter(ctx context.Context) ApiCategoryFiltersCreateCategoryFilterRequest {
-	return ApiCategoryFiltersCreateCategoryFilterRequest{
+func (a *CategoryFiltersAPIService) CreateCategoryFilter(ctx context.Context) CategoryFiltersAPICreateCategoryFilterRequest {
+	return CategoryFiltersAPICreateCategoryFilterRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -176,16 +176,16 @@ func (a *CategoryFiltersAPIService) CategoryFiltersCreateCategoryFilter(ctx cont
 
 // Execute executes the request
 //
-//	@return AtcfwCategoryFilterCreateResponse
-func (a *CategoryFiltersAPIService) CategoryFiltersCreateCategoryFilterExecute(r ApiCategoryFiltersCreateCategoryFilterRequest) (*AtcfwCategoryFilterCreateResponse, *http.Response, error) {
+//	@return CategoryFilterCreateResponse
+func (a *CategoryFiltersAPIService) CreateCategoryFilterExecute(r CategoryFiltersAPICreateCategoryFilterRequest) (*CategoryFilterCreateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwCategoryFilterCreateResponse
+		localVarReturnValue *CategoryFilterCreateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "CategoryFiltersAPIService.CategoryFiltersCreateCategoryFilter")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "CategoryFiltersAPIService.CreateCategoryFilter")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -277,23 +277,23 @@ func (a *CategoryFiltersAPIService) CategoryFiltersCreateCategoryFilterExecute(r
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiCategoryFiltersDeleteCategoryFiltersRequest struct {
+type CategoryFiltersAPIDeleteCategoryFiltersRequest struct {
 	ctx        context.Context
 	ApiService CategoryFiltersAPI
-	body       *AtcfwCategoryFiltersDeleteRequest
+	body       *CategoryFiltersDeleteRequest
 }
 
-func (r ApiCategoryFiltersDeleteCategoryFiltersRequest) Body(body AtcfwCategoryFiltersDeleteRequest) ApiCategoryFiltersDeleteCategoryFiltersRequest {
+func (r CategoryFiltersAPIDeleteCategoryFiltersRequest) Body(body CategoryFiltersDeleteRequest) CategoryFiltersAPIDeleteCategoryFiltersRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiCategoryFiltersDeleteCategoryFiltersRequest) Execute() (*http.Response, error) {
-	return r.ApiService.CategoryFiltersDeleteCategoryFiltersExecute(r)
+func (r CategoryFiltersAPIDeleteCategoryFiltersRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteCategoryFiltersExecute(r)
 }
 
 /*
-CategoryFiltersDeleteCategoryFilters Delete Category Filters By ID.
+DeleteCategoryFilters Delete Category Filters By ID.
 
 Use this method to delete Category Filter object.
 
@@ -303,24 +303,24 @@ Required:
 - ids
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCategoryFiltersDeleteCategoryFiltersRequest
+	@return CategoryFiltersAPIDeleteCategoryFiltersRequest
 */
-func (a *CategoryFiltersAPIService) CategoryFiltersDeleteCategoryFilters(ctx context.Context) ApiCategoryFiltersDeleteCategoryFiltersRequest {
-	return ApiCategoryFiltersDeleteCategoryFiltersRequest{
+func (a *CategoryFiltersAPIService) DeleteCategoryFilters(ctx context.Context) CategoryFiltersAPIDeleteCategoryFiltersRequest {
+	return CategoryFiltersAPIDeleteCategoryFiltersRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-func (a *CategoryFiltersAPIService) CategoryFiltersDeleteCategoryFiltersExecute(r ApiCategoryFiltersDeleteCategoryFiltersRequest) (*http.Response, error) {
+func (a *CategoryFiltersAPIService) DeleteCategoryFiltersExecute(r CategoryFiltersAPIDeleteCategoryFiltersRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "CategoryFiltersAPIService.CategoryFiltersDeleteCategoryFilters")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "CategoryFiltersAPIService.DeleteCategoryFilters")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -397,18 +397,18 @@ func (a *CategoryFiltersAPIService) CategoryFiltersDeleteCategoryFiltersExecute(
 	return localVarHTTPResponse, nil
 }
 
-type ApiCategoryFiltersDeleteSingleCategoryFiltersRequest struct {
+type CategoryFiltersAPIDeleteSingleCategoryFiltersRequest struct {
 	ctx        context.Context
 	ApiService CategoryFiltersAPI
 	id         int32
 }
 
-func (r ApiCategoryFiltersDeleteSingleCategoryFiltersRequest) Execute() (*http.Response, error) {
-	return r.ApiService.CategoryFiltersDeleteSingleCategoryFiltersExecute(r)
+func (r CategoryFiltersAPIDeleteSingleCategoryFiltersRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteSingleCategoryFiltersExecute(r)
 }
 
 /*
-CategoryFiltersDeleteSingleCategoryFilters Delete Category Filters.
+DeleteSingleCategoryFilters Delete Category Filters.
 
 Use this method to delete Category Filter objects.
 
@@ -416,10 +416,10 @@ Category filters are content categorization rules that BloxOne Cloud uses to det
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Category Filter object identifier.
-	@return ApiCategoryFiltersDeleteSingleCategoryFiltersRequest
+	@return CategoryFiltersAPIDeleteSingleCategoryFiltersRequest
 */
-func (a *CategoryFiltersAPIService) CategoryFiltersDeleteSingleCategoryFilters(ctx context.Context, id int32) ApiCategoryFiltersDeleteSingleCategoryFiltersRequest {
-	return ApiCategoryFiltersDeleteSingleCategoryFiltersRequest{
+func (a *CategoryFiltersAPIService) DeleteSingleCategoryFilters(ctx context.Context, id int32) CategoryFiltersAPIDeleteSingleCategoryFiltersRequest {
+	return CategoryFiltersAPIDeleteSingleCategoryFiltersRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -427,14 +427,14 @@ func (a *CategoryFiltersAPIService) CategoryFiltersDeleteSingleCategoryFilters(c
 }
 
 // Execute executes the request
-func (a *CategoryFiltersAPIService) CategoryFiltersDeleteSingleCategoryFiltersExecute(r ApiCategoryFiltersDeleteSingleCategoryFiltersRequest) (*http.Response, error) {
+func (a *CategoryFiltersAPIService) DeleteSingleCategoryFiltersExecute(r CategoryFiltersAPIDeleteSingleCategoryFiltersRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "CategoryFiltersAPIService.CategoryFiltersDeleteSingleCategoryFilters")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "CategoryFiltersAPIService.DeleteSingleCategoryFilters")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -507,7 +507,7 @@ func (a *CategoryFiltersAPIService) CategoryFiltersDeleteSingleCategoryFiltersEx
 	return localVarHTTPResponse, nil
 }
 
-type ApiCategoryFiltersListCategoryFiltersRequest struct {
+type CategoryFiltersAPIListCategoryFiltersRequest struct {
 	ctx        context.Context
 	ApiService CategoryFiltersAPI
 	filter     *string
@@ -520,63 +520,63 @@ type ApiCategoryFiltersListCategoryFiltersRequest struct {
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;.  You can filter by following fields:  | Name               | type   | Supported Op                | | ------------------ | ------ | --------------------------- | | name               | string | !&#x3D;, &#x3D;&#x3D;, ~, !~, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D; |  In addition, grouping operators are supported:  | Op  | Description          | | --- | -------------------- | | and | Logical AND          | | or  | Logical OR           | | not | Logical NOT          | | ()  | Groupping Operators  |  Example: &#x60;&#x60;&#x60; ?_filter&#x3D;\&quot;((name&#x3D;&#x3D;&#39;cat-filter&#39;)or(name~&#39;key&#39;))and(name!&#x3D;&#39;something&#39;)\&quot; &#x60;&#x60;&#x60;
-func (r ApiCategoryFiltersListCategoryFiltersRequest) Filter(filter string) ApiCategoryFiltersListCategoryFiltersRequest {
+func (r CategoryFiltersAPIListCategoryFiltersRequest) Filter(filter string) CategoryFiltersAPIListCategoryFiltersRequest {
 	r.filter = &filter
 	return r
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiCategoryFiltersListCategoryFiltersRequest) Fields(fields string) ApiCategoryFiltersListCategoryFiltersRequest {
+func (r CategoryFiltersAPIListCategoryFiltersRequest) Fields(fields string) CategoryFiltersAPIListCategoryFiltersRequest {
 	r.fields = &fields
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiCategoryFiltersListCategoryFiltersRequest) Offset(offset int32) ApiCategoryFiltersListCategoryFiltersRequest {
+func (r CategoryFiltersAPIListCategoryFiltersRequest) Offset(offset int32) CategoryFiltersAPIListCategoryFiltersRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiCategoryFiltersListCategoryFiltersRequest) Limit(limit int32) ApiCategoryFiltersListCategoryFiltersRequest {
+func (r CategoryFiltersAPIListCategoryFiltersRequest) Limit(limit int32) CategoryFiltersAPIListCategoryFiltersRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiCategoryFiltersListCategoryFiltersRequest) PageToken(pageToken string) ApiCategoryFiltersListCategoryFiltersRequest {
+func (r CategoryFiltersAPIListCategoryFiltersRequest) PageToken(pageToken string) CategoryFiltersAPIListCategoryFiltersRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
 // Filtering by tags.
-func (r ApiCategoryFiltersListCategoryFiltersRequest) Tfilter(tfilter string) ApiCategoryFiltersListCategoryFiltersRequest {
+func (r CategoryFiltersAPIListCategoryFiltersRequest) Tfilter(tfilter string) CategoryFiltersAPIListCategoryFiltersRequest {
 	r.tfilter = &tfilter
 	return r
 }
 
 // Sorting by tags.
-func (r ApiCategoryFiltersListCategoryFiltersRequest) TorderBy(torderBy string) ApiCategoryFiltersListCategoryFiltersRequest {
+func (r CategoryFiltersAPIListCategoryFiltersRequest) TorderBy(torderBy string) CategoryFiltersAPIListCategoryFiltersRequest {
 	r.torderBy = &torderBy
 	return r
 }
 
-func (r ApiCategoryFiltersListCategoryFiltersRequest) Execute() (*AtcfwCategoryFilterMultiResponse, *http.Response, error) {
-	return r.ApiService.CategoryFiltersListCategoryFiltersExecute(r)
+func (r CategoryFiltersAPIListCategoryFiltersRequest) Execute() (*CategoryFilterMultiResponse, *http.Response, error) {
+	return r.ApiService.ListCategoryFiltersExecute(r)
 }
 
 /*
-CategoryFiltersListCategoryFilters List Category Filters.
+ListCategoryFilters List Category Filters.
 
 Use this method to retrieve information on all Category Filter objects for the account.
 
 Category filters are content categorization rules that BloxOne Cloud uses to detect and filter specific internet content. Based on your configuration, specific actions such as Allow or Block, will be taken on the detected content. BloxOne Cloud provides the following content categories from which you can build your category filters: Drugs, Risk/Fraud/Crime, Entertainment/Culture, Purchasing, Information/Communication, Business/Services, Information Technology, Lifestyle, Society/Education/Religion, Mature/Violent, Games/Gambling, Pornography/Nudity and Uncategorized. Each of these categories contains sub-categories that further define the respective content. When you configure your category filter, you can add as many sub-categories as you need. You then add the category filter to your security policy and assign the Block action for the filter.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiCategoryFiltersListCategoryFiltersRequest
+	@return CategoryFiltersAPIListCategoryFiltersRequest
 */
-func (a *CategoryFiltersAPIService) CategoryFiltersListCategoryFilters(ctx context.Context) ApiCategoryFiltersListCategoryFiltersRequest {
-	return ApiCategoryFiltersListCategoryFiltersRequest{
+func (a *CategoryFiltersAPIService) ListCategoryFilters(ctx context.Context) CategoryFiltersAPIListCategoryFiltersRequest {
+	return CategoryFiltersAPIListCategoryFiltersRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -584,16 +584,16 @@ func (a *CategoryFiltersAPIService) CategoryFiltersListCategoryFilters(ctx conte
 
 // Execute executes the request
 //
-//	@return AtcfwCategoryFilterMultiResponse
-func (a *CategoryFiltersAPIService) CategoryFiltersListCategoryFiltersExecute(r ApiCategoryFiltersListCategoryFiltersRequest) (*AtcfwCategoryFilterMultiResponse, *http.Response, error) {
+//	@return CategoryFilterMultiResponse
+func (a *CategoryFiltersAPIService) ListCategoryFiltersExecute(r CategoryFiltersAPIListCategoryFiltersRequest) (*CategoryFilterMultiResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwCategoryFilterMultiResponse
+		localVarReturnValue *CategoryFilterMultiResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "CategoryFiltersAPIService.CategoryFiltersListCategoryFilters")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "CategoryFiltersAPIService.ListCategoryFilters")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -681,7 +681,7 @@ func (a *CategoryFiltersAPIService) CategoryFiltersListCategoryFiltersExecute(r 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiCategoryFiltersReadCategoryFilterRequest struct {
+type CategoryFiltersAPIReadCategoryFilterRequest struct {
 	ctx        context.Context
 	ApiService CategoryFiltersAPI
 	id         int32
@@ -690,22 +690,22 @@ type ApiCategoryFiltersReadCategoryFilterRequest struct {
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiCategoryFiltersReadCategoryFilterRequest) Fields(fields string) ApiCategoryFiltersReadCategoryFilterRequest {
+func (r CategoryFiltersAPIReadCategoryFilterRequest) Fields(fields string) CategoryFiltersAPIReadCategoryFilterRequest {
 	r.fields = &fields
 	return r
 }
 
-func (r ApiCategoryFiltersReadCategoryFilterRequest) Name(name string) ApiCategoryFiltersReadCategoryFilterRequest {
+func (r CategoryFiltersAPIReadCategoryFilterRequest) Name(name string) CategoryFiltersAPIReadCategoryFilterRequest {
 	r.name = &name
 	return r
 }
 
-func (r ApiCategoryFiltersReadCategoryFilterRequest) Execute() (*AtcfwCategoryFilterReadResponse, *http.Response, error) {
-	return r.ApiService.CategoryFiltersReadCategoryFilterExecute(r)
+func (r CategoryFiltersAPIReadCategoryFilterRequest) Execute() (*CategoryFilterReadResponse, *http.Response, error) {
+	return r.ApiService.ReadCategoryFilterExecute(r)
 }
 
 /*
-CategoryFiltersReadCategoryFilter Read Category Filter.
+ReadCategoryFilter Read Category Filter.
 
 Use this method to retrieve information on the specified Category Filter object.
 
@@ -713,10 +713,10 @@ Category filters are content categorization rules that BloxOne Cloud uses to det
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Category Filter object identifier.
-	@return ApiCategoryFiltersReadCategoryFilterRequest
+	@return CategoryFiltersAPIReadCategoryFilterRequest
 */
-func (a *CategoryFiltersAPIService) CategoryFiltersReadCategoryFilter(ctx context.Context, id int32) ApiCategoryFiltersReadCategoryFilterRequest {
-	return ApiCategoryFiltersReadCategoryFilterRequest{
+func (a *CategoryFiltersAPIService) ReadCategoryFilter(ctx context.Context, id int32) CategoryFiltersAPIReadCategoryFilterRequest {
+	return CategoryFiltersAPIReadCategoryFilterRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -725,16 +725,16 @@ func (a *CategoryFiltersAPIService) CategoryFiltersReadCategoryFilter(ctx contex
 
 // Execute executes the request
 //
-//	@return AtcfwCategoryFilterReadResponse
-func (a *CategoryFiltersAPIService) CategoryFiltersReadCategoryFilterExecute(r ApiCategoryFiltersReadCategoryFilterRequest) (*AtcfwCategoryFilterReadResponse, *http.Response, error) {
+//	@return CategoryFilterReadResponse
+func (a *CategoryFiltersAPIService) ReadCategoryFilterExecute(r CategoryFiltersAPIReadCategoryFilterRequest) (*CategoryFilterReadResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwCategoryFilterReadResponse
+		localVarReturnValue *CategoryFilterReadResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "CategoryFiltersAPIService.CategoryFiltersReadCategoryFilter")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "CategoryFiltersAPIService.ReadCategoryFilter")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -818,25 +818,25 @@ func (a *CategoryFiltersAPIService) CategoryFiltersReadCategoryFilterExecute(r A
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiCategoryFiltersUpdateCategoryFilterRequest struct {
+type CategoryFiltersAPIUpdateCategoryFilterRequest struct {
 	ctx        context.Context
 	ApiService CategoryFiltersAPI
 	id         int32
-	body       *AtcfwCategoryFilter
+	body       *CategoryFilter
 }
 
 // The Category Filter object.
-func (r ApiCategoryFiltersUpdateCategoryFilterRequest) Body(body AtcfwCategoryFilter) ApiCategoryFiltersUpdateCategoryFilterRequest {
+func (r CategoryFiltersAPIUpdateCategoryFilterRequest) Body(body CategoryFilter) CategoryFiltersAPIUpdateCategoryFilterRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiCategoryFiltersUpdateCategoryFilterRequest) Execute() (*AtcfwCategoryFilterUpdateResponse, *http.Response, error) {
-	return r.ApiService.CategoryFiltersUpdateCategoryFilterExecute(r)
+func (r CategoryFiltersAPIUpdateCategoryFilterRequest) Execute() (*CategoryFilterUpdateResponse, *http.Response, error) {
+	return r.ApiService.UpdateCategoryFilterExecute(r)
 }
 
 /*
-CategoryFiltersUpdateCategoryFilter Update Category Filter.
+UpdateCategoryFilter Update Category Filter.
 
 Use this method to update the specified Category Filter object.
 
@@ -848,10 +848,10 @@ Required:
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Category Filter object identifier.
-	@return ApiCategoryFiltersUpdateCategoryFilterRequest
+	@return CategoryFiltersAPIUpdateCategoryFilterRequest
 */
-func (a *CategoryFiltersAPIService) CategoryFiltersUpdateCategoryFilter(ctx context.Context, id int32) ApiCategoryFiltersUpdateCategoryFilterRequest {
-	return ApiCategoryFiltersUpdateCategoryFilterRequest{
+func (a *CategoryFiltersAPIService) UpdateCategoryFilter(ctx context.Context, id int32) CategoryFiltersAPIUpdateCategoryFilterRequest {
+	return CategoryFiltersAPIUpdateCategoryFilterRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -860,16 +860,16 @@ func (a *CategoryFiltersAPIService) CategoryFiltersUpdateCategoryFilter(ctx cont
 
 // Execute executes the request
 //
-//	@return AtcfwCategoryFilterUpdateResponse
-func (a *CategoryFiltersAPIService) CategoryFiltersUpdateCategoryFilterExecute(r ApiCategoryFiltersUpdateCategoryFilterRequest) (*AtcfwCategoryFilterUpdateResponse, *http.Response, error) {
+//	@return CategoryFilterUpdateResponse
+func (a *CategoryFiltersAPIService) UpdateCategoryFilterExecute(r CategoryFiltersAPIUpdateCategoryFilterRequest) (*CategoryFilterUpdateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPut
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwCategoryFilterUpdateResponse
+		localVarReturnValue *CategoryFilterUpdateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "CategoryFiltersAPIService.CategoryFiltersUpdateCategoryFilter")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "CategoryFiltersAPIService.UpdateCategoryFilter")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}

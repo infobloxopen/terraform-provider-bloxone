@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
@@ -21,7 +21,7 @@ import (
 
 func TestAccServerResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -54,7 +54,7 @@ func TestAccServerResource_basic(t *testing.T) {
 
 func TestAccServerResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dns_server.test"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -76,7 +76,7 @@ func TestAccServerResource_disappears(t *testing.T) {
 
 func TestAccServerResource_AddEdnsOptionInOutgoingQuery(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_add_edns_option_in_outgoing_query"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -106,7 +106,7 @@ func TestAccServerResource_AddEdnsOptionInOutgoingQuery(t *testing.T) {
 
 func TestAccServerResource_AutoSortViews(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_auto_sort_views"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -136,7 +136,7 @@ func TestAccServerResource_AutoSortViews(t *testing.T) {
 
 func TestAccServerResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_comment"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -166,7 +166,7 @@ func TestAccServerResource_Comment(t *testing.T) {
 
 func TestAccServerResource_CustomRootNs(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_custom_root_ns"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -201,7 +201,7 @@ func TestAccServerResource_CustomRootNs(t *testing.T) {
 
 func TestAccServerResource_CustomRootNsEnabled(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_custom_root_ns_enabled"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -236,7 +236,7 @@ func TestAccServerResource_CustomRootNsEnabled(t *testing.T) {
 
 func TestAccServerResource_DnssecEnableValidation(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_dnssec_enable_validation"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -266,7 +266,7 @@ func TestAccServerResource_DnssecEnableValidation(t *testing.T) {
 
 func TestAccServerResource_DnssecEnabled(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_dnssec_enabled"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -296,7 +296,7 @@ func TestAccServerResource_DnssecEnabled(t *testing.T) {
 
 func TestAccServerResource_DnssecTrustAnchors(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_dnssec_trust_anchors"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -330,7 +330,7 @@ func TestAccServerResource_DnssecTrustAnchors(t *testing.T) {
 
 func TestAccServerResource_DnssecValidateExpiry(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_dnssec_validate_expiry"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -360,7 +360,7 @@ func TestAccServerResource_DnssecValidateExpiry(t *testing.T) {
 
 func TestAccServerResource_EcsEnabled(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_ecs_enabled"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -395,7 +395,7 @@ func TestAccServerResource_EcsEnabled(t *testing.T) {
 
 func TestAccServerResource_EcsForwarding(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_ecs_forwarding"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -425,7 +425,7 @@ func TestAccServerResource_EcsForwarding(t *testing.T) {
 
 func TestAccServerResource_EcsPrefixV4(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_ecs_prefix_v4"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -455,7 +455,7 @@ func TestAccServerResource_EcsPrefixV4(t *testing.T) {
 
 func TestAccServerResource_EcsPrefixV6(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_ecs_prefix_v6"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -485,7 +485,7 @@ func TestAccServerResource_EcsPrefixV6(t *testing.T) {
 
 func TestAccServerResource_EcsZones(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_ecs_zones"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -517,7 +517,7 @@ func TestAccServerResource_EcsZones(t *testing.T) {
 
 func TestAccServerResource_FilterAaaaAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_filter_aaaa_acl"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -569,7 +569,7 @@ func TestAccServerResource_FilterAaaaAcl(t *testing.T) {
 
 func TestAccServerResource_FilterAaaaOnV4(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_filter_aaaa_on_v4"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -599,7 +599,7 @@ func TestAccServerResource_FilterAaaaOnV4(t *testing.T) {
 
 func TestAccServerResource_Forwarders(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_forwarders"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -631,7 +631,7 @@ func TestAccServerResource_Forwarders(t *testing.T) {
 
 func TestAccServerResource_ForwardersOnly(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_forwarders_only"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -666,7 +666,7 @@ func TestAccServerResource_ForwardersOnly(t *testing.T) {
 
 func TestAccServerResource_GssTsigEnabled(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_gss_tsig_enabled"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -696,7 +696,7 @@ func TestAccServerResource_GssTsigEnabled(t *testing.T) {
 
 func TestAccServerResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_inheritance_sources"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -774,7 +774,7 @@ func TestAccServerResource_InheritanceSources(t *testing.T) {
 
 func TestAccServerResource_LameTtl(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_lame_ttl"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -804,7 +804,7 @@ func TestAccServerResource_LameTtl(t *testing.T) {
 
 func TestAccServerResource_LogQueryResponse(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_log_query_response"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -834,7 +834,7 @@ func TestAccServerResource_LogQueryResponse(t *testing.T) {
 
 func TestAccServerResource_MatchRecursiveOnly(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_match_recursive_only"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -864,7 +864,7 @@ func TestAccServerResource_MatchRecursiveOnly(t *testing.T) {
 
 func TestAccServerResource_MaxCacheTtl(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_max_cache_ttl"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -894,7 +894,7 @@ func TestAccServerResource_MaxCacheTtl(t *testing.T) {
 
 func TestAccServerResource_MaxNegativeTtl(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_max_negative_ttl"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -924,7 +924,7 @@ func TestAccServerResource_MaxNegativeTtl(t *testing.T) {
 
 func TestAccServerResource_MinimalResponses(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_minimal_responses"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -954,7 +954,7 @@ func TestAccServerResource_MinimalResponses(t *testing.T) {
 
 func TestAccServerResource_Name(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_name"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name1 = acctest.RandomNameWithPrefix("dns-server")
 	var name2 = acctest.RandomNameWithPrefix("dns-server")
 
@@ -985,7 +985,7 @@ func TestAccServerResource_Name(t *testing.T) {
 
 func TestAccServerResource_Notify(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_notify"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1015,7 +1015,7 @@ func TestAccServerResource_Notify(t *testing.T) {
 
 func TestAccServerResource_QueryAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_query_acl"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1067,7 +1067,7 @@ func TestAccServerResource_QueryAcl(t *testing.T) {
 
 func TestAccServerResource_QueryPort(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_query_port"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1097,7 +1097,7 @@ func TestAccServerResource_QueryPort(t *testing.T) {
 
 func TestAccServerResource_RecursionAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_recursion_acl"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1149,7 +1149,7 @@ func TestAccServerResource_RecursionAcl(t *testing.T) {
 
 func TestAccServerResource_RecursionEnabled(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_recursion_enabled"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1179,7 +1179,7 @@ func TestAccServerResource_RecursionEnabled(t *testing.T) {
 
 func TestAccServerResource_RecursiveClients(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_recursive_clients"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1209,7 +1209,7 @@ func TestAccServerResource_RecursiveClients(t *testing.T) {
 
 func TestAccServerResource_ResolverQueryTimeout(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_resolver_query_timeout"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1239,7 +1239,7 @@ func TestAccServerResource_ResolverQueryTimeout(t *testing.T) {
 
 func TestAccServerResource_SecondaryAxfrQueryLimit(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_secondary_axfr_query_limit"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1269,7 +1269,7 @@ func TestAccServerResource_SecondaryAxfrQueryLimit(t *testing.T) {
 
 func TestAccServerResource_SecondarySoaQueryLimit(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_secondary_soa_query_limit"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1299,7 +1299,7 @@ func TestAccServerResource_SecondarySoaQueryLimit(t *testing.T) {
 
 func TestAccServerResource_SortList(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_sort_list"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1332,7 +1332,7 @@ func TestAccServerResource_SortList(t *testing.T) {
 
 func TestAccServerResource_SynthesizeAddressRecordsFromHttps(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_synthesize_address_records_from_https"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1362,7 +1362,7 @@ func TestAccServerResource_SynthesizeAddressRecordsFromHttps(t *testing.T) {
 
 func TestAccServerResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_tags"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1400,7 +1400,7 @@ func TestAccServerResource_Tags(t *testing.T) {
 
 func TestAccServerResource_TransferAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_transfer_acl"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1452,7 +1452,7 @@ func TestAccServerResource_TransferAcl(t *testing.T) {
 
 func TestAccServerResource_UpdateAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_update_acl"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1504,7 +1504,7 @@ func TestAccServerResource_UpdateAcl(t *testing.T) {
 
 func TestAccServerResource_UseForwardersForSubzones(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_use_forwarders_for_subzones"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1534,7 +1534,7 @@ func TestAccServerResource_UseForwardersForSubzones(t *testing.T) {
 
 func TestAccServerResource_UseRootForwardersForLocalResolutionWithB1td(t *testing.T) {
 	var resourceName = "bloxone_dns_server.test_use_root_forwarders_for_local_resolution_with_b1td"
-	var v dns_config.ConfigServer
+	var v dnsconfig.Server
 	var name = acctest.RandomNameWithPrefix("dns-server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -1567,7 +1567,7 @@ func TestAccServerResource_UseRootForwardersForLocalResolutionWithB1td(t *testin
 	})
 }
 
-func testAccCheckServerExists(ctx context.Context, resourceName string, v *dns_config.ConfigServer) resource.TestCheckFunc {
+func testAccCheckServerExists(ctx context.Context, resourceName string, v *dnsconfig.Server) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -1576,7 +1576,7 @@ func testAccCheckServerExists(ctx context.Context, resourceName string, v *dns_c
 		}
 		apiRes, _, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			ServerAPI.
-			ServerRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -1589,12 +1589,12 @@ func testAccCheckServerExists(ctx context.Context, resourceName string, v *dns_c
 	}
 }
 
-func testAccCheckServerDestroy(ctx context.Context, v *dns_config.ConfigServer) resource.TestCheckFunc {
+func testAccCheckServerDestroy(ctx context.Context, v *dnsconfig.Server) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			ServerAPI.
-			ServerRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -1607,12 +1607,12 @@ func testAccCheckServerDestroy(ctx context.Context, v *dns_config.ConfigServer) 
 	}
 }
 
-func testAccCheckServerDisappears(ctx context.Context, v *dns_config.ConfigServer) resource.TestCheckFunc {
+func testAccCheckServerDisappears(ctx context.Context, v *dnsconfig.Server) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			ServerAPI.
-			ServerDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

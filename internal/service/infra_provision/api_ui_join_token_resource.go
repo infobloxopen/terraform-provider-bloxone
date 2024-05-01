@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/infra_provision"
+	"github.com/infobloxopen/bloxone-go-client/infraprovision"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -70,7 +70,7 @@ func (r *UIJoinTokenResource) Create(ctx context.Context, req resource.CreateReq
 
 	apiRes, _, err := r.client.HostActivationAPI.
 		UIJoinTokenAPI.
-		UIJoinTokenCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -98,7 +98,7 @@ func (r *UIJoinTokenResource) Read(ctx context.Context, req resource.ReadRequest
 
 	apiRes, httpRes, err := r.client.HostActivationAPI.
 		UIJoinTokenAPI.
-		UIJoinTokenRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -128,14 +128,14 @@ func (r *UIJoinTokenResource) Update(ctx context.Context, req resource.UpdateReq
 
 	// Only tags and expires_at is allowed to be updated.
 	// All other optional attributes should have "RequiresReplaceIfConfigured" plan modifier set
-	apiModel := infra_provision.HostactivationJoinToken{
+	apiModel := infraprovision.JoinToken{
 		Tags:      flex.ExpandFrameworkMapString(ctx, data.Tags, &resp.Diagnostics),
 		ExpiresAt: flex.ExpandTimePointer(ctx, data.ExpiresAt, &resp.Diagnostics),
 	}
 
 	apiRes, _, err := r.client.HostActivationAPI.
 		UIJoinTokenAPI.
-		UIJoinTokenUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(apiModel).
 		Execute()
 	if err != nil {
@@ -162,7 +162,7 @@ func (r *UIJoinTokenResource) Delete(ctx context.Context, req resource.DeleteReq
 
 	httpRes, err := r.client.HostActivationAPI.
 		UIJoinTokenAPI.
-		UIJoinTokenDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

@@ -19,10 +19,13 @@ var _ MappedNullable = &NamedListItemsNamedListItemsPartialUpdate400ResponseErro
 
 // NamedListItemsNamedListItemsPartialUpdate400ResponseError struct for NamedListItemsNamedListItemsPartialUpdate400ResponseError
 type NamedListItemsNamedListItemsPartialUpdate400ResponseError struct {
-	Code    *string `json:"code,omitempty"`
-	Message *string `json:"message,omitempty"`
-	Status  *string `json:"status,omitempty"`
+	Code                 *string `json:"code,omitempty"`
+	Message              *string `json:"message,omitempty"`
+	Status               *string `json:"status,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NamedListItemsNamedListItemsPartialUpdate400ResponseError NamedListItemsNamedListItemsPartialUpdate400ResponseError
 
 // NewNamedListItemsNamedListItemsPartialUpdate400ResponseError instantiates a new NamedListItemsNamedListItemsPartialUpdate400ResponseError object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,35 @@ func (o NamedListItemsNamedListItemsPartialUpdate400ResponseError) ToMap() (map[
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NamedListItemsNamedListItemsPartialUpdate400ResponseError) UnmarshalJSON(data []byte) (err error) {
+	varNamedListItemsNamedListItemsPartialUpdate400ResponseError := _NamedListItemsNamedListItemsPartialUpdate400ResponseError{}
+
+	err = json.Unmarshal(data, &varNamedListItemsNamedListItemsPartialUpdate400ResponseError)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NamedListItemsNamedListItemsPartialUpdate400ResponseError(varNamedListItemsNamedListItemsPartialUpdate400ResponseError)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "code")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "status")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNamedListItemsNamedListItemsPartialUpdate400ResponseError struct {

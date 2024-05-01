@@ -15,7 +15,7 @@ import (
 func TestAccServerDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dhcp_servers.test"
 	resourceName := "bloxone_dhcp_server.test"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	dhcpServerName := acctest.RandomNameWithPrefix("server")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -38,7 +38,7 @@ func TestAccServerDataSource_Filters(t *testing.T) {
 func TestAccServerDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dhcp_servers.test"
 	resourceName := "bloxone_dhcp_server.test"
-	var v ipam.IpamsvcServer
+	var v ipam.Server
 	dhcpServerName := acctest.RandomNameWithPrefix("server")
 
 	resource.ParallelTest(t, resource.TestCase{

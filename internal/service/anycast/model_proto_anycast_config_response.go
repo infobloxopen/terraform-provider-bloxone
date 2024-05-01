@@ -27,7 +27,7 @@ var ProtoAnycastConfigResponseResourceSchemaAttributes = map[string]schema.Attri
 	},
 }
 
-func ExpandProtoAnycastConfigResponse(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.ProtoAnycastConfigResponse {
+func ExpandProtoAnycastConfigResponse(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.AnycastConfigResponse {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -39,17 +39,17 @@ func ExpandProtoAnycastConfigResponse(ctx context.Context, o types.Object, diags
 	return m.Expand(ctx, diags)
 }
 
-func (m *ProtoAnycastConfigResponseModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.ProtoAnycastConfigResponse {
+func (m *ProtoAnycastConfigResponseModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.AnycastConfigResponse {
 	if m == nil {
 		return nil
 	}
-	to := &anycast.ProtoAnycastConfigResponse{
+	to := &anycast.AnycastConfigResponse{
 		Results: ExpandProtoAnycastConfig(ctx, m.Results, diags),
 	}
 	return to
 }
 
-func FlattenProtoAnycastConfigResponse(ctx context.Context, from *anycast.ProtoAnycastConfigResponse, diags *diag.Diagnostics) types.Object {
+func FlattenProtoAnycastConfigResponse(ctx context.Context, from *anycast.AnycastConfigResponse, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ProtoAnycastConfigResponseAttrTypes)
 	}
@@ -60,7 +60,7 @@ func FlattenProtoAnycastConfigResponse(ctx context.Context, from *anycast.ProtoA
 	return t
 }
 
-func (m *ProtoAnycastConfigResponseModel) Flatten(ctx context.Context, from *anycast.ProtoAnycastConfigResponse, diags *diag.Diagnostics) {
+func (m *ProtoAnycastConfigResponseModel) Flatten(ctx context.Context, from *anycast.AnycastConfigResponse, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

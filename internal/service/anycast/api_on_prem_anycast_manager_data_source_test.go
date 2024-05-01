@@ -14,7 +14,7 @@ import (
 func TestAccOnPremAnycastManagerDataSource_Services(t *testing.T) {
 	dataSourceName := "data.bloxone_anycast_configs.test"
 	resourceName := "bloxone_anycast_config.test_onprem_hosts"
-	var v anycast.ProtoAnycastConfig
+	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
 	resource.Test(t, resource.TestCase{
@@ -39,7 +39,7 @@ func TestAccOnPremAnycastManagerDataSource_Services(t *testing.T) {
 func TestAccOnPremAnycastManagerDataSource_HostIDs(t *testing.T) {
 	dataSourceName := "data.bloxone_anycast_configs.test"
 	resourceName := "bloxone_anycast_config.test_onprem_hosts"
-	var v anycast.ProtoAnycastConfig
+	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
 	resource.Test(t, resource.TestCase{
@@ -64,7 +64,7 @@ func TestAccOnPremAnycastManagerDataSource_IsConfigured(t *testing.T) {
 	t.Skip("Skipping until ospf and bgp is implemented ")
 	dataSourceName := "data.bloxone_anycast_configs.test"
 	resourceName := "bloxone_anycast_config.test_onprem_hosts"
-	var v anycast.ProtoAnycastConfig
+	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
 	resource.Test(t, resource.TestCase{
@@ -88,7 +88,7 @@ func TestAccOnPremAnycastManagerDataSource_IsConfigured(t *testing.T) {
 func TestAccOnPremAnycastManagerDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_anycast_configs.test"
 	resourceName := "bloxone_anycast_config.test"
-	var v anycast.ProtoAnycastConfig
+	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
 	resource.Test(t, resource.TestCase{

@@ -7,14 +7,14 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccAclDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_acls.test"
 	resourceName := "bloxone_dns_acl.test"
-	var v dns_config.ConfigACL
+	var v dnsconfig.ACL
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -36,7 +36,7 @@ func TestAccAclDataSource_Filters(t *testing.T) {
 func TestAccAclDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_acls.test"
 	resourceName := "bloxone_dns_acl.test"
-	var v dns_config.ConfigACL
+	var v dnsconfig.ACL
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,

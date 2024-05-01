@@ -22,48 +22,48 @@ import (
 
 type AccountsAPI interface {
 	/*
-		AccountsCheckConfig Check Config.
+		CheckConfig Check Config.
 
-		Use this method to check config
+		Use this method to check configuration
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiAccountsCheckConfigRequest
+		@return AccountsAPICheckConfigRequest
 	*/
-	AccountsCheckConfig(ctx context.Context) ApiAccountsCheckConfigRequest
+	CheckConfig(ctx context.Context) AccountsAPICheckConfigRequest
 
-	// AccountsCheckConfigExecute executes the request
+	// CheckConfigExecute executes the request
 	//  @return TypesConfigCheckResponse
-	AccountsCheckConfigExecute(r ApiAccountsCheckConfigRequest) (*TypesConfigCheckResponse, *http.Response, error)
+	CheckConfigExecute(r AccountsAPICheckConfigRequest) (*TypesConfigCheckResponse, *http.Response, error)
 }
 
 // AccountsAPIService AccountsAPI service
 type AccountsAPIService internal.Service
 
-type ApiAccountsCheckConfigRequest struct {
+type AccountsAPICheckConfigRequest struct {
 	ctx        context.Context
 	ApiService AccountsAPI
 	body       *TypesConfigCheckRequest
 }
 
-func (r ApiAccountsCheckConfigRequest) Body(body TypesConfigCheckRequest) ApiAccountsCheckConfigRequest {
+func (r AccountsAPICheckConfigRequest) Body(body TypesConfigCheckRequest) AccountsAPICheckConfigRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiAccountsCheckConfigRequest) Execute() (*TypesConfigCheckResponse, *http.Response, error) {
-	return r.ApiService.AccountsCheckConfigExecute(r)
+func (r AccountsAPICheckConfigRequest) Execute() (*TypesConfigCheckResponse, *http.Response, error) {
+	return r.ApiService.CheckConfigExecute(r)
 }
 
 /*
-AccountsCheckConfig Check Config.
+CheckConfig Check Config.
 
-Use this method to check config
+Use this method to check configuration
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiAccountsCheckConfigRequest
+	@return AccountsAPICheckConfigRequest
 */
-func (a *AccountsAPIService) AccountsCheckConfig(ctx context.Context) ApiAccountsCheckConfigRequest {
-	return ApiAccountsCheckConfigRequest{
+func (a *AccountsAPIService) CheckConfig(ctx context.Context) AccountsAPICheckConfigRequest {
+	return AccountsAPICheckConfigRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -72,7 +72,7 @@ func (a *AccountsAPIService) AccountsCheckConfig(ctx context.Context) ApiAccount
 // Execute executes the request
 //
 //	@return TypesConfigCheckResponse
-func (a *AccountsAPIService) AccountsCheckConfigExecute(r ApiAccountsCheckConfigRequest) (*TypesConfigCheckResponse, *http.Response, error) {
+func (a *AccountsAPIService) CheckConfigExecute(r AccountsAPICheckConfigRequest) (*TypesConfigCheckResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -80,7 +80,7 @@ func (a *AccountsAPIService) AccountsCheckConfigExecute(r ApiAccountsCheckConfig
 		localVarReturnValue *TypesConfigCheckResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.AccountsCheckConfig")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.CheckConfig")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}

@@ -11,13 +11,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccDelegationResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_delegation.test"
-	var v dns_config.ConfigDelegation
+	var v dnsconfig.Delegation
 	viewName := acctest.RandomNameWithPrefix("view")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -49,7 +49,7 @@ func TestAccDelegationResource_basic(t *testing.T) {
 
 func TestAccDelegationResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dns_delegation.test"
-	var v dns_config.ConfigDelegation
+	var v dnsconfig.Delegation
 	viewName := acctest.RandomNameWithPrefix("view")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -71,7 +71,7 @@ func TestAccDelegationResource_disappears(t *testing.T) {
 
 func TestAccDelegationResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dns_delegation.test_comment"
-	var v dns_config.ConfigDelegation
+	var v dnsconfig.Delegation
 	viewName := acctest.RandomNameWithPrefix("view")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -101,7 +101,7 @@ func TestAccDelegationResource_Comment(t *testing.T) {
 
 func TestAccDelegationResource_DelegationServers(t *testing.T) {
 	var resourceName = "bloxone_dns_delegation.test_delegation_servers"
-	var v dns_config.ConfigDelegation
+	var v dnsconfig.Delegation
 	viewName := acctest.RandomNameWithPrefix("view")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -131,7 +131,7 @@ func TestAccDelegationResource_DelegationServers(t *testing.T) {
 
 func TestAccDelegationResource_Disabled(t *testing.T) {
 	var resourceName = "bloxone_dns_delegation.test_disabled"
-	var v dns_config.ConfigDelegation
+	var v dnsconfig.Delegation
 	viewName := acctest.RandomNameWithPrefix("view")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -161,7 +161,7 @@ func TestAccDelegationResource_Disabled(t *testing.T) {
 
 func TestAccDelegationResource_Fqdn(t *testing.T) {
 	var resourceName = "bloxone_dns_delegation.test_fqdn"
-	var v1, v2 dns_config.ConfigDelegation
+	var v1, v2 dnsconfig.Delegation
 	viewName := acctest.RandomNameWithPrefix("view")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -192,7 +192,7 @@ func TestAccDelegationResource_Fqdn(t *testing.T) {
 
 func TestAccDelegationResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dns_delegation.test_tags"
-	var v dns_config.ConfigDelegation
+	var v dnsconfig.Delegation
 	viewName := acctest.RandomNameWithPrefix("view")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -230,7 +230,7 @@ func TestAccDelegationResource_Tags(t *testing.T) {
 
 func TestAccDelegationResource_View(t *testing.T) {
 	var resourceName = "bloxone_dns_delegation.test_view"
-	var v1, v2 dns_config.ConfigDelegation
+	var v1, v2 dnsconfig.Delegation
 	view1 := acctest.RandomNameWithPrefix("view")
 	view2 := acctest.RandomNameWithPrefix("view")
 
@@ -260,7 +260,7 @@ func TestAccDelegationResource_View(t *testing.T) {
 	})
 }
 
-func testAccCheckDelegationExists(ctx context.Context, resourceName string, v *dns_config.ConfigDelegation) resource.TestCheckFunc {
+func testAccCheckDelegationExists(ctx context.Context, resourceName string, v *dnsconfig.Delegation) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -269,7 +269,7 @@ func testAccCheckDelegationExists(ctx context.Context, resourceName string, v *d
 		}
 		apiRes, _, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			DelegationAPI.
-			DelegationRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -282,12 +282,12 @@ func testAccCheckDelegationExists(ctx context.Context, resourceName string, v *d
 	}
 }
 
-func testAccCheckDelegationDestroy(ctx context.Context, v *dns_config.ConfigDelegation) resource.TestCheckFunc {
+func testAccCheckDelegationDestroy(ctx context.Context, v *dnsconfig.Delegation) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			DelegationAPI.
-			DelegationRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -300,12 +300,12 @@ func testAccCheckDelegationDestroy(ctx context.Context, v *dns_config.ConfigDele
 	}
 }
 
-func testAccCheckDelegationDisappears(ctx context.Context, v *dns_config.ConfigDelegation) resource.TestCheckFunc {
+func testAccCheckDelegationDisappears(ctx context.Context, v *dnsconfig.Delegation) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			DelegationAPI.
-			DelegationDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

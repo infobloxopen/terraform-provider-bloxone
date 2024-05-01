@@ -35,7 +35,7 @@ var ProtoAnycastConfigRefResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandProtoAnycastConfigRef(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.ProtoAnycastConfigRef {
+func ExpandProtoAnycastConfigRef(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.AnycastConfigRef {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -47,18 +47,18 @@ func ExpandProtoAnycastConfigRef(ctx context.Context, o types.Object, diags *dia
 	return m.Expand(ctx, diags)
 }
 
-func (m *ProtoAnycastConfigRefModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.ProtoAnycastConfigRef {
+func (m *ProtoAnycastConfigRefModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.AnycastConfigRef {
 	if m == nil {
 		return nil
 	}
-	to := &anycast.ProtoAnycastConfigRef{
+	to := &anycast.AnycastConfigRef{
 		AnycastConfigName: flex.ExpandStringPointer(m.AnycastConfigName),
 		RoutingProtocols:  flex.ExpandFrameworkListString(ctx, m.RoutingProtocols, diags),
 	}
 	return to
 }
 
-func FlattenProtoAnycastConfigRef(ctx context.Context, from *anycast.ProtoAnycastConfigRef, diags *diag.Diagnostics) types.Object {
+func FlattenProtoAnycastConfigRef(ctx context.Context, from *anycast.AnycastConfigRef, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ProtoAnycastConfigRefAttrTypes)
 	}
@@ -69,7 +69,7 @@ func FlattenProtoAnycastConfigRef(ctx context.Context, from *anycast.ProtoAnycas
 	return t
 }
 
-func (m *ProtoAnycastConfigRefModel) Flatten(ctx context.Context, from *anycast.ProtoAnycastConfigRef, diags *diag.Diagnostics) {
+func (m *ProtoAnycastConfigRefModel) Flatten(ctx context.Context, from *anycast.AnycastConfigRef, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

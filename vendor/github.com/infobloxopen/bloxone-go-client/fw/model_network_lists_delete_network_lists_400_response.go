@@ -19,8 +19,11 @@ var _ MappedNullable = &NetworkListsDeleteNetworkLists400Response{}
 
 // NetworkListsDeleteNetworkLists400Response struct for NetworkListsDeleteNetworkLists400Response
 type NetworkListsDeleteNetworkLists400Response struct {
-	Error *NetworkListsDeleteNetworkLists400ResponseError `json:"error,omitempty"`
+	Error                *NetworkListsDeleteNetworkLists400ResponseError `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _NetworkListsDeleteNetworkLists400Response NetworkListsDeleteNetworkLists400Response
 
 // NewNetworkListsDeleteNetworkLists400Response instantiates a new NetworkListsDeleteNetworkLists400Response object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o NetworkListsDeleteNetworkLists400Response) ToMap() (map[string]interface
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *NetworkListsDeleteNetworkLists400Response) UnmarshalJSON(data []byte) (err error) {
+	varNetworkListsDeleteNetworkLists400Response := _NetworkListsDeleteNetworkLists400Response{}
+
+	err = json.Unmarshal(data, &varNetworkListsDeleteNetworkLists400Response)
+
+	if err != nil {
+		return err
+	}
+
+	*o = NetworkListsDeleteNetworkLists400Response(varNetworkListsDeleteNetworkLists400Response)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "error")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableNetworkListsDeleteNetworkLists400Response struct {

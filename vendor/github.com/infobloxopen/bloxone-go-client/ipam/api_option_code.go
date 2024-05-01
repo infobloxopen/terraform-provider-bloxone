@@ -23,108 +23,108 @@ import (
 
 type OptionCodeAPI interface {
 	/*
-			OptionCodeCreate Create the DHCP option code.
+			Create Create the DHCP option code.
 
 			Use this method to create an __OptionCode__ object.
 		The __OptionCode__ object defines a DHCP option code.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiOptionCodeCreateRequest
+			@return OptionCodeAPICreateRequest
 	*/
-	OptionCodeCreate(ctx context.Context) ApiOptionCodeCreateRequest
+	Create(ctx context.Context) OptionCodeAPICreateRequest
 
-	// OptionCodeCreateExecute executes the request
-	//  @return IpamsvcCreateOptionCodeResponse
-	OptionCodeCreateExecute(r ApiOptionCodeCreateRequest) (*IpamsvcCreateOptionCodeResponse, *http.Response, error)
+	// CreateExecute executes the request
+	//  @return CreateOptionCodeResponse
+	CreateExecute(r OptionCodeAPICreateRequest) (*CreateOptionCodeResponse, *http.Response, error)
 	/*
-			OptionCodeDelete Delete the DHCP option code.
+			Delete Delete the DHCP option code.
 
 			Use this method to delete an __OptionCode__ object.
 		The __OptionCode__ object defines a DHCP option code.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id An application specific resource identity of a resource
-			@return ApiOptionCodeDeleteRequest
+			@return OptionCodeAPIDeleteRequest
 	*/
-	OptionCodeDelete(ctx context.Context, id string) ApiOptionCodeDeleteRequest
+	Delete(ctx context.Context, id string) OptionCodeAPIDeleteRequest
 
-	// OptionCodeDeleteExecute executes the request
-	OptionCodeDeleteExecute(r ApiOptionCodeDeleteRequest) (*http.Response, error)
+	// DeleteExecute executes the request
+	DeleteExecute(r OptionCodeAPIDeleteRequest) (*http.Response, error)
 	/*
-			OptionCodeList Retrieve DHCP option codes.
+			List Retrieve DHCP option codes.
 
 			Use this method to retrieve __OptionCode__ objects.
 		The __OptionCode__ object defines a DHCP option code.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiOptionCodeListRequest
+			@return OptionCodeAPIListRequest
 	*/
-	OptionCodeList(ctx context.Context) ApiOptionCodeListRequest
+	List(ctx context.Context) OptionCodeAPIListRequest
 
-	// OptionCodeListExecute executes the request
-	//  @return IpamsvcListOptionCodeResponse
-	OptionCodeListExecute(r ApiOptionCodeListRequest) (*IpamsvcListOptionCodeResponse, *http.Response, error)
+	// ListExecute executes the request
+	//  @return ListOptionCodeResponse
+	ListExecute(r OptionCodeAPIListRequest) (*ListOptionCodeResponse, *http.Response, error)
 	/*
-			OptionCodeRead Retrieve the DHCP option code.
+			Read Retrieve the DHCP option code.
 
 			Use this method to retrieve an __OptionCode__ object.
 		The __OptionCode__ object defines a DHCP option code.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id An application specific resource identity of a resource
-			@return ApiOptionCodeReadRequest
+			@return OptionCodeAPIReadRequest
 	*/
-	OptionCodeRead(ctx context.Context, id string) ApiOptionCodeReadRequest
+	Read(ctx context.Context, id string) OptionCodeAPIReadRequest
 
-	// OptionCodeReadExecute executes the request
-	//  @return IpamsvcReadOptionCodeResponse
-	OptionCodeReadExecute(r ApiOptionCodeReadRequest) (*IpamsvcReadOptionCodeResponse, *http.Response, error)
+	// ReadExecute executes the request
+	//  @return ReadOptionCodeResponse
+	ReadExecute(r OptionCodeAPIReadRequest) (*ReadOptionCodeResponse, *http.Response, error)
 	/*
-			OptionCodeUpdate Update the DHCP option code.
+			Update Update the DHCP option code.
 
 			Use this method to update an __OptionCode__ object.
 		The __OptionCode__ object defines a DHCP option code.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id An application specific resource identity of a resource
-			@return ApiOptionCodeUpdateRequest
+			@return OptionCodeAPIUpdateRequest
 	*/
-	OptionCodeUpdate(ctx context.Context, id string) ApiOptionCodeUpdateRequest
+	Update(ctx context.Context, id string) OptionCodeAPIUpdateRequest
 
-	// OptionCodeUpdateExecute executes the request
-	//  @return IpamsvcUpdateOptionCodeResponse
-	OptionCodeUpdateExecute(r ApiOptionCodeUpdateRequest) (*IpamsvcUpdateOptionCodeResponse, *http.Response, error)
+	// UpdateExecute executes the request
+	//  @return UpdateOptionCodeResponse
+	UpdateExecute(r OptionCodeAPIUpdateRequest) (*UpdateOptionCodeResponse, *http.Response, error)
 }
 
 // OptionCodeAPIService OptionCodeAPI service
 type OptionCodeAPIService internal.Service
 
-type ApiOptionCodeCreateRequest struct {
+type OptionCodeAPICreateRequest struct {
 	ctx        context.Context
 	ApiService OptionCodeAPI
-	body       *IpamsvcOptionCode
+	body       *OptionCode
 }
 
-func (r ApiOptionCodeCreateRequest) Body(body IpamsvcOptionCode) ApiOptionCodeCreateRequest {
+func (r OptionCodeAPICreateRequest) Body(body OptionCode) OptionCodeAPICreateRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiOptionCodeCreateRequest) Execute() (*IpamsvcCreateOptionCodeResponse, *http.Response, error) {
-	return r.ApiService.OptionCodeCreateExecute(r)
+func (r OptionCodeAPICreateRequest) Execute() (*CreateOptionCodeResponse, *http.Response, error) {
+	return r.ApiService.CreateExecute(r)
 }
 
 /*
-OptionCodeCreate Create the DHCP option code.
+Create Create the DHCP option code.
 
 Use this method to create an __OptionCode__ object.
 The __OptionCode__ object defines a DHCP option code.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiOptionCodeCreateRequest
+	@return OptionCodeAPICreateRequest
 */
-func (a *OptionCodeAPIService) OptionCodeCreate(ctx context.Context) ApiOptionCodeCreateRequest {
-	return ApiOptionCodeCreateRequest{
+func (a *OptionCodeAPIService) Create(ctx context.Context) OptionCodeAPICreateRequest {
+	return OptionCodeAPICreateRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -132,16 +132,16 @@ func (a *OptionCodeAPIService) OptionCodeCreate(ctx context.Context) ApiOptionCo
 
 // Execute executes the request
 //
-//	@return IpamsvcCreateOptionCodeResponse
-func (a *OptionCodeAPIService) OptionCodeCreateExecute(r ApiOptionCodeCreateRequest) (*IpamsvcCreateOptionCodeResponse, *http.Response, error) {
+//	@return CreateOptionCodeResponse
+func (a *OptionCodeAPIService) CreateExecute(r OptionCodeAPICreateRequest) (*CreateOptionCodeResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcCreateOptionCodeResponse
+		localVarReturnValue *CreateOptionCodeResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OptionCodeAPIService.OptionCodeCreate")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OptionCodeAPIService.Create")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -174,20 +174,6 @@ func (a *OptionCodeAPIService) OptionCodeCreateExecute(r ApiOptionCodeCreateRequ
 	}
 	// body params
 	localVarPostBody = r.body
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -218,28 +204,28 @@ func (a *OptionCodeAPIService) OptionCodeCreateExecute(r ApiOptionCodeCreateRequ
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOptionCodeDeleteRequest struct {
+type OptionCodeAPIDeleteRequest struct {
 	ctx        context.Context
 	ApiService OptionCodeAPI
 	id         string
 }
 
-func (r ApiOptionCodeDeleteRequest) Execute() (*http.Response, error) {
-	return r.ApiService.OptionCodeDeleteExecute(r)
+func (r OptionCodeAPIDeleteRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteExecute(r)
 }
 
 /*
-OptionCodeDelete Delete the DHCP option code.
+Delete Delete the DHCP option code.
 
 Use this method to delete an __OptionCode__ object.
 The __OptionCode__ object defines a DHCP option code.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id An application specific resource identity of a resource
-	@return ApiOptionCodeDeleteRequest
+	@return OptionCodeAPIDeleteRequest
 */
-func (a *OptionCodeAPIService) OptionCodeDelete(ctx context.Context, id string) ApiOptionCodeDeleteRequest {
-	return ApiOptionCodeDeleteRequest{
+func (a *OptionCodeAPIService) Delete(ctx context.Context, id string) OptionCodeAPIDeleteRequest {
+	return OptionCodeAPIDeleteRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -247,14 +233,14 @@ func (a *OptionCodeAPIService) OptionCodeDelete(ctx context.Context, id string) 
 }
 
 // Execute executes the request
-func (a *OptionCodeAPIService) OptionCodeDeleteExecute(r ApiOptionCodeDeleteRequest) (*http.Response, error) {
+func (a *OptionCodeAPIService) DeleteExecute(r OptionCodeAPIDeleteRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OptionCodeAPIService.OptionCodeDelete")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OptionCodeAPIService.Delete")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -283,20 +269,6 @@ func (a *OptionCodeAPIService) OptionCodeDeleteExecute(r ApiOptionCodeDeleteRequ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return nil, err
@@ -322,7 +294,7 @@ func (a *OptionCodeAPIService) OptionCodeDeleteExecute(r ApiOptionCodeDeleteRequ
 	return localVarHTTPResponse, nil
 }
 
-type ApiOptionCodeListRequest struct {
+type OptionCodeAPIListRequest struct {
 	ctx        context.Context
 	ApiService OptionCodeAPI
 	fields     *string
@@ -334,56 +306,56 @@ type ApiOptionCodeListRequest struct {
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiOptionCodeListRequest) Fields(fields string) ApiOptionCodeListRequest {
+func (r OptionCodeAPIListRequest) Fields(fields string) OptionCodeAPIListRequest {
 	r.fields = &fields
 	return r
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;. The following operators are commonly used in filter expressions:  |  Op   |  Description               |  |  --   |  -----------               |  |  &#x3D;&#x3D;   |  Equal                     |  |  !&#x3D;   |  Not Equal                 |  |  &gt;    |  Greater Than              |  |   &gt;&#x3D;  |  Greater Than or Equal To  |  |  &lt;    |  Less Than                 |  |  &lt;&#x3D;   |  Less Than or Equal To     |  |  and  |  Logical AND               |  |  ~    |  Matches Regex             |  |  !~   |  Does Not Match Regex      |  |  or   |  Logical OR                |  |  not  |  Logical NOT               |  |  ()   |  Groupping Operators       |
-func (r ApiOptionCodeListRequest) Filter(filter string) ApiOptionCodeListRequest {
+func (r OptionCodeAPIListRequest) Filter(filter string) OptionCodeAPIListRequest {
 	r.filter = &filter
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiOptionCodeListRequest) Offset(offset int32) ApiOptionCodeListRequest {
+func (r OptionCodeAPIListRequest) Offset(offset int32) OptionCodeAPIListRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiOptionCodeListRequest) Limit(limit int32) ApiOptionCodeListRequest {
+func (r OptionCodeAPIListRequest) Limit(limit int32) OptionCodeAPIListRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiOptionCodeListRequest) PageToken(pageToken string) ApiOptionCodeListRequest {
+func (r OptionCodeAPIListRequest) PageToken(pageToken string) OptionCodeAPIListRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
 // A collection of response resources can be sorted by their JSON tags. For a &#39;flat&#39; resource, the tag name is straightforward. If sorting is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, its value is assumed to be null.)  Specify this parameter as a comma-separated list of JSON tag names. The sort direction can be specified by a suffix separated by whitespace before the tag name. The suffix &#39;asc&#39; sorts the data in ascending order. The suffix &#39;desc&#39; sorts the data in descending order. If no suffix is specified the data is sorted in ascending order.
-func (r ApiOptionCodeListRequest) OrderBy(orderBy string) ApiOptionCodeListRequest {
+func (r OptionCodeAPIListRequest) OrderBy(orderBy string) OptionCodeAPIListRequest {
 	r.orderBy = &orderBy
 	return r
 }
 
-func (r ApiOptionCodeListRequest) Execute() (*IpamsvcListOptionCodeResponse, *http.Response, error) {
-	return r.ApiService.OptionCodeListExecute(r)
+func (r OptionCodeAPIListRequest) Execute() (*ListOptionCodeResponse, *http.Response, error) {
+	return r.ApiService.ListExecute(r)
 }
 
 /*
-OptionCodeList Retrieve DHCP option codes.
+List Retrieve DHCP option codes.
 
 Use this method to retrieve __OptionCode__ objects.
 The __OptionCode__ object defines a DHCP option code.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiOptionCodeListRequest
+	@return OptionCodeAPIListRequest
 */
-func (a *OptionCodeAPIService) OptionCodeList(ctx context.Context) ApiOptionCodeListRequest {
-	return ApiOptionCodeListRequest{
+func (a *OptionCodeAPIService) List(ctx context.Context) OptionCodeAPIListRequest {
+	return OptionCodeAPIListRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -391,16 +363,16 @@ func (a *OptionCodeAPIService) OptionCodeList(ctx context.Context) ApiOptionCode
 
 // Execute executes the request
 //
-//	@return IpamsvcListOptionCodeResponse
-func (a *OptionCodeAPIService) OptionCodeListExecute(r ApiOptionCodeListRequest) (*IpamsvcListOptionCodeResponse, *http.Response, error) {
+//	@return ListOptionCodeResponse
+func (a *OptionCodeAPIService) ListExecute(r OptionCodeAPIListRequest) (*ListOptionCodeResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcListOptionCodeResponse
+		localVarReturnValue *ListOptionCodeResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OptionCodeAPIService.OptionCodeList")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OptionCodeAPIService.List")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -446,20 +418,6 @@ func (a *OptionCodeAPIService) OptionCodeListExecute(r ApiOptionCodeListRequest)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -490,7 +448,7 @@ func (a *OptionCodeAPIService) OptionCodeListExecute(r ApiOptionCodeListRequest)
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOptionCodeReadRequest struct {
+type OptionCodeAPIReadRequest struct {
 	ctx        context.Context
 	ApiService OptionCodeAPI
 	id         string
@@ -498,27 +456,27 @@ type ApiOptionCodeReadRequest struct {
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiOptionCodeReadRequest) Fields(fields string) ApiOptionCodeReadRequest {
+func (r OptionCodeAPIReadRequest) Fields(fields string) OptionCodeAPIReadRequest {
 	r.fields = &fields
 	return r
 }
 
-func (r ApiOptionCodeReadRequest) Execute() (*IpamsvcReadOptionCodeResponse, *http.Response, error) {
-	return r.ApiService.OptionCodeReadExecute(r)
+func (r OptionCodeAPIReadRequest) Execute() (*ReadOptionCodeResponse, *http.Response, error) {
+	return r.ApiService.ReadExecute(r)
 }
 
 /*
-OptionCodeRead Retrieve the DHCP option code.
+Read Retrieve the DHCP option code.
 
 Use this method to retrieve an __OptionCode__ object.
 The __OptionCode__ object defines a DHCP option code.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id An application specific resource identity of a resource
-	@return ApiOptionCodeReadRequest
+	@return OptionCodeAPIReadRequest
 */
-func (a *OptionCodeAPIService) OptionCodeRead(ctx context.Context, id string) ApiOptionCodeReadRequest {
-	return ApiOptionCodeReadRequest{
+func (a *OptionCodeAPIService) Read(ctx context.Context, id string) OptionCodeAPIReadRequest {
+	return OptionCodeAPIReadRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -527,16 +485,16 @@ func (a *OptionCodeAPIService) OptionCodeRead(ctx context.Context, id string) Ap
 
 // Execute executes the request
 //
-//	@return IpamsvcReadOptionCodeResponse
-func (a *OptionCodeAPIService) OptionCodeReadExecute(r ApiOptionCodeReadRequest) (*IpamsvcReadOptionCodeResponse, *http.Response, error) {
+//	@return ReadOptionCodeResponse
+func (a *OptionCodeAPIService) ReadExecute(r OptionCodeAPIReadRequest) (*ReadOptionCodeResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcReadOptionCodeResponse
+		localVarReturnValue *ReadOptionCodeResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OptionCodeAPIService.OptionCodeRead")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OptionCodeAPIService.Read")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -568,20 +526,6 @@ func (a *OptionCodeAPIService) OptionCodeReadExecute(r ApiOptionCodeReadRequest)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -612,34 +556,34 @@ func (a *OptionCodeAPIService) OptionCodeReadExecute(r ApiOptionCodeReadRequest)
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiOptionCodeUpdateRequest struct {
+type OptionCodeAPIUpdateRequest struct {
 	ctx        context.Context
 	ApiService OptionCodeAPI
 	id         string
-	body       *IpamsvcOptionCode
+	body       *OptionCode
 }
 
-func (r ApiOptionCodeUpdateRequest) Body(body IpamsvcOptionCode) ApiOptionCodeUpdateRequest {
+func (r OptionCodeAPIUpdateRequest) Body(body OptionCode) OptionCodeAPIUpdateRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiOptionCodeUpdateRequest) Execute() (*IpamsvcUpdateOptionCodeResponse, *http.Response, error) {
-	return r.ApiService.OptionCodeUpdateExecute(r)
+func (r OptionCodeAPIUpdateRequest) Execute() (*UpdateOptionCodeResponse, *http.Response, error) {
+	return r.ApiService.UpdateExecute(r)
 }
 
 /*
-OptionCodeUpdate Update the DHCP option code.
+Update Update the DHCP option code.
 
 Use this method to update an __OptionCode__ object.
 The __OptionCode__ object defines a DHCP option code.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id An application specific resource identity of a resource
-	@return ApiOptionCodeUpdateRequest
+	@return OptionCodeAPIUpdateRequest
 */
-func (a *OptionCodeAPIService) OptionCodeUpdate(ctx context.Context, id string) ApiOptionCodeUpdateRequest {
-	return ApiOptionCodeUpdateRequest{
+func (a *OptionCodeAPIService) Update(ctx context.Context, id string) OptionCodeAPIUpdateRequest {
+	return OptionCodeAPIUpdateRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -648,16 +592,16 @@ func (a *OptionCodeAPIService) OptionCodeUpdate(ctx context.Context, id string) 
 
 // Execute executes the request
 //
-//	@return IpamsvcUpdateOptionCodeResponse
-func (a *OptionCodeAPIService) OptionCodeUpdateExecute(r ApiOptionCodeUpdateRequest) (*IpamsvcUpdateOptionCodeResponse, *http.Response, error) {
+//	@return UpdateOptionCodeResponse
+func (a *OptionCodeAPIService) UpdateExecute(r OptionCodeAPIUpdateRequest) (*UpdateOptionCodeResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPatch
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcUpdateOptionCodeResponse
+		localVarReturnValue *UpdateOptionCodeResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OptionCodeAPIService.OptionCodeUpdate")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "OptionCodeAPIService.Update")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -691,20 +635,6 @@ func (a *OptionCodeAPIService) OptionCodeUpdateExecute(r ApiOptionCodeUpdateRequ
 	}
 	// body params
 	localVarPostBody = r.body
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

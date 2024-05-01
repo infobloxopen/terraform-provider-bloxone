@@ -68,7 +68,7 @@ func (r *OptionCodeResource) Create(ctx context.Context, req resource.CreateRequ
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		OptionCodeAPI.
-		OptionCodeCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -95,7 +95,7 @@ func (r *OptionCodeResource) Read(ctx context.Context, req resource.ReadRequest,
 
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		OptionCodeAPI.
-		OptionCodeRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *OptionCodeResource) Update(ctx context.Context, req resource.UpdateRequ
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		OptionCodeAPI.
-		OptionCodeUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *OptionCodeResource) Delete(ctx context.Context, req resource.DeleteRequ
 
 	httpRes, err := r.client.IPAddressManagementAPI.
 		OptionCodeAPI.
-		OptionCodeDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

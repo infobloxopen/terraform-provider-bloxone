@@ -78,7 +78,7 @@ var IpamsvcHostAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcHostAddress(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcHostAddress {
+func ExpandIpamsvcHostAddress(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.HostAddress {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -90,11 +90,11 @@ func ExpandIpamsvcHostAddress(ctx context.Context, o types.Object, diags *diag.D
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcHostAddressModel) Expand(_ context.Context, _ *diag.Diagnostics) *ipam.IpamsvcHostAddress {
+func (m *IpamsvcHostAddressModel) Expand(_ context.Context, _ *diag.Diagnostics) *ipam.HostAddress {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcHostAddress{}
+	to := &ipam.HostAddress{}
 
 	if !m.NextAvailableId.IsNull() && !m.NextAvailableId.IsUnknown() {
 		naip := flex.ExpandString(m.NextAvailableId) + "/nextavailableip"
@@ -106,7 +106,7 @@ func (m *IpamsvcHostAddressModel) Expand(_ context.Context, _ *diag.Diagnostics)
 	return to
 }
 
-func FlattenIpamsvcHostAddress(ctx context.Context, from *ipam.IpamsvcHostAddress, to *IpamsvcHostAddressModel, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcHostAddress(ctx context.Context, from *ipam.HostAddress, to *IpamsvcHostAddressModel, diags *diag.Diagnostics) types.Object {
 	if from == nil || to == nil {
 		return types.ObjectNull(IpamsvcHostAddressAttrTypes)
 	}
@@ -117,7 +117,7 @@ func FlattenIpamsvcHostAddress(ctx context.Context, from *ipam.IpamsvcHostAddres
 	return t
 }
 
-func (m *IpamsvcHostAddressModel) Flatten(_ context.Context, from *ipam.IpamsvcHostAddress, _ *diag.Diagnostics) {
+func (m *IpamsvcHostAddressModel) Flatten(_ context.Context, from *ipam.HostAddress, _ *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

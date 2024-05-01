@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -56,7 +56,7 @@ var ConfigECSBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigECSBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigECSBlock {
+func ExpandConfigECSBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.ECSBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -68,11 +68,11 @@ func ExpandConfigECSBlock(ctx context.Context, o types.Object, diags *diag.Diagn
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigECSBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigECSBlock {
+func (m *ConfigECSBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.ECSBlock {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigECSBlock{
+	to := &dnsconfig.ECSBlock{
 		EcsEnabled:    flex.ExpandBoolPointer(m.EcsEnabled),
 		EcsForwarding: flex.ExpandBoolPointer(m.EcsForwarding),
 		EcsPrefixV4:   flex.ExpandInt64Pointer(m.EcsPrefixV4),
@@ -82,7 +82,7 @@ func (m *ConfigECSBlockModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenConfigECSBlock(ctx context.Context, from *dns_config.ConfigECSBlock, diags *diag.Diagnostics) types.Object {
+func FlattenConfigECSBlock(ctx context.Context, from *dnsconfig.ECSBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigECSBlockAttrTypes)
 	}
@@ -93,7 +93,7 @@ func FlattenConfigECSBlock(ctx context.Context, from *dns_config.ConfigECSBlock,
 	return t
 }
 
-func (m *ConfigECSBlockModel) Flatten(ctx context.Context, from *dns_config.ConfigECSBlock, diags *diag.Diagnostics) {
+func (m *ConfigECSBlockModel) Flatten(ctx context.Context, from *dnsconfig.ECSBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

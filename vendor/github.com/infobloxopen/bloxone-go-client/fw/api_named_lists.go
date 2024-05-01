@@ -23,7 +23,7 @@ import (
 
 type NamedListsAPI interface {
 	/*
-			NamedListsCreateNamedList Create Named List.
+			CreateNamedList Create Named List.
 
 			Use this method to create a Named List object.
 
@@ -36,15 +36,15 @@ type NamedListsAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiNamedListsCreateNamedListRequest
+			@return NamedListsAPICreateNamedListRequest
 	*/
-	NamedListsCreateNamedList(ctx context.Context) ApiNamedListsCreateNamedListRequest
+	CreateNamedList(ctx context.Context) NamedListsAPICreateNamedListRequest
 
-	// NamedListsCreateNamedListExecute executes the request
-	//  @return AtcfwNamedListCreateResponse
-	NamedListsCreateNamedListExecute(r ApiNamedListsCreateNamedListRequest) (*AtcfwNamedListCreateResponse, *http.Response, error)
+	// CreateNamedListExecute executes the request
+	//  @return NamedListCreateResponse
+	CreateNamedListExecute(r NamedListsAPICreateNamedListRequest) (*NamedListCreateResponse, *http.Response, error)
 	/*
-			NamedListsDeleteNamedLists Delete Named Lists.
+			DeleteNamedLists Delete Named Lists.
 
 			Use this method to delete Named List objects. Deletion of multiple lists is an all-or-nothing operation (if any of the specified lists can not be deleted then none of the specified lists will be deleted).
 
@@ -55,14 +55,14 @@ type NamedListsAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiNamedListsDeleteNamedListsRequest
+			@return NamedListsAPIDeleteNamedListsRequest
 	*/
-	NamedListsDeleteNamedLists(ctx context.Context) ApiNamedListsDeleteNamedListsRequest
+	DeleteNamedLists(ctx context.Context) NamedListsAPIDeleteNamedListsRequest
 
-	// NamedListsDeleteNamedListsExecute executes the request
-	NamedListsDeleteNamedListsExecute(r ApiNamedListsDeleteNamedListsRequest) (*http.Response, error)
+	// DeleteNamedListsExecute executes the request
+	DeleteNamedListsExecute(r NamedListsAPIDeleteNamedListsRequest) (*http.Response, error)
 	/*
-			NamedListsDeleteSingleNamedLists Delete Named Lists.
+			DeleteSingleNamedLists Delete Named Lists.
 
 			Use this method to delete Named List object by given Named List object identifier.
 
@@ -71,14 +71,14 @@ type NamedListsAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Named List object identifiers.
-			@return ApiNamedListsDeleteSingleNamedListsRequest
+			@return NamedListsAPIDeleteSingleNamedListsRequest
 	*/
-	NamedListsDeleteSingleNamedLists(ctx context.Context, id int32) ApiNamedListsDeleteSingleNamedListsRequest
+	DeleteSingleNamedLists(ctx context.Context, id int32) NamedListsAPIDeleteSingleNamedListsRequest
 
-	// NamedListsDeleteSingleNamedListsExecute executes the request
-	NamedListsDeleteSingleNamedListsExecute(r ApiNamedListsDeleteSingleNamedListsRequest) (*http.Response, error)
+	// DeleteSingleNamedListsExecute executes the request
+	DeleteSingleNamedListsExecute(r NamedListsAPIDeleteSingleNamedListsRequest) (*http.Response, error)
 	/*
-			NamedListsListNamedLists List Named Lists.
+			ListNamedLists List Named Lists.
 
 			Use this method to retrieve information on all Named List objects for the account. Note that list items are not returned for this operation.
 
@@ -88,30 +88,30 @@ type NamedListsAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiNamedListsListNamedListsRequest
+			@return NamedListsAPIListNamedListsRequest
 	*/
-	NamedListsListNamedLists(ctx context.Context) ApiNamedListsListNamedListsRequest
+	ListNamedLists(ctx context.Context) NamedListsAPIListNamedListsRequest
 
-	// NamedListsListNamedListsExecute executes the request
-	//  @return AtcfwNamedListReadMultiResponse
-	NamedListsListNamedListsExecute(r ApiNamedListsListNamedListsRequest) (*AtcfwNamedListReadMultiResponse, *http.Response, error)
+	// ListNamedListsExecute executes the request
+	//  @return NamedListReadMultiResponse
+	ListNamedListsExecute(r NamedListsAPIListNamedListsRequest) (*NamedListReadMultiResponse, *http.Response, error)
 	/*
-		NamedListsListNamedListsCSV List Named Lists in CSV format.
+		ListNamedListsCSV List Named Lists in CSV format.
 
 		Use this method to download the selected list of named lists in CSV (comma-separate values) format.
 
 
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiNamedListsListNamedListsCSVRequest
+		@return NamedListsAPIListNamedListsCSVRequest
 	*/
-	NamedListsListNamedListsCSV(ctx context.Context) ApiNamedListsListNamedListsCSVRequest
+	ListNamedListsCSV(ctx context.Context) NamedListsAPIListNamedListsCSVRequest
 
-	// NamedListsListNamedListsCSVExecute executes the request
-	//  @return AtcfwNamedListCSVListResponse
-	NamedListsListNamedListsCSVExecute(r ApiNamedListsListNamedListsCSVRequest) (*AtcfwNamedListCSVListResponse, *http.Response, error)
+	// ListNamedListsCSVExecute executes the request
+	//  @return NamedListCSVListResponse
+	ListNamedListsCSVExecute(r NamedListsAPIListNamedListsCSVRequest) (*NamedListCSVListResponse, *http.Response, error)
 	/*
-			NamedListsMultiListUpdate Patch Multiple Named Lists.
+			MultiListUpdate Patch Multiple Named Lists.
 
 			Multiple Named Lists in a single operation.
 		Use this method to insert items for multiple Named List objects. Note that duplicated items correspondig to named list are silently skipped and only new items are appended to the named list. Note that DNSM, TI, Fast Flux and DGA lists cannot be updated. Only named lists of Custom List type can be updated by this operation.
@@ -119,15 +119,15 @@ type NamedListsAPI interface {
 		The Custom List Items represent the list of the FQDN or IPv4 addresses to define whitelists and blacklists for additional protection.
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiNamedListsMultiListUpdateRequest
+			@return NamedListsAPIMultiListUpdateRequest
 	*/
-	NamedListsMultiListUpdate(ctx context.Context) ApiNamedListsMultiListUpdateRequest
+	MultiListUpdate(ctx context.Context) NamedListsAPIMultiListUpdateRequest
 
-	// NamedListsMultiListUpdateExecute executes the request
+	// MultiListUpdateExecute executes the request
 	//  @return map[string]interface{}
-	NamedListsMultiListUpdateExecute(r ApiNamedListsMultiListUpdateRequest) (map[string]interface{}, *http.Response, error)
+	MultiListUpdateExecute(r NamedListsAPIMultiListUpdateRequest) (map[string]interface{}, *http.Response, error)
 	/*
-			NamedListsReadNamedList Read Named List.
+			ReadNamedList Read Named List.
 
 			Use this method to retrieve information on the specified Named List object. Note that returned data includes list items.
 
@@ -136,15 +136,15 @@ type NamedListsAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Named List identifier.
-			@return ApiNamedListsReadNamedListRequest
+			@return NamedListsAPIReadNamedListRequest
 	*/
-	NamedListsReadNamedList(ctx context.Context, id int32) ApiNamedListsReadNamedListRequest
+	ReadNamedList(ctx context.Context, id int32) NamedListsAPIReadNamedListRequest
 
-	// NamedListsReadNamedListExecute executes the request
-	//  @return AtcfwNamedListReadResponse
-	NamedListsReadNamedListExecute(r ApiNamedListsReadNamedListRequest) (*AtcfwNamedListReadResponse, *http.Response, error)
+	// ReadNamedListExecute executes the request
+	//  @return NamedListReadResponse
+	ReadNamedListExecute(r NamedListsAPIReadNamedListRequest) (*NamedListReadResponse, *http.Response, error)
 	/*
-			NamedListsUpdateNamedList Update Named List.
+			UpdateNamedList Update Named List.
 
 			Use this method to update the specified Named List object. Note that list type cannot be updated.
 
@@ -157,15 +157,15 @@ type NamedListsAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Named List object identifier.
-			@return ApiNamedListsUpdateNamedListRequest
+			@return NamedListsAPIUpdateNamedListRequest
 	*/
-	NamedListsUpdateNamedList(ctx context.Context, id int32) ApiNamedListsUpdateNamedListRequest
+	UpdateNamedList(ctx context.Context, id int32) NamedListsAPIUpdateNamedListRequest
 
-	// NamedListsUpdateNamedListExecute executes the request
-	//  @return AtcfwNamedListUpdateResponse
-	NamedListsUpdateNamedListExecute(r ApiNamedListsUpdateNamedListRequest) (*AtcfwNamedListUpdateResponse, *http.Response, error)
+	// UpdateNamedListExecute executes the request
+	//  @return NamedListUpdateResponse
+	UpdateNamedListExecute(r NamedListsAPIUpdateNamedListRequest) (*NamedListUpdateResponse, *http.Response, error)
 	/*
-			NamedListsUpdateNamedListPartial Patch TI List.
+			UpdateNamedListPartial Patch TI List.
 
 			Use this method to update the Severity for a specified named list, which must be of TI list type.
 
@@ -180,36 +180,36 @@ type NamedListsAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Named List object identifier.
-			@return ApiNamedListsUpdateNamedListPartialRequest
+			@return NamedListsAPIUpdateNamedListPartialRequest
 	*/
-	NamedListsUpdateNamedListPartial(ctx context.Context, id int32) ApiNamedListsUpdateNamedListPartialRequest
+	UpdateNamedListPartial(ctx context.Context, id int32) NamedListsAPIUpdateNamedListPartialRequest
 
-	// NamedListsUpdateNamedListPartialExecute executes the request
-	//  @return AtcfwNamedListUpdateResponse
-	NamedListsUpdateNamedListPartialExecute(r ApiNamedListsUpdateNamedListPartialRequest) (*AtcfwNamedListUpdateResponse, *http.Response, error)
+	// UpdateNamedListPartialExecute executes the request
+	//  @return NamedListUpdateResponse
+	UpdateNamedListPartialExecute(r NamedListsAPIUpdateNamedListPartialRequest) (*NamedListUpdateResponse, *http.Response, error)
 }
 
 // NamedListsAPIService NamedListsAPI service
 type NamedListsAPIService internal.Service
 
-type ApiNamedListsCreateNamedListRequest struct {
+type NamedListsAPICreateNamedListRequest struct {
 	ctx        context.Context
 	ApiService NamedListsAPI
-	body       *AtcfwNamedList
+	body       *NamedList
 }
 
 // The Named List object.
-func (r ApiNamedListsCreateNamedListRequest) Body(body AtcfwNamedList) ApiNamedListsCreateNamedListRequest {
+func (r NamedListsAPICreateNamedListRequest) Body(body NamedList) NamedListsAPICreateNamedListRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiNamedListsCreateNamedListRequest) Execute() (*AtcfwNamedListCreateResponse, *http.Response, error) {
-	return r.ApiService.NamedListsCreateNamedListExecute(r)
+func (r NamedListsAPICreateNamedListRequest) Execute() (*NamedListCreateResponse, *http.Response, error) {
+	return r.ApiService.CreateNamedListExecute(r)
 }
 
 /*
-NamedListsCreateNamedList Create Named List.
+CreateNamedList Create Named List.
 
 Use this method to create a Named List object.
 
@@ -221,10 +221,10 @@ Required:
 - items or items_described
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiNamedListsCreateNamedListRequest
+	@return NamedListsAPICreateNamedListRequest
 */
-func (a *NamedListsAPIService) NamedListsCreateNamedList(ctx context.Context) ApiNamedListsCreateNamedListRequest {
-	return ApiNamedListsCreateNamedListRequest{
+func (a *NamedListsAPIService) CreateNamedList(ctx context.Context) NamedListsAPICreateNamedListRequest {
+	return NamedListsAPICreateNamedListRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -232,16 +232,16 @@ func (a *NamedListsAPIService) NamedListsCreateNamedList(ctx context.Context) Ap
 
 // Execute executes the request
 //
-//	@return AtcfwNamedListCreateResponse
-func (a *NamedListsAPIService) NamedListsCreateNamedListExecute(r ApiNamedListsCreateNamedListRequest) (*AtcfwNamedListCreateResponse, *http.Response, error) {
+//	@return NamedListCreateResponse
+func (a *NamedListsAPIService) CreateNamedListExecute(r NamedListsAPICreateNamedListRequest) (*NamedListCreateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwNamedListCreateResponse
+		localVarReturnValue *NamedListCreateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.NamedListsCreateNamedList")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.CreateNamedList")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -333,23 +333,23 @@ func (a *NamedListsAPIService) NamedListsCreateNamedListExecute(r ApiNamedListsC
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiNamedListsDeleteNamedListsRequest struct {
+type NamedListsAPIDeleteNamedListsRequest struct {
 	ctx        context.Context
 	ApiService NamedListsAPI
-	body       *AtcfwNamedListsDeleteRequest
+	body       *NamedListsDeleteRequest
 }
 
-func (r ApiNamedListsDeleteNamedListsRequest) Body(body AtcfwNamedListsDeleteRequest) ApiNamedListsDeleteNamedListsRequest {
+func (r NamedListsAPIDeleteNamedListsRequest) Body(body NamedListsDeleteRequest) NamedListsAPIDeleteNamedListsRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiNamedListsDeleteNamedListsRequest) Execute() (*http.Response, error) {
-	return r.ApiService.NamedListsDeleteNamedListsExecute(r)
+func (r NamedListsAPIDeleteNamedListsRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteNamedListsExecute(r)
 }
 
 /*
-NamedListsDeleteNamedLists Delete Named Lists.
+DeleteNamedLists Delete Named Lists.
 
 Use this method to delete Named List objects. Deletion of multiple lists is an all-or-nothing operation (if any of the specified lists can not be deleted then none of the specified lists will be deleted).
 
@@ -359,24 +359,24 @@ Required:
 - ids
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiNamedListsDeleteNamedListsRequest
+	@return NamedListsAPIDeleteNamedListsRequest
 */
-func (a *NamedListsAPIService) NamedListsDeleteNamedLists(ctx context.Context) ApiNamedListsDeleteNamedListsRequest {
-	return ApiNamedListsDeleteNamedListsRequest{
+func (a *NamedListsAPIService) DeleteNamedLists(ctx context.Context) NamedListsAPIDeleteNamedListsRequest {
+	return NamedListsAPIDeleteNamedListsRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-func (a *NamedListsAPIService) NamedListsDeleteNamedListsExecute(r ApiNamedListsDeleteNamedListsRequest) (*http.Response, error) {
+func (a *NamedListsAPIService) DeleteNamedListsExecute(r NamedListsAPIDeleteNamedListsRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.NamedListsDeleteNamedLists")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.DeleteNamedLists")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -463,18 +463,18 @@ func (a *NamedListsAPIService) NamedListsDeleteNamedListsExecute(r ApiNamedLists
 	return localVarHTTPResponse, nil
 }
 
-type ApiNamedListsDeleteSingleNamedListsRequest struct {
+type NamedListsAPIDeleteSingleNamedListsRequest struct {
 	ctx        context.Context
 	ApiService NamedListsAPI
 	id         int32
 }
 
-func (r ApiNamedListsDeleteSingleNamedListsRequest) Execute() (*http.Response, error) {
-	return r.ApiService.NamedListsDeleteSingleNamedListsExecute(r)
+func (r NamedListsAPIDeleteSingleNamedListsRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteSingleNamedListsExecute(r)
 }
 
 /*
-NamedListsDeleteSingleNamedLists Delete Named Lists.
+DeleteSingleNamedLists Delete Named Lists.
 
 Use this method to delete Named List object by given Named List object identifier.
 
@@ -482,10 +482,10 @@ The Named List object represents several types of lists allowed for BloxOne Clou
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Named List object identifiers.
-	@return ApiNamedListsDeleteSingleNamedListsRequest
+	@return NamedListsAPIDeleteSingleNamedListsRequest
 */
-func (a *NamedListsAPIService) NamedListsDeleteSingleNamedLists(ctx context.Context, id int32) ApiNamedListsDeleteSingleNamedListsRequest {
-	return ApiNamedListsDeleteSingleNamedListsRequest{
+func (a *NamedListsAPIService) DeleteSingleNamedLists(ctx context.Context, id int32) NamedListsAPIDeleteSingleNamedListsRequest {
+	return NamedListsAPIDeleteSingleNamedListsRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -493,14 +493,14 @@ func (a *NamedListsAPIService) NamedListsDeleteSingleNamedLists(ctx context.Cont
 }
 
 // Execute executes the request
-func (a *NamedListsAPIService) NamedListsDeleteSingleNamedListsExecute(r ApiNamedListsDeleteSingleNamedListsRequest) (*http.Response, error) {
+func (a *NamedListsAPIService) DeleteSingleNamedListsExecute(r NamedListsAPIDeleteSingleNamedListsRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.NamedListsDeleteSingleNamedLists")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.DeleteSingleNamedLists")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -583,7 +583,7 @@ func (a *NamedListsAPIService) NamedListsDeleteSingleNamedListsExecute(r ApiName
 	return localVarHTTPResponse, nil
 }
 
-type ApiNamedListsListNamedListsRequest struct {
+type NamedListsAPIListNamedListsRequest struct {
 	ctx        context.Context
 	ApiService NamedListsAPI
 	filter     *string
@@ -596,63 +596,63 @@ type ApiNamedListsListNamedListsRequest struct {
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;.  You can filter by following fields:  | Name               | type   | Supported Ops    | | ------------------ | ------ | ---------------- | | type               | string | &#x3D;&#x3D;, !&#x3D;           | | items              | string | ~, !~            | | items_described    | string | &#x3D;&#x3D;               |  Grouping operators (and, or, not, ()) are not supported between different fields.
-func (r ApiNamedListsListNamedListsRequest) Filter(filter string) ApiNamedListsListNamedListsRequest {
+func (r NamedListsAPIListNamedListsRequest) Filter(filter string) NamedListsAPIListNamedListsRequest {
 	r.filter = &filter
 	return r
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiNamedListsListNamedListsRequest) Fields(fields string) ApiNamedListsListNamedListsRequest {
+func (r NamedListsAPIListNamedListsRequest) Fields(fields string) NamedListsAPIListNamedListsRequest {
 	r.fields = &fields
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiNamedListsListNamedListsRequest) Offset(offset int32) ApiNamedListsListNamedListsRequest {
+func (r NamedListsAPIListNamedListsRequest) Offset(offset int32) NamedListsAPIListNamedListsRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiNamedListsListNamedListsRequest) Limit(limit int32) ApiNamedListsListNamedListsRequest {
+func (r NamedListsAPIListNamedListsRequest) Limit(limit int32) NamedListsAPIListNamedListsRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiNamedListsListNamedListsRequest) PageToken(pageToken string) ApiNamedListsListNamedListsRequest {
+func (r NamedListsAPIListNamedListsRequest) PageToken(pageToken string) NamedListsAPIListNamedListsRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
 // Filtering by tags.
-func (r ApiNamedListsListNamedListsRequest) Tfilter(tfilter string) ApiNamedListsListNamedListsRequest {
+func (r NamedListsAPIListNamedListsRequest) Tfilter(tfilter string) NamedListsAPIListNamedListsRequest {
 	r.tfilter = &tfilter
 	return r
 }
 
 // Sorting by tags.
-func (r ApiNamedListsListNamedListsRequest) TorderBy(torderBy string) ApiNamedListsListNamedListsRequest {
+func (r NamedListsAPIListNamedListsRequest) TorderBy(torderBy string) NamedListsAPIListNamedListsRequest {
 	r.torderBy = &torderBy
 	return r
 }
 
-func (r ApiNamedListsListNamedListsRequest) Execute() (*AtcfwNamedListReadMultiResponse, *http.Response, error) {
-	return r.ApiService.NamedListsListNamedListsExecute(r)
+func (r NamedListsAPIListNamedListsRequest) Execute() (*NamedListReadMultiResponse, *http.Response, error) {
+	return r.ApiService.ListNamedListsExecute(r)
 }
 
 /*
-NamedListsListNamedLists List Named Lists.
+ListNamedLists List Named Lists.
 
 Use this method to retrieve information on all Named List objects for the account. Note that list items are not returned for this operation.
 
 The Named List object represents several types of lists allowed for BloxOne Cloud such as predefined threat intelligence feeds that your subscription offers (Threat Insight, Fast Flux, DGA, DNSM). In addition to the predefined threat intelligence feeds that your subscription offers, you can create custom lists (containing domains and IP addresses) to define whitelists and blacklists for additional protection. You can use a custom list to complement existing feeds or override the Block, Allow, Log, or Redirect action that is currently defined for an existing feed. Note that lists representing predefined TI feeds cannot be created, updated and deleted.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiNamedListsListNamedListsRequest
+	@return NamedListsAPIListNamedListsRequest
 */
-func (a *NamedListsAPIService) NamedListsListNamedLists(ctx context.Context) ApiNamedListsListNamedListsRequest {
-	return ApiNamedListsListNamedListsRequest{
+func (a *NamedListsAPIService) ListNamedLists(ctx context.Context) NamedListsAPIListNamedListsRequest {
+	return NamedListsAPIListNamedListsRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -660,16 +660,16 @@ func (a *NamedListsAPIService) NamedListsListNamedLists(ctx context.Context) Api
 
 // Execute executes the request
 //
-//	@return AtcfwNamedListReadMultiResponse
-func (a *NamedListsAPIService) NamedListsListNamedListsExecute(r ApiNamedListsListNamedListsRequest) (*AtcfwNamedListReadMultiResponse, *http.Response, error) {
+//	@return NamedListReadMultiResponse
+func (a *NamedListsAPIService) ListNamedListsExecute(r NamedListsAPIListNamedListsRequest) (*NamedListReadMultiResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwNamedListReadMultiResponse
+		localVarReturnValue *NamedListReadMultiResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.NamedListsListNamedLists")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.ListNamedLists")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -757,7 +757,7 @@ func (a *NamedListsAPIService) NamedListsListNamedListsExecute(r ApiNamedListsLi
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiNamedListsListNamedListsCSVRequest struct {
+type NamedListsAPIListNamedListsCSVRequest struct {
 	ctx        context.Context
 	ApiService NamedListsAPI
 	filter     *string
@@ -767,43 +767,43 @@ type ApiNamedListsListNamedListsCSVRequest struct {
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;.  You can filter by following fields:  | Name               | type   | Supported Ops    | | ------------------ | ------ | ---------------- | | type               | string | &#x3D;&#x3D;, !&#x3D;           | | items              | string | ~, !~            | | items_described    | string | &#x3D;&#x3D;               |  Grouping operators (and, or, not, ()) are not supported between different fields.
-func (r ApiNamedListsListNamedListsCSVRequest) Filter(filter string) ApiNamedListsListNamedListsCSVRequest {
+func (r NamedListsAPIListNamedListsCSVRequest) Filter(filter string) NamedListsAPIListNamedListsCSVRequest {
 	r.filter = &filter
 	return r
 }
 
 // A collection of response resources can be sorted by their JSON tags. For a &#39;flat&#39; resource, the tag name is straightforward. If sorting is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, its value is assumed to be null.)  Specify this parameter as a comma-separated list of JSON tag names. The sort direction can be specified by a suffix separated by whitespace before the tag name. The suffix &#39;asc&#39; sorts the data in ascending order. The suffix &#39;desc&#39; sorts the data in descending order. If no suffix is specified the data is sorted in ascending order.
-func (r ApiNamedListsListNamedListsCSVRequest) OrderBy(orderBy string) ApiNamedListsListNamedListsCSVRequest {
+func (r NamedListsAPIListNamedListsCSVRequest) OrderBy(orderBy string) NamedListsAPIListNamedListsCSVRequest {
 	r.orderBy = &orderBy
 	return r
 }
 
 // Filtering by tags.
-func (r ApiNamedListsListNamedListsCSVRequest) Tfilter(tfilter string) ApiNamedListsListNamedListsCSVRequest {
+func (r NamedListsAPIListNamedListsCSVRequest) Tfilter(tfilter string) NamedListsAPIListNamedListsCSVRequest {
 	r.tfilter = &tfilter
 	return r
 }
 
 // Sorting by tags.
-func (r ApiNamedListsListNamedListsCSVRequest) TorderBy(torderBy string) ApiNamedListsListNamedListsCSVRequest {
+func (r NamedListsAPIListNamedListsCSVRequest) TorderBy(torderBy string) NamedListsAPIListNamedListsCSVRequest {
 	r.torderBy = &torderBy
 	return r
 }
 
-func (r ApiNamedListsListNamedListsCSVRequest) Execute() (*AtcfwNamedListCSVListResponse, *http.Response, error) {
-	return r.ApiService.NamedListsListNamedListsCSVExecute(r)
+func (r NamedListsAPIListNamedListsCSVRequest) Execute() (*NamedListCSVListResponse, *http.Response, error) {
+	return r.ApiService.ListNamedListsCSVExecute(r)
 }
 
 /*
-NamedListsListNamedListsCSV List Named Lists in CSV format.
+ListNamedListsCSV List Named Lists in CSV format.
 
 Use this method to download the selected list of named lists in CSV (comma-separate values) format.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiNamedListsListNamedListsCSVRequest
+	@return NamedListsAPIListNamedListsCSVRequest
 */
-func (a *NamedListsAPIService) NamedListsListNamedListsCSV(ctx context.Context) ApiNamedListsListNamedListsCSVRequest {
-	return ApiNamedListsListNamedListsCSVRequest{
+func (a *NamedListsAPIService) ListNamedListsCSV(ctx context.Context) NamedListsAPIListNamedListsCSVRequest {
+	return NamedListsAPIListNamedListsCSVRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -811,16 +811,16 @@ func (a *NamedListsAPIService) NamedListsListNamedListsCSV(ctx context.Context) 
 
 // Execute executes the request
 //
-//	@return AtcfwNamedListCSVListResponse
-func (a *NamedListsAPIService) NamedListsListNamedListsCSVExecute(r ApiNamedListsListNamedListsCSVRequest) (*AtcfwNamedListCSVListResponse, *http.Response, error) {
+//	@return NamedListCSVListResponse
+func (a *NamedListsAPIService) ListNamedListsCSVExecute(r NamedListsAPIListNamedListsCSVRequest) (*NamedListCSVListResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwNamedListCSVListResponse
+		localVarReturnValue *NamedListCSVListResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.NamedListsListNamedListsCSV")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.ListNamedListsCSV")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -899,23 +899,23 @@ func (a *NamedListsAPIService) NamedListsListNamedListsCSVExecute(r ApiNamedList
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiNamedListsMultiListUpdateRequest struct {
+type NamedListsAPIMultiListUpdateRequest struct {
 	ctx        context.Context
 	ApiService NamedListsAPI
-	body       *AtcfwMultiListUpdate
+	body       *MultiListUpdate
 }
 
-func (r ApiNamedListsMultiListUpdateRequest) Body(body AtcfwMultiListUpdate) ApiNamedListsMultiListUpdateRequest {
+func (r NamedListsAPIMultiListUpdateRequest) Body(body MultiListUpdate) NamedListsAPIMultiListUpdateRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiNamedListsMultiListUpdateRequest) Execute() (map[string]interface{}, *http.Response, error) {
-	return r.ApiService.NamedListsMultiListUpdateExecute(r)
+func (r NamedListsAPIMultiListUpdateRequest) Execute() (map[string]interface{}, *http.Response, error) {
+	return r.ApiService.MultiListUpdateExecute(r)
 }
 
 /*
-NamedListsMultiListUpdate Patch Multiple Named Lists.
+MultiListUpdate Patch Multiple Named Lists.
 
 Multiple Named Lists in a single operation.
 Use this method to insert items for multiple Named List objects. Note that duplicated items correspondig to named list are silently skipped and only new items are appended to the named list. Note that DNSM, TI, Fast Flux and DGA lists cannot be updated. Only named lists of Custom List type can be updated by this operation.
@@ -923,10 +923,10 @@ If one or more of the list ids is invalid, or the list is of invalid type then t
 The Custom List Items represent the list of the FQDN or IPv4 addresses to define whitelists and blacklists for additional protection.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiNamedListsMultiListUpdateRequest
+	@return NamedListsAPIMultiListUpdateRequest
 */
-func (a *NamedListsAPIService) NamedListsMultiListUpdate(ctx context.Context) ApiNamedListsMultiListUpdateRequest {
-	return ApiNamedListsMultiListUpdateRequest{
+func (a *NamedListsAPIService) MultiListUpdate(ctx context.Context) NamedListsAPIMultiListUpdateRequest {
+	return NamedListsAPIMultiListUpdateRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -935,7 +935,7 @@ func (a *NamedListsAPIService) NamedListsMultiListUpdate(ctx context.Context) Ap
 // Execute executes the request
 //
 //	@return map[string]interface{}
-func (a *NamedListsAPIService) NamedListsMultiListUpdateExecute(r ApiNamedListsMultiListUpdateRequest) (map[string]interface{}, *http.Response, error) {
+func (a *NamedListsAPIService) MultiListUpdateExecute(r NamedListsAPIMultiListUpdateRequest) (map[string]interface{}, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPatch
 		localVarPostBody    interface{}
@@ -943,7 +943,7 @@ func (a *NamedListsAPIService) NamedListsMultiListUpdateExecute(r ApiNamedListsM
 		localVarReturnValue map[string]interface{}
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.NamedListsMultiListUpdate")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.MultiListUpdate")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -1035,7 +1035,7 @@ func (a *NamedListsAPIService) NamedListsMultiListUpdateExecute(r ApiNamedListsM
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiNamedListsReadNamedListRequest struct {
+type NamedListsAPIReadNamedListRequest struct {
 	ctx        context.Context
 	ApiService NamedListsAPI
 	id         int32
@@ -1048,47 +1048,47 @@ type ApiNamedListsReadNamedListRequest struct {
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiNamedListsReadNamedListRequest) Fields(fields string) ApiNamedListsReadNamedListRequest {
+func (r NamedListsAPIReadNamedListRequest) Fields(fields string) NamedListsAPIReadNamedListRequest {
 	r.fields = &fields
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiNamedListsReadNamedListRequest) Offset(offset int32) ApiNamedListsReadNamedListRequest {
+func (r NamedListsAPIReadNamedListRequest) Offset(offset int32) NamedListsAPIReadNamedListRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiNamedListsReadNamedListRequest) Limit(limit int32) ApiNamedListsReadNamedListRequest {
+func (r NamedListsAPIReadNamedListRequest) Limit(limit int32) NamedListsAPIReadNamedListRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiNamedListsReadNamedListRequest) PageToken(pageToken string) ApiNamedListsReadNamedListRequest {
+func (r NamedListsAPIReadNamedListRequest) PageToken(pageToken string) NamedListsAPIReadNamedListRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
 // The name of the named list. Can be used in pair with &#39;type&#39; (both fields are mandatory) to request the object by their name. This aproach available only if the field &#39;id&#39; is empty (&#x3D;&#x3D;0).
-func (r ApiNamedListsReadNamedListRequest) Name(name string) ApiNamedListsReadNamedListRequest {
+func (r NamedListsAPIReadNamedListRequest) Name(name string) NamedListsAPIReadNamedListRequest {
 	r.name = &name
 	return r
 }
 
 // The type of the named list. See &#39;NamedList&#39; for more details.
-func (r ApiNamedListsReadNamedListRequest) Type_(type_ string) ApiNamedListsReadNamedListRequest {
+func (r NamedListsAPIReadNamedListRequest) Type_(type_ string) NamedListsAPIReadNamedListRequest {
 	r.type_ = &type_
 	return r
 }
 
-func (r ApiNamedListsReadNamedListRequest) Execute() (*AtcfwNamedListReadResponse, *http.Response, error) {
-	return r.ApiService.NamedListsReadNamedListExecute(r)
+func (r NamedListsAPIReadNamedListRequest) Execute() (*NamedListReadResponse, *http.Response, error) {
+	return r.ApiService.ReadNamedListExecute(r)
 }
 
 /*
-NamedListsReadNamedList Read Named List.
+ReadNamedList Read Named List.
 
 Use this method to retrieve information on the specified Named List object. Note that returned data includes list items.
 
@@ -1096,10 +1096,10 @@ The Named List object represents several types of lists allowed for BloxOne Clou
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Named List identifier.
-	@return ApiNamedListsReadNamedListRequest
+	@return NamedListsAPIReadNamedListRequest
 */
-func (a *NamedListsAPIService) NamedListsReadNamedList(ctx context.Context, id int32) ApiNamedListsReadNamedListRequest {
-	return ApiNamedListsReadNamedListRequest{
+func (a *NamedListsAPIService) ReadNamedList(ctx context.Context, id int32) NamedListsAPIReadNamedListRequest {
+	return NamedListsAPIReadNamedListRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -1108,16 +1108,16 @@ func (a *NamedListsAPIService) NamedListsReadNamedList(ctx context.Context, id i
 
 // Execute executes the request
 //
-//	@return AtcfwNamedListReadResponse
-func (a *NamedListsAPIService) NamedListsReadNamedListExecute(r ApiNamedListsReadNamedListRequest) (*AtcfwNamedListReadResponse, *http.Response, error) {
+//	@return NamedListReadResponse
+func (a *NamedListsAPIService) ReadNamedListExecute(r NamedListsAPIReadNamedListRequest) (*NamedListReadResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwNamedListReadResponse
+		localVarReturnValue *NamedListReadResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.NamedListsReadNamedList")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.ReadNamedList")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -1213,25 +1213,25 @@ func (a *NamedListsAPIService) NamedListsReadNamedListExecute(r ApiNamedListsRea
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiNamedListsUpdateNamedListRequest struct {
+type NamedListsAPIUpdateNamedListRequest struct {
 	ctx        context.Context
 	ApiService NamedListsAPI
 	id         int32
-	body       *AtcfwNamedList
+	body       *NamedList
 }
 
 // The Named List object.
-func (r ApiNamedListsUpdateNamedListRequest) Body(body AtcfwNamedList) ApiNamedListsUpdateNamedListRequest {
+func (r NamedListsAPIUpdateNamedListRequest) Body(body NamedList) NamedListsAPIUpdateNamedListRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiNamedListsUpdateNamedListRequest) Execute() (*AtcfwNamedListUpdateResponse, *http.Response, error) {
-	return r.ApiService.NamedListsUpdateNamedListExecute(r)
+func (r NamedListsAPIUpdateNamedListRequest) Execute() (*NamedListUpdateResponse, *http.Response, error) {
+	return r.ApiService.UpdateNamedListExecute(r)
 }
 
 /*
-NamedListsUpdateNamedList Update Named List.
+UpdateNamedList Update Named List.
 
 Use this method to update the specified Named List object. Note that list type cannot be updated.
 
@@ -1243,10 +1243,10 @@ Required:
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Named List object identifier.
-	@return ApiNamedListsUpdateNamedListRequest
+	@return NamedListsAPIUpdateNamedListRequest
 */
-func (a *NamedListsAPIService) NamedListsUpdateNamedList(ctx context.Context, id int32) ApiNamedListsUpdateNamedListRequest {
-	return ApiNamedListsUpdateNamedListRequest{
+func (a *NamedListsAPIService) UpdateNamedList(ctx context.Context, id int32) NamedListsAPIUpdateNamedListRequest {
+	return NamedListsAPIUpdateNamedListRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -1255,16 +1255,16 @@ func (a *NamedListsAPIService) NamedListsUpdateNamedList(ctx context.Context, id
 
 // Execute executes the request
 //
-//	@return AtcfwNamedListUpdateResponse
-func (a *NamedListsAPIService) NamedListsUpdateNamedListExecute(r ApiNamedListsUpdateNamedListRequest) (*AtcfwNamedListUpdateResponse, *http.Response, error) {
+//	@return NamedListUpdateResponse
+func (a *NamedListsAPIService) UpdateNamedListExecute(r NamedListsAPIUpdateNamedListRequest) (*NamedListUpdateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPut
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwNamedListUpdateResponse
+		localVarReturnValue *NamedListUpdateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.NamedListsUpdateNamedList")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.UpdateNamedList")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -1367,25 +1367,25 @@ func (a *NamedListsAPIService) NamedListsUpdateNamedListExecute(r ApiNamedListsU
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiNamedListsUpdateNamedListPartialRequest struct {
+type NamedListsAPIUpdateNamedListPartialRequest struct {
 	ctx        context.Context
 	ApiService NamedListsAPI
 	id         int32
-	body       *AtcfwListSeverityLevels
+	body       *ListSeverityLevels
 }
 
 // The Named List object.
-func (r ApiNamedListsUpdateNamedListPartialRequest) Body(body AtcfwListSeverityLevels) ApiNamedListsUpdateNamedListPartialRequest {
+func (r NamedListsAPIUpdateNamedListPartialRequest) Body(body ListSeverityLevels) NamedListsAPIUpdateNamedListPartialRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiNamedListsUpdateNamedListPartialRequest) Execute() (*AtcfwNamedListUpdateResponse, *http.Response, error) {
-	return r.ApiService.NamedListsUpdateNamedListPartialExecute(r)
+func (r NamedListsAPIUpdateNamedListPartialRequest) Execute() (*NamedListUpdateResponse, *http.Response, error) {
+	return r.ApiService.UpdateNamedListPartialExecute(r)
 }
 
 /*
-NamedListsUpdateNamedListPartial Patch TI List.
+UpdateNamedListPartial Patch TI List.
 
 Use this method to update the Severity for a specified named list, which must be of TI list type.
 
@@ -1399,10 +1399,10 @@ Required:
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Named List object identifier.
-	@return ApiNamedListsUpdateNamedListPartialRequest
+	@return NamedListsAPIUpdateNamedListPartialRequest
 */
-func (a *NamedListsAPIService) NamedListsUpdateNamedListPartial(ctx context.Context, id int32) ApiNamedListsUpdateNamedListPartialRequest {
-	return ApiNamedListsUpdateNamedListPartialRequest{
+func (a *NamedListsAPIService) UpdateNamedListPartial(ctx context.Context, id int32) NamedListsAPIUpdateNamedListPartialRequest {
+	return NamedListsAPIUpdateNamedListPartialRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -1411,16 +1411,16 @@ func (a *NamedListsAPIService) NamedListsUpdateNamedListPartial(ctx context.Cont
 
 // Execute executes the request
 //
-//	@return AtcfwNamedListUpdateResponse
-func (a *NamedListsAPIService) NamedListsUpdateNamedListPartialExecute(r ApiNamedListsUpdateNamedListPartialRequest) (*AtcfwNamedListUpdateResponse, *http.Response, error) {
+//	@return NamedListUpdateResponse
+func (a *NamedListsAPIService) UpdateNamedListPartialExecute(r NamedListsAPIUpdateNamedListPartialRequest) (*NamedListUpdateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPatch
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwNamedListUpdateResponse
+		localVarReturnValue *NamedListUpdateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.NamedListsUpdateNamedListPartial")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NamedListsAPIService.UpdateNamedListPartial")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}

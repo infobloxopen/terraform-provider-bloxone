@@ -19,8 +19,11 @@ var _ MappedNullable = &InternalDomainListsUpdateInternalDomains404Response{}
 
 // InternalDomainListsUpdateInternalDomains404Response struct for InternalDomainListsUpdateInternalDomains404Response
 type InternalDomainListsUpdateInternalDomains404Response struct {
-	Error *InternalDomainListsUpdateInternalDomains404ResponseError `json:"error,omitempty"`
+	Error                *InternalDomainListsUpdateInternalDomains404ResponseError `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InternalDomainListsUpdateInternalDomains404Response InternalDomainListsUpdateInternalDomains404Response
 
 // NewInternalDomainListsUpdateInternalDomains404Response instantiates a new InternalDomainListsUpdateInternalDomains404Response object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,33 @@ func (o InternalDomainListsUpdateInternalDomains404Response) ToMap() (map[string
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InternalDomainListsUpdateInternalDomains404Response) UnmarshalJSON(data []byte) (err error) {
+	varInternalDomainListsUpdateInternalDomains404Response := _InternalDomainListsUpdateInternalDomains404Response{}
+
+	err = json.Unmarshal(data, &varInternalDomainListsUpdateInternalDomains404Response)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InternalDomainListsUpdateInternalDomains404Response(varInternalDomainListsUpdateInternalDomains404Response)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "error")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInternalDomainListsUpdateInternalDomains404Response struct {

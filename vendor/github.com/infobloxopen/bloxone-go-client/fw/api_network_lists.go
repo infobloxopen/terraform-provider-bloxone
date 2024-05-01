@@ -23,7 +23,7 @@ import (
 
 type NetworkListsAPI interface {
 	/*
-			NetworkListsCreateNetworkList Create Network List.
+			CreateNetworkList Create Network List.
 
 			Use this method to create a Network List object.
 
@@ -35,15 +35,15 @@ type NetworkListsAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiNetworkListsCreateNetworkListRequest
+			@return NetworkListsAPICreateNetworkListRequest
 	*/
-	NetworkListsCreateNetworkList(ctx context.Context) ApiNetworkListsCreateNetworkListRequest
+	CreateNetworkList(ctx context.Context) NetworkListsAPICreateNetworkListRequest
 
-	// NetworkListsCreateNetworkListExecute executes the request
-	//  @return AtcfwNetworkListCreateResponse
-	NetworkListsCreateNetworkListExecute(r ApiNetworkListsCreateNetworkListRequest) (*AtcfwNetworkListCreateResponse, *http.Response, error)
+	// CreateNetworkListExecute executes the request
+	//  @return NetworkListCreateResponse
+	CreateNetworkListExecute(r NetworkListsAPICreateNetworkListRequest) (*NetworkListCreateResponse, *http.Response, error)
 	/*
-			NetworkListsDeleteNetworkLists Delete Network Lists.
+			DeleteNetworkLists Delete Network Lists.
 
 			Use this method to delete the Network List objects. Deletion of multiple lists is an all-or-nothing operation (if any of the specified lists can not be deleted then none of the specified lists will be deleted).
 
@@ -54,14 +54,14 @@ type NetworkListsAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiNetworkListsDeleteNetworkListsRequest
+			@return NetworkListsAPIDeleteNetworkListsRequest
 	*/
-	NetworkListsDeleteNetworkLists(ctx context.Context) ApiNetworkListsDeleteNetworkListsRequest
+	DeleteNetworkLists(ctx context.Context) NetworkListsAPIDeleteNetworkListsRequest
 
-	// NetworkListsDeleteNetworkListsExecute executes the request
-	NetworkListsDeleteNetworkListsExecute(r ApiNetworkListsDeleteNetworkListsRequest) (*http.Response, error)
+	// DeleteNetworkListsExecute executes the request
+	DeleteNetworkListsExecute(r NetworkListsAPIDeleteNetworkListsRequest) (*http.Response, error)
 	/*
-			NetworkListsDeleteSingleNetworkLists Delete Network Lists.
+			DeleteSingleNetworkLists Delete Network Lists.
 
 			Use this method to delete the Network List object by the specified Network List object id.
 
@@ -71,14 +71,14 @@ type NetworkListsAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Network List object identifier.
-			@return ApiNetworkListsDeleteSingleNetworkListsRequest
+			@return NetworkListsAPIDeleteSingleNetworkListsRequest
 	*/
-	NetworkListsDeleteSingleNetworkLists(ctx context.Context, id int32) ApiNetworkListsDeleteSingleNetworkListsRequest
+	DeleteSingleNetworkLists(ctx context.Context, id int32) NetworkListsAPIDeleteSingleNetworkListsRequest
 
-	// NetworkListsDeleteSingleNetworkListsExecute executes the request
-	NetworkListsDeleteSingleNetworkListsExecute(r ApiNetworkListsDeleteSingleNetworkListsRequest) (*http.Response, error)
+	// DeleteSingleNetworkListsExecute executes the request
+	DeleteSingleNetworkListsExecute(r NetworkListsAPIDeleteSingleNetworkListsRequest) (*http.Response, error)
 	/*
-			NetworkListsListNetworkLists List Network Lists.
+			ListNetworkLists List Network Lists.
 
 			Use this method to retrieve information on all Network List objects for the account.
 
@@ -87,15 +87,15 @@ type NetworkListsAPI interface {
 
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiNetworkListsListNetworkListsRequest
+			@return NetworkListsAPIListNetworkListsRequest
 	*/
-	NetworkListsListNetworkLists(ctx context.Context) ApiNetworkListsListNetworkListsRequest
+	ListNetworkLists(ctx context.Context) NetworkListsAPIListNetworkListsRequest
 
-	// NetworkListsListNetworkListsExecute executes the request
-	//  @return AtcfwNetworkListMultiResponse
-	NetworkListsListNetworkListsExecute(r ApiNetworkListsListNetworkListsRequest) (*AtcfwNetworkListMultiResponse, *http.Response, error)
+	// ListNetworkListsExecute executes the request
+	//  @return NetworkListMultiResponse
+	ListNetworkListsExecute(r NetworkListsAPIListNetworkListsRequest) (*NetworkListMultiResponse, *http.Response, error)
 	/*
-			NetworkListsReadNetworkList Read Network List.
+			ReadNetworkList Read Network List.
 
 			Use this method to retrieve information on the specified Network List object.
 
@@ -104,15 +104,15 @@ type NetworkListsAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Network List object identifier.
-			@return ApiNetworkListsReadNetworkListRequest
+			@return NetworkListsAPIReadNetworkListRequest
 	*/
-	NetworkListsReadNetworkList(ctx context.Context, id int32) ApiNetworkListsReadNetworkListRequest
+	ReadNetworkList(ctx context.Context, id int32) NetworkListsAPIReadNetworkListRequest
 
-	// NetworkListsReadNetworkListExecute executes the request
-	//  @return AtcfwNetworkListReadResponse
-	NetworkListsReadNetworkListExecute(r ApiNetworkListsReadNetworkListRequest) (*AtcfwNetworkListReadResponse, *http.Response, error)
+	// ReadNetworkListExecute executes the request
+	//  @return NetworkListReadResponse
+	ReadNetworkListExecute(r NetworkListsAPIReadNetworkListRequest) (*NetworkListReadResponse, *http.Response, error)
 	/*
-			NetworkListsUpdateNetworkList Update Network List.
+			UpdateNetworkList Update Network List.
 
 			Use this method to update a specified Network List object.
 
@@ -125,36 +125,36 @@ type NetworkListsAPI interface {
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 			@param id The Network List object identifier.
-			@return ApiNetworkListsUpdateNetworkListRequest
+			@return NetworkListsAPIUpdateNetworkListRequest
 	*/
-	NetworkListsUpdateNetworkList(ctx context.Context, id int32) ApiNetworkListsUpdateNetworkListRequest
+	UpdateNetworkList(ctx context.Context, id int32) NetworkListsAPIUpdateNetworkListRequest
 
-	// NetworkListsUpdateNetworkListExecute executes the request
-	//  @return AtcfwNetworkListUpdateResponse
-	NetworkListsUpdateNetworkListExecute(r ApiNetworkListsUpdateNetworkListRequest) (*AtcfwNetworkListUpdateResponse, *http.Response, error)
+	// UpdateNetworkListExecute executes the request
+	//  @return NetworkListUpdateResponse
+	UpdateNetworkListExecute(r NetworkListsAPIUpdateNetworkListRequest) (*NetworkListUpdateResponse, *http.Response, error)
 }
 
 // NetworkListsAPIService NetworkListsAPI service
 type NetworkListsAPIService internal.Service
 
-type ApiNetworkListsCreateNetworkListRequest struct {
+type NetworkListsAPICreateNetworkListRequest struct {
 	ctx        context.Context
 	ApiService NetworkListsAPI
-	body       *AtcfwNetworkList
+	body       *NetworkList
 }
 
 // The Network List object.
-func (r ApiNetworkListsCreateNetworkListRequest) Body(body AtcfwNetworkList) ApiNetworkListsCreateNetworkListRequest {
+func (r NetworkListsAPICreateNetworkListRequest) Body(body NetworkList) NetworkListsAPICreateNetworkListRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiNetworkListsCreateNetworkListRequest) Execute() (*AtcfwNetworkListCreateResponse, *http.Response, error) {
-	return r.ApiService.NetworkListsCreateNetworkListExecute(r)
+func (r NetworkListsAPICreateNetworkListRequest) Execute() (*NetworkListCreateResponse, *http.Response, error) {
+	return r.ApiService.CreateNetworkListExecute(r)
 }
 
 /*
-NetworkListsCreateNetworkList Create Network List.
+CreateNetworkList Create Network List.
 
 Use this method to create a Network List object.
 
@@ -165,10 +165,10 @@ Required:
 - items
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiNetworkListsCreateNetworkListRequest
+	@return NetworkListsAPICreateNetworkListRequest
 */
-func (a *NetworkListsAPIService) NetworkListsCreateNetworkList(ctx context.Context) ApiNetworkListsCreateNetworkListRequest {
-	return ApiNetworkListsCreateNetworkListRequest{
+func (a *NetworkListsAPIService) CreateNetworkList(ctx context.Context) NetworkListsAPICreateNetworkListRequest {
+	return NetworkListsAPICreateNetworkListRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -176,16 +176,16 @@ func (a *NetworkListsAPIService) NetworkListsCreateNetworkList(ctx context.Conte
 
 // Execute executes the request
 //
-//	@return AtcfwNetworkListCreateResponse
-func (a *NetworkListsAPIService) NetworkListsCreateNetworkListExecute(r ApiNetworkListsCreateNetworkListRequest) (*AtcfwNetworkListCreateResponse, *http.Response, error) {
+//	@return NetworkListCreateResponse
+func (a *NetworkListsAPIService) CreateNetworkListExecute(r NetworkListsAPICreateNetworkListRequest) (*NetworkListCreateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwNetworkListCreateResponse
+		localVarReturnValue *NetworkListCreateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NetworkListsAPIService.NetworkListsCreateNetworkList")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NetworkListsAPIService.CreateNetworkList")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -277,23 +277,23 @@ func (a *NetworkListsAPIService) NetworkListsCreateNetworkListExecute(r ApiNetwo
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiNetworkListsDeleteNetworkListsRequest struct {
+type NetworkListsAPIDeleteNetworkListsRequest struct {
 	ctx        context.Context
 	ApiService NetworkListsAPI
-	body       *AtcfwNetworkListsDeleteRequest
+	body       *NetworkListsDeleteRequest
 }
 
-func (r ApiNetworkListsDeleteNetworkListsRequest) Body(body AtcfwNetworkListsDeleteRequest) ApiNetworkListsDeleteNetworkListsRequest {
+func (r NetworkListsAPIDeleteNetworkListsRequest) Body(body NetworkListsDeleteRequest) NetworkListsAPIDeleteNetworkListsRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiNetworkListsDeleteNetworkListsRequest) Execute() (*http.Response, error) {
-	return r.ApiService.NetworkListsDeleteNetworkListsExecute(r)
+func (r NetworkListsAPIDeleteNetworkListsRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteNetworkListsExecute(r)
 }
 
 /*
-NetworkListsDeleteNetworkLists Delete Network Lists.
+DeleteNetworkLists Delete Network Lists.
 
 Use this method to delete the Network List objects. Deletion of multiple lists is an all-or-nothing operation (if any of the specified lists can not be deleted then none of the specified lists will be deleted).
 
@@ -303,24 +303,24 @@ Required:
 - ids
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiNetworkListsDeleteNetworkListsRequest
+	@return NetworkListsAPIDeleteNetworkListsRequest
 */
-func (a *NetworkListsAPIService) NetworkListsDeleteNetworkLists(ctx context.Context) ApiNetworkListsDeleteNetworkListsRequest {
-	return ApiNetworkListsDeleteNetworkListsRequest{
+func (a *NetworkListsAPIService) DeleteNetworkLists(ctx context.Context) NetworkListsAPIDeleteNetworkListsRequest {
+	return NetworkListsAPIDeleteNetworkListsRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-func (a *NetworkListsAPIService) NetworkListsDeleteNetworkListsExecute(r ApiNetworkListsDeleteNetworkListsRequest) (*http.Response, error) {
+func (a *NetworkListsAPIService) DeleteNetworkListsExecute(r NetworkListsAPIDeleteNetworkListsRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NetworkListsAPIService.NetworkListsDeleteNetworkLists")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NetworkListsAPIService.DeleteNetworkLists")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -407,18 +407,18 @@ func (a *NetworkListsAPIService) NetworkListsDeleteNetworkListsExecute(r ApiNetw
 	return localVarHTTPResponse, nil
 }
 
-type ApiNetworkListsDeleteSingleNetworkListsRequest struct {
+type NetworkListsAPIDeleteSingleNetworkListsRequest struct {
 	ctx        context.Context
 	ApiService NetworkListsAPI
 	id         int32
 }
 
-func (r ApiNetworkListsDeleteSingleNetworkListsRequest) Execute() (*http.Response, error) {
-	return r.ApiService.NetworkListsDeleteSingleNetworkListsExecute(r)
+func (r NetworkListsAPIDeleteSingleNetworkListsRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteSingleNetworkListsExecute(r)
 }
 
 /*
-NetworkListsDeleteSingleNetworkLists Delete Network Lists.
+DeleteSingleNetworkLists Delete Network Lists.
 
 Use this method to delete the Network List object by the specified Network List object id.
 
@@ -426,10 +426,10 @@ Before you can apply security policies, you must first define the networks that 
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Network List object identifier.
-	@return ApiNetworkListsDeleteSingleNetworkListsRequest
+	@return NetworkListsAPIDeleteSingleNetworkListsRequest
 */
-func (a *NetworkListsAPIService) NetworkListsDeleteSingleNetworkLists(ctx context.Context, id int32) ApiNetworkListsDeleteSingleNetworkListsRequest {
-	return ApiNetworkListsDeleteSingleNetworkListsRequest{
+func (a *NetworkListsAPIService) DeleteSingleNetworkLists(ctx context.Context, id int32) NetworkListsAPIDeleteSingleNetworkListsRequest {
+	return NetworkListsAPIDeleteSingleNetworkListsRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -437,14 +437,14 @@ func (a *NetworkListsAPIService) NetworkListsDeleteSingleNetworkLists(ctx contex
 }
 
 // Execute executes the request
-func (a *NetworkListsAPIService) NetworkListsDeleteSingleNetworkListsExecute(r ApiNetworkListsDeleteSingleNetworkListsRequest) (*http.Response, error) {
+func (a *NetworkListsAPIService) DeleteSingleNetworkListsExecute(r NetworkListsAPIDeleteSingleNetworkListsRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []internal.FormFile
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NetworkListsAPIService.NetworkListsDeleteSingleNetworkLists")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NetworkListsAPIService.DeleteSingleNetworkLists")
 	if err != nil {
 		return nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -527,7 +527,7 @@ func (a *NetworkListsAPIService) NetworkListsDeleteSingleNetworkListsExecute(r A
 	return localVarHTTPResponse, nil
 }
 
-type ApiNetworkListsListNetworkListsRequest struct {
+type NetworkListsAPIListNetworkListsRequest struct {
 	ctx        context.Context
 	ApiService NetworkListsAPI
 	filter     *string
@@ -538,51 +538,51 @@ type ApiNetworkListsListNetworkListsRequest struct {
 }
 
 // A collection of response resources can be filtered by a logical expression string that includes JSON tag references to values in each resource, literal values, and logical operators. If a resource does not have the specified tag, its value is assumed to be null.  Literal values include numbers (integer and floating-point), and quoted (both single- or double-quoted) literal strings, and &#39;null&#39;.  You can filter by following fields:  | Name                    | type   | Supported Op                | | ----------------------- | ------ | --------------------------- | | id                      | int32  | !&#x3D;, &#x3D;&#x3D;, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D;        | | policy_id               | int32  | !&#x3D;, &#x3D;&#x3D;, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D;        | | name                    | string | !&#x3D;, &#x3D;&#x3D;, ~, !~, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D; | | description             | string | !&#x3D;, &#x3D;&#x3D;, ~, !~, &gt;, &lt;, &lt;&#x3D;, &gt;&#x3D; | | default_security_policy | bool   | !&#x3D;, &#x3D;&#x3D;                      | | items                   | string | &gt;&#x3D;                           |  In addition grouping operators are supported:  | Op  | Description          | | --- | -------------------- | | and | Logical AND          | | or  | Logical OR           | | not | Logical NOT          | | ()  | Groupping Operators  |  Allowed sets of parameters that can be groupped in one query:  - id, policy_id, name, description, default_security_policy - items  Example: &#x60;&#x60;&#x60; ?_filter&#x3D;\&quot;((name&#x3D;&#x3D;&#39;net_list1&#39;)or(name~&#39;list_b&#39;))and(default_security_policy!&#x3D;&#39;true&#39;)\&quot; &#x60;&#x60;&#x60;
-func (r ApiNetworkListsListNetworkListsRequest) Filter(filter string) ApiNetworkListsListNetworkListsRequest {
+func (r NetworkListsAPIListNetworkListsRequest) Filter(filter string) NetworkListsAPIListNetworkListsRequest {
 	r.filter = &filter
 	return r
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiNetworkListsListNetworkListsRequest) Fields(fields string) ApiNetworkListsListNetworkListsRequest {
+func (r NetworkListsAPIListNetworkListsRequest) Fields(fields string) NetworkListsAPIListNetworkListsRequest {
 	r.fields = &fields
 	return r
 }
 
 // The integer index (zero-origin) of the offset into a collection of resources. If omitted or null the value is assumed to be &#39;0&#39;.
-func (r ApiNetworkListsListNetworkListsRequest) Offset(offset int32) ApiNetworkListsListNetworkListsRequest {
+func (r NetworkListsAPIListNetworkListsRequest) Offset(offset int32) NetworkListsAPIListNetworkListsRequest {
 	r.offset = &offset
 	return r
 }
 
 // The integer number of resources to be returned in the response. The service may impose maximum value. If omitted the service may impose a default value.
-func (r ApiNetworkListsListNetworkListsRequest) Limit(limit int32) ApiNetworkListsListNetworkListsRequest {
+func (r NetworkListsAPIListNetworkListsRequest) Limit(limit int32) NetworkListsAPIListNetworkListsRequest {
 	r.limit = &limit
 	return r
 }
 
 // The service-defined string used to identify a page of resources. A null value indicates the first page.
-func (r ApiNetworkListsListNetworkListsRequest) PageToken(pageToken string) ApiNetworkListsListNetworkListsRequest {
+func (r NetworkListsAPIListNetworkListsRequest) PageToken(pageToken string) NetworkListsAPIListNetworkListsRequest {
 	r.pageToken = &pageToken
 	return r
 }
 
-func (r ApiNetworkListsListNetworkListsRequest) Execute() (*AtcfwNetworkListMultiResponse, *http.Response, error) {
-	return r.ApiService.NetworkListsListNetworkListsExecute(r)
+func (r NetworkListsAPIListNetworkListsRequest) Execute() (*NetworkListMultiResponse, *http.Response, error) {
+	return r.ApiService.ListNetworkListsExecute(r)
 }
 
 /*
-NetworkListsListNetworkLists List Network Lists.
+ListNetworkLists List Network Lists.
 
 Use this method to retrieve information on all Network List objects for the account.
 
 Before you can apply security policies, you must first define the networks that you want to protect from malicious attacks. The first step in configuring BloxOne Cloud is to set up DNS Firewall by defining your remote networks. You identify these external networks by their IP addresses. A network can contain a group of IPv4 or IPv6 addresses or blocks.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiNetworkListsListNetworkListsRequest
+	@return NetworkListsAPIListNetworkListsRequest
 */
-func (a *NetworkListsAPIService) NetworkListsListNetworkLists(ctx context.Context) ApiNetworkListsListNetworkListsRequest {
-	return ApiNetworkListsListNetworkListsRequest{
+func (a *NetworkListsAPIService) ListNetworkLists(ctx context.Context) NetworkListsAPIListNetworkListsRequest {
+	return NetworkListsAPIListNetworkListsRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -590,16 +590,16 @@ func (a *NetworkListsAPIService) NetworkListsListNetworkLists(ctx context.Contex
 
 // Execute executes the request
 //
-//	@return AtcfwNetworkListMultiResponse
-func (a *NetworkListsAPIService) NetworkListsListNetworkListsExecute(r ApiNetworkListsListNetworkListsRequest) (*AtcfwNetworkListMultiResponse, *http.Response, error) {
+//	@return NetworkListMultiResponse
+func (a *NetworkListsAPIService) ListNetworkListsExecute(r NetworkListsAPIListNetworkListsRequest) (*NetworkListMultiResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwNetworkListMultiResponse
+		localVarReturnValue *NetworkListMultiResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NetworkListsAPIService.NetworkListsListNetworkLists")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NetworkListsAPIService.ListNetworkLists")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -681,7 +681,7 @@ func (a *NetworkListsAPIService) NetworkListsListNetworkListsExecute(r ApiNetwor
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiNetworkListsReadNetworkListRequest struct {
+type NetworkListsAPIReadNetworkListRequest struct {
 	ctx        context.Context
 	ApiService NetworkListsAPI
 	id         int32
@@ -690,23 +690,23 @@ type ApiNetworkListsReadNetworkListRequest struct {
 }
 
 // A collection of response resources can be transformed by specifying a set of JSON tags to be returned. For a “flat” resource, the tag name is straightforward. If field selection is allowed on non-flat hierarchical resources, the service should implement a qualified naming scheme such as dot-qualification to reference data down the hierarchy. If a resource does not have the specified tag, the tag does not appear in the output resource.  Specify this parameter as a comma-separated list of JSON tag names.
-func (r ApiNetworkListsReadNetworkListRequest) Fields(fields string) ApiNetworkListsReadNetworkListRequest {
+func (r NetworkListsAPIReadNetworkListRequest) Fields(fields string) NetworkListsAPIReadNetworkListRequest {
 	r.fields = &fields
 	return r
 }
 
 // The name of the network list.
-func (r ApiNetworkListsReadNetworkListRequest) Name(name string) ApiNetworkListsReadNetworkListRequest {
+func (r NetworkListsAPIReadNetworkListRequest) Name(name string) NetworkListsAPIReadNetworkListRequest {
 	r.name = &name
 	return r
 }
 
-func (r ApiNetworkListsReadNetworkListRequest) Execute() (*AtcfwNetworkListReadResponse, *http.Response, error) {
-	return r.ApiService.NetworkListsReadNetworkListExecute(r)
+func (r NetworkListsAPIReadNetworkListRequest) Execute() (*NetworkListReadResponse, *http.Response, error) {
+	return r.ApiService.ReadNetworkListExecute(r)
 }
 
 /*
-NetworkListsReadNetworkList Read Network List.
+ReadNetworkList Read Network List.
 
 Use this method to retrieve information on the specified Network List object.
 
@@ -714,10 +714,10 @@ Before you can apply security policies, you must first define the networks that 
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Network List object identifier.
-	@return ApiNetworkListsReadNetworkListRequest
+	@return NetworkListsAPIReadNetworkListRequest
 */
-func (a *NetworkListsAPIService) NetworkListsReadNetworkList(ctx context.Context, id int32) ApiNetworkListsReadNetworkListRequest {
-	return ApiNetworkListsReadNetworkListRequest{
+func (a *NetworkListsAPIService) ReadNetworkList(ctx context.Context, id int32) NetworkListsAPIReadNetworkListRequest {
+	return NetworkListsAPIReadNetworkListRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -726,16 +726,16 @@ func (a *NetworkListsAPIService) NetworkListsReadNetworkList(ctx context.Context
 
 // Execute executes the request
 //
-//	@return AtcfwNetworkListReadResponse
-func (a *NetworkListsAPIService) NetworkListsReadNetworkListExecute(r ApiNetworkListsReadNetworkListRequest) (*AtcfwNetworkListReadResponse, *http.Response, error) {
+//	@return NetworkListReadResponse
+func (a *NetworkListsAPIService) ReadNetworkListExecute(r NetworkListsAPIReadNetworkListRequest) (*NetworkListReadResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwNetworkListReadResponse
+		localVarReturnValue *NetworkListReadResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NetworkListsAPIService.NetworkListsReadNetworkList")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NetworkListsAPIService.ReadNetworkList")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -819,25 +819,25 @@ func (a *NetworkListsAPIService) NetworkListsReadNetworkListExecute(r ApiNetwork
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiNetworkListsUpdateNetworkListRequest struct {
+type NetworkListsAPIUpdateNetworkListRequest struct {
 	ctx        context.Context
 	ApiService NetworkListsAPI
 	id         int32
-	body       *AtcfwNetworkList
+	body       *NetworkList
 }
 
 // The Network List object.
-func (r ApiNetworkListsUpdateNetworkListRequest) Body(body AtcfwNetworkList) ApiNetworkListsUpdateNetworkListRequest {
+func (r NetworkListsAPIUpdateNetworkListRequest) Body(body NetworkList) NetworkListsAPIUpdateNetworkListRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiNetworkListsUpdateNetworkListRequest) Execute() (*AtcfwNetworkListUpdateResponse, *http.Response, error) {
-	return r.ApiService.NetworkListsUpdateNetworkListExecute(r)
+func (r NetworkListsAPIUpdateNetworkListRequest) Execute() (*NetworkListUpdateResponse, *http.Response, error) {
+	return r.ApiService.UpdateNetworkListExecute(r)
 }
 
 /*
-NetworkListsUpdateNetworkList Update Network List.
+UpdateNetworkList Update Network List.
 
 Use this method to update a specified Network List object.
 
@@ -849,10 +849,10 @@ Required:
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The Network List object identifier.
-	@return ApiNetworkListsUpdateNetworkListRequest
+	@return NetworkListsAPIUpdateNetworkListRequest
 */
-func (a *NetworkListsAPIService) NetworkListsUpdateNetworkList(ctx context.Context, id int32) ApiNetworkListsUpdateNetworkListRequest {
-	return ApiNetworkListsUpdateNetworkListRequest{
+func (a *NetworkListsAPIService) UpdateNetworkList(ctx context.Context, id int32) NetworkListsAPIUpdateNetworkListRequest {
+	return NetworkListsAPIUpdateNetworkListRequest{
 		ApiService: a,
 		ctx:        ctx,
 		id:         id,
@@ -861,16 +861,16 @@ func (a *NetworkListsAPIService) NetworkListsUpdateNetworkList(ctx context.Conte
 
 // Execute executes the request
 //
-//	@return AtcfwNetworkListUpdateResponse
-func (a *NetworkListsAPIService) NetworkListsUpdateNetworkListExecute(r ApiNetworkListsUpdateNetworkListRequest) (*AtcfwNetworkListUpdateResponse, *http.Response, error) {
+//	@return NetworkListUpdateResponse
+func (a *NetworkListsAPIService) UpdateNetworkListExecute(r NetworkListsAPIUpdateNetworkListRequest) (*NetworkListUpdateResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPut
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *AtcfwNetworkListUpdateResponse
+		localVarReturnValue *NetworkListUpdateResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NetworkListsAPIService.NetworkListsUpdateNetworkList")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "NetworkListsAPIService.UpdateNetworkList")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}

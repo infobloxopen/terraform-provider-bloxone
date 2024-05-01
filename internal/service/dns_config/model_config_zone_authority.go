@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -85,7 +85,7 @@ var ConfigZoneAuthorityResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigZoneAuthority(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigZoneAuthority {
+func ExpandConfigZoneAuthority(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.ZoneAuthority {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -97,11 +97,11 @@ func ExpandConfigZoneAuthority(ctx context.Context, o types.Object, diags *diag.
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigZoneAuthorityModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigZoneAuthority {
+func (m *ConfigZoneAuthorityModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.ZoneAuthority {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigZoneAuthority{
+	to := &dnsconfig.ZoneAuthority{
 		DefaultTtl:      flex.ExpandInt64Pointer(m.DefaultTtl),
 		Expire:          flex.ExpandInt64Pointer(m.Expire),
 		Mname:           flex.ExpandStringPointer(m.Mname),
@@ -114,7 +114,7 @@ func (m *ConfigZoneAuthorityModel) Expand(ctx context.Context, diags *diag.Diagn
 	return to
 }
 
-func FlattenConfigZoneAuthority(ctx context.Context, from *dns_config.ConfigZoneAuthority, diags *diag.Diagnostics) types.Object {
+func FlattenConfigZoneAuthority(ctx context.Context, from *dnsconfig.ZoneAuthority, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigZoneAuthorityAttrTypes)
 	}
@@ -125,7 +125,7 @@ func FlattenConfigZoneAuthority(ctx context.Context, from *dns_config.ConfigZone
 	return t
 }
 
-func (m *ConfigZoneAuthorityModel) Flatten(ctx context.Context, from *dns_config.ConfigZoneAuthority, diags *diag.Diagnostics) {
+func (m *ConfigZoneAuthorityModel) Flatten(ctx context.Context, from *dnsconfig.ZoneAuthority, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

@@ -100,7 +100,7 @@ var IpamsvcDHCPInfoResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcDHCPInfo(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcDHCPInfo {
+func ExpandIpamsvcDHCPInfo(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.DHCPInfo {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -112,15 +112,15 @@ func ExpandIpamsvcDHCPInfo(ctx context.Context, o types.Object, diags *diag.Diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcDHCPInfoModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcDHCPInfo {
+func (m *IpamsvcDHCPInfoModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.DHCPInfo {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcDHCPInfo{}
+	to := &ipam.DHCPInfo{}
 	return to
 }
 
-func FlattenIpamsvcDHCPInfo(ctx context.Context, from *ipam.IpamsvcDHCPInfo, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcDHCPInfo(ctx context.Context, from *ipam.DHCPInfo, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcDHCPInfoAttrTypes)
 	}
@@ -131,7 +131,7 @@ func FlattenIpamsvcDHCPInfo(ctx context.Context, from *ipam.IpamsvcDHCPInfo, dia
 	return t
 }
 
-func (m *IpamsvcDHCPInfoModel) Flatten(ctx context.Context, from *ipam.IpamsvcDHCPInfo, diags *diag.Diagnostics) {
+func (m *IpamsvcDHCPInfoModel) Flatten(ctx context.Context, from *ipam.DHCPInfo, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

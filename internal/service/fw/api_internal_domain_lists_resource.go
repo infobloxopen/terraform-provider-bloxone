@@ -68,7 +68,7 @@ func (r *InternalDomainListsResource) Create(ctx context.Context, req resource.C
 
 	apiRes, _, err := r.client.FWAPI.
 		InternalDomainListsAPI.
-		InternalDomainListsCreateInternalDomains(ctx).
+		CreateInternalDomains(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -95,7 +95,7 @@ func (r *InternalDomainListsResource) Read(ctx context.Context, req resource.Rea
 
 	apiRes, httpRes, err := r.client.FWAPI.
 		InternalDomainListsAPI.
-		InternalDomainListsReadInternalDomains(ctx, int32(data.Id.ValueInt64())).
+		ReadInternalDomains(ctx, int32(data.Id.ValueInt64())).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *InternalDomainListsResource) Update(ctx context.Context, req resource.U
 
 	apiRes, _, err := r.client.FWAPI.
 		InternalDomainListsAPI.
-		InternalDomainListsUpdateInternalDomains(ctx, int32(data.Id.ValueInt64())).
+		UpdateInternalDomains(ctx, int32(data.Id.ValueInt64())).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *InternalDomainListsResource) Delete(ctx context.Context, req resource.D
 
 	httpRes, err := r.client.FWAPI.
 		InternalDomainListsAPI.
-		InternalDomainListsDeleteSingleInternalDomains(ctx, int32(data.Id.ValueInt64())).
+		DeleteSingleInternalDomains(ctx, int32(data.Id.ValueInt64())).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

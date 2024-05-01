@@ -114,7 +114,7 @@ var ProtoAnycastConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandProtoAnycastConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.ProtoAnycastConfig {
+func ExpandProtoAnycastConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.AnycastConfig {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -126,11 +126,11 @@ func ExpandProtoAnycastConfig(ctx context.Context, o types.Object, diags *diag.D
 	return m.Expand(ctx, diags)
 }
 
-func (m *ProtoAnycastConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.ProtoAnycastConfig {
+func (m *ProtoAnycastConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.AnycastConfig {
 	if m == nil {
 		return nil
 	}
-	to := &anycast.ProtoAnycastConfig{
+	to := &anycast.AnycastConfig{
 		AccountId:          flex.ExpandInt64Pointer(m.AccountId),
 		AnycastIpAddress:   flex.ExpandStringPointer(m.AnycastIpAddress),
 		AnycastIpv6Address: flex.ExpandStringPointer(m.AnycastIpv6Address),
@@ -147,7 +147,7 @@ func (m *ProtoAnycastConfigModel) Expand(ctx context.Context, diags *diag.Diagno
 	return to
 }
 
-func FlattenProtoAnycastConfig(ctx context.Context, from *anycast.ProtoAnycastConfig, diags *diag.Diagnostics) types.Object {
+func FlattenProtoAnycastConfig(ctx context.Context, from *anycast.AnycastConfig, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ProtoAnycastConfigAttrTypes)
 	}
@@ -158,7 +158,7 @@ func FlattenProtoAnycastConfig(ctx context.Context, from *anycast.ProtoAnycastCo
 	return t
 }
 
-func (m *ProtoAnycastConfigModel) Flatten(ctx context.Context, from *anycast.ProtoAnycastConfig, diags *diag.Diagnostics) {
+func (m *ProtoAnycastConfigModel) Flatten(ctx context.Context, from *anycast.AnycastConfig, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

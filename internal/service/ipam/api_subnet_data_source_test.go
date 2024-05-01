@@ -15,7 +15,7 @@ import (
 func TestAccSubnetDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_subnets.test"
 	resourceName := "bloxone_ipam_subnet.test"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -38,7 +38,7 @@ func TestAccSubnetDataSource_Filters(t *testing.T) {
 func TestAccSubnetDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_subnets.test"
 	resourceName := "bloxone_ipam_subnet.test"
-	var v ipam.IpamsvcSubnet
+	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{

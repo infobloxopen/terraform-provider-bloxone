@@ -68,7 +68,7 @@ func (r *ServerResource) Create(ctx context.Context, req resource.CreateRequest,
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
 		ServerAPI.
-		ServerCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Inherit(inheritanceType).
 		Execute()
@@ -96,7 +96,7 @@ func (r *ServerResource) Read(ctx context.Context, req resource.ReadRequest, res
 
 	apiRes, httpRes, err := r.client.DNSConfigurationAPI.
 		ServerAPI.
-		ServerRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
@@ -127,7 +127,7 @@ func (r *ServerResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
 		ServerAPI.
-		ServerUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Inherit(inheritanceType).
 		Execute()
@@ -155,7 +155,7 @@ func (r *ServerResource) Delete(ctx context.Context, req resource.DeleteRequest,
 
 	httpRes, err := r.client.DNSConfigurationAPI.
 		ServerAPI.
-		ServerDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

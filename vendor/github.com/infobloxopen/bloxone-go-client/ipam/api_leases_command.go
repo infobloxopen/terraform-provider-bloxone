@@ -22,50 +22,50 @@ import (
 
 type LeasesCommandAPI interface {
 	/*
-			LeasesCommandCreate Perform actions like clearing DHCP lease(s).
+			Create Perform actions like clearing DHCP lease(s).
 
 			Use this method to create a __LeasesCommand__ object.
 		The __LeasesCommand__ object (_dhcp/leases_command_) is used for performing an action like clearing DHCP lease(s).
 
 			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-			@return ApiLeasesCommandCreateRequest
+			@return LeasesCommandAPICreateRequest
 	*/
-	LeasesCommandCreate(ctx context.Context) ApiLeasesCommandCreateRequest
+	Create(ctx context.Context) LeasesCommandAPICreateRequest
 
-	// LeasesCommandCreateExecute executes the request
-	//  @return IpamsvcCreateLeasesCommandResponse
-	LeasesCommandCreateExecute(r ApiLeasesCommandCreateRequest) (*IpamsvcCreateLeasesCommandResponse, *http.Response, error)
+	// CreateExecute executes the request
+	//  @return CreateLeasesCommandResponse
+	CreateExecute(r LeasesCommandAPICreateRequest) (*CreateLeasesCommandResponse, *http.Response, error)
 }
 
 // LeasesCommandAPIService LeasesCommandAPI service
 type LeasesCommandAPIService internal.Service
 
-type ApiLeasesCommandCreateRequest struct {
+type LeasesCommandAPICreateRequest struct {
 	ctx        context.Context
 	ApiService LeasesCommandAPI
-	body       *IpamsvcLeasesCommand
+	body       *LeasesCommand
 }
 
-func (r ApiLeasesCommandCreateRequest) Body(body IpamsvcLeasesCommand) ApiLeasesCommandCreateRequest {
+func (r LeasesCommandAPICreateRequest) Body(body LeasesCommand) LeasesCommandAPICreateRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiLeasesCommandCreateRequest) Execute() (*IpamsvcCreateLeasesCommandResponse, *http.Response, error) {
-	return r.ApiService.LeasesCommandCreateExecute(r)
+func (r LeasesCommandAPICreateRequest) Execute() (*CreateLeasesCommandResponse, *http.Response, error) {
+	return r.ApiService.CreateExecute(r)
 }
 
 /*
-LeasesCommandCreate Perform actions like clearing DHCP lease(s).
+Create Perform actions like clearing DHCP lease(s).
 
 Use this method to create a __LeasesCommand__ object.
 The __LeasesCommand__ object (_dhcp/leases_command_) is used for performing an action like clearing DHCP lease(s).
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiLeasesCommandCreateRequest
+	@return LeasesCommandAPICreateRequest
 */
-func (a *LeasesCommandAPIService) LeasesCommandCreate(ctx context.Context) ApiLeasesCommandCreateRequest {
-	return ApiLeasesCommandCreateRequest{
+func (a *LeasesCommandAPIService) Create(ctx context.Context) LeasesCommandAPICreateRequest {
+	return LeasesCommandAPICreateRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -73,16 +73,16 @@ func (a *LeasesCommandAPIService) LeasesCommandCreate(ctx context.Context) ApiLe
 
 // Execute executes the request
 //
-//	@return IpamsvcCreateLeasesCommandResponse
-func (a *LeasesCommandAPIService) LeasesCommandCreateExecute(r ApiLeasesCommandCreateRequest) (*IpamsvcCreateLeasesCommandResponse, *http.Response, error) {
+//	@return CreateLeasesCommandResponse
+func (a *LeasesCommandAPIService) CreateExecute(r LeasesCommandAPICreateRequest) (*CreateLeasesCommandResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []internal.FormFile
-		localVarReturnValue *IpamsvcCreateLeasesCommandResponse
+		localVarReturnValue *CreateLeasesCommandResponse
 	)
 
-	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "LeasesCommandAPIService.LeasesCommandCreate")
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "LeasesCommandAPIService.Create")
 	if err != nil {
 		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
 	}
@@ -115,20 +115,6 @@ func (a *LeasesCommandAPIService) LeasesCommandCreateExecute(r ApiLeasesCommandC
 	}
 	// body params
 	localVarPostBody = r.body
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(internal.ContextAPIKeys).(map[string]internal.APIKey); ok {
-			if apiKey, ok := auth["ApiKeyAuth"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
 	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

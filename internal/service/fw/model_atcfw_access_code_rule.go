@@ -2,6 +2,7 @@ package fw
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -60,7 +61,7 @@ var AtcfwAccessCodeRuleResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandAtcfwAccessCodeRule(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.AtcfwAccessCodeRule {
+func ExpandAtcfwAccessCodeRule(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.AccessCodeRule {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -72,11 +73,11 @@ func ExpandAtcfwAccessCodeRule(ctx context.Context, o types.Object, diags *diag.
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcfwAccessCodeRuleModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.AtcfwAccessCodeRule {
+func (m *AtcfwAccessCodeRuleModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.AccessCodeRule {
 	if m == nil {
 		return nil
 	}
-	to := &fw.AtcfwAccessCodeRule{
+	to := &fw.AccessCodeRule{
 		Action:       flex.ExpandStringPointer(m.Action),
 		Data:         flex.ExpandStringPointer(m.Data),
 		Description:  flex.ExpandStringPointer(m.Description),
@@ -86,7 +87,7 @@ func (m *AtcfwAccessCodeRuleModel) Expand(ctx context.Context, diags *diag.Diagn
 	return to
 }
 
-func FlattenAtcfwAccessCodeRule(ctx context.Context, from *fw.AtcfwAccessCodeRule, diags *diag.Diagnostics) types.Object {
+func FlattenAtcfwAccessCodeRule(ctx context.Context, from *fw.AccessCodeRule, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwAccessCodeRuleAttrTypes)
 	}
@@ -97,7 +98,7 @@ func FlattenAtcfwAccessCodeRule(ctx context.Context, from *fw.AtcfwAccessCodeRul
 	return t
 }
 
-func (m *AtcfwAccessCodeRuleModel) Flatten(ctx context.Context, from *fw.AtcfwAccessCodeRule, diags *diag.Diagnostics) {
+func (m *AtcfwAccessCodeRuleModel) Flatten(ctx context.Context, from *fw.AccessCodeRule, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

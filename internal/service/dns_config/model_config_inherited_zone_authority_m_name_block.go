@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -49,7 +49,7 @@ var ConfigInheritedZoneAuthorityMNameBlockResourceSchemaAttributes = map[string]
 	},
 }
 
-func ExpandConfigInheritedZoneAuthorityMNameBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigInheritedZoneAuthorityMNameBlock {
+func ExpandConfigInheritedZoneAuthorityMNameBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.InheritedZoneAuthorityMNameBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -61,17 +61,17 @@ func ExpandConfigInheritedZoneAuthorityMNameBlock(ctx context.Context, o types.O
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigInheritedZoneAuthorityMNameBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigInheritedZoneAuthorityMNameBlock {
+func (m *ConfigInheritedZoneAuthorityMNameBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.InheritedZoneAuthorityMNameBlock {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigInheritedZoneAuthorityMNameBlock{
+	to := &dnsconfig.InheritedZoneAuthorityMNameBlock{
 		Action: flex.ExpandStringPointer(m.Action),
 	}
 	return to
 }
 
-func FlattenConfigInheritedZoneAuthorityMNameBlock(ctx context.Context, from *dns_config.ConfigInheritedZoneAuthorityMNameBlock, diags *diag.Diagnostics) types.Object {
+func FlattenConfigInheritedZoneAuthorityMNameBlock(ctx context.Context, from *dnsconfig.InheritedZoneAuthorityMNameBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigInheritedZoneAuthorityMNameBlockAttrTypes)
 	}
@@ -82,7 +82,7 @@ func FlattenConfigInheritedZoneAuthorityMNameBlock(ctx context.Context, from *dn
 	return t
 }
 
-func (m *ConfigInheritedZoneAuthorityMNameBlockModel) Flatten(ctx context.Context, from *dns_config.ConfigInheritedZoneAuthorityMNameBlock, diags *diag.Diagnostics) {
+func (m *ConfigInheritedZoneAuthorityMNameBlockModel) Flatten(ctx context.Context, from *dnsconfig.InheritedZoneAuthorityMNameBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

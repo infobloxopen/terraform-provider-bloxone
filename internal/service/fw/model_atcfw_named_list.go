@@ -2,6 +2,7 @@ package fw
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
@@ -98,6 +99,7 @@ var AtcfwNamedListResourceSchemaAttributes = map[string]schema.Attribute{
 	"policies": schema.ListAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The list of the security policy names with which the named list is associated.",
 	},
 	"tags": schema.MapAttribute{
@@ -125,7 +127,7 @@ var AtcfwNamedListResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandAtcfwNamedList(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.AtcfwNamedList {
+func ExpandAtcfwNamedList(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.NamedList {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -137,11 +139,11 @@ func ExpandAtcfwNamedList(ctx context.Context, o types.Object, diags *diag.Diagn
 	return m.Expand(ctx, diags)
 }
 
-func (m *AtcfwNamedListModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.AtcfwNamedList {
+func (m *AtcfwNamedListModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.NamedList {
 	if m == nil {
 		return nil
 	}
-	to := &fw.AtcfwNamedList{
+	to := &fw.NamedList{
 		ConfidenceLevel: flex.ExpandStringPointer(m.ConfidenceLevel),
 		Description:     flex.ExpandStringPointer(m.Description),
 		Items:           flex.ExpandFrameworkListString(ctx, m.Items, diags),
@@ -155,7 +157,7 @@ func (m *AtcfwNamedListModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenAtcfwNamedList(ctx context.Context, from *fw.AtcfwNamedList, diags *diag.Diagnostics) types.Object {
+func FlattenAtcfwNamedList(ctx context.Context, from *fw.NamedList, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwNamedListAttrTypes)
 	}
@@ -166,7 +168,7 @@ func FlattenAtcfwNamedList(ctx context.Context, from *fw.AtcfwNamedList, diags *
 	return t
 }
 
-func (m *AtcfwNamedListModel) Flatten(ctx context.Context, from *fw.AtcfwNamedList, diags *diag.Diagnostics) {
+func (m *AtcfwNamedListModel) Flatten(ctx context.Context, from *fw.NamedList, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

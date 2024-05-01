@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -49,7 +49,7 @@ var ConfigInheritedDNSSECValidationBlockResourceSchemaAttributes = map[string]sc
 	},
 }
 
-func ExpandConfigInheritedDNSSECValidationBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigInheritedDNSSECValidationBlock {
+func ExpandConfigInheritedDNSSECValidationBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.InheritedDNSSECValidationBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -61,17 +61,17 @@ func ExpandConfigInheritedDNSSECValidationBlock(ctx context.Context, o types.Obj
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigInheritedDNSSECValidationBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigInheritedDNSSECValidationBlock {
+func (m *ConfigInheritedDNSSECValidationBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.InheritedDNSSECValidationBlock {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigInheritedDNSSECValidationBlock{
+	to := &dnsconfig.InheritedDNSSECValidationBlock{
 		Action: flex.ExpandStringPointer(m.Action),
 	}
 	return to
 }
 
-func FlattenConfigInheritedDNSSECValidationBlock(ctx context.Context, from *dns_config.ConfigInheritedDNSSECValidationBlock, diags *diag.Diagnostics) types.Object {
+func FlattenConfigInheritedDNSSECValidationBlock(ctx context.Context, from *dnsconfig.InheritedDNSSECValidationBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigInheritedDNSSECValidationBlockAttrTypes)
 	}
@@ -82,7 +82,7 @@ func FlattenConfigInheritedDNSSECValidationBlock(ctx context.Context, from *dns_
 	return t
 }
 
-func (m *ConfigInheritedDNSSECValidationBlockModel) Flatten(ctx context.Context, from *dns_config.ConfigInheritedDNSSECValidationBlock, diags *diag.Diagnostics) {
+func (m *ConfigInheritedDNSSECValidationBlockModel) Flatten(ctx context.Context, from *dnsconfig.InheritedDNSSECValidationBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
