@@ -63,6 +63,7 @@ func PreCheck(t *testing.T) {
 		option.WithClientName("terraform-acceptance-tests"),
 		option.WithCSPUrl(cspURL),
 		option.WithAPIKey(apiKey),
+		option.WithDebug(true),
 	)
 }
 

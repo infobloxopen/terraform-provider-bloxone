@@ -12,6 +12,7 @@ import (
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/option"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dfp"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_data"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/fw"
@@ -125,6 +126,8 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 
 		keys.NewTsigResource,
 
+		dfp.NewDfpResource,
+
 		fw.NewSecurityPoliciesResource,
 		fw.NewAccessCodesResource,
 		fw.NewNamedListsResource,
@@ -184,6 +187,8 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 
 		keys.NewTsigDataSource,
 		keys.NewKerberosDataSource,
+
+		dfp.NewDfpDataSource,
 
 		fw.NewSecurityPoliciesDataSource,
 		fw.NewAccessCodesDataSource,
