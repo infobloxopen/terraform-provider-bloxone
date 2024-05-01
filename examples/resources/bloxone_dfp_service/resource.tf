@@ -1,13 +1,5 @@
-resource "bloxone_infra_host" "example_host" {
-  display_name = "example_host"
-}
-resource "bloxone_infra_service" "example" {
-  name           = "example_dfp_service"
-  pool_id        = bloxone_infra_host.example_host.pool_id
-  service_type   = "dfp"
-  desired_state  = "start"
-  wait_for_state = false
-
+data "bloxone_infra_services" "example" {
+  name = "example_dfp_service"
 }
 
 resource "bloxone_td_internal_domain_list" "example_list" {
@@ -16,7 +8,7 @@ resource "bloxone_td_internal_domain_list" "example_list" {
 }
 
 resource "bloxone_dfp_service" "example" {
-  service_id = bloxone_infra_service.example.id
+  service_id = data.bloxone_infra_services.example.results.0.id
 
   # Other optional fields
   internal_domain_lists = [bloxone_td_internal_domain_list.example_list.id]

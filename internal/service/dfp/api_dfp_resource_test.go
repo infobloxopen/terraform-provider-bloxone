@@ -164,21 +164,23 @@ resource "bloxone_dfp_service" "test" {
 }
 
 func testAccDfpInternalDomainLists(hostName, internalDomainList string) string {
+	list1 := acctest.RandomNameWithPrefix("td-internal_domain_list")
+	list2 := acctest.RandomNameWithPrefix("td-internal_domain_list")
 	config := fmt.Sprintf(`
 resource "bloxone_td_internal_domain_list" "test1" {
-	name = "internal_domain_list_1"
+	name = %q
 	internal_domains = ["example.somedomain.com"]
 }
 
 resource "bloxone_td_internal_domain_list" "test2" {
-	name = "internal_domain_list_2"
+	name = %q
 	internal_domains = ["example.newdomain.com"]
 }
 resource "bloxone_dfp_service" "test_internal_domain_lists" {
 	service_id = bloxone_infra_service.example.id
 	internal_domain_lists = [ bloxone_td_internal_domain_list.%s.id ]
 }
-`, internalDomainList)
+`, list1, list2, internalDomainList)
 	return strings.Join([]string{testAccBaseWithInfraService(hostName), config}, "")
 }
 

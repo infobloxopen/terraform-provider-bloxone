@@ -88,7 +88,6 @@ var DfpResourceSchemaAttributes = map[string]schema.Attribute{
 	"internal_domain_lists": schema.ListAttribute{
 		ElementType:         types.Int64Type,
 		Optional:            true,
-		Computed:            true,
 		MarkdownDescription: "The list of internal domains list IDs that are associated with this DFP",
 	},
 	"name": schema.StringAttribute{

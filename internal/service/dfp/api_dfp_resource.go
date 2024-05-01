@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 	"net/http"
 )
 
@@ -68,7 +67,7 @@ func (r *DfpResource) Create(ctx context.Context, req resource.CreateRequest, re
 
 	_, _, err := r.client.DNSForwardingProxyAPI.
 		InfraServicesAPI.
-		CreateOrUpdateDfpService(ctx, utils.ExtractResourceId(data.ServiceId.ValueString())).
+		CreateOrUpdateDfpService(ctx, data.ServiceId.ValueString()).
 		Body(*data.ExpandCreateOrUpdatePayload(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -79,7 +78,7 @@ func (r *DfpResource) Create(ctx context.Context, req resource.CreateRequest, re
 	// We call Read again, so that the fields not part of the CreateOrUpdatePayload are also populated
 	apiRes, _, err := r.client.DNSForwardingProxyAPI.
 		InfraServicesAPI.
-		ReadDfpService(ctx, utils.ExtractResourceId(data.ServiceId.ValueString())).
+		ReadDfpService(ctx, data.ServiceId.ValueString()).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Dfp, got error: %s", err))
@@ -104,7 +103,7 @@ func (r *DfpResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 
 	apiRes, httpRes, err := r.client.DNSForwardingProxyAPI.
 		InfraServicesAPI.
-		ReadDfpService(ctx, utils.ExtractResourceId(data.ServiceId.ValueString())).
+		ReadDfpService(ctx, data.ServiceId.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -134,7 +133,7 @@ func (r *DfpResource) Update(ctx context.Context, req resource.UpdateRequest, re
 
 	_, _, err := r.client.DNSForwardingProxyAPI.
 		InfraServicesAPI.
-		CreateOrUpdateDfpService(ctx, utils.ExtractResourceId(data.ServiceId.ValueString())).
+		CreateOrUpdateDfpService(ctx, data.ServiceId.ValueString()).
 		Body(*data.ExpandCreateOrUpdatePayload(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -145,7 +144,7 @@ func (r *DfpResource) Update(ctx context.Context, req resource.UpdateRequest, re
 	// We call Read again, so that the fields not part of the CreateOrUpdatePayload are also populated
 	apiRes, _, err := r.client.DNSForwardingProxyAPI.
 		InfraServicesAPI.
-		ReadDfpService(ctx, utils.ExtractResourceId(data.ServiceId.ValueString())).
+		ReadDfpService(ctx, data.ServiceId.ValueString()).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Dfp, got error: %s", err))
