@@ -36,30 +36,6 @@ func TestAccOnPremAnycastManagerDataSource_Services(t *testing.T) {
 	})
 }
 
-func TestAccOnPremAnycastManagerDataSource_HostIDs(t *testing.T) {
-	dataSourceName := "data.bloxone_anycast_configs.test"
-	resourceName := "bloxone_anycast_config.test_onprem_hosts"
-	var v anycast.AnycastConfig
-	anycastName := acctest.RandomNameWithPrefix("anycast")
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckOnPremAnycastManagerDestroy(context.Background(), &v),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccOnPremAnycastManagerDataSourceConfigHostID("10.1.1.2", anycastName, "DNS"),
-				Check: resource.ComposeTestCheckFunc(
-					append([]resource.TestCheckFunc{
-						resource.TestCheckResourceAttr(dataSourceName, "results.0.name", anycastName),
-						testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
-					}, testAccCheckOnPremAnycastManagerResourceAttrPair(resourceName, dataSourceName)...)...,
-				),
-			},
-		},
-	})
-}
-
 func TestAccOnPremAnycastManagerDataSource_IsConfigured(t *testing.T) {
 	t.Skip("Skipping until ospf and bgp is implemented ")
 	dataSourceName := "data.bloxone_anycast_configs.test"
@@ -147,50 +123,12 @@ resource "bloxone_anycast_config" "test_onprem_hosts" {
     anycast_ip_address = %q
     name = %q
     service = %q
-    onprem_hosts = [
-	{
-		id = data.bloxone_infra_hosts.anycast_hosts.results.0.legacy_id
-		name = data.bloxone_infra_hosts.anycast_hosts.results.0.display_name
-	}
-	]
 }
 data "bloxone_anycast_configs" "test" {
 	service = %q
 	depends_on = [bloxone_anycast_config.test_onprem_hosts]
 }
 `, anycastIpAddress, name, service, service)
-}
-
-func testAccOnPremAnycastManagerDataSourceConfigHostID(anycastIpAddress, name, service string) string {
-	return fmt.Sprintf(`
-data "bloxone_infra_services" "anycast_services" {
-    filters = {
-      service_type = "anycast"
-    }
-}
-
-data "bloxone_infra_hosts" "anycast_hosts" {
-    filters = {
-      pool_id = data.bloxone_infra_services.anycast_services.results.0.pool_id
-    }
-}
-
-resource "bloxone_anycast_config" "test_onprem_hosts" {
-    anycast_ip_address = %q
-    name = %q
-    service = %q
-    onprem_hosts = [
-	{
-		id = data.bloxone_infra_hosts.anycast_hosts.results.0.legacy_id
-		name = data.bloxone_infra_hosts.anycast_hosts.results.0.display_name
-	}
-	]
-}
-data "bloxone_anycast_configs" "test" {
-	host_id = data.bloxone_infra_hosts.anycast_hosts.results.0.legacy_id
-	depends_on = [bloxone_anycast_config.test_onprem_hosts]
-}
-`, anycastIpAddress, name, service)
 }
 
 func testAccOnPremAnycastManagerDataSourceConfigIsConfigured(anycastIpAddress, name, service string) string {
@@ -211,12 +149,6 @@ resource "bloxone_anycast_config" "test_onprem_hosts" {
     anycast_ip_address = %q
     name = %q
     service = %q
-    onprem_hosts = [
-	{
-		id = data.bloxone_infra_hosts.anycast_hosts.results.0.legacy_id
-		name = data.bloxone_infra_hosts.anycast_hosts.results.0.display_name
-	}
-	]
 }
 data "bloxone_anycast_configs" "test" {
 	is_configured = false

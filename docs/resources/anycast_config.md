@@ -52,7 +52,6 @@ resource "bloxone_anycast_config" "example" {
 
 - `anycast_ipv6_address` (String) IPv6 address of the host in string format
 - `description` (String) The description for the address object. May contain 0 to 1024 characters. Can include UTF-8.
-- `onprem_hosts` (Attributes List) (see [below for nested schema](#nestedatt--onprem_hosts))
 - `tags` (Map of String) Tagging specifics.
 
 ### Read-Only
@@ -61,6 +60,7 @@ resource "bloxone_anycast_config" "example" {
 - `created_at` (String) Time when the object has been created.
 - `id` (Number) The resource identifier.
 - `is_configured` (Boolean)
+- `onprem_hosts` (Attributes List) (see [below for nested schema](#nestedatt--onprem_hosts))
 - `runtime_status` (String)
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 

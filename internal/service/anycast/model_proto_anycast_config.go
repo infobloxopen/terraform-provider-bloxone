@@ -93,7 +93,7 @@ var ProtoAnycastConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ProtoOnpremHostRefResourceSchemaAttributes,
 		},
-		Optional: true,
+		Computed: true,
 	},
 	"runtime_status": schema.StringAttribute{
 		Computed: true,
@@ -134,15 +134,11 @@ func (m *ProtoAnycastConfigModel) Expand(ctx context.Context, diags *diag.Diagno
 		AccountId:          flex.ExpandInt64Pointer(m.AccountId),
 		AnycastIpAddress:   flex.ExpandStringPointer(m.AnycastIpAddress),
 		AnycastIpv6Address: flex.ExpandStringPointer(m.AnycastIpv6Address),
-		CreatedAt:          flex.ExpandTimePointer(ctx, m.CreatedAt, diags),
 		Description:        flex.ExpandStringPointer(m.Description),
-		IsConfigured:       flex.ExpandBoolPointer(m.IsConfigured),
 		Name:               flex.ExpandStringPointer(m.Name),
 		OnpremHosts:        flex.ExpandFrameworkListNestedBlock(ctx, m.OnpremHosts, diags, ExpandProtoOnpremHostRef),
-		RuntimeStatus:      flex.ExpandStringPointer(m.RuntimeStatus),
 		Service:            flex.ExpandStringPointer(m.Service),
 		Tags:               flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
-		UpdatedAt:          flex.ExpandTimePointer(ctx, m.UpdatedAt, diags),
 	}
 	return to
 }
