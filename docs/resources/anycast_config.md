@@ -39,7 +39,7 @@ resource "bloxone_anycast_config" "example" {
 
 ### Required
 
-- `anycast_ip_address` (String)
+- `anycast_ip_address` (String) IPv4 address of the host in string format.
 - `name` (String) The name of the anycast configuration.
 - `service` (String) The type of the Service used in anycast configuration, supports (`dns`, `dhcp`, `dfp`).
 

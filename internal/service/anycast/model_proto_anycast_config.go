@@ -55,7 +55,8 @@ var ProtoAnycastConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The account identifier.",
 	},
 	"anycast_ip_address": schema.StringAttribute{
-		Required: true,
+		Required:            true,
+		MarkdownDescription: "IPv4 address of the host in string format.",
 	},
 	"anycast_ipv6_address": schema.StringAttribute{
 		Optional:            true,
