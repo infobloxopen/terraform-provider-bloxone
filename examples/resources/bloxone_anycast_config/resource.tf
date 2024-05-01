@@ -1,19 +1,13 @@
-data "bloxone_infra_services" "anycast_services" {
+data "bloxone_infra_hosts" "anycast_host" {
   filters = {
-    service_type = "anycast"
-  }
-}
-
-data "bloxone_infra_hosts" "anycast_hosts" {
-  filters = {
-    pool_id = data.bloxone_infra_services.anycast_services.results.0.pool_id
+    display_name = "my_host"
   }
 }
 
 #Create anycast configuration with necessary fields
-resource "bloxone_anycast_ac_config" "example" {
+resource "bloxone_anycast_config" "example" {
 
-  name               = "anycast_config_test"
+  name               = "anycast_example"
   service            = "DNS"
   anycast_ip_address = "192.2.2.1"
 
@@ -23,8 +17,8 @@ resource "bloxone_anycast_ac_config" "example" {
 
   onprem_hosts = [
     {
-      id   = data.bloxone_infra_hosts.anycast_hosts.results.0.legacy_id
-      name = data.bloxone_infra_hosts.anycast_hosts.results.0.display_name
+      id   = data.bloxone_infra_hosts.anycast_host.results.0.legacy_id
+      name = data.bloxone_infra_hosts.anycast_host.results.0.display_name
     }
   ]
 }
