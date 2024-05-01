@@ -136,7 +136,6 @@ func (m *ProtoAnycastConfigModel) Expand(ctx context.Context, diags *diag.Diagno
 		AnycastIpv6Address: flex.ExpandStringPointer(m.AnycastIpv6Address),
 		Description:        flex.ExpandStringPointer(m.Description),
 		Name:               flex.ExpandStringPointer(m.Name),
-		OnpremHosts:        flex.ExpandFrameworkListNestedBlock(ctx, m.OnpremHosts, diags, ExpandProtoOnpremHostRef),
 		Service:            flex.ExpandStringPointer(m.Service),
 		Tags:               flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
