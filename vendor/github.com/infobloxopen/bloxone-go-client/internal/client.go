@@ -132,11 +132,24 @@ func typeCheckParameter(obj interface{}, expected string, name string) error {
 }
 
 func ParameterValueToString(obj interface{}, key string) string {
+	if key == "id" {
+		// "id" is always assumed to be a resource_id
+		// If "id" is not a resource_id, it should be explicitly set to have a different type using "x-gosdk-type" extension
+		return ParameterValueToStringForType(obj, key, "resource_id")
+	}
+	return ParameterValueToStringForType(obj, key, "")
+}
+
+func ParameterValueToStringForType(obj interface{}, key string, objType string) string {
+	if objType == "resource_id" {
+		return extractResourceId(parameterValueToString(obj, key))
+	}
+	return parameterValueToString(obj, key)
+}
+
+func parameterValueToString(obj interface{}, key string) string {
 	if reflect.TypeOf(obj).Kind() != reflect.Ptr {
 		s := fmt.Sprintf("%v", obj)
-		if key == "id" {
-			s = extractResourceId(s)
-		}
 		return s
 	}
 	var param, ok = obj.(MappedNullable)
@@ -148,9 +161,6 @@ func ParameterValueToString(obj interface{}, key string) string {
 		return ""
 	}
 	s := fmt.Sprintf("%v", dataMap[key])
-	if key == "id" {
-		s = extractResourceId(s)
-	}
 	return s
 }
 

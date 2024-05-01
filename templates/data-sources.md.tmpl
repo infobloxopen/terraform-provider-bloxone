@@ -14,6 +14,8 @@ subcategory: "{{- $group := index (split .Name "_") 1 -}}
   Keys
 {{- else if eq $group "anycast" -}}
   Anycast
+{{- else if eq $group "dfp" -}}
+  Threat Defense
 {{- end -}}"
 description: |-
 {{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
