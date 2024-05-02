@@ -477,23 +477,6 @@ func testAccCheckSecurityPoliciesDisappears(ctx context.Context, v *fw.SecurityP
 	}
 }
 
-func testAccBaseWithInfraService(hostName string) string {
-	return fmt.Sprintf(`
-resource "bloxone_infra_host" "test_host" {
-	display_name = %q
-}
-
-resource "bloxone_infra_service" "example" {
-	name = "example_dfp_service"
-	pool_id = bloxone_infra_host.test_host.pool_id
-	service_type = "dfp"
-	desired_state = "start"
-	wait_for_state = false
-	depends_on = [bloxone_infra_host.test_host]
-}
-`, hostName)
-}
-
 func testAccSecurityPoliciesBasicConfig(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_security_policy" "test" {
