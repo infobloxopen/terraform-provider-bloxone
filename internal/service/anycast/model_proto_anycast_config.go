@@ -2,6 +2,7 @@ package anycast
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
@@ -30,6 +31,7 @@ type ProtoAnycastConfigModel struct {
 	RuntimeStatus      types.String      `tfsdk:"runtime_status"`
 	Service            types.String      `tfsdk:"service"`
 	Tags               types.Map         `tfsdk:"tags"`
+	TagsAll            types.Map         `tfsdk:"tags_all"`
 	UpdatedAt          timetypes.RFC3339 `tfsdk:"updated_at"`
 }
 
@@ -46,6 +48,7 @@ var ProtoAnycastConfigAttrTypes = map[string]attr.Type{
 	"runtime_status":       types.StringType,
 	"service":              types.StringType,
 	"tags":                 types.MapType{ElemType: types.StringType},
+	"tags_all":             types.MapType{ElemType: types.StringType},
 	"updated_at":           timetypes.RFC3339Type{},
 }
 
@@ -101,7 +104,12 @@ var ProtoAnycastConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
-		MarkdownDescription: "Tagging specifics.",
+		MarkdownDescription: "The tags for the anycast configuration object.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the anycast configuration object, including default tags.",
 	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -138,12 +146,13 @@ func (m *ProtoAnycastConfigModel) Expand(ctx context.Context, diags *diag.Diagno
 	return to
 }
 
-func FlattenProtoAnycastConfig(ctx context.Context, from *anycast.AnycastConfig, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenProtoAnycastConfig(ctx context.Context, from *anycast.AnycastConfig, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ProtoAnycastConfigAttrTypes)
 	}
 	m := ProtoAnycastConfigModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, ProtoAnycastConfigAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -167,6 +176,6 @@ func (m *ProtoAnycastConfigModel) Flatten(ctx context.Context, from *anycast.Any
 	m.OnpremHosts = flex.FlattenFrameworkListNestedBlock(ctx, from.OnpremHosts, ProtoOnpremHostRefAttrTypes, diags, FlattenProtoOnpremHostRef)
 	m.RuntimeStatus = flex.FlattenStringPointer(from.RuntimeStatus)
 	m.Service = flex.FlattenStringPointer(from.Service)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }

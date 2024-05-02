@@ -17,6 +17,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
+// TODO: this model is redundant, and should be removed
 type AtcfwNamedListReadModel struct {
 	ConfidenceLevel types.String      `tfsdk:"confidence_level"`
 	CreatedTime     timetypes.RFC3339 `tfsdk:"created_time"`
@@ -26,6 +27,7 @@ type AtcfwNamedListReadModel struct {
 	Name            types.String      `tfsdk:"name"`
 	Policies        types.List        `tfsdk:"policies"`
 	Tags            types.Map         `tfsdk:"tags"`
+	TagsAll         types.Map         `tfsdk:"tags_all"`
 	ThreatLevel     types.String      `tfsdk:"threat_level"`
 	Type            types.String      `tfsdk:"type"`
 	UpdatedTime     timetypes.RFC3339 `tfsdk:"updated_time"`
@@ -40,6 +42,7 @@ var AtcfwNamedListReadAttrTypes = map[string]attr.Type{
 	"name":             types.StringType,
 	"policies":         types.ListType{ElemType: types.StringType},
 	"tags":             types.MapType{ElemType: types.StringType},
+	"tags_all":         types.MapType{ElemType: types.StringType},
 	"threat_level":     types.StringType,
 	"type":             types.StringType,
 	"updated_time":     timetypes.RFC3339Type{},
@@ -84,6 +87,11 @@ var AtcfwNamedListReadResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "Tags associated with this Named List",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "Tags associated with this Named List, including default tags",
+	},
 	"threat_level": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: "The threat level for a custom list. The possible values are [\"INFO\", \"LOW\", \"MEDIUM\", \"HIGH\"]",
@@ -121,12 +129,13 @@ func (m *AtcfwNamedListReadModel) Expand(ctx context.Context, diags *diag.Diagno
 	return to
 }
 
-func FlattenAtcfwNamedListRead(ctx context.Context, from *fw.NamedListRead, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenAtcfwNamedListRead(ctx context.Context, from *fw.NamedListRead, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwNamedListReadAttrTypes)
 	}
 	m := AtcfwNamedListReadModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, AtcfwNamedListReadAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -146,7 +155,7 @@ func (m *AtcfwNamedListReadModel) Flatten(ctx context.Context, from *fw.NamedLis
 	m.ItemCount = flex.FlattenInt32Pointer(from.ItemCount)
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Policies = flex.FlattenFrameworkListString(ctx, from.Policies, diags)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.ThreatLevel = flex.FlattenStringPointer(from.ThreatLevel)
 	m.Type = flex.FlattenStringPointer(from.Type)
 	m.UpdatedTime = timetypes.NewRFC3339TimePointerValue(from.UpdatedTime)

@@ -41,7 +41,7 @@ func (m *AtcfwNamedListModelWithFilter) FlattenResults(ctx context.Context, from
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, AtcfwNamedListReadAttrTypes, diags, FlattenAtcfwNamedListRead)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, AtcfwNamedListReadAttrTypes, diags, DataSourceFlattenAtcfwNamedListRead)
 }
 
 func (d *NamedListsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

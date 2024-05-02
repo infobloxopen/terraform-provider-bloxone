@@ -13,7 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/fw"
 
@@ -31,6 +30,7 @@ type AtcfwNamedListModel struct {
 	Name            types.String      `tfsdk:"name"`
 	Policies        types.List        `tfsdk:"policies"`
 	Tags            types.Map         `tfsdk:"tags"`
+	TagsAll         types.Map         `tfsdk:"tags_all"`
 	ThreatLevel     types.String      `tfsdk:"threat_level"`
 	Type            types.String      `tfsdk:"type"`
 	UpdatedTime     timetypes.RFC3339 `tfsdk:"updated_time"`
@@ -47,6 +47,7 @@ var AtcfwNamedListAttrTypes = map[string]attr.Type{
 	"name":             types.StringType,
 	"policies":         types.ListType{ElemType: types.StringType},
 	"tags":             types.MapType{ElemType: types.StringType},
+	"tags_all":         types.MapType{ElemType: types.StringType},
 	"threat_level":     types.StringType,
 	"type":             types.StringType,
 	"updated_time":     timetypes.RFC3339Type{},
@@ -105,7 +106,12 @@ var AtcfwNamedListResourceSchemaAttributes = map[string]schema.Attribute{
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
-		MarkdownDescription: "Enables tag support for resource where tags attribute contains user-defined key value pairs",
+		MarkdownDescription: "The tags for the named list.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the named list, including default tags.",
 	},
 	"threat_level": schema.StringAttribute{
 		Computed:            true,
@@ -127,18 +133,6 @@ var AtcfwNamedListResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandAtcfwNamedList(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.NamedList {
-	if o.IsNull() || o.IsUnknown() {
-		return nil
-	}
-	var m AtcfwNamedListModel
-	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
-	if diags.HasError() {
-		return nil
-	}
-	return m.Expand(ctx, diags)
-}
-
 func (m *AtcfwNamedListModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.NamedList {
 	if m == nil {
 		return nil
@@ -157,17 +151,6 @@ func (m *AtcfwNamedListModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenAtcfwNamedList(ctx context.Context, from *fw.NamedList, diags *diag.Diagnostics) types.Object {
-	if from == nil {
-		return types.ObjectNull(AtcfwNamedListAttrTypes)
-	}
-	m := AtcfwNamedListModel{}
-	m.Flatten(ctx, from, diags)
-	t, d := types.ObjectValueFrom(ctx, AtcfwNamedListAttrTypes, m)
-	diags.Append(d...)
-	return t
-}
-
 func (m *AtcfwNamedListModel) Flatten(ctx context.Context, from *fw.NamedList, diags *diag.Diagnostics) {
 	if from == nil {
 		return
@@ -184,7 +167,7 @@ func (m *AtcfwNamedListModel) Flatten(ctx context.Context, from *fw.NamedList, d
 	m.ItemsDescribed = flex.FlattenFrameworkListNestedBlock(ctx, from.ItemsDescribed, AtcfwItemStructsAttrTypes, diags, FlattenAtcfwItemStructs)
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Policies = flex.FlattenFrameworkListString(ctx, from.Policies, diags)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.ThreatLevel = flex.FlattenStringPointer(from.ThreatLevel)
 	m.Type = flex.FlattenStringPointer(from.Type)
 	m.UpdatedTime = timetypes.NewRFC3339TimePointerValue(from.UpdatedTime)
