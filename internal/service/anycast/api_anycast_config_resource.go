@@ -16,7 +16,7 @@ import (
 var _ resource.Resource = &OnPremAnycastManagerResource{}
 var _ resource.ResourceWithImportState = &OnPremAnycastManagerResource{}
 
-func NewOnPremAnycastManagerResource() resource.Resource {
+func NewAnycastConfigResource() resource.Resource {
 	return &OnPremAnycastManagerResource{}
 }
 
@@ -31,7 +31,7 @@ func (r *OnPremAnycastManagerResource) Metadata(ctx context.Context, req resourc
 
 func (r *OnPremAnycastManagerResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Retrieve an Anycast Configurations.",
+		MarkdownDescription: "Manages Anycast Configuration. Anycast configuration comprises common anycast configuration data that is defined in support of one service on a set of on-prem hosts.",
 		Attributes:          ProtoAnycastConfigResourceSchemaAttributes,
 	}
 }

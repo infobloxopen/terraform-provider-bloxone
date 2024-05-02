@@ -1,6 +1,5 @@
 data "bloxone_infra_hosts" "anycast_hosts" {
   filters = {
-    #pool_id = data.bloxone_infra_services.anycast_services.results.0.pool_id
     display_name = "anycast_real"
   }
 }
@@ -9,7 +8,7 @@ data "bloxone_infra_hosts" "anycast_hosts" {
 resource "bloxone_anycast_config" "test_onprem_hosts" {
   anycast_ip_address = "10.10.10.1"
   name               = "Anycast_config_example"
-  service            = "DNS" # service set to DNS
+  service            = "DNS"
 
 }
 

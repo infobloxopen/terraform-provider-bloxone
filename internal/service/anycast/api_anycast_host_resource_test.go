@@ -18,14 +18,16 @@ import (
 func TestAccOnPremAnycastHostResource_basic(t *testing.T) {
 	var resourceName = "bloxone_anycast_host.test"
 	var v anycast.OnpremHost
+	var anycastConfigName = acctest.RandomNameWithPrefix("anycast")
+	anycastIP := acctest.RandomIP()
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOnPremAnycastHostBasicConfig(),
+				Config: testAccOnPremAnycastHostBasicConfig(anycastConfigName, anycastIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOnPremAnycastHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
@@ -42,14 +44,16 @@ func TestAccOnPremAnycastHostResource_basic(t *testing.T) {
 func TestAccOnPremAnycastHostResource_disappears(t *testing.T) {
 	resourceName := "bloxone_anycast_host.test"
 	var v anycast.OnpremHost
+	var anycastConfigName = acctest.RandomNameWithPrefix("anycast")
+	var anycastIP = acctest.RandomIP()
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckOnPremAnycastHostDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOnPremAnycastHostBasicConfig(),
+				Config: testAccOnPremAnycastHostBasicConfig(anycastConfigName, anycastIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOnPremAnycastHostExists(context.Background(), resourceName, &v),
 					testAccCheckOnPremAnycastHostDisappears(context.Background(), &v),
@@ -63,14 +67,16 @@ func TestAccOnPremAnycastHostResource_disappears(t *testing.T) {
 func TestAccOnPremAnycastHostResource_enableRouting(t *testing.T) {
 	var resourceName = "bloxone_anycast_host.test"
 	var v anycast.OnpremHost
+	var anycastConfigName = acctest.RandomNameWithPrefix("anycast")
+	var anycastIP = acctest.RandomIP()
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOnPremAnycastHostEnableRoutingBGP("BGP"),
+				Config: testAccOnPremAnycastHostEnableRoutingBGP("BGP", anycastConfigName, anycastIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOnPremAnycastHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "config_bgp.asn", "6500"),
@@ -81,7 +87,7 @@ func TestAccOnPremAnycastHostResource_enableRouting(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccOnPremAnycastHostEnableRoutingOSPF("OSPF"),
+				Config: testAccOnPremAnycastHostEnableRoutingOSPF("OSPF", anycastConfigName, anycastIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOnPremAnycastHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "config_ospf.area_type", "STANDARD"),
@@ -100,14 +106,16 @@ func TestAccOnPremAnycastHostResource_enableRouting(t *testing.T) {
 func TestAccOnPremAnycastHostResource_BGP(t *testing.T) {
 	var resourceName = "bloxone_anycast_host.test"
 	var v anycast.OnpremHost
+	var anycastConfigName = acctest.RandomNameWithPrefix("anycast")
+	var anycastIP = acctest.RandomIP()
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOnPremAnycastHostBGP("BGP", 6500, 180),
+				Config: testAccOnPremAnycastHostBGP("BGP", anycastConfigName, anycastIP, 6500, 180),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOnPremAnycastHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "config_bgp.asn", "6500"),
@@ -116,7 +124,7 @@ func TestAccOnPremAnycastHostResource_BGP(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccOnPremAnycastHostBGP("BGP", 6601, 200),
+				Config: testAccOnPremAnycastHostBGP("BGP", anycastConfigName, anycastIP, 6601, 200),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOnPremAnycastHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "config_bgp.asn", "6601"),
@@ -131,14 +139,16 @@ func TestAccOnPremAnycastHostResource_BGP(t *testing.T) {
 func TestAccOnPremAnycastHostResource_OSPF(t *testing.T) {
 	var resourceName = "bloxone_anycast_host.test"
 	var v anycast.OnpremHost
+	var anycastConfigName = acctest.RandomNameWithPrefix("anycast")
+	var anycastIP = acctest.RandomIP()
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOnPremAnycastHostOSPF("OSPF", "STANDARD", "10.10.0.1", "Clear", "eth0", 10, 40, 5, 1),
+				Config: testAccOnPremAnycastHostOSPF("OSPF", "STANDARD", "10.10.0.1", "Clear", "eth0", anycastConfigName, anycastIP, 10, 40, 5, 1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOnPremAnycastHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "config_ospf.area_type", "STANDARD"),
@@ -154,7 +164,7 @@ func TestAccOnPremAnycastHostResource_OSPF(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccOnPremAnycastHostOSPF("OSPF", "NSSA", "10.10.0.2", "MD5", "ens160", 20, 50, 10, 2),
+				Config: testAccOnPremAnycastHostOSPF("OSPF", "NSSA", "10.10.0.2", "MD5", "ens160", anycastConfigName, anycastIP, 20, 50, 10, 2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOnPremAnycastHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "config_ospf.area_type", "NSSA"),
@@ -231,7 +241,7 @@ func testAccCheckOnPremAnycastHostDisappears(ctx context.Context, v *anycast.Onp
 	}
 }
 
-func testAccBaseWithAnycastConfig() string {
+func testAccBaseWithAnycastConfig(name, anycastIpAddress string) string {
 	return fmt.Sprintf(`
 data "bloxone_infra_hosts" "anycast_hosts" {
   filters = {
@@ -240,15 +250,15 @@ data "bloxone_infra_hosts" "anycast_hosts" {
 }
 
 resource "bloxone_anycast_config" "test_onprem_hosts" {
-  anycast_ip_address = "10.10.0.1"
-  name               = "Anycast_Config_Example"
+  name               = "%s"
+  anycast_ip_address = "%s"
   service            = "DNS"
 
 }
-`)
+`, name, anycastIpAddress)
 }
 
-func testAccOnPremAnycastHostBasicConfig() string {
+func testAccOnPremAnycastHostBasicConfig(anycastConfigName, anycastIP string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_anycast_host" "test" {
   id = one(data.bloxone_infra_hosts.anycast_hosts.results).legacy_id
@@ -260,10 +270,10 @@ resource "bloxone_anycast_host" "test" {
   ]
 }
 `)
-	return strings.Join([]string{testAccBaseWithAnycastConfig(), config}, "")
+	return strings.Join([]string{testAccBaseWithAnycastConfig(anycastConfigName, anycastIP), config}, "")
 }
 
-func testAccOnPremAnycastHostEnableRoutingBGP(routing_protocols string) string {
+func testAccOnPremAnycastHostEnableRoutingBGP(routingProtocols, anycastConfigName, anycastIP string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_anycast_host" "test" {
   id = one(data.bloxone_infra_hosts.anycast_hosts.results).legacy_id
@@ -286,11 +296,11 @@ resource "bloxone_anycast_host" "test" {
      ]
    }
  }
-`, routing_protocols)
-	return strings.Join([]string{testAccBaseWithAnycastConfig(), config}, "")
+`, routingProtocols)
+	return strings.Join([]string{testAccBaseWithAnycastConfig(anycastConfigName, anycastIP), config}, "")
 }
 
-func testAccOnPremAnycastHostEnableRoutingOSPF(routing_protocols string) string {
+func testAccOnPremAnycastHostEnableRoutingOSPF(routing_protocols, anycastConfigName, anycastIP string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_anycast_host" "test" {
   id = one(data.bloxone_infra_hosts.anycast_hosts.results).legacy_id
@@ -315,10 +325,10 @@ resource "bloxone_anycast_host" "test" {
  }
 }
 `, routing_protocols)
-	return strings.Join([]string{testAccBaseWithAnycastConfig(), config}, "")
+	return strings.Join([]string{testAccBaseWithAnycastConfig(anycastConfigName, anycastIP), config}, "")
 }
 
-func testAccOnPremAnycastHostBGP(routing_protocols string, asn, holddown_secs int64) string {
+func testAccOnPremAnycastHostBGP(routingProtocols, anycastConfigName, anycastIP string, asn, holddown_secs int64) string {
 	config := fmt.Sprintf(`
 resource "bloxone_anycast_host" "test" {
   id = one(data.bloxone_infra_hosts.anycast_hosts.results).legacy_id
@@ -341,11 +351,11 @@ resource "bloxone_anycast_host" "test" {
      ]
    }
  }
-`, routing_protocols, asn, holddown_secs)
-	return strings.Join([]string{testAccBaseWithAnycastConfig(), config}, "")
+`, routingProtocols, asn, holddown_secs)
+	return strings.Join([]string{testAccBaseWithAnycastConfig(anycastConfigName, anycastIP), config}, "")
 }
 
-func testAccOnPremAnycastHostOSPF(routing_protocols, area_type, area, authentication_type, ospfInterface string, hello_interval, dead_interval, retransmit_interval, transmit_delay int64) string {
+func testAccOnPremAnycastHostOSPF(routing_protocols, area_type, area, authentication_type, ospfInterface, anycastConfigName, anycastIP string, hello_interval, dead_interval, retransmit_interval, transmit_delay int64) string {
 	config := fmt.Sprintf(`
 resource "bloxone_anycast_host" "test" {
   id = one(data.bloxone_infra_hosts.anycast_hosts.results).legacy_id
@@ -371,5 +381,5 @@ resource "bloxone_anycast_host" "test" {
  }
 }
 `, routing_protocols, area_type, area, authentication_type, ospfInterface, hello_interval, dead_interval, retransmit_interval, transmit_delay)
-	return strings.Join([]string{testAccBaseWithAnycastConfig(), config}, "")
+	return strings.Join([]string{testAccBaseWithAnycastConfig(anycastConfigName, anycastIP), config}, "")
 }

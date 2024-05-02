@@ -16,18 +16,18 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ datasource.DataSource = &OnPremAnycastManagerDataSource{}
+var _ datasource.DataSource = &AnycastConfigDataSource{}
 
-func NewOnPremAnycastManagerDataSource() datasource.DataSource {
-	return &OnPremAnycastManagerDataSource{}
+func NewAnycastConfigDataSource() datasource.DataSource {
+	return &AnycastConfigDataSource{}
 }
 
-// OnPremAnycastManagerDataSource defines the data source implementation.
-type OnPremAnycastManagerDataSource struct {
+// AnycastConfigDataSource defines the data source implementation.
+type AnycastConfigDataSource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (d *OnPremAnycastManagerDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *AnycastConfigDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + "anycast_configs"
 }
 
@@ -47,7 +47,7 @@ func (m *ProtoAnycastConfigModelWithFilter) FlattenResults(ctx context.Context, 
 	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ProtoAnycastConfigAttrTypes, diags, FlattenProtoAnycastConfig)
 }
 
-func (d *OnPremAnycastManagerDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *AnycastConfigDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Retrieve all named anycast configurations for the account.",
 		Attributes: map[string]schema.Attribute{
@@ -68,22 +68,22 @@ func (d *OnPremAnycastManagerDataSource) Schema(ctx context.Context, req datasou
 				Computed: true,
 			},
 			"service": schema.StringAttribute{
-				Description: "Service name.",
+				Description: "Filter by service type.",
 				Optional:    true,
 			},
 			"host_id": schema.Int64Attribute{
-				Description: "Host ID.",
+				Description: "Filter by host ID.",
 				Optional:    true,
 			},
 			"is_configured": schema.BoolAttribute{
-				Description: "Is configured.",
+				Description: "Filter by configuration status.",
 				Optional:    true,
 			},
 		},
 	}
 }
 
-func (d *OnPremAnycastManagerDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (d *AnycastConfigDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -103,7 +103,7 @@ func (d *OnPremAnycastManagerDataSource) Configure(ctx context.Context, req data
 	d.client = client
 }
 
-func (d *OnPremAnycastManagerDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (d *AnycastConfigDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data ProtoAnycastConfigModelWithFilter
 
 	// Read Terraform prior state data into the model

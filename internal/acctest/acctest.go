@@ -41,7 +41,7 @@ func RandomNameWithPrefix(prefix string) string {
 }
 
 func RandomIP() string {
-	return fmt.Sprintf("%d.%d.%d.%d", rand.Intn(256), rand.Intn(256), rand.Intn(256), rand.Intn(256))
+	return fmt.Sprintf("%d.%d.%d.%d", rand.Intn(255), rand.Intn(255), rand.Intn(255), rand.Intn(255))
 }
 
 func RandomName() string {
@@ -50,11 +50,6 @@ func RandomName() string {
 		b[i] = letterBytes[rand.Intn(len(letterBytes))]
 	}
 	return string(b)
-}
-
-func RandomIP() string {
-	rand.Seed(time.Now().UnixNano())
-	return fmt.Sprintf("%d.%d.%d.%d", rand.Intn(256), rand.Intn(256), rand.Intn(256), rand.Intn(256))
 }
 
 func PreCheck(t *testing.T) {

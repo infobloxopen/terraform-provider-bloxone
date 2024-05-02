@@ -70,24 +70,16 @@ var ProtoOnpremHostResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"id": schema.Int64Attribute{
 		Required: true,
-		//Computed: true,
 		PlanModifiers: []planmodifier.Int64{
 			int64planmodifier.UseStateForUnknown(),
 		},
 	},
 	"ip_address": schema.StringAttribute{
-		Computed: true,
-		//Optional: true,
-		//PlanModifiers: []planmodifier.String{
-		//	stringplanmodifier.UseStateForUnknown(),
-		//},
+		Computed:            true,
 		MarkdownDescription: "IPv4 address of the on-prem host",
 	},
 	"ipv6_address": schema.StringAttribute{
-		Computed: true,
-		//PlanModifiers: []planmodifier.String{
-		//	stringplanmodifier.UseStateForUnknown(),
-		//},
+		Computed:            true,
 		MarkdownDescription: "IPv6 address of the on-prem host",
 	},
 	"name": schema.StringAttribute{
