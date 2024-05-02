@@ -11,6 +11,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/option"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dfp"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/anycast"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_data"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/fw"
@@ -137,6 +140,11 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 
 		keys.NewTsigResource,
 
+		dfp.NewDfpResource,
+
+		fw.NewSecurityPoliciesResource,
+		anycast.NewAnycastConfigResource,
+
 		fw.NewAccessCodesResource,
 		fw.NewNamedListsResource,
 		fw.NewNetworkListsResource,
@@ -196,6 +204,11 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		keys.NewTsigDataSource,
 		keys.NewKerberosDataSource,
 
+		anycast.NewAnycastConfigDataSource,
+
+		dfp.NewDfpDataSource,
+
+		fw.NewSecurityPoliciesDataSource,
 		fw.NewAccessCodesDataSource,
 		fw.NewNamedListsDataSource,
 		fw.NewNetworkListsDataSource,

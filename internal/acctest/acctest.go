@@ -48,6 +48,10 @@ func RandomNameWithPrefix(prefix string) string {
 	return fmt.Sprintf("%s-%s", prefix, RandomName())
 }
 
+func RandomIP() string {
+	return fmt.Sprintf("%d.%d.%d.%d", rand.Intn(256), rand.Intn(256), rand.Intn(256), rand.Intn(256))
+}
+
 func RandomName() string {
 	b := make([]byte, 6)
 	for i := range b {
@@ -71,6 +75,7 @@ func PreCheck(t *testing.T) {
 		option.WithClientName("terraform-acceptance-tests"),
 		option.WithCSPUrl(cspURL),
 		option.WithAPIKey(apiKey),
+		option.WithDebug(true),
 	)
 }
 
