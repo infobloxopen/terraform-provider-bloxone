@@ -259,7 +259,7 @@ resource "bloxone_anycast_config" "test_onprem_hosts" {
 }
 
 func testAccOnPremAnycastHostBasicConfig(anycastConfigName, anycastIP string) string {
-	config := fmt.Sprintf(`
+	config := `
 resource "bloxone_anycast_host" "test" {
   id = one(data.bloxone_infra_hosts.anycast_hosts.results).legacy_id
 
@@ -269,7 +269,7 @@ resource "bloxone_anycast_host" "test" {
     }
   ]
 }
-`)
+`
 	return strings.Join([]string{testAccBaseWithAnycastConfig(anycastConfigName, anycastIP), config}, "")
 }
 
