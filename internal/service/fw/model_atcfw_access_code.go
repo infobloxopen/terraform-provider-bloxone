@@ -86,7 +86,6 @@ var AtcfwAccessCodeResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"policy_ids": schema.ListAttribute{
 		ElementType:         types.Int64Type,
-		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "The list of SecurityPolicy object identifiers.",
 	},

@@ -17,7 +17,6 @@ import (
 //TODO: add tests
 // The following require additional resource/data source objects to be supported.
 // - net_addr_policy_ids
-// - internal_domain_lists
 
 func TestAccDfpResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dfp_service.test"

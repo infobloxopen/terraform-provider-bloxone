@@ -15,10 +15,6 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-//TODO: add tests
-// The following require additional resource/data source objects to be supported.
-// - policies
-
 func TestAccNamedListsResource_basic(t *testing.T) {
 	var resourceName = "bloxone_td_named_list.test"
 	var v fw.NamedList

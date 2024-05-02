@@ -3,7 +3,7 @@ resource "bloxone_td_named_list" "example" {
   items_described = [
     {
       item        = "tf-domain.com"
-      description = "Exaample Domain"
+      description = "Example Domain"
     }
   ]
   type = "custom_list"

@@ -4,10 +4,12 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 )
@@ -150,15 +152,24 @@ func (r *AccessCodesResource) Delete(ctx context.Context, req resource.DeleteReq
 		return
 	}
 
-	httpRes, err := r.client.FWAPI.
-		AccessCodesAPI.
-		DeleteSingleAccessCodes(ctx, data.AccessKey.ValueString()).
-		Execute()
-	if err != nil {
-		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
-			return
+	err := retry.RetryContext(ctx, InternalDomainListOperationTimeout, func() *retry.RetryError {
+		httpRes, err := r.client.FWAPI.
+			AccessCodesAPI.
+			DeleteSingleAccessCodes(ctx, data.AccessKey.ValueString()).
+			Execute()
+		if err != nil {
+			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
+				return nil
+			}
+			if strings.Contains(err.Error(), "Cannot delete bypass code assigned to policy") {
+				return retry.RetryableError(err)
+			}
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete AccessCodes, got error: %s", err))
+			return retry.NonRetryableError(err)
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete AccessCodes, got error: %s", err))
+		return nil
+	})
+	if err != nil {
 		return
 	}
 }

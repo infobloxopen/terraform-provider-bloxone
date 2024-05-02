@@ -13,30 +13,30 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &SecurityPoliciesResource{}
-var _ resource.ResourceWithImportState = &SecurityPoliciesResource{}
+var _ resource.Resource = &SecurityPolicyResource{}
+var _ resource.ResourceWithImportState = &SecurityPolicyResource{}
 
-func NewSecurityPoliciesResource() resource.Resource {
-	return &SecurityPoliciesResource{}
+func NewSecurityPolicyResource() resource.Resource {
+	return &SecurityPolicyResource{}
 }
 
-// SecurityPoliciesResource defines the resource implementation.
-type SecurityPoliciesResource struct {
+// SecurityPolicyResource defines the resource implementation.
+type SecurityPolicyResource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (r *SecurityPoliciesResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *SecurityPolicyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + "td_security_policy"
 }
 
-func (r *SecurityPoliciesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *SecurityPolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Creates and Manages Security Policies.",
 		Attributes:          AtcfwSecurityPolicyResourceSchemaAttributes,
 	}
 }
 
-func (r *SecurityPoliciesResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *SecurityPolicyResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -56,7 +56,7 @@ func (r *SecurityPoliciesResource) Configure(ctx context.Context, req resource.C
 	r.client = client
 }
 
-func (r *SecurityPoliciesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *SecurityPolicyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data AtcfwSecurityPolicyModel
 
 	// Read Terraform plan data into the model
@@ -83,7 +83,7 @@ func (r *SecurityPoliciesResource) Create(ctx context.Context, req resource.Crea
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *SecurityPoliciesResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *SecurityPolicyResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var data AtcfwSecurityPolicyModel
 
 	// Read Terraform prior state data into the model
@@ -113,7 +113,7 @@ func (r *SecurityPoliciesResource) Read(ctx context.Context, req resource.ReadRe
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *SecurityPoliciesResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *SecurityPolicyResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data AtcfwSecurityPolicyModel
 
 	// Read Terraform plan data into the model
@@ -140,7 +140,7 @@ func (r *SecurityPoliciesResource) Update(ctx context.Context, req resource.Upda
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *SecurityPoliciesResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+func (r *SecurityPolicyResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var data AtcfwSecurityPolicyModel
 
 	// Read Terraform prior state data into the model
@@ -163,6 +163,6 @@ func (r *SecurityPoliciesResource) Delete(ctx context.Context, req resource.Dele
 	}
 }
 
-func (r *SecurityPoliciesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *SecurityPolicyResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 	"time"
 
@@ -14,10 +15,6 @@ import (
 	"github.com/infobloxopen/bloxone-go-client/fw"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
-
-//TODO: add tests
-// The following require additional resource/data source objects to be supported.
-// - policy_ids
 
 func TestAccAccessCodesResource_basic(t *testing.T) {
 	var resourceName = "bloxone_td_access_code.test"
@@ -34,7 +31,6 @@ func TestAccAccessCodesResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.data", "terraform_test"),
 					resource.TestCheckResourceAttr(resourceName, "rules.0.type", "custom_list"),
 					resource.TestCheckResourceAttr(resourceName, "activation", time.Now().UTC().Format(time.RFC3339)),
 					resource.TestCheckResourceAttr(resourceName, "expiration", time.Now().UTC().Add(time.Hour).Format(time.RFC3339)),
@@ -142,7 +138,7 @@ func TestAccAccessCodesResource_Activation(t *testing.T) {
 
 func TestAccAccessCodesResource_Description(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_description"
-	var v1, v2 fw.AccessCode
+	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
 
 	resource.Test(t, resource.TestCase{
@@ -153,7 +149,7 @@ func TestAccAccessCodesResource_Description(t *testing.T) {
 			{
 				Config: testAccAccessCodesDescription(name, "Test Description"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v1),
+					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "Test Description"),
 				),
 			},
@@ -161,7 +157,7 @@ func TestAccAccessCodesResource_Description(t *testing.T) {
 			{
 				Config: testAccAccessCodesDescription(name, "Updated Test Description"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v2),
+					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "Updated Test Description"),
 				),
 			},
@@ -213,20 +209,20 @@ func TestAccAccessCodesResource_Rules(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAccessCodesRules(name, "terraform_test", "custom_list"),
+				Config: testAccAccessCodesRules(name, "test"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.data", "terraform_test"),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.type", "custom_list"),
+					resource.TestCheckResourceAttrPair(resourceName, "rules.0.data", "bloxone_td_named_list.test", "name"),
+					resource.TestCheckResourceAttrPair(resourceName, "rules.0.type", "bloxone_td_named_list.test", "type"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccAccessCodesRules(name, "suspicious", "named_feed"),
+				Config: testAccAccessCodesRules(name, "test2"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.data", "suspicious"),
-					resource.TestCheckResourceAttr(resourceName, "rules.0.type", "named_feed"),
+					resource.TestCheckResourceAttrPair(resourceName, "rules.0.data", "bloxone_td_named_list.test2", "name"),
+					resource.TestCheckResourceAttrPair(resourceName, "rules.0.type", "bloxone_td_named_list.test2", "type"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -288,76 +284,95 @@ func testAccCheckAccessCodesDisappears(ctx context.Context, v *fw.AccessCode) re
 	}
 }
 
-func testAccAccessCodesBasicConfig(name string) string {
+func testAccBaseWithNamedLists() string {
 	return fmt.Sprintf(`
+resource "bloxone_td_named_list" "test" {
+	name = %[1]q
+	items_described = [
+	{
+		item = "example.com"
+		description = "Example Domain"
+	}
+	]
+	type = "custom_list"
+}
+`, acctest.RandomNameWithPrefix("nl"))
+}
+
+func testAccAccessCodesBasicConfig(name string) string {
+	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test" {
 	name = %[1]q
 	activation = %[2]q
 	expiration = %[3]q
 	rules = [
 		{
-			data = "terraform_test",
-			type = "custom_list"
+			data = bloxone_td_named_list.test.name,
+			type = bloxone_td_named_list.test.type
 		}
 	]
 }
 
 `, name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339))
+	return strings.Join([]string{testAccBaseWithNamedLists(), config}, "")
 }
 
 func testAccAccessCodesName(name string) string {
-	return fmt.Sprintf(`
+	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test_name" {
 	name = %[1]q
 	activation = %[2]q
 	expiration = %[3]q
 	rules = [
 		{
-			data = "terraform_test",
-			type = "custom_list"
+			data = bloxone_td_named_list.test.name,
+			type = bloxone_td_named_list.test.type
 		}
 	]
 }
 
 `, name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339))
+	return strings.Join([]string{testAccBaseWithNamedLists(), config}, "")
 }
 
 func testAccAccessCodesActivation(name, activation string) string {
-	return fmt.Sprintf(`
+	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test_activation" {
 	name = %[1]q
 	activation = %q
 	expiration = %[3]q
 	rules = [
 		{
-			data = "terraform_test",
-			type = "custom_list"
+			data = bloxone_td_named_list.test.name,
+			type = bloxone_td_named_list.test.type
 		}
 	]
 }
 
 `, name, activation, time.Now().UTC().Add(time.Hour).Format(time.RFC3339))
+	return strings.Join([]string{testAccBaseWithNamedLists(), config}, "")
 }
 
 func testAccAccessCodesExpiration(name, expiration string) string {
-	return fmt.Sprintf(`
+	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test_expiration" {
 	name = %[1]q
 	activation = %[2]q
 	expiration = %q
 	rules = [
 		{
-			data = "terraform_test",
-			type = "custom_list"
+			data = bloxone_td_named_list.test.name,
+			type = bloxone_td_named_list.test.type
 		}
 	]
 }
 
 `, name, time.Now().UTC().Format(time.RFC3339), expiration)
+	return strings.Join([]string{testAccBaseWithNamedLists(), config}, "")
 }
 
 func testAccAccessCodesDescription(name, description string) string {
-	return fmt.Sprintf(`
+	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test_description" {
 	name = %[1]q
 	activation = %[2]q
@@ -365,28 +380,41 @@ resource "bloxone_td_access_code" "test_description" {
 	description = %[4]q
 	rules = [
 		{
-			data = "terraform_test",
-			type = "custom_list"
+			data = bloxone_td_named_list.test.name,
+			type = bloxone_td_named_list.test.type
 		}
 	]
 }
 
 `, name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339), description)
+	return strings.Join([]string{testAccBaseWithNamedLists(), config}, "")
 }
 
-func testAccAccessCodesRules(name, data, rulesType string) string {
-	return fmt.Sprintf(`
-resource "bloxone_td_access_code" "test_rules" {
+func testAccAccessCodesRules(name, rules string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_td_named_list" "test2" {
 	name = %[1]q
-	activation = %[2]q
-	expiration = %[3]q
+	items_described = [
+	{
+		item = "example2.com"
+		description = "Example Domain"
+	}
+	]
+	type = "custom_list"
+}
+
+resource "bloxone_td_access_code" "test_rules" {
+	name = %[2]q
+	activation = %[3]q
+	expiration = %[4]q
 	rules = [
 		{
-			data = %[4]q,
-			type = %[5]q
+			data = bloxone_td_named_list.%[5]s.name,
+			type = bloxone_td_named_list.%[5]s.type
 		}
 	]
 }
 
-`, name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339), data, rulesType)
+`, acctest.RandomNameWithPrefix("nl"), name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339), rules)
+	return strings.Join([]string{testAccBaseWithNamedLists(), config}, "")
 }
