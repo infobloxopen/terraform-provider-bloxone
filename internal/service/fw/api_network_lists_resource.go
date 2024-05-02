@@ -13,30 +13,30 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &NetworkListsResource{}
-var _ resource.ResourceWithImportState = &NetworkListsResource{}
+var _ resource.Resource = &NetworkListResource{}
+var _ resource.ResourceWithImportState = &NetworkListResource{}
 
-func NewNetworkListsResource() resource.Resource {
-	return &NetworkListsResource{}
+func NewNetworkListResource() resource.Resource {
+	return &NetworkListResource{}
 }
 
-// NetworkListsResource defines the resource implementation.
-type NetworkListsResource struct {
+// NetworkListResource defines the resource implementation.
+type NetworkListResource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (r *NetworkListsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *NetworkListResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + "td_network_list"
 }
 
-func (r *NetworkListsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NetworkListResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manages a Network List.",
 		Attributes:          AtcfwNetworkListResourceSchemaAttributes,
 	}
 }
 
-func (r *NetworkListsResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *NetworkListResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -56,7 +56,7 @@ func (r *NetworkListsResource) Configure(ctx context.Context, req resource.Confi
 	r.client = client
 }
 
-func (r *NetworkListsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *NetworkListResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data AtcfwNetworkListModel
 
 	// Read Terraform plan data into the model
@@ -83,7 +83,7 @@ func (r *NetworkListsResource) Create(ctx context.Context, req resource.CreateRe
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *NetworkListsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *NetworkListResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var data AtcfwNetworkListModel
 
 	// Read Terraform prior state data into the model
@@ -113,7 +113,7 @@ func (r *NetworkListsResource) Read(ctx context.Context, req resource.ReadReques
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *NetworkListsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *NetworkListResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data AtcfwNetworkListModel
 
 	// Read Terraform plan data into the model
@@ -140,7 +140,7 @@ func (r *NetworkListsResource) Update(ctx context.Context, req resource.UpdateRe
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *NetworkListsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+func (r *NetworkListResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var data AtcfwNetworkListModel
 
 	// Read Terraform prior state data into the model
@@ -163,6 +163,6 @@ func (r *NetworkListsResource) Delete(ctx context.Context, req resource.DeleteRe
 	}
 }
 
-func (r *NetworkListsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *NetworkListResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

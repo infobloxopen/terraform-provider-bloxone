@@ -130,13 +130,13 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 
 		dfp.NewDfpResource,
 
-		fw.NewSecurityPolicyResource,
 		anycast.NewAnycastConfigResource,
 
-		fw.NewAccessCodesResource,
-		fw.NewNamedListsResource,
-		fw.NewNetworkListsResource,
-		fw.NewInternalDomainListsResource,
+		fw.NewSecurityPolicyResource,
+		fw.NewAccessCodeResource,
+		fw.NewNamedListResource,
+		fw.NewNetworkListResource,
+		fw.NewInternalDomainListResource,
 	}
 }
 

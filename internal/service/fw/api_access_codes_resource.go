@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -14,31 +15,36 @@ import (
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 )
 
-// Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &AccessCodesResource{}
-var _ resource.ResourceWithImportState = &AccessCodesResource{}
+const (
+	// InternalDomainListOperationTimeout is the maximum amount of time to wait for eventual consistency
+	AccessCodeOperationTimeout = 2 * time.Minute
+)
 
-func NewAccessCodesResource() resource.Resource {
-	return &AccessCodesResource{}
+// Ensure provider defined types fully satisfy framework interfaces.
+var _ resource.Resource = &AccessCodeResource{}
+var _ resource.ResourceWithImportState = &AccessCodeResource{}
+
+func NewAccessCodeResource() resource.Resource {
+	return &AccessCodeResource{}
 }
 
-// AccessCodesResource defines the resource implementation.
-type AccessCodesResource struct {
+// AccessCodeResource defines the resource implementation.
+type AccessCodeResource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (r *AccessCodesResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *AccessCodeResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + "td_access_code"
 }
 
-func (r *AccessCodesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *AccessCodeResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manages an access code.",
 		Attributes:          AtcfwAccessCodeResourceSchemaAttributes,
 	}
 }
 
-func (r *AccessCodesResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *AccessCodeResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -58,7 +64,7 @@ func (r *AccessCodesResource) Configure(ctx context.Context, req resource.Config
 	r.client = client
 }
 
-func (r *AccessCodesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *AccessCodeResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data AtcfwAccessCodeModel
 
 	// Read Terraform plan data into the model
@@ -85,7 +91,7 @@ func (r *AccessCodesResource) Create(ctx context.Context, req resource.CreateReq
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *AccessCodesResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *AccessCodeResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var data AtcfwAccessCodeModel
 
 	// Read Terraform prior state data into the model
@@ -115,7 +121,7 @@ func (r *AccessCodesResource) Read(ctx context.Context, req resource.ReadRequest
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *AccessCodesResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *AccessCodeResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data AtcfwAccessCodeModel
 
 	// Read Terraform plan data into the model
@@ -142,7 +148,7 @@ func (r *AccessCodesResource) Update(ctx context.Context, req resource.UpdateReq
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *AccessCodesResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+func (r *AccessCodeResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var data AtcfwAccessCodeModel
 
 	// Read Terraform prior state data into the model
@@ -152,7 +158,7 @@ func (r *AccessCodesResource) Delete(ctx context.Context, req resource.DeleteReq
 		return
 	}
 
-	err := retry.RetryContext(ctx, InternalDomainListOperationTimeout, func() *retry.RetryError {
+	err := retry.RetryContext(ctx, AccessCodeOperationTimeout, func() *retry.RetryError {
 		httpRes, err := r.client.FWAPI.
 			AccessCodesAPI.
 			DeleteSingleAccessCodes(ctx, data.AccessKey.ValueString()).
@@ -174,6 +180,6 @@ func (r *AccessCodesResource) Delete(ctx context.Context, req resource.DeleteReq
 	}
 }
 
-func (r *AccessCodesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *AccessCodeResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

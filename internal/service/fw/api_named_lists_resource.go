@@ -13,30 +13,30 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &NamedListsResource{}
-var _ resource.ResourceWithImportState = &NamedListsResource{}
+var _ resource.Resource = &NamedListResource{}
+var _ resource.ResourceWithImportState = &NamedListResource{}
 
-func NewNamedListsResource() resource.Resource {
-	return &NamedListsResource{}
+func NewNamedListResource() resource.Resource {
+	return &NamedListResource{}
 }
 
-// NamedListsResource defines the resource implementation.
-type NamedListsResource struct {
+// NamedListResource defines the resource implementation.
+type NamedListResource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (r *NamedListsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *NamedListResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + "td_named_list"
 }
 
-func (r *NamedListsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NamedListResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manages a Named List.",
 		Attributes:          AtcfwNamedListResourceSchemaAttributes,
 	}
 }
 
-func (r *NamedListsResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *NamedListResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -56,7 +56,7 @@ func (r *NamedListsResource) Configure(ctx context.Context, req resource.Configu
 	r.client = client
 }
 
-func (r *NamedListsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *NamedListResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data AtcfwNamedListModel
 
 	// Read Terraform plan data into the model
@@ -83,7 +83,7 @@ func (r *NamedListsResource) Create(ctx context.Context, req resource.CreateRequ
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *NamedListsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *NamedListResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var data AtcfwNamedListModel
 
 	// Read Terraform prior state data into the model
@@ -113,7 +113,7 @@ func (r *NamedListsResource) Read(ctx context.Context, req resource.ReadRequest,
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *NamedListsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *NamedListResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data AtcfwNamedListModel
 
 	// Read Terraform plan data into the model
@@ -140,7 +140,7 @@ func (r *NamedListsResource) Update(ctx context.Context, req resource.UpdateRequ
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *NamedListsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+func (r *NamedListResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var data AtcfwNamedListModel
 
 	// Read Terraform prior state data into the model
@@ -163,6 +163,6 @@ func (r *NamedListsResource) Delete(ctx context.Context, req resource.DeleteRequ
 	}
 }
 
-func (r *NamedListsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *NamedListResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

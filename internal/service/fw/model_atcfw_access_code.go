@@ -84,6 +84,7 @@ var AtcfwAccessCodeResourceSchemaAttributes = map[string]schema.Attribute{
 		Required:            true,
 		MarkdownDescription: "The name of Bypass Code",
 	},
+	// Policy_ids has been Computed to avoid update from both ways and to maintain the standard of adding access codes through security policy
 	"policy_ids": schema.ListAttribute{
 		ElementType:         types.Int64Type,
 		Computed:            true,

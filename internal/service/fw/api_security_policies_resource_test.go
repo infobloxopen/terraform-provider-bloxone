@@ -503,10 +503,6 @@ resource "bloxone_td_security_policy" "test_description" {
 }
 
 func testAccSecurityPoliciesAccessCodes(name, accessCode string) string {
-	act := time.Now().UTC().Format(time.RFC3339)
-	exp := time.Now().UTC().Add(time.Hour).Format(time.RFC3339)
-	name1 := acctest.RandomNameWithPrefix("ac")
-	name2 := acctest.RandomNameWithPrefix("ac")
 	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "ac_test1" {
 	name = %[1]q
@@ -537,7 +533,7 @@ resource "bloxone_td_security_policy" "test_access_codes" {
 	access_codes = [bloxone_td_access_code.%[6]s.id]
 
 }
-`, name1, name2, act, exp, name, accessCode)
+`, acctest.RandomNameWithPrefix("ac"), acctest.RandomNameWithPrefix("ac"), time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339), name, accessCode)
 	return strings.Join([]string{testAccBaseWithNamedLists(), config}, "")
 }
 
@@ -606,8 +602,6 @@ resource "bloxone_td_security_policy" "test_safe_search" {
 }
 
 func testAccSecurityPoliciesRules(name, rulesAction, rulesData string) string {
-	listName1 := acctest.RandomNameWithPrefix("named-list")
-	listName2 := acctest.RandomNameWithPrefix("named-list")
 	return fmt.Sprintf(`
 resource "bloxone_td_named_list" "nl_test1" {
 	name = %q
@@ -641,7 +635,7 @@ resource "bloxone_td_security_policy" "test_rules" {
 		}
 	]
 }
-`, listName1, listName2, name, rulesAction, rulesData)
+`, acctest.RandomNameWithPrefix("named-list"), acctest.RandomNameWithPrefix("named-list"), name, rulesAction, rulesData)
 }
 
 func testAccSecurityPoliciesTags(name string, tags map[string]string) string {

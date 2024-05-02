@@ -21,30 +21,30 @@ const (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &InternalDomainListsResource{}
-var _ resource.ResourceWithImportState = &InternalDomainListsResource{}
+var _ resource.Resource = &InternalDomainListResource{}
+var _ resource.ResourceWithImportState = &InternalDomainListResource{}
 
-func NewInternalDomainListsResource() resource.Resource {
-	return &InternalDomainListsResource{}
+func NewInternalDomainListResource() resource.Resource {
+	return &InternalDomainListResource{}
 }
 
-// InternalDomainListsResource defines the resource implementation.
-type InternalDomainListsResource struct {
+// InternalDomainListResource defines the resource implementation.
+type InternalDomainListResource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (r *InternalDomainListsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *InternalDomainListResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + "td_internal_domain_list"
 }
 
-func (r *InternalDomainListsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *InternalDomainListResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manages an Internal Domain List.",
 		Attributes:          AtcfwInternalDomainsResourceSchemaAttributes,
 	}
 }
 
-func (r *InternalDomainListsResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *InternalDomainListResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -64,7 +64,7 @@ func (r *InternalDomainListsResource) Configure(ctx context.Context, req resourc
 	r.client = client
 }
 
-func (r *InternalDomainListsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *InternalDomainListResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data AtcfwInternalDomainsModel
 
 	// Read Terraform plan data into the model
@@ -91,7 +91,7 @@ func (r *InternalDomainListsResource) Create(ctx context.Context, req resource.C
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *InternalDomainListsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *InternalDomainListResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var data AtcfwInternalDomainsModel
 
 	// Read Terraform prior state data into the model
@@ -121,7 +121,7 @@ func (r *InternalDomainListsResource) Read(ctx context.Context, req resource.Rea
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *InternalDomainListsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *InternalDomainListResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data AtcfwInternalDomainsModel
 
 	// Read Terraform plan data into the model
@@ -148,7 +148,7 @@ func (r *InternalDomainListsResource) Update(ctx context.Context, req resource.U
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *InternalDomainListsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+func (r *InternalDomainListResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var data AtcfwInternalDomainsModel
 
 	// Read Terraform prior state data into the model
@@ -180,6 +180,6 @@ func (r *InternalDomainListsResource) Delete(ctx context.Context, req resource.D
 	}
 }
 
-func (r *InternalDomainListsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *InternalDomainListResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
