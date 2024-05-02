@@ -52,6 +52,7 @@ Read-Only:
 - `item_count` (Number) The number of items in this named list.
 - `name` (String) The name of the named list.
 - `policies` (List of String) The list of the security policy names with which the named list is associated.
+- `tags_all` (Map of String) Tags associated with this Named List, including default tags
 - `threat_level` (String) The threat level for a custom list. The possible values are ["INFO", "LOW", "MEDIUM", "HIGH"]
 - `type` (String) The type of the named list, that can be "custom_list", "threat_insight", "fast_flux", "dga", "dnsm", "threat_insight_nde", "default_allow", "default_block".
 - `updated_time` (String) The time when this Named List object was last updated.

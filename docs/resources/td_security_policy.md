@@ -65,6 +65,7 @@ resource "bloxone_td_security_policy" "example" {
 - `dfp_services` (List of String) The list of DNS Forwarding Proxy Services object identifiers. For Internal Use only.
 - `id` (Number) The Security Policy object identifier.
 - `is_default` (Boolean) Flag that indicates whether this is a default security policy.
+- `tags_all` (Map of String) The tags for the security policy, including default tags.
 - `updated_time` (String) The time when this Security Policy object was last updated.
 
 <a id="nestedatt--net_address_dfps"></a>

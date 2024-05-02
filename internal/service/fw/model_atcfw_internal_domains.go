@@ -12,7 +12,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/fw"
 
@@ -27,6 +26,7 @@ type AtcfwInternalDomainsModel struct {
 	IsDefault       types.Bool        `tfsdk:"is_default"`
 	Name            types.String      `tfsdk:"name"`
 	Tags            types.Map         `tfsdk:"tags"`
+	TagsAll         types.Map         `tfsdk:"tags_all"`
 	UpdatedTime     timetypes.RFC3339 `tfsdk:"updated_time"`
 }
 
@@ -38,6 +38,7 @@ var AtcfwInternalDomainsAttrTypes = map[string]attr.Type{
 	"is_default":       types.BoolType,
 	"name":             types.StringType,
 	"tags":             types.MapType{ElemType: types.StringType},
+	"tags_all":         types.MapType{ElemType: types.StringType},
 	"updated_time":     timetypes.RFC3339Type{},
 }
 
@@ -81,23 +82,16 @@ var AtcfwInternalDomainsResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "The tags for the internal domain list in JSON format.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the internal domain list, including default tags.",
+	},
 	"updated_time": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
 		MarkdownDescription: "The time when this Internal domain list object was last updated.",
 	},
-}
-
-func ExpandAtcfwInternalDomains(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.InternalDomains {
-	if o.IsNull() || o.IsUnknown() {
-		return nil
-	}
-	var m AtcfwInternalDomainsModel
-	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
-	if diags.HasError() {
-		return nil
-	}
-	return m.Expand(ctx, diags)
 }
 
 func (m *AtcfwInternalDomainsModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.InternalDomains {
@@ -114,12 +108,13 @@ func (m *AtcfwInternalDomainsModel) Expand(ctx context.Context, diags *diag.Diag
 	return to
 }
 
-func FlattenAtcfwInternalDomains(ctx context.Context, from *fw.InternalDomains, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenAtcfwInternalDomains(ctx context.Context, from *fw.InternalDomains, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwInternalDomainsAttrTypes)
 	}
 	m := AtcfwInternalDomainsModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, AtcfwInternalDomainsAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -138,6 +133,6 @@ func (m *AtcfwInternalDomainsModel) Flatten(ctx context.Context, from *fw.Intern
 	m.InternalDomains = flex.FlattenFrameworkListString(ctx, from.InternalDomains, diags)
 	m.IsDefault = types.BoolPointerValue(from.IsDefault)
 	m.Name = flex.FlattenStringPointer(from.Name)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedTime = timetypes.NewRFC3339TimePointerValue(from.UpdatedTime)
 }

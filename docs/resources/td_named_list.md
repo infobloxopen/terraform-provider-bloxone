@@ -46,7 +46,7 @@ resource "bloxone_td_named_list" "example" {
 - `confidence_level` (String) The confidence level for a custom list. The possible values are ["LOW", "MEDIUM", "HIGH"]
 - `description` (String) The brief description for the named list.
 - `policies` (List of String) The list of the security policy names with which the named list is associated.
-- `tags` (Map of String) Enables tag support for resource where tags attribute contains user-defined key value pairs
+- `tags` (Map of String) The tags for the named list.
 - `threat_level` (String) The threat level for a custom list. The possible values are ["INFO", "LOW", "MEDIUM", "HIGH"]
 - `type` (String) The type of the named list, that can be "custom_list", "threat_insight", "fast_flux", "dga", "dnsm", "threat_insight_nde", "default_allow", "default_block" or "threat_insight_nde".
 
@@ -56,6 +56,7 @@ resource "bloxone_td_named_list" "example" {
 - `id` (Number) The Named List object identifier.
 - `item_count` (Number) The number of items in this named list.
 - `items` (List of String) The list of the FQDN or IPv4/IPv6 CIDRs to define whitelists and blacklists for additional protection.
+- `tags_all` (Map of String) The tags for the named list, including default tags.
 - `updated_time` (String) The time when this Named List object was last updated.
 
 <a id="nestedatt--items_described"></a>

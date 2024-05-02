@@ -535,12 +535,13 @@ func (m *ConfigViewModel) Expand(ctx context.Context, diags *diag.Diagnostics) *
 	return to
 }
 
-func FlattenConfigView(ctx context.Context, from *dnsconfig.View, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigView(ctx context.Context, from *dnsconfig.View, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigViewAttrTypes)
 	}
 	m := ConfigViewModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, ConfigViewAttrTypes, m)
 	diags.Append(d...)
 	return t

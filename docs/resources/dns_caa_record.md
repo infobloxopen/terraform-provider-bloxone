@@ -52,7 +52,6 @@ resource "bloxone_dns_caa_record" "example" {
 - `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources))
 - `name_in_zone` (String) The relative owner name to the zone origin. Must be specified for creating the DNS resource record and is read only for other operations.
 - `tags` (Map of String) The tags for the DNS resource record in JSON format.
-- `tags_all` (Map of String) The tags for the DNS resource record including default tags.
 - `ttl` (Number) The record time to live value in seconds. The range of this value is 0 to 2147483647.  Defaults to TTL value from the SOA record of the zone.
 - `view` (String) The resource identifier.
 - `zone` (String) The resource identifier.
@@ -93,6 +92,7 @@ resource "bloxone_dns_caa_record" "example" {
   |       | 0            | Default value |
   | LBDN  | 1            | LBDN record   |
   <br>
+- `tags_all` (Map of String) The tags for the DNS resource record including default tags.
 - `type` (String) The type of the record. This is always `CAA`.
 - `updated_at` (String) The timestamp when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `view_name` (String) The display name of the DNS view that contains the parent zone of the DNS resource record.

@@ -67,5 +67,5 @@ func (m *ProtoAnycastConfigResponseModel) Flatten(ctx context.Context, from *any
 	if m == nil {
 		*m = ProtoAnycastConfigResponseModel{}
 	}
-	m.Results = FlattenProtoAnycastConfig(ctx, from.Results, diags)
+	m.Results = DataSourceFlattenProtoAnycastConfig(ctx, from.Results, diags)
 }
