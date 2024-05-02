@@ -123,7 +123,7 @@ func (a *InfraServicesAPIService) CreateOrUpdateDfpServiceExecute(r InfraService
 	}
 
 	localVarPath := localBasePath + "/dfp_services/{payload.service_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"payload.service_id"+"}", url.PathEscape(internal.ParameterValueToString(r.payloadServiceId, "payloadServiceId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"payload.service_id"+"}", url.PathEscape(internal.ParameterValueToStringForType(r.payloadServiceId, "payloadServiceId", "resource_id")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -427,7 +427,7 @@ func (a *InfraServicesAPIService) ReadDfpServiceExecute(r InfraServicesAPIReadDf
 	}
 
 	localVarPath := localBasePath + "/dfp_services/{service_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"service_id"+"}", url.PathEscape(internal.ParameterValueToString(r.serviceId, "serviceId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"service_id"+"}", url.PathEscape(internal.ParameterValueToStringForType(r.serviceId, "serviceId", "resource_id")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
