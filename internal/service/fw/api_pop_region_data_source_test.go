@@ -7,7 +7,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-func TestAccPopRegionsDataSource_Filters(t *testing.T) {
+func TestAccPopRegionDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_pop_regions.test"
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -15,7 +15,7 @@ func TestAccPopRegionsDataSource_Filters(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccPopRegionsDataSourceConfigFilters(),
+				Config: testAccPopRegionDataSourceConfigFilters(),
 				Check: resource.ComposeTestCheckFunc(
 					// check that the results is not empty
 					resource.TestCheckResourceAttrSet(dataSourceName, "results.0.%"),
@@ -25,7 +25,7 @@ func TestAccPopRegionsDataSource_Filters(t *testing.T) {
 	})
 }
 
-func testAccPopRegionsDataSourceConfigFilters() string {
+func testAccPopRegionDataSourceConfigFilters() string {
 	return `
 data "bloxone_td_pop_regions" "test" {
 }

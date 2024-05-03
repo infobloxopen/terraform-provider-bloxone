@@ -11,7 +11,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-func TestAccSecurityPoliciesDataSource_Filters(t *testing.T) {
+func TestAccSecurityPolicyDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_security_policies.test"
 	resourceName := "bloxone_td_security_policy.test"
 	var v fw.SecurityPolicy
@@ -20,21 +20,21 @@ func TestAccSecurityPoliciesDataSource_Filters(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckSecurityPoliciesDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckSecurityPolicyDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSecurityPoliciesDataSourceConfigFilters(name),
+				Config: testAccSecurityPolicyDataSourceConfigFilters(name),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
-						testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
-					}, testAccCheckSecurityPoliciesResourceAttrPair(resourceName, dataSourceName)...)...,
+						testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
+					}, testAccCheckSecurityPolicyResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
 	})
 }
 
-func TestAccSecurityPoliciesDataSource_TagFilters(t *testing.T) {
+func TestAccSecurityPolicyDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_security_policies.test"
 	resourceName := "bloxone_td_security_policy.test"
 	var v fw.SecurityPolicy
@@ -43,14 +43,14 @@ func TestAccSecurityPoliciesDataSource_TagFilters(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckSecurityPoliciesDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckSecurityPolicyDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSecurityPoliciesDataSourceConfigTagFilters(name, acctest.RandomName()),
+				Config: testAccSecurityPolicyDataSourceConfigTagFilters(name, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
-						testAccCheckSecurityPoliciesExists(context.Background(), resourceName, &v),
-					}, testAccCheckSecurityPoliciesResourceAttrPair(resourceName, dataSourceName)...)...,
+						testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
+					}, testAccCheckSecurityPolicyResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
@@ -59,7 +59,7 @@ func TestAccSecurityPoliciesDataSource_TagFilters(t *testing.T) {
 
 // below all TestAcc functions
 
-func testAccCheckSecurityPoliciesResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
+func testAccCheckSecurityPolicyResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
 	return []resource.TestCheckFunc{
 		resource.TestCheckResourceAttrPair(dataSourceName, "results.0.access_codes", resourceName, "access_codes"),
 		resource.TestCheckResourceAttrPair(dataSourceName, "results.0.created_at", resourceName, "created_at"),
@@ -85,7 +85,7 @@ func testAccCheckSecurityPoliciesResourceAttrPair(resourceName, dataSourceName s
 	}
 }
 
-func testAccSecurityPoliciesDataSourceConfigFilters(name string) string {
+func testAccSecurityPolicyDataSourceConfigFilters(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_security_policy" "test" {
 	name = %q
@@ -99,7 +99,7 @@ data "bloxone_td_security_policies" "test" {
 `, name)
 }
 
-func testAccSecurityPoliciesDataSourceConfigTagFilters(name, tagValue string) string {
+func testAccSecurityPolicyDataSourceConfigTagFilters(name, tagValue string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_security_policy" "test" {
   name = %q

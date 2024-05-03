@@ -32,13 +32,13 @@ func (d *InternalDomainListsDataSource) Metadata(ctx context.Context, req dataso
 	resp.TypeName = req.ProviderTypeName + "_" + "td_internal_domain_lists"
 }
 
-type ModelWithFilter struct {
+type AtcfwInternalDomainListModelWithFilter struct {
 	Filters    types.Map  `tfsdk:"filters"`
 	TagFilters types.Map  `tfsdk:"tag_filters"`
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *ModelWithFilter) FlattenResults(ctx context.Context, from []fw.InternalDomains, diags *diag.Diagnostics) {
+func (m *AtcfwInternalDomainListModelWithFilter) FlattenResults(ctx context.Context, from []fw.InternalDomains, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -90,7 +90,7 @@ func (d *InternalDomainListsDataSource) Configure(ctx context.Context, req datas
 }
 
 func (d *InternalDomainListsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data ModelWithFilter
+	var data AtcfwInternalDomainListModelWithFilter
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)

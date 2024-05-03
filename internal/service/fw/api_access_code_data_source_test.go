@@ -12,7 +12,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-func TestAccAccessCodesDataSource_Filters(t *testing.T) {
+func TestAccAccessCodeDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_access_codes.test"
 	resourceName := "bloxone_td_access_code.test"
 	var v fw.AccessCode
@@ -21,14 +21,14 @@ func TestAccAccessCodesDataSource_Filters(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckAccessCodesDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckAccessCodeDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAccessCodesDataSourceConfigFilters(name),
+				Config: testAccAccessCodeDataSourceConfigFilters(name),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
-						testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
-					}, testAccCheckAccessCodesResourceAttrPair(resourceName, dataSourceName)...)...,
+						testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
+					}, testAccCheckAccessCodeResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
@@ -37,7 +37,7 @@ func TestAccAccessCodesDataSource_Filters(t *testing.T) {
 
 // below all TestAcc functions
 
-func testAccCheckAccessCodesResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
+func testAccCheckAccessCodeResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
 	return []resource.TestCheckFunc{
 		resource.TestCheckResourceAttrPair(resourceName, "access_key", dataSourceName, "results.0.access_key"),
 		resource.TestCheckResourceAttrPair(resourceName, "activation", dataSourceName, "results.0.activation"),
@@ -51,7 +51,7 @@ func testAccCheckAccessCodesResourceAttrPair(resourceName, dataSourceName string
 	}
 }
 
-func testAccAccessCodesDataSourceConfigFilters(name string) string {
+func testAccAccessCodeDataSourceConfigFilters(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_access_code" "test" {
 	name = %[1]q

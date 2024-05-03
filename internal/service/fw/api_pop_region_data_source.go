@@ -16,18 +16,18 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ datasource.DataSource = &PoPRegionsDataSource{}
+var _ datasource.DataSource = &PoPRegionDataSource{}
 
-func NewPoPRegionsDataSource() datasource.DataSource {
-	return &PoPRegionsDataSource{}
+func NewPoPRegionDataSource() datasource.DataSource {
+	return &PoPRegionDataSource{}
 }
 
-// PoPRegionsDataSource defines the data source implementation.
-type PoPRegionsDataSource struct {
+// PoPRegionDataSource defines the data source implementation.
+type PoPRegionDataSource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (d *PoPRegionsDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *PoPRegionDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + "td_pop_regions"
 }
 
@@ -43,7 +43,7 @@ func (m *AtcfwPoPRegionModelWithFilter) FlattenResults(ctx context.Context, from
 	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, AtcfwPoPRegionAttrTypes, diags, FlattenAtcfwPoPRegion)
 }
 
-func (d *PoPRegionsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *PoPRegionDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Retrieve information on all Point of Presence (PoP) regions available in the database.",
 		Attributes: map[string]schema.Attribute{
@@ -62,7 +62,7 @@ func (d *PoPRegionsDataSource) Schema(ctx context.Context, req datasource.Schema
 	}
 }
 
-func (d *PoPRegionsDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (d *PoPRegionDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -82,7 +82,7 @@ func (d *PoPRegionsDataSource) Configure(ctx context.Context, req datasource.Con
 	d.client = client
 }
 
-func (d *PoPRegionsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (d *PoPRegionDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data AtcfwPoPRegionModelWithFilter
 
 	// Read Terraform prior state data into the model

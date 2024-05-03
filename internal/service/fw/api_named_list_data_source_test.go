@@ -9,7 +9,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-func TestAccNamedListsDataSource_Filters(t *testing.T) {
+func TestAccNamedListDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_named_lists.test"
 	resourceName := "bloxone_td_named_list.test"
 	name := acctest.RandomNameWithPrefix("named_list")
@@ -19,16 +19,16 @@ func TestAccNamedListsDataSource_Filters(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNamedListsDataSourceConfigFilters(name),
+				Config: testAccNamedListDataSourceConfigFilters(name),
 				Check: resource.ComposeTestCheckFunc(
-					append([]resource.TestCheckFunc{}, testAccCheckNamedListsResourceAttrPair(resourceName, dataSourceName)...)...,
+					append([]resource.TestCheckFunc{}, testAccCheckNamedListResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
 	})
 }
 
-func TestAccNamedListsDataSource_TagFilters(t *testing.T) {
+func TestAccNamedListDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_named_lists.test"
 	resourceName := "bloxone_td_named_list.test"
 	name := acctest.RandomNameWithPrefix("named_list")
@@ -38,9 +38,9 @@ func TestAccNamedListsDataSource_TagFilters(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNamedListsDataSourceConfigTagFilters(name, acctest.RandomName()),
+				Config: testAccNamedListDataSourceConfigTagFilters(name, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
-					append([]resource.TestCheckFunc{}, testAccCheckNamedListsResourceAttrPair(resourceName, dataSourceName)...)...,
+					append([]resource.TestCheckFunc{}, testAccCheckNamedListResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
@@ -49,7 +49,7 @@ func TestAccNamedListsDataSource_TagFilters(t *testing.T) {
 
 // below all TestAcc functions
 
-func testAccCheckNamedListsResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
+func testAccCheckNamedListResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
 	return []resource.TestCheckFunc{
 		resource.TestCheckResourceAttrPair(resourceName, "confidence_level", dataSourceName, "results.0.confidence_level"),
 		resource.TestCheckResourceAttrPair(resourceName, "created_time", dataSourceName, "results.0.created_time"),
@@ -65,7 +65,7 @@ func testAccCheckNamedListsResourceAttrPair(resourceName, dataSourceName string)
 	}
 }
 
-func testAccNamedListsDataSourceConfigFilters(name string) string {
+func testAccNamedListDataSourceConfigFilters(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_named_list" "test" {
 	name = %q
@@ -89,7 +89,7 @@ data "bloxone_td_named_lists" "test" {
 `, name)
 }
 
-func testAccNamedListsDataSourceConfigTagFilters(name, tagValue string) string {
+func testAccNamedListDataSourceConfigTagFilters(name, tagValue string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_named_list" "test" {
   name = %q
