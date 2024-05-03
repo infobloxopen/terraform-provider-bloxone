@@ -11,7 +11,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-func TestAccInternalDomainListsDataSource_Filters(t *testing.T) {
+func TestAccInternalDomainListDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_internal_domain_lists.test"
 	resourceName := "bloxone_td_internal_domain_list.test"
 	var v fw.InternalDomains
@@ -20,21 +20,21 @@ func TestAccInternalDomainListsDataSource_Filters(t *testing.T) {
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckInternalDomainListsDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckInternalDomainListDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccInternalDomainListsDataSourceConfigFilters(name, "example.somedomain.com"),
+				Config: testAccInternalDomainListDataSourceConfigFilters(name, "example.somedomain.com"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
-						testAccCheckInternalDomainListsExists(context.Background(), resourceName, &v),
-					}, testAccCheckInternalDomainListsResourceAttrPair(resourceName, dataSourceName)...)...,
+						testAccCheckInternalDomainListExists(context.Background(), resourceName, &v),
+					}, testAccCheckInternalDomainListResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
 	})
 }
 
-func TestAccInternalDomainListsDataSource_TagFilters(t *testing.T) {
+func TestAccInternalDomainListDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_internal_domain_lists.test"
 	resourceName := "bloxone_td_internal_domain_list.test"
 	var v fw.InternalDomains
@@ -43,14 +43,14 @@ func TestAccInternalDomainListsDataSource_TagFilters(t *testing.T) {
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckInternalDomainListsDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckInternalDomainListDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccInternalDomainListsDataSourceConfigTagFilters(name, "example.somedomain.com", acctest.RandomName()),
+				Config: testAccInternalDomainListDataSourceConfigTagFilters(name, "example.somedomain.com", acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
-						testAccCheckInternalDomainListsExists(context.Background(), resourceName, &v),
-					}, testAccCheckInternalDomainListsResourceAttrPair(resourceName, dataSourceName)...)...,
+						testAccCheckInternalDomainListExists(context.Background(), resourceName, &v),
+					}, testAccCheckInternalDomainListResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
@@ -59,7 +59,7 @@ func TestAccInternalDomainListsDataSource_TagFilters(t *testing.T) {
 
 // below all TestAcc functions
 
-func testAccCheckInternalDomainListsResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
+func testAccCheckInternalDomainListResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
 	return []resource.TestCheckFunc{
 		resource.TestCheckResourceAttrPair(resourceName, "created_time", dataSourceName, "results.0.created_time"),
 		resource.TestCheckResourceAttrPair(resourceName, "description", dataSourceName, "results.0.description"),
@@ -70,7 +70,7 @@ func testAccCheckInternalDomainListsResourceAttrPair(resourceName, dataSourceNam
 	}
 }
 
-func testAccInternalDomainListsDataSourceConfigFilters(name, internalDomains string) string {
+func testAccInternalDomainListDataSourceConfigFilters(name, internalDomains string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_internal_domain_list" "test" {
 	name = %q
@@ -85,7 +85,7 @@ data "bloxone_td_internal_domain_lists" "test" {
 `, name, internalDomains)
 }
 
-func testAccInternalDomainListsDataSourceConfigTagFilters(name, internalDomains, tagValue string) string {
+func testAccInternalDomainListDataSourceConfigTagFilters(name, internalDomains, tagValue string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_internal_domain_list" "test" {
 	name = %q

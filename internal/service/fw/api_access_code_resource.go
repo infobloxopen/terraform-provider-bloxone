@@ -17,34 +17,34 @@ import (
 
 const (
 	// InternalDomainListOperationTimeout is the maximum amount of time to wait for eventual consistency
-	InternalDomainListOperationTimeout = 2 * time.Minute
+	AccessCodeOperationTimeout = 2 * time.Minute
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &InternalDomainListsResource{}
-var _ resource.ResourceWithImportState = &InternalDomainListsResource{}
+var _ resource.Resource = &AccessCodeResource{}
+var _ resource.ResourceWithImportState = &AccessCodeResource{}
 
-func NewInternalDomainListsResource() resource.Resource {
-	return &InternalDomainListsResource{}
+func NewAccessCodeResource() resource.Resource {
+	return &AccessCodeResource{}
 }
 
-// InternalDomainListsResource defines the resource implementation.
-type InternalDomainListsResource struct {
+// AccessCodeResource defines the resource implementation.
+type AccessCodeResource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (r *InternalDomainListsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "td_internal_domain_list"
+func (r *AccessCodeResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "td_access_code"
 }
 
-func (r *InternalDomainListsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *AccessCodeResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Manages an Internal Domain List.",
-		Attributes:          AtcfwInternalDomainsResourceSchemaAttributes,
+		MarkdownDescription: "Manages an access code.",
+		Attributes:          AtcfwAccessCodeResourceSchemaAttributes,
 	}
 }
 
-func (r *InternalDomainListsResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *AccessCodeResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -64,8 +64,8 @@ func (r *InternalDomainListsResource) Configure(ctx context.Context, req resourc
 	r.client = client
 }
 
-func (r *InternalDomainListsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data AtcfwInternalDomainsModel
+func (r *AccessCodeResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data AtcfwAccessCodeModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -75,12 +75,12 @@ func (r *InternalDomainListsResource) Create(ctx context.Context, req resource.C
 	}
 
 	apiRes, _, err := r.client.FWAPI.
-		InternalDomainListsAPI.
-		CreateInternalDomains(ctx).
+		AccessCodesAPI.
+		CreateAccessCode(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create InternalDomainLists, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create AccessCodes, got error: %s", err))
 		return
 	}
 
@@ -91,8 +91,8 @@ func (r *InternalDomainListsResource) Create(ctx context.Context, req resource.C
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *InternalDomainListsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data AtcfwInternalDomainsModel
+func (r *AccessCodeResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data AtcfwAccessCodeModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -102,15 +102,15 @@ func (r *InternalDomainListsResource) Read(ctx context.Context, req resource.Rea
 	}
 
 	apiRes, httpRes, err := r.client.FWAPI.
-		InternalDomainListsAPI.
-		ReadInternalDomains(ctx, int32(data.Id.ValueInt64())).
+		AccessCodesAPI.
+		ReadAccessCode(ctx, data.AccessKey.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			resp.State.RemoveResource(ctx)
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read InternalDomainLists, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read AccessCodes, got error: %s", err))
 		return
 	}
 
@@ -121,8 +121,8 @@ func (r *InternalDomainListsResource) Read(ctx context.Context, req resource.Rea
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *InternalDomainListsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data AtcfwInternalDomainsModel
+func (r *AccessCodeResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var data AtcfwAccessCodeModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -132,12 +132,12 @@ func (r *InternalDomainListsResource) Update(ctx context.Context, req resource.U
 	}
 
 	apiRes, _, err := r.client.FWAPI.
-		InternalDomainListsAPI.
-		UpdateInternalDomains(ctx, int32(data.Id.ValueInt64())).
+		AccessCodesAPI.
+		UpdateAccessCode(ctx, data.AccessKey.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update InternalDomainLists, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update AccessCodes, got error: %s", err))
 		return
 	}
 
@@ -148,8 +148,8 @@ func (r *InternalDomainListsResource) Update(ctx context.Context, req resource.U
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *InternalDomainListsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data AtcfwInternalDomainsModel
+func (r *AccessCodeResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data AtcfwAccessCodeModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -158,19 +158,19 @@ func (r *InternalDomainListsResource) Delete(ctx context.Context, req resource.D
 		return
 	}
 
-	err := retry.RetryContext(ctx, InternalDomainListOperationTimeout, func() *retry.RetryError {
+	err := retry.RetryContext(ctx, AccessCodeOperationTimeout, func() *retry.RetryError {
 		httpRes, err := r.client.FWAPI.
-			InternalDomainListsAPI.
-			DeleteSingleInternalDomains(ctx, int32(data.Id.ValueInt64())).
+			AccessCodesAPI.
+			DeleteSingleAccessCodes(ctx, data.AccessKey.ValueString()).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 				return nil
 			}
-			if strings.Contains(err.Error(), "Internal Domain List is assigned to DFP") {
+			if strings.Contains(err.Error(), "Cannot delete bypass code assigned to policy") {
 				return retry.RetryableError(err)
 			}
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete InternalDomainLists, got error: %s", err))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete AccessCodes, got error: %s", err))
 			return retry.NonRetryableError(err)
 		}
 		return nil
@@ -180,6 +180,6 @@ func (r *InternalDomainListsResource) Delete(ctx context.Context, req resource.D
 	}
 }
 
-func (r *InternalDomainListsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *AccessCodeResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

@@ -13,30 +13,30 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &AccessCodesResource{}
-var _ resource.ResourceWithImportState = &AccessCodesResource{}
+var _ resource.Resource = &SecurityPolicyResource{}
+var _ resource.ResourceWithImportState = &SecurityPolicyResource{}
 
-func NewAccessCodesResource() resource.Resource {
-	return &AccessCodesResource{}
+func NewSecurityPolicyResource() resource.Resource {
+	return &SecurityPolicyResource{}
 }
 
-// AccessCodesResource defines the resource implementation.
-type AccessCodesResource struct {
+// SecurityPolicyResource defines the resource implementation.
+type SecurityPolicyResource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (r *AccessCodesResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "td_access_code"
+func (r *SecurityPolicyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "td_security_policy"
 }
 
-func (r *AccessCodesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *SecurityPolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Manages an access code.",
-		Attributes:          AtcfwAccessCodeResourceSchemaAttributes,
+		MarkdownDescription: "Creates and Manages Security Policies.",
+		Attributes:          AtcfwSecurityPolicyResourceSchemaAttributes,
 	}
 }
 
-func (r *AccessCodesResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *SecurityPolicyResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -56,8 +56,8 @@ func (r *AccessCodesResource) Configure(ctx context.Context, req resource.Config
 	r.client = client
 }
 
-func (r *AccessCodesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data AtcfwAccessCodeModel
+func (r *SecurityPolicyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data AtcfwSecurityPolicyModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -67,12 +67,12 @@ func (r *AccessCodesResource) Create(ctx context.Context, req resource.CreateReq
 	}
 
 	apiRes, _, err := r.client.FWAPI.
-		AccessCodesAPI.
-		CreateAccessCode(ctx).
+		SecurityPoliciesAPI.
+		CreateSecurityPolicy(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create AccessCodes, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create SecurityPolicies, got error: %s", err))
 		return
 	}
 
@@ -83,8 +83,8 @@ func (r *AccessCodesResource) Create(ctx context.Context, req resource.CreateReq
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *AccessCodesResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data AtcfwAccessCodeModel
+func (r *SecurityPolicyResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data AtcfwSecurityPolicyModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -94,15 +94,15 @@ func (r *AccessCodesResource) Read(ctx context.Context, req resource.ReadRequest
 	}
 
 	apiRes, httpRes, err := r.client.FWAPI.
-		AccessCodesAPI.
-		ReadAccessCode(ctx, data.AccessKey.ValueString()).
+		SecurityPoliciesAPI.
+		ReadSecurityPolicy(ctx, int32(data.Id.ValueInt64())).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			resp.State.RemoveResource(ctx)
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read AccessCodes, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read SecurityPolicies, got error: %s", err))
 		return
 	}
 
@@ -113,8 +113,8 @@ func (r *AccessCodesResource) Read(ctx context.Context, req resource.ReadRequest
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *AccessCodesResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data AtcfwAccessCodeModel
+func (r *SecurityPolicyResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var data AtcfwSecurityPolicyModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -124,12 +124,12 @@ func (r *AccessCodesResource) Update(ctx context.Context, req resource.UpdateReq
 	}
 
 	apiRes, _, err := r.client.FWAPI.
-		AccessCodesAPI.
-		UpdateAccessCode(ctx, data.AccessKey.ValueString()).
+		SecurityPoliciesAPI.
+		UpdateSecurityPolicy(ctx, int32(data.Id.ValueInt64())).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update AccessCodes, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update SecurityPolicies, got error: %s", err))
 		return
 	}
 
@@ -140,8 +140,8 @@ func (r *AccessCodesResource) Update(ctx context.Context, req resource.UpdateReq
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *AccessCodesResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data AtcfwAccessCodeModel
+func (r *SecurityPolicyResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data AtcfwSecurityPolicyModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -151,18 +151,18 @@ func (r *AccessCodesResource) Delete(ctx context.Context, req resource.DeleteReq
 	}
 
 	httpRes, err := r.client.FWAPI.
-		AccessCodesAPI.
-		DeleteSingleAccessCodes(ctx, data.AccessKey.ValueString()).
+		SecurityPoliciesAPI.
+		DeleteSingleSecurityPolicy(ctx, int32(data.Id.ValueInt64())).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete AccessCodes, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete SecurityPolicies, got error: %s", err))
 		return
 	}
 }
 
-func (r *AccessCodesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *SecurityPolicyResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
