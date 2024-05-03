@@ -136,7 +136,7 @@ func TestAccAnycastHostResource_BGP(t *testing.T) {
 	})
 }
 
-func TestAccAnycastHostResourceOSPF(t *testing.T) {
+func TestAccAnycastHostResource_OSPF(t *testing.T) {
 	var resourceName = "bloxone_anycast_host.test"
 	var v anycast.OnpremHost
 	var anycastConfigName = acctest.RandomNameWithPrefix("anycast")
