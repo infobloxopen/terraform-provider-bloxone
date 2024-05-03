@@ -11,7 +11,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-func TestAccOnPremAnycastManagerDataSource_Services(t *testing.T) {
+func TestAccAnycastConfigDataSource_Services(t *testing.T) {
 	dataSourceName := "data.bloxone_anycast_configs.test"
 	resourceName := "bloxone_anycast_config.test_onprem_hosts"
 	var v anycast.AnycastConfig
@@ -20,24 +20,23 @@ func TestAccOnPremAnycastManagerDataSource_Services(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckOnPremAnycastManagerDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckAnycastConfigResourceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOnPremAnycastManagerDataSourceConfigService("10.1.1.2", anycastName, "DNS"),
+				Config: testAccAnycastConfigDataSourceConfigService("10.1.1.2", anycastName, "DNS"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
 						resource.TestCheckResourceAttr(dataSourceName, "results.0.name", anycastName),
-						testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
-					}, testAccCheckOnPremAnycastManagerResourceAttrPair(resourceName, dataSourceName)...)...,
+						testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
+					}, testAccCheckAnycastConfigResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
 	})
 }
 
-func TestAccOnPremAnycastManagerDataSource_IsConfigured(t *testing.T) {
-	t.Skip("Skipping until ospf and bgp is implemented ")
+func TestAccAnycastConfigDataSource_IsConfigured(t *testing.T) {
 	dataSourceName := "data.bloxone_anycast_configs.test"
 	resourceName := "bloxone_anycast_config.test_onprem_hosts"
 	var v anycast.AnycastConfig
@@ -46,22 +45,22 @@ func TestAccOnPremAnycastManagerDataSource_IsConfigured(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckOnPremAnycastManagerDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckAnycastConfigResourceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOnPremAnycastManagerDataSourceConfigIsConfigured("10.1.1.2", anycastName, "DNS"),
+				Config: testAccAnycastConfigDataSourceConfigIsConfigured("10.1.1.2", anycastName, "DNS"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						resource.TestCheckResourceAttr(dataSourceName, "results.0.name", anycastName),
-						testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
-					}, testAccCheckOnPremAnycastManagerResourceAttrPair(resourceName, dataSourceName)...)...,
+						testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
+					}, testAccCheckAnycastConfigResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
 	})
 }
 
-func TestAccOnPremAnycastManagerDataSource_TagFilters(t *testing.T) {
+func TestAccAnycastConfigDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_anycast_configs.test"
 	resourceName := "bloxone_anycast_config.test"
 	var v anycast.AnycastConfig
@@ -70,14 +69,14 @@ func TestAccOnPremAnycastManagerDataSource_TagFilters(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckOnPremAnycastManagerDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckAnycastConfigResourceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOnPremAnycastManagerDataSourceConfigTagFilters("10.1.1.2", anycastName, "DNS", "value1"),
+				Config: testAccAnycastConfigDataSourceConfigTagFilters("10.1.1.2", anycastName, "DNS", "value1"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
-						testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
-					}, testAccCheckOnPremAnycastManagerResourceAttrPair(resourceName, dataSourceName)...)...,
+						testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
+					}, testAccCheckAnycastConfigResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
@@ -86,7 +85,7 @@ func TestAccOnPremAnycastManagerDataSource_TagFilters(t *testing.T) {
 
 // below all TestAcc functions
 
-func testAccCheckOnPremAnycastManagerResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
+func testAccCheckAnycastConfigResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
 	return []resource.TestCheckFunc{
 		resource.TestCheckResourceAttrPair(resourceName, "account_id", dataSourceName, "results.0.account_id"),
 		resource.TestCheckResourceAttrPair(resourceName, "anycast_ip_address", dataSourceName, "results.0.anycast_ip_address"),
@@ -105,7 +104,7 @@ func testAccCheckOnPremAnycastManagerResourceAttrPair(resourceName, dataSourceNa
 	}
 }
 
-func testAccOnPremAnycastManagerDataSourceConfigService(anycastIpAddress, name, service string) string {
+func testAccAnycastConfigDataSourceConfigService(anycastIpAddress, name, service string) string {
 	return fmt.Sprintf(`
 data "bloxone_infra_services" "anycast_services" {
     filters = {
@@ -131,7 +130,7 @@ data "bloxone_anycast_configs" "test" {
 `, anycastIpAddress, name, service, service)
 }
 
-func testAccOnPremAnycastManagerDataSourceConfigIsConfigured(anycastIpAddress, name, service string) string {
+func testAccAnycastConfigDataSourceConfigIsConfigured(anycastIpAddress, name, service string) string {
 	return fmt.Sprintf(`
 data "bloxone_infra_services" "anycast_services" {
     filters = {
@@ -157,7 +156,7 @@ data "bloxone_anycast_configs" "test" {
 `, anycastIpAddress, name, service)
 }
 
-func testAccOnPremAnycastManagerDataSourceConfigTagFilters(anycastIpAddress, name, service, tagValue string) string {
+func testAccAnycastConfigDataSourceConfigTagFilters(anycastIpAddress, name, service, tagValue string) string {
 	return fmt.Sprintf(`
 resource "bloxone_anycast_config" "test" {
     anycast_ip_address = %q

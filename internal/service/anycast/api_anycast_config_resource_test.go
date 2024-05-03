@@ -15,9 +15,10 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-func TestAccOnPremAnycastManagerResource_basic(t *testing.T) {
+func TestAccAnycastConfigResource_basic(t *testing.T) {
 	var resourceName = "bloxone_anycast_config.test"
 	var v anycast.AnycastConfig
+	anycastName := acctest.RandomNameWithPrefix("anycast")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -25,9 +26,10 @@ func TestAccOnPremAnycastManagerResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOnPremAnycastManagerBasicConfig("anycast1", "DHCP", "10.0.0.7"),
+				Config: testAccAnycastConfigResourceBasicConfig(anycastName, "DHCP", "10.0.0.8"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
+					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
+					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
@@ -39,20 +41,21 @@ func TestAccOnPremAnycastManagerResource_basic(t *testing.T) {
 	})
 }
 
-func TestAccOnPremAnycastManagerResource_disappears(t *testing.T) {
+func TestAccAnycastConfigResource_disappears(t *testing.T) {
 	resourceName := "bloxone_anycast_config.test"
 	var v anycast.AnycastConfig
+	anycastName := acctest.RandomNameWithPrefix("anycast")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckOnPremAnycastManagerDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckAnycastConfigResourceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOnPremAnycastManagerBasicConfig("anycast_test", "DHCP", "10.0.0.7"),
+				Config: testAccAnycastConfigResourceBasicConfig(anycastName, "DHCP", "10.0.0.7"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
-					testAccCheckOnPremAnycastManagerDisappears(context.Background(), &v),
+					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
+					testAccCheckAnycastConfigResourceDisappears(context.Background(), &v),
 				),
 				ExpectNonEmptyPlan: true,
 			},
@@ -60,7 +63,7 @@ func TestAccOnPremAnycastManagerResource_disappears(t *testing.T) {
 	})
 }
 
-func TestAccOnPremAnycastManagerResource_AnycastIpAddress(t *testing.T) {
+func TestAccAnycastConfigResource_AnycastIpAddress(t *testing.T) {
 	var resourceName = "bloxone_anycast_config.test_anycast_ip_address"
 	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
@@ -71,18 +74,18 @@ func TestAccOnPremAnycastManagerResource_AnycastIpAddress(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOnPremAnycastManagerAnycastIpAddress("10.0.0.2", anycastName, "DHCP"),
+				Config: testAccAnycastConfigResourceAnycastIpAddress("10.0.0.2", anycastName, "DHCP"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
+					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", anycastName),
 					resource.TestCheckResourceAttr(resourceName, "anycast_ip_address", "10.0.0.2"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccOnPremAnycastManagerAnycastIpAddress("10.0.0.3", anycastName, "DHCP"),
+				Config: testAccAnycastConfigResourceAnycastIpAddress("10.0.0.3", anycastName, "DHCP"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
+					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", anycastName),
 					resource.TestCheckResourceAttr(resourceName, "anycast_ip_address", "10.0.0.3"),
 				),
@@ -92,7 +95,7 @@ func TestAccOnPremAnycastManagerResource_AnycastIpAddress(t *testing.T) {
 	})
 }
 
-func TestAccOnPremAnycastManagerResource_Description(t *testing.T) {
+func TestAccAnycastConfigResource_Description(t *testing.T) {
 	var resourceName = "bloxone_anycast_config.test_description"
 	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
@@ -103,17 +106,17 @@ func TestAccOnPremAnycastManagerResource_Description(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOnPremAnycastManagerDescription("10.0.0.2", anycastName, "DNS", "Anycast comment"),
+				Config: testAccAnycastConfigResourceDescription("10.0.0.2", anycastName, "DNS", "Anycast comment"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
+					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "Anycast comment"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccOnPremAnycastManagerDescription("10.0.0.2", anycastName, "DNS", "Anycast comment updated"),
+				Config: testAccAnycastConfigResourceDescription("10.0.0.2", anycastName, "DNS", "Anycast comment updated"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
+					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "Anycast comment updated"),
 				),
 			},
@@ -122,7 +125,7 @@ func TestAccOnPremAnycastManagerResource_Description(t *testing.T) {
 	})
 }
 
-func TestAccOnPremAnycastManagerResource_Name(t *testing.T) {
+func TestAccAnycastConfigResource_Name(t *testing.T) {
 	var resourceName = "bloxone_anycast_config.test_name"
 	var v anycast.AnycastConfig
 	anycastName1 := acctest.RandomNameWithPrefix("anycast")
@@ -134,17 +137,17 @@ func TestAccOnPremAnycastManagerResource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOnPremAnycastManagerName("10.0.0.1", anycastName1, "DNS"),
+				Config: testAccAnycastConfigResourceName("10.0.0.1", anycastName1, "DNS"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
+					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", anycastName1),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccOnPremAnycastManagerName("10.0.0.1", anycastName2, "DNS"),
+				Config: testAccAnycastConfigResourceName("10.0.0.1", anycastName2, "DNS"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
+					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", anycastName2),
 				),
 			},
@@ -153,7 +156,7 @@ func TestAccOnPremAnycastManagerResource_Name(t *testing.T) {
 	})
 }
 
-func TestAccOnPremAnycastManagerResource_Service(t *testing.T) {
+func TestAccAnycastConfigResource_Service(t *testing.T) {
 	var resourceName = "bloxone_anycast_config.test_service"
 	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
@@ -165,17 +168,17 @@ func TestAccOnPremAnycastManagerResource_Service(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOnPremAnycastManagerService(anycastIP, anycastName, "DHCP"),
+				Config: testAccAnycastConfigResourceService(anycastIP, anycastName, "DHCP"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
+					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "service", "DHCP"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccOnPremAnycastManagerService(anycastIP, anycastName, "DNS"),
+				Config: testAccAnycastConfigResourceService(anycastIP, anycastName, "DNS"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
+					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "service", "DNS"),
 				),
 			},
@@ -184,10 +187,11 @@ func TestAccOnPremAnycastManagerResource_Service(t *testing.T) {
 	})
 }
 
-func TestAccOnPremAnycastManagerResource_Tags(t *testing.T) {
+func TestAccAnycastConfigResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_anycast_config.test_tags"
 	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
+	anycastIP := acctest.RandomIP()
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -195,24 +199,24 @@ func TestAccOnPremAnycastManagerResource_Tags(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOnPremAnycastManagerTags("10.0.0.1", anycastName, "DNS", map[string]string{
+				Config: testAccAnycastConfigResourceTags(anycastIP, anycastName, "DNS", map[string]string{
 					"tag1": "value1",
 					"tag2": "value2",
 				}),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
+					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccOnPremAnycastManagerTags("10.0.0.1", anycastName, "DNS", map[string]string{
+				Config: testAccAnycastConfigResourceTags(anycastIP, anycastName, "DNS", map[string]string{
 					"tag2": "value2changed",
 					"tag3": "value3",
 				}),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOnPremAnycastManagerExists(context.Background(), resourceName, &v),
+					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2changed"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag3", "value3"),
 				),
@@ -222,7 +226,7 @@ func TestAccOnPremAnycastManagerResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckOnPremAnycastManagerExists(ctx context.Context, resourceName string, v *anycast.AnycastConfig) resource.TestCheckFunc {
+func testAccCheckAnycastConfigResourceExists(ctx context.Context, resourceName string, v *anycast.AnycastConfig) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -248,7 +252,7 @@ func testAccCheckOnPremAnycastManagerExists(ctx context.Context, resourceName st
 	}
 }
 
-func testAccCheckOnPremAnycastManagerDestroy(ctx context.Context, v *anycast.AnycastConfig) resource.TestCheckFunc {
+func testAccCheckAnycastConfigResourceDestroy(ctx context.Context, v *anycast.AnycastConfig) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.AnycastAPI.
@@ -266,7 +270,7 @@ func testAccCheckOnPremAnycastManagerDestroy(ctx context.Context, v *anycast.Any
 	}
 }
 
-func testAccCheckOnPremAnycastManagerDisappears(ctx context.Context, v *anycast.AnycastConfig) resource.TestCheckFunc {
+func testAccCheckAnycastConfigResourceDisappears(ctx context.Context, v *anycast.AnycastConfig) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, _, err := acctest.BloxOneClient.AnycastAPI.
@@ -280,7 +284,7 @@ func testAccCheckOnPremAnycastManagerDisappears(ctx context.Context, v *anycast.
 	}
 }
 
-func testAccOnPremAnycastManagerBasicConfig(name, service, anycastIpAddress string) string {
+func testAccAnycastConfigResourceBasicConfig(name, service, anycastIpAddress string) string {
 	return fmt.Sprintf(`
 resource "bloxone_anycast_config" "test" {
     name = %q
@@ -290,7 +294,7 @@ resource "bloxone_anycast_config" "test" {
 `, name, service, anycastIpAddress)
 }
 
-func testAccOnPremAnycastManagerAnycastIpAddress(anycastIpAddress, name, service string) string {
+func testAccAnycastConfigResourceAnycastIpAddress(anycastIpAddress, name, service string) string {
 	return fmt.Sprintf(`
 resource "bloxone_anycast_config" "test_anycast_ip_address" {
     anycast_ip_address = %q
@@ -300,7 +304,7 @@ resource "bloxone_anycast_config" "test_anycast_ip_address" {
 `, anycastIpAddress, name, service)
 }
 
-func testAccOnPremAnycastManagerDescription(anycastIpAddress, name, service, description string) string {
+func testAccAnycastConfigResourceDescription(anycastIpAddress, name, service, description string) string {
 	return fmt.Sprintf(`
 resource "bloxone_anycast_config" "test_description" {
     anycast_ip_address = %q
@@ -311,7 +315,7 @@ resource "bloxone_anycast_config" "test_description" {
 `, anycastIpAddress, name, service, description)
 }
 
-func testAccOnPremAnycastManagerName(anycastIpAddress, name, service string) string {
+func testAccAnycastConfigResourceName(anycastIpAddress, name, service string) string {
 	return fmt.Sprintf(`
 resource "bloxone_anycast_config" "test_name" {
     anycast_ip_address = %q
@@ -321,7 +325,7 @@ resource "bloxone_anycast_config" "test_name" {
 `, anycastIpAddress, name, service)
 }
 
-func testAccOnPremAnycastManagerService(anycastIpAddress, name, service string) string {
+func testAccAnycastConfigResourceService(anycastIpAddress, name, service string) string {
 	return fmt.Sprintf(`
 resource "bloxone_anycast_config" "test_service" {
     anycast_ip_address = %q
@@ -331,7 +335,7 @@ resource "bloxone_anycast_config" "test_service" {
 `, anycastIpAddress, name, service)
 }
 
-func testAccOnPremAnycastManagerTags(anycastIpAddress, name, service string, tags map[string]string) string {
+func testAccAnycastConfigResourceTags(anycastIpAddress, name, service string, tags map[string]string) string {
 	tagsStr := "{\n"
 	for k, v := range tags {
 		tagsStr += fmt.Sprintf(`

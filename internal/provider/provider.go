@@ -12,9 +12,8 @@ import (
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/option"
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dfp"
-
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/anycast"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dfp"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_data"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/fw"
@@ -76,6 +75,7 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 		option.WithClientName(fmt.Sprintf("terraform/%s#%s", p.version, p.commit)),
 		option.WithAPIKey(data.APIKey.ValueString()),
 		option.WithCSPUrl(data.CSPUrl.ValueString()),
+		option.WithDebug(false),
 	)
 
 	resp.DataSourceData = client
@@ -128,9 +128,10 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 
 		keys.NewTsigResource,
 
-		dfp.NewDfpResource,
-
+		anycast.NewAnycastHostResource,
 		anycast.NewAnycastConfigResource,
+
+		dfp.NewDfpResource,
 
 		fw.NewSecurityPolicyResource,
 		fw.NewAccessCodeResource,

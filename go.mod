@@ -1,6 +1,6 @@
 module github.com/infobloxopen/terraform-provider-bloxone
 
-go 1.19
+go 1.22
 
 require (
 	github.com/hashicorp/terraform-plugin-docs v0.16.0
@@ -76,3 +76,5 @@ require (
 	google.golang.org/grpc v1.57.1 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 )
+
+//replace github.com/infobloxopen/bloxone-go-client => ../bloxone-go-client
