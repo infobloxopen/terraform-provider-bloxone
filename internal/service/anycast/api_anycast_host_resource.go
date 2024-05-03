@@ -12,30 +12,30 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &OnPremAnycastHostResource{}
-var _ resource.ResourceWithImportState = &OnPremAnycastHostResource{}
+var _ resource.Resource = &AnycastHostResource{}
+var _ resource.ResourceWithImportState = &AnycastHostResource{}
 
-func NewOnPremAnycastOnpremHostResource() resource.Resource {
-	return &OnPremAnycastHostResource{}
+func NewAnycastHostResource() resource.Resource {
+	return &AnycastHostResource{}
 }
 
 // OnPremAnycastManagerResource defines the resource implementation.
-type OnPremAnycastHostResource struct {
+type AnycastHostResource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (r *OnPremAnycastHostResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *AnycastHostResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + "anycast_host"
 }
 
-func (r *OnPremAnycastHostResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *AnycastHostResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Retrieve an Anycast host Configurations.",
 		Attributes:          ProtoOnpremHostResourceSchemaAttributes,
 	}
 }
 
-func (r *OnPremAnycastHostResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *AnycastHostResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -55,12 +55,7 @@ func (r *OnPremAnycastHostResource) Configure(ctx context.Context, req resource.
 	r.client = client
 }
 
-//Read from ID. (ID should be mandatory)
-//Retry until create_timeout, return error if not found
-//If the data is different from read data from API, make an PUT call to API, to update the resource in backend.
-
-// create is uncommented cause to create in api documentation
-func (r *OnPremAnycastHostResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *AnycastHostResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data ProtoOnpremHostModel
 
 	// Read Terraform plan data into the model
@@ -70,8 +65,6 @@ func (r *OnPremAnycastHostResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 
-	// We first query the Host API to get the name and IP address of the host.
-	// This is required, or any name set by the user is simply overwritten by the Host sync process.
 	hostRes, _, err := r.client.InfraManagementAPI.
 		HostsAPI.
 		List(ctx).
@@ -87,7 +80,6 @@ func (r *OnPremAnycastHostResource) Create(ctx context.Context, req resource.Cre
 	data.Name = types.StringValue(hostRes.GetResults()[0].DisplayName)
 	data.IpAddress = types.StringPointerValue(hostRes.GetResults()[0].IpAddress)
 
-	//now we call put call
 	apiRes, _, err := r.client.AnycastAPI.
 		OnPremAnycastManagerAPI.
 		UpdateOnpremHost(ctx, data.Id.ValueInt64()).
@@ -97,8 +89,6 @@ func (r *OnPremAnycastHostResource) Create(ctx context.Context, req resource.Cre
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create OnPremAnycastManager, got error: %s", err))
 		return
 	}
-	//compare Api res with data and update if needed, do a put call if there is a change (what is deep comparision)
-	//or call the put command and override the data
 
 	res := apiRes.GetResults()
 	data.Flatten(ctx, &res, &resp.Diagnostics)
@@ -107,8 +97,7 @@ func (r *OnPremAnycastHostResource) Create(ctx context.Context, req resource.Cre
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *OnPremAnycastHostResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	//var data ProtoAnycastConfigModel
+func (r *AnycastHostResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var data ProtoOnpremHostModel
 
 	// Read Terraform prior state data into the model
@@ -117,7 +106,6 @@ func (r *OnPremAnycastHostResource) Read(ctx context.Context, req resource.ReadR
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	//OnPremAnycastManagerReadAnycastConfigWithRuntimeStatus
 	apiRes, httpRes, err := r.client.AnycastAPI.
 		OnPremAnycastManagerAPI.
 		GetOnpremHost(ctx, data.Id.ValueInt64()).
@@ -138,8 +126,7 @@ func (r *OnPremAnycastHostResource) Read(ctx context.Context, req resource.ReadR
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *OnPremAnycastHostResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	//var data ProtoAnycastConfigModel
+func (r *AnycastHostResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data ProtoOnpremHostModel
 
 	// Read Terraform plan data into the model
@@ -148,7 +135,6 @@ func (r *OnPremAnycastHostResource) Update(ctx context.Context, req resource.Upd
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	//OnPremAnycastManagerUpdateAnycastConfig
 	apiRes, _, err := r.client.AnycastAPI.
 		OnPremAnycastManagerAPI.
 		UpdateOnpremHost(ctx, data.Id.ValueInt64()).
@@ -166,7 +152,7 @@ func (r *OnPremAnycastHostResource) Update(ctx context.Context, req resource.Upd
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *OnPremAnycastHostResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+func (r *AnycastHostResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var data ProtoOnpremHostModel
 
 	// Read Terraform prior state data into the model
@@ -189,6 +175,6 @@ func (r *OnPremAnycastHostResource) Delete(ctx context.Context, req resource.Del
 	}
 }
 
-func (r *OnPremAnycastHostResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *AnycastHostResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

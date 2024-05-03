@@ -78,7 +78,6 @@ func (r *OnPremAnycastManagerResource) Create(ctx context.Context, req resource.
 
 	res := apiRes.GetResults()
 	data.Flatten(ctx, &res, &resp.Diagnostics)
-	//r.client.AnycastAPI.OnPremAnycastManagerAPI.OnPremAnycastManagerUpdateOnpremHost(ctx, data.Id.ValueInt64()).Body(data.OnpremHost).Execute(}
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }

@@ -32,12 +32,12 @@ func (d *AnycastConfigDataSource) Metadata(ctx context.Context, req datasource.M
 }
 
 type ProtoAnycastConfigModelWithFilter struct {
-	Filters     types.Map    `tfsdk:"filters"` //todo : remove this
-	TagFilters  types.Map    `tfsdk:"tag_filters"`
-	Results     types.List   `tfsdk:"results"`
-	Service     types.String `tfsdk:"service"`
-	HostID      types.Int64  `tfsdk:"host_id"`
-	IsConfigued types.Bool   `tfsdk:"is_configured"`
+	Filters      types.Map    `tfsdk:"filters"` //todo : remove this
+	TagFilters   types.Map    `tfsdk:"tag_filters"`
+	Results      types.List   `tfsdk:"results"`
+	Service      types.String `tfsdk:"service"`
+	HostID       types.Int64  `tfsdk:"host_id"`
+	IsConfigured types.Bool   `tfsdk:"is_configured"`
 }
 
 func (m *ProtoAnycastConfigModelWithFilter) FlattenResults(ctx context.Context, from []anycast.AnycastConfig, diags *diag.Diagnostics) {
@@ -118,7 +118,7 @@ func (d *AnycastConfigDataSource) Read(ctx context.Context, req datasource.ReadR
 		GetAnycastConfigList(ctx).
 		Service(flex.ExpandString(data.Service)).
 		HostId(flex.ExpandInt64(data.HostID)).
-		IsConfigured(flex.ExpandBool(data.IsConfigued)).
+		IsConfigured(flex.ExpandBool(data.IsConfigured)).
 		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 		Execute()
 	if err != nil {

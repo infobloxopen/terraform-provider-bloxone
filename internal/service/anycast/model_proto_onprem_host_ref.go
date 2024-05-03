@@ -36,11 +36,11 @@ var ProtoOnpremHostRefAttrTypes = map[string]attr.Type{
 
 var ProtoOnpremHostRefResourceSchemaAttributes = map[string]schema.Attribute{
 	"id": schema.Int64Attribute{
-		Required:            true,
-		MarkdownDescription: "The resource identifier.",
+		Required: true,
 		PlanModifiers: []planmodifier.Int64{
 			int64planmodifier.UseStateForUnknown(),
 		},
+		MarkdownDescription: "The resource identifier.",
 	},
 	"ip_address": schema.StringAttribute{
 		Optional:            true,
@@ -61,7 +61,8 @@ var ProtoOnpremHostRefResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Unique 32-character string identifier assigned to the host",
 	},
 	"runtime_status": schema.StringAttribute{
-		Computed: true,
+		Computed:            true,
+		MarkdownDescription: "The runtime status of the host",
 	},
 }
 

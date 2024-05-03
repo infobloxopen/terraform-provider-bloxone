@@ -11,8 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-
 	"github.com/infobloxopen/bloxone-go-client/anycast"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -49,30 +47,35 @@ var ProtoOnpremHostResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ProtoAnycastConfigRefResourceSchemaAttributes,
 		},
-		Optional: true,
-		//Computed: true,
+		Optional:            true,
+		MarkdownDescription: `Array of AnycastConfigRef structures, identifying the anycast configurations that this host is a member of.`,
 	},
 	"config_bgp": schema.SingleNestedAttribute{
-		Attributes: ProtoBgpConfigResourceSchemaAttributes,
-		Optional:   true,
+		Attributes:          ProtoBgpConfigResourceSchemaAttributes,
+		Optional:            true,
+		MarkdownDescription: `Struct BGP configuration; defines BGP configuration for one anycast-enabled on-prem host.`,
 	},
 	"config_ospf": schema.SingleNestedAttribute{
-		Attributes: ProtoOspfConfigResourceSchemaAttributes,
-		Optional:   true,
+		Attributes:          ProtoOspfConfigResourceSchemaAttributes,
+		Optional:            true,
+		MarkdownDescription: `Struct OSPF configuration; defines OSPF configuration for one anycast-enabled on-prem host.`,
 	},
 	"config_ospfv3": schema.SingleNestedAttribute{
-		Attributes: ProtoOspfv3ConfigResourceSchemaAttributes,
-		Optional:   true,
+		Attributes:          ProtoOspfv3ConfigResourceSchemaAttributes,
+		Optional:            true,
+		MarkdownDescription: `Struct OSPFv3 configuration; defines OSPFv3 configuration for one anycast-enabled on-prem host.`,
 	},
 	"created_at": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Computed:   true,
+		CustomType:          timetypes.RFC3339Type{},
+		Computed:            true,
+		MarkdownDescription: `Date/time this host was created in anycast service database.`,
 	},
 	"id": schema.Int64Attribute{
 		Required: true,
 		PlanModifiers: []planmodifier.Int64{
 			int64planmodifier.UseStateForUnknown(),
 		},
+		MarkdownDescription: `Numeric host identifier.`,
 	},
 	"ip_address": schema.StringAttribute{
 		Computed:            true,
@@ -87,23 +90,13 @@ var ProtoOnpremHostResourceSchemaAttributes = map[string]schema.Attribute{
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.UseStateForUnknown(),
 		},
+		MarkdownDescription: `User-friendly name of the host @example "dns-host-1", "Central Office Server".`,
 	},
 	"updated_at": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Computed:   true,
+		CustomType:          timetypes.RFC3339Type{},
+		Computed:            true,
+		MarkdownDescription: `Date/time this host was last updated in anycast service database.`,
 	},
-}
-
-func ExpandProtoOnpremHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.OnpremHost {
-	if o.IsNull() || o.IsUnknown() {
-		return nil
-	}
-	var m ProtoOnpremHostModel
-	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
-	if diags.HasError() {
-		return nil
-	}
-	return m.Expand(ctx, diags)
 }
 
 func (m *ProtoOnpremHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.OnpremHost {
@@ -115,25 +108,12 @@ func (m *ProtoOnpremHostModel) Expand(ctx context.Context, diags *diag.Diagnosti
 		ConfigBgp:         ExpandProtoBgpConfig(ctx, m.ConfigBgp, diags),
 		ConfigOspf:        ExpandProtoOspfConfig(ctx, m.ConfigOspf, diags),
 		ConfigOspfv3:      ExpandProtoOspfv3Config(ctx, m.ConfigOspfv3, diags),
-		CreatedAt:         flex.ExpandTimePointer(ctx, m.CreatedAt, diags),
 		IpAddress:         flex.ExpandStringPointer(m.IpAddress),
 		Ipv6Address:       flex.ExpandStringPointer(m.Ipv6Address),
 		Name:              flex.ExpandStringPointer(m.Name),
-		UpdatedAt:         flex.ExpandTimePointer(ctx, m.UpdatedAt, diags),
 		Id:                flex.ExpandInt64Pointer(m.Id),
 	}
 	return to
-}
-
-func FlattenProtoOnpremHost(ctx context.Context, from *anycast.OnpremHost, diags *diag.Diagnostics) types.Object {
-	if from == nil {
-		return types.ObjectNull(ProtoOnpremHostAttrTypes)
-	}
-	m := ProtoOnpremHostModel{}
-	m.Flatten(ctx, from, diags)
-	t, d := types.ObjectValueFrom(ctx, ProtoOnpremHostAttrTypes, m)
-	diags.Append(d...)
-	return t
 }
 
 func (m *ProtoOnpremHostModel) Flatten(ctx context.Context, from *anycast.OnpremHost, diags *diag.Diagnostics) {

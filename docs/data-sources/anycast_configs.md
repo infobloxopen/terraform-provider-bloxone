@@ -86,4 +86,4 @@ Read-Only:
 
 - `name` (String) The name of the anycast.
 - `ophid` (String) Unique 32-character string identifier assigned to the host
-- `runtime_status` (String)
+- `runtime_status` (String) The runtime status of the host

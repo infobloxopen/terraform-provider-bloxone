@@ -75,7 +75,7 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 		option.WithClientName(fmt.Sprintf("terraform/%s#%s", p.version, p.commit)),
 		option.WithAPIKey(data.APIKey.ValueString()),
 		option.WithCSPUrl(data.CSPUrl.ValueString()),
-		option.WithDebug(true),
+		option.WithDebug(false),
 	)
 
 	resp.DataSourceData = client
@@ -128,7 +128,7 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 
 		keys.NewTsigResource,
 
-		anycast.NewOnPremAnycastOnpremHostResource,
+		anycast.NewAnycastHostResource,
 		anycast.NewAnycastConfigResource,
 
 		dfp.NewDfpResource,

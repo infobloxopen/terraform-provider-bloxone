@@ -1,11 +1,11 @@
 data "bloxone_infra_hosts" "anycast_hosts" {
   filters = {
-    display_name = "anycast_real"
+    display_name = "my-host"
   }
 }
 
 # Create an anycast config profile with onprem hosts
-resource "bloxone_anycast_config" "test_onprem_hosts" {
+resource "bloxone_anycast_config" "example" {
   anycast_ip_address = "10.10.10.1"
   name               = "Anycast_config_example"
   service            = "DNS"
@@ -13,7 +13,7 @@ resource "bloxone_anycast_config" "test_onprem_hosts" {
 }
 
 # Adding an anycast host with BGP routing protocol
-resource "bloxone_anycast_host" "test_anycast_host" {
+resource "bloxone_anycast_host" "example" {
   id = one(data.bloxone_infra_hosts.anycast_hosts.results).legacy_id
 
   # Adding the anycast config profile and enabling BGP routing protocol
@@ -37,7 +37,7 @@ resource "bloxone_anycast_host" "test_anycast_host" {
     ]
   }
 
-  # Adding the BGP configuration
+  # Adding the OSPF configuration
   config_ospf = {
     area_type           = "STANDARD"
     area                = "10.0.0.1"
