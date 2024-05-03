@@ -15,7 +15,7 @@ func TestAccNetworkListDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_network_lists.test"
 	resourceName := "bloxone_td_network_list.test"
 	var v fw.NetworkList
-	name := acctest.RandomNameWithPrefix("nl")
+	name := acctest.RandomNameWithPrefix("network-list")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },

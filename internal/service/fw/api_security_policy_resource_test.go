@@ -145,6 +145,9 @@ func TestAccSecurityPolicyResource_AccessCodes(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_access_codes"
 	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
+	namedListName := acctest.RandomNameWithPrefix("named-list")
+	accessCodeName1 := acctest.RandomNameWithPrefix("ac")
+	accessCodeName2 := acctest.RandomNameWithPrefix("ac")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -152,7 +155,7 @@ func TestAccSecurityPolicyResource_AccessCodes(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSecurityPolicyAccessCodes(name, "ac_test1"),
+				Config: testAccSecurityPolicyAccessCodes(name, "ac_test1", namedListName, accessCodeName1, accessCodeName2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "access_codes.0", "bloxone_td_access_code.ac_test1", "id"),
@@ -160,7 +163,7 @@ func TestAccSecurityPolicyResource_AccessCodes(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSecurityPolicyAccessCodes(name, "ac_test2"),
+				Config: testAccSecurityPolicyAccessCodes(name, "ac_test2", namedListName, accessCodeName1, accessCodeName2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "access_codes.0", "bloxone_td_access_code.ac_test2", "id"),
@@ -235,6 +238,8 @@ func TestAccSecurityPolicyResource_NetworkLists(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_network_lists"
 	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
+	networkListName1 := acctest.RandomNameWithPrefix("network-list")
+	networkListName2 := acctest.RandomNameWithPrefix("network-list")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -242,7 +247,7 @@ func TestAccSecurityPolicyResource_NetworkLists(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSecurityPolicyNetworkLists(name, "nl_test1"),
+				Config: testAccSecurityPolicyNetworkLists(name, "nl_test1", networkListName1, networkListName2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "network_lists.0", "bloxone_td_network_list.nl_test1", "id"),
@@ -250,7 +255,7 @@ func TestAccSecurityPolicyResource_NetworkLists(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSecurityPolicyNetworkLists(name, "nl_test2"),
+				Config: testAccSecurityPolicyNetworkLists(name, "nl_test2", networkListName1, networkListName2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "network_lists.0", "bloxone_td_network_list.nl_test2", "id"),
@@ -325,6 +330,8 @@ func TestAccSecurityPolicyResource_Rules(t *testing.T) {
 	resourceName := "bloxone_td_security_policy.test_rules"
 	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
+	namedListName1 := acctest.RandomNameWithPrefix("named-list")
+	namedListName2 := acctest.RandomNameWithPrefix("named-list")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -332,7 +339,7 @@ func TestAccSecurityPolicyResource_Rules(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSecurityPolicyRules(name, "action_allow", "nl_test1"),
+				Config: testAccSecurityPolicyRules(name, "action_allow", "nl_test1", namedListName1, namedListName2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "rules.0.data", "bloxone_td_named_list.nl_test1", "name"),
@@ -340,7 +347,7 @@ func TestAccSecurityPolicyResource_Rules(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSecurityPolicyRules(name, "action_log", "nl_test2"),
+				Config: testAccSecurityPolicyRules(name, "action_log", "nl_test2", namedListName1, namedListName2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "rules.0.data", "bloxone_td_named_list.nl_test2", "name"),
@@ -502,7 +509,7 @@ resource "bloxone_td_security_policy" "test_description" {
 `, name, description)
 }
 
-func testAccSecurityPolicyAccessCodes(name, accessCode string) string {
+func testAccSecurityPolicyAccessCodes(name, accessCode, namedListName, accessCodeName1, accessCodeName2 string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "ac_test1" {
 	name = %[1]q
@@ -517,7 +524,7 @@ resource "bloxone_td_access_code" "ac_test1" {
 }
 
 resource "bloxone_td_access_code" "ac_test2" {
-	name = "terraform-test-ac2"
+	name = %[2]q
 	activation = %[3]q
 	expiration = %[4]q
 	rules = [
@@ -533,8 +540,8 @@ resource "bloxone_td_security_policy" "test_access_codes" {
 	access_codes = [bloxone_td_access_code.%[6]s.id]
 
 }
-`, acctest.RandomNameWithPrefix("ac"), acctest.RandomNameWithPrefix("ac"), time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339), name, accessCode)
-	return strings.Join([]string{testAccBaseWithNamedList(), config}, "")
+`, accessCodeName1, accessCodeName2, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339), name, accessCode)
+	return strings.Join([]string{testAccBaseWithNamedList(namedListName), config}, "")
 }
 
 func testAccSecurityPolicyDefaultAction(name, defaultAction string) string {
@@ -555,15 +562,15 @@ resource "bloxone_td_security_policy" "test_ecs" {
 `, name, ecs)
 }
 
-func testAccSecurityPolicyNetworkLists(name, accessCode string) string {
+func testAccSecurityPolicyNetworkLists(name, networkList, networkListName1, networkListName2 string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_network_list" "nl_test1" {
-	name = "terraform-test-nl1"
+	name = %q
 	items = ["156.2.3.0/24"]
 }
 
 resource "bloxone_td_network_list" "nl_test2" {
-	name = "terraform-test-nl2"
+	name = %q
 	items = ["176.2.3.0/24"]
 }
 
@@ -571,7 +578,7 @@ resource "bloxone_td_security_policy" "test_network_lists" {
 	name = %q
 	network_lists = [bloxone_td_network_list.%s.id]
 }
-`, name, accessCode)
+`, networkListName1, networkListName2, name, networkList)
 }
 
 func testAccSecurityPolicyOnpremResolve(name, onpremResolve string) string {
@@ -601,7 +608,7 @@ resource "bloxone_td_security_policy" "test_safe_search" {
 `, name, safeSearch)
 }
 
-func testAccSecurityPolicyRules(name, rulesAction, rulesData string) string {
+func testAccSecurityPolicyRules(name, rulesAction, rulesData, namedListName1, namedListName2 string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_named_list" "nl_test1" {
 	name = %q
@@ -635,7 +642,7 @@ resource "bloxone_td_security_policy" "test_rules" {
 		}
 	]
 }
-`, acctest.RandomNameWithPrefix("named-list"), acctest.RandomNameWithPrefix("named-list"), name, rulesAction, rulesData)
+`, namedListName1, namedListName2, name, rulesAction, rulesData)
 }
 
 func testAccSecurityPolicyTags(name string, tags map[string]string) string {

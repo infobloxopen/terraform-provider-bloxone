@@ -18,7 +18,7 @@ import (
 func TestAccNetworkListResource_basic(t *testing.T) {
 	var resourceName = "bloxone_td_network_list.test"
 	var v fw.NetworkList
-	name := acctest.RandomNameWithPrefix("nl")
+	name := acctest.RandomNameWithPrefix("network-list")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -48,7 +48,7 @@ func TestAccNetworkListResource_basic(t *testing.T) {
 func TestAccNetworkListResource_disappears(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test"
 	var v fw.NetworkList
-	name := acctest.RandomNameWithPrefix("nl")
+	name := acctest.RandomNameWithPrefix("network-list")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -70,8 +70,8 @@ func TestAccNetworkListResource_disappears(t *testing.T) {
 func TestAccNetworkListResource_Name(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test_name"
 	var v1, v2 fw.NetworkList
-	name1 := acctest.RandomNameWithPrefix("nl")
-	name2 := acctest.RandomNameWithPrefix("nl")
+	name1 := acctest.RandomNameWithPrefix("network-list")
+	name2 := acctest.RandomNameWithPrefix("network-list")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -101,7 +101,7 @@ func TestAccNetworkListResource_Name(t *testing.T) {
 func TestAccNetworkListResource_Description(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test_description"
 	var v fw.NetworkList
-	name := acctest.RandomNameWithPrefix("nl")
+	name := acctest.RandomNameWithPrefix("network-list")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -133,7 +133,7 @@ func TestAccNetworkListResource_Description(t *testing.T) {
 func TestAccNetworkListResource_Items(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test_items"
 	var v fw.NetworkList
-	name := acctest.RandomNameWithPrefix("nl")
+	name := acctest.RandomNameWithPrefix("network-list")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },

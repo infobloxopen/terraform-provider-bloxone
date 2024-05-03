@@ -20,6 +20,7 @@ func TestAccAccessCodeResource_basic(t *testing.T) {
 	var resourceName = "bloxone_td_access_code.test"
 	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
+	namedListName := acctest.RandomNameWithPrefix("named-list")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -27,7 +28,7 @@ func TestAccAccessCodeResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAccessCodeBasicConfig(name),
+				Config: testAccAccessCodeBasicConfig(name, namedListName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
@@ -55,6 +56,7 @@ func TestAccAccessCodeResource_disappears(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test"
 	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
+	namedListName := acctest.RandomNameWithPrefix("named-list")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -62,7 +64,7 @@ func TestAccAccessCodeResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckAccessCodeDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAccessCodeBasicConfig(name),
+				Config: testAccAccessCodeBasicConfig(name, namedListName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					testAccCheckAccessCodeDisappears(context.Background(), &v),
@@ -78,6 +80,7 @@ func TestAccAccessCodeResource_Name(t *testing.T) {
 	var v1, v2 fw.AccessCode
 	name1 := acctest.RandomNameWithPrefix("ac")
 	name2 := acctest.RandomNameWithPrefix("ac")
+	namedListName := acctest.RandomNameWithPrefix("named-list")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -85,7 +88,7 @@ func TestAccAccessCodeResource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAccessCodeName(name1),
+				Config: testAccAccessCodeName(name1, namedListName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodeExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "name", name1),
@@ -93,7 +96,7 @@ func TestAccAccessCodeResource_Name(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAccessCodeName(name2),
+				Config: testAccAccessCodeName(name2, namedListName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodeExists(context.Background(), resourceName, &v2),
 					resource.TestCheckResourceAttr(resourceName, "name", name2),
@@ -110,6 +113,7 @@ func TestAccAccessCodeResource_Activation(t *testing.T) {
 	name := acctest.RandomNameWithPrefix("ac")
 	actTime1 := time.Now().UTC().Format(time.RFC3339)
 	actTime2 := time.Now().UTC().Add(time.Minute * 10).Format(time.RFC3339)
+	namedListName := acctest.RandomNameWithPrefix("named-list")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -117,7 +121,7 @@ func TestAccAccessCodeResource_Activation(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAccessCodeActivation(name, actTime1),
+				Config: testAccAccessCodeActivation(name, actTime1, namedListName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "activation", actTime1),
@@ -125,7 +129,7 @@ func TestAccAccessCodeResource_Activation(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAccessCodeActivation(name, actTime2),
+				Config: testAccAccessCodeActivation(name, actTime2, namedListName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "activation", actTime2),
@@ -140,6 +144,7 @@ func TestAccAccessCodeResource_Description(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_description"
 	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
+	namedListName := acctest.RandomNameWithPrefix("named-list")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -147,7 +152,7 @@ func TestAccAccessCodeResource_Description(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAccessCodeDescription(name, "Test Description"),
+				Config: testAccAccessCodeDescription(name, "Test Description", namedListName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "Test Description"),
@@ -155,7 +160,7 @@ func TestAccAccessCodeResource_Description(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAccessCodeDescription(name, "Updated Test Description"),
+				Config: testAccAccessCodeDescription(name, "Updated Test Description", namedListName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "Updated Test Description"),
@@ -172,6 +177,7 @@ func TestAccAccessCodeResource_Expiration(t *testing.T) {
 	name := acctest.RandomNameWithPrefix("ac")
 	expTime1 := time.Now().UTC().Add(time.Hour).Format(time.RFC3339)
 	expTime2 := time.Now().UTC().Add(time.Hour * 2).Format(time.RFC3339)
+	namedListName := acctest.RandomNameWithPrefix("named-list")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -179,7 +185,7 @@ func TestAccAccessCodeResource_Expiration(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAccessCodeExpiration(name, expTime1),
+				Config: testAccAccessCodeExpiration(name, expTime1, namedListName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "expiration", expTime1),
@@ -187,7 +193,7 @@ func TestAccAccessCodeResource_Expiration(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAccessCodeExpiration(name, expTime2),
+				Config: testAccAccessCodeExpiration(name, expTime2, namedListName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "expiration", expTime2),
@@ -202,6 +208,8 @@ func TestAccAccessCodeResource_Rules(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_rules"
 	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
+	namedListName1 := acctest.RandomNameWithPrefix("named-list")
+	namedListName2 := acctest.RandomNameWithPrefix("named-list")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -209,7 +217,7 @@ func TestAccAccessCodeResource_Rules(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAccessCodeRules(name, "test"),
+				Config: testAccAccessCodeRules(name, "test", namedListName1, namedListName2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "rules.0.data", "bloxone_td_named_list.test", "name"),
@@ -218,7 +226,7 @@ func TestAccAccessCodeResource_Rules(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAccessCodeRules(name, "test2"),
+				Config: testAccAccessCodeRules(name, "test2", namedListName1, namedListName2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "rules.0.data", "bloxone_td_named_list.test2", "name"),
@@ -284,7 +292,7 @@ func testAccCheckAccessCodeDisappears(ctx context.Context, v *fw.AccessCode) res
 	}
 }
 
-func testAccBaseWithNamedList() string {
+func testAccBaseWithNamedList(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_named_list" "test" {
 	name = %[1]q
@@ -296,10 +304,10 @@ resource "bloxone_td_named_list" "test" {
 	]
 	type = "custom_list"
 }
-`, acctest.RandomNameWithPrefix("nl"))
+`, name)
 }
 
-func testAccAccessCodeBasicConfig(name string) string {
+func testAccAccessCodeBasicConfig(name, namedListName string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test" {
 	name = %[1]q
@@ -314,10 +322,10 @@ resource "bloxone_td_access_code" "test" {
 }
 
 `, name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339))
-	return strings.Join([]string{testAccBaseWithNamedList(), config}, "")
+	return strings.Join([]string{testAccBaseWithNamedList(namedListName), config}, "")
 }
 
-func testAccAccessCodeName(name string) string {
+func testAccAccessCodeName(name, namedListName string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test_name" {
 	name = %[1]q
@@ -332,10 +340,10 @@ resource "bloxone_td_access_code" "test_name" {
 }
 
 `, name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339))
-	return strings.Join([]string{testAccBaseWithNamedList(), config}, "")
+	return strings.Join([]string{testAccBaseWithNamedList(namedListName), config}, "")
 }
 
-func testAccAccessCodeActivation(name, activation string) string {
+func testAccAccessCodeActivation(name, activation, namedListName string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test_activation" {
 	name = %[1]q
@@ -350,10 +358,10 @@ resource "bloxone_td_access_code" "test_activation" {
 }
 
 `, name, activation, time.Now().UTC().Add(time.Hour).Format(time.RFC3339))
-	return strings.Join([]string{testAccBaseWithNamedList(), config}, "")
+	return strings.Join([]string{testAccBaseWithNamedList(namedListName), config}, "")
 }
 
-func testAccAccessCodeExpiration(name, expiration string) string {
+func testAccAccessCodeExpiration(name, expiration, namedListName string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test_expiration" {
 	name = %[1]q
@@ -368,10 +376,10 @@ resource "bloxone_td_access_code" "test_expiration" {
 }
 
 `, name, time.Now().UTC().Format(time.RFC3339), expiration)
-	return strings.Join([]string{testAccBaseWithNamedList(), config}, "")
+	return strings.Join([]string{testAccBaseWithNamedList(namedListName), config}, "")
 }
 
-func testAccAccessCodeDescription(name, description string) string {
+func testAccAccessCodeDescription(name, description, namedListName string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test_description" {
 	name = %[1]q
@@ -387,10 +395,10 @@ resource "bloxone_td_access_code" "test_description" {
 }
 
 `, name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339), description)
-	return strings.Join([]string{testAccBaseWithNamedList(), config}, "")
+	return strings.Join([]string{testAccBaseWithNamedList(namedListName), config}, "")
 }
 
-func testAccAccessCodeRules(name, rules string) string {
+func testAccAccessCodeRules(name, rules, namedListName1, namedListName2 string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_td_named_list" "test2" {
 	name = %[1]q
@@ -415,6 +423,6 @@ resource "bloxone_td_access_code" "test_rules" {
 	]
 }
 
-`, acctest.RandomNameWithPrefix("nl"), name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339), rules)
-	return strings.Join([]string{testAccBaseWithNamedList(), config}, "")
+`, namedListName2, name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339), rules)
+	return strings.Join([]string{testAccBaseWithNamedList(namedListName1), config}, "")
 }
