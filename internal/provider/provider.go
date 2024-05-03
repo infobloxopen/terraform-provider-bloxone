@@ -201,7 +201,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		fw.NewNamedListsDataSource,
 		fw.NewNetworkListsDataSource,
 		fw.NewInternalDomainListsDataSource,
-		fw.NewPoPRegionsDataSource,
+		fw.NewPoPRegionDataSource,
 	}
 }
 

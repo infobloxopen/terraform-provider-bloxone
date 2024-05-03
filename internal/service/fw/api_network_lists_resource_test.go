@@ -15,7 +15,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-func TestAccNetworkListsResource_basic(t *testing.T) {
+func TestAccNetworkListResource_basic(t *testing.T) {
 	var resourceName = "bloxone_td_network_list.test"
 	var v fw.NetworkList
 	name := acctest.RandomNameWithPrefix("nl")
@@ -26,9 +26,9 @@ func TestAccNetworkListsResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccNetworkListsBasicConfig(name, "156.2.3.0/24"),
+				Config: testAccNetworkListBasicConfig(name, "156.2.3.0/24"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkListsExists(context.Background(), resourceName, &v),
+					testAccCheckNetworkListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					resource.TestCheckResourceAttr(resourceName, "items.0", "156.2.3.0/24"),
 					// Test Read Only fields
@@ -45,7 +45,7 @@ func TestAccNetworkListsResource_basic(t *testing.T) {
 	})
 }
 
-func TestAccNetworkListsResource_disappears(t *testing.T) {
+func TestAccNetworkListResource_disappears(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test"
 	var v fw.NetworkList
 	name := acctest.RandomNameWithPrefix("nl")
@@ -53,13 +53,13 @@ func TestAccNetworkListsResource_disappears(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNetworkListsDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckNetworkListDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkListsBasicConfig(name, "156.2.3.0/24"),
+				Config: testAccNetworkListBasicConfig(name, "156.2.3.0/24"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkListsExists(context.Background(), resourceName, &v),
-					testAccCheckNetworkListsDisappears(context.Background(), &v),
+					testAccCheckNetworkListExists(context.Background(), resourceName, &v),
+					testAccCheckNetworkListDisappears(context.Background(), &v),
 				),
 				ExpectNonEmptyPlan: true,
 			},
@@ -67,7 +67,7 @@ func TestAccNetworkListsResource_disappears(t *testing.T) {
 	})
 }
 
-func TestAccNetworkListsResource_Name(t *testing.T) {
+func TestAccNetworkListResource_Name(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test_name"
 	var v1, v2 fw.NetworkList
 	name1 := acctest.RandomNameWithPrefix("nl")
@@ -79,17 +79,17 @@ func TestAccNetworkListsResource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccNetworkListsName(name1, "156.2.3.0/24"),
+				Config: testAccNetworkListName(name1, "156.2.3.0/24"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkListsExists(context.Background(), resourceName, &v1),
+					testAccCheckNetworkListExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "name", name1),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccNetworkListsName(name2, "156.2.3.0/24"),
+				Config: testAccNetworkListName(name2, "156.2.3.0/24"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkListsExists(context.Background(), resourceName, &v2),
+					testAccCheckNetworkListExists(context.Background(), resourceName, &v2),
 					resource.TestCheckResourceAttr(resourceName, "name", name2),
 				),
 			},
@@ -98,7 +98,7 @@ func TestAccNetworkListsResource_Name(t *testing.T) {
 	})
 }
 
-func TestAccNetworkListsResource_Description(t *testing.T) {
+func TestAccNetworkListResource_Description(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test_description"
 	var v fw.NetworkList
 	name := acctest.RandomNameWithPrefix("nl")
@@ -109,18 +109,18 @@ func TestAccNetworkListsResource_Description(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccNetworkListsDescription(name, "156.2.3.0/24", "Test Description"),
+				Config: testAccNetworkListDescription(name, "156.2.3.0/24", "Test Description"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkListsExists(context.Background(), resourceName, &v),
+					testAccCheckNetworkListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					resource.TestCheckResourceAttr(resourceName, "description", "Test Description"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccNetworkListsDescription(name, "156.2.3.0/24", "Updated Test Description"),
+				Config: testAccNetworkListDescription(name, "156.2.3.0/24", "Updated Test Description"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkListsExists(context.Background(), resourceName, &v),
+					testAccCheckNetworkListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					resource.TestCheckResourceAttr(resourceName, "description", "Updated Test Description"),
 				),
@@ -130,7 +130,7 @@ func TestAccNetworkListsResource_Description(t *testing.T) {
 	})
 }
 
-func TestAccNetworkListsResource_Items(t *testing.T) {
+func TestAccNetworkListResource_Items(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test_items"
 	var v fw.NetworkList
 	name := acctest.RandomNameWithPrefix("nl")
@@ -141,18 +141,18 @@ func TestAccNetworkListsResource_Items(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccNetworkListsItems(name, "156.2.3.0/24"),
+				Config: testAccNetworkListItems(name, "156.2.3.0/24"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkListsExists(context.Background(), resourceName, &v),
+					testAccCheckNetworkListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					resource.TestCheckResourceAttr(resourceName, "items.0", "156.2.3.0/24"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccNetworkListsItems(name, "192.20.30.0/24"),
+				Config: testAccNetworkListItems(name, "192.20.30.0/24"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckNetworkListsExists(context.Background(), resourceName, &v),
+					testAccCheckNetworkListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					resource.TestCheckResourceAttr(resourceName, "items.0", "192.20.30.0/24"),
 				),
@@ -162,7 +162,7 @@ func TestAccNetworkListsResource_Items(t *testing.T) {
 	})
 }
 
-func testAccCheckNetworkListsExists(ctx context.Context, resourceName string, v *fw.NetworkList) resource.TestCheckFunc {
+func testAccCheckNetworkListExists(ctx context.Context, resourceName string, v *fw.NetworkList) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -188,7 +188,7 @@ func testAccCheckNetworkListsExists(ctx context.Context, resourceName string, v 
 	}
 }
 
-func testAccCheckNetworkListsDestroy(ctx context.Context, v *fw.NetworkList) resource.TestCheckFunc {
+func testAccCheckNetworkListDestroy(ctx context.Context, v *fw.NetworkList) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.FWAPI.
@@ -206,7 +206,7 @@ func testAccCheckNetworkListsDestroy(ctx context.Context, v *fw.NetworkList) res
 	}
 }
 
-func testAccCheckNetworkListsDisappears(ctx context.Context, v *fw.NetworkList) resource.TestCheckFunc {
+func testAccCheckNetworkListDisappears(ctx context.Context, v *fw.NetworkList) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.FWAPI.
@@ -220,7 +220,7 @@ func testAccCheckNetworkListsDisappears(ctx context.Context, v *fw.NetworkList) 
 	}
 }
 
-func testAccNetworkListsBasicConfig(name, item string) string {
+func testAccNetworkListBasicConfig(name, item string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_network_list" "test" {
 	name = %q
@@ -229,7 +229,7 @@ resource "bloxone_td_network_list" "test" {
 `, name, item)
 }
 
-func testAccNetworkListsName(name, item string) string {
+func testAccNetworkListName(name, item string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_network_list" "test_name" {
 	name = %q
@@ -239,7 +239,7 @@ resource "bloxone_td_network_list" "test_name" {
 `, name, item)
 }
 
-func testAccNetworkListsDescription(name, item, description string) string {
+func testAccNetworkListDescription(name, item, description string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_network_list" "test_description" {
 	name = %q
@@ -250,7 +250,7 @@ resource "bloxone_td_network_list" "test_description" {
 `, name, item, description)
 }
 
-func testAccNetworkListsItems(name, item string) string {
+func testAccNetworkListItems(name, item string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_network_list" "test_items" {
 	name = %q

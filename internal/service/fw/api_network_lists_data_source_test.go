@@ -11,7 +11,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-func TestAccNetworkListsDataSource_Filters(t *testing.T) {
+func TestAccNetworkListDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_network_lists.test"
 	resourceName := "bloxone_td_network_list.test"
 	var v fw.NetworkList
@@ -20,13 +20,13 @@ func TestAccNetworkListsDataSource_Filters(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckNetworkListsDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckNetworkListDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkListsDataSourceConfigFilters(name, "156.2.3.0/24"),
+				Config: testAccNetworkListDataSourceConfigFilters(name, "156.2.3.0/24"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
-						testAccCheckNetworkListsExists(context.Background(), resourceName, &v),
+						testAccCheckNetworkListExists(context.Background(), resourceName, &v),
 					}, testAccCheckNetworkListsResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
@@ -48,7 +48,7 @@ func testAccCheckNetworkListsResourceAttrPair(resourceName, dataSourceName strin
 	}
 }
 
-func testAccNetworkListsDataSourceConfigFilters(name, item string) string {
+func testAccNetworkListDataSourceConfigFilters(name, item string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_network_list" "test" {
 	name = %q

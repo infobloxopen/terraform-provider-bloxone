@@ -15,7 +15,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-func TestAccInternalDomainListsResource_basic(t *testing.T) {
+func TestAccInternalDomainListResource_basic(t *testing.T) {
 	var resourceName = "bloxone_td_internal_domain_list.test"
 	var v fw.InternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
@@ -26,9 +26,9 @@ func TestAccInternalDomainListsResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccInternalDomainListsBasicConfig(name, "example.somedomain.com"),
+				Config: testAccInternalDomainListBasicConfig(name, "example.somedomain.com"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckInternalDomainListsExists(context.Background(), resourceName, &v),
+					testAccCheckInternalDomainListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_time"),
@@ -41,7 +41,7 @@ func TestAccInternalDomainListsResource_basic(t *testing.T) {
 	})
 }
 
-func TestAccInternalDomainListsResource_disappears(t *testing.T) {
+func TestAccInternalDomainListResource_disappears(t *testing.T) {
 	resourceName := "bloxone_td_internal_domain_list.test"
 	var v fw.InternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
@@ -49,12 +49,12 @@ func TestAccInternalDomainListsResource_disappears(t *testing.T) {
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckInternalDomainListsDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckInternalDomainListDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccInternalDomainListsBasicConfig(name, "example.somedomain.com"),
+				Config: testAccInternalDomainListBasicConfig(name, "example.somedomain.com"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckInternalDomainListsExists(context.Background(), resourceName, &v),
+					testAccCheckInternalDomainListExists(context.Background(), resourceName, &v),
 					testAccCheckInternalDomainListsDisappears(context.Background(), &v),
 				),
 				ExpectNonEmptyPlan: true,
@@ -63,7 +63,7 @@ func TestAccInternalDomainListsResource_disappears(t *testing.T) {
 	})
 }
 
-func TestAccInternalDomainListsResource_Description(t *testing.T) {
+func TestAccInternalDomainListResource_Description(t *testing.T) {
 	resourceName := "bloxone_td_internal_domain_list.test_description"
 	var v fw.InternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
@@ -76,7 +76,7 @@ func TestAccInternalDomainListsResource_Description(t *testing.T) {
 			{
 				Config: testAccInternalDomainDescription(name, "example.somedomain.com", "TEST_DESCRIPTION"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckInternalDomainListsExists(context.Background(), resourceName, &v),
+					testAccCheckInternalDomainListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "TEST_DESCRIPTION"),
 				),
 			},
@@ -84,7 +84,7 @@ func TestAccInternalDomainListsResource_Description(t *testing.T) {
 			{
 				Config: testAccInternalDomainDescription(name, "example.somedomain.com", "TEST_DESCRIPTION_UPDATE"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckInternalDomainListsExists(context.Background(), resourceName, &v),
+					testAccCheckInternalDomainListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "TEST_DESCRIPTION_UPDATE"),
 				),
 			},
@@ -93,7 +93,7 @@ func TestAccInternalDomainListsResource_Description(t *testing.T) {
 	})
 }
 
-func TestAccInternalDomainListsResource_InternalDomains(t *testing.T) {
+func TestAccInternalDomainListResource_InternalDomains(t *testing.T) {
 	resourceName := "bloxone_td_internal_domain_list.test_internal_domain"
 	var v fw.InternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
@@ -104,17 +104,17 @@ func TestAccInternalDomainListsResource_InternalDomains(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccInternalDomainListsInternalDomain(name, "example.somedomain.com"),
+				Config: testAccInternalDomainListInternalDomain(name, "example.somedomain.com"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckInternalDomainListsExists(context.Background(), resourceName, &v),
+					testAccCheckInternalDomainListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "internal_domains.0", "example.somedomain.com"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccInternalDomainListsInternalDomain(name, "example.newdomain.com"),
+				Config: testAccInternalDomainListInternalDomain(name, "example.newdomain.com"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckInternalDomainListsExists(context.Background(), resourceName, &v),
+					testAccCheckInternalDomainListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "internal_domains.0", "example.newdomain.com"),
 				),
 			},
@@ -123,7 +123,7 @@ func TestAccInternalDomainListsResource_InternalDomains(t *testing.T) {
 	})
 }
 
-func TestAccInternalDomainListsResource_Name(t *testing.T) {
+func TestAccInternalDomainListResource_Name(t *testing.T) {
 	resourceName := "bloxone_td_internal_domain_list.test_name"
 	var v1, v2 fw.InternalDomains
 	var name1 = acctest.RandomNameWithPrefix("td-internal_domain_list")
@@ -137,7 +137,7 @@ func TestAccInternalDomainListsResource_Name(t *testing.T) {
 			{
 				Config: testAccInternalDomainName(name1, "example.somedomain.com"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckInternalDomainListsExists(context.Background(), resourceName, &v1),
+					testAccCheckInternalDomainListExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "name", name1),
 				),
 			},
@@ -145,8 +145,8 @@ func TestAccInternalDomainListsResource_Name(t *testing.T) {
 			{
 				Config: testAccInternalDomainName(name2, "example.somedomain.com"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckInternalDomainListsDestroy(context.Background(), &v1),
-					testAccCheckInternalDomainListsExists(context.Background(), resourceName, &v2),
+					testAccCheckInternalDomainListDestroy(context.Background(), &v1),
+					testAccCheckInternalDomainListExists(context.Background(), resourceName, &v2),
 					resource.TestCheckResourceAttr(resourceName, "name", name2),
 				),
 			},
@@ -155,7 +155,7 @@ func TestAccInternalDomainListsResource_Name(t *testing.T) {
 	})
 }
 
-func TestAccInternalDomainListsResource_Tags(t *testing.T) {
+func TestAccInternalDomainListResource_Tags(t *testing.T) {
 	resourceName := "bloxone_td_internal_domain_list.test_tags"
 	var v fw.InternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
@@ -171,7 +171,7 @@ func TestAccInternalDomainListsResource_Tags(t *testing.T) {
 					"tag2": "value2",
 				}),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckInternalDomainListsExists(context.Background(), resourceName, &v),
+					testAccCheckInternalDomainListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
 				),
@@ -183,7 +183,7 @@ func TestAccInternalDomainListsResource_Tags(t *testing.T) {
 					"tag3": "value3",
 				}),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckInternalDomainListsExists(context.Background(), resourceName, &v),
+					testAccCheckInternalDomainListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2changed"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag3", "value3"),
 				),
@@ -193,7 +193,7 @@ func TestAccInternalDomainListsResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckInternalDomainListsExists(ctx context.Context, resourceName string, v *fw.InternalDomains) resource.TestCheckFunc {
+func testAccCheckInternalDomainListExists(ctx context.Context, resourceName string, v *fw.InternalDomains) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -219,7 +219,7 @@ func testAccCheckInternalDomainListsExists(ctx context.Context, resourceName str
 	}
 }
 
-func testAccCheckInternalDomainListsDestroy(ctx context.Context, v *fw.InternalDomains) resource.TestCheckFunc {
+func testAccCheckInternalDomainListDestroy(ctx context.Context, v *fw.InternalDomains) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.FWAPI.
@@ -251,7 +251,7 @@ func testAccCheckInternalDomainListsDisappears(ctx context.Context, v *fw.Intern
 	}
 }
 
-func testAccInternalDomainListsBasicConfig(name, internalDomains string) string {
+func testAccInternalDomainListBasicConfig(name, internalDomains string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_internal_domain_list" "test" {
 	name = %q
@@ -270,7 +270,7 @@ resource "bloxone_td_internal_domain_list" "test_description" {
 `, name, internalDomains, description)
 }
 
-func testAccInternalDomainListsInternalDomain(name, internalDomains string) string {
+func testAccInternalDomainListInternalDomain(name, internalDomains string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_internal_domain_list" "test_internal_domain" {
 	name = %q

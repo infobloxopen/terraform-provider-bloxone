@@ -16,7 +16,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-func TestAccAccessCodesResource_basic(t *testing.T) {
+func TestAccAccessCodeResource_basic(t *testing.T) {
 	var resourceName = "bloxone_td_access_code.test"
 	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
@@ -27,9 +27,9 @@ func TestAccAccessCodesResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAccessCodesBasicConfig(name),
+				Config: testAccAccessCodeBasicConfig(name),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
+					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					resource.TestCheckResourceAttr(resourceName, "rules.0.type", "custom_list"),
 					resource.TestCheckResourceAttr(resourceName, "activation", time.Now().UTC().Format(time.RFC3339)),
@@ -51,7 +51,7 @@ func TestAccAccessCodesResource_basic(t *testing.T) {
 	})
 }
 
-func TestAccAccessCodesResource_disappears(t *testing.T) {
+func TestAccAccessCodeResource_disappears(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test"
 	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
@@ -59,13 +59,13 @@ func TestAccAccessCodesResource_disappears(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckAccessCodesDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckAccessCodeDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAccessCodesBasicConfig(name),
+				Config: testAccAccessCodeBasicConfig(name),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
-					testAccCheckAccessCodesDisappears(context.Background(), &v),
+					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
+					testAccCheckAccessCodeDisappears(context.Background(), &v),
 				),
 				ExpectNonEmptyPlan: true,
 			},
@@ -73,7 +73,7 @@ func TestAccAccessCodesResource_disappears(t *testing.T) {
 	})
 }
 
-func TestAccAccessCodesResource_Name(t *testing.T) {
+func TestAccAccessCodeResource_Name(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_name"
 	var v1, v2 fw.AccessCode
 	name1 := acctest.RandomNameWithPrefix("ac")
@@ -85,17 +85,17 @@ func TestAccAccessCodesResource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAccessCodesName(name1),
+				Config: testAccAccessCodeName(name1),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v1),
+					testAccCheckAccessCodeExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "name", name1),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccAccessCodesName(name2),
+				Config: testAccAccessCodeName(name2),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v2),
+					testAccCheckAccessCodeExists(context.Background(), resourceName, &v2),
 					resource.TestCheckResourceAttr(resourceName, "name", name2),
 				),
 			},
@@ -104,7 +104,7 @@ func TestAccAccessCodesResource_Name(t *testing.T) {
 	})
 }
 
-func TestAccAccessCodesResource_Activation(t *testing.T) {
+func TestAccAccessCodeResource_Activation(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_activation"
 	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
@@ -117,17 +117,17 @@ func TestAccAccessCodesResource_Activation(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAccessCodesActivation(name, actTime1),
+				Config: testAccAccessCodeActivation(name, actTime1),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
+					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "activation", actTime1),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccAccessCodesActivation(name, actTime2),
+				Config: testAccAccessCodeActivation(name, actTime2),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
+					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "activation", actTime2),
 				),
 			},
@@ -136,7 +136,7 @@ func TestAccAccessCodesResource_Activation(t *testing.T) {
 	})
 }
 
-func TestAccAccessCodesResource_Description(t *testing.T) {
+func TestAccAccessCodeResource_Description(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_description"
 	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
@@ -147,17 +147,17 @@ func TestAccAccessCodesResource_Description(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAccessCodesDescription(name, "Test Description"),
+				Config: testAccAccessCodeDescription(name, "Test Description"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
+					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "Test Description"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccAccessCodesDescription(name, "Updated Test Description"),
+				Config: testAccAccessCodeDescription(name, "Updated Test Description"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
+					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "Updated Test Description"),
 				),
 			},
@@ -166,7 +166,7 @@ func TestAccAccessCodesResource_Description(t *testing.T) {
 	})
 }
 
-func TestAccAccessCodesResource_Expiration(t *testing.T) {
+func TestAccAccessCodeResource_Expiration(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_expiration"
 	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
@@ -179,17 +179,17 @@ func TestAccAccessCodesResource_Expiration(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAccessCodesExpiration(name, expTime1),
+				Config: testAccAccessCodeExpiration(name, expTime1),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
+					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "expiration", expTime1),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccAccessCodesExpiration(name, expTime2),
+				Config: testAccAccessCodeExpiration(name, expTime2),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
+					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "expiration", expTime2),
 				),
 			},
@@ -198,7 +198,7 @@ func TestAccAccessCodesResource_Expiration(t *testing.T) {
 	})
 }
 
-func TestAccAccessCodesResource_Rules(t *testing.T) {
+func TestAccAccessCodeResource_Rules(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test_rules"
 	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
@@ -209,18 +209,18 @@ func TestAccAccessCodesResource_Rules(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAccessCodesRules(name, "test"),
+				Config: testAccAccessCodeRules(name, "test"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
+					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "rules.0.data", "bloxone_td_named_list.test", "name"),
 					resource.TestCheckResourceAttrPair(resourceName, "rules.0.type", "bloxone_td_named_list.test", "type"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccAccessCodesRules(name, "test2"),
+				Config: testAccAccessCodeRules(name, "test2"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAccessCodesExists(context.Background(), resourceName, &v),
+					testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "rules.0.data", "bloxone_td_named_list.test2", "name"),
 					resource.TestCheckResourceAttrPair(resourceName, "rules.0.type", "bloxone_td_named_list.test2", "type"),
 				),
@@ -230,7 +230,7 @@ func TestAccAccessCodesResource_Rules(t *testing.T) {
 	})
 }
 
-func testAccCheckAccessCodesExists(ctx context.Context, resourceName string, v *fw.AccessCode) resource.TestCheckFunc {
+func testAccCheckAccessCodeExists(ctx context.Context, resourceName string, v *fw.AccessCode) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -252,7 +252,7 @@ func testAccCheckAccessCodesExists(ctx context.Context, resourceName string, v *
 	}
 }
 
-func testAccCheckAccessCodesDestroy(ctx context.Context, v *fw.AccessCode) resource.TestCheckFunc {
+func testAccCheckAccessCodeDestroy(ctx context.Context, v *fw.AccessCode) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.FWAPI.
@@ -270,7 +270,7 @@ func testAccCheckAccessCodesDestroy(ctx context.Context, v *fw.AccessCode) resou
 	}
 }
 
-func testAccCheckAccessCodesDisappears(ctx context.Context, v *fw.AccessCode) resource.TestCheckFunc {
+func testAccCheckAccessCodeDisappears(ctx context.Context, v *fw.AccessCode) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.FWAPI.
@@ -284,7 +284,7 @@ func testAccCheckAccessCodesDisappears(ctx context.Context, v *fw.AccessCode) re
 	}
 }
 
-func testAccBaseWithNamedLists() string {
+func testAccBaseWithNamedList() string {
 	return fmt.Sprintf(`
 resource "bloxone_td_named_list" "test" {
 	name = %[1]q
@@ -299,7 +299,7 @@ resource "bloxone_td_named_list" "test" {
 `, acctest.RandomNameWithPrefix("nl"))
 }
 
-func testAccAccessCodesBasicConfig(name string) string {
+func testAccAccessCodeBasicConfig(name string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test" {
 	name = %[1]q
@@ -314,10 +314,10 @@ resource "bloxone_td_access_code" "test" {
 }
 
 `, name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339))
-	return strings.Join([]string{testAccBaseWithNamedLists(), config}, "")
+	return strings.Join([]string{testAccBaseWithNamedList(), config}, "")
 }
 
-func testAccAccessCodesName(name string) string {
+func testAccAccessCodeName(name string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test_name" {
 	name = %[1]q
@@ -332,10 +332,10 @@ resource "bloxone_td_access_code" "test_name" {
 }
 
 `, name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339))
-	return strings.Join([]string{testAccBaseWithNamedLists(), config}, "")
+	return strings.Join([]string{testAccBaseWithNamedList(), config}, "")
 }
 
-func testAccAccessCodesActivation(name, activation string) string {
+func testAccAccessCodeActivation(name, activation string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test_activation" {
 	name = %[1]q
@@ -350,10 +350,10 @@ resource "bloxone_td_access_code" "test_activation" {
 }
 
 `, name, activation, time.Now().UTC().Add(time.Hour).Format(time.RFC3339))
-	return strings.Join([]string{testAccBaseWithNamedLists(), config}, "")
+	return strings.Join([]string{testAccBaseWithNamedList(), config}, "")
 }
 
-func testAccAccessCodesExpiration(name, expiration string) string {
+func testAccAccessCodeExpiration(name, expiration string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test_expiration" {
 	name = %[1]q
@@ -368,10 +368,10 @@ resource "bloxone_td_access_code" "test_expiration" {
 }
 
 `, name, time.Now().UTC().Format(time.RFC3339), expiration)
-	return strings.Join([]string{testAccBaseWithNamedLists(), config}, "")
+	return strings.Join([]string{testAccBaseWithNamedList(), config}, "")
 }
 
-func testAccAccessCodesDescription(name, description string) string {
+func testAccAccessCodeDescription(name, description string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test_description" {
 	name = %[1]q
@@ -387,10 +387,10 @@ resource "bloxone_td_access_code" "test_description" {
 }
 
 `, name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339), description)
-	return strings.Join([]string{testAccBaseWithNamedLists(), config}, "")
+	return strings.Join([]string{testAccBaseWithNamedList(), config}, "")
 }
 
-func testAccAccessCodesRules(name, rules string) string {
+func testAccAccessCodeRules(name, rules string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_td_named_list" "test2" {
 	name = %[1]q
@@ -416,5 +416,5 @@ resource "bloxone_td_access_code" "test_rules" {
 }
 
 `, acctest.RandomNameWithPrefix("nl"), name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339), rules)
-	return strings.Join([]string{testAccBaseWithNamedLists(), config}, "")
+	return strings.Join([]string{testAccBaseWithNamedList(), config}, "")
 }
