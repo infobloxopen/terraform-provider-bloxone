@@ -918,13 +918,13 @@ func TestAccAddressBlockResource_NextAvailableId_Count(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAddressBlockNextAvailableIdCount(spaceName, "bloxone_ipam_address_block.two", 24, 5),
+				Config: testAccAddressBlockNextAvailableIdCount(spaceName, "bloxone_ipam_address_block.test", 24, 5),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(resourceName+".0", "next_available_id", "bloxone_ipam_address_block.two", "id"),
-					resource.TestCheckResourceAttrPair(resourceName+".1", "next_available_id", "bloxone_ipam_address_block.two", "id"),
-					resource.TestCheckResourceAttrPair(resourceName+".2", "next_available_id", "bloxone_ipam_address_block.two", "id"),
-					resource.TestCheckResourceAttrPair(resourceName+".3", "next_available_id", "bloxone_ipam_address_block.two", "id"),
-					resource.TestCheckResourceAttrPair(resourceName+".4", "next_available_id", "bloxone_ipam_address_block.two", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".0", "next_available_id", "bloxone_ipam_address_block.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".1", "next_available_id", "bloxone_ipam_address_block.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".2", "next_available_id", "bloxone_ipam_address_block.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".3", "next_available_id", "bloxone_ipam_address_block.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName+".4", "next_available_id", "bloxone_ipam_address_block.test", "id"),
 				),
 			},
 		},

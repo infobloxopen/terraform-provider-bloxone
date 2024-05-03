@@ -4,12 +4,20 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
+)
+
+const (
+	// SecurityPolicyOperationTimeout is the maximum amount of time to wait for eventual consistency
+	SecurityPolicyOperationTimeout = 2 * time.Minute
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -150,15 +158,24 @@ func (r *SecurityPolicyResource) Delete(ctx context.Context, req resource.Delete
 		return
 	}
 
-	httpRes, err := r.client.FWAPI.
-		SecurityPoliciesAPI.
-		DeleteSingleSecurityPolicy(ctx, int32(data.Id.ValueInt64())).
-		Execute()
-	if err != nil {
-		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
-			return
+	err := retry.RetryContext(ctx, SecurityPolicyOperationTimeout, func() *retry.RetryError {
+		httpRes, err := r.client.FWAPI.
+			SecurityPoliciesAPI.
+			DeleteSingleSecurityPolicy(ctx, int32(data.Id.ValueInt64())).
+			Execute()
+		if err != nil {
+			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
+				return nil
+			}
+			if strings.Contains(err.Error(), "Internal Server Error") {
+				return retry.RetryableError(err)
+			}
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete SecurityPolicies, got error: %s", err))
+			return retry.NonRetryableError(err)
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete SecurityPolicies, got error: %s", err))
+		return nil
+	})
+	if err != nil {
 		return
 	}
 }
