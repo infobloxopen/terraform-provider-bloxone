@@ -16,27 +16,28 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ datasource.DataSource = &OnPremAnycastManagerDataSource{}
+var _ datasource.DataSource = &AnycastConfigDataSource{}
 
 func NewAnycastConfigDataSource() datasource.DataSource {
-	return &OnPremAnycastManagerDataSource{}
+	return &AnycastConfigDataSource{}
 }
 
-// OnPremAnycastManagerDataSource defines the data source implementation.
-type OnPremAnycastManagerDataSource struct {
+// AnycastConfigDataSource defines the data source implementation.
+type AnycastConfigDataSource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (d *OnPremAnycastManagerDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *AnycastConfigDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + "anycast_configs"
 }
 
 type ProtoAnycastConfigModelWithFilter struct {
-	TagFilters  types.Map    `tfsdk:"tag_filters"`
-	Results     types.List   `tfsdk:"results"`
-	Service     types.String `tfsdk:"service"`
-	HostID      types.Int64  `tfsdk:"host_id"`
-	IsConfigued types.Bool   `tfsdk:"is_configured"`
+	Filters      types.Map    `tfsdk:"filters"` //todo : remove this
+	TagFilters   types.Map    `tfsdk:"tag_filters"`
+	Results      types.List   `tfsdk:"results"`
+	Service      types.String `tfsdk:"service"`
+	HostID       types.Int64  `tfsdk:"host_id"`
+	IsConfigured types.Bool   `tfsdk:"is_configured"`
 }
 
 func (m *ProtoAnycastConfigModelWithFilter) FlattenResults(ctx context.Context, from []anycast.AnycastConfig, diags *diag.Diagnostics) {
@@ -46,10 +47,15 @@ func (m *ProtoAnycastConfigModelWithFilter) FlattenResults(ctx context.Context, 
 	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ProtoAnycastConfigAttrTypes, diags, FlattenProtoAnycastConfig)
 }
 
-func (d *OnPremAnycastManagerDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *AnycastConfigDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Retrieve all named anycast configurations for the account.",
 		Attributes: map[string]schema.Attribute{
+			"filters": schema.MapAttribute{
+				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
+				ElementType: types.StringType,
+				Optional:    true,
+			},
 			"tag_filters": schema.MapAttribute{
 				Description: "Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
 				ElementType: types.StringType,
@@ -77,7 +83,7 @@ func (d *OnPremAnycastManagerDataSource) Schema(ctx context.Context, req datasou
 	}
 }
 
-func (d *OnPremAnycastManagerDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (d *AnycastConfigDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -97,7 +103,7 @@ func (d *OnPremAnycastManagerDataSource) Configure(ctx context.Context, req data
 	d.client = client
 }
 
-func (d *OnPremAnycastManagerDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (d *AnycastConfigDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data ProtoAnycastConfigModelWithFilter
 
 	// Read Terraform prior state data into the model
@@ -112,7 +118,7 @@ func (d *OnPremAnycastManagerDataSource) Read(ctx context.Context, req datasourc
 		GetAnycastConfigList(ctx).
 		Service(flex.ExpandString(data.Service)).
 		HostId(flex.ExpandInt64(data.HostID)).
-		IsConfigured(flex.ExpandBool(data.IsConfigued)).
+		IsConfigured(flex.ExpandBool(data.IsConfigured)).
 		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
