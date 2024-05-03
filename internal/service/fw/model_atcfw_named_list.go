@@ -156,12 +156,12 @@ func (m *AtcfwNamedListModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenAtcfwNamedList(ctx context.Context, from *fw.NamedList, diags *diag.Diagnostics) types.Object {
+func FlattenAtcfwNamedList(ctx context.Context, from *fw.NamedListRead, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwNamedListAttrTypes)
 	}
 	m := AtcfwNamedListModel{}
-	m.Flatten(ctx, from, diags)
+	m.FlattenRead(ctx, from, diags)
 	t, d := types.ObjectValueFrom(ctx, AtcfwNamedListAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -181,6 +181,28 @@ func (m *AtcfwNamedListModel) Flatten(ctx context.Context, from *fw.NamedList, d
 	m.ItemCount = flex.FlattenInt32Pointer(from.ItemCount)
 	m.Items = flex.FlattenFrameworkListString(ctx, from.Items, diags)
 	m.ItemsDescribed = flex.FlattenFrameworkListNestedBlock(ctx, from.ItemsDescribed, AtcfwItemStructsAttrTypes, diags, FlattenAtcfwItemStructs)
+	m.Name = flex.FlattenStringPointer(from.Name)
+	m.Policies = flex.FlattenFrameworkListString(ctx, from.Policies, diags)
+	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.ThreatLevel = flex.FlattenStringPointer(from.ThreatLevel)
+	m.Type = flex.FlattenStringPointer(from.Type)
+	m.UpdatedTime = timetypes.NewRFC3339TimePointerValue(from.UpdatedTime)
+}
+
+func (m *AtcfwNamedListModel) FlattenRead(ctx context.Context, from *fw.NamedListRead, diags *diag.Diagnostics) {
+	if from == nil {
+		return
+	}
+	if m == nil {
+		*m = AtcfwNamedListModel{}
+	}
+	m.ConfidenceLevel = flex.FlattenStringPointer(from.ConfidenceLevel)
+	m.CreatedTime = timetypes.NewRFC3339TimePointerValue(from.CreatedTime)
+	m.Description = flex.FlattenStringPointer(from.Description)
+	m.Id = flex.FlattenInt32Pointer(from.Id)
+	m.ItemCount = flex.FlattenInt32Pointer(from.ItemCount)
+	m.Items = types.ListNull(types.StringType)
+	m.ItemsDescribed = types.ListNull(types.ObjectType{AttrTypes: AtcfwItemStructsAttrTypes})
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Policies = flex.FlattenFrameworkListString(ctx, from.Policies, diags)
 	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)

@@ -3,6 +3,7 @@ package fw_test
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 	"time"
 
@@ -17,6 +18,7 @@ func TestAccAccessCodeDataSource_Filters(t *testing.T) {
 	resourceName := "bloxone_td_access_code.test"
 	var v fw.AccessCode
 	name := acctest.RandomNameWithPrefix("ac")
+	namedListName := acctest.RandomNameWithPrefix("named-list")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -24,7 +26,7 @@ func TestAccAccessCodeDataSource_Filters(t *testing.T) {
 		CheckDestroy:             testAccCheckAccessCodeDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAccessCodeDataSourceConfigFilters(name),
+				Config: testAccAccessCodeDataSourceConfigFilters(name, namedListName),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckAccessCodeExists(context.Background(), resourceName, &v),
@@ -51,19 +53,16 @@ func testAccCheckAccessCodeResourceAttrPair(resourceName, dataSourceName string)
 	}
 }
 
-func testAccAccessCodeDataSourceConfigFilters(name string) string {
-	return fmt.Sprintf(`
+func testAccAccessCodeDataSourceConfigFilters(name, namedListName string) string {
+	config := fmt.Sprintf(`
 resource "bloxone_td_access_code" "test" {
 	name = %[1]q
 	activation = %[2]q
 	expiration = %[3]q
 	rules = [
 		{
-			action = "" ,
-			data = "terraform_test",
-			description = "",
-			redirect_name = "",
-			type = "custom_list"
+			data = bloxone_td_named_list.test.name,
+			type = bloxone_td_named_list.test.type
 		}
 	]
 }
@@ -74,4 +73,5 @@ data "bloxone_td_access_codes" "test" {
   }
 }
 `, name, time.Now().UTC().Format(time.RFC3339), time.Now().UTC().Add(time.Hour).Format(time.RFC3339))
+	return strings.Join([]string{testAccBaseWithNamedList(namedListName), config}, "")
 }

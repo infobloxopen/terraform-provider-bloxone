@@ -32,9 +32,8 @@ func (d *DfpDataSource) Metadata(ctx context.Context, req datasource.MetadataReq
 }
 
 type DfpServicesModelWithFilter struct {
-	Filters    types.Map  `tfsdk:"filters"`
-	TagFilters types.Map  `tfsdk:"tag_filters"`
-	Results    types.List `tfsdk:"results"`
+	Filters types.Map  `tfsdk:"filters"`
+	Results types.List `tfsdk:"results"`
 }
 
 func (m *DfpServicesModelWithFilter) FlattenResults(ctx context.Context, from []dfp.Dfp, diags *diag.Diagnostics) {
@@ -50,11 +49,6 @@ func (d *DfpDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
-				ElementType: types.StringType,
-				Optional:    true,
-			},
-			"tag_filters": schema.MapAttribute{
-				Description: "Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
 				ElementType: types.StringType,
 				Optional:    true,
 			},
