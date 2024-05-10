@@ -88,10 +88,11 @@ module "bloxone_infra_host_gcp" {
 | <a name="input_name"></a> [name](#input\_name) | The name of the virtual machine | `string` | n/a | yes |
 | <a name="input_network_interfaces"></a> [network\_interfaces](#input\_network\_interfaces) | List of network interfaces to be attached to the virtual machine. | <pre>list(object({<br>    network          = string<br>    subnetwork       = string<br>    assign_public_ip = optional(bool)<br>  }))</pre> | n/a | yes |
 | <a name="input_service_account"></a> [service\_account](#input\_service\_account) | The service account to use for the BloxOne Host. | <pre>object({<br>    email  = string<br>    scopes = list(string)<br>  })</pre> | `null` | no |
-| <a name="input_services"></a> [services](#input\_services) | The services to provision on the BloxOne Host. The services must be a map of valid service type with values of "start" or "stop". Valid service types are "dhcp" and "dns". | `map(string)` | n/a | yes |
+| <a name="input_services"></a> [services](#input\_services) | The services to provision on the BloxOne Host. The services must be a map of valid service type with values of "start" or "stop". Valid service types are "dhcp", "dns", "anycast", "dfp". | `map(string)` | n/a | yes |
 | <a name="input_source_image"></a> [source\_image](#input\_source\_image) | The source image to use for the virtual machine. | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | The tags to use for the BloxOne Host. | `map(string)` | `{}` | no |
 | <a name="input_timeouts"></a> [timeouts](#input\_timeouts) | The timeouts to use for the BloxOne Host. The timeout value is a string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). If not provided, the default timeouts will be used. | <pre>object({<br>    create = string<br>    update = string<br>    read   = string<br>  })</pre> | `null` | no |
+| <a name="input_wait_for_state"></a> [wait\_for\_state](#input\_wait\_for\_state) | If set to `true`, the resource will wait for the desired state to be reached before returning. If set to `false`, the resource will return immediately after the request is sent to the API. | `bool` | `null` | no |
 
 ## Outputs
 

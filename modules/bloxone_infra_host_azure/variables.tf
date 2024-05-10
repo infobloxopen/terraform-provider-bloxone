@@ -90,7 +90,7 @@ variable "plan_product" {
   default     = "infoblox-bloxone-34"
 }
 
-variable plan_publisher {
+variable "plan_publisher" {
   description = "The publisher to use for the BloxOne Host."
   type        = string
   default     = "infoblox"
@@ -108,20 +108,26 @@ variable "ssh_public_key_path" {
 }
 
 variable "services" {
-  description = "The services to provision on the BloxOne Host. The services must be a map of valid service type with values of \"start\" or \"stop\". Valid service types are \"dhcp\" and \"dns\"."
+  description = "The services to provision on the BloxOne Host. The services must be a map of valid service type with values of \"start\" or \"stop\". Valid service types are \"dhcp\", \"dns\", \"anycast\", \"dfp\"."
   type        = map(string)
   validation {
-    condition     = length(keys(var.services)) == length([for k in keys(var.services) : k if contains(["dhcp", "dns"], k)]) && alltrue([for v in values(var.services) : contains(["start", "stop"], v)])
+    condition     = length(keys(var.services)) == length([for k in keys(var.services) : k if contains(["dhcp", "dns", "anycast", "dfp"], k)]) && alltrue([for v in values(var.services) : contains(["start", "stop"], v)])
     error_message = "services must be a map of valid service type with values of start or stop"
   }
 }
 
 variable "timeouts" {
   description = "The timeouts to use for the BloxOne Host. The timeout value is a string that can be parsed as a duration consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). If not provided, the default timeouts will be used."
-  type        = object({
+  type = object({
     create = string
     update = string
     read   = string
   })
   default = null
+}
+
+variable "wait_for_state" {
+  description = "If set to `true`, the resource will wait for the desired state to be reached before returning. If set to `false`, the resource will return immediately after the request is sent to the API."
+  type        = bool
+  default     = null
 }
