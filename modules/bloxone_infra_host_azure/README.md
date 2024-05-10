@@ -47,14 +47,14 @@ module "bloxone_infra_host_azure" {
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.0.0 |
-| <a name="requirement_bloxone"></a> [bloxone](#requirement\_bloxone) | >= 1.0.0 |
+| <a name="requirement_bloxone"></a> [bloxone](#requirement\_bloxone) | >= 1.1.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.0.0 |
-| <a name="provider_bloxone"></a> [bloxone](#provider\_bloxone) | >= 1.0.0 |
+| <a name="provider_bloxone"></a> [bloxone](#provider\_bloxone) | >= 1.1.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Resources

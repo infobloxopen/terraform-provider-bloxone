@@ -36,14 +36,14 @@ module "bloxone_infra_host_aws" {
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0.0 |
-| <a name="requirement_bloxone"></a> [bloxone](#requirement\_bloxone) | >= 1.0.0 |
+| <a name="requirement_bloxone"></a> [bloxone](#requirement\_bloxone) | >= 1.1.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
-| <a name="provider_bloxone"></a> [bloxone](#provider\_bloxone) | >= 1.0.0 |
+| <a name="provider_bloxone"></a> [bloxone](#provider\_bloxone) | >= 1.1.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Resources
