@@ -50,4 +50,3 @@ resource "bloxone_anycast_host" "example" {
     transmit_delay      = 1
   }
 }
-
