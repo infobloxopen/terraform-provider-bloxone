@@ -44,7 +44,7 @@ variable "aws_instance_tags" {
 }
 
 variable "services" {
-  description = "The services to provision on the BloxOne Host. The services must be a map of valid service type with values of \"start\" or \"stop\". Valid service types are \"dhcp\" and \"dns\"."
+  description = "The services to provision on the BloxOne Host. The services must be a map of valid service type with values of \"start\" or \"stop\". Valid service types are \"dhcp\", \"dns\", \"anycast\", \"dfp\"."
   type        = map(string)
   validation {
     condition     = length(keys(var.services)) == length([for k in keys(var.services) : k if contains(["dhcp", "dns", "anycast", "dfp"], k)]) && alltrue([for v in values(var.services) : contains(["start", "stop"], v)])
