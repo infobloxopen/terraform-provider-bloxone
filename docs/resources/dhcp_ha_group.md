@@ -16,23 +16,19 @@ The HA Group object represents on-prem hosts that can serve the same leases for 
 ## Example Usage
 
 ```terraform
+# Get first host for the HA group.
 data "bloxone_dhcp_hosts" "example_host_1" {
   filters = {
-    name = "Your Host name"
+    name = "Host-1"
   }
 }
 
+# Get second host for the HA group.
 data "bloxone_dhcp_hosts" "example_host_2" {
   filters = {
-    name = "Your host name"
+    name = "Host-2"
   }
 }
-
-# Get the anycast configuration for the service
-data "bloxone_anycast_configs" "example_service" {
-  service = "DNS"
-}
-
 
 resource "bloxone_dhcp_ha_group" "example_tags" {
   name = "example_ha_group_tags"
@@ -53,6 +49,31 @@ resource "bloxone_dhcp_ha_group" "example_tags" {
   tags = {
     location = "site1"
   }
+}
+```
+
+## Example Usage For Ancyast
+
+```terraform
+# Get first host for the HA group.
+# This host must have 'Anycast' enabled.
+data "bloxone_dhcp_hosts" "example_host_1" {
+  filters = {
+    name = "Host-1"
+  }
+}
+
+# Get second host for the HA group.
+# This host must have 'Anycast' enabled.
+data "bloxone_dhcp_hosts" "example_host_2" {
+  filters = {
+    name = "Host-2"
+  }
+}
+
+# Get the Anycast configuration for the service
+data "bloxone_anycast_configs" "example_service" {
+  service = "DHCP"
 }
 
 resource "bloxone_dhcp_ha_group" "example_anycast" {

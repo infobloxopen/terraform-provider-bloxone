@@ -1,13 +1,13 @@
 variable "join_token" {
   description = "The join token to use for the BloxOne Host. If not provided, a join token will be created."
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "ami" {
   description = "The AMI to use for the BloxOne Host. If not provided, the latest AMI will be used."
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "instance_type" {
@@ -60,4 +60,10 @@ variable "timeouts" {
     read   = string
   })
   default = null
+}
+
+variable "wait_for_state" {
+  description = "If set to `true`, the resource will wait for the desired state to be reached before returning. If set to `false`, the resource will return immediately after the request is sent to the API."
+  type        = bool
+  default     = null
 }

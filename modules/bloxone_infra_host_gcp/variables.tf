@@ -17,7 +17,7 @@ variable "machine_type" {
 
 variable "network_interfaces" {
   description = "List of network interfaces to be attached to the virtual machine."
-  type        = list(object({
+  type = list(object({
     network          = string
     subnetwork       = string
     assign_public_ip = optional(bool)
@@ -55,7 +55,7 @@ variable "tags" {
 
 variable "service_account" {
   description = "The service account to use for the BloxOne Host."
-  type        = object({
+  type = object({
     email  = string
     scopes = list(string)
   })
@@ -79,10 +79,16 @@ variable "services" {
 
 variable "timeouts" {
   description = "The timeouts to use for the BloxOne Host. The timeout value is a string that can be parsed as a duration consisting of numbers and unit suffixes, such as \"30s\" or \"2h45m\". Valid time units are \"s\" (seconds), \"m\" (minutes), \"h\" (hours). If not provided, the default timeouts will be used."
-  type        = object({
+  type = object({
     create = string
     update = string
     read   = string
   })
   default = null
+}
+
+variable "wait_for_state" {
+  description = "If set to `true`, the resource will wait for the desired state to be reached before returning. If set to `false`, the resource will return immediately after the request is sent to the API."
+  type        = bool
+  default     = null
 }
