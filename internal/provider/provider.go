@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/redirect"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
@@ -138,6 +139,8 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		fw.NewNamedListResource,
 		fw.NewNetworkListResource,
 		fw.NewInternalDomainListResource,
+
+		redirect.NewCustomRedirectResource,
 	}
 }
 
@@ -203,6 +206,8 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		fw.NewNetworkListsDataSource,
 		fw.NewInternalDomainListsDataSource,
 		fw.NewPoPRegionDataSource,
+
+		redirect.NewCustomRedirectsDataSource,
 	}
 }
 
