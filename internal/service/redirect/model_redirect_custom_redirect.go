@@ -7,6 +7,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -46,7 +48,10 @@ var RedirectCustomRedirectResourceSchemaAttributes = map[string]schema.Attribute
 		MarkdownDescription: "The list of csv custom IPv4/IPv6 or a single domain redirect address.",
 	},
 	"id": schema.Int64Attribute{
-		Computed:            true,
+		Computed: true,
+		PlanModifiers: []planmodifier.Int64{
+			int64planmodifier.UseStateForUnknown(),
+		},
 		MarkdownDescription: "The Custom Redirect object identifier.",
 	},
 	"name": schema.StringAttribute{

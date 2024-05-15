@@ -31,12 +31,12 @@ func (d *CustomRedirectsDataSource) Metadata(ctx context.Context, req datasource
 	resp.TypeName = req.ProviderTypeName + "_" + "td_custom_redirects"
 }
 
-type RedirectCustomRedirectModelWithFilter struct {
+type CustomRedirectModelWithFilter struct {
 	Filters types.Map  `tfsdk:"filters"`
 	Results types.List `tfsdk:"results"`
 }
 
-func (m *RedirectCustomRedirectModelWithFilter) FlattenResults(ctx context.Context, from []redirect.CustomRedirect, diags *diag.Diagnostics) {
+func (m *CustomRedirectModelWithFilter) FlattenResults(ctx context.Context, from []redirect.CustomRedirect, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
@@ -83,7 +83,7 @@ func (d *CustomRedirectsDataSource) Configure(ctx context.Context, req datasourc
 }
 
 func (d *CustomRedirectsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data RedirectCustomRedirectModelWithFilter
+	var data CustomRedirectModelWithFilter
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)

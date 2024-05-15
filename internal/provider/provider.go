@@ -139,6 +139,8 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		fw.NewNamedListResource,
 		fw.NewNetworkListResource,
 		fw.NewInternalDomainListResource,
+		fw.NewCategoryFilterResource,
+		fw.NewApplicationFilterResource,
 
 		redirect.NewCustomRedirectResource,
 	}
@@ -206,6 +208,9 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		fw.NewNetworkListsDataSource,
 		fw.NewInternalDomainListsDataSource,
 		fw.NewPoPRegionDataSource,
+		fw.NewCategoryFiltersDataSource,
+		fw.NewApplicationFiltersDataSource,
+		fw.NewContentCategoriesDataSource,
 
 		redirect.NewCustomRedirectsDataSource,
 	}
