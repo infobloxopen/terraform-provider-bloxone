@@ -131,6 +131,9 @@ func testAccCheckCustomRedirectsExists(ctx context.Context, resourceName string,
 			return fmt.Errorf("not found: %s", resourceName)
 		}
 		id, err := strconv.Atoi(rs.Primary.ID)
+		if err != nil {
+			return err
+		}
 		apiRes, _, err := acctest.BloxOneClient.RedirectAPI.
 			CustomRedirectsAPI.
 			ReadCustomRedirect(ctx, int32(id)).

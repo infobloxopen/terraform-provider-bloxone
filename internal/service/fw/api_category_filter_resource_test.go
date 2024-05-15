@@ -202,6 +202,9 @@ func testAccCheckCategoryFiltersExists(ctx context.Context, resourceName string,
 			return fmt.Errorf("not found: %s", resourceName)
 		}
 		id, err := strconv.Atoi(rs.Primary.ID)
+		if err != nil {
+			return err
+		}
 		apiRes, _, err := acctest.BloxOneClient.FWAPI.
 			CategoryFiltersAPI.
 			ReadCategoryFilter(ctx, int32(id)).
@@ -250,10 +253,10 @@ func testAccCheckCategoryFiltersDisappears(ctx context.Context, v *fw.CategoryFi
 }
 
 func testAccBaseWithContentCategories() string {
-	return fmt.Sprintf(`
+	return `
 data "bloxone_td_content_categories" "test" {
 }
-`)
+`
 }
 
 func testAccCategoryFiltersBasicConfig(name string) string {

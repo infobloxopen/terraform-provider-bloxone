@@ -202,6 +202,9 @@ func testAccCheckApplicationFiltersExists(ctx context.Context, resourceName stri
 			return fmt.Errorf("not found: %s", resourceName)
 		}
 		id, err := strconv.Atoi(rs.Primary.ID)
+		if err != nil {
+			return err
+		}
 		apiRes, _, err := acctest.BloxOneClient.FWAPI.
 			ApplicationFiltersAPI.
 			ReadApplicationFilter(ctx, int32(id)).
