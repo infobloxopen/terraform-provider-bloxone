@@ -52,7 +52,7 @@ var AtcfwApplicationFilterResourceSchemaAttributes = map[string]schema.Attribute
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: AtcfwApplicationCriterionResourceSchemaAttributes,
 		},
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The array of key-value pairs specifying criteria for the search.",
 	},
 	"description": schema.StringAttribute{
@@ -69,7 +69,7 @@ var AtcfwApplicationFilterResourceSchemaAttributes = map[string]schema.Attribute
 		MarkdownDescription: "The Application Filter object identifier.",
 	},
 	"name": schema.StringAttribute{
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The name of the application filter.",
 	},
 	"policies": schema.ListAttribute{

@@ -46,11 +46,14 @@ data "bloxone_td_category_filters" "example_all" {}
 <a id="nestedatt--results"></a>
 ### Nested Schema for `results`
 
-Optional:
+Required:
 
 - `categories` (List of String) The list of content category names that falls into this category filter.
-- `description` (String) The brief description for the category filter.
 - `name` (String) The name of the category filter.
+
+Optional:
+
+- `description` (String) The brief description for the category filter.
 - `tags` (Map of String) Enables tag support for resource where tags attribute contains user-defined key value pairs
 
 Read-Only:

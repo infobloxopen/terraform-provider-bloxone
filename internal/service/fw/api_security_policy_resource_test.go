@@ -19,11 +19,7 @@ import (
 
 //TODO: add tests
 // The following require additional resource/data source objects to be supported.
-// - dfps
 // - net_address_dfps
-// - roaming_device_groups
-// - user_groups
-// - default_redirect_name
 
 func TestAccSecurityPolicyResource_basic(t *testing.T) {
 	var resourceName = "bloxone_td_security_policy.test"
@@ -197,6 +193,38 @@ func TestAccSecurityPolicyResource_DefaultAction(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "default_action", "action_redirect"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccSecurityPolicyResource_DefaultRedirectName(t *testing.T) {
+	resourceName := "bloxone_td_security_policy.test_default_redirect_name"
+	var v fw.SecurityPolicy
+	name := acctest.RandomNameWithPrefix("sec-policy")
+	redirectName1 := acctest.RandomNameWithPrefix("redirect")
+	redirectName2 := acctest.RandomNameWithPrefix("redirect")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccSecurityPolicyDefaultRedirectName(name, "test_a", redirectName1, redirectName2),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrPair(resourceName, "default_redirect_name", "bloxone_td_custom_redirect.test_a", "name"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccSecurityPolicyDefaultRedirectName(name, "test_b", redirectName1, redirectName2),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrPair(resourceName, "default_redirect_name", "bloxone_td_custom_redirect.test_b", "name"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -551,6 +579,26 @@ resource "bloxone_td_security_policy" "test_default_action" {
 	default_action = %q
 }
 `, name, defaultAction)
+}
+
+func testAccSecurityPolicyDefaultRedirectName(name, defaultRedirect, redirectName1, redirectName2 string) string {
+	return fmt.Sprintf(`
+resource "bloxone_td_custom_redirect" "test_a" {
+	name = %q
+	data = "156.2.3.10"
+}
+
+resource "bloxone_td_custom_redirect" "test_b" {
+	name = %q
+	data = "192.2.3.10"
+}
+
+resource "bloxone_td_security_policy" "test_default_redirect_name" {
+	name = %q
+	default_action = "action_redirect"
+	default_redirect_name = bloxone_td_custom_redirect.%s.name
+}
+`, redirectName1, redirectName2, name, defaultRedirect)
 }
 
 func testAccSecurityPolicyEcs(name, ecs string) string {

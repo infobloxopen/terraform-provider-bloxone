@@ -31,7 +31,7 @@ func (r *ApplicationFilterResource) Metadata(ctx context.Context, req resource.M
 
 func (r *ApplicationFilterResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Creates and Manages Application Filters.",
 		Attributes:          AtcfwApplicationFilterResourceSchemaAttributes,
 	}
 }

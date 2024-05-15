@@ -31,21 +31,24 @@ var AtcfwApplicationCriterionAttrTypes = map[string]attr.Type{
 
 var AtcfwApplicationCriterionResourceSchemaAttributes = map[string]schema.Attribute{
 	"category": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		Default:  stringdefault.StaticString(""),
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
+		MarkdownDescription: "The category of the application.",
 	},
 	"id": schema.StringAttribute{
-		Computed: true,
+		Computed:            true,
+		MarkdownDescription: "The Application Criterion object identifier.",
 	},
 	"name": schema.StringAttribute{
 		Optional:            true,
 		MarkdownDescription: "Name for the application. Since the name of application is unique it may be used as alternate key for the application. The 'name' is used for import-export workflow and should be resolved to the 'id' before continue processing Create/Update operations.",
 	},
 	"subcategory": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		Default:  stringdefault.StaticString(""),
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
+		MarkdownDescription: "The subcategory of the application.",
 	},
 }
 

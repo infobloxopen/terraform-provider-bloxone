@@ -46,11 +46,14 @@ data "bloxone_td_application_filters" "example_all" {}
 <a id="nestedatt--results"></a>
 ### Nested Schema for `results`
 
-Optional:
+Required:
 
 - `criteria` (Attributes List) The array of key-value pairs specifying criteria for the search. (see [below for nested schema](#nestedatt--results--criteria))
-- `description` (String) The brief description for the application filter.
 - `name` (String) The name of the application filter.
+
+Optional:
+
+- `description` (String) The brief description for the application filter.
 - `tags` (Map of String) Enables tag support for resource where tags attribute contains user-defined key value pairs
 
 Read-Only:
@@ -66,10 +69,10 @@ Read-Only:
 
 Optional:
 
-- `category` (String)
+- `category` (String) The category of the application.
 - `name` (String) Name for the application. Since the name of application is unique it may be used as alternate key for the application. The 'name' is used for import-export workflow and should be resolved to the 'id' before continue processing Create/Update operations.
-- `subcategory` (String)
+- `subcategory` (String) The subcategory of the application.
 
 Read-Only:
 
-- `id` (String)
+- `id` (String) The Application Criterion object identifier.

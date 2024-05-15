@@ -31,7 +31,7 @@ func (r *CategoryFilterResource) Metadata(ctx context.Context, req resource.Meta
 
 func (r *CategoryFilterResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Creates and Manages Category Filters.",
 		Attributes:          AtcfwCategoryFilterResourceSchemaAttributes,
 	}
 }

@@ -31,7 +31,7 @@ func (r *CustomRedirectResource) Metadata(ctx context.Context, req resource.Meta
 
 func (r *CustomRedirectResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Creates and Manages Custom Redirects.",
 		Attributes:          RedirectCustomRedirectResourceSchemaAttributes,
 	}
 }

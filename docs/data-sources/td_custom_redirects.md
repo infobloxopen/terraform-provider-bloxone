@@ -45,7 +45,7 @@ data "bloxone_td_custom_redirects" "example_all" {}
 <a id="nestedatt--results"></a>
 ### Nested Schema for `results`
 
-Optional:
+Required:
 
 - `data` (String) The list of csv custom IPv4/IPv6 or a single domain redirect address.
 - `name` (String) The name of the custom redirect.

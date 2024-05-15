@@ -44,7 +44,7 @@ var RedirectCustomRedirectResourceSchemaAttributes = map[string]schema.Attribute
 		MarkdownDescription: "The time when this Custom Redirect object was created.",
 	},
 	"data": schema.StringAttribute{
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The list of csv custom IPv4/IPv6 or a single domain redirect address.",
 	},
 	"id": schema.Int64Attribute{
@@ -55,7 +55,7 @@ var RedirectCustomRedirectResourceSchemaAttributes = map[string]schema.Attribute
 		MarkdownDescription: "The Custom Redirect object identifier.",
 	},
 	"name": schema.StringAttribute{
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The name of the custom redirect.",
 	},
 	"policy_ids": schema.ListAttribute{

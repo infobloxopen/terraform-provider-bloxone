@@ -100,16 +100,16 @@ resource "bloxone_td_application_filter" "test" {
 	{
 		name = %q
 	}
-	]
+]
 	tags = {
 		tag1 = %q
 	}
 }
 
 data "bloxone_td_application_filters" "test" {
-  tag_filters = {
-	tag1 = bloxone_td_application_filter.test.tags.tag1
-  }
+	tag_filters = {
+		tag1 = bloxone_td_application_filter.test.tags.tag1
+	}
 }
 `, name, criteriaName, tagValue)
 }

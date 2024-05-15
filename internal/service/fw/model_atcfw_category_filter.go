@@ -43,7 +43,7 @@ var AtcfwCategoryFilterAttrTypes = map[string]attr.Type{
 var AtcfwCategoryFilterResourceSchemaAttributes = map[string]schema.Attribute{
 	"categories": schema.ListAttribute{
 		ElementType:         types.StringType,
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The list of content category names that falls into this category filter.",
 	},
 	"created_time": schema.StringAttribute{
@@ -65,7 +65,7 @@ var AtcfwCategoryFilterResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The Category Filter object identifier.",
 	},
 	"name": schema.StringAttribute{
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The name of the category filter.",
 	},
 	"policies": schema.ListAttribute{
