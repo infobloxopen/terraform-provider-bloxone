@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.1.0 (Unreleased)
+## v1.1.0 (May 10, 2024)
 
 NOTES:
 * Upgraded to Go 1.22 ([#107](https://github.com/infobloxopen/terraform-provider-bloxone/pull/107))
@@ -14,9 +14,11 @@ FEATURES:
 * **New Resource and Data Source:** `bloxone_td_security_policy`, `bloxone_td_security_policies` ([#94](https://github.com/infobloxopen/terraform-provider-bloxone/pull/94))
 * **New Resource and Data Source:** `bloxone_dfp_service`, `bloxone_dfp_services` ([#102](https://github.com/infobloxopen/terraform-provider-bloxone/pull/102))
 * **New Resource and Data Source:** `bloxone_anycast_config`, `bloxone_anycast_configs` ([#92](https://github.com/infobloxopen/terraform-provider-bloxone/pull/92))
-* **New Resource and Data Source:** `bloxone_anycast_host`, `bloxone_anycast_hosts` ([#95](https://github.com/infobloxopen/terraform-provider-bloxone/pull/95))
+* **New Resource:** `bloxone_anycast_host` ([#95](https://github.com/infobloxopen/terraform-provider-bloxone/pull/95))
 
 ENHANCEMENTS:
+* Added example for DHCP HA group with Anycast ([#111](https://github.com/infobloxopen/terraform-provider-bloxone/pull/111))
+* Added `dfp` and `anycast` as valid service types for modules ([#111](https://github.com/infobloxopen/terraform-provider-bloxone/pull/111))
 * Added `echo_client_id` to `bloxone_ipam_ip_space.dhcp_config`, `bloxone_dhcp_server.dhcp_config` ([#93](https://github.com/infobloxopen/terraform-provider-bloxone/pull/93))
 * Added example for ddns in `bloxone_dhcp_server` ([#88](https://github.com/infobloxopen/terraform-provider-bloxone/pull/88))
 
