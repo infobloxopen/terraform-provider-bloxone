@@ -211,6 +211,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		fw.NewCategoryFiltersDataSource,
 		fw.NewApplicationFiltersDataSource,
 		fw.NewContentCategoriesDataSource,
+		fw.NewThreatFeedsDataSource,
 
 		redirect.NewCustomRedirectsDataSource,
 	}
