@@ -265,11 +265,11 @@ resource "bloxone_dfp_service" "test_resolvers_all_protocols_multiple" {
 
 func testAccBaseDfp(hostName string) string {
 	// This is a workaround, ideally it would be nice to have the default internal domain list in the provider
-	config := fmt.Sprintf(`
+	config := `
 data "bloxone_td_internal_domain_lists" "default" {
 	filters = {
 		is_default = true
 	}
-}`)
+}`
 	return strings.Join([]string{testAccBaseWithInfraService(hostName, "dfp"), config}, "")
 }
