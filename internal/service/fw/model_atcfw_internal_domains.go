@@ -34,7 +34,7 @@ var AtcfwInternalDomainsAttrTypes = map[string]attr.Type{
 	"created_time":     timetypes.RFC3339Type{},
 	"description":      types.StringType,
 	"id":               types.Int64Type,
-	"internal_domains": internaltypes.UnorderedList[types.String]{},
+	"internal_domains": internaltypes.UnorderedListOfStringType,
 	"is_default":       types.BoolType,
 	"name":             types.StringType,
 	"tags":             types.MapType{ElemType: types.StringType},
