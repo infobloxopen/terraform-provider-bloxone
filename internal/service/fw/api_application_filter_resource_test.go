@@ -65,7 +65,7 @@ func TestAccApplicationFiltersResource_disappears(t *testing.T) {
 	})
 }
 
-func TestAccApplicationFiltersResource_Criteria(t *testing.T) {
+func TestAccApplicationFiltersResource_CriteriaCategory(t *testing.T) {
 	var resourceName = "bloxone_td_application_filter.test_criteria"
 	var v fw.ApplicationFilter
 	name := acctest.RandomNameWithPrefix("app-filter")
@@ -76,7 +76,37 @@ func TestAccApplicationFiltersResource_Criteria(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccApplicationFiltersCriteria(name, "Microsoft 365"),
+				Config: testAccApplicationFiltersCriteriaCategory(name, "Email"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckApplicationFiltersExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "criteria.0.category", "Email"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccApplicationFiltersCriteriaCategory(name, "Communication"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckApplicationFiltersExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "criteria.0.category", "Communication"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccApplicationFiltersResource_CriteriaName(t *testing.T) {
+	var resourceName = "bloxone_td_application_filter.test_criteria"
+	var v fw.ApplicationFilter
+	name := acctest.RandomNameWithPrefix("app-filter")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccApplicationFiltersCriteriaName(name, "Microsoft 365"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckApplicationFiltersExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "criteria.0.name", "Microsoft 365"),
@@ -84,7 +114,7 @@ func TestAccApplicationFiltersResource_Criteria(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccApplicationFiltersCriteria(name, "163 Cloud"),
+				Config: testAccApplicationFiltersCriteriaName(name, "163 Cloud"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckApplicationFiltersExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "criteria.0.name", "163 Cloud"),
@@ -265,7 +295,20 @@ resource "bloxone_td_application_filter" "test" {
 `, name, criteriaName)
 }
 
-func testAccApplicationFiltersCriteria(name, criteriaName string) string {
+func testAccApplicationFiltersCriteriaCategory(name, criteriaName string) string {
+	return fmt.Sprintf(`
+resource "bloxone_td_application_filter" "test_criteria" {
+	name = %q
+	criteria  = [
+	{
+		category = %q
+	}
+]
+}
+`, name, criteriaName)
+}
+
+func testAccApplicationFiltersCriteriaName(name, criteriaName string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_application_filter" "test_criteria" {
 	name = %q

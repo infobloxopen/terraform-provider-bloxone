@@ -42,6 +42,8 @@ var AtcfwApplicationCriterionResourceSchemaAttributes = map[string]schema.Attrib
 	},
 	"name": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "Name for the application. Since the name of application is unique it may be used as alternate key for the application. The 'name' is used for import-export workflow and should be resolved to the 'id' before continue processing Create/Update operations.",
 	},
 	"subcategory": schema.StringAttribute{

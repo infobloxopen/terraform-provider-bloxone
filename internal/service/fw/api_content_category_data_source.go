@@ -44,7 +44,7 @@ func (m *AtcfwContentCategoriesrModelWithFilter) FlattenResults(ctx context.Cont
 
 func (d *ContentCategoriesDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Retrieves information about existing Content Categories.",
 		Attributes: map[string]schema.Attribute{
 			"results": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{

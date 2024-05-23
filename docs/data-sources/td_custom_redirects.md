@@ -3,12 +3,12 @@
 page_title: "bloxone_td_custom_redirects Data Source - terraform-provider-bloxone"
 subcategory: "Threat Defense"
 description: |-
-  
+  Retrieves information about existing Custom Redirects.
 ---
 
 # bloxone_td_custom_redirects (Data Source)
 
-
+Retrieves information about existing Custom Redirects.
 
 ## Example Usage
 

@@ -3,12 +3,12 @@
 page_title: "bloxone_td_content_categories Data Source - terraform-provider-bloxone"
 subcategory: "Threat Defense"
 description: |-
-  
+  Retrieves information about existing Content Categories.
 ---
 
 # bloxone_td_content_categories (Data Source)
 
-
+Retrieves information about existing Content Categories.
 
 ## Example Usage
 

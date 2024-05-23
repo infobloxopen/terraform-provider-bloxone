@@ -3,7 +3,6 @@ package fw_test
 import (
 	"context"
 	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -24,7 +23,7 @@ func TestAccCategoryFiltersDataSource_Filters(t *testing.T) {
 		CheckDestroy:             testAccCheckCategoryFiltersDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCategoryFiltersDataSourceConfigFilters(name),
+				Config: testAccCategoryFiltersDataSourceConfigFilters(name, "College"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckCategoryFiltersExists(context.Background(), resourceName, &v),
@@ -47,7 +46,7 @@ func TestAccCategoryFiltersDataSource_TagFilters(t *testing.T) {
 		CheckDestroy:             testAccCheckCategoryFiltersDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCategoryFiltersDataSourceConfigTagFilters(name, "value1"),
+				Config: testAccCategoryFiltersDataSourceConfigTagFilters(name, "College", "value1"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckCategoryFiltersExists(context.Background(), resourceName, &v),
@@ -73,11 +72,11 @@ func testAccCheckCategoryFiltersResourceAttrPair(resourceName, dataSourceName st
 	}
 }
 
-func testAccCategoryFiltersDataSourceConfigFilters(name string) string {
-	config := fmt.Sprintf(`
+func testAccCategoryFiltersDataSourceConfigFilters(name, category string) string {
+	return fmt.Sprintf(`
 resource "bloxone_td_category_filter" "test" {
 	name = %q
-	categories = [data.bloxone_td_content_categories.test.results.0.category_name]
+	categories = [%q]
 }
 
 data "bloxone_td_category_filters" "test" {
@@ -85,15 +84,14 @@ data "bloxone_td_category_filters" "test" {
 	name = bloxone_td_category_filter.test.name
   }
 }
-`, name)
-	return strings.Join([]string{testAccBaseWithContentCategories(), config}, "")
+`, name, category)
 }
 
-func testAccCategoryFiltersDataSourceConfigTagFilters(name, tagValue string) string {
-	config := fmt.Sprintf(`
+func testAccCategoryFiltersDataSourceConfigTagFilters(name, category, tagValue string) string {
+	return fmt.Sprintf(`
 resource "bloxone_td_category_filter" "test" {
 	name = %q
-	categories = [data.bloxone_td_content_categories.test.results.0.category_name]
+	categories = [%q]
 	tags = {
 		tag1 = %q
 	}
@@ -104,6 +102,5 @@ data "bloxone_td_category_filters" "test" {
 		tag1 = bloxone_td_category_filter.test.tags.tag1
 	}
 }
-`, name, tagValue)
-	return strings.Join([]string{testAccBaseWithContentCategories(), config}, "")
+`, name, category, tagValue)
 }

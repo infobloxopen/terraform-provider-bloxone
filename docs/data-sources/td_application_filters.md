@@ -3,12 +3,12 @@
 page_title: "bloxone_td_application_filters Data Source - terraform-provider-bloxone"
 subcategory: "Threat Defense"
 description: |-
-  
+  Retrieves information about existing Application Filters.
 ---
 
 # bloxone_td_application_filters (Data Source)
 
-
+Retrieves information about existing Application Filters.
 
 ## Example Usage
 

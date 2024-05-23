@@ -1,11 +1,9 @@
-data "bloxone_td_content_categories" "test" {}
-
 resource "bloxone_td_category_filter" "example" {
   name       = "example_category_filter"
-  categories = [data.bloxone_td_content_categories.test.results.0.category_name]
+  categories = ["Tutoring", "College"]
 
   # Other optional fields
-  description = "Example of an Category Filter"
+  description = "Example of a Category Filter"
   tags = {
     site = "Site A"
   }

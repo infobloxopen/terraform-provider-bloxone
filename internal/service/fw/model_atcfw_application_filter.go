@@ -113,7 +113,6 @@ func (m *AtcfwApplicationFilterModel) Expand(ctx context.Context, diags *diag.Di
 		Criteria:    flex.ExpandFrameworkListNestedBlock(ctx, m.Criteria, diags, ExpandAtcfwApplicationCriterion),
 		Description: flex.ExpandStringPointer(m.Description),
 		Name:        flex.ExpandStringPointer(m.Name),
-		Readonly:    flex.ExpandBoolPointer(m.Readonly),
 		Tags:        flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 	return to

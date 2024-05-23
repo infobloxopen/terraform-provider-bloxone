@@ -3,12 +3,12 @@
 page_title: "bloxone_td_category_filters Data Source - terraform-provider-bloxone"
 subcategory: "Threat Defense"
 description: |-
-  
+  Retrieves information about existing Category Filters.
 ---
 
 # bloxone_td_category_filters (Data Source)
 
-
+Retrieves information about existing Category Filters.
 
 ## Example Usage
 

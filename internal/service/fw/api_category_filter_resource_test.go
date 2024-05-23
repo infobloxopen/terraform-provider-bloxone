@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -27,7 +26,7 @@ func TestAccCategoryFiltersResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccCategoryFiltersBasicConfig(name),
+				Config: testAccCategoryFiltersBasicConfig(name, "College"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCategoryFiltersExists(context.Background(), resourceName, &v),
 					// Test Read Only fields
@@ -54,7 +53,7 @@ func TestAccCategoryFiltersResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckCategoryFiltersDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCategoryFiltersBasicConfig(name),
+				Config: testAccCategoryFiltersBasicConfig(name, "College"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCategoryFiltersExists(context.Background(), resourceName, &v),
 					testAccCheckCategoryFiltersDisappears(context.Background(), &v),
@@ -76,18 +75,18 @@ func TestAccCategoryFiltersResource_Categories(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccCategoryFiltersCategories(name, "1"),
+				Config: testAccCategoryFiltersCategories(name, "College"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCategoryFiltersExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttrPair(resourceName, "categories.0", "data.bloxone_td_content_categories.test", "results.1.category_name"),
+					resource.TestCheckResourceAttr(resourceName, "categories.0", "College"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccCategoryFiltersCategories(name, "2"),
+				Config: testAccCategoryFiltersCategories(name, "Tutoring"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCategoryFiltersExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttrPair(resourceName, "categories.0", "data.bloxone_td_content_categories.test", "results.2.category_name"),
+					resource.TestCheckResourceAttr(resourceName, "categories.0", "Tutoring"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -106,7 +105,7 @@ func TestAccCategoryFiltersResource_Description(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccCategoryFiltersDescription(name, "Test Description"),
+				Config: testAccCategoryFiltersDescription(name, "College", "Test Description"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCategoryFiltersExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "Test Description"),
@@ -114,7 +113,7 @@ func TestAccCategoryFiltersResource_Description(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccCategoryFiltersDescription(name, "Updated Test Description"),
+				Config: testAccCategoryFiltersDescription(name, "College", "Updated Test Description"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCategoryFiltersExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "Updated Test Description"),
@@ -137,7 +136,7 @@ func TestAccCategoryFiltersResource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccCategoryFiltersName(name1),
+				Config: testAccCategoryFiltersName(name1, "College"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCategoryFiltersExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name1),
@@ -145,7 +144,7 @@ func TestAccCategoryFiltersResource_Name(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccCategoryFiltersName(name2),
+				Config: testAccCategoryFiltersName(name2, "College"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCategoryFiltersExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name2),
@@ -167,7 +166,7 @@ func TestAccCategoryFiltersResource_Tags(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccCategoryFiltersTags(name, map[string]string{
+				Config: testAccCategoryFiltersTags(name, "College", map[string]string{
 					"tag1": "value1",
 					"tag2": "value2",
 				}),
@@ -179,7 +178,7 @@ func TestAccCategoryFiltersResource_Tags(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccCategoryFiltersTags(name, map[string]string{
+				Config: testAccCategoryFiltersTags(name, "College", map[string]string{
 					"tag2": "value2changed",
 					"tag3": "value3",
 				}),
@@ -252,55 +251,47 @@ func testAccCheckCategoryFiltersDisappears(ctx context.Context, v *fw.CategoryFi
 	}
 }
 
-func testAccBaseWithContentCategories() string {
-	return `
-data "bloxone_td_content_categories" "test" {
-}
-`
-}
-
-func testAccCategoryFiltersBasicConfig(name string) string {
-	config := fmt.Sprintf(`
+func testAccCategoryFiltersBasicConfig(name, category string) string {
+	return fmt.Sprintf(`
 resource "bloxone_td_category_filter" "test" {
 	name = %q
-	categories = [data.bloxone_td_content_categories.test.results.0.category_name]
+	categories = [%q]
 }
-`, name)
-	return strings.Join([]string{testAccBaseWithContentCategories(), config}, "")
+`, name, category)
 }
 
 func testAccCategoryFiltersCategories(name, category string) string {
-	config := fmt.Sprintf(`
+	return fmt.Sprintf(`
 resource "bloxone_td_category_filter" "test_categories" {
 	name = %q
-	categories = [data.bloxone_td_content_categories.test.results.%s.category_name]
+	categories = [%q]
 }
 `, name, category)
-	return strings.Join([]string{testAccBaseWithContentCategories(), config}, "")
+
 }
 
-func testAccCategoryFiltersDescription(name, description string) string {
-	config := fmt.Sprintf(`
+func testAccCategoryFiltersDescription(name, category, description string) string {
+	return fmt.Sprintf(`
 resource "bloxone_td_category_filter" "test_description" {
 	name = %q
-	categories = [data.bloxone_td_content_categories.test.results.0.category_name]
+	categories = [%q]
 	description = %q
 }
-`, name, description)
-	return strings.Join([]string{testAccBaseWithContentCategories(), config}, "")
+`, name, category, description)
+
 }
 
-func testAccCategoryFiltersName(name string) string {
-	config := fmt.Sprintf(`
+func testAccCategoryFiltersName(name, category string) string {
+	return fmt.Sprintf(`
 resource "bloxone_td_category_filter" "test_name" {
 	name = %q
-	categories = [data.bloxone_td_content_categories.test.results.0.category_name]
+	categories = [%q]
 }
-`, name)
-	return strings.Join([]string{testAccBaseWithContentCategories(), config}, "")
+`, name, category)
+
 }
 
-func testAccCategoryFiltersTags(name string, tags map[string]string) string {
+func testAccCategoryFiltersTags(name, category string, tags map[string]string) string {
 	tagsStr := "{\n"
 	for k, v := range tags {
 		tagsStr += fmt.Sprintf(`
@@ -309,12 +300,12 @@ func testAccCategoryFiltersTags(name string, tags map[string]string) string {
 	}
 	tagsStr += "\t}"
 
-	config := fmt.Sprintf(`
+	return fmt.Sprintf(`
 resource "bloxone_td_category_filter" "test_tags" {
 	name = %q
-	categories = [data.bloxone_td_content_categories.test.results.0.category_name]
+	categories = [%q]
 	tags = %s
 }
-`, name, tagsStr)
-	return strings.Join([]string{testAccBaseWithContentCategories(), config}, "")
+`, name, category, tagsStr)
+
 }

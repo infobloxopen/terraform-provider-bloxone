@@ -3,7 +3,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/redirect"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
@@ -22,6 +21,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_provision"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/ipam"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/keys"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/redirect"
 )
 
 // Ensure BloxOneProvider satisfies various provider interfaces.
