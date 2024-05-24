@@ -21,6 +21,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_provision"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/ipam"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/keys"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/redirect"
 )
 
 // Ensure BloxOneProvider satisfies various provider interfaces.
@@ -138,6 +139,10 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		fw.NewNamedListResource,
 		fw.NewNetworkListResource,
 		fw.NewInternalDomainListResource,
+		fw.NewCategoryFilterResource,
+		fw.NewApplicationFilterResource,
+
+		redirect.NewCustomRedirectResource,
 	}
 }
 
@@ -203,6 +208,12 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		fw.NewNetworkListsDataSource,
 		fw.NewInternalDomainListsDataSource,
 		fw.NewPoPRegionDataSource,
+		fw.NewCategoryFiltersDataSource,
+		fw.NewApplicationFiltersDataSource,
+		fw.NewContentCategoriesDataSource,
+		fw.NewThreatFeedsDataSource,
+
+		redirect.NewCustomRedirectsDataSource,
 	}
 }
 
