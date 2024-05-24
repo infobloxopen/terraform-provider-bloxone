@@ -12,29 +12,29 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/fw"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 )
 
 type AtcfwInternalDomainsModel struct {
-	CreatedTime     timetypes.RFC3339 `tfsdk:"created_time"`
-	Description     types.String      `tfsdk:"description"`
-	Id              types.Int64       `tfsdk:"id"`
-	InternalDomains types.List        `tfsdk:"internal_domains"`
-	IsDefault       types.Bool        `tfsdk:"is_default"`
-	Name            types.String      `tfsdk:"name"`
-	Tags            types.Map         `tfsdk:"tags"`
-	UpdatedTime     timetypes.RFC3339 `tfsdk:"updated_time"`
+	CreatedTime     timetypes.RFC3339                              `tfsdk:"created_time"`
+	Description     types.String                                   `tfsdk:"description"`
+	Id              types.Int64                                    `tfsdk:"id"`
+	InternalDomains internaltypes.UnorderedListValue[types.String] `tfsdk:"internal_domains"`
+	IsDefault       types.Bool                                     `tfsdk:"is_default"`
+	Name            types.String                                   `tfsdk:"name"`
+	Tags            types.Map                                      `tfsdk:"tags"`
+	UpdatedTime     timetypes.RFC3339                              `tfsdk:"updated_time"`
 }
 
 var AtcfwInternalDomainsAttrTypes = map[string]attr.Type{
 	"created_time":     timetypes.RFC3339Type{},
 	"description":      types.StringType,
 	"id":               types.Int64Type,
-	"internal_domains": types.ListType{ElemType: types.StringType},
+	"internal_domains": internaltypes.UnorderedListOfStringType,
 	"is_default":       types.BoolType,
 	"name":             types.StringType,
 	"tags":             types.MapType{ElemType: types.StringType},
@@ -61,6 +61,7 @@ var AtcfwInternalDomainsResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The Internal Domain object identifier.",
 	},
 	"internal_domains": schema.ListAttribute{
+		CustomType:          internaltypes.UnorderedListOfStringType,
 		ElementType:         types.StringType,
 		Optional:            true,
 		MarkdownDescription: "The list of internal domains, should be unique to each other and has to be read-only from the API level.",
@@ -86,18 +87,6 @@ var AtcfwInternalDomainsResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "The time when this Internal domain list object was last updated.",
 	},
-}
-
-func ExpandAtcfwInternalDomains(ctx context.Context, o types.Object, diags *diag.Diagnostics) *fw.InternalDomains {
-	if o.IsNull() || o.IsUnknown() {
-		return nil
-	}
-	var m AtcfwInternalDomainsModel
-	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
-	if diags.HasError() {
-		return nil
-	}
-	return m.Expand(ctx, diags)
 }
 
 func (m *AtcfwInternalDomainsModel) Expand(ctx context.Context, diags *diag.Diagnostics) *fw.InternalDomains {
@@ -135,7 +124,7 @@ func (m *AtcfwInternalDomainsModel) Flatten(ctx context.Context, from *fw.Intern
 	m.CreatedTime = timetypes.NewRFC3339TimePointerValue(from.CreatedTime)
 	m.Description = flex.FlattenStringPointer(from.Description)
 	m.Id = flex.FlattenInt32Pointer(from.Id)
-	m.InternalDomains = flex.FlattenFrameworkListString(ctx, from.InternalDomains, diags)
+	m.InternalDomains = flex.FlattenFrameworkCustomListString(ctx, from.InternalDomains, diags)
 	m.IsDefault = types.BoolPointerValue(from.IsDefault)
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
