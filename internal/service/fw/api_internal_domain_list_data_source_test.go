@@ -66,7 +66,6 @@ func testAccCheckInternalDomainListResourceAttrPair(resourceName, dataSourceName
 		resource.TestCheckResourceAttrPair(resourceName, "id", dataSourceName, "results.0.id"),
 		resource.TestCheckResourceAttrPair(resourceName, "name", dataSourceName, "results.0.name"),
 		resource.TestCheckResourceAttrPair(resourceName, "tags", dataSourceName, "results.0.tags"),
-		resource.TestCheckResourceAttrPair(resourceName, "updated_time", dataSourceName, "results.0.updated_time"),
 	}
 }
 

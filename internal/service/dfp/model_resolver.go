@@ -10,22 +10,23 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/dfp"
+	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
 type ResolverModel struct {
-	Address    types.String `tfsdk:"address"`
-	IsFallback types.Bool   `tfsdk:"is_fallback"`
-	IsLocal    types.Bool   `tfsdk:"is_local"`
-	Protocols  types.List   `tfsdk:"protocols"`
+	Address    types.String                                   `tfsdk:"address"`
+	IsFallback types.Bool                                     `tfsdk:"is_fallback"`
+	IsLocal    types.Bool                                     `tfsdk:"is_local"`
+	Protocols  internaltypes.UnorderedListValue[types.String] `tfsdk:"protocols"`
 }
 
 var ResolverAttrTypes = map[string]attr.Type{
 	"address":     types.StringType,
 	"is_fallback": types.BoolType,
 	"is_local":    types.BoolType,
-	"protocols":   types.ListType{ElemType: types.StringType},
+	"protocols":   internaltypes.UnorderedListOfStringType,
 }
 
 var ResolverResourceSchemaAttributes = map[string]schema.Attribute{
@@ -42,6 +43,7 @@ var ResolverResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Mark it true to set internal or local DNS servers' IPv4 or IPv6 addresses that are used as DNS resolvers",
 	},
 	"protocols": schema.ListAttribute{
+		CustomType:          internaltypes.UnorderedListOfStringType,
 		ElementType:         types.StringType,
 		Optional:            true,
 		MarkdownDescription: "The list of DNS resolver communication protocols.",
@@ -73,7 +75,7 @@ func (m *ResolverModel) Expand(ctx context.Context, diags *diag.Diagnostics) *df
 	return to
 }
 
-func ExpandDNSProtocol(ctx context.Context, tfList types.List, diags *diag.Diagnostics) []dfp.DNSProtocol {
+func ExpandDNSProtocol(ctx context.Context, tfList internaltypes.UnorderedListValue[types.String], diags *diag.Diagnostics) []dfp.DNSProtocol {
 	if tfList.IsNull() || tfList.IsUnknown() {
 		return nil
 	}
@@ -106,11 +108,11 @@ func (m *ResolverModel) Flatten(ctx context.Context, from *dfp.Resolver, diags *
 	m.Protocols = FlattenDNSProtocol(ctx, from.Protocols, diags)
 }
 
-func FlattenDNSProtocol(ctx context.Context, l []dfp.DNSProtocol, diags *diag.Diagnostics) types.List {
+func FlattenDNSProtocol(ctx context.Context, l []dfp.DNSProtocol, diags *diag.Diagnostics) internaltypes.UnorderedListValue[types.String] {
 	if len(l) == 0 {
-		return types.ListNull(types.StringType)
+		return internaltypes.NewUnorderedListValueNull[types.String](ctx)
 	}
-	tfList, d := types.ListValueFrom(ctx, types.StringType, l)
+	tfList, d := internaltypes.NewUnorderedListValueFrom[types.String](ctx, l)
 	diags.Append(d...)
 	return tfList
 }

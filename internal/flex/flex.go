@@ -11,7 +11,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
+	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
@@ -85,7 +87,10 @@ func FlattenFrameworkMapString(ctx context.Context, m map[string]interface{}, di
 	return tfMap
 }
 
-func ExpandFrameworkListString(ctx context.Context, tfList types.List, diags *diag.Diagnostics) []string {
+func ExpandFrameworkListString(ctx context.Context, tfList interface {
+	basetypes.ListValuable
+	ElementsAs(ctx context.Context, target interface{}, allowUnhandled bool) diag.Diagnostics
+}, diags *diag.Diagnostics) []string {
 	if tfList.IsNull() || tfList.IsUnknown() {
 		return nil
 	}
@@ -117,6 +122,15 @@ func FlattenFrameworkListString(ctx context.Context, l []string, diags *diag.Dia
 		return types.ListNull(types.StringType)
 	}
 	tfList, d := types.ListValueFrom(ctx, types.StringType, l)
+	diags.Append(d...)
+	return tfList
+}
+
+func FlattenFrameworkCustomListString(ctx context.Context, l []string, diags *diag.Diagnostics) internaltypes.UnorderedListValue[types.String] {
+	if len(l) == 0 {
+		return internaltypes.NewUnorderedListValueNull[types.String](ctx)
+	}
+	tfList, d := internaltypes.NewUnorderedListValueFrom[types.String](ctx, l)
 	diags.Append(d...)
 	return tfList
 }
