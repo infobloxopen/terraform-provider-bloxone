@@ -269,7 +269,7 @@ Read-Only:
 - `custom_root_ns_enabled` (Boolean) Optional. Field config for _custom_root_ns_enabled_ field.
 
 <a id="nestedatt--inheritance_sources--custom_root_ns_block--value--custom_root_ns"></a>
-### Nested Schema for `inheritance_sources.custom_root_ns_block.value.custom_root_ns_enabled`
+### Nested Schema for `inheritance_sources.custom_root_ns_block.value.custom_root_ns`
 
 Read-Only:
 
@@ -304,7 +304,7 @@ Read-Only:
 - `dnssec_validate_expiry` (Boolean) Optional. Field config for _dnssec_validate_expiry_ field.
 
 <a id="nestedatt--inheritance_sources--dnssec_validation_block--value--dnssec_trust_anchors"></a>
-### Nested Schema for `inheritance_sources.dnssec_validation_block.value.dnssec_validate_expiry`
+### Nested Schema for `inheritance_sources.dnssec_validation_block.value.dnssec_trust_anchors`
 
 Read-Only:
 
@@ -455,7 +455,7 @@ Read-Only:
 - `use_root_forwarders_for_local_resolution_with_b1td` (Boolean) Optional. Field config for _use_root_forwarders_for_local_resolution_with_b1td_ field.
 
 <a id="nestedatt--inheritance_sources--forwarders_block--value--forwarders"></a>
-### Nested Schema for `inheritance_sources.forwarders_block.value.use_root_forwarders_for_local_resolution_with_b1td`
+### Nested Schema for `inheritance_sources.forwarders_block.value.forwarders`
 
 Read-Only:
 
