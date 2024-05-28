@@ -426,7 +426,7 @@ Optional:
 - `rname` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--zone_authority--rname))
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--default_ttl"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.default_ttl`
 
 Optional:
 
@@ -445,7 +445,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--expire"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.expire`
 
 Optional:
 
@@ -464,7 +464,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--mname_block"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.mname_block`
 
 Optional:
 
@@ -488,7 +488,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--negative_ttl"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.negative_ttl`
 
 Optional:
 
@@ -507,7 +507,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--protocol_rname"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.protocol_rname`
 
 Optional:
 
@@ -526,7 +526,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--refresh"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.refresh`
 
 Optional:
 
@@ -545,7 +545,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--retry"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.retry`
 
 Optional:
 
