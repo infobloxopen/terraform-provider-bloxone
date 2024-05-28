@@ -27,10 +27,10 @@ func TestAccCustomRedirectsDataSource_Filters(t *testing.T) {
 			{
 				Config: testAccCustomRedirectsDataSourceConfigFilters(name, "156.2.3.10"),
 				Check: resource.ComposeTestCheckFunc(
-					append([]resource.TestCheckFunc{
+					[]resource.TestCheckFunc{
 						testAccCheckCustomRedirectsExists(context.Background(), resourceName, &v),
 						testAccCheckCustomRedirectsResourceAttrPairWithIndexInOutput(resourceName, dataSourceName, "index"),
-					})...,
+					}...,
 				),
 			},
 		},
