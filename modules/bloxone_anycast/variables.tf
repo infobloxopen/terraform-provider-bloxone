@@ -1,72 +1,62 @@
 variable "hosts" {
-  description = "Map of hostnames or IP addresses for the Anycast configuration"
+  description = "Map of hostnames or IP addresses for the Anycast configuration."
   type        = map(string)
-  default     = {
-    host1 = "ujjwal"
-    host2 = "anycast_real"
-  }
-}
-
-variable "dhcp_hosts" {
-  description = "Map of hostnames or IP addresses for DHCP hosts"
-  type        = map(string)
-  default     = {
-    host1 = "ujjwal"
-    host2 = "anycast_real"
-  }
 }
 
 variable "name" {
-  description = "Name of the Anycast service"
+  description = "Name of the Anycast service."
   type        = string
   default = "anycast-service"
 }
 
 variable "service" {
+  description = "The type of the Service used in anycast configuration, supports (`dns`, `dhcp`, `dfp`)."
   type    = string
   default = "DHCP"
 }
 
 variable "anycast_ip_address" {
+  description = "Anycast IP address."
   type    = string
   default = "10.10.10.5"
 }
 
 variable "anycast_config_name" {
+  description = "Name of the Anycast configuration."
   type    = string
   default = "anycast-config-1"
 }
 
 variable "routing_protocols" {
-  description = "List of routing protocols to be configured (e.g., BGP, OSPF)"
+  description = "List of routing protocols to be configured (e.g., BGP, OSPF)."
   type        = list(string)
   default = ["BGP", "OSPF"]
 }
 
-variable "asn" {
-  type    = string
-  default = "6500"
-}
-
-variable "holddown_secs" {
-  type    = number
-  default = 180
-}
-
-variable "bgp_neighbors" {
-  type = list(object({
-    asn        = string
-    ip_address = string
-  }))
-  default = [
-    {
-      asn        = "6501"
-      ip_address = "172.28.4.198"
-    }
-  ]
+variable "bgp_config" {
+  description = "BGP configuration"
+  type = object({
+    asn            = string
+    holddown_secs  = number
+    neighbors      = list(object({
+      asn        = string
+      ip_address = string
+    }))
+  })
+  default = {
+    asn           = "6500"
+    holddown_secs = 180
+    neighbors     = [
+      {
+        asn        = "6501"
+        ip_address = "172.28.4.198"
+      }
+    ]
+  }
 }
 
 variable "ospf_config" {
+  description = "OSPF configuration."
   type = object({
     area                = string
     area_type           = string

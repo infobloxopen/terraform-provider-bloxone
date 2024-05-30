@@ -1,12 +1,9 @@
-
-
-
 /**
  * # Terraform Module to create BloxOne Anycast in AWS
  *
  * This module will retrieve an AWS EC2 instance that uses a BloxOne AMI.
  * The instance will be configured to setup anycast config profile and add anycast protocols like BGP, OSPF.
- *
+ * Then a DHCP HA group will be created with the provided hosts with anycast as HA configuration.
  *
  * This module will fetch the already created BloxOne Host and create an anycast config profile with the desired routing protocols.
  *
@@ -14,40 +11,47 @@
  *
  * ```hcl
  * module "bloxone_anycast" {
- *   host_name = "MY_HOST_NAME"
+ *  source = "/Users/agadiyarhj/go/src/github.com/infobloxopen/terraform-provider-bloxone/modules/bloxone_anycast"
  *
- *  hosts = [
- *    "HOST_1"
- *    "HOST_2"
- *     ]
+ *  hosts = {
+ *    ujjwal       = "active",
+ *    anycast_real = "passive"
+ *  }
+ *  name      = "ac"
+ *  service   = "DHCP"
+ *  anycast_ip_address = "192.2.2.1"
+ *  routing_protocols = ["BGP", "OSPF"]
  *
- *   name = "ac"
- *   service = "DNS"
- *   ip_address = "192.2.2.1"
- *   routing_protocols   = ["BGP", "OSPF"]
- *   # Adding the BGP configuration
- *     config_bgp = {
- *      ...
-      }
- *     config_ospf = {
- *     ...
- *    }
- * }
- * ```
- * 
+ *  bgp_config = {
+ *    asn           = "6500"
+ *    holddown_secs = 180
+ *    neighbors     = [
+ *      {
+ *        asn        = "6501"
+ *        ip_address = "172.28.4.198"
+ *      }
+ *    ]
+ *  }
+ *
+ *  ospf_config = {
+ *    area                = "10.10.0.1"
+ *    area_type           = "STANDARD"
+ *    authentication_type = "Clear"
+ *    interface           = "eth0"
+ *    authentication_key  = "YXV0aGV"
+ *    hello_interval      = 10
+ *    dead_interval       = 40
+ *    retransmit_interval = 5
+ *    transmit_delay      = 1
+ *  }
+ *}
+ ```
  */
-
-//Fetch the aws instance
-# data "bloxone_infra_hosts" "anycast_host_1" {
-#   filters = {
-#     "name" = "example_host_1"
-#   }
-# }
 
 data "bloxone_infra_hosts" "this" {
   for_each       = var.hosts
   filters = {
-    "display_name" = each.value
+    "display_name" = each.key
   }
 }
 
@@ -61,7 +65,7 @@ resource "bloxone_anycast_config" "ac" {
 # Adding an anycast host with BGP routing protocol
 resource "bloxone_anycast_host" "this" {
   for_each  = data.bloxone_infra_hosts.this
-  id        = data.bloxone_infra_hosts.this[each.key].results.0.legacy_id
+  id        = data.bloxone_infra_hosts.this[each.key].results[0].legacy_id
 
   # Adding the anycast config profile and enabling BGP routing protocol
   anycast_config_refs = [
@@ -72,11 +76,7 @@ resource "bloxone_anycast_host" "this" {
   ]
 
   # Adding the BGP configuration
-  config_bgp = {
-    asn          = var.asn
-    holddown_secs = var.holddown_secs
-    neighbors    = var.bgp_neighbors
-  }
+  config_bgp = var.bgp_config
 
   # Adding the OSPF configuration
   config_ospf = var.ospf_config
@@ -85,7 +85,7 @@ resource "bloxone_anycast_host" "this" {
 data "bloxone_dhcp_hosts" "this" {
   for_each       = var.hosts
   filters = {
-    name = each.value
+    name = each.key
   }
 }
 
@@ -96,17 +96,9 @@ resource "bloxone_dhcp_ha_group" "example_anycast" {
   anycast_config_id = format("accm/ac_configs/%s", bloxone_anycast_config.ac.id)
 
   hosts = [
-    {
-      host = data.bloxone_dhcp_hosts.this["host1"].results[0].id
-      role = "active"
-    },
-    {
-      host = data.bloxone_dhcp_hosts.this["host2"].results[0].id
-      role = "passive"
+    for host, role in var.hosts : {
+      host  = data.bloxone_dhcp_hosts.this[host].results[0].id
+      role = role
     }
   ]
-}
-
-output "first_host_id" {
-  value = data.bloxone_dhcp_hosts.this["host1"].results[0].id
 }
