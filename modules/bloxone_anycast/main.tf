@@ -14,8 +14,8 @@
  *  source = "/Users/agadiyarhj/go/src/github.com/infobloxopen/terraform-provider-bloxone/modules/bloxone_anycast"
  *
  *  hosts = {
- *    ujjwal       = "active",
- *    anycast_real = "passive"
+ *    host1 = "active",
+ *    host2 = "passive"
  *  }
  *  name      = "ac"
  *  service   = "DHCP"
