@@ -92,6 +92,7 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		ipam.NewAddressResource,
 		ipam.NewRangeResource,
 		ipam.NewFixedAddressResource,
+		ipam.NewDhcpHostResource,
 		ipam.NewServerResource,
 		ipam.NewHaGroupResource,
 		ipam.NewOptionSpaceResource,

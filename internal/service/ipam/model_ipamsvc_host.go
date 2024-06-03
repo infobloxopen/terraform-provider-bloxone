@@ -59,7 +59,7 @@ var IpamsvcHostResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"associated_server": schema.SingleNestedAttribute{
 		Attributes:          IpamsvcHostAssociatedServerResourceSchemaAttributes,
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The DHCP Config Profile for the on-prem host.",
 	},
 	"comment": schema.StringAttribute{
@@ -71,14 +71,14 @@ var IpamsvcHostResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Current dhcp application version of the host.",
 	},
 	"id": schema.StringAttribute{
-		Computed:            true,
+		Required:            true,
 		MarkdownDescription: "The resource identifier.",
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.UseStateForUnknown(),
 		},
 	},
 	"ip_space": schema.StringAttribute{
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 	"name": schema.StringAttribute{
@@ -94,12 +94,15 @@ var IpamsvcHostResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "External provider identifier.",
 	},
 	"server": schema.StringAttribute{
-		Optional:            true,
+		Required: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "The resource identifier.",
 	},
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The tags of the on-prem host in JSON format.",
 	},
 	"type": schema.StringAttribute{
@@ -125,10 +128,7 @@ func (m *IpamsvcHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) 
 		return nil
 	}
 	to := &ipam.Host{
-		AssociatedServer: ExpandIpamsvcHostAssociatedServer(ctx, m.AssociatedServer, diags),
-		IpSpace:          flex.ExpandStringPointer(m.IpSpace),
-		Server:           flex.ExpandStringPointer(m.Server),
-		Tags:             flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
+		Server: flex.ExpandStringPointer(m.Server),
 	}
 	return to
 }
@@ -156,7 +156,6 @@ func (m *IpamsvcHostModel) Flatten(ctx context.Context, from *ipam.Host, diags *
 	m.AssociatedServer = FlattenIpamsvcHostAssociatedServer(ctx, from.AssociatedServer, diags)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CurrentVersion = flex.FlattenStringPointer(from.CurrentVersion)
-	m.Id = flex.FlattenStringPointer(from.Id)
 	m.IpSpace = flex.FlattenStringPointer(from.IpSpace)
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Ophid = flex.FlattenStringPointer(from.Ophid)
