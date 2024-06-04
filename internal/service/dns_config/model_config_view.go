@@ -67,6 +67,7 @@ type ConfigViewModel struct {
 	SortList                                    types.List        `tfsdk:"sort_list"`
 	SynthesizeAddressRecordsFromHttps           types.Bool        `tfsdk:"synthesize_address_records_from_https"`
 	Tags                                        types.Map         `tfsdk:"tags"`
+	TagsAll                                     types.Map         `tfsdk:"tags_all"`
 	TransferAcl                                 types.List        `tfsdk:"transfer_acl"`
 	UpdateAcl                                   types.List        `tfsdk:"update_acl"`
 	UpdatedAt                                   timetypes.RFC3339 `tfsdk:"updated_at"`
@@ -118,6 +119,7 @@ var ConfigViewAttrTypes = map[string]attr.Type{
 	"sort_list":                             types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigSortListItemAttrTypes}},
 	"synthesize_address_records_from_https": types.BoolType,
 	"tags":                                  types.MapType{ElemType: types.StringType},
+	"tags_all":                              types.MapType{ElemType: types.StringType},
 	"transfer_acl":                          types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}},
 	"update_acl":                            types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}},
 	"updated_at":                            timetypes.RFC3339Type{},
@@ -409,6 +411,11 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: `Tagging specifics.`,
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: `Tagging specifics including default tags.`,
+	},
 	"transfer_acl": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigACLItemResourceSchemaAttributes,
@@ -528,12 +535,13 @@ func (m *ConfigViewModel) Expand(ctx context.Context, diags *diag.Diagnostics) *
 	return to
 }
 
-func FlattenConfigView(ctx context.Context, from *dnsconfig.View, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigView(ctx context.Context, from *dnsconfig.View, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigViewAttrTypes)
 	}
 	m := ConfigViewModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, ConfigViewAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -587,7 +595,7 @@ func (m *ConfigViewModel) Flatten(ctx context.Context, from *dnsconfig.View, dia
 	m.RecursionEnabled = types.BoolPointerValue(from.RecursionEnabled)
 	m.SortList = flex.FlattenFrameworkListNestedBlock(ctx, from.SortList, ConfigSortListItemAttrTypes, diags, FlattenConfigSortListItem)
 	m.SynthesizeAddressRecordsFromHttps = types.BoolPointerValue(from.SynthesizeAddressRecordsFromHttps)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.TransferAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.TransferAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
 	m.UpdateAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.UpdateAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)

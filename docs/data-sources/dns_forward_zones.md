@@ -67,6 +67,7 @@ Read-Only:
 - `mapping` (String) Read-only. Zone mapping type. Allowed values:  * _forward_,  * _ipv4_reverse_.  * _ipv6_reverse_.  Defaults to _forward_.
 - `parent` (String) The resource identifier.
 - `protocol_fqdn` (String) Zone FQDN in punycode.
+- `tags_all` (Map of String) Tagging specifics includes default tags.
 - `updated_at` (String) The timestamp when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `warnings` (Attributes List) The list of a forward zone warnings. (see [below for nested schema](#nestedatt--results--warnings))
 

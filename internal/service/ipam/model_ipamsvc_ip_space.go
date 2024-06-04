@@ -51,6 +51,7 @@ type IpamsvcIPSpaceModel struct {
 	InheritanceSources              types.Object      `tfsdk:"inheritance_sources"`
 	Name                            types.String      `tfsdk:"name"`
 	Tags                            types.Map         `tfsdk:"tags"`
+	TagsAll                         types.Map         `tfsdk:"tags_all"`
 	Threshold                       types.Object      `tfsdk:"threshold"`
 	UpdatedAt                       timetypes.RFC3339 `tfsdk:"updated_at"`
 	Utilization                     types.Object      `tfsdk:"utilization"`
@@ -85,6 +86,7 @@ var IpamsvcIPSpaceAttrTypes = map[string]attr.Type{
 	"inheritance_sources":                 types.ObjectType{AttrTypes: IpamsvcIPSpaceInheritanceAttrTypes},
 	"name":                                types.StringType,
 	"tags":                                types.MapType{ElemType: types.StringType},
+	"tags_all":                            types.MapType{ElemType: types.StringType},
 	"threshold":                           types.ObjectType{AttrTypes: IpamsvcUtilizationThresholdAttrTypes},
 	"updated_at":                          timetypes.RFC3339Type{},
 	"utilization":                         types.ObjectType{AttrTypes: IpamsvcUtilizationAttrTypes},
@@ -289,6 +291,11 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: `The tags for the IP space in JSON format.`,
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags of the IP space in JSON format including default tags.",
+	},
 	"threshold": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationThresholdResourceSchemaAttributes,
 		Computed:   true,
@@ -357,12 +364,13 @@ func (m *IpamsvcIPSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenIpamsvcIPSpace(ctx context.Context, from *ipam.IPSpace, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcIPSpaceDataSource(ctx context.Context, from *ipam.IPSpace, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcIPSpaceAttrTypes)
 	}
 	m := IpamsvcIPSpaceModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcIPSpaceAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -400,7 +408,7 @@ func (m *IpamsvcIPSpaceModel) Flatten(ctx context.Context, from *ipam.IPSpace, d
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.InheritanceSources = FlattenIpamsvcIPSpaceInheritance(ctx, from.InheritanceSources, diags)
 	m.Name = flex.FlattenString(from.Name)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Threshold = FlattenIpamsvcUtilizationThreshold(ctx, from.Threshold, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.Utilization = FlattenIpamsvcUtilization(ctx, from.Utilization, diags)

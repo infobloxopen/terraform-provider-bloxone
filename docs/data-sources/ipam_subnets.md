@@ -110,6 +110,7 @@ Read-Only:
 - `inheritance_parent` (String) The resource identifier.
 - `parent` (String) The resource identifier.
 - `protocol` (String) The type of protocol of the subnet (_ip4_ or _ip6_).
+- `tags_all` (Map of String) The tags for the subnet in JSON format including default tags.
 - `threshold` (Attributes) (see [below for nested schema](#nestedatt--results--threshold))
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `usage` (List of String) The usage is a combination of indicators, each tracking a specific associated use. Listed below are usage indicators with their meaning:

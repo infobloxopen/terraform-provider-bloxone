@@ -23,14 +23,16 @@ type ConfigACLModel struct {
 	List    types.List   `tfsdk:"list"`
 	Name    types.String `tfsdk:"name"`
 	Tags    types.Map    `tfsdk:"tags"`
+	TagsAll types.Map    `tfsdk:"tags_all"`
 }
 
 var ConfigACLAttrTypes = map[string]attr.Type{
-	"comment": types.StringType,
-	"id":      types.StringType,
-	"list":    types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}},
-	"name":    types.StringType,
-	"tags":    types.MapType{ElemType: types.StringType},
+	"comment":  types.StringType,
+	"id":       types.StringType,
+	"list":     types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}},
+	"name":     types.StringType,
+	"tags":     types.MapType{ElemType: types.StringType},
+	"tags_all": types.MapType{ElemType: types.StringType},
 }
 
 var ConfigACLResourceSchemaAttributes = map[string]schema.Attribute{
@@ -63,6 +65,11 @@ var ConfigACLResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: `Tagging specifics.`,
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: `Tagging specifics includes the default tags.`,
+	},
 }
 
 func ExpandConfigACL(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.ACL {
@@ -90,12 +97,13 @@ func (m *ConfigACLModel) Expand(ctx context.Context, diags *diag.Diagnostics) *d
 	return to
 }
 
-func FlattenConfigACL(ctx context.Context, from *dnsconfig.ACL, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigACL(ctx context.Context, from *dnsconfig.ACL, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigACLAttrTypes)
 	}
 	m := ConfigACLModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, ConfigACLAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -112,5 +120,5 @@ func (m *ConfigACLModel) Flatten(ctx context.Context, from *dnsconfig.ACL, diags
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.List = flex.FlattenFrameworkListNestedBlock(ctx, from.List, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
 	m.Name = flex.FlattenString(from.Name)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 }

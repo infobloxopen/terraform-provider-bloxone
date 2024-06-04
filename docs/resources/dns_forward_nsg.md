@@ -50,6 +50,7 @@ resource "bloxone_dns_forward_nsg" "example" {
 ### Read-Only
 
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) Tagging specifics includes default tags.
 
 <a id="nestedatt--external_forwarders"></a>
 ### Nested Schema for `external_forwarders`

@@ -337,3 +337,24 @@ func ExtractResourceId(id string) string {
 		return id
 	}
 }
+
+// DefaultTagsHandler converts default_tags attribute to map[string]string
+// supports only string values
+func DefaultTagsHandler(m map[string]interface{}, d *diag.Diagnostics) map[string]string {
+	newMap := make(map[string]string, len(m))
+	for key, value := range m {
+		strValue := ""
+
+		switch v := value.(type) {
+		case string:
+			strValue = v
+		default:
+			d.AddError("Client error", fmt.Sprintf("Invalid type '%v' for default_tags %s value, only string supported", v, key))
+			continue
+		}
+
+		newMap[key] = strValue
+	}
+
+	return newMap
+}
