@@ -19,11 +19,7 @@ The HA Group object represents on-prem hosts that can serve the same leases for 
 # Get first host for the HA group.
 data "bloxone_dhcp_hosts" "example_host_1" {
   filters = {
-<<<<<<< HEAD
-    name = "Your host name"
-=======
     name = "Host-1"
->>>>>>> 1835083c0a38bb6891b5d4baf1d11858eb822829
   }
 }
 
