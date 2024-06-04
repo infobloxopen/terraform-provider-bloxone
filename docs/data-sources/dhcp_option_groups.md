@@ -64,6 +64,7 @@ Read-Only:
 
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) The tags for the option group in JSON format including default tag.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 
 <a id="nestedatt--results--dhcp_options"></a>

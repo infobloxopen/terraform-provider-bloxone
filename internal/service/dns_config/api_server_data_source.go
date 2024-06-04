@@ -41,7 +41,7 @@ func (m *ConfigServerModelWithFilter) FlattenResults(ctx context.Context, from [
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigServerAttrTypes, diags, FlattenConfigServer)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigServerAttrTypes, diags, DataSourceFlattenConfigServer)
 }
 
 func (d *ServerDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

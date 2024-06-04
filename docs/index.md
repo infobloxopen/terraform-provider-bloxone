@@ -16,6 +16,12 @@ The BloxOne provider is used to interact with the resources supported by Infoblo
 provider "bloxone" {
   csp_url = "https://csp.infoblox.com"
   api_key = "<BloxOne DDI API Key>"
+
+  # Other Optional Fields
+  default_tags = {
+    managed_by = "terraform"
+    site       = "Site A"
+  }
 }
 ```
 
@@ -26,3 +32,4 @@ provider "bloxone" {
 
 - `api_key` (String) API key for accessing the BloxOne API. Can also be configured by using the `BLOXONE_API_KEY` environment variable. https://docs.infoblox.com/space/BloxOneCloud/35430405/Configuring+User+API+Keys
 - `csp_url` (String) URL for BloxOne Cloud Services Portal. Can also be configured using the `BLOXONE_CSP_URL` environment variable.
+- `default_tags` (Map of String) Tags to default for all resources.

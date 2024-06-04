@@ -85,6 +85,7 @@ resource "bloxone_dns_server" "example_server" {
 - `created_at` (String) Time when the object has been created.
 - `dnssec_root_keys` (Attributes List) DNSSEC root keys. The root keys are not configurable.  A default list is provided by cloud management and included here for config generation. (see [below for nested schema](#nestedatt--dnssec_root_keys))
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) Tagging specifics includes default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `views` (Attributes List) Optional. Ordered list of _dns/display_view_ objects served by any of _dns/host_ assigned to a particular DNS Config Profile. Automatically determined. Allows re-ordering only. (see [below for nested schema](#nestedatt--views))
 
@@ -269,7 +270,7 @@ Read-Only:
 - `custom_root_ns_enabled` (Boolean) Optional. Field config for _custom_root_ns_enabled_ field.
 
 <a id="nestedatt--inheritance_sources--custom_root_ns_block--value--custom_root_ns"></a>
-### Nested Schema for `inheritance_sources.custom_root_ns_block.value.custom_root_ns_enabled`
+### Nested Schema for `inheritance_sources.custom_root_ns_block.value.custom_root_ns`
 
 Read-Only:
 
@@ -304,7 +305,7 @@ Read-Only:
 - `dnssec_validate_expiry` (Boolean) Optional. Field config for _dnssec_validate_expiry_ field.
 
 <a id="nestedatt--inheritance_sources--dnssec_validation_block--value--dnssec_trust_anchors"></a>
-### Nested Schema for `inheritance_sources.dnssec_validation_block.value.dnssec_validate_expiry`
+### Nested Schema for `inheritance_sources.dnssec_validation_block.value.dnssec_trust_anchors`
 
 Read-Only:
 
@@ -455,7 +456,7 @@ Read-Only:
 - `use_root_forwarders_for_local_resolution_with_b1td` (Boolean) Optional. Field config for _use_root_forwarders_for_local_resolution_with_b1td_ field.
 
 <a id="nestedatt--inheritance_sources--forwarders_block--value--forwarders"></a>
-### Nested Schema for `inheritance_sources.forwarders_block.value.use_root_forwarders_for_local_resolution_with_b1td`
+### Nested Schema for `inheritance_sources.forwarders_block.value.forwarders`
 
 Read-Only:
 

@@ -60,6 +60,7 @@ type IpamsvcAddressBlockModel struct {
 	Protocol                   types.String      `tfsdk:"protocol"`
 	Space                      types.String      `tfsdk:"space"`
 	Tags                       types.Map         `tfsdk:"tags"`
+	TagsAll                    types.Map         `tfsdk:"tags_all"`
 	Threshold                  types.Object      `tfsdk:"threshold"`
 	UpdatedAt                  timetypes.RFC3339 `tfsdk:"updated_at"`
 	Usage                      types.List        `tfsdk:"usage"`
@@ -103,6 +104,7 @@ var IpamsvcAddressBlockAttrTypes = map[string]attr.Type{
 	"protocol":                      types.StringType,
 	"space":                         types.StringType,
 	"tags":                          types.MapType{ElemType: types.StringType},
+	"tags_all":                      types.MapType{ElemType: types.StringType},
 	"threshold":                     types.ObjectType{AttrTypes: IpamsvcUtilizationThresholdAttrTypes},
 	"updated_at":                    timetypes.RFC3339Type{},
 	"usage":                         types.ListType{ElemType: types.StringType},
@@ -344,6 +346,11 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "The tags for the address block in JSON format.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the address block in JSON format including default tags.",
+	},
 	"threshold": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationThresholdResourceSchemaAttributes,
 		Computed:   true,
@@ -401,6 +408,7 @@ func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagn
 	if m == nil {
 		return nil
 	}
+
 	to := &ipam.AddressBlock{
 		AsmConfig:                  ExpandIpamsvcASMConfig(ctx, m.AsmConfig, diags),
 		Cidr:                       flex.ExpandInt64Pointer(m.Cidr),
@@ -448,12 +456,13 @@ func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagn
 	return to
 }
 
-func FlattenIpamsvcAddressBlock(ctx context.Context, from *ipam.AddressBlock, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcAddressBlockDataSource(ctx context.Context, from *ipam.AddressBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcAddressBlockAttrTypes)
 	}
 	m := IpamsvcAddressBlockModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcAddressBlockAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -466,6 +475,7 @@ func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.Addre
 	if m == nil {
 		*m = IpamsvcAddressBlockModel{}
 	}
+
 	m.Address = flex.FlattenStringPointer(from.Address)
 	m.AsmConfig = FlattenIpamsvcASMConfig(ctx, from.AsmConfig, diags)
 	m.AsmScopeFlag = flex.FlattenInt64(*from.AsmScopeFlag)
@@ -499,10 +509,11 @@ func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.Addre
 	m.Parent = flex.FlattenStringPointer(from.Parent)
 	m.Protocol = flex.FlattenStringPointer(from.Protocol)
 	m.Space = flex.FlattenStringPointer(from.Space)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Threshold = FlattenIpamsvcUtilizationThreshold(ctx, from.Threshold, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.Usage = flex.FlattenFrameworkListString(ctx, from.Usage, diags)
 	m.Utilization = FlattenIpamsvcUtilization(ctx, from.Utilization, diags)
 	m.UtilizationV6 = FlattenIpamsvcUtilizationV6(ctx, from.UtilizationV6, diags)
+
 }

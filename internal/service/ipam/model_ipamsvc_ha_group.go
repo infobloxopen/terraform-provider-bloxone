@@ -3,17 +3,16 @@ package ipam
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-
-	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
-	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -33,6 +32,7 @@ type IpamsvcHAGroupModel struct {
 	Name            types.String      `tfsdk:"name"`
 	Status          types.String      `tfsdk:"status"`
 	Tags            types.Map         `tfsdk:"tags"`
+	TagsAll         types.Map         `tfsdk:"tags_all"`
 	UpdatedAt       timetypes.RFC3339 `tfsdk:"updated_at"`
 	CollectStats    types.Bool        `tfsdk:"collect_stats"`
 }
@@ -48,6 +48,7 @@ var IpamsvcHAGroupAttrTypes = map[string]attr.Type{
 	"name":              types.StringType,
 	"status":            types.StringType,
 	"tags":              types.MapType{ElemType: types.StringType},
+	"tags_all":          types.MapType{ElemType: types.StringType},
 	"updated_at":        timetypes.RFC3339Type{},
 	"collect_stats":     types.BoolType,
 }
@@ -115,6 +116,11 @@ var IpamsvcHAGroupResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "The tags for the HA group.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the HA group including default tags.",
+	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
@@ -157,12 +163,13 @@ func (m *IpamsvcHAGroupModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenIpamsvcHAGroup(ctx context.Context, from *ipam.HAGroup, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcHAGroupDataSource(ctx context.Context, from *ipam.HAGroup, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcHAGroupAttrTypes)
 	}
 	m := IpamsvcHAGroupModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcHAGroupAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -184,6 +191,6 @@ func (m *IpamsvcHAGroupModel) Flatten(ctx context.Context, from *ipam.HAGroup, d
 	m.Mode = flex.FlattenStringPointer(from.Mode)
 	m.Name = flex.FlattenString(from.Name)
 	m.Status = flex.FlattenStringPointer(from.Status)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }

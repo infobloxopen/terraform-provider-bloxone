@@ -3,15 +3,14 @@ package dns_config
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
@@ -35,6 +34,7 @@ type ConfigForwardZoneModel struct {
 	Parent             types.String      `tfsdk:"parent"`
 	ProtocolFqdn       types.String      `tfsdk:"protocol_fqdn"`
 	Tags               types.Map         `tfsdk:"tags"`
+	TagsAll            types.Map         `tfsdk:"tags_all"`
 	UpdatedAt          timetypes.RFC3339 `tfsdk:"updated_at"`
 	View               types.String      `tfsdk:"view"`
 	Warnings           types.List        `tfsdk:"warnings"`
@@ -56,6 +56,7 @@ var ConfigForwardZoneAttrTypes = map[string]attr.Type{
 	"parent":              types.StringType,
 	"protocol_fqdn":       types.StringType,
 	"tags":                types.MapType{ElemType: types.StringType},
+	"tags_all":            types.MapType{ElemType: types.StringType},
 	"updated_at":          timetypes.RFC3339Type{},
 	"view":                types.StringType,
 	"warnings":            types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigWarningAttrTypes}},
@@ -142,6 +143,11 @@ var ConfigForwardZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "Tagging specifics.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "Tagging specifics includes default tags.",
+	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
@@ -186,12 +192,13 @@ func (m *ConfigForwardZoneModel) Expand(ctx context.Context, diags *diag.Diagnos
 	return to
 }
 
-func FlattenConfigForwardZone(ctx context.Context, from *dnsconfig.ForwardZone, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigForwardZone(ctx context.Context, from *dnsconfig.ForwardZone, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigForwardZoneAttrTypes)
 	}
 	m := ConfigForwardZoneModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, ConfigForwardZoneAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -218,7 +225,7 @@ func (m *ConfigForwardZoneModel) Flatten(ctx context.Context, from *dnsconfig.Fo
 	m.Nsgs = flex.FlattenFrameworkListString(ctx, from.Nsgs, diags)
 	m.Parent = flex.FlattenStringPointer(from.Parent)
 	m.ProtocolFqdn = flex.FlattenStringPointer(from.ProtocolFqdn)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.View = flex.FlattenStringPointer(from.View)
 	m.Warnings = flex.FlattenFrameworkListNestedBlock(ctx, from.Warnings, ConfigWarningAttrTypes, diags, FlattenConfigWarning)

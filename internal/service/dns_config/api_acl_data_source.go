@@ -41,7 +41,7 @@ func (m *ConfigACLModelWithFilter) FlattenResults(ctx context.Context, from []dn
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigACLAttrTypes, diags, FlattenConfigACL)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigACLAttrTypes, diags, DataSourceFlattenConfigACL)
 }
 
 func (d *AclDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

@@ -90,6 +90,7 @@ resource "bloxone_dns_ns_record" "example" {
   |       | 0            | Default value |
   | LBDN  | 1            | LBDN record   |
   <br>
+- `tags_all` (Map of String) The tags for the DNS resource record including default tags.
 - `type` (String) The type of DNS record. This is always `NS`.
 - `updated_at` (String) The timestamp when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `view_name` (String) The display name of the DNS view that contains the parent zone of the DNS resource record.

@@ -128,6 +128,7 @@ resource "bloxone_dhcp_server" "example" {
 
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) The tags for the DHCP Config Profile in JSON format including default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 
 <a id="nestedatt--ddns_zones"></a>
@@ -306,7 +307,7 @@ Read-Only:
 - `server_principal` (String) The Kerberos principal name of the external DNS server that will receive updates.  Defaults to empty.
 
 <a id="nestedatt--inheritance_sources--ddns_block--value--ddns_zones"></a>
-### Nested Schema for `inheritance_sources.ddns_block.value.server_principal`
+### Nested Schema for `inheritance_sources.ddns_block.value.ddns_zones`
 
 Read-Only:
 
@@ -356,7 +357,7 @@ Read-Only:
 
 
 <a id="nestedatt--inheritance_sources--ddns_block--value--kerberos_keys"></a>
-### Nested Schema for `inheritance_sources.ddns_block.value.server_principal`
+### Nested Schema for `inheritance_sources.ddns_block.value.kerberos_keys`
 
 Read-Only:
 

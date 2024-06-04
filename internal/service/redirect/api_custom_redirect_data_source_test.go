@@ -3,9 +3,11 @@ package redirect_test
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/infobloxopen/bloxone-go-client/redirect"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
@@ -25,9 +27,10 @@ func TestAccCustomRedirectsDataSource_Filters(t *testing.T) {
 			{
 				Config: testAccCustomRedirectsDataSourceConfigFilters(name, "156.2.3.10"),
 				Check: resource.ComposeTestCheckFunc(
-					append([]resource.TestCheckFunc{
+					[]resource.TestCheckFunc{
 						testAccCheckCustomRedirectsExists(context.Background(), resourceName, &v),
-					}, testAccCheckCustomRedirectsResourceAttrPair(resourceName, dataSourceName)...)...,
+						testAccCheckCustomRedirectsResourceAttrPairWithIndexInOutput(resourceName, dataSourceName, "index"),
+					}...,
 				),
 			},
 		},
@@ -36,15 +39,35 @@ func TestAccCustomRedirectsDataSource_Filters(t *testing.T) {
 
 // below all TestAcc functions
 
-func testAccCheckCustomRedirectsResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
+func testAccCheckCustomRedirectsResourceAttrPair(resourceName, dataSourceName string, index int) []resource.TestCheckFunc {
+	resultKey := fmt.Sprintf("results.%d.", index)
 	return []resource.TestCheckFunc{
-		resource.TestCheckResourceAttrPair(resourceName, "created_time", dataSourceName, "results.0.created_time"),
-		resource.TestCheckResourceAttrPair(resourceName, "data", dataSourceName, "results.0.data"),
-		resource.TestCheckResourceAttrPair(resourceName, "id", dataSourceName, "results.0.id"),
-		resource.TestCheckResourceAttrPair(resourceName, "name", dataSourceName, "results.0.name"),
-		resource.TestCheckResourceAttrPair(resourceName, "policy_ids", dataSourceName, "results.0.policy_ids"),
-		resource.TestCheckResourceAttrPair(resourceName, "policy_names", dataSourceName, "results.0.policy_names"),
-		resource.TestCheckResourceAttrPair(resourceName, "updated_time", dataSourceName, "results.0.updated_time"),
+		resource.TestCheckResourceAttrPair(resourceName, "created_time", dataSourceName, resultKey+"created_time"),
+		resource.TestCheckResourceAttrPair(resourceName, "data", dataSourceName, resultKey+"data"),
+		resource.TestCheckResourceAttrPair(resourceName, "id", dataSourceName, resultKey+"id"),
+		resource.TestCheckResourceAttrPair(resourceName, "name", dataSourceName, resultKey+"name"),
+		resource.TestCheckResourceAttrPair(resourceName, "policy_ids", dataSourceName, resultKey+"policy_ids"),
+		resource.TestCheckResourceAttrPair(resourceName, "policy_names", dataSourceName, resultKey+"policy_names"),
+		resource.TestCheckResourceAttrPair(resourceName, "updated_time", dataSourceName, resultKey+"updated_time"),
+	}
+}
+
+func testAccCheckCustomRedirectsResourceAttrPairWithIndexInOutput(resourceName, dataSourceName, outputName string) resource.TestCheckFunc {
+	return func(state *terraform.State) error {
+		rs, ok := state.RootModule().Outputs[outputName]
+		if !ok {
+			return fmt.Errorf("not found: %s", outputName)
+		}
+		if rs.Type != "string" {
+			return fmt.Errorf("expected output %q to be of type string, got %q", outputName, rs.Type)
+		}
+		index, err := strconv.Atoi(rs.Value.(string))
+		if err != nil {
+			return fmt.Errorf("failed to parse output %q: %v", outputName, err)
+		}
+		return resource.ComposeTestCheckFunc(
+			testAccCheckCustomRedirectsResourceAttrPair(resourceName, dataSourceName, index)...,
+		)(state)
 	}
 }
 
@@ -55,9 +78,10 @@ resource "bloxone_td_custom_redirect" "test" {
 	data = %q
 }
 data "bloxone_td_custom_redirects" "test" {
-  filters = {
-	name = bloxone_td_custom_redirect.test.name
-  }
+	depends_on = [bloxone_td_custom_redirect.test]
+}
+output "index" {
+	value = index(data.bloxone_td_custom_redirects.test.results[*].name, bloxone_td_custom_redirect.test.name)
 }
 `, name, data)
 }

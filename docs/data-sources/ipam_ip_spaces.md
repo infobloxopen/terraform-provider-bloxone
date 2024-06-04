@@ -96,6 +96,7 @@ Read-Only:
 - `asm_scope_flag` (Number) The number of times the automated scope management usage limits have been exceeded for any of the subnets in this IP space.
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) The tags of the IP space in JSON format including default tags.
 - `threshold` (Attributes) (see [below for nested schema](#nestedatt--results--threshold))
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `utilization` (Attributes) (see [below for nested schema](#nestedatt--results--utilization))
@@ -211,7 +212,7 @@ Optional:
 - `min_unused` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--asm_config--min_unused))
 
 <a id="nestedatt--results--inheritance_sources--asm_config--asm_enable_block"></a>
-### Nested Schema for `results.inheritance_sources.asm_config.min_unused`
+### Nested Schema for `results.inheritance_sources.asm_config.asm_enable_block`
 
 Optional:
 
@@ -239,7 +240,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--asm_config--asm_growth_block"></a>
-### Nested Schema for `results.inheritance_sources.asm_config.min_unused`
+### Nested Schema for `results.inheritance_sources.asm_config.asm_growth_block`
 
 Optional:
 
@@ -266,7 +267,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--asm_config--asm_threshold"></a>
-### Nested Schema for `results.inheritance_sources.asm_config.min_unused`
+### Nested Schema for `results.inheritance_sources.asm_config.asm_threshold`
 
 Optional:
 
@@ -284,7 +285,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--asm_config--forecast_period"></a>
-### Nested Schema for `results.inheritance_sources.asm_config.min_unused`
+### Nested Schema for `results.inheritance_sources.asm_config.forecast_period`
 
 Optional:
 
@@ -302,7 +303,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--asm_config--history"></a>
-### Nested Schema for `results.inheritance_sources.asm_config.min_unused`
+### Nested Schema for `results.inheritance_sources.asm_config.history`
 
 Optional:
 
@@ -320,7 +321,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--asm_config--min_total"></a>
-### Nested Schema for `results.inheritance_sources.asm_config.min_unused`
+### Nested Schema for `results.inheritance_sources.asm_config.min_total`
 
 Optional:
 
@@ -536,7 +537,7 @@ Optional:
 - `lease_time_v6` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--lease_time_v6))
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--abandoned_reclaim_time"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.abandoned_reclaim_time`
 
 Optional:
 
@@ -554,7 +555,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--abandoned_reclaim_time_v6"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.abandoned_reclaim_time_v6`
 
 Optional:
 
@@ -572,7 +573,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--allow_unknown"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.allow_unknown`
 
 Optional:
 
@@ -590,7 +591,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--allow_unknown_v6"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.allow_unknown_v6`
 
 Optional:
 
@@ -608,7 +609,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--echo_client_id"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.echo_client_id`
 
 Optional:
 
@@ -626,7 +627,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--filters"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.filters`
 
 Optional:
 
@@ -644,7 +645,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--filters_v6"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.filters_v6`
 
 Optional:
 
@@ -662,7 +663,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--ignore_client_uid"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.ignore_client_uid`
 
 Optional:
 
@@ -680,7 +681,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--ignore_list"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.ignore_list`
 
 Optional:
 
@@ -710,7 +711,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--lease_time"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time`
 
 Optional:
 
@@ -784,7 +785,7 @@ Read-Only:
 - `overriding_group` (String) The resource identifier.
 
 <a id="nestedatt--results--inheritance_sources--dhcp_options--value--value--option"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_options.value.value.overriding_group`
+### Nested Schema for `results.inheritance_sources.dhcp_options.value.value.option`
 
 Read-Only:
 
@@ -837,7 +838,7 @@ Read-Only:
 - `overriding_group` (String) The resource identifier.
 
 <a id="nestedatt--results--inheritance_sources--dhcp_options_v6--value--value--option"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_options_v6.value.value.overriding_group`
+### Nested Schema for `results.inheritance_sources.dhcp_options_v6.value.value.option`
 
 Read-Only:
 

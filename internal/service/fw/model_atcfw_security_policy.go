@@ -2,6 +2,7 @@ package fw
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -39,6 +40,7 @@ type AtcfwSecurityPolicyModel struct {
 	Rules               types.List        `tfsdk:"rules"`
 	SafeSearch          types.Bool        `tfsdk:"safe_search"`
 	Tags                types.Map         `tfsdk:"tags"`
+	TagsAll             types.Map         `tfsdk:"tags_all"`
 	UpdatedTime         timetypes.RFC3339 `tfsdk:"updated_time"`
 	UserGroups          types.List        `tfsdk:"user_groups"`
 }
@@ -63,6 +65,7 @@ var AtcfwSecurityPolicyAttrTypes = map[string]attr.Type{
 	"rules":                 types.ListType{ElemType: types.ObjectType{AttrTypes: AtcfwSecurityPolicyRuleAttrTypes}},
 	"safe_search":           types.BoolType,
 	"tags":                  types.MapType{ElemType: types.StringType},
+	"tags_all":              types.MapType{ElemType: types.StringType},
 	"updated_time":          timetypes.RFC3339Type{},
 	"user_groups":           types.ListType{ElemType: types.StringType},
 }
@@ -182,6 +185,11 @@ var AtcfwSecurityPolicyResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "Enables tag support for resource where tags attribute contains user-defined key value pairs",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the security policy, including default tags.",
+	},
 	"updated_time": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
@@ -232,12 +240,13 @@ func (m *AtcfwSecurityPolicyModel) Expand(ctx context.Context, diags *diag.Diagn
 	return to
 }
 
-func FlattenAtcfwSecurityPolicy(ctx context.Context, from *fw.SecurityPolicy, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenAtcfwSecurityPolicy(ctx context.Context, from *fw.SecurityPolicy, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(AtcfwSecurityPolicyAttrTypes)
 	}
 	m := AtcfwSecurityPolicyModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, AtcfwSecurityPolicyAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -267,7 +276,7 @@ func (m *AtcfwSecurityPolicyModel) Flatten(ctx context.Context, from *fw.Securit
 	m.Precedence = flex.FlattenInt32Pointer(from.Precedence)
 	m.Rules = flex.FlattenFrameworkListNestedBlock(ctx, from.Rules, AtcfwSecurityPolicyRuleAttrTypes, diags, FlattenAtcfwSecurityPolicyRule)
 	m.SafeSearch = types.BoolPointerValue(from.SafeSearch)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedTime = timetypes.NewRFC3339TimePointerValue(from.UpdatedTime)
 	m.UserGroups = flex.FlattenFrameworkListString(ctx, from.UserGroups, diags)
 	m.Dfps = flex.FlattenFrameworkListInt32NotNull(ctx, from.Dfps, diags)
