@@ -299,7 +299,7 @@ Read-Only:
 - `zone` (String) The resource identifier.
 
 <a id="nestedatt--results--inheritance_sources--ddns_block--value--ddns_zones--nameservers"></a>
-### Nested Schema for `results.inheritance_sources.ddns_block.value.ddns_zones.zone`
+### Nested Schema for `results.inheritance_sources.ddns_block.value.ddns_zones.nameservers`
 
 Read-Only:
 
@@ -314,7 +314,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--ddns_block--value--ddns_zones--tsig_key"></a>
-### Nested Schema for `results.inheritance_sources.ddns_block.value.ddns_zones.zone`
+### Nested Schema for `results.inheritance_sources.ddns_block.value.ddns_zones.tsig_key`
 
 Read-Only:
 
@@ -484,7 +484,7 @@ Optional:
 - `lease_time_v6` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--lease_time_v6))
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--abandoned_reclaim_time"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.abandoned_reclaim_time`
 
 Optional:
 
@@ -502,7 +502,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--abandoned_reclaim_time_v6"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.abandoned_reclaim_time_v6`
 
 Optional:
 
@@ -520,7 +520,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--allow_unknown"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.allow_unknown`
 
 Optional:
 
@@ -538,7 +538,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--allow_unknown_v6"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.allow_unknown_v6`
 
 Optional:
 
@@ -556,7 +556,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--echo_client_id"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.echo_client_id`
 
 Optional:
 
@@ -574,7 +574,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--filters"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.filters`
 
 Optional:
 
@@ -592,7 +592,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--filters_v6"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.filters_v6`
 
 Optional:
 
@@ -610,7 +610,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--ignore_client_uid"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.ignore_client_uid`
 
 Optional:
 
@@ -628,7 +628,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--ignore_list"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.ignore_list`
 
 Optional:
 
@@ -658,7 +658,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--lease_time"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6`
+### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time`
 
 Optional:
 
@@ -732,7 +732,7 @@ Read-Only:
 - `overriding_group` (String) The resource identifier.
 
 <a id="nestedatt--results--inheritance_sources--dhcp_options--value--value--option"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_options.value.value.overriding_group`
+### Nested Schema for `results.inheritance_sources.dhcp_options.value.value.option`
 
 Read-Only:
 
@@ -785,7 +785,7 @@ Read-Only:
 - `overriding_group` (String) The resource identifier.
 
 <a id="nestedatt--results--inheritance_sources--dhcp_options_v6--value--value--option"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_options_v6.value.value.overriding_group`
+### Nested Schema for `results.inheritance_sources.dhcp_options_v6.value.value.option`
 
 Read-Only:
 

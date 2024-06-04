@@ -63,14 +63,17 @@ resource "bloxone_anycast_config" "example" {
 <a id="nestedatt--onprem_hosts"></a>
 ### Nested Schema for `onprem_hosts`
 
-Optional:
+Required:
 
 - `id` (Number) The resource identifier.
+
+Optional:
+
 - `ip_address` (String) IPv4 address of the host in string format
 - `ipv6_address` (String) IPv6 address of the host in string format
-- `name` (String) The name of the anycast.
 
 Read-Only:
 
+- `name` (String) The name of the anycast.
 - `ophid` (String) Unique 32-character string identifier assigned to the host
-- `runtime_status` (String)
+- `runtime_status` (String) The runtime status of the host

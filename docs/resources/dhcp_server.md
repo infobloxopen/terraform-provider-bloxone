@@ -307,7 +307,7 @@ Read-Only:
 - `server_principal` (String) The Kerberos principal name of the external DNS server that will receive updates.  Defaults to empty.
 
 <a id="nestedatt--inheritance_sources--ddns_block--value--ddns_zones"></a>
-### Nested Schema for `inheritance_sources.ddns_block.value.server_principal`
+### Nested Schema for `inheritance_sources.ddns_block.value.ddns_zones`
 
 Read-Only:
 
@@ -357,7 +357,7 @@ Read-Only:
 
 
 <a id="nestedatt--inheritance_sources--ddns_block--value--kerberos_keys"></a>
-### Nested Schema for `inheritance_sources.ddns_block.value.server_principal`
+### Nested Schema for `inheritance_sources.ddns_block.value.kerberos_keys`
 
 Read-Only:
 

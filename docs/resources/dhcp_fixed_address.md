@@ -4,7 +4,7 @@ page_title: "bloxone_dhcp_fixed_address Resource - terraform-provider-bloxone"
 subcategory: "IPAM/DHCP"
 description: |-
   Manages a Fixed Address.
-  The Fixed Address object reserves an address for a specific client. It must have a matchtype_ and a valid corresponding matchvalue_ so that it can match that client.
+  The Fixed Address object reserves an address for a specific client. It must have a match_type and a valid corresponding match_value so that it can match that client.
 ---
 
 # bloxone_dhcp_fixed_address (Resource)
