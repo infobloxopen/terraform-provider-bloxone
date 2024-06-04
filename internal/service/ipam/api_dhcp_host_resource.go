@@ -3,11 +3,10 @@ package ipam
 import (
 	"context"
 	"fmt"
-
 	"net/http"
-	"strings"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -43,6 +42,16 @@ func (r *DhcpHostResource) Schema(ctx context.Context, req resource.SchemaReques
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manages DHCP Hosts.\n\nA DHCP Host object associates a DHCP Config Profile with an on-prem host.",
 		Attributes:          IpamsvcHostResourceSchemaAttributes,
+		Blocks: map[string]schema.Block{
+			"timeouts": timeouts.Block(ctx, timeouts.Opts{
+				Create: true,
+			}),
+		},
+	}
+	// Add the "retry_if_not_found" attribute
+	resp.Schema.Attributes["retry_if_not_found"] = schema.BoolAttribute{
+		Optional:            true,
+		MarkdownDescription: "If set to `true`, the data source will retry until a matching host is found, or until the Read Timeout expires.",
 	}
 }
 
@@ -67,8 +76,7 @@ func (r *DhcpHostResource) Configure(ctx context.Context, req resource.Configure
 }
 
 func (r *DhcpHostResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data IpamsvcHostModel
-	var data2 IpamsvcHostModelWithFilter
+	var data IpamsvcHostModelWithRetryAndTimeouts
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -77,12 +85,33 @@ func (r *DhcpHostResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
-	readTimeout, diags := data2.Timeouts.Read(ctx, 20*time.Minute)
+	readTimeout, diags := data.Timeouts.Create(ctx, 20*time.Minute)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
 	err := retry.RetryContext(ctx, readTimeout, func() *retry.RetryError {
+		_, httpRes, err := r.client.IPAddressManagementAPI.
+			DhcpHostAPI.
+			Read(ctx, data.Id.ValueString()).
+			Execute()
+		if err != nil {
+			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
+				if data.RetryIfNotFound.ValueBool() {
+					return retry.RetryableError(err)
+				}
+				return retry.NonRetryableError(err)
+			}
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create DhcpHost, got error: %s", err))
+			return retry.NonRetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		return
+	}
+
+	err = retry.RetryContext(ctx, readTimeout, func() *retry.RetryError {
 		apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 			DhcpHostAPI.
 			Update(ctx, data.Id.ValueString()).
@@ -90,10 +119,10 @@ func (r *DhcpHostResource) Create(ctx context.Context, req resource.CreateReques
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
-				return nil
-			}
-			if strings.Contains(err.Error(), "record not found") {
-				return retry.RetryableError(err)
+				if data.RetryIfNotFound.ValueBool() {
+					return retry.RetryableError(err)
+				}
+				return retry.NonRetryableError(err)
 			}
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create DhcpHost, got error: %s", err))
 			return retry.NonRetryableError(err)
@@ -113,7 +142,7 @@ func (r *DhcpHostResource) Create(ctx context.Context, req resource.CreateReques
 }
 
 func (r *DhcpHostResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data IpamsvcHostModel
+	var data IpamsvcHostModelWithRetryAndTimeouts
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -143,7 +172,7 @@ func (r *DhcpHostResource) Read(ctx context.Context, req resource.ReadRequest, r
 }
 
 func (r *DhcpHostResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data IpamsvcHostModel
+	var data IpamsvcHostModelWithRetryAndTimeouts
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -170,7 +199,7 @@ func (r *DhcpHostResource) Update(ctx context.Context, req resource.UpdateReques
 }
 
 func (r *DhcpHostResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data IpamsvcHostModel
+	var data IpamsvcHostModelWithRetryAndTimeouts
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)

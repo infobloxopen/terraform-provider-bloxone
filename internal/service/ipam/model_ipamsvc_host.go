@@ -3,6 +3,7 @@ package ipam
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -29,6 +30,24 @@ type IpamsvcHostModel struct {
 	Server           types.String `tfsdk:"server"`
 	Tags             types.Map    `tfsdk:"tags"`
 	Type             types.String `tfsdk:"type"`
+}
+
+type IpamsvcHostModelWithRetryAndTimeouts struct {
+	Address          types.String   `tfsdk:"address"`
+	AnycastAddresses types.List     `tfsdk:"anycast_addresses"`
+	AssociatedServer types.Object   `tfsdk:"associated_server"`
+	Comment          types.String   `tfsdk:"comment"`
+	CurrentVersion   types.String   `tfsdk:"current_version"`
+	Id               types.String   `tfsdk:"id"`
+	IpSpace          types.String   `tfsdk:"ip_space"`
+	Name             types.String   `tfsdk:"name"`
+	Ophid            types.String   `tfsdk:"ophid"`
+	ProviderId       types.String   `tfsdk:"provider_id"`
+	Server           types.String   `tfsdk:"server"`
+	Tags             types.Map      `tfsdk:"tags"`
+	Type             types.String   `tfsdk:"type"`
+	RetryIfNotFound  types.Bool     `tfsdk:"retry_if_not_found"`
+	Timeouts         timeouts.Value `tfsdk:"timeouts"`
 }
 
 var IpamsvcHostAttrTypes = map[string]attr.Type{
@@ -133,6 +152,16 @@ func (m *IpamsvcHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) 
 	return to
 }
 
+func (m *IpamsvcHostModelWithRetryAndTimeouts) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.Host {
+	if m == nil {
+		return nil
+	}
+	to := &ipam.Host{
+		Server: flex.ExpandStringPointer(m.Server),
+	}
+	return to
+}
+
 func FlattenIpamsvcHost(ctx context.Context, from *ipam.Host, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcHostAttrTypes)
@@ -150,6 +179,27 @@ func (m *IpamsvcHostModel) Flatten(ctx context.Context, from *ipam.Host, diags *
 	}
 	if m == nil {
 		*m = IpamsvcHostModel{}
+	}
+	m.Address = flex.FlattenStringPointer(from.Address)
+	m.AnycastAddresses = flex.FlattenFrameworkListString(ctx, from.AnycastAddresses, diags)
+	m.AssociatedServer = FlattenIpamsvcHostAssociatedServer(ctx, from.AssociatedServer, diags)
+	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CurrentVersion = flex.FlattenStringPointer(from.CurrentVersion)
+	m.IpSpace = flex.FlattenStringPointer(from.IpSpace)
+	m.Name = flex.FlattenStringPointer(from.Name)
+	m.Ophid = flex.FlattenStringPointer(from.Ophid)
+	m.ProviderId = flex.FlattenStringPointer(from.ProviderId)
+	m.Server = flex.FlattenStringPointer(from.Server)
+	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.Type = flex.FlattenStringPointer(from.Type)
+}
+
+func (m *IpamsvcHostModelWithRetryAndTimeouts) Flatten(ctx context.Context, from *ipam.Host, diags *diag.Diagnostics) {
+	if from == nil {
+		return
+	}
+	if m == nil {
+		*m = IpamsvcHostModelWithRetryAndTimeouts{}
 	}
 	m.Address = flex.FlattenStringPointer(from.Address)
 	m.AnycastAddresses = flex.FlattenFrameworkListString(ctx, from.AnycastAddresses, diags)
