@@ -47,14 +47,14 @@ module "bloxone_infra_host_azure" {
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.0.0 |
-| <a name="requirement_bloxone"></a> [bloxone](#requirement\_bloxone) | >= 1.0.0 |
+| <a name="requirement_bloxone"></a> [bloxone](#requirement\_bloxone) | >= 1.1.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.0.0 |
-| <a name="provider_bloxone"></a> [bloxone](#provider\_bloxone) | >= 1.0.0 |
+| <a name="provider_bloxone"></a> [bloxone](#provider\_bloxone) | >= 1.1.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Resources
@@ -81,7 +81,7 @@ module "bloxone_infra_host_azure" {
 | <a name="input_plan_product"></a> [plan\_product](#input\_plan\_product) | The product to use for the BloxOne Host. | `string` | `"infoblox-bloxone-34"` | no |
 | <a name="input_plan_publisher"></a> [plan\_publisher](#input\_plan\_publisher) | The publisher to use for the BloxOne Host. | `string` | `"infoblox"` | no |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The name of the resource group in which the resources will be created | `string` | n/a | yes |
-| <a name="input_services"></a> [services](#input\_services) | The services to provision on the BloxOne Host. The services must be a map of valid service type with values of "start" or "stop". Valid service types are "dhcp" and "dns". | `map(string)` | n/a | yes |
+| <a name="input_services"></a> [services](#input\_services) | The services to provision on the BloxOne Host. The services must be a map of valid service type with values of "start" or "stop". Valid service types are "dhcp", "dns", "anycast", "dfp". | `map(string)` | n/a | yes |
 | <a name="input_source_image_reference_offer"></a> [source\_image\_reference\_offer](#input\_source\_image\_reference\_offer) | The offer of the image that you want to deploy | `string` | `"infoblox-bloxone-34"` | no |
 | <a name="input_source_image_reference_publisher"></a> [source\_image\_reference\_publisher](#input\_source\_image\_reference\_publisher) | The publisher of the image that you want to deploy | `string` | `"infoblox"` | no |
 | <a name="input_source_image_reference_sku"></a> [source\_image\_reference\_sku](#input\_source\_image\_reference\_sku) | The sku of the image that you want to deploy | `string` | `"infoblox-bloxone"` | no |
@@ -92,6 +92,7 @@ module "bloxone_infra_host_azure" {
 | <a name="input_vm_name"></a> [vm\_name](#input\_vm\_name) | The name of the virtual machine | `string` | n/a | yes |
 | <a name="input_vm_network_interface_ids"></a> [vm\_network\_interface\_ids](#input\_vm\_network\_interface\_ids) | The network interface ids that will be associated to the BloxOne Host | `list(string)` | n/a | yes |
 | <a name="input_vm_size"></a> [vm\_size](#input\_vm\_size) | Size of the Virtual Machine based on Azure sizing | `string` | `"Standard_F8s"` | no |
+| <a name="input_wait_for_state"></a> [wait\_for\_state](#input\_wait\_for\_state) | If set to `true`, the resource will wait for the desired state to be reached before returning. If set to `false`, the resource will return immediately after the request is sent to the API. | `bool` | `null` | no |
 
 ## Outputs
 

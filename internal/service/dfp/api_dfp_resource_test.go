@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
+
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
 	"github.com/infobloxopen/bloxone-go-client/dfp"
@@ -17,14 +18,13 @@ import (
 //TODO: add tests
 // The following require additional resource/data source objects to be supported.
 // - net_addr_policy_ids
-// - internal_domain_lists
 
 func TestAccDfpResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dfp_service.test"
 	var v dfp.Dfp
 	hostName := acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -54,7 +54,7 @@ func TestAccDfpResource_InternalDomainLists(t *testing.T) {
 	var v dfp.Dfp
 	hostName := acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -63,7 +63,8 @@ func TestAccDfpResource_InternalDomainLists(t *testing.T) {
 				Config: testAccDfpInternalDomainLists(hostName, "test1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDfpExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttrPair(resourceName, "internal_domain_lists.0", "bloxone_td_internal_domain_list.test1", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "internal_domain_lists.0", "data.bloxone_td_internal_domain_lists.default", "results.0.id"),
+					resource.TestCheckResourceAttrPair(resourceName, "internal_domain_lists.1", "bloxone_td_internal_domain_list.test1", "id"),
 				),
 			},
 			// Update and Read
@@ -71,7 +72,8 @@ func TestAccDfpResource_InternalDomainLists(t *testing.T) {
 				Config: testAccDfpInternalDomainLists(hostName, "test2"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDfpExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttrPair(resourceName, "internal_domain_lists.0", "bloxone_td_internal_domain_list.test2", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "internal_domain_lists.0", "data.bloxone_td_internal_domain_lists.default", "results.0.id"),
+					resource.TestCheckResourceAttrPair(resourceName, "internal_domain_lists.1", "bloxone_td_internal_domain_list.test2", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -84,7 +86,7 @@ func TestAccDfpResource_ResolversAll(t *testing.T) {
 	var v dfp.Dfp
 	hostName := acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -115,6 +117,38 @@ func TestAccDfpResource_ResolversAll(t *testing.T) {
 	})
 }
 
+func TestAccDfpResource_ResolversAll_Protocols_Multiple(t *testing.T) {
+	resourceName := "bloxone_dfp_service.test_resolvers_all_protocols_multiple"
+	var v dfp.Dfp
+	hostName := acctest.RandomNameWithPrefix("host")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccDfpResolverAllProtocolMultiple(hostName, []string{"DO53", "DOT"}),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDfpExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "resolvers_all.0.protocols.0", "DO53"),
+					resource.TestCheckResourceAttr(resourceName, "resolvers_all.0.protocols.1", "DOT"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccDfpResolverAllProtocolMultiple(hostName, []string{"DOT", "DO53"}),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDfpExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "resolvers_all.0.protocols.0", "DOT"),
+					resource.TestCheckResourceAttr(resourceName, "resolvers_all.0.protocols.1", "DO53"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func testAccCheckDfpExists(ctx context.Context, resourceName string, v *dfp.Dfp) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
@@ -137,30 +171,31 @@ func testAccCheckDfpExists(ctx context.Context, resourceName string, v *dfp.Dfp)
 	}
 }
 
-func testAccBaseWithInfraService(hostName string) string {
+func testAccBaseWithInfraService(hostName, serviceType string) string {
 	return fmt.Sprintf(`
 resource "bloxone_infra_host" "test_host" {
-	display_name = %q
+	display_name = %[1]q
 }
 
 resource "bloxone_infra_service" "example" {
-	name = "example_dfp_service"
+	name = "%[1]s-%[2]s"
 	pool_id = bloxone_infra_host.test_host.pool_id
-	service_type = "dfp"
+	service_type = "%[2]s"
 	desired_state = "start"
 	wait_for_state = false
 	depends_on = [bloxone_infra_host.test_host]
 }
-`, hostName)
+`, hostName, serviceType)
 }
 
 func testAccDfpBasicConfig(hostName string) string {
 	config := `
 resource "bloxone_dfp_service" "test" {
 	service_id = bloxone_infra_service.example.id
+	internal_domain_lists=[one(data.bloxone_td_internal_domain_lists.default.results).id]
 }
 `
-	return strings.Join([]string{testAccBaseWithInfraService(hostName), config}, "")
+	return strings.Join([]string{testAccBaseDfp(hostName), config}, "")
 }
 
 func testAccDfpInternalDomainLists(hostName, internalDomainList string) string {
@@ -178,16 +213,17 @@ resource "bloxone_td_internal_domain_list" "test2" {
 }
 resource "bloxone_dfp_service" "test_internal_domain_lists" {
 	service_id = bloxone_infra_service.example.id
-	internal_domain_lists = [ bloxone_td_internal_domain_list.%s.id ]
+	internal_domain_lists = [one(data.bloxone_td_internal_domain_lists.default.results).id, bloxone_td_internal_domain_list.%s.id ]
 }
 `, list1, list2, internalDomainList)
-	return strings.Join([]string{testAccBaseWithInfraService(hostName), config}, "")
+	return strings.Join([]string{testAccBaseDfp(hostName), config}, "")
 }
 
 func testAccDfpResolverAll(hostName, resolverAddress, isFallback, isLocal, protocols string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dfp_service" "test_resolvers_all" {
-  service_id = bloxone_infra_service.example.id
+	service_id = bloxone_infra_service.example.id
+	internal_domain_lists = [one(data.bloxone_td_internal_domain_lists.default.results).id]
 	resolvers_all = [
 		{
 			address = %q
@@ -198,5 +234,42 @@ resource "bloxone_dfp_service" "test_resolvers_all" {
 	]
 }
 `, resolverAddress, isFallback, isLocal, protocols)
-	return strings.Join([]string{testAccBaseWithInfraService(hostName), config}, "")
+	return strings.Join([]string{testAccBaseDfp(hostName), config}, "")
+}
+
+func testAccDfpResolverAllProtocolMultiple(hostName string, protocols []string) string {
+	protocolsStr := ""
+	for i, protocol := range protocols {
+		if i > 0 {
+			protocolsStr += ","
+		}
+		protocolsStr += fmt.Sprintf(`%q`, protocol)
+	}
+
+	config := fmt.Sprintf(`
+resource "bloxone_dfp_service" "test_resolvers_all_protocols_multiple" {
+	service_id = bloxone_infra_service.example.id
+	internal_domain_lists = [one(data.bloxone_td_internal_domain_lists.default.results).id]
+	resolvers_all = [
+		{
+			address = "2.2.2.2"
+			is_fallback = "false"
+			is_local = "true"
+			protocols = [%s]
+		}
+	]
+}
+`, protocolsStr)
+	return strings.Join([]string{testAccBaseDfp(hostName), config}, "")
+}
+
+func testAccBaseDfp(hostName string) string {
+	// This is a workaround, ideally it would be nice to have the default internal domain list in the provider
+	config := `
+data "bloxone_td_internal_domain_lists" "default" {
+	filters = {
+		is_default = true
+	}
+}`
+	return strings.Join([]string{testAccBaseWithInfraService(hostName, "dfp"), config}, "")
 }

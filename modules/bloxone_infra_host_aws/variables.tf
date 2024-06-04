@@ -1,13 +1,13 @@
 variable "join_token" {
   description = "The join token to use for the BloxOne Host. If not provided, a join token will be created."
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "ami" {
   description = "The AMI to use for the BloxOne Host. If not provided, the latest AMI will be used."
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "instance_type" {
@@ -44,10 +44,10 @@ variable "aws_instance_tags" {
 }
 
 variable "services" {
-  description = "The services to provision on the BloxOne Host. The services must be a map of valid service type with values of \"start\" or \"stop\". Valid service types are \"dhcp\" and \"dns\"."
+  description = "The services to provision on the BloxOne Host. The services must be a map of valid service type with values of \"start\" or \"stop\". Valid service types are \"dhcp\", \"dns\", \"anycast\", \"dfp\"."
   type        = map(string)
   validation {
-    condition     = length(keys(var.services)) == length([for k in keys(var.services) : k if contains(["dhcp", "dns"], k)]) && alltrue([for v in values(var.services) : contains(["start", "stop"], v)])
+    condition     = length(keys(var.services)) == length([for k in keys(var.services) : k if contains(["dhcp", "dns", "anycast", "dfp"], k)]) && alltrue([for v in values(var.services) : contains(["start", "stop"], v)])
     error_message = "services must be a map of valid service type with values of start or stop"
   }
 }
@@ -60,4 +60,10 @@ variable "timeouts" {
     read   = string
   })
   default = null
+}
+
+variable "wait_for_state" {
+  description = "If set to `true`, the resource will wait for the desired state to be reached before returning. If set to `false`, the resource will return immediately after the request is sent to the API."
+  type        = bool
+  default     = null
 }

@@ -35,6 +35,7 @@ data "bloxone_anycast_configs" "example_all" {
 
 ### Optional
 
+- `filters` (Map of String) Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.
 - `host_id` (Number) Filter by host ID.
 - `is_configured` (Boolean) Filter by configuration status.
 - `service` (String) Filter by service type.
@@ -73,14 +74,17 @@ Read-Only:
 <a id="nestedatt--results--onprem_hosts"></a>
 ### Nested Schema for `results.onprem_hosts`
 
-Optional:
+Required:
 
 - `id` (Number) The resource identifier.
+
+Optional:
+
 - `ip_address` (String) IPv4 address of the host in string format
 - `ipv6_address` (String) IPv6 address of the host in string format
-- `name` (String) The name of the anycast.
 
 Read-Only:
 
+- `name` (String) The name of the anycast.
 - `ophid` (String) Unique 32-character string identifier assigned to the host
-- `runtime_status` (String)
+- `runtime_status` (String) The runtime status of the host

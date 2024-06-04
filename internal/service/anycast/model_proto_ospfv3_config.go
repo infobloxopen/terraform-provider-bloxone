@@ -40,23 +40,28 @@ var ProtoOspfv3ConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "OSPF area identifier; usually in the format of an IPv4 address (although not an address itself)",
 	},
 	"cost": schema.Int64Attribute{
-		Optional: true,
+		Optional:            true,
+		MarkdownDescription: `Explicit link cost for the interface.`,
 	},
 	"dead_interval": schema.Int64Attribute{
-		Optional: true,
+		Optional:            true,
+		MarkdownDescription: `OSPF router dead interval timer in seconds; must be the same for all the routers on the same network; default: 40 sec.`,
 	},
 	"hello_interval": schema.Int64Attribute{
-		Optional: true,
+		Optional:            true,
+		MarkdownDescription: `Period (in seconds) of OSPF Hello packet, sent by the OSPF router; must be the same for all the routers on the same network; default: 10 secs.`,
 	},
 	"interface": schema.StringAttribute{
 		Optional:            true,
 		MarkdownDescription: "Name of the interface that is configured with external IP address of the host",
 	},
 	"retransmit_interval": schema.Int64Attribute{
-		Optional: true,
+		Optional:            true,
+		MarkdownDescription: `Period (in seconds) of retransmitting for OSPF Database Description and Link State Requests; default: 5 seconds.`,
 	},
 	"transmit_delay": schema.Int64Attribute{
-		Optional: true,
+		Optional:            true,
+		MarkdownDescription: `Estimated time to transmit link state advertisements; default: 1 sec.`,
 	},
 }
 

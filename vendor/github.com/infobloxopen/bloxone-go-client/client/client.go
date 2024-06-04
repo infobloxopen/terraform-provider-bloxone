@@ -11,6 +11,8 @@ import (
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 	"github.com/infobloxopen/bloxone-go-client/keys"
 	"github.com/infobloxopen/bloxone-go-client/option"
+	"github.com/infobloxopen/bloxone-go-client/redirect"
+	"github.com/infobloxopen/bloxone-go-client/upgradepolicy"
 )
 
 // APIClient is an aggregation of different BloxOne API clients.
@@ -24,6 +26,8 @@ type APIClient struct {
 	DNSForwardingProxyAPI  *dfp.APIClient
 	FWAPI                  *fw.APIClient
 	AnycastAPI             *anycast.APIClient
+	RedirectAPI            *redirect.APIClient
+	UpgradePolicyClientAPI *upgradepolicy.APIClient
 }
 
 // NewAPIClient creates a new BloxOne API Client.
@@ -38,6 +42,7 @@ type APIClient struct {
 // - DNSForwardingProxyAPI
 // - FWAPI
 // - AnycastAPI
+// - UpgradePolicyClientAPI
 //
 // The client can be configured with a variadic option. The following options are available:
 // - WithClientName(string) sets the name of the client using the SDK.
@@ -57,5 +62,7 @@ func NewAPIClient(options ...option.ClientOption) *APIClient {
 		DNSForwardingProxyAPI:  dfp.NewAPIClient(options...),
 		FWAPI:                  fw.NewAPIClient(options...),
 		AnycastAPI:             anycast.NewAPIClient(options...),
+		RedirectAPI:            redirect.NewAPIClient(options...),
+		UpgradePolicyClientAPI: upgradepolicy.NewAPIClient(options...),
 	}
 }

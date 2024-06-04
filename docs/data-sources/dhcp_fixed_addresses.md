@@ -4,7 +4,7 @@ page_title: "bloxone_dhcp_fixed_addresses Data Source - terraform-provider-bloxo
 subcategory: "IPAM/DHCP"
 description: |-
   Retrieves information about existing Fixed Addresses.
-  The Fixed Address object reserves an address for a specific client. It must have a matchtype_ and a valid corresponding matchvalue_ so that it can match that client.
+  The Fixed Address object reserves an address for a specific client. It must have a match_type and a valid corresponding match_value so that it can match that client.
 ---
 
 # bloxone_dhcp_fixed_addresses (Data Source)
@@ -145,7 +145,7 @@ Read-Only:
 - `overriding_group` (String) The resource identifier.
 
 <a id="nestedatt--results--inheritance_sources--dhcp_options--value--value--option"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_options.value.value.overriding_group`
+### Nested Schema for `results.inheritance_sources.dhcp_options.value.value.option`
 
 Read-Only:
 

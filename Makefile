@@ -3,8 +3,8 @@ HOSTNAME=registry.terraform.io
 NAMESPACE=infobloxopen
 NAME=bloxone
 BINARY=terraform-provider-${NAME}
-VERSION=1.0.0
-OS_ARCH=linux_amd64
+VERSION=1.2.0
+OS_ARCH=$(shell uname -s | tr '[:upper:]' '[:lower:]')_$(shell uname -m)
 MODULES_DIR=./modules
 TERRAFORM_DOCS_IMAGE=quay.io/terraform-docs/terraform-docs:0.17.0
 
