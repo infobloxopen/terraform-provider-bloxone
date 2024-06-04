@@ -76,6 +76,7 @@ Read-Only:
 - `ophid` (String) The on-prem host ID.
 - `provider_id` (String) External provider identifier.
 - `tags` (Map of String) The tags of the on-prem host in JSON format.
+- `tags_all` (Map of String) The tags of the on-prem host in JSON format including default tags.
 - `type` (String) Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services.  * _microsoft_active_directory_: host type is Microsoft Active Directory.
 
 <a id="nestedatt--results--associated_server"></a>

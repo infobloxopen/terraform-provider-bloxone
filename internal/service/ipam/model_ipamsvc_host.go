@@ -47,6 +47,7 @@ type IpamsvcHostModelWithRetryAndTimeouts struct {
 	ProviderId       types.String   `tfsdk:"provider_id"`
 	Server           types.String   `tfsdk:"server"`
 	Tags             types.Map      `tfsdk:"tags"`
+	TagsAll          types.Map      `tfsdk:"tags_all"`
 	Type             types.String   `tfsdk:"type"`
 	RetryIfNotFound  types.Bool     `tfsdk:"retry_if_not_found"`
 	Timeouts         timeouts.Value `tfsdk:"timeouts"`
@@ -196,6 +197,11 @@ var IpamsvcHostResourceSchemaAttributesWithRetryAndTimeouts = map[string]schema.
 		Computed:            true,
 		MarkdownDescription: "The tags of the on-prem host in JSON format.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags of the on-prem host in JSON format including default tags.",
+	},
 	"type": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: "Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services.  * _microsoft_active_directory_: host type is Microsoft Active Directory.",
@@ -268,6 +274,7 @@ func (m *IpamsvcHostModel) Flatten(ctx context.Context, from *ipam.Host, diags *
 	m.ProviderId = flex.FlattenStringPointer(from.ProviderId)
 	m.Server = flex.FlattenStringPointer(from.Server)
 	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Type = flex.FlattenStringPointer(from.Type)
 }
 
