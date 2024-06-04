@@ -41,17 +41,12 @@ func (r *DhcpHostResource) Metadata(ctx context.Context, req resource.MetadataRe
 func (r *DhcpHostResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manages DHCP Hosts.\n\nA DHCP Host object associates a DHCP Config Profile with an on-prem host.",
-		Attributes:          IpamsvcHostResourceSchemaAttributes,
+		Attributes:          IpamsvcHostResourceSchemaAttributesWithRetryAndTimeouts,
 		Blocks: map[string]schema.Block{
 			"timeouts": timeouts.Block(ctx, timeouts.Opts{
 				Create: true,
 			}),
 		},
-	}
-	// Add the "retry_if_not_found" attribute
-	resp.Schema.Attributes["retry_if_not_found"] = schema.BoolAttribute{
-		Optional:            true,
-		MarkdownDescription: "If set to `true`, the data source will retry until a matching host is found, or until the Read Timeout expires.",
 	}
 }
 

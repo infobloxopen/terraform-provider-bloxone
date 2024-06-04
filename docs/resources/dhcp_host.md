@@ -45,6 +45,11 @@ resource "bloxone_dhcp_host" "example_dhcp_host" {
 - `id` (String) The resource identifier.
 - `server` (String) The resource identifier.
 
+### Optional
+
+- `retry_if_not_found` (Boolean) If set to `true`, the resource will retry until a matching host is found, or until the Create Timeout expires.
+- `timeouts` (Block, Optional) (see [below for nested schema](#nestedblock--timeouts))
+
 ### Read-Only
 
 - `address` (String) The primary IP address of the on-prem host.
@@ -58,6 +63,14 @@ resource "bloxone_dhcp_host" "example_dhcp_host" {
 - `provider_id` (String) External provider identifier.
 - `tags` (Map of String) The tags of the on-prem host in JSON format.
 - `type` (String) Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services.  * _microsoft_active_directory_: host type is Microsoft Active Directory.
+
+<a id="nestedblock--timeouts"></a>
+### Nested Schema for `timeouts`
+
+Optional:
+
+- `create` (String) A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+
 
 <a id="nestedatt--associated_server"></a>
 ### Nested Schema for `associated_server`

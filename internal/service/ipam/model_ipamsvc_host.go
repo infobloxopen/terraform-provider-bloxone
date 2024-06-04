@@ -130,6 +130,74 @@ var IpamsvcHostResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
+var IpamsvcHostResourceSchemaAttributesWithRetryAndTimeouts = map[string]schema.Attribute{
+	"address": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The primary IP address of the on-prem host.",
+	},
+	"anycast_addresses": schema.ListAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "Anycast address configured to the host. Order is not significant.",
+	},
+	"associated_server": schema.SingleNestedAttribute{
+		Attributes:          IpamsvcHostAssociatedServerResourceSchemaAttributes,
+		Computed:            true,
+		MarkdownDescription: "The DHCP Config Profile for the on-prem host.",
+	},
+	"comment": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The description for the on-prem host.",
+	},
+	"current_version": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "Current dhcp application version of the host.",
+	},
+	"id": schema.StringAttribute{
+		Required:            true,
+		MarkdownDescription: "The resource identifier.",
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+		},
+	},
+	"ip_space": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
+	},
+	"name": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The display name of the on-prem host.",
+	},
+	"ophid": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The on-prem host ID.",
+	},
+	"provider_id": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "External provider identifier.",
+	},
+	"server": schema.StringAttribute{
+		Required: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
+		MarkdownDescription: "The resource identifier.",
+	},
+	"tags": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags of the on-prem host in JSON format.",
+	},
+	"type": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services.  * _microsoft_active_directory_: host type is Microsoft Active Directory.",
+	},
+	"retry_if_not_found": schema.BoolAttribute{
+		Optional:            true,
+		MarkdownDescription: "If set to `true`, the resource will retry until a matching host is found, or until the Create Timeout expires.",
+	},
+}
+
 func ExpandIpamsvcHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.Host {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
