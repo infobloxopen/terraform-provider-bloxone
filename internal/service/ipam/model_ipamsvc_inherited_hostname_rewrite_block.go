@@ -52,7 +52,7 @@ var IpamsvcInheritedHostnameRewriteBlockResourceSchemaAttributes = map[string]sc
 	},
 }
 
-func ExpandIpamsvcInheritedHostnameRewriteBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcInheritedHostnameRewriteBlock {
+func ExpandIpamsvcInheritedHostnameRewriteBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.InheritedHostnameRewriteBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -64,17 +64,17 @@ func ExpandIpamsvcInheritedHostnameRewriteBlock(ctx context.Context, o types.Obj
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcInheritedHostnameRewriteBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcInheritedHostnameRewriteBlock {
+func (m *IpamsvcInheritedHostnameRewriteBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.InheritedHostnameRewriteBlock {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcInheritedHostnameRewriteBlock{
+	to := &ipam.InheritedHostnameRewriteBlock{
 		Action: m.Action.ValueStringPointer(),
 	}
 	return to
 }
 
-func FlattenIpamsvcInheritedHostnameRewriteBlock(ctx context.Context, from *ipam.IpamsvcInheritedHostnameRewriteBlock, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcInheritedHostnameRewriteBlock(ctx context.Context, from *ipam.InheritedHostnameRewriteBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcInheritedHostnameRewriteBlockAttrTypes)
 	}
@@ -85,7 +85,7 @@ func FlattenIpamsvcInheritedHostnameRewriteBlock(ctx context.Context, from *ipam
 	return t
 }
 
-func (m *IpamsvcInheritedHostnameRewriteBlockModel) Flatten(ctx context.Context, from *ipam.IpamsvcInheritedHostnameRewriteBlock, diags *diag.Diagnostics) {
+func (m *IpamsvcInheritedHostnameRewriteBlockModel) Flatten(ctx context.Context, from *ipam.InheritedHostnameRewriteBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

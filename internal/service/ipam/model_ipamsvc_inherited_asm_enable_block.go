@@ -52,7 +52,7 @@ var IpamsvcInheritedAsmEnableBlockResourceSchemaAttributes = map[string]schema.A
 	},
 }
 
-func ExpandIpamsvcInheritedAsmEnableBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcInheritedAsmEnableBlock {
+func ExpandIpamsvcInheritedAsmEnableBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.InheritedAsmEnableBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -64,17 +64,17 @@ func ExpandIpamsvcInheritedAsmEnableBlock(ctx context.Context, o types.Object, d
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcInheritedAsmEnableBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcInheritedAsmEnableBlock {
+func (m *IpamsvcInheritedAsmEnableBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.InheritedAsmEnableBlock {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcInheritedAsmEnableBlock{
+	to := &ipam.InheritedAsmEnableBlock{
 		Action: m.Action.ValueStringPointer(),
 	}
 	return to
 }
 
-func FlattenIpamsvcInheritedAsmEnableBlock(ctx context.Context, from *ipam.IpamsvcInheritedAsmEnableBlock, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcInheritedAsmEnableBlock(ctx context.Context, from *ipam.InheritedAsmEnableBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcInheritedAsmEnableBlockAttrTypes)
 	}
@@ -85,7 +85,7 @@ func FlattenIpamsvcInheritedAsmEnableBlock(ctx context.Context, from *ipam.Ipams
 	return t
 }
 
-func (m *IpamsvcInheritedAsmEnableBlockModel) Flatten(ctx context.Context, from *ipam.IpamsvcInheritedAsmEnableBlock, diags *diag.Diagnostics) {
+func (m *IpamsvcInheritedAsmEnableBlockModel) Flatten(ctx context.Context, from *ipam.InheritedAsmEnableBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

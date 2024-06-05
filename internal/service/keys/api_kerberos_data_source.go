@@ -101,7 +101,7 @@ func (d *KerberosDataSource) Read(ctx context.Context, req datasource.ReadReques
 	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]keys.KerberosKey, error) {
 		apiRes, _, err := d.client.KeysAPI.
 			KerberosAPI.
-			KerberosList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

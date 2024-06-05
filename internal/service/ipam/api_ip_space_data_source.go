@@ -37,11 +37,11 @@ type IpamsvcIPSpaceModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *IpamsvcIPSpaceModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamsvcIPSpace, diags *diag.Diagnostics) {
+func (m *IpamsvcIPSpaceModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IPSpace, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcIPSpaceAttrTypes, diags, FlattenIpamsvcIPSpace)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcIPSpaceAttrTypes, diags, FlattenIpamsvcIPSpaceDataSource)
 }
 
 func (d *IpSpaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -98,10 +98,10 @@ func (d *IpSpaceDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IpamsvcIPSpace, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IPSpace, error) {
 		apiRes, _, err := d.client.IPAddressManagementAPI.
 			IpSpaceAPI.
-			IpSpaceList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

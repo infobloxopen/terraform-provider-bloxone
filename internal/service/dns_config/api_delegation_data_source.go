@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
@@ -37,11 +37,11 @@ type ConfigDelegationModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *ConfigDelegationModelWithFilter) FlattenResults(ctx context.Context, from []dns_config.ConfigDelegation, diags *diag.Diagnostics) {
+func (m *ConfigDelegationModelWithFilter) FlattenResults(ctx context.Context, from []dnsconfig.Delegation, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigDelegationAttrTypes, diags, FlattenConfigDelegation)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigDelegationAttrTypes, diags, DataSourceFlattenConfigDelegation)
 }
 
 func (d *DelegationDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -98,10 +98,10 @@ func (d *DelegationDataSource) Read(ctx context.Context, req datasource.ReadRequ
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]dns_config.ConfigDelegation, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]dnsconfig.Delegation, error) {
 		apiRes, _, err := d.client.DNSConfigurationAPI.
 			DelegationAPI.
-			DelegationList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

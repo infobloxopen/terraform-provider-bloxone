@@ -37,11 +37,11 @@ type IpamsvcServerModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *IpamsvcServerModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamsvcServer, diags *diag.Diagnostics) {
+func (m *IpamsvcServerModelWithFilter) FlattenResults(ctx context.Context, from []ipam.Server, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcServerAttrTypes, diags, FlattenIpamsvcServer)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcServerAttrTypes, diags, FlattenIpamsvcServerDataSource)
 }
 
 func (d *ServerDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -98,10 +98,10 @@ func (d *ServerDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IpamsvcServer, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.Server, error) {
 		apiRes, _, err := d.client.IPAddressManagementAPI.
 			ServerAPI.
-			ServerList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

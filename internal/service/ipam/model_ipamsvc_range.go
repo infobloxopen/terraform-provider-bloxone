@@ -41,6 +41,7 @@ type IpamsvcRangeModel struct {
 	Space                    types.String      `tfsdk:"space"`
 	Start                    types.String      `tfsdk:"start"`
 	Tags                     types.Map         `tfsdk:"tags"`
+	TagsAll                  types.Map         `tfsdk:"tags_all"`
 	Threshold                types.Object      `tfsdk:"threshold"`
 	UpdatedAt                timetypes.RFC3339 `tfsdk:"updated_at"`
 	Utilization              types.Object      `tfsdk:"utilization"`
@@ -66,6 +67,7 @@ var IpamsvcRangeAttrTypes = map[string]attr.Type{
 	"space":                      types.StringType,
 	"start":                      types.StringType,
 	"tags":                       types.MapType{ElemType: types.StringType},
+	"tags_all":                   types.MapType{ElemType: types.StringType},
 	"threshold":                  types.ObjectType{AttrTypes: IpamsvcUtilizationThresholdAttrTypes},
 	"updated_at":                 timetypes.RFC3339Type{},
 	"utilization":                types.ObjectType{AttrTypes: IpamsvcUtilizationAttrTypes},
@@ -183,6 +185,11 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "The tags for the range in JSON format.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the range in JSON format including default tags.",
+	},
 	"threshold": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationThresholdResourceSchemaAttributes,
 		Computed:   true,
@@ -202,7 +209,7 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcRange(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcRange {
+func ExpandIpamsvcRange(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.Range {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -214,11 +221,11 @@ func ExpandIpamsvcRange(ctx context.Context, o types.Object, diags *diag.Diagnos
 	return m.Expand(ctx, diags, true)
 }
 
-func (m *IpamsvcRangeModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcRange {
+func (m *IpamsvcRangeModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.Range {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcRange{
+	to := &ipam.Range{
 		End:                flex.ExpandString(m.End),
 		Start:              flex.ExpandString(m.Start),
 		Comment:            flex.ExpandStringPointer(m.Comment),
@@ -242,18 +249,19 @@ func (m *IpamsvcRangeModel) Expand(ctx context.Context, diags *diag.Diagnostics,
 	return to
 }
 
-func FlattenIpamsvcRange(ctx context.Context, from *ipam.IpamsvcRange, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcRangeDataSource(ctx context.Context, from *ipam.Range, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcRangeAttrTypes)
 	}
 	m := IpamsvcRangeModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcRangeAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *IpamsvcRangeModel) Flatten(ctx context.Context, from *ipam.IpamsvcRange, diags *diag.Diagnostics) {
+func (m *IpamsvcRangeModel) Flatten(ctx context.Context, from *ipam.Range, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
@@ -277,7 +285,7 @@ func (m *IpamsvcRangeModel) Flatten(ctx context.Context, from *ipam.IpamsvcRange
 	m.Protocol = flex.FlattenStringPointer(from.Protocol)
 	m.Space = flex.FlattenStringPointer(from.Space)
 	m.Start = flex.FlattenString(from.Start)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Threshold = FlattenIpamsvcUtilizationThreshold(ctx, from.Threshold, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.Utilization = FlattenIpamsvcUtilization(ctx, from.Utilization, diags)

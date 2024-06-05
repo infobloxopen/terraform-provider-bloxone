@@ -16,15 +16,17 @@ The HA Group object represents on-prem hosts that can serve the same leases for 
 ## Example Usage
 
 ```terraform
+# Get first host for the HA group.
 data "bloxone_dhcp_hosts" "example_host_1" {
   filters = {
-    name = "Your Host name"
+    name = "Host-1"
   }
 }
 
+# Get second host for the HA group.
 data "bloxone_dhcp_hosts" "example_host_2" {
   filters = {
-    name = "Your host name"
+    name = "Host-2"
   }
 }
 
@@ -47,6 +49,48 @@ resource "bloxone_dhcp_ha_group" "example_tags" {
   tags = {
     location = "site1"
   }
+}
+```
+
+## Example Usage For Ancyast
+
+```terraform
+# Get first host for the HA group.
+# This host must have 'Anycast' enabled.
+data "bloxone_dhcp_hosts" "example_host_1" {
+  filters = {
+    name = "Host-1"
+  }
+}
+
+# Get second host for the HA group.
+# This host must have 'Anycast' enabled.
+data "bloxone_dhcp_hosts" "example_host_2" {
+  filters = {
+    name = "Host-2"
+  }
+}
+
+# Get the Anycast configuration for the service
+data "bloxone_anycast_configs" "example_service" {
+  service = "DHCP"
+}
+
+resource "bloxone_dhcp_ha_group" "example_anycast" {
+  name              = "example_ha_group_anycast"
+  mode              = "anycast"
+  anycast_config_id = format("accm/ac_configs/%s", data.bloxone_anycast_configs.example_service.results.0.id)
+
+  hosts = [
+    {
+      host = data.bloxone_dhcp_hosts.example_host_1.results.0.id,
+      role = "active"
+    },
+    {
+      host = data.bloxone_dhcp_hosts.example_host_2.results.0.id,
+      role = "passive"
+    }
+  ]
 }
 ```
 
@@ -75,6 +119,7 @@ resource "bloxone_dhcp_ha_group" "example_tags" {
 - `id` (String) The resource identifier.
 - `ip_space` (String) The resource identifier.
 - `status` (String) Status of the HA group. This field is set when the _collect_stats_ is set to _true_ in the _GET_ _/dhcp/ha_group_ request.
+- `tags_all` (Map of String) The tags for the HA group including default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 
 <a id="nestedatt--hosts"></a>

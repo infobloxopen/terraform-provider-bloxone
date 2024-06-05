@@ -15,7 +15,7 @@ import (
 func TestAccAddressBlockDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_address_blocks.test"
 	resourceName := "bloxone_ipam_address_block.test"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -38,7 +38,7 @@ func TestAccAddressBlockDataSource_Filters(t *testing.T) {
 func TestAccAddressBlockDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_address_blocks.test"
 	resourceName := "bloxone_ipam_address_block.test"
-	var v ipam.IpamsvcAddressBlock
+	var v ipam.AddressBlock
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
 
 	resource.ParallelTest(t, resource.TestCase{

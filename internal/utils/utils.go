@@ -3,6 +3,7 @@ package utils
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -321,4 +322,39 @@ func ToComputedAttribute(name string, val resourceschema.Attribute) resourcesche
 
 	tflog.Error(context.Background(), fmt.Sprintf("Failed to convert schema attribute of type '%T' for '%s'", val, name))
 	return nil
+}
+
+func ExtractResourceId(id string) string {
+	v := strings.SplitN(strings.Trim(id, "/"), "/", 3)
+	switch len(v) {
+	case 1:
+		return v[0] // c will return c
+	case 2:
+		return v[1] // b/c will return c
+	case 3:
+		return v[2] // a/b/c will return c
+	default:
+		return id
+	}
+}
+
+// DefaultTagsHandler converts default_tags attribute to map[string]string
+// supports only string values
+func DefaultTagsHandler(m map[string]interface{}, d *diag.Diagnostics) map[string]string {
+	newMap := make(map[string]string, len(m))
+	for key, value := range m {
+		strValue := ""
+
+		switch v := value.(type) {
+		case string:
+			strValue = v
+		default:
+			d.AddError("Client error", fmt.Sprintf("Invalid type '%v' for default_tags %s value, only string supported", v, key))
+			continue
+		}
+
+		newMap[key] = strValue
+	}
+
+	return newMap
 }

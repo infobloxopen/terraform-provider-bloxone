@@ -68,7 +68,7 @@ func (r *OptionGroupResource) Create(ctx context.Context, req resource.CreateReq
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		OptionGroupAPI.
-		OptionGroupCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
 		Execute()
 	if err != nil {
@@ -95,7 +95,7 @@ func (r *OptionGroupResource) Read(ctx context.Context, req resource.ReadRequest
 
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		OptionGroupAPI.
-		OptionGroupRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *OptionGroupResource) Update(ctx context.Context, req resource.UpdateReq
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		OptionGroupAPI.
-		OptionGroupUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *OptionGroupResource) Delete(ctx context.Context, req resource.DeleteReq
 
 	httpRes, err := r.client.IPAddressManagementAPI.
 		OptionGroupAPI.
-		OptionGroupDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

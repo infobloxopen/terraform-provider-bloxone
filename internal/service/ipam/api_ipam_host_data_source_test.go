@@ -14,7 +14,7 @@ import (
 func TestAccIpamHostDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_hosts.test"
 	resourceName := "bloxone_ipam_host.test"
-	var v ipam.IpamsvcIpamHost
+	var v ipam.IpamHost
 	var name = acctest.RandomNameWithPrefix("ipam_host")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -37,7 +37,7 @@ func TestAccIpamHostDataSource_Filters(t *testing.T) {
 func TestAccIpamHostDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_hosts.test"
 	resourceName := "bloxone_ipam_host.test"
-	var v ipam.IpamsvcIpamHost
+	var v ipam.IpamHost
 	var name = acctest.RandomNameWithPrefix("ipam_host")
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },

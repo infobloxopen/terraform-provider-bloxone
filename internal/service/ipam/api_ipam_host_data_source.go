@@ -37,11 +37,11 @@ type IpamsvcIpamHostModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *IpamsvcIpamHostModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamsvcIpamHost, diags *diag.Diagnostics) {
+func (m *IpamsvcIpamHostModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamHost, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcIpamHostAttrTypes, diags, FlattenIpamsvcIpamHost)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcIpamHostAttrTypes, diags, FlattenIpamsvcIpamHostDataSource)
 }
 
 func (d *IpamHostDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -98,10 +98,10 @@ func (d *IpamHostDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IpamsvcIpamHost, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IpamHost, error) {
 		apiRes, _, err := d.client.IPAddressManagementAPI.
 			IpamHostAPI.
-			IpamHostList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

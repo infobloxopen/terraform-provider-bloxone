@@ -37,11 +37,11 @@ type IpamsvcOptionSpaceModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *IpamsvcOptionSpaceModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamsvcOptionSpace, diags *diag.Diagnostics) {
+func (m *IpamsvcOptionSpaceModelWithFilter) FlattenResults(ctx context.Context, from []ipam.OptionSpace, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcOptionSpaceAttrTypes, diags, FlattenIpamsvcOptionSpace)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcOptionSpaceAttrTypes, diags, FlattenIpamsvcOptionSpaceDataSource)
 }
 
 func (d *OptionSpaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -100,7 +100,7 @@ func (d *OptionSpaceDataSource) Read(ctx context.Context, req datasource.ReadReq
 
 	apiRes, _, err := d.client.IPAddressManagementAPI.
 		OptionSpaceAPI.
-		OptionSpaceList(ctx).
+		List(ctx).
 		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 		Execute()

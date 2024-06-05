@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	internalplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -58,7 +58,7 @@ var ConfigSortListItemResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandConfigSortListItem(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigSortListItem {
+func ExpandConfigSortListItem(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.SortListItem {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -70,11 +70,11 @@ func ExpandConfigSortListItem(ctx context.Context, o types.Object, diags *diag.D
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigSortListItemModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigSortListItem {
+func (m *ConfigSortListItemModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.SortListItem {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigSortListItem{
+	to := &dnsconfig.SortListItem{
 		Acl:                 flex.ExpandStringPointer(m.Acl),
 		Element:             flex.ExpandString(m.Element),
 		PrioritizedNetworks: flex.ExpandFrameworkListString(ctx, m.PrioritizedNetworks, diags),
@@ -83,7 +83,7 @@ func (m *ConfigSortListItemModel) Expand(ctx context.Context, diags *diag.Diagno
 	return to
 }
 
-func FlattenConfigSortListItem(ctx context.Context, from *dns_config.ConfigSortListItem, diags *diag.Diagnostics) types.Object {
+func FlattenConfigSortListItem(ctx context.Context, from *dnsconfig.SortListItem, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigSortListItemAttrTypes)
 	}
@@ -94,7 +94,7 @@ func FlattenConfigSortListItem(ctx context.Context, from *dns_config.ConfigSortL
 	return t
 }
 
-func (m *ConfigSortListItemModel) Flatten(ctx context.Context, from *dns_config.ConfigSortListItem, diags *diag.Diagnostics) {
+func (m *ConfigSortListItemModel) Flatten(ctx context.Context, from *dnsconfig.SortListItem, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/infra_mgmt"
+	"github.com/infobloxopen/bloxone-go-client/inframgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
@@ -37,11 +37,11 @@ type InfraServiceModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *InfraServiceModelWithFilter) FlattenResults(ctx context.Context, from []infra_mgmt.InfraService, diags *diag.Diagnostics) {
+func (m *InfraServiceModelWithFilter) FlattenResults(ctx context.Context, from []inframgmt.Service, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, InfraServiceAttrTypes, diags, FlattenInfraService)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, InfraServiceAttrTypes, diags, DataSourceFlattenInfraService)
 }
 
 func (d *ServicesDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -98,10 +98,10 @@ func (d *ServicesDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]infra_mgmt.InfraService, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]inframgmt.Service, error) {
 		apiRes, _, err := d.client.InfraManagementAPI.
 			ServicesAPI.
-			ServicesList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

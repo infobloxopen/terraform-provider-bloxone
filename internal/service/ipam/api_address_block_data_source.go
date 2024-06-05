@@ -11,6 +11,7 @@ import (
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
@@ -37,11 +38,11 @@ type IpamsvcAddressBlockModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *IpamsvcAddressBlockModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamsvcAddressBlock, diags *diag.Diagnostics) {
+func (m *IpamsvcAddressBlockModelWithFilter) FlattenResults(ctx context.Context, from []ipam.AddressBlock, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcAddressBlockAttrTypes, diags, FlattenIpamsvcAddressBlock)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcAddressBlockAttrTypes, diags, FlattenIpamsvcAddressBlockDataSource)
 }
 
 func (d *AddressBlockDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -98,10 +99,10 @@ func (d *AddressBlockDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IpamsvcAddressBlock, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.AddressBlock, error) {
 		apiRes, _, err := d.client.IPAddressManagementAPI.
 			AddressBlockAPI.
-			AddressBlockList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

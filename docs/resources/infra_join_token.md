@@ -52,5 +52,6 @@ resource "bloxone_infra_join_token" "example" {
 - `join_token` (String, Sensitive)
 - `last_used_at` (String)
 - `status` (String)
+- `tags_all` (Map of String)
 - `token_id` (String) first half of the token.
 - `use_counter` (Number)

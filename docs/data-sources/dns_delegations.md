@@ -64,6 +64,7 @@ Read-Only:
 - `id` (String) The resource identifier.
 - `parent` (String) The resource identifier.
 - `protocol_fqdn` (String) Delegation FQDN in punycode.
+- `tags_all` (Map of String) Tagging specifics includes default tags.
 
 <a id="nestedatt--results--delegation_servers"></a>
 ### Nested Schema for `results.delegation_servers`

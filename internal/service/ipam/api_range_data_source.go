@@ -37,11 +37,11 @@ type IpamsvcRangeModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *IpamsvcRangeModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamsvcRange, diags *diag.Diagnostics) {
+func (m *IpamsvcRangeModelWithFilter) FlattenResults(ctx context.Context, from []ipam.Range, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcRangeAttrTypes, diags, FlattenIpamsvcRange)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcRangeAttrTypes, diags, FlattenIpamsvcRangeDataSource)
 }
 
 func (d *RangeDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -100,10 +100,10 @@ func (d *RangeDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IpamsvcRange, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.Range, error) {
 		apiRes, _, err := d.client.IPAddressManagementAPI.
 			RangeAPI.
-			RangeList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

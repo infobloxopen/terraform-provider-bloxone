@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -36,6 +36,7 @@ type ConfigHostModel struct {
 	Server               types.String `tfsdk:"server"`
 	SiteId               types.String `tfsdk:"site_id"`
 	Tags                 types.Map    `tfsdk:"tags"`
+	TagsAll              types.Map    `tfsdk:"tags_all"`
 	Type                 types.String `tfsdk:"type"`
 }
 
@@ -58,6 +59,7 @@ var ConfigHostAttrTypes = map[string]attr.Type{
 	"server":                 types.StringType,
 	"site_id":                types.StringType,
 	"tags":                   types.MapType{ElemType: types.StringType},
+	"tags_all":               types.MapType{ElemType: types.StringType},
 	"type":                   types.StringType,
 }
 
@@ -148,13 +150,18 @@ var ConfigHostResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "Host tagging specifics.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "Host tagging specifics includes default tags.",
+	},
 	"type": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: "Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services,  * _microsoft_active_directory_: host type is Microsoft Active Directory,  * _google_cloud_platform_: host type is Google Cloud Platform.",
 	},
 }
 
-func ExpandConfigHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigHost {
+func ExpandConfigHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.Host {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -166,11 +173,11 @@ func ExpandConfigHost(ctx context.Context, o types.Object, diags *diag.Diagnosti
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigHost {
+func (m *ConfigHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.Host {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigHost{
+	to := &dnsconfig.Host{
 		AssociatedServer:   ExpandConfigHostAssociatedServer(ctx, m.AssociatedServer, diags),
 		InheritanceSources: ExpandConfigHostInheritance(ctx, m.InheritanceSources, diags),
 		KerberosKeys:       flex.ExpandFrameworkListNestedBlock(ctx, m.KerberosKeys, diags, ExpandConfigKerberosKey),
@@ -180,18 +187,19 @@ func (m *ConfigHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *
 	return to
 }
 
-func FlattenConfigHost(ctx context.Context, from *dns_config.ConfigHost, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigHost(ctx context.Context, from *dnsconfig.Host, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigHostAttrTypes)
 	}
 	m := ConfigHostModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, ConfigHostAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *ConfigHostModel) Flatten(ctx context.Context, from *dns_config.ConfigHost, diags *diag.Diagnostics) {
+func (m *ConfigHostModel) Flatten(ctx context.Context, from *dnsconfig.Host, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
@@ -215,6 +223,6 @@ func (m *ConfigHostModel) Flatten(ctx context.Context, from *dns_config.ConfigHo
 	m.ProviderId = flex.FlattenStringPointer(from.ProviderId)
 	m.Server = flex.FlattenStringPointer(from.Server)
 	m.SiteId = flex.FlattenStringPointer(from.SiteId)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Type = flex.FlattenStringPointer(from.Type)
 }

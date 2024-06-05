@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
@@ -24,7 +24,7 @@ import (
 
 func TestAccAuthZoneResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -59,7 +59,7 @@ func TestAccAuthZoneResource_basic(t *testing.T) {
 
 func TestAccAuthZoneResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dns_auth_zone.test"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -81,8 +81,8 @@ func TestAccAuthZoneResource_disappears(t *testing.T) {
 
 func TestAccAuthZoneResource_FQDN(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test"
-	var v1 dns_config.ConfigAuthZone
-	var v2 dns_config.ConfigAuthZone
+	var v1 dnsconfig.AuthZone
+	var v2 dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -115,8 +115,8 @@ func TestAccAuthZoneResource_FQDN(t *testing.T) {
 
 func TestAccAuthZoneResource_PrimaryType(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test"
-	var v1 dns_config.ConfigAuthZone
-	var v2 dns_config.ConfigAuthZone
+	var v1 dnsconfig.AuthZone
+	var v2 dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -149,7 +149,7 @@ func TestAccAuthZoneResource_PrimaryType(t *testing.T) {
 
 func TestAccAuthZoneResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_comment"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -179,7 +179,7 @@ func TestAccAuthZoneResource_Comment(t *testing.T) {
 
 func TestAccAuthZoneResource_Disabled(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_disabled"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -209,7 +209,7 @@ func TestAccAuthZoneResource_Disabled(t *testing.T) {
 
 func TestAccAuthZoneResource_ExternalPrimaries(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_external_primaries"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -248,7 +248,7 @@ func TestAccAuthZoneResource_ExternalPrimaries(t *testing.T) {
 
 func TestAccAuthZoneResource_ExternalSecondaries(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_external_secondaries"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -280,7 +280,7 @@ func TestAccAuthZoneResource_ExternalSecondaries(t *testing.T) {
 
 func TestAccAuthZoneResource_GssTsigEnabled(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_gss_tsig_enabled"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -310,7 +310,7 @@ func TestAccAuthZoneResource_GssTsigEnabled(t *testing.T) {
 
 func TestAccAuthZoneResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_inheritance_sources"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -340,8 +340,8 @@ func TestAccAuthZoneResource_InheritanceSources(t *testing.T) {
 
 func TestAccAuthZoneResource_InitialSoaSerial(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_initial_soa_serial"
-	var v1 dns_config.ConfigAuthZone
-	var v2 dns_config.ConfigAuthZone
+	var v1 dnsconfig.AuthZone
+	var v2 dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -372,7 +372,7 @@ func TestAccAuthZoneResource_InitialSoaSerial(t *testing.T) {
 
 func TestAccAuthZoneResource_Notify(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_notify"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -402,7 +402,7 @@ func TestAccAuthZoneResource_Notify(t *testing.T) {
 
 func TestAccAuthZoneResource_Nsgs(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_nsgs"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -432,7 +432,7 @@ func TestAccAuthZoneResource_Nsgs(t *testing.T) {
 
 func TestAccAuthZoneResource_QueryAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_query_acl"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -483,7 +483,7 @@ func TestAccAuthZoneResource_QueryAcl(t *testing.T) {
 
 func TestAccAuthZoneResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_tags"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -521,7 +521,7 @@ func TestAccAuthZoneResource_Tags(t *testing.T) {
 
 func TestAccAuthZoneResource_TransferAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_transfer_acl"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -572,7 +572,7 @@ func TestAccAuthZoneResource_TransferAcl(t *testing.T) {
 
 func TestAccAuthZoneResource_UpdateAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_update_acl"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -623,7 +623,7 @@ func TestAccAuthZoneResource_UpdateAcl(t *testing.T) {
 
 func TestAccAuthZoneResource_UseForwardersForSubzones(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_use_forwarders_for_subzones"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -653,8 +653,8 @@ func TestAccAuthZoneResource_UseForwardersForSubzones(t *testing.T) {
 
 func TestAccAuthZoneResource_View(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_view"
-	var v1 dns_config.ConfigAuthZone
-	var v2 dns_config.ConfigAuthZone
+	var v1 dnsconfig.AuthZone
+	var v2 dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -686,7 +686,7 @@ func TestAccAuthZoneResource_View(t *testing.T) {
 func TestAccAuthZoneResource_ZoneAuthority(t *testing.T) {
 	t.Skipf("Mname and rname provide incosistent result after apply")
 	var resourceName = "bloxone_dns_auth_zone.test_zone_authority"
-	var v dns_config.ConfigAuthZone
+	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -733,7 +733,7 @@ func TestAccAuthZoneResource_ZoneAuthority(t *testing.T) {
 	})
 }
 
-func testAccCheckAuthZoneExists(ctx context.Context, resourceName string, v *dns_config.ConfigAuthZone) resource.TestCheckFunc {
+func testAccCheckAuthZoneExists(ctx context.Context, resourceName string, v *dnsconfig.AuthZone) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -742,7 +742,7 @@ func testAccCheckAuthZoneExists(ctx context.Context, resourceName string, v *dns
 		}
 		apiRes, _, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			AuthZoneAPI.
-			AuthZoneRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -755,12 +755,12 @@ func testAccCheckAuthZoneExists(ctx context.Context, resourceName string, v *dns
 	}
 }
 
-func testAccCheckAuthZoneDestroy(ctx context.Context, v *dns_config.ConfigAuthZone) resource.TestCheckFunc {
+func testAccCheckAuthZoneDestroy(ctx context.Context, v *dnsconfig.AuthZone) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			AuthZoneAPI.
-			AuthZoneRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -773,12 +773,12 @@ func testAccCheckAuthZoneDestroy(ctx context.Context, v *dns_config.ConfigAuthZo
 	}
 }
 
-func testAccCheckAuthZoneDisappears(ctx context.Context, v *dns_config.ConfigAuthZone) resource.TestCheckFunc {
+func testAccCheckAuthZoneDisappears(ctx context.Context, v *dnsconfig.AuthZone) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			AuthZoneAPI.
-			AuthZoneDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

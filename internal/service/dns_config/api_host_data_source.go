@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
@@ -43,11 +43,11 @@ type ConfigHostModelWithFilter struct {
 	Timeouts        timeouts.Value `tfsdk:"timeouts"`
 }
 
-func (m *ConfigHostModelWithFilter) FlattenResults(ctx context.Context, from []dns_config.ConfigHost, diags *diag.Diagnostics) {
+func (m *ConfigHostModelWithFilter) FlattenResults(ctx context.Context, from []dnsconfig.Host, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigHostAttrTypes, diags, FlattenConfigHost)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigHostAttrTypes, diags, DataSourceFlattenConfigHost)
 }
 
 func (d *HostDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -118,10 +118,10 @@ func (d *HostDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 	}
 
 	err := retry.RetryContext(ctx, readTimeout, func() *retry.RetryError {
-		allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]dns_config.ConfigHost, error) {
+		allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]dnsconfig.Host, error) {
 			apiRes, _, err := d.client.DNSConfigurationAPI.
 				HostAPI.
-				HostList(ctx).
+				List(ctx).
 				Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 				Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 				Offset(offset).

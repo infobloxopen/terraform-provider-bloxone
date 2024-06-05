@@ -19,7 +19,7 @@ func TestAccHaGroupResource_basic(t *testing.T) {
 	t.Skip("Skipping due to the lack of DHCP hosts")
 
 	var resourceName = "bloxone_dhcp_ha_group.test"
-	var v ipam.IpamsvcHAGroup
+	var v ipam.HAGroup
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
@@ -50,7 +50,7 @@ func TestAccHaGroupResource_disappears(t *testing.T) {
 	t.Skip("Skipping due to the lack of DHCP hosts")
 
 	resourceName := "bloxone_dhcp_ha_group.test"
-	var v ipam.IpamsvcHAGroup
+	var v ipam.HAGroup
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -73,7 +73,7 @@ func TestAccHaGroupResource_Comment(t *testing.T) {
 	t.Skip("Skipping due to the lack of DHCP hosts")
 
 	var resourceName = "bloxone_dhcp_ha_group.test_comment"
-	var v ipam.IpamsvcHAGroup
+	var v ipam.HAGroup
 	name := acctest.RandomNameWithPrefix("test-ha")
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -104,7 +104,7 @@ func TestAccHaGroupResource_Hosts(t *testing.T) {
 	t.Skip("Skipping due to the lack of DHCP hosts")
 
 	var (
-		v              ipam.IpamsvcHAGroup
+		v              ipam.HAGroup
 		resourceName   = "bloxone_dhcp_ha_group.test_hosts"
 		name           = acctest.RandomNameWithPrefix("test-ha")
 		dataSourceHost = "data.bloxone_dhcp_hosts.test"
@@ -155,7 +155,7 @@ func TestAccHaGroupResource_Mode(t *testing.T) {
 	t.Skip("Skipping due to the lack of DHCP hosts")
 
 	var resourceName = "bloxone_dhcp_ha_group.test_mode"
-	var v ipam.IpamsvcHAGroup
+	var v ipam.HAGroup
 	name := acctest.RandomNameWithPrefix("test-ha")
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -186,7 +186,7 @@ func TestAccHaGroupResource_Name(t *testing.T) {
 	t.Skip("Skipping due to the lack of DHCP hosts")
 
 	var resourceName = "bloxone_dhcp_ha_group.test_name"
-	var v ipam.IpamsvcHAGroup
+	var v ipam.HAGroup
 	name := acctest.RandomNameWithPrefix("test-ha")
 	updateName := acctest.RandomNameWithPrefix("test-ha-new")
 	resource.Test(t, resource.TestCase{
@@ -218,12 +218,12 @@ func TestAccHaGroupResource_Tags(t *testing.T) {
 	t.Skip("Skipping due to the lack of DHCP hosts")
 
 	var resourceName = "bloxone_dhcp_ha_group.test_tags"
-	var v ipam.IpamsvcHAGroup
+	var v ipam.HAGroup
 	name := acctest.RandomNameWithPrefix("test-ha")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactoriesWithTags,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
@@ -235,6 +235,9 @@ func TestAccHaGroupResource_Tags(t *testing.T) {
 					testAccCheckHaGroupExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag1", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Update and Read
@@ -247,6 +250,9 @@ func TestAccHaGroupResource_Tags(t *testing.T) {
 					testAccCheckHaGroupExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2changed"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag3", "value3"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2changed"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag3", "value3"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -254,7 +260,7 @@ func TestAccHaGroupResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckHaGroupExists(ctx context.Context, resourceName string, v *ipam.IpamsvcHAGroup) resource.TestCheckFunc {
+func testAccCheckHaGroupExists(ctx context.Context, resourceName string, v *ipam.HAGroup) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -263,7 +269,7 @@ func testAccCheckHaGroupExists(ctx context.Context, resourceName string, v *ipam
 		}
 		apiRes, _, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			HaGroupAPI.
-			HaGroupRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -276,12 +282,12 @@ func testAccCheckHaGroupExists(ctx context.Context, resourceName string, v *ipam
 	}
 }
 
-func testAccCheckHaGroupDestroy(ctx context.Context, v *ipam.IpamsvcHAGroup) resource.TestCheckFunc {
+func testAccCheckHaGroupDestroy(ctx context.Context, v *ipam.HAGroup) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			HaGroupAPI.
-			HaGroupRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -294,12 +300,12 @@ func testAccCheckHaGroupDestroy(ctx context.Context, v *ipam.IpamsvcHAGroup) res
 	}
 }
 
-func testAccCheckHaGroupDisappears(ctx context.Context, v *ipam.IpamsvcHAGroup) resource.TestCheckFunc {
+func testAccCheckHaGroupDisappears(ctx context.Context, v *ipam.HAGroup) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			HaGroupAPI.
-			HaGroupDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err
@@ -325,7 +331,7 @@ resource "bloxone_dhcp_ha_group" "test" {
 	mode = %q
 }`, role1, role2, name, mode)
 
-	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
+	return strings.Join([]string{acctest.TestAccBase_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupComment(role1, role2, name, mode, comment string) string {
@@ -347,7 +353,7 @@ resource "bloxone_dhcp_ha_group" "test_comment" {
 }
 `, role1, role2, name, mode, comment)
 
-	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
+	return strings.Join([]string{acctest.TestAccBase_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupHosts(host1, role1, host2, role2, name, mode string) string {
@@ -367,7 +373,7 @@ resource "bloxone_dhcp_ha_group" "test_hosts" {
 	mode = %q
 }
 `, host1, role1, host2, role2, name, mode)
-	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
+	return strings.Join([]string{acctest.TestAccBase_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupMode(role1, role2, name, mode string) string {
@@ -387,7 +393,7 @@ resource "bloxone_dhcp_ha_group" "test_mode" {
 	mode = %q
 }
 `, role1, role2, name, mode)
-	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
+	return strings.Join([]string{acctest.TestAccBase_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupName(role1, role2, name, mode string) string {
@@ -407,7 +413,7 @@ resource "bloxone_dhcp_ha_group" "test_name" {
 	mode = %q
 }
 `, role1, role2, name, mode)
-	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
+	return strings.Join([]string{acctest.TestAccBase_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupTags(role1, role2, name, mode string, tags map[string]string) string {
@@ -436,5 +442,5 @@ resource "bloxone_dhcp_ha_group" "test_tags" {
 }
 `, role1, role2, name, mode, tagsStr)
 
-	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
+	return strings.Join([]string{acctest.TestAccBase_DhcpHosts(), config}, "")
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
@@ -21,7 +21,7 @@ import (
 
 func TestAccAuthNsgResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_nsg.test"
-	var v dns_config.ConfigAuthNSG
+	var v dnsconfig.AuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -44,7 +44,7 @@ func TestAccAuthNsgResource_basic(t *testing.T) {
 
 func TestAccAuthNsgResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dns_auth_nsg.test"
-	var v dns_config.ConfigAuthNSG
+	var v dnsconfig.AuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -66,7 +66,7 @@ func TestAccAuthNsgResource_disappears(t *testing.T) {
 
 func TestAccAuthNsgResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_nsg.test_comment"
-	var v dns_config.ConfigAuthNSG
+	var v dnsconfig.AuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -96,7 +96,7 @@ func TestAccAuthNsgResource_Comment(t *testing.T) {
 
 func TestAccAuthNsgResource_ExternalPrimaries(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_nsg.test_external_primaries"
-	var v dns_config.ConfigAuthNSG
+	var v dnsconfig.AuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 	nsg1 := acctest.RandomNameWithPrefix("auth-nsg")
 	nsg2 := acctest.RandomNameWithPrefix("auth-nsg")
@@ -138,7 +138,7 @@ func TestAccAuthNsgResource_ExternalPrimaries(t *testing.T) {
 
 func TestAccAuthNsgResource_ExternalSecondaries(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_nsg.test_external_secondaries"
-	var v dns_config.ConfigAuthNSG
+	var v dnsconfig.AuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -172,8 +172,8 @@ func TestAccAuthNsgResource_ExternalSecondaries(t *testing.T) {
 
 func TestAccAuthNsgResource_Name(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_nsg.test_name"
-	var v1 dns_config.ConfigAuthNSG
-	var v2 dns_config.ConfigAuthNSG
+	var v1 dnsconfig.AuthNSG
+	var v2 dnsconfig.AuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -204,7 +204,7 @@ func TestAccAuthNsgResource_Name(t *testing.T) {
 
 func TestAccAuthNsgResource_Nsgs(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_nsg.test_nsgs"
-	var v dns_config.ConfigAuthNSG
+	var v dnsconfig.AuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 	nsg1 := acctest.RandomNameWithPrefix("auth-nsg")
 	nsg2 := acctest.RandomNameWithPrefix("auth-nsg")
@@ -239,7 +239,7 @@ func TestAccAuthNsgResource_Nsgs(t *testing.T) {
 
 func TestAccAuthNsgResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_nsg.test_tags"
-	var v dns_config.ConfigAuthNSG
+	var v dnsconfig.AuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -275,7 +275,7 @@ func TestAccAuthNsgResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckAuthNsgExists(ctx context.Context, resourceName string, v *dns_config.ConfigAuthNSG) resource.TestCheckFunc {
+func testAccCheckAuthNsgExists(ctx context.Context, resourceName string, v *dnsconfig.AuthNSG) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -284,7 +284,7 @@ func testAccCheckAuthNsgExists(ctx context.Context, resourceName string, v *dns_
 		}
 		apiRes, _, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			AuthNsgAPI.
-			AuthNsgRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -297,12 +297,12 @@ func testAccCheckAuthNsgExists(ctx context.Context, resourceName string, v *dns_
 	}
 }
 
-func testAccCheckAuthNsgDestroy(ctx context.Context, v *dns_config.ConfigAuthNSG) resource.TestCheckFunc {
+func testAccCheckAuthNsgDestroy(ctx context.Context, v *dnsconfig.AuthNSG) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			AuthNsgAPI.
-			AuthNsgRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -315,12 +315,12 @@ func testAccCheckAuthNsgDestroy(ctx context.Context, v *dns_config.ConfigAuthNSG
 	}
 }
 
-func testAccCheckAuthNsgDisappears(ctx context.Context, v *dns_config.ConfigAuthNSG) resource.TestCheckFunc {
+func testAccCheckAuthNsgDisappears(ctx context.Context, v *dnsconfig.AuthNSG) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			AuthNsgAPI.
-			AuthNsgDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

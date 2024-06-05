@@ -51,6 +51,7 @@ type IpamsvcIPSpaceModel struct {
 	InheritanceSources              types.Object      `tfsdk:"inheritance_sources"`
 	Name                            types.String      `tfsdk:"name"`
 	Tags                            types.Map         `tfsdk:"tags"`
+	TagsAll                         types.Map         `tfsdk:"tags_all"`
 	Threshold                       types.Object      `tfsdk:"threshold"`
 	UpdatedAt                       timetypes.RFC3339 `tfsdk:"updated_at"`
 	Utilization                     types.Object      `tfsdk:"utilization"`
@@ -85,6 +86,7 @@ var IpamsvcIPSpaceAttrTypes = map[string]attr.Type{
 	"inheritance_sources":                 types.ObjectType{AttrTypes: IpamsvcIPSpaceInheritanceAttrTypes},
 	"name":                                types.StringType,
 	"tags":                                types.MapType{ElemType: types.StringType},
+	"tags_all":                            types.MapType{ElemType: types.StringType},
 	"threshold":                           types.ObjectType{AttrTypes: IpamsvcUtilizationThresholdAttrTypes},
 	"updated_at":                          timetypes.RFC3339Type{},
 	"utilization":                         types.ObjectType{AttrTypes: IpamsvcUtilizationAttrTypes},
@@ -195,7 +197,7 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.`,
 	},
 	"dhcp_config": schema.SingleNestedAttribute{
-		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes,
+		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes(false),
 		Optional:   true,
 		Computed:   true,
 		Default: objectdefault.StaticValue(types.ObjectValueMust(IpamsvcDHCPConfigAttrTypes, map[string]attr.Value{
@@ -203,6 +205,7 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 			"abandoned_reclaim_time_v6": types.Int64Value(3600),
 			"allow_unknown":             types.BoolValue(true),
 			"allow_unknown_v6":          types.BoolValue(true),
+			"echo_client_id":            types.BoolValue(true),
 			"filters":                   types.ListNull(types.StringType),
 			"filters_v6":                types.ListNull(types.StringType),
 			"ignore_client_uid":         types.BoolValue(false),
@@ -288,6 +291,11 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: `The tags for the IP space in JSON format.`,
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags of the IP space in JSON format including default tags.",
+	},
 	"threshold": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationThresholdResourceSchemaAttributes,
 		Computed:   true,
@@ -311,7 +319,7 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcIPSpace(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcIPSpace {
+func ExpandIpamsvcIPSpace(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IPSpace {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -323,11 +331,11 @@ func ExpandIpamsvcIPSpace(ctx context.Context, o types.Object, diags *diag.Diagn
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcIPSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcIPSpace {
+func (m *IpamsvcIPSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IPSpace {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcIPSpace{
+	to := &ipam.IPSpace{
 		AsmConfig:                       ExpandIpamsvcASMConfig(ctx, m.AsmConfig, diags),
 		Comment:                         flex.ExpandStringPointer(m.Comment),
 		DdnsClientUpdate:                m.DdnsClientUpdate.ValueStringPointer(),
@@ -356,18 +364,19 @@ func (m *IpamsvcIPSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenIpamsvcIPSpace(ctx context.Context, from *ipam.IpamsvcIPSpace, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcIPSpaceDataSource(ctx context.Context, from *ipam.IPSpace, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcIPSpaceAttrTypes)
 	}
 	m := IpamsvcIPSpaceModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcIPSpaceAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *IpamsvcIPSpaceModel) Flatten(ctx context.Context, from *ipam.IpamsvcIPSpace, diags *diag.Diagnostics) {
+func (m *IpamsvcIPSpaceModel) Flatten(ctx context.Context, from *ipam.IPSpace, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
@@ -399,7 +408,7 @@ func (m *IpamsvcIPSpaceModel) Flatten(ctx context.Context, from *ipam.IpamsvcIPS
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.InheritanceSources = FlattenIpamsvcIPSpaceInheritance(ctx, from.InheritanceSources, diags)
 	m.Name = flex.FlattenString(from.Name)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Threshold = FlattenIpamsvcUtilizationThreshold(ctx, from.Threshold, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.Utilization = FlattenIpamsvcUtilization(ctx, from.Utilization, diags)

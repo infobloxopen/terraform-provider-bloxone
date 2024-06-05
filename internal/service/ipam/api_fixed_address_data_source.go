@@ -37,11 +37,11 @@ type IpamsvcFixedAddressModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *IpamsvcFixedAddressModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamsvcFixedAddress, diags *diag.Diagnostics) {
+func (m *IpamsvcFixedAddressModelWithFilter) FlattenResults(ctx context.Context, from []ipam.FixedAddress, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcFixedAddressAttrTypes, diags, FlattenIpamsvcFixedAddress)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcFixedAddressAttrTypes, diags, FlattenIpamsvcFixedAddressDataSource)
 }
 
 func (d *FixedAddressDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -98,10 +98,10 @@ func (d *FixedAddressDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IpamsvcFixedAddress, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.FixedAddress, error) {
 		apiRes, _, err := d.client.IPAddressManagementAPI.
 			FixedAddressAPI.
-			FixedAddressList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

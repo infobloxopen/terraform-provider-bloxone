@@ -1,12 +1,14 @@
+# Get first host for the HA group.
 data "bloxone_dhcp_hosts" "example_host_1" {
   filters = {
-    name = "Your Host name"
+    name = "Host-1"
   }
 }
 
+# Get second host for the HA group.
 data "bloxone_dhcp_hosts" "example_host_2" {
   filters = {
-    name = "Your host name"
+    name = "Host-2"
   }
 }
 

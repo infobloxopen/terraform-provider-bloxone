@@ -60,6 +60,7 @@ type IpamsvcAddressBlockModel struct {
 	Protocol                   types.String      `tfsdk:"protocol"`
 	Space                      types.String      `tfsdk:"space"`
 	Tags                       types.Map         `tfsdk:"tags"`
+	TagsAll                    types.Map         `tfsdk:"tags_all"`
 	Threshold                  types.Object      `tfsdk:"threshold"`
 	UpdatedAt                  timetypes.RFC3339 `tfsdk:"updated_at"`
 	Usage                      types.List        `tfsdk:"usage"`
@@ -103,6 +104,7 @@ var IpamsvcAddressBlockAttrTypes = map[string]attr.Type{
 	"protocol":                      types.StringType,
 	"space":                         types.StringType,
 	"tags":                          types.MapType{ElemType: types.StringType},
+	"tags_all":                      types.MapType{ElemType: types.StringType},
 	"threshold":                     types.ObjectType{AttrTypes: IpamsvcUtilizationThresholdAttrTypes},
 	"updated_at":                    timetypes.RFC3339Type{},
 	"usage":                         types.ListType{ElemType: types.StringType},
@@ -221,14 +223,15 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.",
 	},
 	"dhcp_config": schema.SingleNestedAttribute{
-		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes,
+		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes(true),
 		Optional:   true,
 		Computed:   true,
 		Default: objectdefault.StaticValue(types.ObjectValueMust(IpamsvcDHCPConfigAttrTypes, map[string]attr.Value{
-			"abandoned_reclaim_time":    types.Int64Null(),
-			"abandoned_reclaim_time_v6": types.Int64Null(),
+			"abandoned_reclaim_time":    types.Int64Null(), // abandonded_reclaim_time cannot be set for address block
+			"abandoned_reclaim_time_v6": types.Int64Null(), // abandonded_reclaim_time_v6 cannot be set for address block
 			"allow_unknown":             types.BoolValue(true),
 			"allow_unknown_v6":          types.BoolValue(true),
+			"echo_client_id":            types.BoolNull(), // echo_client_id cannot be set for address block
 			"filters":                   types.ListNull(types.StringType),
 			"filters_v6":                types.ListNull(types.StringType),
 			"ignore_client_uid":         types.BoolValue(false),
@@ -343,6 +346,11 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "The tags for the address block in JSON format.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the address block in JSON format including default tags.",
+	},
 	"threshold": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationThresholdResourceSchemaAttributes,
 		Computed:   true,
@@ -384,7 +392,7 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcAddressBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcAddressBlock {
+func ExpandIpamsvcAddressBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.AddressBlock {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -396,11 +404,12 @@ func ExpandIpamsvcAddressBlock(ctx context.Context, o types.Object, diags *diag.
 	return m.Expand(ctx, diags, true)
 }
 
-func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcAddressBlock {
+func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.AddressBlock {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcAddressBlock{
+
+	to := &ipam.AddressBlock{
 		AsmConfig:                  ExpandIpamsvcASMConfig(ctx, m.AsmConfig, diags),
 		Cidr:                       flex.ExpandInt64Pointer(m.Cidr),
 		Comment:                    flex.ExpandStringPointer(m.Comment),
@@ -447,24 +456,26 @@ func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagn
 	return to
 }
 
-func FlattenIpamsvcAddressBlock(ctx context.Context, from *ipam.IpamsvcAddressBlock, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcAddressBlockDataSource(ctx context.Context, from *ipam.AddressBlock, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcAddressBlockAttrTypes)
 	}
 	m := IpamsvcAddressBlockModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcAddressBlockAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.IpamsvcAddressBlock, diags *diag.Diagnostics) {
+func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.AddressBlock, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
 	if m == nil {
 		*m = IpamsvcAddressBlockModel{}
 	}
+
 	m.Address = flex.FlattenStringPointer(from.Address)
 	m.AsmConfig = FlattenIpamsvcASMConfig(ctx, from.AsmConfig, diags)
 	m.AsmScopeFlag = flex.FlattenInt64(*from.AsmScopeFlag)
@@ -480,7 +491,7 @@ func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.Ipams
 	m.DdnsTtlPercent = flex.FlattenFloat64(float64(*from.DdnsTtlPercent))
 	m.DdnsUpdateOnRenew = types.BoolPointerValue(from.DdnsUpdateOnRenew)
 	m.DdnsUseConflictResolution = types.BoolPointerValue(from.DdnsUseConflictResolution)
-	m.DhcpConfig = FlattenIpamsvcDHCPConfig(ctx, from.DhcpConfig, diags)
+	m.DhcpConfig = FlattenIpamsvcDHCPConfigForSubnetOrAddressBlock(ctx, from.DhcpConfig, diags)
 	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DhcpUtilization = FlattenIpamsvcDHCPUtilization(ctx, from.DhcpUtilization, diags)
 	m.DiscoveryAttrs = flex.FlattenFrameworkMapString(ctx, from.DiscoveryAttrs, diags)
@@ -498,10 +509,11 @@ func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.Ipams
 	m.Parent = flex.FlattenStringPointer(from.Parent)
 	m.Protocol = flex.FlattenStringPointer(from.Protocol)
 	m.Space = flex.FlattenStringPointer(from.Space)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Threshold = FlattenIpamsvcUtilizationThreshold(ctx, from.Threshold, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.Usage = flex.FlattenFrameworkListString(ctx, from.Usage, diags)
 	m.Utilization = FlattenIpamsvcUtilization(ctx, from.Utilization, diags)
 	m.UtilizationV6 = FlattenIpamsvcUtilizationV6(ctx, from.UtilizationV6, diags)
+
 }

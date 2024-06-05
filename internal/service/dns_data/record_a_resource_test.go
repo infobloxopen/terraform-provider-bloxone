@@ -11,13 +11,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_data"
+	"github.com/infobloxopen/bloxone-go-client/dnsdata"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccRecordAResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -41,7 +41,7 @@ func TestAccRecordAResource_basic(t *testing.T) {
 
 func TestAccRecordAResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dns_a_record.test"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -63,7 +63,7 @@ func TestAccRecordAResource_disappears(t *testing.T) {
 
 func TestAccRecordAResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_comment"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -93,7 +93,7 @@ func TestAccRecordAResource_Comment(t *testing.T) {
 
 func TestAccRecordAResource_Disabled(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_disabled"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -123,7 +123,7 @@ func TestAccRecordAResource_Disabled(t *testing.T) {
 
 func TestAccRecordAResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_inheritance_sources"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -153,7 +153,7 @@ func TestAccRecordAResource_InheritanceSources(t *testing.T) {
 
 func TestAccRecordAResource_NameInZone(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_name_in_zone"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -183,7 +183,7 @@ func TestAccRecordAResource_NameInZone(t *testing.T) {
 
 func TestAccRecordAResource_Rdata(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_rdata"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -213,7 +213,7 @@ func TestAccRecordAResource_Rdata(t *testing.T) {
 
 func TestAccRecordAResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_tags"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -247,7 +247,7 @@ func TestAccRecordAResource_Tags(t *testing.T) {
 
 func TestAccRecordAResource_Ttl(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_ttl"
-	var v dns_data.DataRecord
+	var v dnsdata.Record
 	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -277,7 +277,7 @@ func TestAccRecordAResource_Ttl(t *testing.T) {
 
 func TestAccRecordAResource_View(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_view"
-	var v1, v2 dns_data.DataRecord
+	var v1, v2 dnsdata.Record
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -307,7 +307,7 @@ func TestAccRecordAResource_View(t *testing.T) {
 
 func TestAccRecordAResource_Zone(t *testing.T) {
 	var resourceName = "bloxone_dns_a_record.test_zone"
-	var v1, v2 dns_data.DataRecord
+	var v1, v2 dnsdata.Record
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -335,7 +335,53 @@ func TestAccRecordAResource_Zone(t *testing.T) {
 	})
 }
 
-func testAccCheckRecordExists(ctx context.Context, resourceName string, v *dns_data.DataRecord) resource.TestCheckFunc {
+func TestAccRecordAResource_Options(t *testing.T) {
+	var resourceName = "bloxone_dns_a_record.test_options"
+	var datasourceName = "data.bloxone_dns_ptr_records.test"
+	var v1 dnsdata.Record
+	var v2 dnsdata.Record
+	viewName := acctest.RandomNameWithPrefix("view")
+	zoneFqdn := acctest.RandomNameWithPrefix("zone") + ".com."
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccRecordAOptions(viewName, zoneFqdn, "10.0.0.1", true, true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckRecordExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttr(resourceName, "options.create_ptr", "true"),
+					resource.TestCheckResourceAttr(resourceName, "options.check_rmz", "true"),
+					resource.TestCheckResourceAttr(datasourceName, "results.0.name_in_zone", "1.0.0"),
+				),
+			},
+			{
+				Config: testAccRecordAOptions(viewName, zoneFqdn, "10.0.0.1", true, false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckRecordExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttr(resourceName, "options.create_ptr", "true"),
+					resource.TestCheckResourceAttr(resourceName, "options.check_rmz", "false"),
+					resource.TestCheckResourceAttr(datasourceName, "results.0.name_in_zone", "1.0.0"),
+				),
+			},
+			{
+				// The value of create_ptr has changed from `true` to false, so the resource will be recreated.
+				Config: testAccRecordAOptions(viewName, zoneFqdn, "10.0.0.1", false, false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckRecordDestroy(context.Background(), &v1),
+					testAccCheckRecordExists(context.Background(), resourceName, &v2),
+					resource.TestCheckResourceAttr(resourceName, "options.create_ptr", "false"),
+					resource.TestCheckResourceAttr(resourceName, "options.check_rmz", "false"),
+					resource.TestCheckResourceAttr(datasourceName, "results.#", "0"),
+				),
+			},
+		},
+	})
+}
+
+func testAccCheckRecordExists(ctx context.Context, resourceName string, v *dnsdata.Record) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -344,7 +390,7 @@ func testAccCheckRecordExists(ctx context.Context, resourceName string, v *dns_d
 		}
 		apiRes, _, err := acctest.BloxOneClient.DNSDataAPI.
 			RecordAPI.
-			RecordRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -357,12 +403,12 @@ func testAccCheckRecordExists(ctx context.Context, resourceName string, v *dns_d
 	}
 }
 
-func testAccCheckRecordDestroy(ctx context.Context, v *dns_data.DataRecord) resource.TestCheckFunc {
+func testAccCheckRecordDestroy(ctx context.Context, v *dnsdata.Record) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.DNSDataAPI.
 			RecordAPI.
-			RecordRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -375,12 +421,12 @@ func testAccCheckRecordDestroy(ctx context.Context, v *dns_data.DataRecord) reso
 	}
 }
 
-func testAccCheckRecordDisappears(ctx context.Context, v *dns_data.DataRecord) resource.TestCheckFunc {
+func testAccCheckRecordDisappears(ctx context.Context, v *dnsdata.Record) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.DNSDataAPI.
 			RecordAPI.
-			RecordDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err
@@ -555,6 +601,36 @@ resource "bloxone_dns_a_record" "test_zone" {
 `, zone1fqdn, zone2fqdn, address, zone)
 }
 
+func testAccRecordAOptions(view string, zoneFqdn string, address string, createPtr, checkRmz bool) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dns_a_record" "test_options" {
+    rdata = {
+		"address" = %q
+	}
+	options = {
+		"create_ptr" = %t
+		"check_rmz" = %t
+	}
+	zone = bloxone_dns_auth_zone.test.id
+	depends_on = [bloxone_dns_auth_zone.rmz, bloxone_dns_auth_zone.test]
+}
+
+data "bloxone_dns_ptr_records" "test" {
+	filters = {
+		zone = bloxone_dns_auth_zone.rmz.id
+	}   
+	depends_on = [bloxone_dns_a_record.test_options]
+}
+
+resource "bloxone_dns_auth_zone" "rmz" {
+	fqdn = "10.in-addr.arpa."
+	primary_type = "cloud"
+	view = bloxone_dns_view.test.id
+}
+`, address, createPtr, checkRmz)
+	return strings.Join([]string{testAccBaseWithZoneAndView(view, zoneFqdn), config}, "")
+}
+
 func testAccBaseWithZone(zoneFqdn string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_auth_zone" "test" {
@@ -562,4 +638,18 @@ resource "bloxone_dns_auth_zone" "test" {
     primary_type = "cloud"
 }
 `, zoneFqdn)
+}
+
+func testAccBaseWithZoneAndView(view, zoneFqdn string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_view" "test" {
+	name = %q
+}
+
+resource "bloxone_dns_auth_zone" "test" {
+    fqdn = %q
+    primary_type = "cloud"
+	view = bloxone_dns_view.test.id
+}
+`, view, zoneFqdn)
 }

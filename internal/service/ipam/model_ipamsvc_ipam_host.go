@@ -3,16 +3,15 @@ package ipam
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-
-	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
-	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -30,6 +29,7 @@ type IpamsvcIpamHostModel struct {
 	Id                  types.String      `tfsdk:"id"`
 	Name                types.String      `tfsdk:"name"`
 	Tags                types.Map         `tfsdk:"tags"`
+	TagsAll             types.Map         `tfsdk:"tags_all"`
 	UpdatedAt           timetypes.RFC3339 `tfsdk:"updated_at"`
 }
 
@@ -42,6 +42,7 @@ var IpamsvcIpamHostAttrTypes = map[string]attr.Type{
 	"id":                    types.StringType,
 	"name":                  types.StringType,
 	"tags":                  types.MapType{ElemType: types.StringType},
+	"tags_all":              types.MapType{ElemType: types.StringType},
 	"updated_at":            timetypes.RFC3339Type{},
 }
 
@@ -96,6 +97,11 @@ var IpamsvcIpamHostResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: `The tags for the IPAM host in JSON format.`,
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: `The tags for the IPAM host in JSON format including default tags.`,
+	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
@@ -103,7 +109,7 @@ var IpamsvcIpamHostResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcIpamHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcIpamHost {
+func ExpandIpamsvcIpamHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamHost {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -115,11 +121,11 @@ func ExpandIpamsvcIpamHost(ctx context.Context, o types.Object, diags *diag.Diag
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcIpamHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcIpamHost {
+func (m *IpamsvcIpamHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamHost {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcIpamHost{
+	to := &ipam.IpamHost{
 		Addresses:           flex.ExpandFrameworkListNestedBlock(ctx, m.Addresses, diags, ExpandIpamsvcHostAddress),
 		AutoGenerateRecords: flex.ExpandBoolPointer(m.AutoGenerateRecords),
 		Comment:             flex.ExpandStringPointer(m.Comment),
@@ -130,18 +136,19 @@ func (m *IpamsvcIpamHostModel) Expand(ctx context.Context, diags *diag.Diagnosti
 	return to
 }
 
-func FlattenIpamsvcIpamHost(ctx context.Context, from *ipam.IpamsvcIpamHost, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcIpamHostDataSource(ctx context.Context, from *ipam.IpamHost, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcIpamHostAttrTypes)
 	}
 	m := IpamsvcIpamHostModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcIpamHostAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *IpamsvcIpamHostModel) Flatten(ctx context.Context, from *ipam.IpamsvcIpamHost, diags *diag.Diagnostics) {
+func (m *IpamsvcIpamHostModel) Flatten(ctx context.Context, from *ipam.IpamHost, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
@@ -158,6 +165,6 @@ func (m *IpamsvcIpamHostModel) Flatten(ctx context.Context, from *ipam.IpamsvcIp
 	m.HostNames = flex.FlattenFrameworkListNestedBlock(ctx, from.HostNames, IpamsvcHostNameAttrTypes, diags, FlattenIpamsvcHostName)
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.Name = flex.FlattenString(from.Name)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }

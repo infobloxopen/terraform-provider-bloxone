@@ -8,8 +8,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -69,9 +69,16 @@ func (r *AddressBlockResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 
+	if !data.NextAvailableId.IsUnknown() && !data.NextAvailableId.IsNull() {
+		// Lock the mutex to serialize operations with the same key
+		// This is necessary to prevent the same block being returned.
+		utils.GlobalMutexStore.Lock(data.NextAvailableId.ValueString())
+		defer utils.GlobalMutexStore.Unlock(data.NextAvailableId.ValueString())
+	}
+
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		AddressBlockAPI.
-		AddressBlockCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
 		Inherit(inheritanceType).
 		Execute()
@@ -99,7 +106,7 @@ func (r *AddressBlockResource) Read(ctx context.Context, req resource.ReadReques
 
 	apiRes, httpRes, err := r.client.IPAddressManagementAPI.
 		AddressBlockAPI.
-		AddressBlockRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
@@ -130,7 +137,7 @@ func (r *AddressBlockResource) Update(ctx context.Context, req resource.UpdateRe
 
 	apiRes, _, err := r.client.IPAddressManagementAPI.
 		AddressBlockAPI.
-		AddressBlockUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
 		Inherit(inheritanceType).
 		Execute()
@@ -158,7 +165,7 @@ func (r *AddressBlockResource) Delete(ctx context.Context, req resource.DeleteRe
 
 	httpRes, err := r.client.IPAddressManagementAPI.
 		AddressBlockAPI.
-		AddressBlockDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

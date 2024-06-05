@@ -13,7 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/dns_data"
+	"github.com/infobloxopen/bloxone-go-client/dnsdata"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
@@ -130,10 +130,10 @@ func (d *RecordDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	}
 	filters = filters + "type=='" + data.Type.ValueString() + "'"
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]dns_data.DataRecord, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]dnsdata.Record, error) {
 		apiRes, _, err := d.client.DNSDataAPI.
 			RecordAPI.
-			RecordList(ctx).
+			List(ctx).
 			Filter(filters).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).
@@ -158,12 +158,13 @@ func (d *RecordDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (d *RecordDataSource) FlattenDataRecord(ctx context.Context, from *dns_data.DataRecord, diags *diag.Diagnostics) types.Object {
+func (d *RecordDataSource) FlattenDataRecord(ctx context.Context, from *dnsdata.Record, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(d.impl.attributeTypes())
 	}
 	m := dataRecordModel{}
 	m.Flatten(ctx, from, diags, d.impl)
+	m.Tags = m.TagsAll
 	t, ds := types.ObjectValueFrom(ctx, d.impl.attributeTypes(), m)
 	diags.Append(ds...)
 	return t

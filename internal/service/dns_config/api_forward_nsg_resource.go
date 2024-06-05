@@ -68,7 +68,7 @@ func (r *ForwardNsgResource) Create(ctx context.Context, req resource.CreateRequ
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
 		ForwardNsgAPI.
-		ForwardNsgCreate(ctx).
+		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -95,7 +95,7 @@ func (r *ForwardNsgResource) Read(ctx context.Context, req resource.ReadRequest,
 
 	apiRes, httpRes, err := r.client.DNSConfigurationAPI.
 		ForwardNsgAPI.
-		ForwardNsgRead(ctx, data.Id.ValueString()).
+		Read(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *ForwardNsgResource) Update(ctx context.Context, req resource.UpdateRequ
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
 		ForwardNsgAPI.
-		ForwardNsgUpdate(ctx, data.Id.ValueString()).
+		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *ForwardNsgResource) Delete(ctx context.Context, req resource.DeleteRequ
 
 	httpRes, err := r.client.DNSConfigurationAPI.
 		ForwardNsgAPI.
-		ForwardNsgDelete(ctx, data.Id.ValueString()).
+		Delete(ctx, data.Id.ValueString()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

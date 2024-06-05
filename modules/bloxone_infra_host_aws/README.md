@@ -36,14 +36,14 @@ module "bloxone_infra_host_aws" {
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0.0 |
-| <a name="requirement_bloxone"></a> [bloxone](#requirement\_bloxone) | >= 1.0.0 |
+| <a name="requirement_bloxone"></a> [bloxone](#requirement\_bloxone) | >= 1.1.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
-| <a name="provider_bloxone"></a> [bloxone](#provider\_bloxone) | >= 1.0.0 |
+| <a name="provider_bloxone"></a> [bloxone](#provider\_bloxone) | >= 1.1.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Resources
@@ -66,11 +66,12 @@ module "bloxone_infra_host_aws" {
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | The instance type to use for the BloxOne Host. Infoblox recommends you choose an instance type that has minimum resources of 8 CPU and 16 GB of RAM. | `string` | `"c5a.2xlarge"` | no |
 | <a name="input_join_token"></a> [join\_token](#input\_join\_token) | The join token to use for the BloxOne Host. If not provided, a join token will be created. | `string` | `null` | no |
 | <a name="input_key_name"></a> [key\_name](#input\_key\_name) | The key name to use for EC2 instance. The key must be in the same region as the subnet. | `string` | n/a | yes |
-| <a name="input_services"></a> [services](#input\_services) | The services to provision on the BloxOne Host. The services must be a map of valid service type with values of "start" or "stop". Valid service types are "dhcp" and "dns". | `map(string)` | n/a | yes |
+| <a name="input_services"></a> [services](#input\_services) | The services to provision on the BloxOne Host. The services must be a map of valid service type with values of "start" or "stop". Valid service types are "dhcp", "dns", "anycast", "dfp". | `map(string)` | n/a | yes |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The subnet to use for the EC2 instance. The subnet must be in the same VPC as the security group. | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | The tags to use for the BloxOne Host. For tags to use in AWS EC2, use `aws_tags`. | `map(string)` | `{}` | no |
 | <a name="input_timeouts"></a> [timeouts](#input\_timeouts) | The timeouts to use for the BloxOne Host. The timeout value is a string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). If not provided, the default timeouts will be used. | <pre>object({<br>    create = string<br>    update = string<br>    read   = string<br>  })</pre> | `null` | no |
 | <a name="input_vpc_security_group_ids"></a> [vpc\_security\_group\_ids](#input\_vpc\_security\_group\_ids) | The security group to use for EC2 instance. The security group must be in the same VPC as the subnet. | `list(string)` | n/a | yes |
+| <a name="input_wait_for_state"></a> [wait\_for\_state](#input\_wait\_for\_state) | If set to `true`, the resource will wait for the desired state to be reached before returning. If set to `false`, the resource will return immediately after the request is sent to the API. | `bool` | `null` | no |
 
 ## Outputs
 

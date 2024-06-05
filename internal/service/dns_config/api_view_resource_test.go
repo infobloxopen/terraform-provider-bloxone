@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
@@ -21,7 +21,7 @@ import (
 
 func TestAccViewResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test"
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 	var name = acctest.RandomNameWithPrefix("view")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -55,7 +55,7 @@ func TestAccViewResource_basic(t *testing.T) {
 
 func TestAccViewResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dns_view.test"
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 	var name = acctest.RandomNameWithPrefix("view")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -79,8 +79,8 @@ func TestAccViewResource_Name(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test"
 	var name1 = acctest.RandomNameWithPrefix("view")
 	var name2 = acctest.RandomNameWithPrefix("view")
-	var v1 dns_config.ConfigView
-	var v2 dns_config.ConfigView
+	var v1 dnsconfig.View
+	var v2 dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -111,7 +111,7 @@ func TestAccViewResource_Name(t *testing.T) {
 func TestAccViewResource_AddEdnsOptionInOutgoingQuery(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_add_edns_option_in_outgoing_query"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -141,7 +141,7 @@ func TestAccViewResource_AddEdnsOptionInOutgoingQuery(t *testing.T) {
 func TestAccViewResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_comment"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -171,7 +171,7 @@ func TestAccViewResource_Comment(t *testing.T) {
 func TestAccViewResource_CustomRootNs(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_custom_root_ns"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -206,7 +206,7 @@ func TestAccViewResource_CustomRootNs(t *testing.T) {
 func TestAccViewResource_CustomRootNsEnabled(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_custom_root_ns_enabled"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -241,7 +241,7 @@ func TestAccViewResource_CustomRootNsEnabled(t *testing.T) {
 func TestAccViewResource_Disabled(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_disabled"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -271,7 +271,7 @@ func TestAccViewResource_Disabled(t *testing.T) {
 func TestAccViewResource_DnssecEnableValidation(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_dnssec_enable_validation"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -301,7 +301,7 @@ func TestAccViewResource_DnssecEnableValidation(t *testing.T) {
 func TestAccViewResource_DnssecEnabled(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_dnssec_enabled"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -331,7 +331,7 @@ func TestAccViewResource_DnssecEnabled(t *testing.T) {
 func TestAccViewResource_DnssecTrustAnchors(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_dnssec_trust_anchors"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -365,7 +365,7 @@ func TestAccViewResource_DnssecTrustAnchors(t *testing.T) {
 func TestAccViewResource_DnssecValidateExpiry(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_dnssec_validate_expiry"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -395,7 +395,7 @@ func TestAccViewResource_DnssecValidateExpiry(t *testing.T) {
 func TestAccViewResource_DtcConfig(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_dtc_config"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -425,7 +425,7 @@ func TestAccViewResource_DtcConfig(t *testing.T) {
 func TestAccViewResource_EcsEnabled(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_ecs_enabled"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -460,7 +460,7 @@ func TestAccViewResource_EcsEnabled(t *testing.T) {
 func TestAccViewResource_EcsForwarding(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_ecs_forwarding"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -490,7 +490,7 @@ func TestAccViewResource_EcsForwarding(t *testing.T) {
 func TestAccViewResource_EcsPrefixV4(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_ecs_prefix_v4"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -520,7 +520,7 @@ func TestAccViewResource_EcsPrefixV4(t *testing.T) {
 func TestAccViewResource_EcsPrefixV6(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_ecs_prefix_v6"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -550,7 +550,7 @@ func TestAccViewResource_EcsPrefixV6(t *testing.T) {
 func TestAccViewResource_EcsZones(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_ecs_zones"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -582,7 +582,7 @@ func TestAccViewResource_EcsZones(t *testing.T) {
 func TestAccViewResource_EdnsUdpSize(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_edns_udp_size"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -612,7 +612,7 @@ func TestAccViewResource_EdnsUdpSize(t *testing.T) {
 func TestAccViewResource_FilterAaaaAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_filter_aaaa_acl"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -664,7 +664,7 @@ func TestAccViewResource_FilterAaaaAcl(t *testing.T) {
 func TestAccViewResource_FilterAaaaOnV4(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_filter_aaaa_on_v4"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -694,7 +694,7 @@ func TestAccViewResource_FilterAaaaOnV4(t *testing.T) {
 func TestAccViewResource_Forwarders(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_forwarders"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -726,7 +726,7 @@ func TestAccViewResource_Forwarders(t *testing.T) {
 func TestAccViewResource_ForwardersOnly(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_forwarders_only"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -761,7 +761,7 @@ func TestAccViewResource_ForwardersOnly(t *testing.T) {
 func TestAccViewResource_GssTsigEnabled(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_gss_tsig_enabled"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -790,7 +790,7 @@ func TestAccViewResource_GssTsigEnabled(t *testing.T) {
 
 func TestAccViewResource_InheritanceSources(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_inheritance_sources"
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 	var name = acctest.RandomNameWithPrefix("view")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -871,7 +871,7 @@ func TestAccViewResource_InheritanceSources(t *testing.T) {
 func TestAccViewResource_IpSpaces(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_ip_spaces"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 	var ipSpaceName = acctest.RandomNameWithPrefix("ip_space")
 	var ipSpaceName2 = acctest.RandomNameWithPrefix("ip_space")
 
@@ -905,7 +905,7 @@ func TestAccViewResource_IpSpaces(t *testing.T) {
 func TestAccViewResource_LameTtl(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_lame_ttl"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -935,7 +935,7 @@ func TestAccViewResource_LameTtl(t *testing.T) {
 func TestAccViewResource_MatchClientsAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_match_clients_acl"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -987,7 +987,7 @@ func TestAccViewResource_MatchClientsAcl(t *testing.T) {
 func TestAccViewResource_MatchDestinationsAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_match_destinations_acl"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1039,7 +1039,7 @@ func TestAccViewResource_MatchDestinationsAcl(t *testing.T) {
 func TestAccViewResource_MatchRecursiveOnly(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_match_recursive_only"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1069,7 +1069,7 @@ func TestAccViewResource_MatchRecursiveOnly(t *testing.T) {
 func TestAccViewResource_MaxCacheTtl(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_max_cache_ttl"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1099,7 +1099,7 @@ func TestAccViewResource_MaxCacheTtl(t *testing.T) {
 func TestAccViewResource_MaxNegativeTtl(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_max_negative_ttl"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1129,7 +1129,7 @@ func TestAccViewResource_MaxNegativeTtl(t *testing.T) {
 func TestAccViewResource_MaxUdpSize(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_max_udp_size"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1159,7 +1159,7 @@ func TestAccViewResource_MaxUdpSize(t *testing.T) {
 func TestAccViewResource_MinimalResponses(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_minimal_responses"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1189,7 +1189,7 @@ func TestAccViewResource_MinimalResponses(t *testing.T) {
 func TestAccViewResource_Notify(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_notify"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1219,7 +1219,7 @@ func TestAccViewResource_Notify(t *testing.T) {
 func TestAccViewResource_QueryAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_query_acl"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1271,7 +1271,7 @@ func TestAccViewResource_QueryAcl(t *testing.T) {
 func TestAccViewResource_RecursionAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_recursion_acl"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1323,7 +1323,7 @@ func TestAccViewResource_RecursionAcl(t *testing.T) {
 func TestAccViewResource_RecursionEnabled(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_recursion_enabled"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1353,7 +1353,7 @@ func TestAccViewResource_RecursionEnabled(t *testing.T) {
 func TestAccViewResource_SortList(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_sort_list"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1385,7 +1385,7 @@ func TestAccViewResource_SortList(t *testing.T) {
 func TestAccViewResource_SynthesizeAddressRecordsFromHttps(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_synthesize_address_records_from_https"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1415,7 +1415,7 @@ func TestAccViewResource_SynthesizeAddressRecordsFromHttps(t *testing.T) {
 func TestAccViewResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_tags"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1453,7 +1453,7 @@ func TestAccViewResource_Tags(t *testing.T) {
 func TestAccViewResource_TransferAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_transfer_acl"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1505,7 +1505,7 @@ func TestAccViewResource_TransferAcl(t *testing.T) {
 func TestAccViewResource_UpdateAcl(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_update_acl"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1557,7 +1557,7 @@ func TestAccViewResource_UpdateAcl(t *testing.T) {
 func TestAccViewResource_UseForwardersForSubzones(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_use_forwarders_for_subzones"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1587,7 +1587,7 @@ func TestAccViewResource_UseForwardersForSubzones(t *testing.T) {
 func TestAccViewResource_UseRootForwardersForLocalResolutionWithB1td(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_use_root_forwarders_for_local_resolution_with_b1td"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1622,7 +1622,7 @@ func TestAccViewResource_UseRootForwardersForLocalResolutionWithB1td(t *testing.
 func TestAccViewResource_ZoneAuthority(t *testing.T) {
 	var resourceName = "bloxone_dns_view.test_zone_authority"
 	var name = acctest.RandomNameWithPrefix("view")
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1665,7 +1665,7 @@ func TestAccViewResource_ZoneAuthority(t *testing.T) {
 	})
 }
 
-func testAccCheckViewExists(ctx context.Context, resourceName string, v *dns_config.ConfigView) resource.TestCheckFunc {
+func testAccCheckViewExists(ctx context.Context, resourceName string, v *dnsconfig.View) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -1674,7 +1674,7 @@ func testAccCheckViewExists(ctx context.Context, resourceName string, v *dns_con
 		}
 		apiRes, _, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			ViewAPI.
-			ViewRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -1687,12 +1687,12 @@ func testAccCheckViewExists(ctx context.Context, resourceName string, v *dns_con
 	}
 }
 
-func testAccCheckViewDestroy(ctx context.Context, v *dns_config.ConfigView) resource.TestCheckFunc {
+func testAccCheckViewDestroy(ctx context.Context, v *dnsconfig.View) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			ViewAPI.
-			ViewRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -1705,12 +1705,12 @@ func testAccCheckViewDestroy(ctx context.Context, v *dns_config.ConfigView) reso
 	}
 }
 
-func testAccCheckViewDisappears(ctx context.Context, v *dns_config.ConfigView) resource.TestCheckFunc {
+func testAccCheckViewDisappears(ctx context.Context, v *dnsconfig.View) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.DNSConfigurationAPI.
 			ViewAPI.
-			ViewDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

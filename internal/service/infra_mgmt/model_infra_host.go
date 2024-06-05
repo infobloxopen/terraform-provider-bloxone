@@ -13,7 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/infra_mgmt"
+	"github.com/infobloxopen/bloxone-go-client/inframgmt"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -41,6 +41,7 @@ type InfraHostModel struct {
 	PoolId              types.String      `tfsdk:"pool_id"`
 	SerialNumber        types.String      `tfsdk:"serial_number"`
 	Tags                types.Map         `tfsdk:"tags"`
+	TagsAll             types.Map         `tfsdk:"tags_all"`
 	Timezone            types.String      `tfsdk:"timezone"`
 	UpdatedAt           timetypes.RFC3339 `tfsdk:"updated_at"`
 }
@@ -68,6 +69,7 @@ var InfraHostAttrTypes = map[string]attr.Type{
 	"pool_id":              types.StringType,
 	"serial_number":        types.StringType,
 	"tags":                 types.MapType{ElemType: types.StringType},
+	"tags_all":             types.MapType{ElemType: types.StringType},
 	"timezone":             types.StringType,
 	"updated_at":           timetypes.RFC3339Type{},
 }
@@ -182,6 +184,11 @@ var InfraHostResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "Tags associated with this Host.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "Tags associated with this Host including default tags.",
+	},
 	"timezone": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: "The timezone of the Host.",
@@ -193,7 +200,7 @@ var InfraHostResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandInfraHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *infra_mgmt.InfraHost {
+func ExpandInfraHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *inframgmt.Host {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -205,11 +212,11 @@ func ExpandInfraHost(ctx context.Context, o types.Object, diags *diag.Diagnostic
 	return m.Expand(ctx, diags)
 }
 
-func (m *InfraHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *infra_mgmt.InfraHost {
+func (m *InfraHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *inframgmt.Host {
 	if m == nil {
 		return nil
 	}
-	to := &infra_mgmt.InfraHost{
+	to := &inframgmt.Host{
 		Description:     flex.ExpandStringPointer(m.Description),
 		DisplayName:     flex.ExpandString(m.DisplayName),
 		IpSpace:         flex.ExpandStringPointer(m.IpSpace),
@@ -222,18 +229,19 @@ func (m *InfraHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *i
 	return to
 }
 
-func FlattenInfraHost(ctx context.Context, from *infra_mgmt.InfraHost, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenInfraHost(ctx context.Context, from *inframgmt.Host, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(InfraHostAttrTypes)
 	}
 	m := InfraHostModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, InfraHostAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *InfraHostModel) Flatten(ctx context.Context, from *infra_mgmt.InfraHost, diags *diag.Diagnostics) {
+func (m *InfraHostModel) Flatten(ctx context.Context, from *inframgmt.Host, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
@@ -261,7 +269,7 @@ func (m *InfraHostModel) Flatten(ctx context.Context, from *infra_mgmt.InfraHost
 	m.Ophid = flex.FlattenStringPointer(from.Ophid)
 	m.PoolId = flex.FlattenStringPointer(from.PoolId)
 	m.SerialNumber = flex.FlattenStringPointer(from.SerialNumber)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Timezone = flex.FlattenStringPointer(from.Timezone)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }

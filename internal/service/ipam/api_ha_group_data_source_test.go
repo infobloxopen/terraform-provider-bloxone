@@ -18,7 +18,7 @@ func TestAccHaGroupDataSource_Filters(t *testing.T) {
 
 	dataSourceName := "data.bloxone_dhcp_ha_groups.test"
 	resourceName := "bloxone_dhcp_ha_group.test"
-	var v ipam.IpamsvcHAGroup
+	var v ipam.HAGroup
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -42,7 +42,7 @@ func TestAccHaGroupDataSource_TagFilters(t *testing.T) {
 
 	dataSourceName := "data.bloxone_dhcp_ha_groups.test"
 	resourceName := "bloxone_dhcp_ha_group.test"
-	var v ipam.IpamsvcHAGroup
+	var v ipam.HAGroup
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
@@ -65,7 +65,7 @@ func TestAccHaGroupDataSource_CollectStats(t *testing.T) {
 
 	dataSourceName := "data.bloxone_dhcp_ha_groups.test"
 	resourceName := "bloxone_dhcp_ha_group.test"
-	var v ipam.IpamsvcHAGroup
+	var v ipam.HAGroup
 	name := acctest.RandomNameWithPrefix("test_ha_stats")
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -148,7 +148,7 @@ data "bloxone_dhcp_ha_groups" "test" {
   }
   depends_on = [bloxone_dhcp_ha_group.test]
 }`, name, name)
-	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
+	return strings.Join([]string{acctest.TestAccBase_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupDataSourceConfigTagFilters(name, tagValue string) string {
@@ -177,7 +177,7 @@ data "bloxone_dhcp_ha_groups" "test" {
   }
 }`, name, tagValue)
 
-	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
+	return strings.Join([]string{acctest.TestAccBase_DhcpHosts(), config}, "")
 }
 
 func testAccHaGroupDataSourceConfigCollectStats(name string) string {
@@ -205,7 +205,7 @@ data "bloxone_dhcp_ha_groups" "test" {
   depends_on = [bloxone_dhcp_ha_group.test]
 }`, name, name)
 
-	return strings.Join([]string{acctest.TestAccBaseConfig_DhcpHosts(), config}, "")
+	return strings.Join([]string{acctest.TestAccBase_DhcpHosts(), config}, "")
 }
 
 func testAccCheckHAState(state string) error {

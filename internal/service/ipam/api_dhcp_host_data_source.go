@@ -43,11 +43,11 @@ type IpamsvcHostModelWithFilter struct {
 	Timeouts        timeouts.Value `tfsdk:"timeouts"`
 }
 
-func (m *IpamsvcHostModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamsvcHost, diags *diag.Diagnostics) {
+func (m *IpamsvcHostModelWithFilter) FlattenResults(ctx context.Context, from []ipam.Host, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcHostAttrTypes, diags, FlattenIpamsvcHost)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcHostAttrTypes, diags, FlattenIpamsvcHostDataSource)
 }
 
 func (d *DhcpHostDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -118,10 +118,10 @@ func (d *DhcpHostDataSource) Read(ctx context.Context, req datasource.ReadReques
 	}
 
 	err := retry.RetryContext(ctx, readTimeout, func() *retry.RetryError {
-		allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IpamsvcHost, error) {
+		allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.Host, error) {
 			apiRes, _, err := d.client.IPAddressManagementAPI.
 				DhcpHostAPI.
-				DhcpHostList(ctx).
+				List(ctx).
 				Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 				Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 				Offset(offset).

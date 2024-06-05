@@ -64,6 +64,7 @@ type IpamsvcSubnetModel struct {
 	RenewTime                  types.Int64       `tfsdk:"renew_time"`
 	Space                      types.String      `tfsdk:"space"`
 	Tags                       types.Map         `tfsdk:"tags"`
+	TagsAll                    types.Map         `tfsdk:"tags_all"`
 	Threshold                  types.Object      `tfsdk:"threshold"`
 	UpdatedAt                  timetypes.RFC3339 `tfsdk:"updated_at"`
 	Usage                      types.List        `tfsdk:"usage"`
@@ -112,6 +113,7 @@ var IpamsvcSubnetAttrTypes = map[string]attr.Type{
 	"renew_time":                    types.Int64Type,
 	"space":                         types.StringType,
 	"tags":                          types.MapType{ElemType: types.StringType},
+	"tags_all":                      types.MapType{ElemType: types.StringType},
 	"threshold":                     types.ObjectType{AttrTypes: IpamsvcUtilizationThresholdAttrTypes},
 	"updated_at":                    timetypes.RFC3339Type{},
 	"usage":                         types.ListType{ElemType: types.StringType},
@@ -235,14 +237,15 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.",
 	},
 	"dhcp_config": schema.SingleNestedAttribute{
-		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes,
+		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes(true),
 		Optional:   true,
 		Computed:   true,
 		Default: objectdefault.StaticValue(types.ObjectValueMust(IpamsvcDHCPConfigAttrTypes, map[string]attr.Value{
-			"abandoned_reclaim_time":    types.Int64Null(),
-			"abandoned_reclaim_time_v6": types.Int64Null(),
+			"abandoned_reclaim_time":    types.Int64Null(), // abandoned_reclaim_time cannot be set for subnet
+			"abandoned_reclaim_time_v6": types.Int64Null(), // abandoned_reclaim_time_v6 cannot be set for subnet
 			"allow_unknown":             types.BoolValue(true),
 			"allow_unknown_v6":          types.BoolValue(true),
+			"echo_client_id":            types.BoolNull(), // echo_id cannot be set for subnet
 			"filters":                   types.ListNull(types.StringType),
 			"filters_v6":                types.ListNull(types.StringType),
 			"ignore_client_uid":         types.BoolValue(false),
@@ -380,6 +383,11 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "The tags for the subnet in JSON format.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the subnet in JSON format including default tags.",
+	},
 	"threshold": schema.SingleNestedAttribute{
 		Attributes: IpamsvcUtilizationThresholdResourceSchemaAttributes,
 		Computed:   true,
@@ -422,11 +430,11 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcSubnet {
+func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.Subnet {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcSubnet{
+	to := &ipam.Subnet{
 		AsmConfig:                  ExpandIpamsvcASMConfig(ctx, m.AsmConfig, diags),
 		Cidr:                       flex.ExpandInt64Pointer(m.Cidr),
 		Comment:                    flex.ExpandStringPointer(m.Comment),
@@ -472,18 +480,19 @@ func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics
 	return to
 }
 
-func FlattenIpamsvcSubnet(ctx context.Context, from *ipam.IpamsvcSubnet, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcSubnetDataSource(ctx context.Context, from *ipam.Subnet, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcSubnetAttrTypes)
 	}
 	m := IpamsvcSubnetModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcSubnetAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.IpamsvcSubnet, diags *diag.Diagnostics) {
+func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.Subnet, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
@@ -505,7 +514,7 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.IpamsvcSubn
 	m.DdnsTtlPercent = flex.FlattenFloat64(float64(*from.DdnsTtlPercent))
 	m.DdnsUpdateOnRenew = types.BoolPointerValue(from.DdnsUpdateOnRenew)
 	m.DdnsUseConflictResolution = types.BoolPointerValue(from.DdnsUseConflictResolution)
-	m.DhcpConfig = FlattenIpamsvcDHCPConfig(ctx, from.DhcpConfig, diags)
+	m.DhcpConfig = FlattenIpamsvcDHCPConfigForSubnetOrAddressBlock(ctx, from.DhcpConfig, diags)
 	m.DhcpHost = flex.FlattenStringPointerWithNilAsEmpty(from.DhcpHost)
 	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DhcpUtilization = FlattenIpamsvcDHCPUtilization(ctx, from.DhcpUtilization, diags)
@@ -528,7 +537,7 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.IpamsvcSubn
 	m.RebindTime = flex.FlattenInt64Pointer(from.RebindTime)
 	m.RenewTime = flex.FlattenInt64Pointer(from.RenewTime)
 	m.Space = flex.FlattenStringPointer(from.Space)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Threshold = FlattenIpamsvcUtilizationThreshold(ctx, from.Threshold, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.Usage = flex.FlattenFrameworkListString(ctx, from.Usage, diags)

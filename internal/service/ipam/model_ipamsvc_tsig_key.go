@@ -65,7 +65,7 @@ var IpamsvcTSIGKeyResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcTSIGKey(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcTSIGKey {
+func ExpandIpamsvcTSIGKey(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.TSIGKey {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -77,11 +77,11 @@ func ExpandIpamsvcTSIGKey(ctx context.Context, o types.Object, diags *diag.Diagn
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcTSIGKeyModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcTSIGKey {
+func (m *IpamsvcTSIGKeyModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.TSIGKey {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcTSIGKey{
+	to := &ipam.TSIGKey{
 		Algorithm: m.Algorithm.ValueStringPointer(),
 		Comment:   m.Comment.ValueStringPointer(),
 		Key:       m.Key.ValueString(),
@@ -91,7 +91,7 @@ func (m *IpamsvcTSIGKeyModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenIpamsvcTSIGKey(ctx context.Context, from *ipam.IpamsvcTSIGKey, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcTSIGKey(ctx context.Context, from *ipam.TSIGKey, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcTSIGKeyAttrTypes)
 	}
@@ -102,7 +102,7 @@ func FlattenIpamsvcTSIGKey(ctx context.Context, from *ipam.IpamsvcTSIGKey, diags
 	return t
 }
 
-func (m *IpamsvcTSIGKeyModel) Flatten(ctx context.Context, from *ipam.IpamsvcTSIGKey, diags *diag.Diagnostics) {
+func (m *IpamsvcTSIGKeyModel) Flatten(ctx context.Context, from *ipam.TSIGKey, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

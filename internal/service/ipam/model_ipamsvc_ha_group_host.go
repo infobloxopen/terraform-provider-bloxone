@@ -69,7 +69,7 @@ var IpamsvcHAGroupHostResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandIpamsvcHAGroupHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.IpamsvcHAGroupHost {
+func ExpandIpamsvcHAGroupHost(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.HAGroupHost {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -81,11 +81,11 @@ func ExpandIpamsvcHAGroupHost(ctx context.Context, o types.Object, diags *diag.D
 	return m.Expand(ctx, diags)
 }
 
-func (m *IpamsvcHAGroupHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcHAGroupHost {
+func (m *IpamsvcHAGroupHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.HAGroupHost {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcHAGroupHost{
+	to := &ipam.HAGroupHost{
 		Address:    flex.ExpandStringPointer(m.Address),
 		Heartbeats: flex.ExpandFrameworkListNestedBlock(ctx, m.Heartbeats, diags, ExpandIpamsvcHAGroupHeartbeats),
 		Host:       flex.ExpandString(m.Host),
@@ -95,7 +95,7 @@ func (m *IpamsvcHAGroupHostModel) Expand(ctx context.Context, diags *diag.Diagno
 	return to
 }
 
-func FlattenIpamsvcHAGroupHost(ctx context.Context, from *ipam.IpamsvcHAGroupHost, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcHAGroupHost(ctx context.Context, from *ipam.HAGroupHost, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcHAGroupHostAttrTypes)
 	}
@@ -106,7 +106,7 @@ func FlattenIpamsvcHAGroupHost(ctx context.Context, from *ipam.IpamsvcHAGroupHos
 	return t
 }
 
-func (m *IpamsvcHAGroupHostModel) Flatten(ctx context.Context, from *ipam.IpamsvcHAGroupHost, diags *diag.Diagnostics) {
+func (m *IpamsvcHAGroupHostModel) Flatten(ctx context.Context, from *ipam.HAGroupHost, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

@@ -26,8 +26,11 @@ type InheritedDHCPConfigIgnoreItemList struct {
 	// The resource identifier.
 	Source *string `json:"source,omitempty"`
 	// The inherited value.
-	Value []IpamsvcIgnoreItem `json:"value,omitempty"`
+	Value                []IgnoreItem `json:"value,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InheritedDHCPConfigIgnoreItemList InheritedDHCPConfigIgnoreItemList
 
 // NewInheritedDHCPConfigIgnoreItemList instantiates a new InheritedDHCPConfigIgnoreItemList object
 // This constructor will assign default values to properties that have it defined,
@@ -143,9 +146,9 @@ func (o *InheritedDHCPConfigIgnoreItemList) SetSource(v string) {
 }
 
 // GetValue returns the Value field value if set, zero value otherwise.
-func (o *InheritedDHCPConfigIgnoreItemList) GetValue() []IpamsvcIgnoreItem {
+func (o *InheritedDHCPConfigIgnoreItemList) GetValue() []IgnoreItem {
 	if o == nil || IsNil(o.Value) {
-		var ret []IpamsvcIgnoreItem
+		var ret []IgnoreItem
 		return ret
 	}
 	return o.Value
@@ -153,7 +156,7 @@ func (o *InheritedDHCPConfigIgnoreItemList) GetValue() []IpamsvcIgnoreItem {
 
 // GetValueOk returns a tuple with the Value field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *InheritedDHCPConfigIgnoreItemList) GetValueOk() ([]IpamsvcIgnoreItem, bool) {
+func (o *InheritedDHCPConfigIgnoreItemList) GetValueOk() ([]IgnoreItem, bool) {
 	if o == nil || IsNil(o.Value) {
 		return nil, false
 	}
@@ -169,8 +172,8 @@ func (o *InheritedDHCPConfigIgnoreItemList) HasValue() bool {
 	return false
 }
 
-// SetValue gets a reference to the given []IpamsvcIgnoreItem and assigns it to the Value field.
-func (o *InheritedDHCPConfigIgnoreItemList) SetValue(v []IpamsvcIgnoreItem) {
+// SetValue gets a reference to the given []IgnoreItem and assigns it to the Value field.
+func (o *InheritedDHCPConfigIgnoreItemList) SetValue(v []IgnoreItem) {
 	o.Value = v
 }
 
@@ -196,7 +199,36 @@ func (o InheritedDHCPConfigIgnoreItemList) ToMap() (map[string]interface{}, erro
 	if !IsNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InheritedDHCPConfigIgnoreItemList) UnmarshalJSON(data []byte) (err error) {
+	varInheritedDHCPConfigIgnoreItemList := _InheritedDHCPConfigIgnoreItemList{}
+
+	err = json.Unmarshal(data, &varInheritedDHCPConfigIgnoreItemList)
+
+	if err != nil {
+		return err
+	}
+
+	*o = InheritedDHCPConfigIgnoreItemList(varInheritedDHCPConfigIgnoreItemList)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "value")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInheritedDHCPConfigIgnoreItemList struct {

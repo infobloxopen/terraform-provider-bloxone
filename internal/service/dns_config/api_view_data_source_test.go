@@ -7,14 +7,14 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccViewDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_views.test"
 	resourceName := "bloxone_dns_view.test"
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 	var name = acctest.RandomNameWithPrefix("view")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -37,7 +37,7 @@ func TestAccViewDataSource_Filters(t *testing.T) {
 func TestAccViewDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_views.test"
 	resourceName := "bloxone_dns_view.test"
-	var v dns_config.ConfigView
+	var v dnsconfig.View
 	var name = acctest.RandomNameWithPrefix("view")
 
 	resource.ParallelTest(t, resource.TestCase{

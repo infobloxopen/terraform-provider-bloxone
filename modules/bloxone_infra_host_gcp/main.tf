@@ -56,7 +56,7 @@ resource "random_uuid" "this" {}
 
 locals {
   join_token = var.join_token == null ? bloxone_infra_join_token.this[0].join_token : var.join_token
-  tags       = merge(
+  tags = merge(
     var.tags,
     {
       "tf_module_host_id" = "bloxone-host-${random_uuid.this.result}"
@@ -87,7 +87,7 @@ resource "google_compute_instance" "this" {
   dynamic "network_interface" {
     for_each = var.network_interfaces
     content {
-      network = network_interface.value.network
+      network    = network_interface.value.network
       subnetwork = network_interface.value.subnetwork
 
       dynamic "access_config" {
@@ -134,11 +134,12 @@ data "bloxone_infra_hosts" "this" {
 }
 
 resource "bloxone_infra_service" "this" {
-  for_each      = var.services
-  name          = format("%s_%s", each.key, data.bloxone_infra_hosts.this.results[0].display_name)
-  pool_id       = data.bloxone_infra_hosts.this.results[0].pool_id
-  service_type  = each.key
-  desired_state = each.value
-  tags          = local.tags
-  timeouts      = var.timeouts
+  for_each       = var.services
+  name           = format("%s_%s", each.key, data.bloxone_infra_hosts.this.results[0].display_name)
+  pool_id        = data.bloxone_infra_hosts.this.results[0].pool_id
+  service_type   = each.key
+  desired_state  = each.value
+  tags           = local.tags
+  timeouts       = var.timeouts
+  wait_for_state = var.wait_for_state
 }

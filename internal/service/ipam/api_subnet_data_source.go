@@ -37,11 +37,11 @@ type IpamsvcSubnetModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *IpamsvcSubnetModelWithFilter) FlattenResults(ctx context.Context, from []ipam.IpamsvcSubnet, diags *diag.Diagnostics) {
+func (m *IpamsvcSubnetModelWithFilter) FlattenResults(ctx context.Context, from []ipam.Subnet, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcSubnetAttrTypes, diags, FlattenIpamsvcSubnet)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcSubnetAttrTypes, diags, FlattenIpamsvcSubnetDataSource)
 }
 
 func (d *SubnetDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -98,10 +98,10 @@ func (d *SubnetDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.IpamsvcSubnet, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.Subnet, error) {
 		apiRes, _, err := d.client.IPAddressManagementAPI.
 			SubnetAPI.
-			SubnetList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

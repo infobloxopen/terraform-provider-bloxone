@@ -7,14 +7,14 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
 func TestAccAuthNsgDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_auth_nsgs.test"
 	resourceName := "bloxone_dns_auth_nsg.test"
-	var v dns_config.ConfigAuthNSG
+	var v dnsconfig.AuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -37,7 +37,7 @@ func TestAccAuthNsgDataSource_Filters(t *testing.T) {
 func TestAccAuthNsgDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_dns_auth_nsgs.test"
 	resourceName := "bloxone_dns_auth_nsg.test"
-	var v dns_config.ConfigAuthNSG
+	var v dnsconfig.AuthNSG
 	name := acctest.RandomNameWithPrefix("auth-nsg")
 
 	resource.ParallelTest(t, resource.TestCase{

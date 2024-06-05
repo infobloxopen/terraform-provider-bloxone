@@ -18,7 +18,7 @@ import (
 func TestAccOptionCodeResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_code.test"
 	var optionSpace = "bloxone_dhcp_option_space.test"
-	var v ipam.IpamsvcOptionCode
+	var v ipam.OptionCode
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -50,7 +50,7 @@ func TestAccOptionCodeResource_basic(t *testing.T) {
 
 func TestAccOptionCodeResource_disappears(t *testing.T) {
 	resourceName := "bloxone_dhcp_option_code.test"
-	var v ipam.IpamsvcOptionCode
+	var v ipam.OptionCode
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -72,7 +72,7 @@ func TestAccOptionCodeResource_disappears(t *testing.T) {
 
 func TestAccOptionCodeResource_Array(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_code.test_array"
-	var v ipam.IpamsvcOptionCode
+	var v ipam.OptionCode
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -102,7 +102,7 @@ func TestAccOptionCodeResource_Array(t *testing.T) {
 
 func TestAccOptionCodeResource_Code(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_code.test_code"
-	var v ipam.IpamsvcOptionCode
+	var v ipam.OptionCode
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -132,7 +132,7 @@ func TestAccOptionCodeResource_Code(t *testing.T) {
 
 func TestAccOptionCodeResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_code.test_comment"
-	var v ipam.IpamsvcOptionCode
+	var v ipam.OptionCode
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -162,7 +162,7 @@ func TestAccOptionCodeResource_Comment(t *testing.T) {
 
 func TestAccOptionCodeResource_Name(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_code.test_name"
-	var v ipam.IpamsvcOptionCode
+	var v ipam.OptionCode
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -194,7 +194,7 @@ func TestAccOptionCodeResource_OptionSpace(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_code.test_option_space"
 	var optSpace1 = "bloxone_dhcp_option_space.test1"
 	var optSpace2 = "bloxone_dhcp_option_space.test2"
-	var v ipam.IpamsvcOptionCode
+	var v ipam.OptionCode
 	optionSpaceName1 := acctest.RandomNameWithPrefix("os")
 	optionSpaceName2 := acctest.RandomNameWithPrefix("os")
 
@@ -225,7 +225,7 @@ func TestAccOptionCodeResource_OptionSpace(t *testing.T) {
 
 func TestAccOptionCodeResource_Type(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_code.test_type"
-	var v ipam.IpamsvcOptionCode
+	var v ipam.OptionCode
 	optionSpaceName := acctest.RandomNameWithPrefix("os")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -253,7 +253,7 @@ func TestAccOptionCodeResource_Type(t *testing.T) {
 	})
 }
 
-func testAccCheckOptionCodeExists(ctx context.Context, resourceName string, v *ipam.IpamsvcOptionCode) resource.TestCheckFunc {
+func testAccCheckOptionCodeExists(ctx context.Context, resourceName string, v *ipam.OptionCode) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -262,7 +262,7 @@ func testAccCheckOptionCodeExists(ctx context.Context, resourceName string, v *i
 		}
 		apiRes, _, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			OptionCodeAPI.
-			OptionCodeRead(ctx, rs.Primary.ID).
+			Read(ctx, rs.Primary.ID).
 			Execute()
 		if err != nil {
 			return err
@@ -275,12 +275,12 @@ func testAccCheckOptionCodeExists(ctx context.Context, resourceName string, v *i
 	}
 }
 
-func testAccCheckOptionCodeDestroy(ctx context.Context, v *ipam.IpamsvcOptionCode) resource.TestCheckFunc {
+func testAccCheckOptionCodeDestroy(ctx context.Context, v *ipam.OptionCode) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		_, httpRes, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			OptionCodeAPI.
-			OptionCodeRead(ctx, *v.Id).
+			Read(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -293,12 +293,12 @@ func testAccCheckOptionCodeDestroy(ctx context.Context, v *ipam.IpamsvcOptionCod
 	}
 }
 
-func testAccCheckOptionCodeDisappears(ctx context.Context, v *ipam.IpamsvcOptionCode) resource.TestCheckFunc {
+func testAccCheckOptionCodeDisappears(ctx context.Context, v *ipam.OptionCode) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.IPAddressManagementAPI.
 			OptionCodeAPI.
-			OptionCodeDelete(ctx, *v.Id).
+			Delete(ctx, *v.Id).
 			Execute()
 		if err != nil {
 			return err

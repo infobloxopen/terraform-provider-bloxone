@@ -56,6 +56,7 @@ resource "bloxone_dns_auth_nsg" "example" {
 ### Read-Only
 
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) Tagging specifics includes default tags.
 
 <a id="nestedatt--external_primaries"></a>
 ### Nested Schema for `external_primaries`

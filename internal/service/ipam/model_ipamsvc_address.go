@@ -40,6 +40,7 @@ type IpamsvcAddressModel struct {
 	Space             types.String      `tfsdk:"space"`
 	State             types.String      `tfsdk:"state"`
 	Tags              types.Map         `tfsdk:"tags"`
+	TagsAll           types.Map         `tfsdk:"tags_all"`
 	UpdatedAt         timetypes.RFC3339 `tfsdk:"updated_at"`
 	Usage             types.List        `tfsdk:"usage"`
 	NextAvailableId   types.String      `tfsdk:"next_available_id"`
@@ -64,6 +65,7 @@ var IpamsvcAddressAttrTypes = map[string]attr.Type{
 	"space":              types.StringType,
 	"state":              types.StringType,
 	"tags":               types.MapType{ElemType: types.StringType},
+	"tags_all":           types.MapType{ElemType: types.StringType},
 	"updated_at":         timetypes.RFC3339Type{},
 	"usage":              types.ListType{ElemType: types.StringType},
 	"next_available_id":  types.StringType,
@@ -165,6 +167,11 @@ var IpamsvcAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "The tags for this address in JSON format.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the address in JSON format including default tags.",
+	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
@@ -202,11 +209,11 @@ var IpamsvcAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *IpamsvcAddressModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.IpamsvcAddress {
+func (m *IpamsvcAddressModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipam.Address {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcAddress{
+	to := &ipam.Address{
 		Address:   flex.ExpandString(m.Address),
 		Comment:   flex.ExpandStringPointer(m.Comment),
 		Hwaddr:    flex.ExpandStringPointer(m.Hwaddr),
@@ -227,18 +234,19 @@ func (m *IpamsvcAddressModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	return to
 }
 
-func FlattenIpamsvcAddress(ctx context.Context, from *ipam.IpamsvcAddress, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcAddressDataSource(ctx context.Context, from *ipam.Address, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcAddressAttrTypes)
 	}
 	m := IpamsvcAddressModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcAddressAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *IpamsvcAddressModel) Flatten(ctx context.Context, from *ipam.IpamsvcAddress, diags *diag.Diagnostics) {
+func (m *IpamsvcAddressModel) Flatten(ctx context.Context, from *ipam.Address, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
@@ -262,7 +270,7 @@ func (m *IpamsvcAddressModel) Flatten(ctx context.Context, from *ipam.IpamsvcAdd
 	m.Range = flex.FlattenStringPointer(from.Range)
 	m.Space = flex.FlattenStringPointer(from.Space)
 	m.State = flex.FlattenStringPointer(from.State)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.Usage = flex.FlattenFrameworkListString(ctx, from.Usage, diags)
 }

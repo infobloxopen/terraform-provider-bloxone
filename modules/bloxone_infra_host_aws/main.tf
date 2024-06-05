@@ -99,11 +99,12 @@ data "bloxone_infra_hosts" "this" {
 }
 
 resource "bloxone_infra_service" "this" {
-  for_each      = var.services
-  name          = format("%s_%s", each.key, data.bloxone_infra_hosts.this.results[0].display_name)
-  pool_id       = data.bloxone_infra_hosts.this.results[0].pool_id
-  service_type  = each.key
-  desired_state = each.value
-  tags          = local.tags
-  timeouts      = var.timeouts
+  for_each       = var.services
+  name           = format("%s_%s", each.key, data.bloxone_infra_hosts.this.results[0].display_name)
+  pool_id        = data.bloxone_infra_hosts.this.results[0].pool_id
+  service_type   = each.key
+  desired_state  = each.value
+  tags           = local.tags
+  timeouts       = var.timeouts
+  wait_for_state = var.wait_for_state
 }

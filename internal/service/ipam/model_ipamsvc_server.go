@@ -60,6 +60,7 @@ type IpamsvcServerModel struct {
 	Name                            types.String      `tfsdk:"name"`
 	ServerPrincipal                 types.String      `tfsdk:"server_principal"`
 	Tags                            types.Map         `tfsdk:"tags"`
+	TagsAll                         types.Map         `tfsdk:"tags_all"`
 	UpdatedAt                       timetypes.RFC3339 `tfsdk:"updated_at"`
 	VendorSpecificOptionOptionSpace types.String      `tfsdk:"vendor_specific_option_option_space"`
 }
@@ -100,6 +101,7 @@ var IpamsvcServerAttrTypes = map[string]attr.Type{
 	"name":                                types.StringType,
 	"server_principal":                    types.StringType,
 	"tags":                                types.MapType{ElemType: types.StringType},
+	"tags_all":                            types.MapType{ElemType: types.StringType},
 	"updated_at":                          timetypes.RFC3339Type{},
 	"vendor_specific_option_option_space": types.StringType,
 }
@@ -208,7 +210,7 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 	},
 	"dhcp_config": schema.SingleNestedAttribute{
-		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes,
+		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes(false),
 		Optional:   true,
 		Computed:   true,
 		Default: objectdefault.StaticValue(types.ObjectValueMust(IpamsvcDHCPConfigAttrTypes, map[string]attr.Value{
@@ -216,6 +218,7 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 			"abandoned_reclaim_time_v6": types.Int64Value(3600),
 			"allow_unknown":             types.BoolValue(true),
 			"allow_unknown_v6":          types.BoolValue(true),
+			"echo_client_id":            types.BoolValue(true),
 			"filters":                   types.ListNull(types.StringType),
 			"filters_v6":                types.ListNull(types.StringType),
 			"ignore_client_uid":         types.BoolValue(true),
@@ -349,6 +352,11 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "The tags for the DHCP Config Profile in JSON format.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the DHCP Config Profile in JSON format including default tags.",
+	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
@@ -360,11 +368,11 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func (m *IpamsvcServerModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.IpamsvcServer {
+func (m *IpamsvcServerModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.Server {
 	if m == nil {
 		return nil
 	}
-	to := &ipam.IpamsvcServer{
+	to := &ipam.Server{
 		ClientPrincipal:                 flex.ExpandStringPointer(m.ClientPrincipal),
 		Comment:                         flex.ExpandStringPointer(m.Comment),
 		DdnsClientUpdate:                flex.ExpandStringPointer(m.DdnsClientUpdate),
@@ -403,18 +411,19 @@ func (m *IpamsvcServerModel) Expand(ctx context.Context, diags *diag.Diagnostics
 	return to
 }
 
-func FlattenIpamsvcServer(ctx context.Context, from *ipam.IpamsvcServer, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcServerDataSource(ctx context.Context, from *ipam.Server, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcServerAttrTypes)
 	}
 	m := IpamsvcServerModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcServerAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *IpamsvcServerModel) Flatten(ctx context.Context, from *ipam.IpamsvcServer, diags *diag.Diagnostics) {
+func (m *IpamsvcServerModel) Flatten(ctx context.Context, from *ipam.Server, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
@@ -455,7 +464,7 @@ func (m *IpamsvcServerModel) Flatten(ctx context.Context, from *ipam.IpamsvcServ
 	m.KerberosTkeyProtocol = flex.FlattenStringPointer(from.KerberosTkeyProtocol)
 	m.Name = flex.FlattenString(from.Name)
 	m.ServerPrincipal = flex.FlattenStringPointer(from.ServerPrincipal)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.VendorSpecificOptionOptionSpace = flex.FlattenStringPointer(from.VendorSpecificOptionOptionSpace)
 }

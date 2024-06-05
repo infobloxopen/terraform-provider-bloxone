@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
@@ -37,11 +37,11 @@ type ConfigAuthNSGModelWithFilter struct {
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *ConfigAuthNSGModelWithFilter) FlattenResults(ctx context.Context, from []dns_config.ConfigAuthNSG, diags *diag.Diagnostics) {
+func (m *ConfigAuthNSGModelWithFilter) FlattenResults(ctx context.Context, from []dnsconfig.AuthNSG, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigAuthNSGAttrTypes, diags, FlattenConfigAuthNSG)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigAuthNSGAttrTypes, diags, DataSourceFlattenConfigAuthNSG)
 }
 
 func (d *AuthNsgDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -98,10 +98,10 @@ func (d *AuthNsgDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]dns_config.ConfigAuthNSG, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]dnsconfig.AuthNSG, error) {
 		apiRes, _, err := d.client.DNSConfigurationAPI.
 			AuthNsgAPI.
-			AuthNsgList(ctx).
+			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
 			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).

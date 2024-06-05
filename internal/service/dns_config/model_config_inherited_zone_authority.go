@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 )
 
 type ConfigInheritedZoneAuthorityModel struct {
@@ -77,7 +77,7 @@ var ConfigInheritedZoneAuthorityResourceSchemaAttributes = map[string]schema.Att
 	},
 }
 
-func ExpandConfigInheritedZoneAuthority(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigInheritedZoneAuthority {
+func ExpandConfigInheritedZoneAuthority(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.InheritedZoneAuthority {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -89,11 +89,11 @@ func ExpandConfigInheritedZoneAuthority(ctx context.Context, o types.Object, dia
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigInheritedZoneAuthorityModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigInheritedZoneAuthority {
+func (m *ConfigInheritedZoneAuthorityModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.InheritedZoneAuthority {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigInheritedZoneAuthority{
+	to := &dnsconfig.InheritedZoneAuthority{
 		DefaultTtl:    ExpandInheritance2InheritedUInt32(ctx, m.DefaultTtl, diags),
 		Expire:        ExpandInheritance2InheritedUInt32(ctx, m.Expire, diags),
 		MnameBlock:    ExpandConfigInheritedZoneAuthorityMNameBlock(ctx, m.MnameBlock, diags),
@@ -106,7 +106,7 @@ func (m *ConfigInheritedZoneAuthorityModel) Expand(ctx context.Context, diags *d
 	return to
 }
 
-func FlattenConfigInheritedZoneAuthority(ctx context.Context, from *dns_config.ConfigInheritedZoneAuthority, diags *diag.Diagnostics) types.Object {
+func FlattenConfigInheritedZoneAuthority(ctx context.Context, from *dnsconfig.InheritedZoneAuthority, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigInheritedZoneAuthorityAttrTypes)
 	}
@@ -117,7 +117,7 @@ func FlattenConfigInheritedZoneAuthority(ctx context.Context, from *dns_config.C
 	return t
 }
 
-func (m *ConfigInheritedZoneAuthorityModel) Flatten(ctx context.Context, from *dns_config.ConfigInheritedZoneAuthority, diags *diag.Diagnostics) {
+func (m *ConfigInheritedZoneAuthorityModel) Flatten(ctx context.Context, from *dnsconfig.InheritedZoneAuthority, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dns_config"
+	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -26,6 +26,7 @@ type ConfigAuthNSGModel struct {
 	Name                types.String `tfsdk:"name"`
 	Nsgs                types.List   `tfsdk:"nsgs"`
 	Tags                types.Map    `tfsdk:"tags"`
+	TagsAll             types.Map    `tfsdk:"tags_all"`
 }
 
 var ConfigAuthNSGAttrTypes = map[string]attr.Type{
@@ -37,6 +38,7 @@ var ConfigAuthNSGAttrTypes = map[string]attr.Type{
 	"name":                 types.StringType,
 	"nsgs":                 types.ListType{ElemType: types.StringType},
 	"tags":                 types.MapType{ElemType: types.StringType},
+	"tags_all":             types.MapType{ElemType: types.StringType},
 }
 
 var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
@@ -91,9 +93,14 @@ var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "Tagging specifics.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "Tagging specifics includes default tags.",
+	},
 }
 
-func ExpandConfigAuthNSG(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dns_config.ConfigAuthNSG {
+func ExpandConfigAuthNSG(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.AuthNSG {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -105,11 +112,11 @@ func ExpandConfigAuthNSG(ctx context.Context, o types.Object, diags *diag.Diagno
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigAuthNSGModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dns_config.ConfigAuthNSG {
+func (m *ConfigAuthNSGModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.AuthNSG {
 	if m == nil {
 		return nil
 	}
-	to := &dns_config.ConfigAuthNSG{
+	to := &dnsconfig.AuthNSG{
 		Comment:             flex.ExpandStringPointer(m.Comment),
 		ExternalPrimaries:   flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalPrimaries, diags, ExpandConfigExternalPrimary),
 		ExternalSecondaries: flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalSecondaries, diags, ExpandConfigExternalSecondary),
@@ -121,18 +128,19 @@ func (m *ConfigAuthNSGModel) Expand(ctx context.Context, diags *diag.Diagnostics
 	return to
 }
 
-func FlattenConfigAuthNSG(ctx context.Context, from *dns_config.ConfigAuthNSG, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigAuthNSG(ctx context.Context, from *dnsconfig.AuthNSG, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigAuthNSGAttrTypes)
 	}
 	m := ConfigAuthNSGModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, ConfigAuthNSGAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *ConfigAuthNSGModel) Flatten(ctx context.Context, from *dns_config.ConfigAuthNSG, diags *diag.Diagnostics) {
+func (m *ConfigAuthNSGModel) Flatten(ctx context.Context, from *dnsconfig.AuthNSG, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
@@ -146,5 +154,5 @@ func (m *ConfigAuthNSGModel) Flatten(ctx context.Context, from *dns_config.Confi
 	m.InternalSecondaries = flex.FlattenFrameworkListNestedBlock(ctx, from.InternalSecondaries, ConfigInternalSecondaryAttrTypes, diags, FlattenConfigInternalSecondary)
 	m.Name = flex.FlattenString(from.Name)
 	m.Nsgs = flex.FlattenFrameworkListString(ctx, from.Nsgs, diags)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 }

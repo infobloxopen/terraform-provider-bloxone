@@ -14,7 +14,7 @@ import (
 func TestAccTsigDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_keys_tsigs.test"
 	resourceName := "bloxone_keys_tsig.test"
-	var v keys.KeysTSIGKey
+	var v keys.TSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -37,7 +37,7 @@ func TestAccTsigDataSource_Filters(t *testing.T) {
 func TestAccTsigDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_keys_tsigs.test"
 	resourceName := "bloxone_keys_tsig.test"
-	var v keys.KeysTSIGKey
+	var v keys.TSIGKey
 	name := acctest.RandomNameWithPrefix("key") + "."
 
 	resource.ParallelTest(t, resource.TestCase{
