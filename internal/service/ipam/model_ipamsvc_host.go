@@ -139,7 +139,7 @@ var IpamsvcHostResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-var IpamsvcHostResourceSchemaAttributesWithRetryAndTimeouts = map[string]schema.Attribute{
+var IpamsvcHostResourceSchemaAttributesWithRetry = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: "The primary IP address of the on-prem host.",
@@ -295,6 +295,7 @@ func (m *IpamsvcHostModelWithRetryAndTimeouts) Flatten(ctx context.Context, from
 	m.Ophid = flex.FlattenStringPointer(from.Ophid)
 	m.ProviderId = flex.FlattenStringPointer(from.ProviderId)
 	m.Server = flex.FlattenStringPointer(from.Server)
+	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Type = flex.FlattenStringPointer(from.Type)
 }

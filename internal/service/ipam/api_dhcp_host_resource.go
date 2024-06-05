@@ -41,7 +41,7 @@ func (r *DhcpHostResource) Metadata(ctx context.Context, req resource.MetadataRe
 func (r *DhcpHostResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manages DHCP Hosts.\n\nA DHCP Host object associates a DHCP Config Profile with an on-prem host.",
-		Attributes:          IpamsvcHostResourceSchemaAttributesWithRetryAndTimeouts,
+		Attributes:          IpamsvcHostResourceSchemaAttributesWithRetry,
 		Blocks: map[string]schema.Block{
 			"timeouts": timeouts.Block(ctx, timeouts.Opts{
 				Create: true,
