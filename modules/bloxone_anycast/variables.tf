@@ -1,12 +1,20 @@
 variable "hosts" {
   description = "Map of hostnames or IP addresses for the Anycast configuration."
-  type        = map(string)
+  type        = map(object({
+    role             = string,
+    routing_protocols = list(string)  # This will now handle multiple protocols
+  }))
+  default = {}
 }
 
-variable "name" {
+variable "ha_name" {
   description = "Name of the Anycast service."
   type        = string
-  default = "anycast-service"
+}
+
+variable "view_name" {
+  description = "Name of the Anycast service."
+  type        = string
 }
 
 variable "service" {
@@ -18,48 +26,37 @@ variable "service" {
 variable "anycast_ip_address" {
   description = "Anycast IP address."
   type    = string
-  default = "10.10.10.5"
 }
 
 variable "anycast_config_name" {
   description = "Name of the Anycast configuration."
   type    = string
-  default = "anycast-config-1"
 }
 
-variable "routing_protocols" {
-  description = "List of routing protocols to be configured (e.g., BGP, OSPF)."
-  type        = list(string)
-  default = ["BGP", "OSPF"]
-}
+# variable "routing_protocols" {
+#   description = "List of routing protocols to be configured (e.g., BGP, OSPF)."
+#   type        = list(string)
+#   default = ["BGP", "OSPF"]
+# }
 
-variable "bgp_config" {
-  description = "BGP configuration"
-  type = object({
+variable "bgp_configs" {
+  description = "Map of BGP configurations per host."
+  type = map(object({
     asn            = string
     holddown_secs  = number
     neighbors      = list(object({
       asn        = string
       ip_address = string
     }))
-  })
-  default = {
-    asn           = "6500"
-    holddown_secs = 180
-    neighbors     = [
-      {
-        asn        = "6501"
-        ip_address = "172.28.4.198"
-      }
-    ]
-  }
+  }))
+  default = {}
 }
 
-variable "ospf_config" {
-  description = "OSPF configuration."
-  type = object({
-    area                = string
+variable "ospf_configs" {
+  description = "Map of OSPF configurations per host."
+  type = map(object({
     area_type           = string
+    area                = string
     authentication_type = string
     interface           = string
     authentication_key  = string
@@ -67,16 +64,16 @@ variable "ospf_config" {
     dead_interval       = number
     retransmit_interval = number
     transmit_delay      = number
-  })
-  default = {
-    area                = "10.10.0.1"
-    area_type           = "STANDARD"
-    authentication_type = "Clear"
-    interface           = "eth0"
-    authentication_key  = "YXV0aGV"
-    hello_interval      = 10
-    dead_interval       = 40
-    retransmit_interval = 5
-    transmit_delay      = 1
-  }
+  }))
+  default = {}
+}
+
+variable "fqdn" {
+    description = "FQDN of the Anycast service."
+    type        = string
+}
+
+variable "primary_type"{
+    description = "Primary type of the Anycast service."
+    type        = string
 }

@@ -19,10 +19,11 @@ output "service" {
 }
 
 output "anycast_host_configs" {
-  description    = "The anycast host configurations"
   value = {
-    anycast_config = bloxone_anycast_config.ac.name,
-    bgp_asn        = var.bgp_config.asn,
-    ospf_area      = var.ospf_config.area
+    for host_key, host in data.bloxone_infra_hosts.this : host_key => {
+      id             = host.results[0].legacy_id,
+      bgp_asn        = contains(var.hosts[host_key].routing_protocols , "BGP") ? var.bgp_configs[host_key].asn : null,
+      ospf_area      = contains(var.hosts[host_key].routing_protocols, "OSPF") ? var.ospf_configs[host_key].area : null
+    }
   }
 }
