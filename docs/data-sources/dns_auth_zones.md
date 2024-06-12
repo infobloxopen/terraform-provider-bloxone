@@ -475,10 +475,10 @@ Read-Only:
 
 - `display_name` (String) Human-readable display name for the object referred to by _source_.
 - `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--zone_authority--rname--value))
+- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--zone_authority--mname_block--value))
 
-<a id="nestedatt--results--inheritance_sources--zone_authority--rname--value"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname.value`
+<a id="nestedatt--results--inheritance_sources--zone_authority--mname_block--value"></a>
+### Nested Schema for `results.inheritance_sources.zone_authority.mname_block.value`
 
 Read-Only:
 

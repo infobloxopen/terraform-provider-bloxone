@@ -236,10 +236,10 @@ Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
 - `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--asm_config--min_unused--value))
+- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--asm_config--asm_enable_block--value))
 
-<a id="nestedatt--results--inheritance_sources--asm_config--min_unused--value"></a>
-### Nested Schema for `results.inheritance_sources.asm_config.min_unused.value`
+<a id="nestedatt--results--inheritance_sources--asm_config--asm_enable_block--value"></a>
+### Nested Schema for `results.inheritance_sources.asm_config.asm_enable_block.value`
 
 Read-Only:
 
@@ -264,10 +264,10 @@ Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
 - `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--asm_config--min_unused--value))
+- `value` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--asm_config--asm_growth_block--value))
 
-<a id="nestedatt--results--inheritance_sources--asm_config--min_unused--value"></a>
-### Nested Schema for `results.inheritance_sources.asm_config.min_unused.value`
+<a id="nestedatt--results--inheritance_sources--asm_config--asm_growth_block--value"></a>
+### Nested Schema for `results.inheritance_sources.asm_config.asm_growth_block.value`
 
 Read-Only:
 
@@ -705,10 +705,10 @@ Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
 - `source` (String) The resource identifier.
-- `value` (Attributes List) The inherited value. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--lease_time_v6--value))
+- `value` (Attributes List) The inherited value. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--ignore_list--value))
 
-<a id="nestedatt--results--inheritance_sources--dhcp_config--lease_time_v6--value"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_config.lease_time_v6.value`
+<a id="nestedatt--results--inheritance_sources--dhcp_config--ignore_list--value"></a>
+### Nested Schema for `results.inheritance_sources.dhcp_config.ignore_list.value`
 
 Read-Only:
 
