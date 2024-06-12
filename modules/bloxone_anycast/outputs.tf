@@ -22,8 +22,21 @@ output "anycast_host_configs" {
   value = {
     for host_key, host in data.bloxone_infra_hosts.this : host_key => {
       id             = host.results[0].legacy_id,
-      bgp_asn        = contains(var.hosts[host_key].routing_protocols , "BGP") ? var.bgp_configs[host_key].asn : null,
-      ospf_area      = contains(var.hosts[host_key].routing_protocols, "OSPF") ? var.ospf_configs[host_key].area : null
     }
   }
+}
+
+output "anycast_host_ids" {
+  value = { for k, v in bloxone_anycast_host.this : k => v.id }
+  description = "The IDs of the created anycast hosts."
+}
+
+output "dhcp_ha_group_id" {
+  value       = length(bloxone_dhcp_ha_group.this) > 0 ? bloxone_dhcp_ha_group.this[0].id : null
+  description = "The ID of the created DHCP HA group."
+}
+
+output "infra_service_ids" {
+  value = { for k, v in bloxone_infra_service.anycast : k => v.id }
+  description = "The IDs of the created infrastructure services."
 }
