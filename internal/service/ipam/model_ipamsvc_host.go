@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -28,6 +29,7 @@ type IpamsvcHostModel struct {
 	ProviderId       types.String `tfsdk:"provider_id"`
 	Server           types.String `tfsdk:"server"`
 	Tags             types.Map    `tfsdk:"tags"`
+	TagsAll          types.Map    `tfsdk:"tags_all"`
 	Type             types.String `tfsdk:"type"`
 }
 
@@ -44,6 +46,7 @@ var IpamsvcHostAttrTypes = map[string]attr.Type{
 	"provider_id":       types.StringType,
 	"server":            types.StringType,
 	"tags":              types.MapType{ElemType: types.StringType},
+	"tags_all":          types.MapType{ElemType: types.StringType},
 	"type":              types.StringType,
 }
 
@@ -102,6 +105,11 @@ var IpamsvcHostResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "The tags of the on-prem host in JSON format.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags of the on-prem host in JSON format including default tags.",
+	},
 	"type": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: "Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services.  * _microsoft_active_directory_: host type is Microsoft Active Directory.",
@@ -133,12 +141,13 @@ func (m *IpamsvcHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) 
 	return to
 }
 
-func FlattenIpamsvcHost(ctx context.Context, from *ipam.Host, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcHostDataSource(ctx context.Context, from *ipam.Host, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcHostAttrTypes)
 	}
 	m := IpamsvcHostModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcHostAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -162,6 +171,6 @@ func (m *IpamsvcHostModel) Flatten(ctx context.Context, from *ipam.Host, diags *
 	m.Ophid = flex.FlattenStringPointer(from.Ophid)
 	m.ProviderId = flex.FlattenStringPointer(from.ProviderId)
 	m.Server = flex.FlattenStringPointer(from.Server)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Type = flex.FlattenStringPointer(from.Type)
 }

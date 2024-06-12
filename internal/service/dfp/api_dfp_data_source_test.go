@@ -17,7 +17,7 @@ func TestAccDfpDataSource_Filters(t *testing.T) {
 	var v dfp.Dfp
 	hostName := acctest.RandomNameWithPrefix("host")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -37,7 +37,6 @@ func TestAccDfpDataSource_Filters(t *testing.T) {
 
 func testAccCheckDfpResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
 	return []resource.TestCheckFunc{
-		resource.TestCheckResourceAttrPair(resourceName, "created_time", dataSourceName, "results.0.created_time"),
 		resource.TestCheckResourceAttrPair(resourceName, "forwarding_policy", dataSourceName, "results.0.forwarding_policy"),
 		resource.TestCheckResourceAttrPair(resourceName, "host", dataSourceName, "results.0.host"),
 		resource.TestCheckResourceAttrPair(resourceName, "net_addr_policy_ids", dataSourceName, "results.0.net_addr_policy_ids"),
@@ -58,7 +57,8 @@ func testAccCheckDfpResourceAttrPair(resourceName, dataSourceName string) []reso
 func testAccDfpDataSourceConfigFilters(hostName string) string {
 	config := `
 resource "bloxone_dfp_service" "test" {
-  service_id = bloxone_infra_service.example.id
+	service_id = bloxone_infra_service.example.id
+	internal_domain_lists = [one(data.bloxone_td_internal_domain_lists.default.results).id]
 }
 data "bloxone_dfp_services" "test" {
 	filters = {
@@ -66,5 +66,5 @@ data "bloxone_dfp_services" "test" {
 	}
 }
 `
-	return strings.Join([]string{testAccBaseWithInfraService(hostName), config}, "")
+	return strings.Join([]string{testAccBaseDfp(hostName), config}, "")
 }

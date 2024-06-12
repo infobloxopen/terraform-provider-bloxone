@@ -4,7 +4,7 @@ page_title: "bloxone_dhcp_fixed_addresses Data Source - terraform-provider-bloxo
 subcategory: "IPAM/DHCP"
 description: |-
   Retrieves information about existing Fixed Addresses.
-  The Fixed Address object reserves an address for a specific client. It must have a matchtype_ and a valid corresponding matchvalue_ so that it can match that client.
+  The Fixed Address object reserves an address for a specific client. It must have a match_type and a valid corresponding match_value so that it can match that client.
 ---
 
 # bloxone_dhcp_fixed_addresses (Data Source)
@@ -81,6 +81,7 @@ Read-Only:
 - `id` (String) The resource identifier.
 - `inheritance_assigned_hosts` (Attributes List) The list of the inheritance assigned hosts of the object. (see [below for nested schema](#nestedatt--results--inheritance_assigned_hosts))
 - `parent` (String) The resource identifier.
+- `tags_all` (Map of String) The tags for the fixed address in JSON format including default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 
 <a id="nestedatt--results--dhcp_options"></a>
@@ -144,7 +145,7 @@ Read-Only:
 - `overriding_group` (String) The resource identifier.
 
 <a id="nestedatt--results--inheritance_sources--dhcp_options--value--value--option"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_options.value.value.overriding_group`
+### Nested Schema for `results.inheritance_sources.dhcp_options.value.value.option`
 
 Read-Only:
 

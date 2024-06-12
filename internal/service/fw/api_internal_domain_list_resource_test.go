@@ -123,6 +123,41 @@ func TestAccInternalDomainListResource_InternalDomains(t *testing.T) {
 	})
 }
 
+func TestAccInternalDomainListResource_InternalDomains_Multiple(t *testing.T) {
+	resourceName := "bloxone_td_internal_domain_list.test_internal_domain_multiple"
+	var v fw.InternalDomains
+	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccInternalDomainListInternalDomainMultiple(name, []string{"example.somedomain.com", "dev.somedomain.com", "internal.somedomain.com", "test.somedomain.com"}),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckInternalDomainListExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "internal_domains.0", "example.somedomain.com"),
+					resource.TestCheckResourceAttr(resourceName, "internal_domains.1", "dev.somedomain.com"),
+					resource.TestCheckResourceAttr(resourceName, "internal_domains.2", "internal.somedomain.com"),
+					resource.TestCheckResourceAttr(resourceName, "internal_domains.3", "test.somedomain.com"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccInternalDomainListInternalDomainMultiple(name, []string{"test.newdomain.com", "internal.newdomain.com", "newdomain.com"}),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckInternalDomainListExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "internal_domains.0", "test.newdomain.com"),
+					resource.TestCheckResourceAttr(resourceName, "internal_domains.1", "internal.newdomain.com"),
+					resource.TestCheckResourceAttr(resourceName, "internal_domains.2", "newdomain.com"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccInternalDomainListResource_Name(t *testing.T) {
 	resourceName := "bloxone_td_internal_domain_list.test_name"
 	var v1, v2 fw.InternalDomains
@@ -277,6 +312,24 @@ resource "bloxone_td_internal_domain_list" "test_internal_domain" {
 	internal_domains = [%q]
 }
 `, name, internalDomains)
+}
+
+func testAccInternalDomainListInternalDomainMultiple(name string, internalDomains []string) string {
+	// join internalDomains into a string separated by commas, and quote each element
+	internalDomainsStr := ""
+	for i, domain := range internalDomains {
+		if i > 0 {
+			internalDomainsStr += ","
+		}
+		internalDomainsStr += fmt.Sprintf(`%q`, domain)
+	}
+
+	return fmt.Sprintf(`
+resource "bloxone_td_internal_domain_list" "test_internal_domain_multiple" {
+	name = %q
+	internal_domains = [%s]
+}
+`, name, internalDomainsStr)
 }
 
 func testAccInternalDomainName(name, internalDomains string) string {

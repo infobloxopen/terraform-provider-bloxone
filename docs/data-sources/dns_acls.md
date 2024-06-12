@@ -60,6 +60,7 @@ Optional:
 Read-Only:
 
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) Tagging specifics includes the default tags.
 
 <a id="nestedatt--results--list"></a>
 ### Nested Schema for `results.list`

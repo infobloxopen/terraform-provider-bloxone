@@ -82,6 +82,7 @@ Read-Only:
 - `protocol_absolute_name` (String) Host FQDN in punycode.
 - `provider_id` (String) External provider identifier.
 - `site_id` (String) Host site ID.
+- `tags_all` (Map of String) Host tagging specifics includes default tags.
 - `type` (String) Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services,  * _microsoft_active_directory_: host type is Microsoft Active Directory,  * _google_cloud_platform_: host type is Google Cloud Platform.
 
 <a id="nestedatt--results--associated_server"></a>

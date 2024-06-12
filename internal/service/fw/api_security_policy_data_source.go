@@ -41,7 +41,7 @@ func (m *AtcfwSecurityPolicyModelWithFilter) FlattenResults(ctx context.Context,
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, AtcfwSecurityPolicyAttrTypes, diags, FlattenAtcfwSecurityPolicy)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, AtcfwSecurityPolicyAttrTypes, diags, DataSourceFlattenAtcfwSecurityPolicy)
 }
 
 func (d *SecurityPoliciesDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

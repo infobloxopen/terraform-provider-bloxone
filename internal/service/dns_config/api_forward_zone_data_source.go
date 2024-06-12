@@ -41,7 +41,7 @@ func (m *ConfigForwardZoneModelWithFilter) FlattenResults(ctx context.Context, f
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigForwardZoneAttrTypes, diags, FlattenConfigForwardZone)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigForwardZoneAttrTypes, diags, DataSourceFlattenConfigForwardZone)
 }
 
 func (d *ForwardZoneDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

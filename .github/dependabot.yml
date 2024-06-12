@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "gomod"
     directory: "/"
     schedule:
-      interval: "weeekly"
+      interval: "weekly"
     commit-message:
       prefix: "chore"
       include: "scope"

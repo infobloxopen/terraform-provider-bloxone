@@ -42,7 +42,7 @@ func (m *AtcfwInternalDomainListModelWithFilter) FlattenResults(ctx context.Cont
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, AtcfwInternalDomainsAttrTypes, diags, FlattenAtcfwInternalDomains)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, AtcfwInternalDomainsAttrTypes, diags, DataSourceFlattenAtcfwInternalDomains)
 }
 
 func (d *InternalDomainListsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

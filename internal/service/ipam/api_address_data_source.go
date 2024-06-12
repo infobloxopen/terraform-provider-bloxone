@@ -41,7 +41,7 @@ func (m *IpamsvcAddressModelWithFilter) FlattenResults(ctx context.Context, from
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcAddressAttrTypes, diags, FlattenIpamsvcAddress)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcAddressAttrTypes, diags, FlattenIpamsvcAddressDataSource)
 }
 
 func (d *AddressDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {

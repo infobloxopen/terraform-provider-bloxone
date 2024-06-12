@@ -41,7 +41,7 @@ func (m *ConfigAuthNSGModelWithFilter) FlattenResults(ctx context.Context, from 
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigAuthNSGAttrTypes, diags, FlattenConfigAuthNSG)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigAuthNSGAttrTypes, diags, DataSourceFlattenConfigAuthNSG)
 }
 
 func (d *AuthNsgDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

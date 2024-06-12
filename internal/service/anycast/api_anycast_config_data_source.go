@@ -44,7 +44,7 @@ func (m *ProtoAnycastConfigModelWithFilter) FlattenResults(ctx context.Context, 
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ProtoAnycastConfigAttrTypes, diags, FlattenProtoAnycastConfig)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ProtoAnycastConfigAttrTypes, diags, DataSourceFlattenProtoAnycastConfig)
 }
 
 func (d *AnycastConfigDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

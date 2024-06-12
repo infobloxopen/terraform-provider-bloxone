@@ -26,6 +26,7 @@ type IpamsvcOptionSpaceModel struct {
 	Name      types.String      `tfsdk:"name"`
 	Protocol  types.String      `tfsdk:"protocol"`
 	Tags      types.Map         `tfsdk:"tags"`
+	TagsAll   types.Map         `tfsdk:"tags_all"`
 	UpdatedAt timetypes.RFC3339 `tfsdk:"updated_at"`
 }
 
@@ -36,6 +37,7 @@ var IpamsvcOptionSpaceAttrTypes = map[string]attr.Type{
 	"name":       types.StringType,
 	"protocol":   types.StringType,
 	"tags":       types.MapType{ElemType: types.StringType},
+	"tags_all":   types.MapType{ElemType: types.StringType},
 	"updated_at": timetypes.RFC3339Type{},
 }
 
@@ -80,6 +82,11 @@ var IpamsvcOptionSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "The tags for the option space in JSON format.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the option space in JSON format including default tags.",
+	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
@@ -102,12 +109,13 @@ func (m *IpamsvcOptionSpaceModel) Expand(ctx context.Context, diags *diag.Diagno
 	return to
 }
 
-func FlattenIpamsvcOptionSpace(ctx context.Context, from *ipam.OptionSpace, diags *diag.Diagnostics) types.Object {
+func FlattenIpamsvcOptionSpaceDataSource(ctx context.Context, from *ipam.OptionSpace, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(IpamsvcOptionSpaceAttrTypes)
 	}
 	m := IpamsvcOptionSpaceModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, IpamsvcOptionSpaceAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -125,6 +133,6 @@ func (m *IpamsvcOptionSpaceModel) Flatten(ctx context.Context, from *ipam.Option
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.Name = flex.FlattenString(from.Name)
 	m.Protocol = flex.FlattenStringPointer(from.Protocol)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }

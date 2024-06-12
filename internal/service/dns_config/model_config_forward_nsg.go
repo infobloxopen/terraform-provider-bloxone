@@ -3,14 +3,13 @@ package dns_config
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-
-	"github.com/hashicorp/terraform-plugin-framework/attr"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -29,6 +28,7 @@ type ConfigForwardNSGModel struct {
 	Name               types.String `tfsdk:"name"`
 	Nsgs               types.List   `tfsdk:"nsgs"`
 	Tags               types.Map    `tfsdk:"tags"`
+	TagsAll            types.Map    `tfsdk:"tags_all"`
 }
 
 var ConfigForwardNSGAttrTypes = map[string]attr.Type{
@@ -41,6 +41,7 @@ var ConfigForwardNSGAttrTypes = map[string]attr.Type{
 	"name":                types.StringType,
 	"nsgs":                types.ListType{ElemType: types.StringType},
 	"tags":                types.MapType{ElemType: types.StringType},
+	"tags_all":            types.MapType{ElemType: types.StringType},
 }
 
 var ConfigForwardNSGResourceSchemaAttributes = map[string]schema.Attribute{
@@ -94,6 +95,11 @@ var ConfigForwardNSGResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "Tagging specifics.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "Tagging specifics includes default tags.",
+	},
 }
 
 func ExpandConfigForwardNSG(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.ForwardNSG {
@@ -125,12 +131,13 @@ func (m *ConfigForwardNSGModel) Expand(ctx context.Context, diags *diag.Diagnost
 	return to
 }
 
-func FlattenConfigForwardNSG(ctx context.Context, from *dnsconfig.ForwardNSG, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenConfigForwardNSG(ctx context.Context, from *dnsconfig.ForwardNSG, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ConfigForwardNSGAttrTypes)
 	}
 	m := ConfigForwardNSGModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, ConfigForwardNSGAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -151,5 +158,5 @@ func (m *ConfigForwardNSGModel) Flatten(ctx context.Context, from *dnsconfig.For
 	m.InternalForwarders = flex.FlattenFrameworkListString(ctx, from.InternalForwarders, diags)
 	m.Name = flex.FlattenString(from.Name)
 	m.Nsgs = flex.FlattenFrameworkListString(ctx, from.Nsgs, diags)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 }

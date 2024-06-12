@@ -164,6 +164,7 @@ func (d *RecordDataSource) FlattenDataRecord(ctx context.Context, from *dnsdata.
 	}
 	m := dataRecordModel{}
 	m.Flatten(ctx, from, diags, d.impl)
+	m.Tags = m.TagsAll
 	t, ds := types.ObjectValueFrom(ctx, d.impl.attributeTypes(), m)
 	diags.Append(ds...)
 	return t

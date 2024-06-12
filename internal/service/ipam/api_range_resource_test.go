@@ -359,7 +359,7 @@ func TestAccRangeResource_Tags(t *testing.T) {
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactoriesWithTags,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
@@ -369,6 +369,8 @@ func TestAccRangeResource_Tags(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.site", "NA"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.site", "NA"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Update and Read
@@ -379,6 +381,8 @@ func TestAccRangeResource_Tags(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRangeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.site", "CA"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.site", "CA"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
