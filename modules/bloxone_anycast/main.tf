@@ -131,7 +131,7 @@
  *  ha_name            = null
  * }
  *
- * # Create a BloxOne Anycast Configuration for DNS
+ * # Create a BloxOne Anycast Configuration for DFP
  * module "bloxone_anycast" {
  *
  *  anycast_config_name = "ac"
