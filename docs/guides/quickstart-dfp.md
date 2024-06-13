@@ -7,7 +7,7 @@ description: |-
 
 # Managing Policy Based DFP service using the BloxOne Terraform Provider
 
-This guide provides step-by-step instructions for using the BloxOne Terraform Provider to manage Security Policies and various Threat Defense objects associated with it.
+This guide provides step-by-step instructions for using the BloxOne Terraform Provider to manage the DFP Service , Security Policies and various Threat Defense objects associated with it.
 
 ## Configuring the Provider
 
@@ -48,7 +48,8 @@ terraform init
 ### BloxOne Host on AWS with DFP service
 
 As the first step, you will also configure a BloxOne Host on AWS with DFP service.
-You will use the following module to create these
+
+You will use the following module to create it:
 - [bloxone_infra_host_aws](https://github.com/infobloxopen/terraform-provider-bloxone/tree/master/modules/bloxone_infra_host_aws)
 
 The module requires the [AWS terraform provider](https://registry.terraform.io/providers/hashicorp/aws/latest) to be configured.
@@ -90,11 +91,12 @@ module "bloxone_infra_host_aws" {
 }
 ````
 
-You will need the pool ID of the AWS host to create the Infra Service block for DFP. `explain how to get the pool ID`
+You will need the pool ID of the AWS host to create the Infra Service block for DFP. 
+
 To create the Infra service block , we use the following resource :
 - [bloxone_infra_service](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/infra_service)
 
-`Add the following code to your main.tf:
+Add the following code to your main.tf:
 
 ````terraform
 resource "bloxone_infra_service" "example" {
@@ -102,15 +104,17 @@ resource "bloxone_infra_service" "example" {
   pool_id      = data.bloxone_infra_hosts.dfp_host.results.0.pool_id
   service_type = "dfp"
   desired_state = "start"
-  wait_for_state = false
 }
 ````
 
-`explain all 2 blocks below`
-Further , we define the following:
+
+Further , we deploy the DFP Service and create an Internal Domain List using the following resources:
 - [bloxone_td_internal_domain_list](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/td_internal_domain_list)
 - [bloxone_dfp_service](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/dfp_service)
 
+We use the service ID of the Infra Service block to create the DFP Service.
+
+Add the following code to your main.tf:
 
 ````terraform
 resource "bloxone_td_internal_domain_list" "example_list" {
@@ -134,6 +138,7 @@ resource "bloxone_dfp_service" "example" {
   ]
 }
 ````
+The `resolvers_all` attribute is used to specify the DNS resolvers for the DFP service.
 
 You can now run `terraform plan` to see what resources will be created.
 
@@ -141,12 +146,12 @@ You can now run `terraform plan` to see what resources will be created.
 terraform plan
 ```
 
-### IPAM and DHCP Resources
-In this example, you will use the following resources to create a Named/Custom List, Access/Bypass Code, and a Network List/External Network.
-`add alternate names for the resources below`
-- [bloxone_td_named_list](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/td_named_list)
-- [bloxone_td_access_code](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/td_access_code)
-- [bloxone_td_network_list](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/td_network_list)
+### Creating Security Policy and resources associated with it
+In this example, you will use the following resources to create a Custom List, Bypass Code and an External Network.
+
+- [bloxone_td_named_list (Custom List)](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/td_named_list)
+- [bloxone_td_access_code (Bypass Code)](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/td_access_code)
+- [bloxone_td_network_list (External Network)](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/td_network_list)
 
 Add the following to the `main.tf` file:
 
@@ -189,6 +194,7 @@ resource "bloxone_td_network_list" "example" {
 
 
 ````
+The `rules` attribute in the Access code resource is used to specify the Named List.
 
 You can now run `terraform plan` to see what resources will be created.
 
@@ -228,7 +234,9 @@ resource "bloxone_td_security_policy" "example" {
 }
 ````
 
-`explain everthing above`
+Here the `dfps` attribute is used to associate the Security Policy with the DFP Service.
+
+The `onprem_resolve` attribute is used to enable the resolution of on-premises domains.
 
 You can now run `terraform plan` to see what resources will be created.
 
