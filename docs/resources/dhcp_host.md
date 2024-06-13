@@ -5,6 +5,7 @@ subcategory: "IPAM/DHCP"
 description: |-
   Manages DHCP Hosts.
   A DHCP Host object associates a DHCP Config Profile with an on-prem host.
+  Note: This resource represents an existing backend object that cannot be created or deleted through API calls. Instead, it can only be updated. When using terraform apply the resource configuration is applied to the existing object, and no new object is created. Similarly terraform destroy removes the configuration associated with the object without actually deleting it from the backend.
 ---
 
 # bloxone_dhcp_host (Resource)
@@ -12,6 +13,8 @@ description: |-
 Manages DHCP Hosts.
 
 A DHCP Host object associates a DHCP Config Profile with an on-prem host.
+
+Note: This resource represents an existing backend object that cannot be created or deleted through API calls. Instead, it can only be updated. When using terraform apply the resource configuration is applied to the existing object, and no new object is created. Similarly terraform destroy removes the configuration associated with the object without actually deleting it from the backend.
 
 ## Example Usage
 

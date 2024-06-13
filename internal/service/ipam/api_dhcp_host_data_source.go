@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -22,6 +23,97 @@ import (
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ datasource.DataSource = &DhcpHostDataSource{}
 
+var IpamsvcHostAttrTypes = map[string]attr.Type{
+	"address":           types.StringType,
+	"anycast_addresses": types.ListType{ElemType: types.StringType},
+	"associated_server": types.ObjectType{AttrTypes: IpamsvcHostAssociatedServerAttrTypes},
+	"comment":           types.StringType,
+	"current_version":   types.StringType,
+	"id":                types.StringType,
+	"ip_space":          types.StringType,
+	"name":              types.StringType,
+	"ophid":             types.StringType,
+	"provider_id":       types.StringType,
+	"server":            types.StringType,
+	"tags":              types.MapType{ElemType: types.StringType},
+	"tags_all":          types.MapType{ElemType: types.StringType},
+	"type":              types.StringType,
+}
+
+var IpamsvcHostAssociatedServerDataSourceSchemaAttributes = map[string]schema.Attribute{
+	"id": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
+	},
+	"name": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The DHCP Config Profile name.",
+	},
+}
+
+var IpamsvcHostDataSourceSchemaAttributes = map[string]schema.Attribute{
+	"address": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The primary IP address of the on-prem host.",
+	},
+	"anycast_addresses": schema.ListAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "Anycast address configured to the host. Order is not significant.",
+	},
+	"associated_server": schema.SingleNestedAttribute{
+		Attributes:          IpamsvcHostAssociatedServerDataSourceSchemaAttributes,
+		Computed:            true,
+		MarkdownDescription: "The DHCP Config Profile for the on-prem host.",
+	},
+	"comment": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The description for the on-prem host.",
+	},
+	"current_version": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "Current dhcp application version of the host.",
+	},
+	"id": schema.StringAttribute{
+		Required:            true,
+		MarkdownDescription: "The resource identifier.",
+	},
+	"ip_space": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
+	},
+	"name": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The display name of the on-prem host.",
+	},
+	"ophid": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The on-prem host ID.",
+	},
+	"provider_id": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "External provider identifier.",
+	},
+	"server": schema.StringAttribute{
+		Required:            true,
+		MarkdownDescription: "The resource identifier.",
+	},
+	"tags": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags of the on-prem host in JSON format.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags of the on-prem host in JSON format including default tags.",
+	},
+	"type": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services.  * _microsoft_active_directory_: host type is Microsoft Active Directory.",
+	},
+}
+
 func NewDhcpHostDataSource() datasource.DataSource {
 	return &DhcpHostDataSource{}
 }
@@ -33,6 +125,23 @@ type DhcpHostDataSource struct {
 
 func (d *DhcpHostDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + "dhcp_hosts"
+}
+
+type IpamsvcHostModel struct {
+	Address          types.String `tfsdk:"address"`
+	AnycastAddresses types.List   `tfsdk:"anycast_addresses"`
+	AssociatedServer types.Object `tfsdk:"associated_server"`
+	Comment          types.String `tfsdk:"comment"`
+	CurrentVersion   types.String `tfsdk:"current_version"`
+	Id               types.String `tfsdk:"id"`
+	IpSpace          types.String `tfsdk:"ip_space"`
+	Name             types.String `tfsdk:"name"`
+	Ophid            types.String `tfsdk:"ophid"`
+	ProviderId       types.String `tfsdk:"provider_id"`
+	Server           types.String `tfsdk:"server"`
+	Tags             types.Map    `tfsdk:"tags"`
+	TagsAll          types.Map    `tfsdk:"tags_all"`
+	Type             types.String `tfsdk:"type"`
 }
 
 type IpamsvcHostModelWithFilter struct {
@@ -66,7 +175,7 @@ func (d *DhcpHostDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			},
 			"results": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
-					Attributes: utils.DataSourceAttributeMap(IpamsvcHostResourceSchemaAttributes, &resp.Diagnostics),
+					Attributes: IpamsvcHostDataSourceSchemaAttributes,
 				},
 				Computed: true,
 			},
@@ -151,4 +260,48 @@ func (d *DhcpHostDataSource) Read(ctx context.Context, req datasource.ReadReques
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+}
+
+func (m *IpamsvcHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.Host {
+	if m == nil {
+		return nil
+	}
+	to := &ipam.Host{
+		Server: flex.ExpandStringPointer(m.Server),
+	}
+	return to
+}
+
+func FlattenIpamsvcHostDataSource(ctx context.Context, from *ipam.Host, diags *diag.Diagnostics) types.Object {
+	if from == nil {
+		return types.ObjectNull(IpamsvcHostAttrTypes)
+	}
+	m := IpamsvcHostModel{}
+	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
+	t, d := types.ObjectValueFrom(ctx, IpamsvcHostAttrTypes, m)
+	diags.Append(d...)
+	return t
+}
+
+func (m *IpamsvcHostModel) Flatten(ctx context.Context, from *ipam.Host, diags *diag.Diagnostics) {
+	if from == nil {
+		return
+	}
+	if m == nil {
+		*m = IpamsvcHostModel{}
+	}
+	m.Address = flex.FlattenStringPointer(from.Address)
+	m.AnycastAddresses = flex.FlattenFrameworkListString(ctx, from.AnycastAddresses, diags)
+	m.AssociatedServer = FlattenIpamsvcHostAssociatedServer(ctx, from.AssociatedServer, diags)
+	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CurrentVersion = flex.FlattenStringPointer(from.CurrentVersion)
+	m.IpSpace = flex.FlattenStringPointer(from.IpSpace)
+	m.Name = flex.FlattenStringPointer(from.Name)
+	m.Ophid = flex.FlattenStringPointer(from.Ophid)
+	m.ProviderId = flex.FlattenStringPointer(from.ProviderId)
+	m.Server = flex.FlattenStringPointer(from.Server)
+	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.Type = flex.FlattenStringPointer(from.Type)
 }

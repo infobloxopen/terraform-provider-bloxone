@@ -2,6 +2,7 @@ package ipam_test
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"testing"
@@ -21,6 +22,7 @@ func TestAccDhcpHostResource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckDhcpHostDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
@@ -44,6 +46,7 @@ func TestAccDhcpHostResource_Server(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckDhcpHostDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
@@ -85,6 +88,24 @@ func testAccCheckDhcpHostExists(ctx context.Context, resourceName string, v *ipa
 		}
 		*v = apiRes.GetResult()
 		return nil
+	}
+}
+
+func testAccCheckDhcpHostDestroy(ctx context.Context, v *ipam.Host) resource.TestCheckFunc {
+	// Verify the server is unassigned from the host
+	return func(state *terraform.State) error {
+		apiRes, _, err := acctest.BloxOneClient.IPAddressManagementAPI.
+			DhcpHostAPI.
+			Read(ctx, *v.Id).
+			Execute()
+		if err != nil {
+			return err
+		}
+		if apiRes.Result.Server == nil {
+			// Server object was deleted
+			return nil
+		}
+		return errors.New("server expected to be unassigned from host")
 	}
 }
 

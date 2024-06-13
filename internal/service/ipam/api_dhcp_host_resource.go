@@ -7,23 +7,115 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
+	"github.com/infobloxopen/bloxone-go-client/ipam"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 )
 
-//const (
-//	// DhcpHostOperationTimeout is the maximum amount of time to wait for eventual consistency
-//	DhcpHostOperationTimeout = 2 * time.Minute
-//)
-
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &DhcpHostResource{}
 var _ resource.ResourceWithImportState = &DhcpHostResource{}
+
+type IpamsvcHostModelWithRetryAndTimeouts struct {
+	Address          types.String   `tfsdk:"address"`
+	AnycastAddresses types.List     `tfsdk:"anycast_addresses"`
+	AssociatedServer types.Object   `tfsdk:"associated_server"`
+	Comment          types.String   `tfsdk:"comment"`
+	CurrentVersion   types.String   `tfsdk:"current_version"`
+	Id               types.String   `tfsdk:"id"`
+	IpSpace          types.String   `tfsdk:"ip_space"`
+	Name             types.String   `tfsdk:"name"`
+	Ophid            types.String   `tfsdk:"ophid"`
+	ProviderId       types.String   `tfsdk:"provider_id"`
+	Server           types.String   `tfsdk:"server"`
+	Tags             types.Map      `tfsdk:"tags"`
+	TagsAll          types.Map      `tfsdk:"tags_all"`
+	Type             types.String   `tfsdk:"type"`
+	RetryIfNotFound  types.Bool     `tfsdk:"retry_if_not_found"`
+	Timeouts         timeouts.Value `tfsdk:"timeouts"`
+}
+
+var IpamsvcHostResourceSchemaAttributesWithRetry = map[string]schema.Attribute{
+	"address": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The primary IP address of the on-prem host.",
+	},
+	"anycast_addresses": schema.ListAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "Anycast address configured to the host. Order is not significant.",
+	},
+	"associated_server": schema.SingleNestedAttribute{
+		Attributes:          IpamsvcHostAssociatedServerResourceSchemaAttributes,
+		Computed:            true,
+		MarkdownDescription: "The DHCP Config Profile for the on-prem host.",
+	},
+	"comment": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The description for the on-prem host.",
+	},
+	"current_version": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "Current dhcp application version of the host.",
+	},
+	"id": schema.StringAttribute{
+		Required:            true,
+		MarkdownDescription: "The resource identifier.",
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+		},
+	},
+	"ip_space": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The resource identifier.",
+	},
+	"name": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The display name of the on-prem host.",
+	},
+	"ophid": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The on-prem host ID.",
+	},
+	"provider_id": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "External provider identifier.",
+	},
+	"server": schema.StringAttribute{
+		Required: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
+		MarkdownDescription: "The resource identifier.",
+	},
+	"tags": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags of the on-prem host in JSON format.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags of the on-prem host in JSON format including default tags.",
+	},
+	"type": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services.  * _microsoft_active_directory_: host type is Microsoft Active Directory.",
+	},
+	"retry_if_not_found": schema.BoolAttribute{
+		Optional:            true,
+		MarkdownDescription: "If set to `true`, the resource will retry until a matching host is found, or until the Create Timeout expires.",
+	},
+}
 
 func NewDhcpHostResource() resource.Resource {
 	return &DhcpHostResource{}
@@ -40,7 +132,7 @@ func (r *DhcpHostResource) Metadata(ctx context.Context, req resource.MetadataRe
 
 func (r *DhcpHostResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Manages DHCP Hosts.\n\nA DHCP Host object associates a DHCP Config Profile with an on-prem host.",
+		MarkdownDescription: "Manages DHCP Hosts.\n\nA DHCP Host object associates a DHCP Config Profile with an on-prem host.\n\nNote: This resource represents an existing backend object that cannot be created or deleted through API calls. Instead, it can only be updated. When using terraform apply the resource configuration is applied to the existing object, and no new object is created. Similarly terraform destroy removes the configuration associated with the object without actually deleting it from the backend.",
 		Attributes:          IpamsvcHostResourceSchemaAttributesWithRetry,
 		Blocks: map[string]schema.Block{
 			"timeouts": timeouts.Block(ctx, timeouts.Opts{
@@ -224,4 +316,36 @@ func (r *DhcpHostResource) Delete(ctx context.Context, req resource.DeleteReques
 
 func (r *DhcpHostResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+}
+
+func (m *IpamsvcHostModelWithRetryAndTimeouts) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.Host {
+	if m == nil {
+		return nil
+	}
+	to := &ipam.Host{
+		Server: flex.ExpandStringPointer(m.Server),
+	}
+	return to
+}
+
+func (m *IpamsvcHostModelWithRetryAndTimeouts) Flatten(ctx context.Context, from *ipam.Host, diags *diag.Diagnostics) {
+	if from == nil {
+		return
+	}
+	if m == nil {
+		*m = IpamsvcHostModelWithRetryAndTimeouts{}
+	}
+	m.Address = flex.FlattenStringPointer(from.Address)
+	m.AnycastAddresses = flex.FlattenFrameworkListString(ctx, from.AnycastAddresses, diags)
+	m.AssociatedServer = FlattenIpamsvcHostAssociatedServer(ctx, from.AssociatedServer, diags)
+	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CurrentVersion = flex.FlattenStringPointer(from.CurrentVersion)
+	m.IpSpace = flex.FlattenStringPointer(from.IpSpace)
+	m.Name = flex.FlattenStringPointer(from.Name)
+	m.Ophid = flex.FlattenStringPointer(from.Ophid)
+	m.ProviderId = flex.FlattenStringPointer(from.ProviderId)
+	m.Server = flex.FlattenStringPointer(from.Server)
+	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.Type = flex.FlattenStringPointer(from.Type)
 }
