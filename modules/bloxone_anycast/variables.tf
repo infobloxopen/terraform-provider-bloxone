@@ -26,19 +26,15 @@ variable "hosts" {
 }
 
 variable "ha_name" {
-  description = "Name of the Anycast service."
+  description = "Name of the HA group."
   type        = string
-}
-
-variable "view_name" {
-  description = "Name of the Anycast service."
-  type        = string
+  default = null
 }
 
 variable "service" {
   description = "The type of the Service used in anycast configuration, supports (`dns`, `dhcp`, `dfp`)."
   type    = string
-  default = "DHCP"
+  default = "dhcp"
 }
 
 variable "anycast_ip_address" {
@@ -49,16 +45,6 @@ variable "anycast_ip_address" {
 variable "anycast_config_name" {
   description = "Name of the Anycast configuration."
   type    = string
-}
-
-variable "fqdn" {
-    description = "FQDN of the Anycast service."
-    type        = string
-}
-
-variable "primary_type"{
-    description = "Primary type of the Anycast service."
-    type        = string
 }
 
 variable "timeouts" {

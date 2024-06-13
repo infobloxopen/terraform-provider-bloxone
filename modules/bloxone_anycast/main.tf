@@ -31,6 +31,7 @@
  * ## Example Usage
  *
  * ```hcl
+ *  # Create a BloxOne Anycast Configuration for DHCP
  * module "bloxone_anycast" {
  *
  *  anycast_config_name = "ac"
@@ -72,8 +73,21 @@
  *        retransmit_interval = 5
  *        transmit_delay      = 1
  *      }
- *    },
- *    host3 = {
+ *    }
+ *  }
+ *
+ *  service            = "dhcp"
+ *  anycast_ip_address = "192.2.2.1"
+ *  ha_name            = "example_ha_group"
+ *  }
+ *
+ * # Create a BloxOne Anycast Configuration for DNS
+ * module "bloxone_anycast" {
+ *
+ *  anycast_config_name = "ac"
+ *
+ *  hosts = {
+ *    host1 = {
  *      role              = "active",
  *      routing_protocols = ["BGP", "OSPF"]
  *      bgp_config = {
@@ -88,22 +102,22 @@
  *        area_type           = "STANDARD"
  *        authentication_type = "Clear"
  *        authentication_key  = "YXV0aGVk"
- *        interface           = "eth0"
+ *        interface           = "ens5"
  *        hello_interval      = 10
  *        dead_interval       = 40
  *        retransmit_interval = 5
  *        transmit_delay      = 1
  *      }
  *    },
- *    host4 = {
- *      role              = "active",
+ *    host2 = {
+ *      role              = "passive",
  *      routing_protocols = ["OSPF"]
  *      ospf_config = {
- *        area                = "0.0.0.0"
+ *        area                = "0.0.0.1"
  *        area_type           = "STANDARD"
  *        authentication_type = "Clear"
  *        authentication_key  = "YXV0aGVk"
- *        interface           = "eth0"
+ *        interface           = "ens5"
  *        hello_interval      = 10
  *        dead_interval       = 40
  *        retransmit_interval = 5
@@ -114,11 +128,72 @@
  *
  *  service            = "dns"
  *  anycast_ip_address = "192.2.2.1"
+ *  ha_name            = null
+ * }
  *
- *  ha_name            = "example_ha_group"
- *  view_name          = "example_view"
- *  fqdn               = "example.com"
- *  primary_type       = "cloud"
+ * # Create a BloxOne Anycast Configuration for DNS
+ * module "bloxone_anycast" {
+ *
+ *  anycast_config_name = "ac"
+ *
+ *  hosts = {
+ *    host1 = {
+ *      role              = "active",
+ *      routing_protocols = ["BGP", "OSPF"]
+ *      bgp_config = {
+ *        asn           = "65001"
+ *        holddown_secs = 180
+ *        neighbors = [
+ *          { asn = "65002", ip_address = "172.28.4.198" }
+ *        ]
+ *      }
+ *      ospf_config = {
+ *        area                = "0.0.0.0"
+ *        area_type           = "STANDARD"
+ *        authentication_type = "Clear"
+ *        authentication_key  = "YXV0aGVk"
+ *        interface           = "ens5"
+ *        hello_interval      = 10
+ *        dead_interval       = 40
+ *        retransmit_interval = 5
+ *        transmit_delay      = 1
+ *      }
+ *    },
+ *    host2 = {
+ *      role              = "passive",
+ *      routing_protocols = ["OSPF"]
+ *      ospf_config = {
+ *        area                = "0.0.0.1"
+ *        area_type           = "STANDARD"
+ *        authentication_type = "Clear"
+ *        authentication_key  = "YXV0aGVk"
+ *        interface           = "ens5"
+ *        hello_interval      = 10
+ *        dead_interval       = 40
+ *        retransmit_interval = 5
+ *        transmit_delay      = 1
+ *      }
+ *    }
+ *    host3 = {
+ *       role              = "passive",
+ *       routing_protocols = ["OSPF"]
+ *       ospf_config = {
+ *          area                = "0.0.0.1"
+ *          area_type           = "STANDARD"
+ *          authentication_type = "Clear"
+ *          authentication_key  = "YXV0aGVk"
+ *          interface           = "ens5"
+ *          hello_interval      = 10
+ *          dead_interval       = 40
+ *          retransmit_interval = 5
+ *          transmit_delay      = 1
+ *      }
+ *    }
+ *
+ *  service            = "dfp"
+ *  anycast_ip_address = "192.2.2.1"
+ *  ha_name            = null
+ * }
  ```
  */
 
@@ -162,7 +237,7 @@ resource "bloxone_infra_service" "anycast" {
   pool_id        = data.bloxone_infra_hosts.this[each.key].results[0].pool_id
   service_type   = "anycast"
   desired_state  = "start"
-  wait_for_state = var.wait_for_state
+  wait_for_state = false
 }
 
 # Adding an anycast host with BGP and OSPF routing protocol

@@ -30,6 +30,7 @@ This Terraform module is designed to configure BloxOne Anycast services with DHC
 ## Example Usage
 
 ```hcl
+ # Create a BloxOne Anycast Configuration for DHCP
 module "bloxone_anycast" {
 
  anycast_config_name = "ac"
@@ -71,8 +72,21 @@ module "bloxone_anycast" {
        retransmit_interval = 5
        transmit_delay      = 1
      }
-   },
-   host3 = {
+   }
+ }
+
+ service            = "dhcp"
+ anycast_ip_address = "192.2.2.1"
+ ha_name            = "example_ha_group"
+ }
+
+# Create a BloxOne Anycast Configuration for DNS
+module "bloxone_anycast" {
+
+ anycast_config_name = "ac"
+
+ hosts = {
+   host1 = {
      role              = "active",
      routing_protocols = ["BGP", "OSPF"]
      bgp_config = {
@@ -87,22 +101,22 @@ module "bloxone_anycast" {
        area_type           = "STANDARD"
        authentication_type = "Clear"
        authentication_key  = "YXV0aGVk"
-       interface           = "eth0"
+       interface           = "ens5"
        hello_interval      = 10
        dead_interval       = 40
        retransmit_interval = 5
        transmit_delay      = 1
      }
    },
-   host4 = {
-     role              = "active",
+   host2 = {
+     role              = "passive",
      routing_protocols = ["OSPF"]
      ospf_config = {
-       area                = "0.0.0.0"
+       area                = "0.0.0.1"
        area_type           = "STANDARD"
        authentication_type = "Clear"
        authentication_key  = "YXV0aGVk"
-       interface           = "eth0"
+       interface           = "ens5"
        hello_interval      = 10
        dead_interval       = 40
        retransmit_interval = 5
@@ -113,11 +127,72 @@ module "bloxone_anycast" {
 
  service            = "dns"
  anycast_ip_address = "192.2.2.1"
+ ha_name            = null
+}
 
- ha_name            = "example_ha_group"
- view_name          = "example_view"
- fqdn               = "example.com"
- primary_type       = "cloud"
+# Create a BloxOne Anycast Configuration for DNS
+module "bloxone_anycast" {
+
+ anycast_config_name = "ac"
+
+ hosts = {
+   host1 = {
+     role              = "active",
+     routing_protocols = ["BGP", "OSPF"]
+     bgp_config = {
+       asn           = "65001"
+       holddown_secs = 180
+       neighbors = [
+         { asn = "65002", ip_address = "172.28.4.198" }
+       ]
+     }
+     ospf_config = {
+       area                = "0.0.0.0"
+       area_type           = "STANDARD"
+       authentication_type = "Clear"
+       authentication_key  = "YXV0aGVk"
+       interface           = "ens5"
+       hello_interval      = 10
+       dead_interval       = 40
+       retransmit_interval = 5
+       transmit_delay      = 1
+     }
+   },
+   host2 = {
+     role              = "passive",
+     routing_protocols = ["OSPF"]
+     ospf_config = {
+       area                = "0.0.0.1"
+       area_type           = "STANDARD"
+       authentication_type = "Clear"
+       authentication_key  = "YXV0aGVk"
+       interface           = "ens5"
+       hello_interval      = 10
+       dead_interval       = 40
+       retransmit_interval = 5
+       transmit_delay      = 1
+     }
+   }
+   host3 = {
+      role              = "passive",
+      routing_protocols = ["OSPF"]
+      ospf_config = {
+         area                = "0.0.0.1"
+         area_type           = "STANDARD"
+         authentication_type = "Clear"
+         authentication_key  = "YXV0aGVk"
+         interface           = "ens5"
+         hello_interval      = 10
+         dead_interval       = 40
+         retransmit_interval = 5
+         transmit_delay      = 1
+     }
+   }
+
+ service            = "dfp"
+ anycast_ip_address = "192.2.2.1"
+ ha_name            = null
+}
 ```
 
 ## Requirements
@@ -149,25 +224,18 @@ module "bloxone_anycast" {
 |------|-------------|------|---------|:--------:|
 | <a name="input_anycast_config_name"></a> [anycast\_config\_name](#input\_anycast\_config\_name) | Name of the Anycast configuration. | `string` | n/a | yes |
 | <a name="input_anycast_ip_address"></a> [anycast\_ip\_address](#input\_anycast\_ip\_address) | Anycast IP address. | `string` | n/a | yes |
-| <a name="input_fqdn"></a> [fqdn](#input\_fqdn) | FQDN of the Anycast service. | `string` | n/a | yes |
-| <a name="input_ha_name"></a> [ha\_name](#input\_ha\_name) | Name of the Anycast service. | `string` | n/a | yes |
+| <a name="input_ha_name"></a> [ha\_name](#input\_ha\_name) | Name of the HA group. | `string` | `null` | no |
 | <a name="input_hosts"></a> [hosts](#input\_hosts) | Map of hostnames with their roles, routing protocols, BGP, and OSPF configurations. | <pre>map(object({<br>    role               = string<br>    routing_protocols  = list(string)<br>    bgp_config = optional(object({<br>      asn            = string<br>      holddown_secs  = number<br>      neighbors      = list(object({<br>        asn        = string<br>        ip_address = string<br>      }))<br>    }))<br>    ospf_config = optional(object({<br>      area                = string<br>      area_type           = string<br>      authentication_type = string<br>      interface           = string<br>      authentication_key  = string<br>      hello_interval      = number<br>      dead_interval       = number<br>      retransmit_interval = number<br>      transmit_delay      = number<br>    }))<br>  }))</pre> | n/a | yes |
-| <a name="input_primary_type"></a> [primary\_type](#input\_primary\_type) | Primary type of the Anycast service. | `string` | n/a | yes |
-| <a name="input_service"></a> [service](#input\_service) | The type of the Service used in anycast configuration, supports (`dns`, `dhcp`, `dfp`). | `string` | `"DHCP"` | no |
+| <a name="input_service"></a> [service](#input\_service) | The type of the Service used in anycast configuration, supports (`dns`, `dhcp`, `dfp`). | `string` | `"dhcp"` | no |
 | <a name="input_timeouts"></a> [timeouts](#input\_timeouts) | The timeouts to use for the BloxOne Host. The timeout value is a string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). If not provided, the default timeouts will be used. | <pre>object({<br>    create = string<br>    update = string<br>    read   = string<br>  })</pre> | `null` | no |
-| <a name="input_view_name"></a> [view\_name](#input\_view\_name) | Name of the Anycast service. | `string` | n/a | yes |
 | <a name="input_wait_for_state"></a> [wait\_for\_state](#input\_wait\_for\_state) | If set to `true`, the resource will wait for the desired state to be reached before returning. If set to `false`, the resource will return immediately after the request is sent to the API. | `bool` | `null` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_anycast_config_id"></a> [anycast\_config\_id](#output\_anycast\_config\_id) | The ID of the anycast config |
-| <a name="output_anycast_config_name"></a> [anycast\_config\_name](#output\_anycast\_config\_name) | The name of the anycast config |
-| <a name="output_anycast_host_configs"></a> [anycast\_host\_configs](#output\_anycast\_host\_configs) | n/a |
-| <a name="output_anycast_host_ids"></a> [anycast\_host\_ids](#output\_anycast\_host\_ids) | The IDs of the created anycast hosts. |
-| <a name="output_anycast_ip_address"></a> [anycast\_ip\_address](#output\_anycast\_ip\_address) | The anycast IP address |
-| <a name="output_dhcp_ha_group_id"></a> [dhcp\_ha\_group\_id](#output\_dhcp\_ha\_group\_id) | The ID of the created DHCP HA group. |
-| <a name="output_infra_service_ids"></a> [infra\_service\_ids](#output\_infra\_service\_ids) | The IDs of the created infrastructure services. |
-| <a name="output_service"></a> [service](#output\_service) | The service of the anycast config |
+| <a name="output_anycast_config"></a> [anycast\_config](#output\_anycast\_config) | The anycast config |
+| <a name="output_anycast_hosts"></a> [anycast\_hosts](#output\_anycast\_hosts) | Map of anycast hosts |
+| <a name="output_dhcp_ha_group"></a> [dhcp\_ha\_group](#output\_dhcp\_ha\_group) | The DHCP HA group |
+| <a name="output_infra_services"></a> [infra\_services](#output\_infra\_services) | Map of infrastructure services |
 <!-- END_TF_DOCS -->
