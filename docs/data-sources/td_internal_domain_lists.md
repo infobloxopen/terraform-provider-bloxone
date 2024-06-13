@@ -58,4 +58,5 @@ Read-Only:
 - `created_time` (String) The time when this Internal Domain list object was created.
 - `id` (Number) The Internal Domain object identifier.
 - `is_default` (Boolean) True if name is 'Default Bypass Domains/CIDRs' otherwise false.
+- `tags_all` (Map of String) The tags for the internal domain list, including default tags.
 - `updated_time` (String) The time when this Internal domain list object was last updated.

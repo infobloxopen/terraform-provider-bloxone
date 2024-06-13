@@ -76,6 +76,7 @@ Read-Only:
 - `protocol` (String) The type of protocol (_ip4_ or _ip6_).
 - `range` (String) The resource identifier.
 - `state` (String) The state of the address (_used_ or _free_).
+- `tags_all` (Map of String) The tags for the address in JSON format including default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `usage` (List of String) The usage is a combination of indicators, each tracking a specific associated use. Listed below are usage indicators with their meaning:
 

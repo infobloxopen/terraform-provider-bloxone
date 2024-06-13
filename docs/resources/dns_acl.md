@@ -47,6 +47,7 @@ resource "bloxone_dns_acl" "example_acl" {
 ### Read-Only
 
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) Tagging specifics includes the default tags.
 
 <a id="nestedatt--list"></a>
 ### Nested Schema for `list`

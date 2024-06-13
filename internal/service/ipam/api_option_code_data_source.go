@@ -40,7 +40,7 @@ func (m *IpamsvcOptionCodeModelWithFilter) FlattenResults(ctx context.Context, f
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcOptionCodeAttrTypes, diags, FlattenIpamsvcOptionCode)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcOptionCodeAttrTypes, diags, FlattenIpamsvcOptionCodeDataSource)
 }
 
 func (d *OptionCodeDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

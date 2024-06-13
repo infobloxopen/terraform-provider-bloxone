@@ -18,6 +18,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/infobloxopen/bloxone-go-client/dnsdata"
+
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -42,6 +43,7 @@ type dataRecordModel struct {
 	Source              types.List        `tfsdk:"source"`
 	Subtype             types.String      `tfsdk:"subtype"`
 	Tags                types.Map         `tfsdk:"tags"`
+	TagsAll             types.Map         `tfsdk:"tags_all"`
 	Ttl                 types.Int64       `tfsdk:"ttl"`
 	Type                types.String      `tfsdk:"type"`
 	UpdatedAt           timetypes.RFC3339 `tfsdk:"updated_at"`
@@ -71,6 +73,7 @@ func recordCommonAttrTypes() map[string]attr.Type {
 		"source":                 types.ListType{ElemType: types.StringType},
 		"subtype":                types.StringType,
 		"tags":                   types.MapType{ElemType: types.StringType},
+		"tags_all":               types.MapType{ElemType: types.StringType},
 		"ttl":                    types.Int64Type,
 		"type":                   types.StringType,
 		"updated_at":             timetypes.RFC3339Type{},
@@ -203,6 +206,11 @@ func recordCommonSchema() map[string]schema.Attribute {
 			Optional:            true,
 			MarkdownDescription: "The tags for the DNS resource record in JSON format.",
 		},
+		"tags_all": schema.MapAttribute{
+			ElementType:         types.StringType,
+			Computed:            true,
+			MarkdownDescription: "The tags for the DNS resource record including default tags.",
+		},
 		"ttl": schema.Int64Attribute{
 			Optional:            true,
 			Computed:            true,
@@ -301,7 +309,7 @@ func (m *dataRecordModel) Flatten(ctx context.Context, from *dnsdata.Record, dia
 	m.Rdata = impl.flattenRData(ctx, from.Rdata, diags)
 	m.Source = flex.FlattenFrameworkListString(ctx, from.Source, diags)
 	m.Subtype = flex.FlattenStringPointer(from.Subtype)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Ttl = flex.FlattenInt64Pointer(from.Ttl)
 	m.Type = flex.FlattenStringPointer(from.Type)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)

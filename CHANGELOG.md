@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.2.0 (May 28, 2024)
+
+FEATURES:
+* **New Resource and Data Source:** `bloxone_td_application_filter`, `bloxone_td_application_filters` ([#113](https://github.com/infobloxopen/terraform-provider-bloxone/pull/113))
+* **New Resource and Data Source:** `bloxone_td_category_filter`, `bloxone_td_category_filters` ([#113](https://github.com/infobloxopen/terraform-provider-bloxone/pull/113))
+* **New Resource and Data Source:** `bloxone_td_custom_redirect`, `bloxone_td_custom_redirects` ([#113](https://github.com/infobloxopen/terraform-provider-bloxone/pull/113))
+* **New Data Source:** `bloxone_td_content_categories` ([#113](https://github.com/infobloxopen/terraform-provider-bloxone/pull/113))
+* **New Data Source:** `bloxone_td_threat_feeds` ([#113](https://github.com/infobloxopen/terraform-provider-bloxone/pull/113))
+
+FIXES:
+* Fixed inconsistent result error when applying `bloxone_td_internal_domain_list` and `bloxone_dfp_service` caused due to changes in the list order ([#114](https://github.com/infobloxopen/terraform-provider-bloxone/pull/114))  
+
 ## v1.1.0 (May 10, 2024)
 
 NOTES:

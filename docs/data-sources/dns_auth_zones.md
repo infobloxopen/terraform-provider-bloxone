@@ -81,6 +81,7 @@ Read-Only:
 - `mapping` (String) Zone mapping type. Allowed values:  * _forward_,  * _ipv4_reverse_.  * _ipv6_reverse_.  Defaults to forward.
 - `parent` (String) The resource identifier.
 - `protocol_fqdn` (String) Zone FQDN in punycode.
+- `tags_all` (Map of String) Tagging specifics includes default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `warnings` (Attributes List) The list of an auth zone warnings. (see [below for nested schema](#nestedatt--results--warnings))
 - `zone_authority` (Attributes) (see [below for nested schema](#nestedatt--results--zone_authority))
@@ -426,7 +427,7 @@ Optional:
 - `rname` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--zone_authority--rname))
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--default_ttl"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.default_ttl`
 
 Optional:
 
@@ -445,7 +446,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--expire"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.expire`
 
 Optional:
 
@@ -464,7 +465,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--mname_block"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.mname_block`
 
 Optional:
 
@@ -488,7 +489,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--negative_ttl"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.negative_ttl`
 
 Optional:
 
@@ -507,7 +508,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--protocol_rname"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.protocol_rname`
 
 Optional:
 
@@ -526,7 +527,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--refresh"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.refresh`
 
 Optional:
 
@@ -545,7 +546,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--retry"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.retry`
 
 Optional:
 

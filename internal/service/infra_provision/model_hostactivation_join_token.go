@@ -26,6 +26,7 @@ type HostactivationJoinTokenModel struct {
 	Name        types.String      `tfsdk:"name"`
 	Status      types.String      `tfsdk:"status"`
 	Tags        types.Map         `tfsdk:"tags"`
+	TagsAll     types.Map         `tfsdk:"tags_all"`
 	TokenId     types.String      `tfsdk:"token_id"`
 	UseCounter  types.Int64       `tfsdk:"use_counter"`
 }
@@ -40,6 +41,7 @@ var HostactivationJoinTokenAttrTypes = map[string]attr.Type{
 	"name":         types.StringType,
 	"status":       types.StringType,
 	"tags":         types.MapType{ElemType: types.StringType},
+	"tags_all":     types.MapType{ElemType: types.StringType},
 	"token_id":     types.StringType,
 	"use_counter":  types.Int64Type,
 }
@@ -90,6 +92,10 @@ var HostactivationJoinTokenResourceSchemaAttributes = map[string]schema.Attribut
 		ElementType: types.StringType,
 		Optional:    true,
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType: types.StringType,
+		Computed:    true,
+	},
 	"token_id": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: `first half of the token.`,
@@ -130,6 +136,7 @@ func FlattenHostactivationJoinToken(ctx context.Context, from *infraprovision.Jo
 	}
 	m := HostactivationJoinTokenModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, HostactivationJoinTokenAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -148,7 +155,7 @@ func (m *HostactivationJoinTokenModel) Flatten(ctx context.Context, from *infrap
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.LastUsedAt = timetypes.NewRFC3339TimePointerValue(from.LastUsedAt)
 	m.Name = flex.FlattenStringPointer(from.Name)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.TokenId = flex.FlattenStringPointer(from.TokenId)
 	m.UseCounter = flex.FlattenInt64(int64(*from.UseCounter))
 	m.Status = flattenStatus(from.Status)

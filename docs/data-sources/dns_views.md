@@ -106,6 +106,7 @@ Read-Only:
 - `created_at` (String) The timestamp when the object has been created.
 - `dnssec_root_keys` (Attributes List) DNSSEC root keys. The root keys are not configurable.  A default list is provided by cloud management and included here for config generation. (see [below for nested schema](#nestedatt--results--dnssec_root_keys))
 - `id` (String) The resource identifier.
+- `tags_all` (Map of String) Tagging specifics including default tags.
 - `updated_at` (String) The timestamp when the object has been updated. Equals to _created_at_ if not updated after creation.
 
 <a id="nestedatt--results--custom_root_ns"></a>
@@ -1016,7 +1017,7 @@ Optional:
 - `rname` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources--zone_authority--rname))
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--default_ttl"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.default_ttl`
 
 Optional:
 
@@ -1035,7 +1036,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--expire"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.expire`
 
 Optional:
 
@@ -1054,7 +1055,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--mname_block"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.mname_block`
 
 Optional:
 
@@ -1078,7 +1079,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--negative_ttl"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.negative_ttl`
 
 Optional:
 
@@ -1097,7 +1098,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--protocol_rname"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.protocol_rname`
 
 Optional:
 
@@ -1116,7 +1117,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--refresh"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.refresh`
 
 Optional:
 
@@ -1135,7 +1136,7 @@ Read-Only:
 
 
 <a id="nestedatt--results--inheritance_sources--zone_authority--retry"></a>
-### Nested Schema for `results.inheritance_sources.zone_authority.rname`
+### Nested Schema for `results.inheritance_sources.zone_authority.retry`
 
 Optional:
 

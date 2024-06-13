@@ -41,7 +41,7 @@ func (m *ConfigForwardNSGModelWithFilter) FlattenResults(ctx context.Context, fr
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigForwardNSGAttrTypes, diags, FlattenConfigForwardNSG)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigForwardNSGAttrTypes, diags, DataSourceFlattenConfigForwardNSG)
 }
 
 func (d *ForwardNsgDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

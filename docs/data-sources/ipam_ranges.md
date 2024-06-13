@@ -83,6 +83,7 @@ Read-Only:
 - `inheritance_parent` (String) The resource identifier.
 - `parent` (String) The resource identifier.
 - `protocol` (String) The type of protocol (_ip4_ or _ip6_).
+- `tags_all` (Map of String) The tags for the range in JSON format including default tags.
 - `threshold` (Attributes) (see [below for nested schema](#nestedatt--results--threshold))
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 - `utilization` (Attributes) (see [below for nested schema](#nestedatt--results--utilization))
@@ -172,7 +173,7 @@ Read-Only:
 - `overriding_group` (String) The resource identifier.
 
 <a id="nestedatt--results--inheritance_sources--dhcp_options--value--value--option"></a>
-### Nested Schema for `results.inheritance_sources.dhcp_options.value.value.overriding_group`
+### Nested Schema for `results.inheritance_sources.dhcp_options.value.value.option`
 
 Read-Only:
 
