@@ -251,4 +251,4 @@ terraform apply
 
 ## Next steps
 
-You can also use the BloxOne Terraform Provider to manage other resources such as DNS zones, DNS records. For more information, see the [BloxOne Terraform Provider documentation](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs).
+You can also use the BloxOne Terraform Provider to manage other DNS and DHCP objects. For more information, see the [BloxOne Terraform Provider documentation](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs).
