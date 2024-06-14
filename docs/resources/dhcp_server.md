@@ -313,15 +313,15 @@ Read-Only:
 
 - `fqdn` (String) Zone FQDN.  If _zone_ is defined, the _fqdn_ field must be empty.
 - `gss_tsig_enabled` (Boolean) _gss_tsig_enabled_ enables/disables GSS-TSIG signed dynamic updates.  Defaults to _false_.
-- `nameservers` (Attributes List) The Nameservers in the zone.  Each nameserver IP should be unique across the list of nameservers. (see [below for nested schema](#nestedatt--inheritance_sources--ddns_block--value--server_principal--nameservers))
+- `nameservers` (Attributes List) The Nameservers in the zone.  Each nameserver IP should be unique across the list of nameservers. (see [below for nested schema](#nestedatt--inheritance_sources--ddns_block--value--ddns_zones--nameservers))
 - `tsig_enabled` (Boolean) Indicates if TSIG key should be used for the update.  Defaults to _false_.
-- `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--ddns_block--value--server_principal--tsig_key))
+- `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--ddns_block--value--ddns_zones--tsig_key))
 - `view` (String) The resource identifier.
 - `view_name` (String) The name of the view.
 - `zone` (String) The resource identifier.
 
-<a id="nestedatt--inheritance_sources--ddns_block--value--server_principal--nameservers"></a>
-### Nested Schema for `inheritance_sources.ddns_block.value.server_principal.nameservers`
+<a id="nestedatt--inheritance_sources--ddns_block--value--ddns_zones--nameservers"></a>
+### Nested Schema for `inheritance_sources.ddns_block.value.ddns_zones.nameservers`
 
 Read-Only:
 
@@ -335,8 +335,8 @@ Read-Only:
 - `server_principal` (String) The Kerberos principal name of this DNS server that will receive updates.  Defaults to empty.
 
 
-<a id="nestedatt--inheritance_sources--ddns_block--value--server_principal--tsig_key"></a>
-### Nested Schema for `inheritance_sources.ddns_block.value.server_principal.tsig_key`
+<a id="nestedatt--inheritance_sources--ddns_block--value--ddns_zones--tsig_key"></a>
+### Nested Schema for `inheritance_sources.ddns_block.value.ddns_zones.tsig_key`
 
 Read-Only:
 
