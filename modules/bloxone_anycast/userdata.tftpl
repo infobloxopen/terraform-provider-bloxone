@@ -1,7 +1,0 @@
-#cloud-config
-host_setup:
-  jointoken: ${join_token}
-  tags:
-  %{ for k, v in tags ~}
-  - "${k}=${v}"
-  %{ endfor ~}
