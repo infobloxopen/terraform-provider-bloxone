@@ -53,7 +53,7 @@ func DhcpHostDataSourceSchemaAttributes(diags *diag.Diagnostics) map[string]sche
 		},
 		"associated_server": schema.SingleNestedAttribute{
 			Attributes:          utils.DataSourceAttributeMap(IpamsvcHostAssociatedServerResourceSchemaAttributes, diags),
-			Computed:            true,
+			Optional:            true,
 			MarkdownDescription: "The DHCP Config Profile for the on-prem host.",
 		},
 		"comment": schema.StringAttribute{
@@ -65,11 +65,11 @@ func DhcpHostDataSourceSchemaAttributes(diags *diag.Diagnostics) map[string]sche
 			MarkdownDescription: "Current dhcp application version of the host.",
 		},
 		"id": schema.StringAttribute{
-			Required:            true,
+			Computed:            true,
 			MarkdownDescription: "The resource identifier.",
 		},
 		"ip_space": schema.StringAttribute{
-			Computed:            true,
+			Optional:            true,
 			MarkdownDescription: "The resource identifier.",
 		},
 		"name": schema.StringAttribute{
@@ -85,12 +85,12 @@ func DhcpHostDataSourceSchemaAttributes(diags *diag.Diagnostics) map[string]sche
 			MarkdownDescription: "External provider identifier.",
 		},
 		"server": schema.StringAttribute{
-			Required:            true,
+			Optional:            true,
 			MarkdownDescription: "The resource identifier.",
 		},
 		"tags": schema.MapAttribute{
 			ElementType:         types.StringType,
-			Computed:            true,
+			Optional:            true,
 			MarkdownDescription: "The tags of the on-prem host in JSON format.",
 		},
 		"tags_all": schema.MapAttribute{
