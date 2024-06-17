@@ -59,23 +59,23 @@ Optional:
 <a id="nestedatt--results"></a>
 ### Nested Schema for `results`
 
-Required:
+Optional:
 
-- `id` (String) The resource identifier.
+- `associated_server` (Attributes) The DHCP Config Profile for the on-prem host. (see [below for nested schema](#nestedatt--results--associated_server))
+- `ip_space` (String) The resource identifier.
 - `server` (String) The resource identifier.
+- `tags` (Map of String) The tags of the on-prem host in JSON format.
 
 Read-Only:
 
 - `address` (String) The primary IP address of the on-prem host.
 - `anycast_addresses` (List of String) Anycast address configured to the host. Order is not significant.
-- `associated_server` (Attributes) The DHCP Config Profile for the on-prem host. (see [below for nested schema](#nestedatt--results--associated_server))
 - `comment` (String) The description for the on-prem host.
 - `current_version` (String) Current dhcp application version of the host.
-- `ip_space` (String) The resource identifier.
+- `id` (String) The resource identifier.
 - `name` (String) The display name of the on-prem host.
 - `ophid` (String) The on-prem host ID.
 - `provider_id` (String) External provider identifier.
-- `tags` (Map of String) The tags of the on-prem host in JSON format.
 - `tags_all` (Map of String) The tags of the on-prem host in JSON format including default tags.
 - `type` (String) Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services.  * _microsoft_active_directory_: host type is Microsoft Active Directory.
 
