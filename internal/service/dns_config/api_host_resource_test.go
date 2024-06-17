@@ -69,7 +69,7 @@ func TestAccDnsHostResource_Server(t *testing.T) {
 	})
 }
 
-func TestAccHostResource_Tags(t *testing.T) {
+func TestAccDnsHostResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_dns_host.test_tags"
 	var v dnsconfig.Host
 	var dnsServerName = acctest.RandomNameWithPrefix("dns-server")
