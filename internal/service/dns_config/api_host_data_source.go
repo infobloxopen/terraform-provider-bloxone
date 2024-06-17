@@ -27,7 +27,7 @@ func NewHostDataSource() datasource.DataSource {
 	return &HostDataSource{}
 }
 
-var ConfigHostAttrTypes = map[string]attr.Type{
+var HostAttrTypes = map[string]attr.Type{
 	"absolute_name":          types.StringType,
 	"address":                types.StringType,
 	"anycast_addresses":      types.ListType{ElemType: types.StringType},
@@ -50,99 +50,100 @@ var ConfigHostAttrTypes = map[string]attr.Type{
 	"type":                   types.StringType,
 }
 
-var ConfigHostDataSourceSchemaAttributes = map[string]schema.Attribute{
-	"absolute_name": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "Host FQDN.",
-	},
-	"address": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "Host's primary IP Address.",
-	},
-	"anycast_addresses": schema.ListAttribute{
-		ElementType:         types.StringType,
-		Computed:            true,
-		MarkdownDescription: "Anycast address configured to the host. Order is not significant.",
-	},
-	"associated_server": schema.SingleNestedAttribute{
-		Attributes:          ConfigHostAssociatedServerResourceSchemaAttributes,
-		Optional:            true,
-		MarkdownDescription: "Host associated server configuration.",
-	},
-	"comment": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "Host description.",
-	},
-	"current_version": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "Host current version.",
-	},
-	"dfp": schema.BoolAttribute{
-		Computed:            true,
-		MarkdownDescription: "Below _dfp_ field is deprecated and not supported anymore. The indication whether or not BloxOne DDI DNS and BloxOne TD DFP are both active on the host will be migrated into the new _dfp_service_ field.",
-	},
-	"dfp_service": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "DFP service indicates whether or not BloxOne DDI DNS and BloxOne TD DFP are both active on the host. If so, BloxOne DDI DNS will augment recursive queries and forward them to BloxOne TD DFP. Allowed values:  * _unavailable_: BloxOne TD DFP application is not available,  * _enabled_: BloxOne TD DFP application is available and enabled,  * _disabled_: BloxOne TD DFP application is available but disabled.",
-	},
-	"id": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "The resource identifier.",
-	},
-	"inheritance_sources": schema.SingleNestedAttribute{
-		Attributes:          ConfigHostInheritanceResourceSchemaAttributes,
-		Optional:            true,
-		Computed:            true,
-		MarkdownDescription: "Optional. Inheritance configuration.",
-	},
-	"kerberos_keys": schema.ListNestedAttribute{
-		NestedObject: schema.NestedAttributeObject{
-			Attributes: ConfigKerberosKeyResourceSchemaAttributes,
+func HostDataSourceSchemaAttributes(diag *diag.Diagnostics) map[string]schema.Attribute {
+	return map[string]schema.Attribute{
+		"absolute_name": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "Host FQDN.",
 		},
-		Optional:            true,
-		MarkdownDescription: "Optional. _kerberos_keys_ contains a list of keys for GSS-TSIG signed dynamic updates.  Defaults to empty.",
-	},
-	"name": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "Host display name.",
-	},
-	"ophid": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "On-Prem Host ID.",
-	},
-	"protocol_absolute_name": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "Host FQDN in punycode.",
-	},
-	"provider_id": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "External provider identifier.",
-	},
-	"server": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: "The resource identifier.",
-	},
-	"site_id": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "Host site ID.",
-	},
-	"tags": schema.MapAttribute{
-		ElementType:         types.StringType,
-		Optional:            true,
-		MarkdownDescription: "Host tagging specifics.",
-	},
-	"tags_all": schema.MapAttribute{
-		ElementType:         types.StringType,
-		Computed:            true,
-		MarkdownDescription: "Host tagging specifics includes default tags.",
-	},
-	"type": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services,  * _microsoft_active_directory_: host type is Microsoft Active Directory,  * _google_cloud_platform_: host type is Google Cloud Platform.",
-	},
+		"address": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "Host's primary IP Address.",
+		},
+		"anycast_addresses": schema.ListAttribute{
+			ElementType:         types.StringType,
+			Computed:            true,
+			MarkdownDescription: "Anycast address configured to the host. Order is not significant.",
+		},
+		"associated_server": schema.SingleNestedAttribute{
+			Attributes:          utils.DataSourceAttributeMap(ConfigHostAssociatedServerResourceSchemaAttributes, diag),
+			Optional:            true,
+			MarkdownDescription: "Host associated server configuration.",
+		},
+		"comment": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "Host description.",
+		},
+		"current_version": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "Host current version.",
+		},
+		"dfp": schema.BoolAttribute{
+			Computed:            true,
+			MarkdownDescription: "Below _dfp_ field is deprecated and not supported anymore. The indication whether or not BloxOne DDI DNS and BloxOne TD DFP are both active on the host will be migrated into the new _dfp_service_ field.",
+		},
+		"dfp_service": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "DFP service indicates whether or not BloxOne DDI DNS and BloxOne TD DFP are both active on the host. If so, BloxOne DDI DNS will augment recursive queries and forward them to BloxOne TD DFP. Allowed values:  * _unavailable_: BloxOne TD DFP application is not available,  * _enabled_: BloxOne TD DFP application is available and enabled,  * _disabled_: BloxOne TD DFP application is available but disabled.",
+		},
+		"id": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "The resource identifier.",
+		},
+		"inheritance_sources": schema.SingleNestedAttribute{
+			Attributes:          utils.DataSourceAttributeMap(ConfigHostInheritanceResourceSchemaAttributes, diag),
+			Optional:            true,
+			MarkdownDescription: "Optional. Inheritance configuration.",
+		},
+		"kerberos_keys": schema.ListNestedAttribute{
+			NestedObject: schema.NestedAttributeObject{
+				Attributes: utils.DataSourceAttributeMap(ConfigKerberosKeyResourceSchemaAttributes, diag),
+			},
+			Optional:            true,
+			MarkdownDescription: "Optional. _kerberos_keys_ contains a list of keys for GSS-TSIG signed dynamic updates.  Defaults to empty.",
+		},
+		"name": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "Host display name.",
+		},
+		"ophid": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "On-Prem Host ID.",
+		},
+		"protocol_absolute_name": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "Host FQDN in punycode.",
+		},
+		"provider_id": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "External provider identifier.",
+		},
+		"server": schema.StringAttribute{
+			Optional:            true,
+			MarkdownDescription: "The resource identifier.",
+		},
+		"site_id": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "Host site ID.",
+		},
+		"tags": schema.MapAttribute{
+			ElementType:         types.StringType,
+			Optional:            true,
+			MarkdownDescription: "Host tagging specifics.",
+		},
+		"tags_all": schema.MapAttribute{
+			ElementType:         types.StringType,
+			Computed:            true,
+			MarkdownDescription: "Host tagging specifics includes default tags.",
+		},
+		"type": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services,  * _microsoft_active_directory_: host type is Microsoft Active Directory,  * _google_cloud_platform_: host type is Google Cloud Platform.",
+		},
+	}
 }
 
-type ConfigHostModel struct {
+type HostModel struct {
 	AbsoluteName         types.String `tfsdk:"absolute_name"`
 	Address              types.String `tfsdk:"address"`
 	AnycastAddresses     types.List   `tfsdk:"anycast_addresses"`
@@ -174,7 +175,7 @@ func (d *HostDataSource) Metadata(ctx context.Context, req datasource.MetadataRe
 	resp.TypeName = req.ProviderTypeName + "_" + "dns_hosts"
 }
 
-type ConfigHostModelWithFilter struct {
+type HostModelWithFilter struct {
 	Filters         types.Map      `tfsdk:"filters"`
 	TagFilters      types.Map      `tfsdk:"tag_filters"`
 	Results         types.List     `tfsdk:"results"`
@@ -182,11 +183,11 @@ type ConfigHostModelWithFilter struct {
 	Timeouts        timeouts.Value `tfsdk:"timeouts"`
 }
 
-func (m *ConfigHostModelWithFilter) FlattenResults(ctx context.Context, from []dnsconfig.Host, diags *diag.Diagnostics) {
+func (m *HostModelWithFilter) FlattenResults(ctx context.Context, from []dnsconfig.Host, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ConfigHostAttrTypes, diags, FlattenConfigHost)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, HostAttrTypes, diags, FlattenConfigHost)
 }
 
 func (d *HostDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -205,7 +206,7 @@ func (d *HostDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 			},
 			"results": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
-					Attributes: ConfigHostDataSourceSchemaAttributes,
+					Attributes: HostDataSourceSchemaAttributes(&resp.Diagnostics),
 				},
 				Computed: true,
 			},
@@ -242,7 +243,7 @@ func (d *HostDataSource) Configure(ctx context.Context, req datasource.Configure
 }
 
 func (d *HostDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data ConfigHostModelWithFilter
+	var data HostModelWithFilter
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -293,7 +294,7 @@ func (d *HostDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (m *ConfigHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.Host {
+func (m *HostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.Host {
 	if m == nil {
 		return nil
 	}
@@ -309,22 +310,22 @@ func (m *ConfigHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *
 
 func FlattenConfigHost(ctx context.Context, from *dnsconfig.Host, diags *diag.Diagnostics) types.Object {
 	if from == nil {
-		return types.ObjectNull(ConfigHostAttrTypes)
+		return types.ObjectNull(HostAttrTypes)
 	}
-	m := ConfigHostModel{}
+	m := HostModel{}
 	m.Flatten(ctx, from, diags)
 	m.Tags = m.TagsAll
-	t, d := types.ObjectValueFrom(ctx, ConfigHostAttrTypes, m)
+	t, d := types.ObjectValueFrom(ctx, HostAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *ConfigHostModel) Flatten(ctx context.Context, from *dnsconfig.Host, diags *diag.Diagnostics) {
+func (m *HostModel) Flatten(ctx context.Context, from *dnsconfig.Host, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
 	if m == nil {
-		*m = ConfigHostModel{}
+		*m = HostModel{}
 	}
 	m.AbsoluteName = flex.FlattenStringPointer(from.AbsoluteName)
 	m.Address = flex.FlattenStringPointer(from.Address)

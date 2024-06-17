@@ -27,7 +27,7 @@ import (
 var _ resource.Resource = &HostResource{}
 var _ resource.ResourceWithImportState = &HostResource{}
 
-type ConfigHostModelWithRetryAndTimeouts struct {
+type HostModelWithRetryAndTimeouts struct {
 	AbsoluteName         types.String   `tfsdk:"absolute_name"`
 	Address              types.String   `tfsdk:"address"`
 	AnycastAddresses     types.List     `tfsdk:"anycast_addresses"`
@@ -52,7 +52,7 @@ type ConfigHostModelWithRetryAndTimeouts struct {
 	Timeouts             timeouts.Value `tfsdk:"timeouts"`
 }
 
-var ConfigHostResourceSchemaAttributesWithRetryAndTimeouts = map[string]schema.Attribute{
+var HostResourceSchemaAttributesWithRetryAndTimeouts = map[string]schema.Attribute{
 	"absolute_name": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: "Host FQDN.",
@@ -171,7 +171,7 @@ func (r *HostResource) Metadata(ctx context.Context, req resource.MetadataReques
 func (r *HostResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manages DNS Hosts.\n\nA DNS Host object associates a DNS Config Profile with an on-prem host.\n\nNote: This resource represents an existing backend object that cannot be created or deleted through API calls. Instead, it can only be updated. When using terraform apply the resource configuration is applied to the existing object, and no new object is created. Similarly terraform destroy removes the configuration associated with the object without actually deleting it from the backend.",
-		Attributes:          ConfigHostResourceSchemaAttributesWithRetryAndTimeouts,
+		Attributes:          HostResourceSchemaAttributesWithRetryAndTimeouts,
 		Blocks: map[string]schema.Block{
 			"timeouts": timeouts.Block(ctx, timeouts.Opts{
 				Create: true,
@@ -201,7 +201,7 @@ func (r *HostResource) Configure(ctx context.Context, req resource.ConfigureRequ
 }
 
 func (r *HostResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data ConfigHostModelWithRetryAndTimeouts
+	var data HostModelWithRetryAndTimeouts
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -267,7 +267,7 @@ func (r *HostResource) Create(ctx context.Context, req resource.CreateRequest, r
 }
 
 func (r *HostResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data ConfigHostModelWithRetryAndTimeouts
+	var data HostModelWithRetryAndTimeouts
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -297,7 +297,7 @@ func (r *HostResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 }
 
 func (r *HostResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data ConfigHostModelWithRetryAndTimeouts
+	var data HostModelWithRetryAndTimeouts
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -324,7 +324,7 @@ func (r *HostResource) Update(ctx context.Context, req resource.UpdateRequest, r
 }
 
 func (r *HostResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data ConfigHostModelWithRetryAndTimeouts
+	var data HostModelWithRetryAndTimeouts
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -356,7 +356,7 @@ func (r *HostResource) ImportState(ctx context.Context, req resource.ImportState
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
 
-func (m *ConfigHostModelWithRetryAndTimeouts) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.Host {
+func (m *HostModelWithRetryAndTimeouts) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.Host {
 	if m == nil {
 		return nil
 	}
@@ -366,12 +366,12 @@ func (m *ConfigHostModelWithRetryAndTimeouts) Expand(ctx context.Context, diags 
 	return to
 }
 
-func (m *ConfigHostModelWithRetryAndTimeouts) Flatten(ctx context.Context, from *dnsconfig.Host, diags *diag.Diagnostics) {
+func (m *HostModelWithRetryAndTimeouts) Flatten(ctx context.Context, from *dnsconfig.Host, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
 	if m == nil {
-		*m = ConfigHostModelWithRetryAndTimeouts{}
+		*m = HostModelWithRetryAndTimeouts{}
 	}
 	m.AbsoluteName = flex.FlattenStringPointer(from.AbsoluteName)
 	m.Address = flex.FlattenStringPointer(from.Address)
