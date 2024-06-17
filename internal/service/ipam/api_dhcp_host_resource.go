@@ -25,7 +25,7 @@ import (
 var _ resource.Resource = &DhcpHostResource{}
 var _ resource.ResourceWithImportState = &DhcpHostResource{}
 
-type IpamsvcHostModelWithRetryAndTimeouts struct {
+type DhcpHostModelWithRetryAndTimeouts struct {
 	Address          types.String   `tfsdk:"address"`
 	AnycastAddresses types.List     `tfsdk:"anycast_addresses"`
 	AssociatedServer types.Object   `tfsdk:"associated_server"`
@@ -44,7 +44,7 @@ type IpamsvcHostModelWithRetryAndTimeouts struct {
 	Timeouts         timeouts.Value `tfsdk:"timeouts"`
 }
 
-var IpamsvcHostResourceSchemaAttributesWithRetry = map[string]schema.Attribute{
+var DhcpHostResourceSchemaAttributesWithRetry = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: "The primary IP address of the on-prem host.",
@@ -133,7 +133,7 @@ func (r *DhcpHostResource) Metadata(ctx context.Context, req resource.MetadataRe
 func (r *DhcpHostResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manages DHCP Hosts.\n\nA DHCP Host object associates a DHCP Config Profile with an on-prem host.\n\nNote: This resource represents an existing backend object that cannot be created or deleted through API calls. Instead, it can only be updated. When using terraform apply the resource configuration is applied to the existing object, and no new object is created. Similarly terraform destroy removes the configuration associated with the object without actually deleting it from the backend.",
-		Attributes:          IpamsvcHostResourceSchemaAttributesWithRetry,
+		Attributes:          DhcpHostResourceSchemaAttributesWithRetry,
 		Blocks: map[string]schema.Block{
 			"timeouts": timeouts.Block(ctx, timeouts.Opts{
 				Create: true,
@@ -163,7 +163,7 @@ func (r *DhcpHostResource) Configure(ctx context.Context, req resource.Configure
 }
 
 func (r *DhcpHostResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data IpamsvcHostModelWithRetryAndTimeouts
+	var data DhcpHostModelWithRetryAndTimeouts
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -229,7 +229,7 @@ func (r *DhcpHostResource) Create(ctx context.Context, req resource.CreateReques
 }
 
 func (r *DhcpHostResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data IpamsvcHostModelWithRetryAndTimeouts
+	var data DhcpHostModelWithRetryAndTimeouts
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -259,7 +259,7 @@ func (r *DhcpHostResource) Read(ctx context.Context, req resource.ReadRequest, r
 }
 
 func (r *DhcpHostResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data IpamsvcHostModelWithRetryAndTimeouts
+	var data DhcpHostModelWithRetryAndTimeouts
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -286,7 +286,7 @@ func (r *DhcpHostResource) Update(ctx context.Context, req resource.UpdateReques
 }
 
 func (r *DhcpHostResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data IpamsvcHostModelWithRetryAndTimeouts
+	var data DhcpHostModelWithRetryAndTimeouts
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -318,7 +318,7 @@ func (r *DhcpHostResource) ImportState(ctx context.Context, req resource.ImportS
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
 
-func (m *IpamsvcHostModelWithRetryAndTimeouts) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.Host {
+func (m *DhcpHostModelWithRetryAndTimeouts) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.Host {
 	if m == nil {
 		return nil
 	}
@@ -328,12 +328,12 @@ func (m *IpamsvcHostModelWithRetryAndTimeouts) Expand(ctx context.Context, diags
 	return to
 }
 
-func (m *IpamsvcHostModelWithRetryAndTimeouts) Flatten(ctx context.Context, from *ipam.Host, diags *diag.Diagnostics) {
+func (m *DhcpHostModelWithRetryAndTimeouts) Flatten(ctx context.Context, from *ipam.Host, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
 	if m == nil {
-		*m = IpamsvcHostModelWithRetryAndTimeouts{}
+		*m = DhcpHostModelWithRetryAndTimeouts{}
 	}
 	m.Address = flex.FlattenStringPointer(from.Address)
 	m.AnycastAddresses = flex.FlattenFrameworkListString(ctx, from.AnycastAddresses, diags)
