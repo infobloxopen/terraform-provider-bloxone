@@ -1,13 +1,13 @@
 ---
-page_title: "Managing DHCP service with the BloxOne Terraform Provider"
+page_title: "Managing Policy Based DFP service using the BloxOne Terraform Provider"
 subcategory: "Guides"
 description: |-
-  This guide provides step-by-step instructions for using the BloxOne Terraform Provider to manage IPAM and DHCP resources.
+  This guide provides step-by-step instructions for using the BloxOne Terraform Provider to manage the DFP Service , Security Policies and various resources associated to it.
 ---
 
 # Managing Policy Based DFP service using the BloxOne Terraform Provider
 
-This guide provides step-by-step instructions for using the BloxOne Terraform Provider to manage the DFP Service , Security Policies and various Threat Defense objects associated with it.
+This guide provides step-by-step instructions for using the BloxOne Terraform Provider to manage the DFP Service , Security Policies and various resources associated to it.
 
 ## Configuring the Provider
 
@@ -47,7 +47,7 @@ terraform init
 
 ### BloxOne Host on AWS with DFP service
 
-As the first step, you will also configure a BloxOne Host on AWS with DFP service.
+As the first step, you will configure a BloxOne Host on AWS with DFP service.
 
 You will use the following module to create it:
 - [bloxone_infra_host_aws](https://github.com/infobloxopen/terraform-provider-bloxone/tree/master/modules/bloxone_infra_host_aws)
@@ -108,7 +108,7 @@ resource "bloxone_infra_service" "example" {
 ````
 
 
-Further , we deploy the DFP Service and create an Internal Domain List using the following resources:
+Next , we create the DFP Service block and an Internal Domain List using the following resources:
 - [bloxone_td_internal_domain_list](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/td_internal_domain_list)
 - [bloxone_dfp_service](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/dfp_service)
 
@@ -146,7 +146,7 @@ You can now run `terraform plan` to see what resources will be created.
 terraform plan
 ```
 
-### Creating Security Policy and resources associated with it
+### Creating the Security Policy and Resources associated with it
 In this example, you will use the following resources to create a Custom List, Bypass Code and an External Network.
 
 - [bloxone_td_named_list (Custom List)](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/td_named_list)
@@ -194,7 +194,7 @@ resource "bloxone_td_network_list" "example" {
 
 
 ````
-The `rules` attribute in the Access code resource is used to specify the Named List.
+The `rules` attribute in the Access code resource is used to specify the Named List created earlier.
 
 You can now run `terraform plan` to see what resources will be created.
 
@@ -202,7 +202,7 @@ You can now run `terraform plan` to see what resources will be created.
 terraform plan
 ```
 
-Finally, you will create the Security Policy that uses Named List, Access Code, and Network List created earlier.
+Finally, you will create the Security Policy that uses the Custom List, Bypass Code and an External Network created earlier.
 
 - [bloxone_td_security_policy](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/td_security_policy)
 
@@ -255,4 +255,4 @@ terraform apply
 
 ## Next steps
 
-You can also use the BloxOne Terraform Provider to manage other resources such as DNS and DHCP/IPAM resources. For more information, see the [BloxOne Terraform Provider documentation](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs).
+You can also use the BloxOne Terraform Provider to manage other DNS and DHCP/IPAM resources. For more information, see the [BloxOne Terraform Provider documentation](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs).

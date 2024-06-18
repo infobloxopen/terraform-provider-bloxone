@@ -255,4 +255,4 @@ terraform apply
 
 ## Next steps
 
-You can also use the BloxOne Terraform Provider to manage other  DNS and DHCP/IPAM resources. For more information, see the [BloxOne Terraform Provider documentation](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs).
+You can also use the BloxOne Terraform Provider to manage other DNS and DHCP/IPAM resources. For more information, see the [BloxOne Terraform Provider documentation](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs).
