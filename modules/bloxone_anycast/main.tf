@@ -1,44 +1,19 @@
 /**
- /**
  * # Terraform Module to Create BloxOne Anycast Configurations
  *
- * This Terraform module is designed to configure BloxOne Anycast services with DHCP HA pairs and DNS, DFP configurations based on the specified services. It retrieves existing BloxOne hosts, sets up anycast configuration profiles, and adds protocols like BGP and OSPF.
+ * This Terraform module configures BloxOne Anycast services for DHCP HA pairs, DNS, and DFP based on the specified service type. It fetches BloxOne hosts by provided names, creates an anycast configuration profile with the desired IP address and routing protocols, and if the service type is `dhcp`, it also creates a DHCP HA group.
  *
- * ## Features
- *
- *    Anycast Configuration Profile: The module creates an anycast configuration profile and applies specified routing protocols.
- *
- *    DHCP HA Group: When the service is set to DHCP and at least two hosts are provided, a DHCP HA group is created with anycast configuration.
- *
- *    DNS Configuration: When the service is set to DNS, Anycast config profile is created with DNS
- *
- *    DFP Configuration: When the service is set to DFP, Anycast config profile is created with DFP
- *
- * ## Module Workflow
- *
- *    Retrieve BloxOne Hosts: The module fetches existing BloxOne hosts based on the provided host names or IP addresses.
- *
- *    Create Anycast Configuration Profile: An anycast configuration profile is created with the desired anycast IP address and routing protocols.
- *
- *    Configure Anycast Hosts: Each host is configured with the specified BGP and OSPF settings.
- *
- *    DHCP HA Group Creation: If the service includes DHCP, a DHCP HA group is created using the provided hosts with anycast as the HA configuration.
- *
- *    DNS Resources Creation: If the service includes DNS, DNS anycast config profile is created with anycast-enabled hosts.
- *
- *    DFP Resources Creation: If the service includes DFP, DFP anycast config profile is created with anycast-enabled hosts.
- *
+ * Note: The module only creates the `anycast` service object and assumes pre-existing hosts in BloxOne and pre-configured `dhcp`, `dns`, or `dfp` services.
  * ## Example Usage
  *
+ * ### Anycast Configuration for DHCP
  * ```hcl
- *  # Create a BloxOne Anycast Configuration for DHCP
  * module "bloxone_anycast" {
- *
  *  anycast_config_name = "ac"
  *
  *  hosts = {
  *    host1 = {
- *      role              = "active",
+ *      ha_role              = "active",
  *      routing_protocols = ["BGP", "OSPF"]
  *      bgp_config = {
  *        asn           = "65001"
@@ -60,7 +35,7 @@
  *      }
  *    },
  *    host2 = {
- *      role              = "passive",
+ *      ha_role              = "passive",
  *      routing_protocols = ["OSPF"]
  *      ospf_config = {
  *        area                = "0.0.0.1"
@@ -78,17 +53,64 @@
  *
  *  service            = "dhcp"
  *  anycast_ip_address = "192.2.2.1"
- *  ha_name            = "example_ha_group"
+ *  ha_group_name      = "example_ha_group"
  *  }
+ * ```
+ * ### Anycast Configuration for DNS
+ * ```hcl
  *
- * # Create a BloxOne Anycast Configuration for DNS
+ *  module "bloxone_anycast" {
+ *   anycast_config_name = "ac"
+ *
+ *   hosts = {
+ *     host1 = {
+ *       routing_protocols = ["BGP", "OSPF"]
+ *       bgp_config = {
+ *         asn           = "65001"
+ *         holddown_secs = 180
+ *         neighbors = [
+ *           { asn = "65002", ip_address = "172.28.4.198" }
+ *         ]
+ *       }
+ *       ospf_config = {
+ *         area                = "0.0.0.0"
+ *         area_type           = "STANDARD"
+ *         authentication_type = "Clear"
+ *         authentication_key  = "YXV0aGVk"
+ *         interface           = "ens5"
+ *         hello_interval      = 10
+ *         dead_interval       = 40
+ *         retransmit_interval = 5
+ *         transmit_delay      = 1
+ *       }
+ *     },
+ *     host2 = {
+ *       routing_protocols = ["OSPF"]
+ *       ospf_config = {
+ *         area                = "0.0.0.1"
+ *         area_type           = "STANDARD"
+ *         authentication_type = "Clear"
+ *         authentication_key  = "YXV0aGVk"
+ *         interface           = "ens5"
+ *         hello_interval      = 10
+ *         dead_interval       = 40
+ *         retransmit_interval = 5
+ *         transmit_delay      = 1
+ *       }
+ *     }
+ *   }
+ *
+ *   service            = "dns"
+ *   anycast_ip_address = "192.2.2.1"
+ *  }
+ * ```
+ * ### Anycast Configuration for DFP
+ * ```hcl
  * module "bloxone_anycast" {
- *
  *  anycast_config_name = "ac"
  *
  *  hosts = {
  *    host1 = {
- *      role              = "active",
  *      routing_protocols = ["BGP", "OSPF"]
  *      bgp_config = {
  *        asn           = "65001"
@@ -110,57 +132,6 @@
  *      }
  *    },
  *    host2 = {
- *      role              = "passive",
- *      routing_protocols = ["OSPF"]
- *      ospf_config = {
- *        area                = "0.0.0.1"
- *        area_type           = "STANDARD"
- *        authentication_type = "Clear"
- *        authentication_key  = "YXV0aGVk"
- *        interface           = "ens5"
- *        hello_interval      = 10
- *        dead_interval       = 40
- *        retransmit_interval = 5
- *        transmit_delay      = 1
- *      }
- *    }
- *  }
- *
- *  service            = "dns"
- *  anycast_ip_address = "192.2.2.1"
- *  ha_name            = null
- * }
- *
- * # Create a BloxOne Anycast Configuration for DFP
- * module "bloxone_anycast" {
- *
- *  anycast_config_name = "ac"
- *
- *  hosts = {
- *    host1 = {
- *      role              = "active",
- *      routing_protocols = ["BGP", "OSPF"]
- *      bgp_config = {
- *        asn           = "65001"
- *        holddown_secs = 180
- *        neighbors = [
- *          { asn = "65002", ip_address = "172.28.4.198" }
- *        ]
- *      }
- *      ospf_config = {
- *        area                = "0.0.0.0"
- *        area_type           = "STANDARD"
- *        authentication_type = "Clear"
- *        authentication_key  = "YXV0aGVk"
- *        interface           = "ens5"
- *        hello_interval      = 10
- *        dead_interval       = 40
- *        retransmit_interval = 5
- *        transmit_delay      = 1
- *      }
- *    },
- *    host2 = {
- *      role              = "passive",
  *      routing_protocols = ["OSPF"]
  *      ospf_config = {
  *        area                = "0.0.0.1"
@@ -189,12 +160,11 @@
  *          transmit_delay      = 1
  *      }
  *    }
- *
+ *  }
  *  service            = "dfp"
  *  anycast_ip_address = "192.2.2.1"
- *  ha_name            = null
  * }
- ```
+ * ```
  */
 
 locals {
@@ -213,12 +183,12 @@ data "bloxone_infra_hosts" "this" {
 
   lifecycle {
     postcondition {
-      condition = self.results != null
+      condition     = self.results != null
       error_message = "Host not found for ${each.key}"
     }
 
     postcondition {
-      condition = contains(self.results[0].configs[*].service_type, var.service)
+      condition     = contains(self.results[0].configs[*].service_type, var.service)
       error_message = "${var.service} for ${each.key} is not configured"
     }
   }
@@ -242,8 +212,8 @@ resource "bloxone_infra_service" "anycast" {
 
 # Adding an anycast host with BGP and OSPF routing protocol
 resource "bloxone_anycast_host" "this" {
-  for_each  = data.bloxone_infra_hosts.this
-  id        = one(data.bloxone_infra_hosts.this[each.key].results).legacy_id
+  for_each = data.bloxone_infra_hosts.this
+  id       = one(data.bloxone_infra_hosts.this[each.key].results).legacy_id
 
   # Adding the anycast config profile and enabling BGP routing protocol
   anycast_config_refs = [
@@ -268,7 +238,7 @@ data "bloxone_dhcp_hosts" "this" {
 
   lifecycle {
     postcondition {
-      condition = self.results != null
+      condition     = self.results != null
       error_message = "Host not found for ${each.key}"
     }
   }
@@ -276,21 +246,26 @@ data "bloxone_dhcp_hosts" "this" {
 
 # Define the HA group resource
 resource "bloxone_dhcp_ha_group" "this" {
-  count = var.service == "dhcp" ? 1 : 0
-  name  = var.ha_name
-  mode  = "anycast"
+  count             = var.service == "dhcp" ? 1 : 0
+  name              = var.ha_group_name
+  mode              = "anycast"
   anycast_config_id = format("accm/ac_configs/%s", bloxone_anycast_config.ac.id)
 
   hosts = [
     for k, v in var.hosts : {
       host = data.bloxone_dhcp_hosts.this[k].results[0].id
-      role = v.role
+      role = v.ha_role
     }
   ]
 
   lifecycle {
     precondition {
-      condition = length(var.hosts) >= 2
+      condition     = var.ha_group_name != ""
+      error_message = "HA group name must be provided"
+    }
+
+    precondition {
+      condition     = length(var.hosts) >= 2
       error_message = "At least two hosts are required for DHCP HA"
     }
   }

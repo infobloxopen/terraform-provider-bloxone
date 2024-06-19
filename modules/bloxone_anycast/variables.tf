@@ -1,50 +1,51 @@
 variable "hosts" {
   description = "Map of hostnames with their roles, routing protocols, BGP, and OSPF configurations."
   type = map(object({
-    role               = string
-    routing_protocols  = list(string)
+    ha_role           = optional(string)
+    routing_protocols = list(string)
     bgp_config = optional(object({
-      asn            = string
-      holddown_secs  = number
-      neighbors      = list(object({
+      asn           = optional(string)
+      holddown_secs = optional(number)
+      neighbors = optional(list(object({
         asn        = string
         ip_address = string
-      }))
+      })))
     }))
     ospf_config = optional(object({
-      area                = string
-      area_type           = string
-      authentication_type = string
-      interface           = string
-      authentication_key  = string
-      hello_interval      = number
-      dead_interval       = number
-      retransmit_interval = number
-      transmit_delay      = number
+      area                = optional(string)
+      area_type           = optional(string)
+      authentication_type = optional(string)
+      authentication_key  = optional(string)
+      interface           = optional(string)
+      hello_interval      = optional(number)
+      dead_interval       = optional(number)
+      retransmit_interval = optional(number)
+      transmit_delay      = optional(number)
     }))
   }))
+  default = {}
 }
 
-variable "ha_name" {
+variable "ha_group_name" {
   description = "Name of the HA group."
   type        = string
-  default = null
+  default     = null
 }
 
 variable "service" {
   description = "The type of the Service used in anycast configuration, supports (`dns`, `dhcp`, `dfp`)."
-  type    = string
-  default = "dhcp"
+  type        = string
+  default     = "dhcp"
 }
 
 variable "anycast_ip_address" {
   description = "Anycast IP address."
-  type    = string
+  type        = string
 }
 
 variable "anycast_config_name" {
   description = "Name of the Anycast configuration."
-  type    = string
+  type        = string
 }
 
 variable "timeouts" {
@@ -60,5 +61,5 @@ variable "timeouts" {
 variable "wait_for_state" {
   description = "If set to `true`, the resource will wait for the desired state to be reached before returning. If set to `false`, the resource will return immediately after the request is sent to the API."
   type        = bool
-  default     = null
+  default     = true
 }

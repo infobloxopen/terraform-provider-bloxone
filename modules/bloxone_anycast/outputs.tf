@@ -5,12 +5,12 @@ output "anycast_config" {
 
 output "anycast_hosts" {
   description = "Map of anycast hosts"
-  value       = { for k, v in bloxone_anycast_host.this : k => v }
+  value       = bloxone_anycast_host.this
 }
 
 output "infra_services" {
   description = "Map of infrastructure services"
-  value       = { for k, v in bloxone_infra_service.anycast : k => v }
+  value       =  bloxone_infra_service.anycast
 }
 
 output "dhcp_ha_group" {
