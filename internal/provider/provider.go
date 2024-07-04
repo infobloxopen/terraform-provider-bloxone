@@ -109,6 +109,7 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		ipam.NewOptionSpaceResource,
 		ipam.NewOptionGroupResource,
 		ipam.NewOptionCodeResource,
+		ipam.NewDhcpHostResource,
 
 		dns_config.NewViewResource,
 		dns_config.NewAuthNsgResource,
