@@ -68,7 +68,6 @@ var HostResourceSchemaAttributesWithRetryAndTimeouts = map[string]schema.Attribu
 	},
 	"associated_server": schema.SingleNestedAttribute{
 		Attributes:          ConfigHostAssociatedServerResourceSchemaAttributes,
-		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "Host associated server configuration.",
 	},
@@ -108,7 +107,7 @@ var HostResourceSchemaAttributesWithRetryAndTimeouts = map[string]schema.Attribu
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigKerberosKeyResourceSchemaAttributes,
 		},
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Optional. _kerberos_keys_ contains a list of keys for GSS-TSIG signed dynamic updates.  Defaults to empty.",
 	},
 	"name": schema.StringAttribute{
@@ -128,7 +127,10 @@ var HostResourceSchemaAttributesWithRetryAndTimeouts = map[string]schema.Attribu
 		MarkdownDescription: "External provider identifier.",
 	},
 	"server": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "The resource identifier.",
 	},
 	"site_id": schema.StringAttribute{

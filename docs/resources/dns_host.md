@@ -49,9 +49,7 @@ resource "bloxone_dns_host" "example_dns_host" {
 
 ### Optional
 
-- `associated_server` (Attributes) Host associated server configuration. (see [below for nested schema](#nestedatt--associated_server))
 - `inheritance_sources` (Attributes) Optional. Inheritance configuration. (see [below for nested schema](#nestedatt--inheritance_sources))
-- `kerberos_keys` (Attributes List) Optional. _kerberos_keys_ contains a list of keys for GSS-TSIG signed dynamic updates.  Defaults to empty. (see [below for nested schema](#nestedatt--kerberos_keys))
 - `retry_if_not_found` (Boolean) If set to `true`, the resource will retry until a matching host is found, or until the Create Timeout expires.
 - `server` (String) The resource identifier.
 - `tags` (Map of String) Host tagging specifics.
@@ -62,10 +60,12 @@ resource "bloxone_dns_host" "example_dns_host" {
 - `absolute_name` (String) Host FQDN.
 - `address` (String) Host's primary IP Address.
 - `anycast_addresses` (List of String) Anycast address configured to the host. Order is not significant.
+- `associated_server` (Attributes) Host associated server configuration. (see [below for nested schema](#nestedatt--associated_server))
 - `comment` (String) Host description.
 - `current_version` (String) Host current version.
 - `dfp` (Boolean) Below _dfp_ field is deprecated and not supported anymore. The indication whether or not BloxOne DDI DNS and BloxOne TD DFP are both active on the host will be migrated into the new _dfp_service_ field.
 - `dfp_service` (String) DFP service indicates whether or not BloxOne DDI DNS and BloxOne TD DFP are both active on the host. If so, BloxOne DDI DNS will augment recursive queries and forward them to BloxOne TD DFP. Allowed values:  * _unavailable_: BloxOne TD DFP application is not available,  * _enabled_: BloxOne TD DFP application is available and enabled,  * _disabled_: BloxOne TD DFP application is available but disabled.
+- `kerberos_keys` (Attributes List) Optional. _kerberos_keys_ contains a list of keys for GSS-TSIG signed dynamic updates.  Defaults to empty. (see [below for nested schema](#nestedatt--kerberos_keys))
 - `name` (String) Host display name.
 - `ophid` (String) On-Prem Host ID.
 - `protocol_absolute_name` (String) Host FQDN in punycode.
@@ -73,15 +73,6 @@ resource "bloxone_dns_host" "example_dns_host" {
 - `site_id` (String) Host site ID.
 - `tags_all` (Map of String) Host tagging specifics includes default tags.
 - `type` (String) Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services,  * _microsoft_active_directory_: host type is Microsoft Active Directory,  * _google_cloud_platform_: host type is Google Cloud Platform.
-
-<a id="nestedatt--associated_server"></a>
-### Nested Schema for `associated_server`
-
-Read-Only:
-
-- `id` (String) The resource identifier.
-- `name` (String) DNS server name.
-
 
 <a id="nestedatt--inheritance_sources"></a>
 ### Nested Schema for `inheritance_sources`
@@ -118,6 +109,23 @@ Read-Only:
 
 
 
+<a id="nestedblock--timeouts"></a>
+### Nested Schema for `timeouts`
+
+Optional:
+
+- `create` (String) A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).
+
+
+<a id="nestedatt--associated_server"></a>
+### Nested Schema for `associated_server`
+
+Read-Only:
+
+- `id` (String) The resource identifier.
+- `name` (String) DNS server name.
+
+
 <a id="nestedatt--kerberos_keys"></a>
 ### Nested Schema for `kerberos_keys`
 
@@ -132,11 +140,3 @@ Read-Only:
 - `principal` (String) Kerberos principal associated with key.
 - `uploaded_at` (String) Upload time for the key.
 - `version` (Number) The version number (KVNO) of the key.
-
-
-<a id="nestedblock--timeouts"></a>
-### Nested Schema for `timeouts`
-
-Optional:
-
-- `create` (String) A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).

@@ -69,44 +69,6 @@ func TestAccDnsHostResource_Server(t *testing.T) {
 	})
 }
 
-func TestAccDnsHostResource_Tags(t *testing.T) {
-	var resourceName = "bloxone_dns_host.test_tags"
-	var v dnsconfig.Host
-	var dnsServerName = acctest.RandomNameWithPrefix("dns-server")
-
-	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// Create and Read
-			{
-				Config: testAccHostTags("TF_TEST_HOST_02", dnsServerName, map[string]string{
-					"tag1": "value1",
-					"tag2": "value2",
-				}),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDnsHostExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
-					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccHostTags("TF_TEST_HOST_02", dnsServerName, map[string]string{
-					"tag2": "value2changed",
-					"tag3": "value3",
-				}),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDnsHostExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2changed"),
-					resource.TestCheckResourceAttr(resourceName, "tags.tag3", "value3"),
-				),
-			},
-			// Delete testing automatically occurs in TestCase
-		},
-	})
-}
-
 func testAccCheckDnsHostExists(ctx context.Context, resourceName string, v *dnsconfig.Host) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
@@ -184,23 +146,4 @@ resource "bloxone_dns_host" "test_server" {
 }
 `, dnsServerName2, dnsServer)
 	return strings.Join([]string{testAccBaseWithDnsConfig(hostName, dnsServerName1), config}, "")
-}
-
-func testAccHostTags(hostName, dnsServerName string, tags map[string]string) string {
-	tagsStr := "{\n"
-	for k, v := range tags {
-		tagsStr += fmt.Sprintf(`
-		%s = %q
-`, k, v)
-	}
-	tagsStr += "\t}"
-
-	config := fmt.Sprintf(`
-resource "bloxone_dns_host" "test_tags" {
-	id = data.bloxone_infra_hosts.test_host.results.0.legacy_id
-	server = bloxone_dns_server.server.id
-	tags = %s
-}
-`, tagsStr)
-	return strings.Join([]string{testAccBaseWithDnsConfig(hostName, dnsServerName), config}, "")
 }

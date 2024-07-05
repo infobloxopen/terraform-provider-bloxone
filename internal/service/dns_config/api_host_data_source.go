@@ -67,7 +67,7 @@ func HostDataSourceSchemaAttributes(diag *diag.Diagnostics) map[string]schema.At
 		},
 		"associated_server": schema.SingleNestedAttribute{
 			Attributes:          utils.DataSourceAttributeMap(ConfigHostAssociatedServerResourceSchemaAttributes, diag),
-			Optional:            true,
+			Computed:            true,
 			MarkdownDescription: "Host associated server configuration.",
 		},
 		"comment": schema.StringAttribute{
