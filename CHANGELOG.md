@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.3.0 (Jun 24, 2024)
+## v1.3.0 (Jul 11, 2024)
 
 FEATURES:
 * **New feature:** `Support Default Tags` ([#124](https://github.com/infobloxopen/terraform-provider-bloxone/pull/124))
