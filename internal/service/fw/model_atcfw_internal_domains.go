@@ -20,15 +20,15 @@ import (
 )
 
 type AtcfwInternalDomainsModel struct {
-	CreatedTime     timetypes.RFC3339                              `tfsdk:"created_time"`
-	Description     types.String                                   `tfsdk:"description"`
-	Id              types.Int64                                    `tfsdk:"id"`
-	InternalDomains internaltypes.UnorderedListValue[types.String] `tfsdk:"internal_domains"`
-	IsDefault       types.Bool                                     `tfsdk:"is_default"`
-	Name            types.String                                   `tfsdk:"name"`
-	Tags            types.Map                                      `tfsdk:"tags"`
-	TagsAll         types.Map                                      `tfsdk:"tags_all"`
-	UpdatedTime     timetypes.RFC3339                              `tfsdk:"updated_time"`
+	CreatedTime     timetypes.RFC3339                `tfsdk:"created_time"`
+	Description     types.String                     `tfsdk:"description"`
+	Id              types.Int64                      `tfsdk:"id"`
+	InternalDomains internaltypes.UnorderedListValue `tfsdk:"internal_domains"`
+	IsDefault       types.Bool                       `tfsdk:"is_default"`
+	Name            types.String                     `tfsdk:"name"`
+	Tags            types.Map                        `tfsdk:"tags"`
+	TagsAll         types.Map                        `tfsdk:"tags_all"`
+	UpdatedTime     timetypes.RFC3339                `tfsdk:"updated_time"`
 }
 
 var AtcfwInternalDomainsAttrTypes = map[string]attr.Type{
@@ -132,7 +132,7 @@ func (m *AtcfwInternalDomainsModel) Flatten(ctx context.Context, from *fw.Intern
 	m.CreatedTime = timetypes.NewRFC3339TimePointerValue(from.CreatedTime)
 	m.Description = flex.FlattenStringPointer(from.Description)
 	m.Id = flex.FlattenInt32Pointer(from.Id)
-	m.InternalDomains = flex.FlattenFrameworkCustomListString(ctx, from.InternalDomains, diags)
+	m.InternalDomains = flex.FlattenFrameworkUnorderedList(ctx, types.StringType, from.InternalDomains, diags)
 	m.IsDefault = types.BoolPointerValue(from.IsDefault)
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)

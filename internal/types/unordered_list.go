@@ -11,22 +11,18 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-var UnorderedListOfStringType = UnorderedList[basetypes.StringValue]{basetypes.ListType{ElemType: basetypes.StringType{}}}
+var UnorderedListOfStringType = UnorderedList{basetypes.ListType{ElemType: basetypes.StringType{}}}
 
-var _ basetypes.ListValuableWithSemanticEquals = UnorderedListValue[basetypes.StringValue]{}
-var _ basetypes.ListTypable = UnorderedList[basetypes.StringValue]{}
+var _ basetypes.ListValuableWithSemanticEquals = UnorderedListValue{}
+var _ basetypes.ListTypable = UnorderedList{}
 
 // UnorderedList is a type representing a list of values where the order of the elements is not significant.
-type UnorderedList[T attr.Value] struct {
+type UnorderedList struct {
 	basetypes.ListType
 }
 
-func NewUnorderedList[T attr.Value](ctx context.Context) UnorderedList[T] {
-	return UnorderedList[T]{basetypes.ListType{ElemType: newAttrTypeOf[T](ctx)}}
-}
-
-func (t UnorderedList[T]) Equal(o attr.Type) bool {
-	other, ok := o.(UnorderedList[T])
+func (t UnorderedList) Equal(o attr.Type) bool {
+	other, ok := o.(UnorderedList)
 
 	if !ok {
 		return false
@@ -35,31 +31,31 @@ func (t UnorderedList[T]) Equal(o attr.Type) bool {
 	return t.ListType.Equal(other.ListType)
 }
 
-func (UnorderedList[T]) String() string {
-	return fmt.Sprintf("UnorderedList[%T]", new(T))
+func (UnorderedList) String() string {
+	return fmt.Sprintf("UnorderedList")
 }
 
-func (t UnorderedList[T]) ValueFromList(ctx context.Context, in basetypes.ListValue) (basetypes.ListValuable, diag.Diagnostics) {
+func (t UnorderedList) ValueFromList(ctx context.Context, in basetypes.ListValue) (basetypes.ListValuable, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
 	if in.IsNull() {
-		return NewUnorderedListValueNull[T](ctx), diags
+		return NewUnorderedListValueNull(t.ElemType), diags
 	}
 
 	if in.IsUnknown() {
-		return NewUnorderedListValueUnknown[T](ctx), diags
+		return NewUnorderedListValueUnknown(t.ElemType), diags
 	}
 
-	v, d := basetypes.NewListValue(newAttrTypeOf[T](ctx), in.Elements())
+	v, d := basetypes.NewListValue(t.ElemType, in.Elements())
 	diags.Append(d...)
 	if diags.HasError() {
-		return NewUnorderedListValueUnknown[T](ctx), diags
+		return NewUnorderedListValueUnknown(t.ElemType), diags
 	}
 
-	return UnorderedListValue[T]{ListValue: v}, diags
+	return UnorderedListValue{ListValue: v}, diags
 }
 
-func (t UnorderedList[T]) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+func (t UnorderedList) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
 	attrValue, err := t.ListType.ValueFromTerraform(ctx, in)
 
 	if err != nil {
@@ -81,18 +77,24 @@ func (t UnorderedList[T]) ValueFromTerraform(ctx context.Context, in tftypes.Val
 	return listValuable, nil
 }
 
-func (UnorderedList[T]) ValueType(context.Context) attr.Value {
-	return UnorderedListValue[T]{}
+func (t UnorderedList) ValueType(ctx context.Context) attr.Value {
+	return UnorderedListValue{
+		ListValue: t.ListType.ValueType(ctx).(basetypes.ListValue),
+	}
 }
 
-type UnorderedListValue[T attr.Value] struct {
+func NewUnorderedList(elemType attr.Type) UnorderedList {
+	return UnorderedList{basetypes.ListType{ElemType: elemType}}
+}
+
+type UnorderedListValue struct {
 	basetypes.ListValue
 }
 
-func (v UnorderedListValue[T]) ListSemanticEquals(ctx context.Context, newValuable basetypes.ListValuable) (bool, diag.Diagnostics) {
+func (v UnorderedListValue) ListSemanticEquals(ctx context.Context, newValuable basetypes.ListValuable) (bool, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	newValue, ok := newValuable.(UnorderedListValue[T])
+	newValue, ok := newValuable.(UnorderedListValue)
 	if !ok {
 		return false, diags
 	}
@@ -132,8 +134,8 @@ func (v UnorderedListValue[T]) ListSemanticEquals(ctx context.Context, newValuab
 	return len(oldElems) == 0, diags
 }
 
-func (v UnorderedListValue[T]) Equal(o attr.Value) bool {
-	other, ok := o.(UnorderedListValue[T])
+func (v UnorderedListValue) Equal(o attr.Value) bool {
+	other, ok := o.(UnorderedListValue)
 
 	if !ok {
 		return false
@@ -142,42 +144,37 @@ func (v UnorderedListValue[T]) Equal(o attr.Value) bool {
 	return v.ListValue.Equal(other.ListValue)
 }
 
-func (UnorderedListValue[T]) Type(ctx context.Context) attr.Type {
-	return NewUnorderedList[T](ctx)
+func (v UnorderedListValue) Type(ctx context.Context) attr.Type {
+	return NewUnorderedList(v.ElementType(ctx))
 }
 
-func NewUnorderedListValueNull[T attr.Value](ctx context.Context) UnorderedListValue[T] {
-	return UnorderedListValue[T]{ListValue: basetypes.NewListNull(newAttrTypeOf[T](ctx))}
+func NewUnorderedListValueNull(elemType attr.Type) UnorderedListValue {
+	return UnorderedListValue{ListValue: basetypes.NewListNull(elemType)}
 }
 
-func NewUnorderedListValueUnknown[T attr.Value](ctx context.Context) UnorderedListValue[T] {
-	return UnorderedListValue[T]{ListValue: basetypes.NewListUnknown(newAttrTypeOf[T](ctx))}
+func NewUnorderedListValueUnknown(elemType attr.Type) UnorderedListValue {
+	return UnorderedListValue{ListValue: basetypes.NewListUnknown(elemType)}
 }
-
-func NewUnorderedListValue[T attr.Value](ctx context.Context, elements []attr.Value) (UnorderedListValue[T], diag.Diagnostics) {
+func NewUnorderedListValue(elemType attr.Type, elements []attr.Value) (UnorderedListValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	v, d := basetypes.NewListValue(newAttrTypeOf[T](ctx), elements)
+	v, d := basetypes.NewListValue(elemType, elements)
 	diags.Append(d...)
 	if diags.HasError() {
-		return NewUnorderedListValueUnknown[T](ctx), diags
+		return NewUnorderedListValueUnknown(elemType), diags
 	}
 
-	return UnorderedListValue[T]{ListValue: v}, diags
+	return UnorderedListValue{ListValue: v}, diags
 }
 
-func NewUnorderedListValueFrom[T attr.Value](ctx context.Context, elements any) (UnorderedListValue[T], diag.Diagnostics) {
+func NewUnorderedListValueFrom(ctx context.Context, elemType attr.Type, elements any) (UnorderedListValue, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	v, d := basetypes.NewListValueFrom(ctx, newAttrTypeOf[T](ctx), elements)
+	v, d := basetypes.NewListValueFrom(ctx, elemType, elements)
 	diags.Append(d...)
 	if diags.HasError() {
-		return NewUnorderedListValueUnknown[T](ctx), diags
+		return NewUnorderedListValueUnknown(elemType), diags
 	}
 
-	return UnorderedListValue[T]{ListValue: v}, diags
-}
-
-func newAttrTypeOf[T attr.Value](ctx context.Context) attr.Type {
-	return (*new(T)).Type(ctx)
+	return UnorderedListValue{ListValue: v}, diags
 }

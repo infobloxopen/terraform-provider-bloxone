@@ -4,12 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"net/http"
 	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/infobloxopen/bloxone-go-client/anycast"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
@@ -66,6 +67,32 @@ func TestAccAnycastHostResource_disappears(t *testing.T) {
 	})
 }
 
+func TestAccAnycastHostResource_AnycastConfigRefs(t *testing.T) {
+	var resourceName = "bloxone_anycast_host.test"
+	var v anycast.OnpremHost
+	var anycastConfigName = acctest.RandomNameWithPrefix("anycast")
+	var anycastHostname = acctest.RandomNameWithPrefix("anycast_host")
+	anycastIP := acctest.RandomIP()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAnycastHostBasicConfig(anycastHostname, anycastConfigName, anycastIP),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAnycastHostExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrSet(resourceName, "id"),
+					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
+					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
+					resource.TestCheckResourceAttrSet(resourceName, "name"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
 func TestAccAnycastHostResource_enableRouting(t *testing.T) {
 	var resourceName = "bloxone_anycast_host.test"
 	var v anycast.OnpremHost
@@ -274,6 +301,40 @@ resource "bloxone_anycast_host" "test" {
 }
 `
 	return strings.Join([]string{testAccBaseWithAnycastConfig(hostName, anycastConfigName, anycastIP), config}, "")
+}
+
+func testAccAnycastHostAnycastConfigRefs(hostName, configNames []string) string {
+	for i, name := range configNames {
+		configNames[i] = fmt.Sprintf(`%q`, name)
+	}
+	configNamesStr := strings.Join(configNames, ",")
+
+	config := fmt.Sprintf(`
+resource "bloxone_infra_host" "test_host" {
+	display_name = %q
+}
+
+locals {
+	config_names = [ %s ]
+}
+
+resource "bloxone_anycast_config" "test_onprem_hosts" {
+	for_each = toset(local.config_names)
+	name               = "each.value"
+	service            = "DNS"
+}
+
+resource "bloxone_anycast_host" "test" {
+	for_each = toset(local.config_names)
+	id = bloxone_infra_host.test_host.legacy_id
+	anycast_config_refs = [
+		{
+			anycast_config_name = each.value
+		}
+	]
+}
+`, hostName, configNamesStr)
+	return config
 }
 
 func testAccAnycastHostEnableRoutingBGP(routingProtocols, hostName, anycastConfigName, anycastIP string) string {
