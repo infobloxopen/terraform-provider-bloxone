@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.3.0 (Jul 11, 2024)
+
+FEATURES:
+* **New feature:** `Support Default Tags` ([#124](https://github.com/infobloxopen/terraform-provider-bloxone/pull/124))
+* **New feature:** `Assign Service Instance in DHCP Config Profile` ([#121](https://github.com/infobloxopen/terraform-provider-bloxone/pull/121))
+* **New Module:** `Implementation for anycast module` ([#120](https://github.com/infobloxopen/terraform-provider-bloxone/pull/120))
+
 ## v1.2.0 (May 28, 2024)
 
 FEATURES:
