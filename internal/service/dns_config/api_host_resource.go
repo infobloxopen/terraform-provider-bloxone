@@ -139,7 +139,7 @@ var HostResourceSchemaAttributesWithRetryAndTimeouts = map[string]schema.Attribu
 	},
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Host tagging specifics.",
 	},
 	"tags_all": schema.MapAttribute{
@@ -391,6 +391,7 @@ func (m *HostModelWithRetryAndTimeouts) Flatten(ctx context.Context, from *dnsco
 	m.ProviderId = flex.FlattenStringPointer(from.ProviderId)
 	m.Server = flex.FlattenStringPointer(from.Server)
 	m.SiteId = flex.FlattenStringPointer(from.SiteId)
+	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Type = flex.FlattenStringPointer(from.Type)
 }

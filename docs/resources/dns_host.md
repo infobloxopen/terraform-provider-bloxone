@@ -25,13 +25,13 @@ data "bloxone_infra_hosts" "host" {
   }
 }
 
-resource "bloxone_dns_server" "dhcp_server" {
+resource "bloxone_dns_server" "dns_server" {
   name = "my-dns-server"
 }
 
 resource "bloxone_dns_host" "example_dns_host" {
   id     = data.bloxone_infra_hosts.host.results.0.legacy_id
-  server = bloxone_dns_server.dhcp_server.id
+  server = bloxone_dns_server.dns_server.id
 
   # Other Optional fields
   tags = {
@@ -52,7 +52,6 @@ resource "bloxone_dns_host" "example_dns_host" {
 - `inheritance_sources` (Attributes) Optional. Inheritance configuration. (see [below for nested schema](#nestedatt--inheritance_sources))
 - `retry_if_not_found` (Boolean) If set to `true`, the resource will retry until a matching host is found, or until the Create Timeout expires.
 - `server` (String) The resource identifier.
-- `tags` (Map of String) Host tagging specifics.
 - `timeouts` (Block, Optional) (see [below for nested schema](#nestedblock--timeouts))
 
 ### Read-Only
@@ -71,6 +70,7 @@ resource "bloxone_dns_host" "example_dns_host" {
 - `protocol_absolute_name` (String) Host FQDN in punycode.
 - `provider_id` (String) External provider identifier.
 - `site_id` (String) Host site ID.
+- `tags` (Map of String) Host tagging specifics.
 - `tags_all` (Map of String) Host tagging specifics includes default tags.
 - `type` (String) Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services,  * _microsoft_active_directory_: host type is Microsoft Active Directory,  * _google_cloud_platform_: host type is Google Cloud Platform.
 
