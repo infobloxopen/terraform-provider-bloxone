@@ -55,6 +55,7 @@ type HostModelWithRetryAndTimeouts struct {
 var HostResourceSchemaAttributesWithRetryAndTimeouts = map[string]schema.Attribute{
 	"absolute_name": schema.StringAttribute{
 		Computed:            true,
+		Optional:            true,
 		MarkdownDescription: "Host FQDN.",
 	},
 	"address": schema.StringAttribute{
@@ -108,6 +109,7 @@ var HostResourceSchemaAttributesWithRetryAndTimeouts = map[string]schema.Attribu
 			Attributes: ConfigKerberosKeyResourceSchemaAttributes,
 		},
 		Computed:            true,
+		Optional:            true,
 		MarkdownDescription: "Optional. _kerberos_keys_ contains a list of keys for GSS-TSIG signed dynamic updates.  Defaults to empty.",
 	},
 	"name": schema.StringAttribute{
@@ -363,7 +365,8 @@ func (m *HostModelWithRetryAndTimeouts) Expand(ctx context.Context, diags *diag.
 		return nil
 	}
 	to := &dnsconfig.Host{
-		Server: flex.ExpandStringPointer(m.Server),
+		Server:       flex.ExpandStringPointer(m.Server),
+		AbsoluteName: flex.ExpandStringPointer(m.AbsoluteName),
 	}
 	return to
 }

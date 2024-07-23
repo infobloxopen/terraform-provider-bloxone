@@ -37,6 +37,39 @@ func TestAccDnsHostResource_basic(t *testing.T) {
 	})
 }
 
+func TestAccDnsHostResource_AbsoluteName(t *testing.T) {
+	var resourceName = "bloxone_dns_host.test_absolute_name"
+	var v dnsconfig.Host
+	var dnsServerName1 = acctest.RandomNameWithPrefix("dns_server")
+	var absoluteName1 = acctest.RandomNameWithPrefix("dns_host") + "."
+	var absoluteName2 = acctest.RandomNameWithPrefix("dns_host") + "."
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckDnsHostDestroy(context.Background(), &v),
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccDnsHostAbsoluteName("TF_TEST_HOST_02", dnsServerName1, absoluteName1),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDnsHostExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "absolute_name", absoluteName1),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccDnsHostAbsoluteName("TF_TEST_HOST_02", dnsServerName1, absoluteName2),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDnsHostExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "absolute_name", absoluteName2),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccDnsHostResource_Server(t *testing.T) {
 	var resourceName = "bloxone_dns_host.test_server"
 	var v dnsconfig.Host
@@ -130,6 +163,17 @@ resource "bloxone_dns_host" "test" {
 	server = bloxone_dns_server.server.id
 }
 `
+	return strings.Join([]string{testAccBaseWithDnsConfig(hostName, dnsServerName), config}, "")
+}
+
+func testAccDnsHostAbsoluteName(hostName, dnsServerName, absoluteName string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dns_host" "test_absolute_name" {
+	id = data.bloxone_infra_hosts.test_host.results.0.legacy_id
+	server = bloxone_dns_server.server.id
+	absolute_name = %q
+}
+`, absoluteName)
 	return strings.Join([]string{testAccBaseWithDnsConfig(hostName, dnsServerName), config}, "")
 }
 
