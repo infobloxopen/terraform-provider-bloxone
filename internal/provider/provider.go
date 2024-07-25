@@ -88,7 +88,7 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 		option.WithAPIKey(data.APIKey.ValueString()),
 		option.WithCSPUrl(data.CSPUrl.ValueString()),
 		option.WithDefaultTags(dfTags),
-		option.WithDebug(true),
+		option.WithDebug(false),
 	)
 
 	resp.DataSourceData = client
@@ -104,12 +104,12 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		ipam.NewAddressResource,
 		ipam.NewRangeResource,
 		ipam.NewFixedAddressResource,
-		ipam.NewDhcpHostResource,
 		ipam.NewServerResource,
 		ipam.NewHaGroupResource,
 		ipam.NewOptionSpaceResource,
 		ipam.NewOptionGroupResource,
 		ipam.NewOptionCodeResource,
+		ipam.NewDhcpHostResource,
 
 		dns_config.NewViewResource,
 		dns_config.NewAuthNsgResource,
@@ -119,6 +119,7 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		dns_config.NewDelegationResource,
 		dns_config.NewServerResource,
 		dns_config.NewAclResource,
+		dns_config.NewHostResource,
 
 		dns_data.NewRecordAResource,
 		dns_data.NewRecordAAAAResource,
