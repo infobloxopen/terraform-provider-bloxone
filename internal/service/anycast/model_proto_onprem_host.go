@@ -114,6 +114,7 @@ func (m *ProtoOnpremHostModel) Flatten(ctx context.Context, from *anycast.Onprem
 		*m = ProtoOnpremHostModel{}
 	}
 	m.AnycastConfigRefs = flex.FlattenFrameworkUnorderedListNestedBlock(ctx, from.AnycastConfigRefs, ProtoAnycastConfigRefAttrTypes, diags, FlattenProtoAnycastConfigRef)
+	m.ConfigBgp = FlattenProtoBgpConfig(ctx, from.ConfigBgp, diags)
 	m.ConfigOspf = FlattenProtoOspfConfig(ctx, from.ConfigOspf, diags)
 	m.ConfigOspfv3 = FlattenProtoOspfv3Config(ctx, from.ConfigOspfv3, diags)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)

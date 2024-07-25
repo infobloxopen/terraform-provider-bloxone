@@ -70,9 +70,7 @@ func TestAccAnycastHostResource_disappears(t *testing.T) {
 func TestAccAnycastHostResource_AnycastConfigRefs(t *testing.T) {
 	var resourceName = "bloxone_anycast_host.test"
 	var v anycast.OnpremHost
-	var anycastConfigName = acctest.RandomNameWithPrefix("anycast")
 	var anycastHostname = acctest.RandomNameWithPrefix("anycast_host")
-	anycastIP := acctest.RandomIP()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -80,19 +78,20 @@ func TestAccAnycastHostResource_AnycastConfigRefs(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAnycastHostBasicConfig(anycastHostname, anycastConfigName, anycastIP),
+				Config: testAccAnycastHostAnycastConfigRefs(anycastHostname, map[string]string{
+					acctest.RandomNameWithPrefix("anycast"): acctest.RandomIP(),
+					acctest.RandomNameWithPrefix("anycast"): acctest.RandomIP(),
+				}),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastHostExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttrSet(resourceName, "id"),
-					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
-					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
-					resource.TestCheckResourceAttrSet(resourceName, "name"),
+					resource.TestCheckResourceAttr(resourceName, "anycast_config_refs.#", "2"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
 }
+
 func TestAccAnycastHostResource_enableRouting(t *testing.T) {
 	var resourceName = "bloxone_anycast_host.test"
 	var v anycast.OnpremHost
@@ -303,38 +302,41 @@ resource "bloxone_anycast_host" "test" {
 	return strings.Join([]string{testAccBaseWithAnycastConfig(hostName, anycastConfigName, anycastIP), config}, "")
 }
 
-func testAccAnycastHostAnycastConfigRefs(hostName, configNames []string) string {
-	for i, name := range configNames {
-		configNames[i] = fmt.Sprintf(`%q`, name)
-	}
-	configNamesStr := strings.Join(configNames, ",")
+func testAccAnycastHostAnycastConfigRefs(hostName string, anycastIPs map[string]string) string {
+	var configs []string
 
-	config := fmt.Sprintf(`
-resource "bloxone_infra_host" "test_host" {
+	configs = append(configs, fmt.Sprintf(`
+resource "bloxone_infra_host" "test" {
 	display_name = %q
 }
+`, hostName))
 
-locals {
-	config_names = [ %s ]
-}
-
-resource "bloxone_anycast_config" "test_onprem_hosts" {
-	for_each = toset(local.config_names)
-	name               = "each.value"
+	for name, ip := range anycastIPs {
+		configs = append(configs, fmt.Sprintf(`
+resource "bloxone_anycast_config" %[1]q {
+	anycast_ip_address = %[2]q
+	name               = %[1]q
 	service            = "DNS"
 }
+`, name, ip))
+	}
 
+	configRefsStr := ""
+	for name, _ := range anycastIPs {
+		configRefsStr += fmt.Sprintf(`{
+	  anycast_config_name = bloxone_anycast_config.%[1]s.name
+	},`, name)
+	}
+
+	configs = append(configs, fmt.Sprintf(`
 resource "bloxone_anycast_host" "test" {
-	for_each = toset(local.config_names)
-	id = bloxone_infra_host.test_host.legacy_id
+	id = bloxone_infra_host.test.legacy_id
 	anycast_config_refs = [
-		{
-			anycast_config_name = each.value
-		}
+		%[1]s
 	]
 }
-`, hostName, configNamesStr)
-	return config
+`, configRefsStr))
+	return strings.Join(configs, "")
 }
 
 func testAccAnycastHostEnableRoutingBGP(routingProtocols, hostName, anycastConfigName, anycastIP string) string {

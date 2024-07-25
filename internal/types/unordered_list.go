@@ -32,7 +32,7 @@ func (t UnorderedList) Equal(o attr.Type) bool {
 }
 
 func (UnorderedList) String() string {
-	return fmt.Sprintf("UnorderedList")
+	return "UnorderedList"
 }
 
 func (t UnorderedList) ValueFromList(ctx context.Context, in basetypes.ListValue) (basetypes.ListValuable, diag.Diagnostics) {
