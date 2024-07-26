@@ -322,7 +322,7 @@ resource "bloxone_anycast_config" %[1]q {
 	}
 
 	configRefsStr := ""
-	for name, _ := range anycastIPs {
+	for name := range anycastIPs {
 		configRefsStr += fmt.Sprintf(`{
 	  anycast_config_name = bloxone_anycast_config.%[1]s.name
 	},`, name)
