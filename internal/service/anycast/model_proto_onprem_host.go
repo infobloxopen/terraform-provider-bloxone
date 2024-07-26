@@ -4,46 +4,36 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+
 	"github.com/infobloxopen/bloxone-go-client/anycast"
+	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
 type ProtoOnpremHostModel struct {
-	AnycastConfigRefs types.List        `tfsdk:"anycast_config_refs"`
-	ConfigBgp         types.Object      `tfsdk:"config_bgp"`
-	ConfigOspf        types.Object      `tfsdk:"config_ospf"`
-	ConfigOspfv3      types.Object      `tfsdk:"config_ospfv3"`
-	CreatedAt         timetypes.RFC3339 `tfsdk:"created_at"`
-	Id                types.Int64       `tfsdk:"id"`
-	IpAddress         types.String      `tfsdk:"ip_address"`
-	Ipv6Address       types.String      `tfsdk:"ipv6_address"`
-	Name              types.String      `tfsdk:"name"`
-	UpdatedAt         timetypes.RFC3339 `tfsdk:"updated_at"`
-}
-
-var ProtoOnpremHostAttrTypes = map[string]attr.Type{
-	"anycast_config_refs": types.ListType{ElemType: types.ObjectType{AttrTypes: ProtoAnycastConfigRefAttrTypes}},
-	"config_bgp":          types.ObjectType{AttrTypes: ProtoBgpConfigAttrTypes},
-	"config_ospf":         types.ObjectType{AttrTypes: ProtoOspfConfigAttrTypes},
-	"config_ospfv3":       types.ObjectType{AttrTypes: ProtoOspfv3ConfigAttrTypes},
-	"created_at":          timetypes.RFC3339Type{},
-	"id":                  types.Int64Type,
-	"ip_address":          types.StringType,
-	"ipv6_address":        types.StringType,
-	"name":                types.StringType,
-	"updated_at":          timetypes.RFC3339Type{},
+	AnycastConfigRefs internaltypes.UnorderedListValue `tfsdk:"anycast_config_refs"`
+	ConfigBgp         types.Object                     `tfsdk:"config_bgp"`
+	ConfigOspf        types.Object                     `tfsdk:"config_ospf"`
+	ConfigOspfv3      types.Object                     `tfsdk:"config_ospfv3"`
+	CreatedAt         timetypes.RFC3339                `tfsdk:"created_at"`
+	Id                types.Int64                      `tfsdk:"id"`
+	IpAddress         types.String                     `tfsdk:"ip_address"`
+	Ipv6Address       types.String                     `tfsdk:"ipv6_address"`
+	Name              types.String                     `tfsdk:"name"`
+	UpdatedAt         timetypes.RFC3339                `tfsdk:"updated_at"`
 }
 
 var ProtoOnpremHostResourceSchemaAttributes = map[string]schema.Attribute{
 	"anycast_config_refs": schema.ListNestedAttribute{
+		CustomType: internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: ProtoAnycastConfigRefAttrTypes}}},
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ProtoAnycastConfigRefResourceSchemaAttributes,
 		},
@@ -123,7 +113,7 @@ func (m *ProtoOnpremHostModel) Flatten(ctx context.Context, from *anycast.Onprem
 	if m == nil {
 		*m = ProtoOnpremHostModel{}
 	}
-	m.AnycastConfigRefs = flex.FlattenFrameworkListNestedBlock(ctx, from.AnycastConfigRefs, ProtoAnycastConfigRefAttrTypes, diags, FlattenProtoAnycastConfigRef)
+	m.AnycastConfigRefs = flex.FlattenFrameworkUnorderedListNestedBlock(ctx, from.AnycastConfigRefs, ProtoAnycastConfigRefAttrTypes, diags, FlattenProtoAnycastConfigRef)
 	m.ConfigBgp = FlattenProtoBgpConfig(ctx, from.ConfigBgp, diags)
 	m.ConfigOspf = FlattenProtoOspfConfig(ctx, from.ConfigOspf, diags)
 	m.ConfigOspfv3 = FlattenProtoOspfv3Config(ctx, from.ConfigOspfv3, diags)
