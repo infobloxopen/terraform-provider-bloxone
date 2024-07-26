@@ -68,7 +68,7 @@ provider "aws" {
 You can also use the following environment variables to configure the provider:
 `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
 
-To create an EC2 instance with DHCP service, you will need to have the following information:
+To create an EC2 instance with DFP service, you will need to have the following information:
 - key_name: The name of the key pair to use for the instance
 - subnet_id: The ID of the subnet to launch the instance into
 - vpc_security_group_ids: A list of security group IDs to associate with the instance
@@ -123,7 +123,7 @@ resource "bloxone_td_internal_domain_list" "example_list" {
 }
 
 # Create the DFP Service
-resource "bloxone_dfp_service" "example" {
+resource "bloxone_dfp_service" "example_dfp_service" {
   service_id = bloxone_infra_service.example.id
 
   # Other optional fields
@@ -202,7 +202,7 @@ You can now run `terraform plan` to see what resources will be created.
 terraform plan
 ```
 
-Finally, you will create the Security Policy that uses the Custom List, Bypass Code and an External Network created earlier.
+Finally, you will create a  Security Policy that uses the DFP Service, Custom List, Bypass Code and an External Network created earlier.
 
 - [bloxone_td_security_policy](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/td_security_policy)
 
