@@ -126,11 +126,11 @@ func FlattenFrameworkListString(ctx context.Context, l []string, diags *diag.Dia
 	return tfList
 }
 
-func FlattenFrameworkCustomListString(ctx context.Context, l []string, diags *diag.Diagnostics) internaltypes.UnorderedListValue[types.String] {
-	if len(l) == 0 {
-		return internaltypes.NewUnorderedListValueNull[types.String](ctx)
+func FlattenFrameworkUnorderedList[T any](ctx context.Context, elemType attr.Type, data []T, diags *diag.Diagnostics) internaltypes.UnorderedListValue {
+	if len(data) == 0 {
+		return internaltypes.NewUnorderedListValueNull(elemType)
 	}
-	tfList, d := internaltypes.NewUnorderedListValueFrom[types.String](ctx, l)
+	tfList, d := internaltypes.NewUnorderedListValueFrom(ctx, elemType, data)
 	diags.Append(d...)
 	return tfList
 }
@@ -175,6 +175,21 @@ func FlattenFrameworkListNestedBlock[T any, U any](ctx context.Context, data []T
 	})
 
 	tfList, d := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: attrTypes}, tfData)
+
+	diags.Append(d...)
+	return tfList
+}
+
+func FlattenFrameworkUnorderedListNestedBlock[T any, U any](ctx context.Context, data []T, attrTypes map[string]attr.Type, diags *diag.Diagnostics, f FrameworkElementFlExFunc[*T, U]) internaltypes.UnorderedListValue {
+	if len(data) == 0 {
+		return internaltypes.NewUnorderedListValueNull(types.ObjectType{AttrTypes: attrTypes})
+	}
+
+	tfData := ApplyToAll(data, func(t T) U {
+		return f(ctx, &t, diags)
+	})
+
+	tfList, d := internaltypes.NewUnorderedListValueFrom(ctx, types.ObjectType{AttrTypes: attrTypes}, tfData)
 
 	diags.Append(d...)
 	return tfList
@@ -234,7 +249,10 @@ func ExpandFrameworkMapString(ctx context.Context, tfMap types.Map, diags *diag.
 	return elementsNew
 }
 
-func ExpandFrameworkListNestedBlock[T any, U any](ctx context.Context, tfList types.List, diags *diag.Diagnostics, f FrameworkElementFlExFunc[T, *U]) []U {
+func ExpandFrameworkListNestedBlock[T any, U any](ctx context.Context, tfList interface {
+	basetypes.ListValuable
+	ElementsAs(ctx context.Context, target interface{}, allowUnhandled bool) diag.Diagnostics
+}, diags *diag.Diagnostics, f FrameworkElementFlExFunc[T, *U]) []U {
 	if tfList.IsNull() || tfList.IsUnknown() {
 		return nil
 	}

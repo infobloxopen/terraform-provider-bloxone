@@ -984,11 +984,11 @@ resource "bloxone_dns_auth_zone" "test_notify" {
 func testAccAuthZoneNsgs(fqdn, primaryType, nsgs string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_auth_nsg" "one"{
-	name = %q
+	name = "one"
 }
 
 resource "bloxone_dns_auth_nsg" "two"{
-	name = %q
+	name = "two"
 }
 
 resource "bloxone_dns_auth_zone" "test_nsgs" {
@@ -996,7 +996,7 @@ resource "bloxone_dns_auth_zone" "test_nsgs" {
     primary_type = %q
     nsgs = [%s.id]
 }
-`, acctest.RandomNameWithPrefix("auth-nsg"), acctest.RandomNameWithPrefix("auth-nsg"), fqdn, primaryType, nsgs)
+`, fqdn, primaryType, nsgs)
 }
 
 func testAccAuthZoneTags(fqdn string, primaryType string, tags map[string]string) string {
