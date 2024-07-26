@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -93,6 +94,8 @@ var ConfigForwardNSGResourceSchemaAttributes = map[string]schema.Attribute{
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
+		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
 		MarkdownDescription: "Tagging specifics.",
 	},
 	"tags_all": schema.MapAttribute{
