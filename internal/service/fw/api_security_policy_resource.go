@@ -74,6 +74,26 @@ func (r *SecurityPolicyResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
+	// This code block is added to check if the provided precedence is within the range of the existing security policies
+	if !data.Precedence.IsUnknown() {
+		readRes, _, err := r.client.FWAPI.
+			SecurityPoliciesAPI.
+			ListSecurityPolicies(ctx).
+			Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read SecurityPolicies, got error: %s", err))
+			return
+		}
+
+		if int(data.Precedence.ValueInt64()) > (len(readRes.GetResults()) + 1) {
+			resp.Diagnostics.AddError(
+				"Invalid Precedence Level",
+				fmt.Sprintf("Precedence should be between 1 and %d", len(readRes.GetResults())+1),
+			)
+			return
+		}
+	}
+
 	apiRes, _, err := r.client.FWAPI.
 		SecurityPoliciesAPI.
 		CreateSecurityPolicy(ctx).
@@ -129,6 +149,26 @@ func (r *SecurityPolicyResource) Update(ctx context.Context, req resource.Update
 
 	if resp.Diagnostics.HasError() {
 		return
+	}
+
+	// This code block is added to check if the provided precedence is within the range of the existing security policies
+	if !data.Precedence.IsUnknown() {
+		readRes, _, err := r.client.FWAPI.
+			SecurityPoliciesAPI.
+			ListSecurityPolicies(ctx).
+			Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read SecurityPolicies, got error: %s", err))
+			return
+		}
+
+		if int(data.Precedence.ValueInt64()) > (len(readRes.GetResults()) + 1) {
+			resp.Diagnostics.AddError(
+				"Invalid Precedence Level",
+				fmt.Sprintf("Precedence should be between 1 and %d", len(readRes.GetResults())+1),
+			)
+			return
+		}
 	}
 
 	apiRes, _, err := r.client.FWAPI.

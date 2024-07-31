@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listdefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -32,6 +33,7 @@ var ProtoAnycastConfigRefResourceSchemaAttributes = map[string]schema.Attribute{
 		ElementType:         types.StringType,
 		Optional:            true,
 		Computed:            true,
+		Default:             listdefault.StaticValue(types.ListNull(types.StringType)),
 		MarkdownDescription: "Routing protocols enabled for this anycast configuration, on a particular host. Valid protocol names are \"BGP\", \"OSPF\"/\"OSPFv2\", \"OSPFv3\".",
 	},
 }

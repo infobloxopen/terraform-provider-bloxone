@@ -179,7 +179,6 @@ var InfraHostResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The unique serial number of the Host.",
 	},
 	"tags": schema.MapAttribute{
-		Computed:            true,
 		ElementType:         types.StringType,
 		Optional:            true,
 		MarkdownDescription: "Tags associated with this Host.",
