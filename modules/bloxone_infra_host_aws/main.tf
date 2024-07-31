@@ -52,9 +52,10 @@ resource "bloxone_infra_join_token" "this" {
 
 data "aws_ami" "bloxone" {
   most_recent = true
+  owners = ["aws-marketplace"]
   filter {
     name   = "name"
-    values = ["BloxOne381_MarketPlace-96cf85a8-a940-4dd0-80a5-80ab90fb1d1a"]
+    values = ["Bloxone_v3.8.*"]
   }
 }
 

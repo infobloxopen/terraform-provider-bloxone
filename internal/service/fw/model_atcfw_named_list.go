@@ -3,6 +3,7 @@ package fw
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
@@ -105,6 +106,8 @@ var AtcfwNamedListResourceSchemaAttributes = map[string]schema.Attribute{
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
+		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
 		MarkdownDescription: "The tags for the named list.",
 	},
 	"tags_all": schema.MapAttribute{
