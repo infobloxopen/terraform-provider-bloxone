@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.3.1 (August 1, 2024)
+
+FIXES:
+* Adding NSGs to bloxone_dns_auth_zone no longer forces replacement ([#133](https://github.com/infobloxopen/terraform-provider-bloxone/pull/133))
+* Fixed inconsistent result error after applying `bloxone_anycast_host` due to changes in list order for `anycast_config_refs` ([#134](https://github.com/infobloxopen/terraform-provider-bloxone/pull/134))
+* Fixed the error "Provider returned invalid result object after apply" when a resource is created with no tags ([#135](https://github.com/infobloxopen/terraform-provider-bloxone/pull/135))
+* Fixed AMI image in `bloxone_infra_host_aws` module ([#136](https://github.com/infobloxopen/terraform-provider-bloxone/pull/136))
+* Fixed Value Coversion Error in data sources `bloxone_infra_services` and `bloxone_td_named_lists` for `tags_all` field. ([#137](https://github.com/infobloxopen/terraform-provider-bloxone/pull/137))
+* Fixed some acceptance tests failing due to ovelapping CIDRs. ([#137](https://github.com/infobloxopen/terraform-provider-bloxone/pull/137))
+
 ## v1.3.0 (Jul 11, 2024)
 
 FEATURES:
