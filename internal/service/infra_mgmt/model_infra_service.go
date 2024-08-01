@@ -209,7 +209,7 @@ func (m *InfraServiceModel) Flatten(ctx context.Context, from *inframgmt.Service
 	m.Name = flex.FlattenString(from.Name)
 	m.PoolId = flex.FlattenString(from.PoolId)
 	m.ServiceType = flex.FlattenString(from.ServiceType)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }
 

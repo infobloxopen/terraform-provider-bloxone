@@ -268,6 +268,8 @@ func TestAccSecurityPolicyResource_NetworkLists(t *testing.T) {
 	name := acctest.RandomNameWithPrefix("sec-policy")
 	networkListName1 := acctest.RandomNameWithPrefix("network-list")
 	networkListName2 := acctest.RandomNameWithPrefix("network-list")
+	ip1 := acctest.RandomIP() + "/32"
+	ip2 := acctest.RandomIP() + "/32"
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -275,7 +277,7 @@ func TestAccSecurityPolicyResource_NetworkLists(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSecurityPolicyNetworkLists(name, "nl_test1", networkListName1, networkListName2),
+				Config: testAccSecurityPolicyNetworkLists(name, "nl_test1", networkListName1, ip1, networkListName2, ip2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "network_lists.0", "bloxone_td_network_list.nl_test1", "id"),
@@ -283,7 +285,7 @@ func TestAccSecurityPolicyResource_NetworkLists(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSecurityPolicyNetworkLists(name, "nl_test2", networkListName1, networkListName2),
+				Config: testAccSecurityPolicyNetworkLists(name, "nl_test2", networkListName1, ip1, networkListName2, ip2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "network_lists.0", "bloxone_td_network_list.nl_test2", "id"),
@@ -335,18 +337,18 @@ func TestAccSecurityPolicyResource_Precedence(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSecurityPolicyPrecedence(name, 5),
+				Config: testAccSecurityPolicyPrecedence(name, 1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "precedence", "5"),
+					resource.TestCheckResourceAttr(resourceName, "precedence", "1"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccSecurityPolicyPrecedence(name, 3),
+				Config: testAccSecurityPolicyPrecedence(name, 5),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "precedence", "3"),
+					resource.TestCheckResourceAttr(resourceName, "precedence", "5"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -610,23 +612,23 @@ resource "bloxone_td_security_policy" "test_ecs" {
 `, name, ecs)
 }
 
-func testAccSecurityPolicyNetworkLists(name, networkList, networkListName1, networkListName2 string) string {
+func testAccSecurityPolicyNetworkLists(name, networkList, networkListName1, ip1, networkListName2, ip2 string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_network_list" "nl_test1" {
 	name = %q
-	items = ["156.2.3.0/24"]
+	items = [%q]
 }
 
 resource "bloxone_td_network_list" "nl_test2" {
 	name = %q
-	items = ["176.2.3.0/24"]
+	items = [%q]
 }
 
 resource "bloxone_td_security_policy" "test_network_lists" {
 	name = %q
 	network_lists = [bloxone_td_network_list.%s.id]
 }
-`, networkListName1, networkListName2, name, networkList)
+`, networkListName1, ip1, networkListName2, ip2, name, networkList)
 }
 
 func testAccSecurityPolicyOnpremResolve(name, onpremResolve string) string {

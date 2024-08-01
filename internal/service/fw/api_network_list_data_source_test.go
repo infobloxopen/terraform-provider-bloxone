@@ -16,6 +16,7 @@ func TestAccNetworkListDataSource_Filters(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test"
 	var v fw.NetworkList
 	name := acctest.RandomNameWithPrefix("network-list")
+	ip := acctest.RandomIP() + "/32"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -23,7 +24,7 @@ func TestAccNetworkListDataSource_Filters(t *testing.T) {
 		CheckDestroy:             testAccCheckNetworkListDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkListDataSourceConfigFilters(name, "156.2.3.0/24"),
+				Config: testAccNetworkListDataSourceConfigFilters(name, ip),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckNetworkListExists(context.Background(), resourceName, &v),

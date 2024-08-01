@@ -19,6 +19,7 @@ func TestAccNetworkListResource_basic(t *testing.T) {
 	var resourceName = "bloxone_td_network_list.test"
 	var v fw.NetworkList
 	name := acctest.RandomNameWithPrefix("network-list")
+	ip := acctest.RandomIP() + "/32"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -26,11 +27,11 @@ func TestAccNetworkListResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccNetworkListBasicConfig(name, "156.2.3.0/24"),
+				Config: testAccNetworkListBasicConfig(name, ip),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items.0", "156.2.3.0/24"),
+					resource.TestCheckResourceAttr(resourceName, "items.0", ip),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_time"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
@@ -49,6 +50,7 @@ func TestAccNetworkListResource_disappears(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test"
 	var v fw.NetworkList
 	name := acctest.RandomNameWithPrefix("network-list")
+	ip := acctest.RandomIP() + "/32"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -56,7 +58,7 @@ func TestAccNetworkListResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckNetworkListDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetworkListBasicConfig(name, "156.2.3.0/24"),
+				Config: testAccNetworkListBasicConfig(name, ip),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkListExists(context.Background(), resourceName, &v),
 					testAccCheckNetworkListDisappears(context.Background(), &v),
@@ -72,6 +74,7 @@ func TestAccNetworkListResource_Name(t *testing.T) {
 	var v1, v2 fw.NetworkList
 	name1 := acctest.RandomNameWithPrefix("network-list")
 	name2 := acctest.RandomNameWithPrefix("network-list")
+	ip := acctest.RandomIP() + "/32"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -79,7 +82,7 @@ func TestAccNetworkListResource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccNetworkListName(name1, "156.2.3.0/24"),
+				Config: testAccNetworkListName(name1, ip),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkListExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "name", name1),
@@ -87,7 +90,7 @@ func TestAccNetworkListResource_Name(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccNetworkListName(name2, "156.2.3.0/24"),
+				Config: testAccNetworkListName(name2, ip),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkListExists(context.Background(), resourceName, &v2),
 					resource.TestCheckResourceAttr(resourceName, "name", name2),
@@ -102,6 +105,7 @@ func TestAccNetworkListResource_Description(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test_description"
 	var v fw.NetworkList
 	name := acctest.RandomNameWithPrefix("network-list")
+	ip := acctest.RandomIP() + "/32"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -109,7 +113,7 @@ func TestAccNetworkListResource_Description(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccNetworkListDescription(name, "156.2.3.0/24", "Test Description"),
+				Config: testAccNetworkListDescription(name, ip, "Test Description"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
@@ -118,7 +122,7 @@ func TestAccNetworkListResource_Description(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccNetworkListDescription(name, "156.2.3.0/24", "Updated Test Description"),
+				Config: testAccNetworkListDescription(name, ip, "Updated Test Description"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
@@ -134,6 +138,8 @@ func TestAccNetworkListResource_Items(t *testing.T) {
 	resourceName := "bloxone_td_network_list.test_items"
 	var v fw.NetworkList
 	name := acctest.RandomNameWithPrefix("network-list")
+	ip1 := acctest.RandomIP() + "/32"
+	ip2 := acctest.RandomIP() + "/32"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -141,20 +147,20 @@ func TestAccNetworkListResource_Items(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccNetworkListItems(name, "156.2.3.0/24"),
+				Config: testAccNetworkListItems(name, ip1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items.0", "156.2.3.0/24"),
+					resource.TestCheckResourceAttr(resourceName, "items.0", ip1),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccNetworkListItems(name, "192.20.30.0/24"),
+				Config: testAccNetworkListItems(name, ip2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNetworkListExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
-					resource.TestCheckResourceAttr(resourceName, "items.0", "192.20.30.0/24"),
+					resource.TestCheckResourceAttr(resourceName, "items.0", ip2),
 				),
 			},
 			// Delete testing automatically occurs in TestCase

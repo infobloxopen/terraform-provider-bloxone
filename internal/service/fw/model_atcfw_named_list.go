@@ -159,6 +159,7 @@ func FlattenAtcfwNamedList(ctx context.Context, from *fw.NamedListRead, diags *d
 	}
 	m := AtcfwNamedListModel{}
 	m.FlattenRead(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, AtcfwNamedListAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -202,7 +203,7 @@ func (m *AtcfwNamedListModel) FlattenRead(ctx context.Context, from *fw.NamedLis
 	m.ItemsDescribed = types.ListNull(types.ObjectType{AttrTypes: AtcfwItemStructsAttrTypes})
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Policies = flex.FlattenFrameworkListString(ctx, from.Policies, diags)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.ThreatLevel = flex.FlattenStringPointer(from.ThreatLevel)
 	m.Type = flex.FlattenStringPointer(from.Type)
 	m.UpdatedTime = timetypes.NewRFC3339TimePointerValue(from.UpdatedTime)
