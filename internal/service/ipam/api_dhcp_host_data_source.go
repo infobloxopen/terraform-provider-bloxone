@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -22,6 +23,88 @@ import (
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ datasource.DataSource = &DhcpHostDataSource{}
 
+var DhcpHostAttrTypes = map[string]attr.Type{
+	"address":           types.StringType,
+	"anycast_addresses": types.ListType{ElemType: types.StringType},
+	"associated_server": types.ObjectType{AttrTypes: IpamsvcHostAssociatedServerAttrTypes},
+	"comment":           types.StringType,
+	"current_version":   types.StringType,
+	"id":                types.StringType,
+	"ip_space":          types.StringType,
+	"name":              types.StringType,
+	"ophid":             types.StringType,
+	"provider_id":       types.StringType,
+	"server":            types.StringType,
+	"tags":              types.MapType{ElemType: types.StringType},
+	"tags_all":          types.MapType{ElemType: types.StringType},
+	"type":              types.StringType,
+}
+
+func DhcpHostDataSourceSchemaAttributes(diags *diag.Diagnostics) map[string]schema.Attribute {
+	return map[string]schema.Attribute{
+		"address": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "The primary IP address of the on-prem host.",
+		},
+		"anycast_addresses": schema.ListAttribute{
+			ElementType:         types.StringType,
+			Computed:            true,
+			MarkdownDescription: "Anycast address configured to the host. Order is not significant.",
+		},
+		"associated_server": schema.SingleNestedAttribute{
+			Attributes:          utils.DataSourceAttributeMap(IpamsvcHostAssociatedServerResourceSchemaAttributes, diags),
+			Optional:            true,
+			MarkdownDescription: "The DHCP Config Profile for the on-prem host.",
+		},
+		"comment": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "The description for the on-prem host.",
+		},
+		"current_version": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "Current dhcp application version of the host.",
+		},
+		"id": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "The resource identifier.",
+		},
+		"ip_space": schema.StringAttribute{
+			Optional:            true,
+			MarkdownDescription: "The resource identifier.",
+		},
+		"name": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "The display name of the on-prem host.",
+		},
+		"ophid": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "The on-prem host ID.",
+		},
+		"provider_id": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "External provider identifier.",
+		},
+		"server": schema.StringAttribute{
+			Optional:            true,
+			MarkdownDescription: "The resource identifier.",
+		},
+		"tags": schema.MapAttribute{
+			ElementType:         types.StringType,
+			Optional:            true,
+			MarkdownDescription: "The tags of the on-prem host in JSON format.",
+		},
+		"tags_all": schema.MapAttribute{
+			ElementType:         types.StringType,
+			Computed:            true,
+			MarkdownDescription: "The tags of the on-prem host in JSON format including default tags.",
+		},
+		"type": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services.  * _microsoft_active_directory_: host type is Microsoft Active Directory.",
+		},
+	}
+}
+
 func NewDhcpHostDataSource() datasource.DataSource {
 	return &DhcpHostDataSource{}
 }
@@ -35,7 +118,24 @@ func (d *DhcpHostDataSource) Metadata(ctx context.Context, req datasource.Metada
 	resp.TypeName = req.ProviderTypeName + "_" + "dhcp_hosts"
 }
 
-type IpamsvcHostModelWithFilter struct {
+type DhcpHostModel struct {
+	Address          types.String `tfsdk:"address"`
+	AnycastAddresses types.List   `tfsdk:"anycast_addresses"`
+	AssociatedServer types.Object `tfsdk:"associated_server"`
+	Comment          types.String `tfsdk:"comment"`
+	CurrentVersion   types.String `tfsdk:"current_version"`
+	Id               types.String `tfsdk:"id"`
+	IpSpace          types.String `tfsdk:"ip_space"`
+	Name             types.String `tfsdk:"name"`
+	Ophid            types.String `tfsdk:"ophid"`
+	ProviderId       types.String `tfsdk:"provider_id"`
+	Server           types.String `tfsdk:"server"`
+	Tags             types.Map    `tfsdk:"tags"`
+	TagsAll          types.Map    `tfsdk:"tags_all"`
+	Type             types.String `tfsdk:"type"`
+}
+
+type DhcpHostModelWithFilter struct {
 	Filters         types.Map      `tfsdk:"filters"`
 	TagFilters      types.Map      `tfsdk:"tag_filters"`
 	Results         types.List     `tfsdk:"results"`
@@ -43,11 +143,11 @@ type IpamsvcHostModelWithFilter struct {
 	Timeouts        timeouts.Value `tfsdk:"timeouts"`
 }
 
-func (m *IpamsvcHostModelWithFilter) FlattenResults(ctx context.Context, from []ipam.Host, diags *diag.Diagnostics) {
+func (m *DhcpHostModelWithFilter) FlattenResults(ctx context.Context, from []ipam.Host, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, IpamsvcHostAttrTypes, diags, FlattenIpamsvcHostDataSource)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, DhcpHostAttrTypes, diags, FlattenDhcpHostDataSource)
 }
 
 func (d *DhcpHostDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -66,7 +166,7 @@ func (d *DhcpHostDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			},
 			"results": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
-					Attributes: utils.DataSourceAttributeMap(IpamsvcHostResourceSchemaAttributes, &resp.Diagnostics),
+					Attributes: DhcpHostDataSourceSchemaAttributes(&resp.Diagnostics),
 				},
 				Computed: true,
 			},
@@ -103,7 +203,7 @@ func (d *DhcpHostDataSource) Configure(ctx context.Context, req datasource.Confi
 }
 
 func (d *DhcpHostDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data IpamsvcHostModelWithFilter
+	var data DhcpHostModelWithFilter
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -151,4 +251,48 @@ func (d *DhcpHostDataSource) Read(ctx context.Context, req datasource.ReadReques
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+}
+
+func (m *DhcpHostModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.Host {
+	if m == nil {
+		return nil
+	}
+	to := &ipam.Host{
+		Server: flex.ExpandStringPointer(m.Server),
+	}
+	return to
+}
+
+func FlattenDhcpHostDataSource(ctx context.Context, from *ipam.Host, diags *diag.Diagnostics) types.Object {
+	if from == nil {
+		return types.ObjectNull(DhcpHostAttrTypes)
+	}
+	m := DhcpHostModel{}
+	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
+	t, d := types.ObjectValueFrom(ctx, DhcpHostAttrTypes, m)
+	diags.Append(d...)
+	return t
+}
+
+func (m *DhcpHostModel) Flatten(ctx context.Context, from *ipam.Host, diags *diag.Diagnostics) {
+	if from == nil {
+		return
+	}
+	if m == nil {
+		*m = DhcpHostModel{}
+	}
+	m.Address = flex.FlattenStringPointer(from.Address)
+	m.AnycastAddresses = flex.FlattenFrameworkListString(ctx, from.AnycastAddresses, diags)
+	m.AssociatedServer = FlattenIpamsvcHostAssociatedServer(ctx, from.AssociatedServer, diags)
+	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CurrentVersion = flex.FlattenStringPointer(from.CurrentVersion)
+	m.IpSpace = flex.FlattenStringPointer(from.IpSpace)
+	m.Name = flex.FlattenStringPointer(from.Name)
+	m.Ophid = flex.FlattenStringPointer(from.Ophid)
+	m.ProviderId = flex.FlattenStringPointer(from.ProviderId)
+	m.Server = flex.FlattenStringPointer(from.Server)
+	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.Type = flex.FlattenStringPointer(from.Type)
 }

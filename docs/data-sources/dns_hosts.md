@@ -61,7 +61,6 @@ Optional:
 
 Optional:
 
-- `associated_server` (Attributes) Host associated server configuration. (see [below for nested schema](#nestedatt--results--associated_server))
 - `inheritance_sources` (Attributes) Optional. Inheritance configuration. (see [below for nested schema](#nestedatt--results--inheritance_sources))
 - `kerberos_keys` (Attributes List) Optional. _kerberos_keys_ contains a list of keys for GSS-TSIG signed dynamic updates.  Defaults to empty. (see [below for nested schema](#nestedatt--results--kerberos_keys))
 - `server` (String) The resource identifier.
@@ -72,6 +71,7 @@ Read-Only:
 - `absolute_name` (String) Host FQDN.
 - `address` (String) Host's primary IP Address.
 - `anycast_addresses` (List of String) Anycast address configured to the host. Order is not significant.
+- `associated_server` (Attributes) Host associated server configuration. (see [below for nested schema](#nestedatt--results--associated_server))
 - `comment` (String) Host description.
 - `current_version` (String) Host current version.
 - `dfp` (Boolean) Below _dfp_ field is deprecated and not supported anymore. The indication whether or not BloxOne DDI DNS and BloxOne TD DFP are both active on the host will be migrated into the new _dfp_service_ field.
@@ -84,15 +84,6 @@ Read-Only:
 - `site_id` (String) Host site ID.
 - `tags_all` (Map of String) Host tagging specifics includes default tags.
 - `type` (String) Defines the type of host. Allowed values:  * _bloxone_ddi_: host type is BloxOne DDI,  * _microsoft_azure_: host type is Microsoft Azure,  * _amazon_web_service_: host type is Amazon Web Services,  * _microsoft_active_directory_: host type is Microsoft Active Directory,  * _google_cloud_platform_: host type is Google Cloud Platform.
-
-<a id="nestedatt--results--associated_server"></a>
-### Nested Schema for `results.associated_server`
-
-Read-Only:
-
-- `id` (String) The resource identifier.
-- `name` (String) DNS server name.
-
 
 <a id="nestedatt--results--inheritance_sources"></a>
 ### Nested Schema for `results.inheritance_sources`
@@ -143,3 +134,12 @@ Read-Only:
 - `principal` (String) Kerberos principal associated with key.
 - `uploaded_at` (String) Upload time for the key.
 - `version` (Number) The version number (KVNO) of the key.
+
+
+<a id="nestedatt--results--associated_server"></a>
+### Nested Schema for `results.associated_server`
+
+Read-Only:
+
+- `id` (String) The resource identifier.
+- `name` (String) DNS server name.

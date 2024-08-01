@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -104,6 +105,8 @@ var ProtoAnycastConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
+		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
 		MarkdownDescription: "The tags for the anycast configuration object.",
 	},
 	"tags_all": schema.MapAttribute{

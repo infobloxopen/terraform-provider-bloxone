@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -133,6 +134,8 @@ func InfraServiceResourceSchemaAttributes() map[string]schema.Attribute {
 		"tags": schema.MapAttribute{
 			ElementType:         types.StringType,
 			Optional:            true,
+			Computed:            true,
+			Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
 			MarkdownDescription: "Tags associated with this Service.",
 		},
 		"tags_all": schema.MapAttribute{
@@ -172,7 +175,7 @@ func (m *InfraServiceModel) Expand(ctx context.Context, diags *diag.Diagnostics)
 		Name:            flex.ExpandString(m.Name),
 		PoolId:          flex.ExpandString(m.PoolId),
 		ServiceType:     flex.ExpandString(m.ServiceType),
-		Tags:            flex.ExpandFrameworkMapString(ctx, m.TagsAll, diags),
+		Tags:            flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 	return to
 }
@@ -206,7 +209,7 @@ func (m *InfraServiceModel) Flatten(ctx context.Context, from *inframgmt.Service
 	m.Name = flex.FlattenString(from.Name)
 	m.PoolId = flex.FlattenString(from.PoolId)
 	m.ServiceType = flex.FlattenString(from.ServiceType)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }
 

@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -381,6 +382,8 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
+		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
 		MarkdownDescription: "The tags for the subnet in JSON format.",
 	},
 	"tags_all": schema.MapAttribute{

@@ -26,8 +26,6 @@ func TestAccAnycastConfigDataSource_Services(t *testing.T) {
 				Config: testAccAnycastConfigDataSourceConfigService("10.1.1.2", anycastName, "DNS"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
-						resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
-						resource.TestCheckResourceAttr(dataSourceName, "results.0.name", anycastName),
 						testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					}, testAccCheckAnycastConfigResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
@@ -51,7 +49,6 @@ func TestAccAnycastConfigDataSource_IsConfigured(t *testing.T) {
 				Config: testAccAnycastConfigDataSourceConfigIsConfigured("10.1.1.2", anycastName, "DNS"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
-						resource.TestCheckResourceAttr(dataSourceName, "results.0.name", anycastName),
 						testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					}, testAccCheckAnycastConfigResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
@@ -75,6 +72,8 @@ func TestAccAnycastConfigDataSource_TagFilters(t *testing.T) {
 				Config: testAccAnycastConfigDataSourceConfigTagFilters("10.1.1.2", anycastName, "DNS", "value1"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
+						resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
+						resource.TestCheckResourceAttr(dataSourceName, "results.0.name", anycastName),
 						testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					}, testAccCheckAnycastConfigResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
@@ -106,44 +105,20 @@ func testAccCheckAnycastConfigResourceAttrPair(resourceName, dataSourceName stri
 
 func testAccAnycastConfigDataSourceConfigService(anycastIpAddress, name, service string) string {
 	return fmt.Sprintf(`
-data "bloxone_infra_services" "anycast_services" {
-    filters = {
-      service_type = "anycast"
-    }
-}
-
-data "bloxone_infra_hosts" "anycast_hosts" {
-    filters = {
-      pool_id = data.bloxone_infra_services.anycast_services.results.0.pool_id
-    }
-}
-
-resource "bloxone_anycast_config" "test_onprem_hosts" {
+resource "bloxone_anycast_config" "test" {
     anycast_ip_address = %q
     name = %q
     service = %q
 }
 data "bloxone_anycast_configs" "test" {
 	service = %q
-	depends_on = [bloxone_anycast_config.test_onprem_hosts]
+	depends_on = [bloxone_anycast_config.test]
 }
 `, anycastIpAddress, name, service, service)
 }
 
 func testAccAnycastConfigDataSourceConfigIsConfigured(anycastIpAddress, name, service string) string {
 	return fmt.Sprintf(`
-data "bloxone_infra_services" "anycast_services" {
-    filters = {
-      service_type = "anycast"
-    }
-}
-
-data "bloxone_infra_hosts" "anycast_hosts" {
-    filters = {
-      pool_id = data.bloxone_infra_services.anycast_services.results.0.pool_id
-    }
-}
-
 resource "bloxone_anycast_config" "test_onprem_hosts" {
     anycast_ip_address = %q
     name = %q

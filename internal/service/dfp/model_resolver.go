@@ -16,10 +16,10 @@ import (
 )
 
 type ResolverModel struct {
-	Address    types.String                                   `tfsdk:"address"`
-	IsFallback types.Bool                                     `tfsdk:"is_fallback"`
-	IsLocal    types.Bool                                     `tfsdk:"is_local"`
-	Protocols  internaltypes.UnorderedListValue[types.String] `tfsdk:"protocols"`
+	Address    types.String                     `tfsdk:"address"`
+	IsFallback types.Bool                       `tfsdk:"is_fallback"`
+	IsLocal    types.Bool                       `tfsdk:"is_local"`
+	Protocols  internaltypes.UnorderedListValue `tfsdk:"protocols"`
 }
 
 var ResolverAttrTypes = map[string]attr.Type{
@@ -75,7 +75,7 @@ func (m *ResolverModel) Expand(ctx context.Context, diags *diag.Diagnostics) *df
 	return to
 }
 
-func ExpandDNSProtocol(ctx context.Context, tfList internaltypes.UnorderedListValue[types.String], diags *diag.Diagnostics) []dfp.DNSProtocol {
+func ExpandDNSProtocol(ctx context.Context, tfList internaltypes.UnorderedListValue, diags *diag.Diagnostics) []dfp.DNSProtocol {
 	if tfList.IsNull() || tfList.IsUnknown() {
 		return nil
 	}
@@ -105,14 +105,5 @@ func (m *ResolverModel) Flatten(ctx context.Context, from *dfp.Resolver, diags *
 	m.Address = flex.FlattenStringPointer(from.Address)
 	m.IsFallback = types.BoolPointerValue(from.IsFallback)
 	m.IsLocal = types.BoolPointerValue(from.IsLocal)
-	m.Protocols = FlattenDNSProtocol(ctx, from.Protocols, diags)
-}
-
-func FlattenDNSProtocol(ctx context.Context, l []dfp.DNSProtocol, diags *diag.Diagnostics) internaltypes.UnorderedListValue[types.String] {
-	if len(l) == 0 {
-		return internaltypes.NewUnorderedListValueNull[types.String](ctx)
-	}
-	tfList, d := internaltypes.NewUnorderedListValueFrom[types.String](ctx, l)
-	diags.Append(d...)
-	return tfList
+	m.Protocols = flex.FlattenFrameworkUnorderedList(ctx, types.StringType, from.Protocols, diags)
 }
