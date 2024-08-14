@@ -19,10 +19,10 @@ var _ MappedNullable = &UpdateBatchMaintenanceWindow{}
 
 // UpdateBatchMaintenanceWindow struct for UpdateBatchMaintenanceWindow
 type UpdateBatchMaintenanceWindow struct {
-	DeferredWindow       *DeferredWindow                   `json:"deferred_window,omitempty"`
-	MwId                 *string                           `json:"mw_id,omitempty"`
-	ScheduledWindow      *ScheduledWindow                  `json:"scheduled_window,omitempty"`
-	Tags                 map[string]map[string]interface{} `json:"tags,omitempty"`
+	DeferredWindow       *DeferredWindow        `json:"deferred_window,omitempty"`
+	MwId                 *string                `json:"mw_id,omitempty"`
+	ScheduledWindow      *ScheduledWindow       `json:"scheduled_window,omitempty"`
+	Tags                 map[string]interface{} `json:"tags,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -142,9 +142,9 @@ func (o *UpdateBatchMaintenanceWindow) SetScheduledWindow(v ScheduledWindow) {
 }
 
 // GetTags returns the Tags field value if set, zero value otherwise.
-func (o *UpdateBatchMaintenanceWindow) GetTags() map[string]map[string]interface{} {
+func (o *UpdateBatchMaintenanceWindow) GetTags() map[string]interface{} {
 	if o == nil || IsNil(o.Tags) {
-		var ret map[string]map[string]interface{}
+		var ret map[string]interface{}
 		return ret
 	}
 	return o.Tags
@@ -152,9 +152,9 @@ func (o *UpdateBatchMaintenanceWindow) GetTags() map[string]map[string]interface
 
 // GetTagsOk returns a tuple with the Tags field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *UpdateBatchMaintenanceWindow) GetTagsOk() (map[string]map[string]interface{}, bool) {
+func (o *UpdateBatchMaintenanceWindow) GetTagsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Tags) {
-		return map[string]map[string]interface{}{}, false
+		return map[string]interface{}{}, false
 	}
 	return o.Tags, true
 }
@@ -168,8 +168,8 @@ func (o *UpdateBatchMaintenanceWindow) HasTags() bool {
 	return false
 }
 
-// SetTags gets a reference to the given map[string]map[string]interface{} and assigns it to the Tags field.
-func (o *UpdateBatchMaintenanceWindow) SetTags(v map[string]map[string]interface{}) {
+// SetTags gets a reference to the given map[string]interface{} and assigns it to the Tags field.
+func (o *UpdateBatchMaintenanceWindow) SetTags(v map[string]interface{}) {
 	o.Tags = v
 }
 
