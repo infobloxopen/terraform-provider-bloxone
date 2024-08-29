@@ -24,11 +24,12 @@ type JoinToken struct {
 	Description *string    `json:"description,omitempty"`
 	ExpiresAt   *time.Time `json:"expires_at,omitempty"`
 	// The resource identifier.
-	Id         *string                   `json:"id,omitempty"`
-	LastUsedAt *time.Time                `json:"last_used_at,omitempty"`
-	Name       *string                   `json:"name,omitempty"`
-	Status     *JoinTokenJoinTokenStatus `json:"status,omitempty"`
-	Tags       map[string]interface{}    `json:"tags,omitempty"`
+	Id         *string    `json:"id,omitempty"`
+	LastUsedAt *time.Time `json:"last_used_at,omitempty"`
+	Name       *string    `json:"name,omitempty"`
+	// derived field, \"active\" when expires_at and deleted_at are null.
+	Status *JoinTokenJoinTokenStatus `json:"status,omitempty"`
+	Tags   map[string]interface{}    `json:"tags,omitempty"`
 	// first half of the token.
 	TokenId              *string `json:"token_id,omitempty"`
 	UseCounter           *int64  `json:"use_counter,omitempty"`
@@ -43,8 +44,6 @@ type _JoinToken JoinToken
 // will change when the set of required properties is changed
 func NewJoinToken() *JoinToken {
 	this := JoinToken{}
-	var status JoinTokenJoinTokenStatus = JOINTOKENJOINTOKENSTATUS_UNKNOWN
-	this.Status = &status
 	return &this
 }
 
@@ -53,8 +52,6 @@ func NewJoinToken() *JoinToken {
 // but it doesn't guarantee that properties required by API are set
 func NewJoinTokenWithDefaults() *JoinToken {
 	this := JoinToken{}
-	var status JoinTokenJoinTokenStatus = JOINTOKENJOINTOKENSTATUS_UNKNOWN
-	this.Status = &status
 	return &this
 }
 

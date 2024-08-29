@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadIpamHostResponse{}
 
 // ReadIpamHostResponse The response format to retrieve the __IpamHost__ object.
 type ReadIpamHostResponse struct {
+	// The IpamHost object.
 	Result               *IpamHost `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

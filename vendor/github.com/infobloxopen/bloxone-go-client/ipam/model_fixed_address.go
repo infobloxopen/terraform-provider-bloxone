@@ -44,7 +44,8 @@ type FixedAddress struct {
 	// The list of the inheritance assigned hosts of the object.
 	InheritanceAssignedHosts []InheritanceAssignedHost `json:"inheritance_assigned_hosts,omitempty"`
 	// The resource identifier.
-	InheritanceParent  *string                  `json:"inheritance_parent,omitempty"`
+	InheritanceParent *string `json:"inheritance_parent,omitempty"`
+	// The inheritance configuration.
 	InheritanceSources *FixedAddressInheritance `json:"inheritance_sources,omitempty"`
 	// The resource identifier.
 	IpSpace *string `json:"ip_space,omitempty"`

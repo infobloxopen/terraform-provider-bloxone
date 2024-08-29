@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateHostResponse{}
 
 // UpdateHostResponse The response format to update the DHCP __Host__ object.
 type UpdateHostResponse struct {
+	// The DHCP Host object.
 	Result               *Host `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

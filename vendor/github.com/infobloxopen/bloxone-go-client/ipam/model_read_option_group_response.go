@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadOptionGroupResponse{}
 
 // ReadOptionGroupResponse The response format to retrieve the __OptionGroup__ object.
 type ReadOptionGroupResponse struct {
+	// The OptionGroup object.
 	Result               *OptionGroup `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

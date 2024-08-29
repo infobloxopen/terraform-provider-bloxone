@@ -25,7 +25,7 @@ type AnycastConfig struct {
 	AnycastIpv6Address   *string                `json:"anycast_ipv6_address,omitempty"`
 	CreatedAt            *time.Time             `json:"created_at,omitempty"`
 	Description          *string                `json:"description,omitempty"`
-	Fields               *BufFieldMask          `json:"fields,omitempty"`
+	Fields               *ProtobufFieldMask     `json:"fields,omitempty"`
 	Id                   *int64                 `json:"id,omitempty"`
 	IsConfigured         *bool                  `json:"is_configured,omitempty"`
 	Name                 *string                `json:"name,omitempty"`
@@ -217,9 +217,9 @@ func (o *AnycastConfig) SetDescription(v string) {
 }
 
 // GetFields returns the Fields field value if set, zero value otherwise.
-func (o *AnycastConfig) GetFields() BufFieldMask {
+func (o *AnycastConfig) GetFields() ProtobufFieldMask {
 	if o == nil || IsNil(o.Fields) {
-		var ret BufFieldMask
+		var ret ProtobufFieldMask
 		return ret
 	}
 	return *o.Fields
@@ -227,7 +227,7 @@ func (o *AnycastConfig) GetFields() BufFieldMask {
 
 // GetFieldsOk returns a tuple with the Fields field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AnycastConfig) GetFieldsOk() (*BufFieldMask, bool) {
+func (o *AnycastConfig) GetFieldsOk() (*ProtobufFieldMask, bool) {
 	if o == nil || IsNil(o.Fields) {
 		return nil, false
 	}
@@ -243,8 +243,8 @@ func (o *AnycastConfig) HasFields() bool {
 	return false
 }
 
-// SetFields gets a reference to the given BufFieldMask and assigns it to the Fields field.
-func (o *AnycastConfig) SetFields(v BufFieldMask) {
+// SetFields gets a reference to the given ProtobufFieldMask and assigns it to the Fields field.
+func (o *AnycastConfig) SetFields(v ProtobufFieldMask) {
 	o.Fields = &v
 }
 

@@ -19,6 +19,7 @@ var _ MappedNullable = &CustomRedirectCreateResponse{}
 
 // CustomRedirectCreateResponse The Custom Redirect create response.
 type CustomRedirectCreateResponse struct {
+	// The Custom Redirect object.
 	Results              *CustomRedirect `json:"results,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

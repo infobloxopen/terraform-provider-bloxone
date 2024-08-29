@@ -19,22 +19,37 @@ var _ MappedNullable = &DHCPInheritance{}
 
 // DHCPInheritance The __DHCPInheritance__ object specifies how the _dhcp_config_, _dhcp_options_ and _asm_config_ configuration fields are inherited from the parent object.
 type DHCPInheritance struct {
-	AsmConfig                  *InheritedASMConfig            `json:"asm_config,omitempty"`
-	DdnsClientUpdate           *InheritanceInheritedString    `json:"ddns_client_update,omitempty"`
-	DdnsConflictResolutionMode *InheritanceInheritedString    `json:"ddns_conflict_resolution_mode,omitempty"`
-	DdnsEnabled                *InheritanceInheritedBool      `json:"ddns_enabled,omitempty"`
-	DdnsHostnameBlock          *InheritedDDNSHostnameBlock    `json:"ddns_hostname_block,omitempty"`
-	DdnsTtlPercent             *InheritanceInheritedFloat     `json:"ddns_ttl_percent,omitempty"`
-	DdnsUpdateBlock            *InheritedDDNSUpdateBlock      `json:"ddns_update_block,omitempty"`
-	DdnsUpdateOnRenew          *InheritanceInheritedBool      `json:"ddns_update_on_renew,omitempty"`
-	DdnsUseConflictResolution  *InheritanceInheritedBool      `json:"ddns_use_conflict_resolution,omitempty"`
-	DhcpConfig                 *InheritedDHCPConfig           `json:"dhcp_config,omitempty"`
-	DhcpOptions                *InheritedDHCPOptionList       `json:"dhcp_options,omitempty"`
-	HeaderOptionFilename       *InheritanceInheritedString    `json:"header_option_filename,omitempty"`
-	HeaderOptionServerAddress  *InheritanceInheritedString    `json:"header_option_server_address,omitempty"`
-	HeaderOptionServerName     *InheritanceInheritedString    `json:"header_option_server_name,omitempty"`
-	HostnameRewriteBlock       *InheritedHostnameRewriteBlock `json:"hostname_rewrite_block,omitempty"`
-	AdditionalProperties       map[string]interface{}
+	// The inheritance configuration for _asm_config_ field.
+	AsmConfig *InheritedASMConfig `json:"asm_config,omitempty"`
+	// The inheritance configuration for _ddns_client_update_ field.
+	DdnsClientUpdate *InheritanceInheritedString `json:"ddns_client_update,omitempty"`
+	// The inheritance configuration for _ddns_conflict_resolution_mode_ field.
+	DdnsConflictResolutionMode *InheritanceInheritedString `json:"ddns_conflict_resolution_mode,omitempty"`
+	// The inheritance configuration for _ddns_enabled_ field. Only action allowed is 'inherit'.
+	DdnsEnabled *InheritanceInheritedBool `json:"ddns_enabled,omitempty"`
+	// The inheritance configuration for _ddns_generate_name_ and _ddns_generated_prefix_ fields.
+	DdnsHostnameBlock *InheritedDDNSHostnameBlock `json:"ddns_hostname_block,omitempty"`
+	// The inheritance configuration for _ddns_ttl_percent_ field.
+	DdnsTtlPercent *InheritanceInheritedFloat `json:"ddns_ttl_percent,omitempty"`
+	// The inheritance configuration for _ddns_send_updates_ and _ddns_domain_ fields.
+	DdnsUpdateBlock *InheritedDDNSUpdateBlock `json:"ddns_update_block,omitempty"`
+	// The inheritance configuration for _ddns_update_on_renew_ field.
+	DdnsUpdateOnRenew *InheritanceInheritedBool `json:"ddns_update_on_renew,omitempty"`
+	// The inheritance configuration for _ddns_use_conflict_resolution_ field.
+	DdnsUseConflictResolution *InheritanceInheritedBool `json:"ddns_use_conflict_resolution,omitempty"`
+	// The inheritance configuration for _dhcp_config_ field.
+	DhcpConfig *InheritedDHCPConfig `json:"dhcp_config,omitempty"`
+	// The inheritance configuration for _dhcp_options_ field.
+	DhcpOptions *InheritedDHCPOptionList `json:"dhcp_options,omitempty"`
+	// The inheritance configuration for _header_option_filename_ field.
+	HeaderOptionFilename *InheritanceInheritedString `json:"header_option_filename,omitempty"`
+	// The inheritance configuration for _header_option_server_address_ field.
+	HeaderOptionServerAddress *InheritanceInheritedString `json:"header_option_server_address,omitempty"`
+	// The inheritance configuration for _header_option_server_name_ field.
+	HeaderOptionServerName *InheritanceInheritedString `json:"header_option_server_name,omitempty"`
+	// The inheritance configuration for _hostname_rewrite_enabled_, _hostname_rewrite_regex_, and _hostname_rewrite_char_ fields.
+	HostnameRewriteBlock *InheritedHostnameRewriteBlock `json:"hostname_rewrite_block,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _DHCPInheritance DHCPInheritance

@@ -19,6 +19,7 @@ var _ MappedNullable = &AppApprovalsUpdateRequest{}
 
 // AppApprovalsUpdateRequest struct for AppApprovalsUpdateRequest
 type AppApprovalsUpdateRequest struct {
+	// Field Mask.
 	Fields               *ProtobufFieldMask          `json:"fields,omitempty"`
 	InsertedApprovals    []AppApproval               `json:"inserted_approvals,omitempty"`
 	RemovedApprovals     []AppApprovalRemovalRequest `json:"removed_approvals,omitempty"`

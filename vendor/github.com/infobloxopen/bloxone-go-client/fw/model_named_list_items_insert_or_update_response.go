@@ -19,7 +19,7 @@ var _ MappedNullable = &NamedListItemsInsertOrUpdateResponse{}
 
 // NamedListItemsInsertOrUpdateResponse The Named List Items create or update response.
 type NamedListItemsInsertOrUpdateResponse struct {
-	Success              *AtcfwNamedListItemsInsertOrUpdateResponseSuccess `json:"success,omitempty"`
+	Success              *NamedListItemsInsertOrUpdateResponseSuccess `json:"success,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -43,9 +43,9 @@ func NewNamedListItemsInsertOrUpdateResponseWithDefaults() *NamedListItemsInsert
 }
 
 // GetSuccess returns the Success field value if set, zero value otherwise.
-func (o *NamedListItemsInsertOrUpdateResponse) GetSuccess() AtcfwNamedListItemsInsertOrUpdateResponseSuccess {
+func (o *NamedListItemsInsertOrUpdateResponse) GetSuccess() NamedListItemsInsertOrUpdateResponseSuccess {
 	if o == nil || IsNil(o.Success) {
-		var ret AtcfwNamedListItemsInsertOrUpdateResponseSuccess
+		var ret NamedListItemsInsertOrUpdateResponseSuccess
 		return ret
 	}
 	return *o.Success
@@ -53,7 +53,7 @@ func (o *NamedListItemsInsertOrUpdateResponse) GetSuccess() AtcfwNamedListItemsI
 
 // GetSuccessOk returns a tuple with the Success field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *NamedListItemsInsertOrUpdateResponse) GetSuccessOk() (*AtcfwNamedListItemsInsertOrUpdateResponseSuccess, bool) {
+func (o *NamedListItemsInsertOrUpdateResponse) GetSuccessOk() (*NamedListItemsInsertOrUpdateResponseSuccess, bool) {
 	if o == nil || IsNil(o.Success) {
 		return nil, false
 	}
@@ -69,8 +69,8 @@ func (o *NamedListItemsInsertOrUpdateResponse) HasSuccess() bool {
 	return false
 }
 
-// SetSuccess gets a reference to the given AtcfwNamedListItemsInsertOrUpdateResponseSuccess and assigns it to the Success field.
-func (o *NamedListItemsInsertOrUpdateResponse) SetSuccess(v AtcfwNamedListItemsInsertOrUpdateResponseSuccess) {
+// SetSuccess gets a reference to the given NamedListItemsInsertOrUpdateResponseSuccess and assigns it to the Success field.
+func (o *NamedListItemsInsertOrUpdateResponse) SetSuccess(v NamedListItemsInsertOrUpdateResponseSuccess) {
 	o.Success = &v
 }
 

@@ -19,6 +19,7 @@ var _ MappedNullable = &CustomRedirectReadResponse{}
 
 // CustomRedirectReadResponse The Custom Redirect read response.
 type CustomRedirectReadResponse struct {
+	// The Custom Redirect object.
 	Results              *CustomRedirect `json:"results,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

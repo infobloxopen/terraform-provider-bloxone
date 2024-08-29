@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateOptionGroupResponse{}
 
 // CreateOptionGroupResponse The response format to create the __OptionGroup__ object.
 type CreateOptionGroupResponse struct {
+	// The created OptionGroup object.
 	Result               *OptionGroup `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

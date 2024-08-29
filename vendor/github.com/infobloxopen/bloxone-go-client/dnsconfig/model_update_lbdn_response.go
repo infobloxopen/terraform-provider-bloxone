@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateLBDNResponse{}
 
 // UpdateLBDNResponse The __LBDN__ object update response format.
 type UpdateLBDNResponse struct {
+	// The __LBDN__ object.
 	Result               *LBDN `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

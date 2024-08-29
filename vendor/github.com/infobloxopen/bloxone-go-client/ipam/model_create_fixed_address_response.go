@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateFixedAddressResponse{}
 
 // CreateFixedAddressResponse The response format to create the __FixedAddress__ object.
 type CreateFixedAddressResponse struct {
+	// The created Fixed Address object.
 	Result               *FixedAddress `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

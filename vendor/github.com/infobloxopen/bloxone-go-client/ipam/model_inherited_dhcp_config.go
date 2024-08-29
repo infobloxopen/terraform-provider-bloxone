@@ -19,18 +19,29 @@ var _ MappedNullable = &InheritedDHCPConfig{}
 
 // InheritedDHCPConfig The inheritance configuration for a field of type _DHCPConfig_.
 type InheritedDHCPConfig struct {
-	AbandonedReclaimTime   *InheritanceInheritedUInt32        `json:"abandoned_reclaim_time,omitempty"`
-	AbandonedReclaimTimeV6 *InheritanceInheritedUInt32        `json:"abandoned_reclaim_time_v6,omitempty"`
-	AllowUnknown           *InheritanceInheritedBool          `json:"allow_unknown,omitempty"`
-	AllowUnknownV6         *InheritanceInheritedBool          `json:"allow_unknown_v6,omitempty"`
-	EchoClientId           *InheritanceInheritedBool          `json:"echo_client_id,omitempty"`
-	Filters                *InheritedDHCPConfigFilterList     `json:"filters,omitempty"`
-	FiltersV6              *InheritedDHCPConfigFilterList     `json:"filters_v6,omitempty"`
-	IgnoreClientUid        *InheritanceInheritedBool          `json:"ignore_client_uid,omitempty"`
-	IgnoreList             *InheritedDHCPConfigIgnoreItemList `json:"ignore_list,omitempty"`
-	LeaseTime              *InheritanceInheritedUInt32        `json:"lease_time,omitempty"`
-	LeaseTimeV6            *InheritanceInheritedUInt32        `json:"lease_time_v6,omitempty"`
-	AdditionalProperties   map[string]interface{}
+	// The inheritance configuration for _abandoned_reclaim_time_ field from _DHCPConfig_ object.
+	AbandonedReclaimTime *InheritanceInheritedUInt32 `json:"abandoned_reclaim_time,omitempty"`
+	// The inheritance configuration for _abandoned_reclaim_time_v6_ field from _DHCPConfig_ object.
+	AbandonedReclaimTimeV6 *InheritanceInheritedUInt32 `json:"abandoned_reclaim_time_v6,omitempty"`
+	// The inheritance configuration for _allow_unknown_ field from _DHCPConfig_ object.
+	AllowUnknown *InheritanceInheritedBool `json:"allow_unknown,omitempty"`
+	// The inheritance configuration for _allow_unknown_v6_ field from _DHCPConfig_ object.
+	AllowUnknownV6 *InheritanceInheritedBool `json:"allow_unknown_v6,omitempty"`
+	// The inheritance configuration for _echo_client_id_ field from _DHCPConfig_ object.
+	EchoClientId *InheritanceInheritedBool `json:"echo_client_id,omitempty"`
+	// The inheritance configuration for filters field from _DHCPConfig_ object.
+	Filters *InheritedDHCPConfigFilterList `json:"filters,omitempty"`
+	// The inheritance configuration for _filters_v6_ field from _DHCPConfig_ object.
+	FiltersV6 *InheritedDHCPConfigFilterList `json:"filters_v6,omitempty"`
+	// The inheritance configuration for _ignore_client_uid_ field from _DHCPConfig_ object.
+	IgnoreClientUid *InheritanceInheritedBool `json:"ignore_client_uid,omitempty"`
+	// The inheritance configuration for _ignore_list_ field from _DHCPConfig_ object.
+	IgnoreList *InheritedDHCPConfigIgnoreItemList `json:"ignore_list,omitempty"`
+	// The inheritance configuration for _lease_time_ field from _DHCPConfig_ object.
+	LeaseTime *InheritanceInheritedUInt32 `json:"lease_time,omitempty"`
+	// The inheritance configuration for _lease_time_v6_ field from _DHCPConfig_ object.
+	LeaseTimeV6          *InheritanceInheritedUInt32 `json:"lease_time_v6,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _InheritedDHCPConfig InheritedDHCPConfig

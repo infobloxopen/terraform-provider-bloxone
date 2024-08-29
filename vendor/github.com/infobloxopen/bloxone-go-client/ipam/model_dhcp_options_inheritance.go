@@ -19,6 +19,7 @@ var _ MappedNullable = &DHCPOptionsInheritance{}
 
 // DHCPOptionsInheritance The inheritance configuration that specifies how the _dhcp_options_ field is inherited from the parent object.
 type DHCPOptionsInheritance struct {
+	// The inheritance configuration for the _dhcp_options_ field.
 	DhcpOptions          *InheritedDHCPOptionList `json:"dhcp_options,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -21,6 +21,7 @@ var _ MappedNullable = &IPSpace{}
 
 // IPSpace An __IPSpace__ object (_ipam/ip_space_) allows customers to represent their entire managed address space with no collision. A collision arises when two or more block of addresses overlap partially or fully.
 type IPSpace struct {
+	// The Automated Scope Management configuration for the IP space.
 	AsmConfig *ASMConfig `json:"asm_config,omitempty"`
 	// The number of times the automated scope management usage limits have been exceeded for any of the subnets in this IP space.
 	AsmScopeFlag *int64 `json:"asm_scope_flag,omitempty"`
@@ -45,8 +46,9 @@ type IPSpace struct {
 	// Instructs the DHCP server to always update the DNS information when a lease is renewed even if its DNS information has not changed.  Defaults to _false_.
 	DdnsUpdateOnRenew *bool `json:"ddns_update_on_renew,omitempty"`
 	// When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.
-	DdnsUseConflictResolution *bool       `json:"ddns_use_conflict_resolution,omitempty"`
-	DhcpConfig                *DHCPConfig `json:"dhcp_config,omitempty"`
+	DdnsUseConflictResolution *bool `json:"ddns_use_conflict_resolution,omitempty"`
+	// The shared DHCP configuration for the IP space that controls how leases are issued.
+	DhcpConfig *DHCPConfig `json:"dhcp_config,omitempty"`
 	// The list of IPv4 DHCP options for IP space. May be either a specific option or a group of options.
 	DhcpOptions []OptionItem `json:"dhcp_options,omitempty"`
 	// The list of IPv6 DHCP options for IP space. May be either a specific option or a group of options.
@@ -64,16 +66,20 @@ type IPSpace struct {
 	// The regex bracket expression to match valid characters.  Must begin with \"[\" and end with \"]\" and be a compilable POSIX regex.  Defaults to \"[^a-zA-Z0-9_.]\".
 	HostnameRewriteRegex *string `json:"hostname_rewrite_regex,omitempty"`
 	// The resource identifier.
-	Id                 *string             `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
+	// The inheritance configuration.
 	InheritanceSources *IPSpaceInheritance `json:"inheritance_sources,omitempty"`
 	// The name of the IP space. Must contain 1 to 256 characters. Can include UTF-8.
 	Name string `json:"name"`
 	// The tags for the IP space in JSON format.
-	Tags      map[string]interface{} `json:"tags,omitempty"`
-	Threshold *UtilizationThreshold  `json:"threshold,omitempty"`
+	Tags map[string]interface{} `json:"tags,omitempty"`
+	// The utilization threshold settings for the IP space.
+	Threshold *UtilizationThreshold `json:"threshold,omitempty"`
 	// Time when the object has been updated. Equals to _created_at_ if not updated after creation.
-	UpdatedAt     *time.Time     `json:"updated_at,omitempty"`
-	Utilization   *Utilization   `json:"utilization,omitempty"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	// The utilization of IPV4 addresses in the IP space.
+	Utilization *Utilization `json:"utilization,omitempty"`
+	// The utilization of IPV6 addresses in the IP space.
 	UtilizationV6 *UtilizationV6 `json:"utilization_v6,omitempty"`
 	// The resource identifier.
 	VendorSpecificOptionOptionSpace *string `json:"vendor_specific_option_option_space,omitempty"`

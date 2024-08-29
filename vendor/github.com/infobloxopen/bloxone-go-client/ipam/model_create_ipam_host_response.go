@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateIpamHostResponse{}
 
 // CreateIpamHostResponse The response format to create the __IpamHost__ object.
 type CreateIpamHostResponse struct {
+	// The created IpamHost object.
 	Result               *IpamHost `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

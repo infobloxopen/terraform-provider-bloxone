@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateServerResponse{}
 
 // UpdateServerResponse The response format to update the __Server__ object.
 type UpdateServerResponse struct {
+	// The Server object.
 	Result               *Server `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

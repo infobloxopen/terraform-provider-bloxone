@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadHostResponse{}
 
 // ReadHostResponse The response format to retrieve the DHCP __Host__ object.
 type ReadHostResponse struct {
+	// The DHCP Host object.
 	Result               *Host `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

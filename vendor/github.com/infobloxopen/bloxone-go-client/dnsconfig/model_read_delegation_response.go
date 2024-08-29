@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadDelegationResponse{}
 
 // ReadDelegationResponse The Delegation object read response format.
 type ReadDelegationResponse struct {
+	// The Delegation object.
 	Result               *Delegation `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

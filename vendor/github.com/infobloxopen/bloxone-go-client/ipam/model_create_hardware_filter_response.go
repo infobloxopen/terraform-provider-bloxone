@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateHardwareFilterResponse{}
 
 // CreateHardwareFilterResponse The response format to create the __HardwareFilter__ object.
 type CreateHardwareFilterResponse struct {
+	// The created HardwareFilter object.
 	Result               *HardwareFilter `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -19,14 +19,22 @@ var _ MappedNullable = &InheritedZoneAuthority{}
 
 // InheritedZoneAuthority Inheritance configuration for a field of type _ZoneAuthority_.
 type InheritedZoneAuthority struct {
-	DefaultTtl           *Inheritance2InheritedUInt32      `json:"default_ttl,omitempty"`
-	Expire               *Inheritance2InheritedUInt32      `json:"expire,omitempty"`
-	MnameBlock           *InheritedZoneAuthorityMNameBlock `json:"mname_block,omitempty"`
-	NegativeTtl          *Inheritance2InheritedUInt32      `json:"negative_ttl,omitempty"`
-	ProtocolRname        *Inheritance2InheritedString      `json:"protocol_rname,omitempty"`
-	Refresh              *Inheritance2InheritedUInt32      `json:"refresh,omitempty"`
-	Retry                *Inheritance2InheritedUInt32      `json:"retry,omitempty"`
-	Rname                *Inheritance2InheritedString      `json:"rname,omitempty"`
+	// Optional. Field config for _default_ttl_ field from _ZoneAuthority_ object.
+	DefaultTtl *Inheritance2InheritedUInt32 `json:"default_ttl,omitempty"`
+	// Optional. Field config for _expire_ field from _ZoneAuthority_ object.
+	Expire *Inheritance2InheritedUInt32 `json:"expire,omitempty"`
+	// Optional. Field config for _mname_ block from _ZoneAuthority_ object.
+	MnameBlock *InheritedZoneAuthorityMNameBlock `json:"mname_block,omitempty"`
+	// Optional. Field config for _negative_ttl_ field from _ZoneAuthority_ object.
+	NegativeTtl *Inheritance2InheritedUInt32 `json:"negative_ttl,omitempty"`
+	// Optional. Field config for _protocol_rname_ field from _ZoneAuthority_ object.
+	ProtocolRname *Inheritance2InheritedString `json:"protocol_rname,omitempty"`
+	// Optional. Field config for _refresh_ field from _ZoneAuthority_ object.
+	Refresh *Inheritance2InheritedUInt32 `json:"refresh,omitempty"`
+	// Optional. Field config for _retry_ field from _ZoneAuthority_ object.
+	Retry *Inheritance2InheritedUInt32 `json:"retry,omitempty"`
+	// Optional. Field config for _rname_ field from _ZoneAuthority_ object.
+	Rname                *Inheritance2InheritedString `json:"rname,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 

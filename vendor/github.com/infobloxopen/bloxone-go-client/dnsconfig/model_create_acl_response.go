@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateACLResponse{}
 
 // CreateACLResponse The ACL object create response format.
 type CreateACLResponse struct {
+	// The created ACL object.
 	Result               *ACL `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

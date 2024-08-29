@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateGlobalResponse{}
 
 // UpdateGlobalResponse The Global object update response format.
 type UpdateGlobalResponse struct {
+	// The global object.
 	Result               *Global `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -27,8 +27,9 @@ type DetailHostServiceConfig struct {
 	// The name of the Service.
 	ServiceName *string `json:"service_name,omitempty"`
 	// The type of the Service deployed on the Host (`dns`, `cdc`, etc.).
-	ServiceType *string             `json:"service_type,omitempty"`
-	Status      *ShortServiceStatus `json:"status,omitempty"`
+	ServiceType *string `json:"service_type,omitempty"`
+	// Service status information.
+	Status *ShortServiceStatus `json:"status,omitempty"`
 	// The timestamp of the latest upgrade of the Host-specific Service configuration.
 	UpgradedAt           *time.Time `json:"upgraded_at,omitempty"`
 	AdditionalProperties map[string]interface{}

@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateAddressBlockResponse{}
 
 // UpdateAddressBlockResponse The response format to update the __AddressBlock__ object.
 type UpdateAddressBlockResponse struct {
+	// The AddressBlock object.
 	Result               *AddressBlock `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

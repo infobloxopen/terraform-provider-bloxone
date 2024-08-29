@@ -19,6 +19,7 @@ var _ MappedNullable = &ConvertDomainNameResponse{}
 
 // ConvertDomainNameResponse The ConvertDomainName object convert response format.
 type ConvertDomainNameResponse struct {
+	// The ConvertDomainName object.
 	Result               *ConvertDomainName `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

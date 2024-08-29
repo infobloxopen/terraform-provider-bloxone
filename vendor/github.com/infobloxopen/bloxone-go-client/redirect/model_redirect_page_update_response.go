@@ -19,6 +19,7 @@ var _ MappedNullable = &RedirectPageUpdateResponse{}
 
 // RedirectPageUpdateResponse The Redirect Page update response.
 type RedirectPageUpdateResponse struct {
+	// The Redirect Page object.
 	Results              *RedirectPage `json:"results,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

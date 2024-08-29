@@ -19,6 +19,7 @@ var _ MappedNullable = &CategoryFilterReadResponse{}
 
 // CategoryFilterReadResponse The Category Filter read response.
 type CategoryFilterReadResponse struct {
+	// The Category Filter object.
 	Results              *CategoryFilter `json:"results,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

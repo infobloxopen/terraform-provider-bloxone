@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateRecordResponse{}
 
 // CreateRecordResponse The response format to create the __Record__ object.
 type CreateRecordResponse struct {
+	// The created Record object.
 	Result               *Record `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

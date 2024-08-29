@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateOptionGroupResponse{}
 
 // UpdateOptionGroupResponse The response format to update the __OptionGroup__ object.
 type UpdateOptionGroupResponse struct {
+	// The OptionGroup object.
 	Result               *OptionGroup `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadOptionCodeResponse{}
 
 // ReadOptionCodeResponse The response format to retrieve the __OptionCode__ object.
 type ReadOptionCodeResponse struct {
+	// The OptionCode object.
 	Result               *OptionCode `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

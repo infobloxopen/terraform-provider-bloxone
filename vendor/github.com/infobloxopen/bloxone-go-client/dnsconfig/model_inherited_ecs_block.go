@@ -24,7 +24,8 @@ type InheritedECSBlock struct {
 	// Human-readable display name for the object referred to by _source_.
 	DisplayName *string `json:"display_name,omitempty"`
 	// The resource identifier.
-	Source               *string   `json:"source,omitempty"`
+	Source *string `json:"source,omitempty"`
+	// Inherited value.
 	Value                *ECSBlock `json:"value,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadRangeResponse{}
 
 // ReadRangeResponse The response format to retrieve the __Range__ object.
 type ReadRangeResponse struct {
+	// The Range object.
 	Result               *Range `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -24,7 +24,8 @@ type InheritedDHCPOption struct {
 	// The human-readable display name for the object referred to by _source_.
 	DisplayName *string `json:"display_name,omitempty"`
 	// The resource identifier.
-	Source               *string                  `json:"source,omitempty"`
+	Source *string `json:"source,omitempty"`
+	// The inherited value for the DHCP option.
 	Value                *InheritedDHCPOptionItem `json:"value,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

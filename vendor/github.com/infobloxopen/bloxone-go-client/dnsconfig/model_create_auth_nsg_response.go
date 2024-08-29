@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateAuthNSGResponse{}
 
 // CreateAuthNSGResponse The AuthNSG object create response format.
 type CreateAuthNSGResponse struct {
+	// The created AuthNSG object.
 	Result               *AuthNSG `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

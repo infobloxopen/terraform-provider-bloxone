@@ -19,6 +19,7 @@ var _ MappedNullable = &InternalDomainsReadResponse{}
 
 // InternalDomainsReadResponse The Internal Domains read response.
 type InternalDomainsReadResponse struct {
+	// The Internal Domains object.
 	Results              *InternalDomains `json:"results,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

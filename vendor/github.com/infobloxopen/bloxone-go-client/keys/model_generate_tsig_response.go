@@ -19,6 +19,7 @@ var _ MappedNullable = &GenerateTSIGResponse{}
 
 // GenerateTSIGResponse The response format to generate the TSIG key.
 type GenerateTSIGResponse struct {
+	// The generated TSIG key.
 	Result               *GenerateTSIGResult `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

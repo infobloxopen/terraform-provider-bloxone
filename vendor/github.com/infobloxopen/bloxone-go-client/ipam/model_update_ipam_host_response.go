@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateIpamHostResponse{}
 
 // UpdateIpamHostResponse The response format to update the _IpamHost__ object.
 type UpdateIpamHostResponse struct {
+	// The IpamHost object.
 	Result               *IpamHost `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

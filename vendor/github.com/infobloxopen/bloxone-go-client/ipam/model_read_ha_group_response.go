@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadHAGroupResponse{}
 
 // ReadHAGroupResponse The response format to retrieve the __HAGroup__ object.
 type ReadHAGroupResponse struct {
+	// The HAGroup object.
 	Result               *HAGroup `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

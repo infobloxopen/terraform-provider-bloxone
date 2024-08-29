@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadAddressResponse{}
 
 // ReadAddressResponse The response format to retrieve the __Address__ object.
 type ReadAddressResponse struct {
+	// The Address object.
 	Result               *Address `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

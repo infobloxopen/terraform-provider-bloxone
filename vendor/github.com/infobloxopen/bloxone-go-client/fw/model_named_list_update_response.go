@@ -19,6 +19,7 @@ var _ MappedNullable = &NamedListUpdateResponse{}
 
 // NamedListUpdateResponse The Named List update response.
 type NamedListUpdateResponse struct {
+	// The Named List object.
 	Results              *NamedList `json:"results,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

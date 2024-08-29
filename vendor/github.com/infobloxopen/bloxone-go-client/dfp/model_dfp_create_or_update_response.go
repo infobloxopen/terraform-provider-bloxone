@@ -19,6 +19,7 @@ var _ MappedNullable = &DfpCreateOrUpdateResponse{}
 
 // DfpCreateOrUpdateResponse The DNS Forwarding Proxy update response.
 type DfpCreateOrUpdateResponse struct {
+	// The DNS Forwarding Proxy object.
 	Results              *Dfp `json:"results,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

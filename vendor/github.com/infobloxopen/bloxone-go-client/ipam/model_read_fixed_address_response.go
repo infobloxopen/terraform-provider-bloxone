@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadFixedAddressResponse{}
 
 // ReadFixedAddressResponse The response format to retrieve the __FixedAddress__ object.
 type ReadFixedAddressResponse struct {
+	// The FixedAddress object.
 	Result               *FixedAddress `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -26,8 +26,9 @@ type UploadRequest struct {
 	Content string             `json:"content"`
 	Fields  *ProtobufFieldMask `json:"fields,omitempty"`
 	// The tags for uploaded content in JSON format.
-	Tags                 map[string]interface{} `json:"tags,omitempty"`
-	Type                 UploadContentType      `json:"type"`
+	Tags map[string]interface{} `json:"tags,omitempty"`
+	// Type of uploaded content.
+	Type                 UploadContentType `json:"type"`
 	AdditionalProperties map[string]interface{}
 }
 

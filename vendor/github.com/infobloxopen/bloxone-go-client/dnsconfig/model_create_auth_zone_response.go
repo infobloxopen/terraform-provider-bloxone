@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateAuthZoneResponse{}
 
 // CreateAuthZoneResponse The Authoritative Zone object create response format.
 type CreateAuthZoneResponse struct {
+	// The created AuthZone object.
 	Result               *AuthZone `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

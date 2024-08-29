@@ -19,6 +19,7 @@ var _ MappedNullable = &InheritedDtcConfig{}
 
 // InheritedDtcConfig Inheritance configuration for a field of type _DTCConfig_.
 type InheritedDtcConfig struct {
+	// Optional. Field config for _default_ttl_ field from _DTCConfig_ object.
 	DefaultTtl           *Inheritance2InheritedUInt32 `json:"default_ttl,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

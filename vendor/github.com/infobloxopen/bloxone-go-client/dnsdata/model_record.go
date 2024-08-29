@@ -42,7 +42,8 @@ type Record struct {
 	// The DNS protocol textual representation of the DNS resource record data.
 	DnsRdata *string `json:"dns_rdata,omitempty"`
 	// The resource identifier.
-	Id                 *string            `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
+	// The inheritance configuration.
 	InheritanceSources *RecordInheritance `json:"inheritance_sources,omitempty"`
 	// The resource identifier.
 	IpamHost *string `json:"ipam_host,omitempty"`

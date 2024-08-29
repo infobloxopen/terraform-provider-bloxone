@@ -39,10 +39,12 @@ type DetailService struct {
 	// The resource identifier.
 	Id *string `json:"id,omitempty"`
 	// List of interfaces on which this Service can operate.
-	InterfaceLabels []string        `json:"interface_labels,omitempty"`
-	Location        *DetailLocation `json:"location,omitempty"`
+	InterfaceLabels []string `json:"interface_labels,omitempty"`
+	// Location that this Host is associated with.
+	Location *DetailLocation `json:"location,omitempty"`
 	// The name of the Service.
-	Name *string   `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
+	// Pool information for this Service (internal).
 	Pool *PoolInfo `json:"pool,omitempty"`
 	// The type of the Service deployed on the Host (`dns`, `cdc`, etc.).
 	ServiceType *string `json:"service_type,omitempty"`

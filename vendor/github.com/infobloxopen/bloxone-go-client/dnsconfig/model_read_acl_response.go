@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadACLResponse{}
 
 // ReadACLResponse The ACL object read response format.
 type ReadACLResponse struct {
+	// The ACL object.
 	Result               *ACL `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadKerberosKeyResponse{}
 
 // ReadKerberosKeyResponse The response format to retrieve the __KerberosKey__ resource extracted from the uploaded keytab file.
 type ReadKerberosKeyResponse struct {
+	// The __KerberosKey__ object.
 	Result               *KerberosKey `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadHardwareFilterResponse{}
 
 // ReadHardwareFilterResponse The response format to retrieve the __HardwareFilter__ object.
 type ReadHardwareFilterResponse struct {
+	// The HardwareFilter object.
 	Result               *HardwareFilter `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

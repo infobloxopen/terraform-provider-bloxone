@@ -19,6 +19,7 @@ var _ MappedNullable = &NetworkListReadResponse{}
 
 // NetworkListReadResponse The Network List read response.
 type NetworkListReadResponse struct {
+	// The Network List object.
 	Results              *NetworkList `json:"results,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

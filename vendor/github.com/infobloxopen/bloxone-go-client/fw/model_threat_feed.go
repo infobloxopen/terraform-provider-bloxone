@@ -26,7 +26,8 @@ type ThreatFeed struct {
 	// The TSIG key of the threat feed.
 	Key *string `json:"key,omitempty"`
 	// The name of the thread feed.
-	Name   *string           `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
+	// The source of the threat feed.
 	Source *ThreatFeedSource `json:"source,omitempty"`
 	// The Threat Level of the Feed.
 	ThreatLevel          *string `json:"threat_level,omitempty"`
@@ -41,8 +42,6 @@ type _ThreatFeed ThreatFeed
 // will change when the set of required properties is changed
 func NewThreatFeed() *ThreatFeed {
 	this := ThreatFeed{}
-	var source ThreatFeedSource = THREATFEEDSOURCE_INFOBLOX
-	this.Source = &source
 	return &this
 }
 
@@ -51,8 +50,6 @@ func NewThreatFeed() *ThreatFeed {
 // but it doesn't guarantee that properties required by API are set
 func NewThreatFeedWithDefaults() *ThreatFeed {
 	this := ThreatFeed{}
-	var source ThreatFeedSource = THREATFEEDSOURCE_INFOBLOX
-	this.Source = &source
 	return &this
 }
 

@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateOptionFilterResponse{}
 
 // UpdateOptionFilterResponse The response format to update the __OptionFilter__ object.
 type UpdateOptionFilterResponse struct {
+	// The OptionFilter object.
 	Result               *OptionFilter `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

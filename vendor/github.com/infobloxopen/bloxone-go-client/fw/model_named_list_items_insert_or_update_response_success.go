@@ -14,37 +14,37 @@ import (
 	"encoding/json"
 )
 
-// checks if the AtcfwNamedListItemsInsertOrUpdateResponseSuccess type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &AtcfwNamedListItemsInsertOrUpdateResponseSuccess{}
+// checks if the NamedListItemsInsertOrUpdateResponseSuccess type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &NamedListItemsInsertOrUpdateResponseSuccess{}
 
-// AtcfwNamedListItemsInsertOrUpdateResponseSuccess struct for AtcfwNamedListItemsInsertOrUpdateResponseSuccess
-type AtcfwNamedListItemsInsertOrUpdateResponseSuccess struct {
+// NamedListItemsInsertOrUpdateResponseSuccess struct for NamedListItemsInsertOrUpdateResponseSuccess
+type NamedListItemsInsertOrUpdateResponseSuccess struct {
 	Code                 *string `json:"code,omitempty"`
 	Status               *int32  `json:"status,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
-type _AtcfwNamedListItemsInsertOrUpdateResponseSuccess AtcfwNamedListItemsInsertOrUpdateResponseSuccess
+type _NamedListItemsInsertOrUpdateResponseSuccess NamedListItemsInsertOrUpdateResponseSuccess
 
-// NewAtcfwNamedListItemsInsertOrUpdateResponseSuccess instantiates a new AtcfwNamedListItemsInsertOrUpdateResponseSuccess object
+// NewNamedListItemsInsertOrUpdateResponseSuccess instantiates a new NamedListItemsInsertOrUpdateResponseSuccess object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAtcfwNamedListItemsInsertOrUpdateResponseSuccess() *AtcfwNamedListItemsInsertOrUpdateResponseSuccess {
-	this := AtcfwNamedListItemsInsertOrUpdateResponseSuccess{}
+func NewNamedListItemsInsertOrUpdateResponseSuccess() *NamedListItemsInsertOrUpdateResponseSuccess {
+	this := NamedListItemsInsertOrUpdateResponseSuccess{}
 	return &this
 }
 
-// NewAtcfwNamedListItemsInsertOrUpdateResponseSuccessWithDefaults instantiates a new AtcfwNamedListItemsInsertOrUpdateResponseSuccess object
+// NewNamedListItemsInsertOrUpdateResponseSuccessWithDefaults instantiates a new NamedListItemsInsertOrUpdateResponseSuccess object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewAtcfwNamedListItemsInsertOrUpdateResponseSuccessWithDefaults() *AtcfwNamedListItemsInsertOrUpdateResponseSuccess {
-	this := AtcfwNamedListItemsInsertOrUpdateResponseSuccess{}
+func NewNamedListItemsInsertOrUpdateResponseSuccessWithDefaults() *NamedListItemsInsertOrUpdateResponseSuccess {
+	this := NamedListItemsInsertOrUpdateResponseSuccess{}
 	return &this
 }
 
 // GetCode returns the Code field value if set, zero value otherwise.
-func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) GetCode() string {
+func (o *NamedListItemsInsertOrUpdateResponseSuccess) GetCode() string {
 	if o == nil || IsNil(o.Code) {
 		var ret string
 		return ret
@@ -54,7 +54,7 @@ func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) GetCode() string {
 
 // GetCodeOk returns a tuple with the Code field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) GetCodeOk() (*string, bool) {
+func (o *NamedListItemsInsertOrUpdateResponseSuccess) GetCodeOk() (*string, bool) {
 	if o == nil || IsNil(o.Code) {
 		return nil, false
 	}
@@ -62,7 +62,7 @@ func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) GetCodeOk() (*string,
 }
 
 // HasCode returns a boolean if a field has been set.
-func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) HasCode() bool {
+func (o *NamedListItemsInsertOrUpdateResponseSuccess) HasCode() bool {
 	if o != nil && !IsNil(o.Code) {
 		return true
 	}
@@ -71,12 +71,12 @@ func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) HasCode() bool {
 }
 
 // SetCode gets a reference to the given string and assigns it to the Code field.
-func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) SetCode(v string) {
+func (o *NamedListItemsInsertOrUpdateResponseSuccess) SetCode(v string) {
 	o.Code = &v
 }
 
 // GetStatus returns the Status field value if set, zero value otherwise.
-func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) GetStatus() int32 {
+func (o *NamedListItemsInsertOrUpdateResponseSuccess) GetStatus() int32 {
 	if o == nil || IsNil(o.Status) {
 		var ret int32
 		return ret
@@ -86,7 +86,7 @@ func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) GetStatus() int32 {
 
 // GetStatusOk returns a tuple with the Status field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) GetStatusOk() (*int32, bool) {
+func (o *NamedListItemsInsertOrUpdateResponseSuccess) GetStatusOk() (*int32, bool) {
 	if o == nil || IsNil(o.Status) {
 		return nil, false
 	}
@@ -94,7 +94,7 @@ func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) GetStatusOk() (*int32
 }
 
 // HasStatus returns a boolean if a field has been set.
-func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) HasStatus() bool {
+func (o *NamedListItemsInsertOrUpdateResponseSuccess) HasStatus() bool {
 	if o != nil && !IsNil(o.Status) {
 		return true
 	}
@@ -103,11 +103,11 @@ func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) HasStatus() bool {
 }
 
 // SetStatus gets a reference to the given int32 and assigns it to the Status field.
-func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) SetStatus(v int32) {
+func (o *NamedListItemsInsertOrUpdateResponseSuccess) SetStatus(v int32) {
 	o.Status = &v
 }
 
-func (o AtcfwNamedListItemsInsertOrUpdateResponseSuccess) MarshalJSON() ([]byte, error) {
+func (o NamedListItemsInsertOrUpdateResponseSuccess) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -115,7 +115,7 @@ func (o AtcfwNamedListItemsInsertOrUpdateResponseSuccess) MarshalJSON() ([]byte,
 	return json.Marshal(toSerialize)
 }
 
-func (o AtcfwNamedListItemsInsertOrUpdateResponseSuccess) ToMap() (map[string]interface{}, error) {
+func (o NamedListItemsInsertOrUpdateResponseSuccess) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Code) {
 		toSerialize["code"] = o.Code
@@ -131,16 +131,16 @@ func (o AtcfwNamedListItemsInsertOrUpdateResponseSuccess) ToMap() (map[string]in
 	return toSerialize, nil
 }
 
-func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) UnmarshalJSON(data []byte) (err error) {
-	varAtcfwNamedListItemsInsertOrUpdateResponseSuccess := _AtcfwNamedListItemsInsertOrUpdateResponseSuccess{}
+func (o *NamedListItemsInsertOrUpdateResponseSuccess) UnmarshalJSON(data []byte) (err error) {
+	varNamedListItemsInsertOrUpdateResponseSuccess := _NamedListItemsInsertOrUpdateResponseSuccess{}
 
-	err = json.Unmarshal(data, &varAtcfwNamedListItemsInsertOrUpdateResponseSuccess)
+	err = json.Unmarshal(data, &varNamedListItemsInsertOrUpdateResponseSuccess)
 
 	if err != nil {
 		return err
 	}
 
-	*o = AtcfwNamedListItemsInsertOrUpdateResponseSuccess(varAtcfwNamedListItemsInsertOrUpdateResponseSuccess)
+	*o = NamedListItemsInsertOrUpdateResponseSuccess(varNamedListItemsInsertOrUpdateResponseSuccess)
 
 	additionalProperties := make(map[string]interface{})
 
@@ -153,38 +153,38 @@ func (o *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) UnmarshalJSON(data []
 	return err
 }
 
-type NullableAtcfwNamedListItemsInsertOrUpdateResponseSuccess struct {
-	value *AtcfwNamedListItemsInsertOrUpdateResponseSuccess
+type NullableNamedListItemsInsertOrUpdateResponseSuccess struct {
+	value *NamedListItemsInsertOrUpdateResponseSuccess
 	isSet bool
 }
 
-func (v NullableAtcfwNamedListItemsInsertOrUpdateResponseSuccess) Get() *AtcfwNamedListItemsInsertOrUpdateResponseSuccess {
+func (v NullableNamedListItemsInsertOrUpdateResponseSuccess) Get() *NamedListItemsInsertOrUpdateResponseSuccess {
 	return v.value
 }
 
-func (v *NullableAtcfwNamedListItemsInsertOrUpdateResponseSuccess) Set(val *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) {
+func (v *NullableNamedListItemsInsertOrUpdateResponseSuccess) Set(val *NamedListItemsInsertOrUpdateResponseSuccess) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableAtcfwNamedListItemsInsertOrUpdateResponseSuccess) IsSet() bool {
+func (v NullableNamedListItemsInsertOrUpdateResponseSuccess) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableAtcfwNamedListItemsInsertOrUpdateResponseSuccess) Unset() {
+func (v *NullableNamedListItemsInsertOrUpdateResponseSuccess) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableAtcfwNamedListItemsInsertOrUpdateResponseSuccess(val *AtcfwNamedListItemsInsertOrUpdateResponseSuccess) *NullableAtcfwNamedListItemsInsertOrUpdateResponseSuccess {
-	return &NullableAtcfwNamedListItemsInsertOrUpdateResponseSuccess{value: val, isSet: true}
+func NewNullableNamedListItemsInsertOrUpdateResponseSuccess(val *NamedListItemsInsertOrUpdateResponseSuccess) *NullableNamedListItemsInsertOrUpdateResponseSuccess {
+	return &NullableNamedListItemsInsertOrUpdateResponseSuccess{value: val, isSet: true}
 }
 
-func (v NullableAtcfwNamedListItemsInsertOrUpdateResponseSuccess) MarshalJSON() ([]byte, error) {
+func (v NullableNamedListItemsInsertOrUpdateResponseSuccess) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableAtcfwNamedListItemsInsertOrUpdateResponseSuccess) UnmarshalJSON(src []byte) error {
+func (v *NullableNamedListItemsInsertOrUpdateResponseSuccess) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

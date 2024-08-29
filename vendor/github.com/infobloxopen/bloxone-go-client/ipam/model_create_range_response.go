@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateRangeResponse{}
 
 // CreateRangeResponse The response format to create the __Range__ object.
 type CreateRangeResponse struct {
+	// The created Range object.
 	Result               *Range `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
