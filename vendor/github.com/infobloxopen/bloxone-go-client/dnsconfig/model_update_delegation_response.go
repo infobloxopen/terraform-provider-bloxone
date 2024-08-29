@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateDelegationResponse{}
 
 // UpdateDelegationResponse The Delegation object update response format.
 type UpdateDelegationResponse struct {
+	// The updated Delegation object.
 	Result               *Delegation `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

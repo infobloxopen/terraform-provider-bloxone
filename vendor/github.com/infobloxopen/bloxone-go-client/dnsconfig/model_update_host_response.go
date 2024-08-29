@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateHostResponse{}
 
 // UpdateHostResponse The DNS Host object update response format.
 type UpdateHostResponse struct {
+	// The updated DNS Host object.
 	Result               *Host `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

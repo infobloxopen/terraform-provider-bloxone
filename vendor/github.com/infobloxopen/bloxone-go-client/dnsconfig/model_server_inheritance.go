@@ -19,36 +19,65 @@ var _ MappedNullable = &ServerInheritance{}
 
 // ServerInheritance Inheritance configuration specifies how and which fields _Server_ object inherits from _Global_ parent.
 type ServerInheritance struct {
-	AddEdnsOptionInOutgoingQuery      *Inheritance2InheritedBool      `json:"add_edns_option_in_outgoing_query,omitempty"`
-	CustomRootNsBlock                 *InheritedCustomRootNSBlock     `json:"custom_root_ns_block,omitempty"`
-	DnssecValidationBlock             *InheritedDNSSECValidationBlock `json:"dnssec_validation_block,omitempty"`
-	EcsBlock                          *InheritedECSBlock              `json:"ecs_block,omitempty"`
-	FilterAaaaAcl                     *InheritedACLItems              `json:"filter_aaaa_acl,omitempty"`
-	FilterAaaaOnV4                    *Inheritance2InheritedString    `json:"filter_aaaa_on_v4,omitempty"`
-	ForwardersBlock                   *InheritedForwardersBlock       `json:"forwarders_block,omitempty"`
-	GssTsigEnabled                    *Inheritance2InheritedBool      `json:"gss_tsig_enabled,omitempty"`
-	KerberosKeys                      *InheritedKerberosKeys          `json:"kerberos_keys,omitempty"`
-	LameTtl                           *Inheritance2InheritedUInt32    `json:"lame_ttl,omitempty"`
-	LogQueryResponse                  *Inheritance2InheritedBool      `json:"log_query_response,omitempty"`
-	MatchRecursiveOnly                *Inheritance2InheritedBool      `json:"match_recursive_only,omitempty"`
-	MaxCacheTtl                       *Inheritance2InheritedUInt32    `json:"max_cache_ttl,omitempty"`
-	MaxNegativeTtl                    *Inheritance2InheritedUInt32    `json:"max_negative_ttl,omitempty"`
-	MinimalResponses                  *Inheritance2InheritedBool      `json:"minimal_responses,omitempty"`
-	Notify                            *Inheritance2InheritedBool      `json:"notify,omitempty"`
-	QueryAcl                          *InheritedACLItems              `json:"query_acl,omitempty"`
-	QueryPort                         *Inheritance2InheritedUInt32    `json:"query_port,omitempty"`
-	RecursionAcl                      *InheritedACLItems              `json:"recursion_acl,omitempty"`
-	RecursionEnabled                  *Inheritance2InheritedBool      `json:"recursion_enabled,omitempty"`
-	RecursiveClients                  *Inheritance2InheritedUInt32    `json:"recursive_clients,omitempty"`
-	ResolverQueryTimeout              *Inheritance2InheritedUInt32    `json:"resolver_query_timeout,omitempty"`
-	SecondaryAxfrQueryLimit           *Inheritance2InheritedUInt32    `json:"secondary_axfr_query_limit,omitempty"`
-	SecondarySoaQueryLimit            *Inheritance2InheritedUInt32    `json:"secondary_soa_query_limit,omitempty"`
-	SortList                          *InheritedSortListItems         `json:"sort_list,omitempty"`
-	SynthesizeAddressRecordsFromHttps *Inheritance2InheritedBool      `json:"synthesize_address_records_from_https,omitempty"`
-	TransferAcl                       *InheritedACLItems              `json:"transfer_acl,omitempty"`
-	UpdateAcl                         *InheritedACLItems              `json:"update_acl,omitempty"`
-	UseForwardersForSubzones          *Inheritance2InheritedBool      `json:"use_forwarders_for_subzones,omitempty"`
-	AdditionalProperties              map[string]interface{}
+	// Field config for _add_edns_option_in_outgoing_query_ field from _Server_ object.
+	AddEdnsOptionInOutgoingQuery *Inheritance2InheritedBool `json:"add_edns_option_in_outgoing_query,omitempty"`
+	// Optional. Field config for _custom_root_ns_block_ field from _Server_ object.
+	CustomRootNsBlock *InheritedCustomRootNSBlock `json:"custom_root_ns_block,omitempty"`
+	// Optional. Field config for _dnssec_validation_block_ field from _Server_ object.
+	DnssecValidationBlock *InheritedDNSSECValidationBlock `json:"dnssec_validation_block,omitempty"`
+	// Optional. Field config for _ecs_block_ field from _Server_ object.
+	EcsBlock *InheritedECSBlock `json:"ecs_block,omitempty"`
+	// Optional. Field config for _filter_aaaa_acl_ field from _Server_ object.
+	FilterAaaaAcl *InheritedACLItems `json:"filter_aaaa_acl,omitempty"`
+	// Optional. Field config for _filter_aaaa_on_v4_ field from _Server_ object.
+	FilterAaaaOnV4 *Inheritance2InheritedString `json:"filter_aaaa_on_v4,omitempty"`
+	// Optional. Field config for _forwarders_block_ field from _Server_ object.
+	ForwardersBlock *InheritedForwardersBlock `json:"forwarders_block,omitempty"`
+	// Optional. Field config for _gss_tsig_enabled_ field from _Server_ object.
+	GssTsigEnabled *Inheritance2InheritedBool `json:"gss_tsig_enabled,omitempty"`
+	// Optional. Field config for _kerberos_keys_ field from _Server_ object.
+	KerberosKeys *InheritedKerberosKeys `json:"kerberos_keys,omitempty"`
+	// Optional. Field config for _lame_ttl_ field from _Server_ object.
+	LameTtl *Inheritance2InheritedUInt32 `json:"lame_ttl,omitempty"`
+	// Optional. Field config for _log_queries_response_ field from _Server_ object.
+	LogQueryResponse *Inheritance2InheritedBool `json:"log_query_response,omitempty"`
+	// Optional. Field config for _match_recursive_only_ field from _Server_ object.
+	MatchRecursiveOnly *Inheritance2InheritedBool `json:"match_recursive_only,omitempty"`
+	// Optional. Field config for _max_cache_ttl_ field from _Server_ object.
+	MaxCacheTtl *Inheritance2InheritedUInt32 `json:"max_cache_ttl,omitempty"`
+	// Optional. Field config for _max_negative_ttl_ field from _Server_ object.
+	MaxNegativeTtl *Inheritance2InheritedUInt32 `json:"max_negative_ttl,omitempty"`
+	// Optional. Field config for _minimal_responses_ field from _Server_ object.
+	MinimalResponses *Inheritance2InheritedBool `json:"minimal_responses,omitempty"`
+	// Field config for _notify_ field from _Server_ object.
+	Notify *Inheritance2InheritedBool `json:"notify,omitempty"`
+	// Optional. Field config for _query_acl_ field from _Server_ object.
+	QueryAcl *InheritedACLItems `json:"query_acl,omitempty"`
+	// Optional. Field config for _query_port_ field from _Server_ object.
+	QueryPort *Inheritance2InheritedUInt32 `json:"query_port,omitempty"`
+	// Optional. Field config for _recursion_acl_ field from _Server_ object.
+	RecursionAcl *InheritedACLItems `json:"recursion_acl,omitempty"`
+	// Optional. Field config for _recursion_enabled_ field from _Server_ object.
+	RecursionEnabled *Inheritance2InheritedBool `json:"recursion_enabled,omitempty"`
+	// Optional. Field config for _recursive_clients_ field from _Server_ object.
+	RecursiveClients *Inheritance2InheritedUInt32 `json:"recursive_clients,omitempty"`
+	// Optional. Field config for _resolver_query_timeout_ field from _Server_ object.
+	ResolverQueryTimeout *Inheritance2InheritedUInt32 `json:"resolver_query_timeout,omitempty"`
+	// Optional. Field config for _secondary_axfr_query_limit_ field from _Server_ object.
+	SecondaryAxfrQueryLimit *Inheritance2InheritedUInt32 `json:"secondary_axfr_query_limit,omitempty"`
+	// Optional. Field config for _secondary_soa_query_limit_ field from _Server_ object.
+	SecondarySoaQueryLimit *Inheritance2InheritedUInt32 `json:"secondary_soa_query_limit,omitempty"`
+	// Optional. Field config for _sort_list_ field from _Server object.
+	SortList *InheritedSortListItems `json:"sort_list,omitempty"`
+	// Field config for _synthesize_address_records_from_https_ field from _Server_ object.
+	SynthesizeAddressRecordsFromHttps *Inheritance2InheritedBool `json:"synthesize_address_records_from_https,omitempty"`
+	// Optional. Field config for _transfer_acl_ field from _Server_ object.
+	TransferAcl *InheritedACLItems `json:"transfer_acl,omitempty"`
+	// Optional. Field config for _update_acl_ field from _Server_ object.
+	UpdateAcl *InheritedACLItems `json:"update_acl,omitempty"`
+	// Optional. Field config for _use_forwarders_for_subzones_ field from _Server_ object.
+	UseForwardersForSubzones *Inheritance2InheritedBool `json:"use_forwarders_for_subzones,omitempty"`
+	AdditionalProperties     map[string]interface{}
 }
 
 type _ServerInheritance ServerInheritance

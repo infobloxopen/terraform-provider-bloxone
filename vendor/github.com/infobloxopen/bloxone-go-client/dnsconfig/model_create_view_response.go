@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateViewResponse{}
 
 // CreateViewResponse The View object create response format.
 type CreateViewResponse struct {
+	// The created View object.
 	Result               *View `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -19,6 +19,7 @@ var _ MappedNullable = &Global{}
 
 // Global The global DHCP configuration (_dhcp/global_). Used by default unless more specific configuration exists. There is only one instance of this object.
 type Global struct {
+	// The global Automated Scope Management configuration.
 	AsmConfig *ASMConfig `json:"asm_config,omitempty"`
 	// The Kerberos principal name. It uses the typical Kerberos notation: <SERVICE-NAME>/<server-domain-name>@<REALM>.  Defaults to empty.
 	ClientPrincipal *string `json:"client_principal,omitempty"`
@@ -43,12 +44,14 @@ type Global struct {
 	// When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.
 	DdnsUseConflictResolution *bool `json:"ddns_use_conflict_resolution,omitempty"`
 	// DNS zones that DDNS updates can be sent to. There is no resolver fallback. The target zone must be explicitly configured for the update to be performed.  Updates are sent to the closest enclosing zone.  Error if _ddns_enabled_ is _true_ and the _ddns_domain_ does not have a corresponding entry in _ddns_zones_.  Error if there are items with duplicate zone in the list.  Defaults to empty list.
-	DdnsZones  []DDNSZone  `json:"ddns_zones,omitempty"`
+	DdnsZones []DDNSZone `json:"ddns_zones,omitempty"`
+	// The global DHCP configuration that controls how leases are issued.
 	DhcpConfig *DHCPConfig `json:"dhcp_config,omitempty"`
 	// The list of DHCP options or group of options for IPv4. An option list is ordered and may include both option groups and specific options. Multiple occurrences of the same option or group is not an error. The last occurrence of an option in the list will be used.  Error if the graph of referenced groups contains cycles.  Defaults to empty list.
 	DhcpOptions []OptionItem `json:"dhcp_options,omitempty"`
 	// The list of DHCP options or group of options for IPv6. An option list is ordered and may include both option groups and specific options. Multiple occurrences of the same option or group is not an error. The last occurrence of an option in the list will be used.  Error if the graph of referenced groups contains cycles.  Defaults to empty list.
-	DhcpOptionsV6 []OptionItem              `json:"dhcp_options_v6,omitempty"`
+	DhcpOptionsV6 []OptionItem `json:"dhcp_options_v6,omitempty"`
+	// The global DHCP Utilization threshold settings.
 	DhcpThreshold *DHCPUtilizationThreshold `json:"dhcp_threshold,omitempty"`
 	// The behavior when GSS-TSIG should be used (a matching external DNS server is configured) but no GSS-TSIG key is available. If configured to _false_ (the default) this DNS server is skipped, if configured to _true_ the DNS server is ignored and the DNS update is sent with the configured DHCP-DDNS protection e.g. TSIG key or without any protection when none was configured.  Defaults to _false_.
 	GssTsigFallback *bool `json:"gss_tsig_fallback,omitempty"`

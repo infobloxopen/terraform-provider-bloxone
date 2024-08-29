@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadIPSpaceResponse{}
 
 // ReadIPSpaceResponse The response format to retrieve the __IPSpace__ object.
 type ReadIPSpaceResponse struct {
+	// The IPSpace object.
 	Result               *IPSpace `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -27,8 +27,9 @@ type DDNSZone struct {
 	// The Nameservers in the zone.  Each nameserver IP should be unique across the list of nameservers.
 	Nameservers []Nameserver `json:"nameservers,omitempty"`
 	// Indicates if TSIG key should be used for the update.  Defaults to _false_.
-	TsigEnabled *bool    `json:"tsig_enabled,omitempty"`
-	TsigKey     *TSIGKey `json:"tsig_key,omitempty"`
+	TsigEnabled *bool `json:"tsig_enabled,omitempty"`
+	// The TSIG key. Required if _tsig_enabled_ is _true_.  Defaults to empty.
+	TsigKey *TSIGKey `json:"tsig_key,omitempty"`
 	// The resource identifier.
 	View *string `json:"view,omitempty"`
 	// The name of the view.

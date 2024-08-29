@@ -42,7 +42,8 @@ type OptionFilter struct {
 	// The type of protocol of option filter (_ip4_ or _ip6_).
 	Protocol *string `json:"protocol,omitempty"`
 	// The role of DHCP filter (_values_ or _selection_).  Defaults to _values_.
-	Role  *string              `json:"role,omitempty"`
+	Role *string `json:"role,omitempty"`
+	// The list of option filter rules to match.
 	Rules OptionFilterRuleList `json:"rules"`
 	// The tags for the option filter in JSON format.
 	Tags map[string]interface{} `json:"tags,omitempty"`

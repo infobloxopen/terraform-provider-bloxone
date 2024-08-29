@@ -30,7 +30,7 @@ var ProtobufFieldMaskResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandProtobufFieldMask(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.BufFieldMask {
+func ExpandProtobufFieldMask(ctx context.Context, o types.Object, diags *diag.Diagnostics) *anycast.ProtobufFieldMask {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
@@ -42,17 +42,17 @@ func ExpandProtobufFieldMask(ctx context.Context, o types.Object, diags *diag.Di
 	return m.Expand(ctx, diags)
 }
 
-func (m *ProtobufFieldMaskModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.BufFieldMask {
+func (m *ProtobufFieldMaskModel) Expand(ctx context.Context, diags *diag.Diagnostics) *anycast.ProtobufFieldMask {
 	if m == nil {
 		return nil
 	}
-	to := &anycast.BufFieldMask{
+	to := &anycast.ProtobufFieldMask{
 		Paths: flex.ExpandFrameworkListString(ctx, m.Paths, diags),
 	}
 	return to
 }
 
-func FlattenProtobufFieldMask(ctx context.Context, from *anycast.BufFieldMask, diags *diag.Diagnostics) types.Object {
+func FlattenProtobufFieldMask(ctx context.Context, from *anycast.ProtobufFieldMask, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ProtobufFieldMaskAttrTypes)
 	}
@@ -63,7 +63,7 @@ func FlattenProtobufFieldMask(ctx context.Context, from *anycast.BufFieldMask, d
 	return t
 }
 
-func (m *ProtobufFieldMaskModel) Flatten(ctx context.Context, from *anycast.BufFieldMask, diags *diag.Diagnostics) {
+func (m *ProtobufFieldMaskModel) Flatten(ctx context.Context, from *anycast.ProtobufFieldMask, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}

@@ -19,10 +19,12 @@ var _ MappedNullable = &HostAssociationsResponse{}
 
 // HostAssociationsResponse The response format to retrieve __HAGroup__, __Subnet__ and __DHCPPacketStats__ objects associated with the DHCP __Host__ object. The host in question is also included in the output, for the convenience reasons.
 type HostAssociationsResponse struct {
+	// The DHCP packets statistics.
 	DhcpPktStats *DHCPPacketStats `json:"dhcp_pkt_stats,omitempty"`
 	// The list of HA groups.
 	HaGroups []HAGroup `json:"ha_groups,omitempty"`
-	Host     *Host     `json:"host,omitempty"`
+	// The host for which the associated objects, subnets and HA groups, are returned.
+	Host *Host `json:"host,omitempty"`
 	// The list of subnets.
 	Subnets              []Subnet `json:"subnets,omitempty"`
 	AdditionalProperties map[string]interface{}

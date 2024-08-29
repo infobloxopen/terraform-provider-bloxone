@@ -30,7 +30,8 @@ type NetAddrDfpAssignment struct {
 	// Host reference, UUID
 	HostId *string `json:"host_id,omitempty"`
 	// IPSpace reference, UUID
-	IpSpaceId *string                        `json:"ip_space_id,omitempty"`
+	IpSpaceId *string `json:"ip_space_id,omitempty"`
+	// scope type
 	ScopeType *NetAddrDfpAssignmentScopeType `json:"scope_type,omitempty"`
 	// Start and end pair of addresses used for range scope type
 	Start                *string `json:"start,omitempty"`

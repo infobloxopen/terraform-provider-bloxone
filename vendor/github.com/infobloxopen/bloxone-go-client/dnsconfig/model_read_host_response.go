@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadHostResponse{}
 
 // ReadHostResponse The DNS Host object read response format.
 type ReadHostResponse struct {
+	// The DNS Host object.
 	Result               *Host `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

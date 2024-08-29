@@ -27,7 +27,8 @@ type Address struct {
 	Comment *string `json:"comment,omitempty"`
 	// Time when the object has been created.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
-	DhcpInfo  *DHCPInfo  `json:"dhcp_info,omitempty"`
+	// The DHCP information associated with this object.
+	DhcpInfo *DHCPInfo `json:"dhcp_info,omitempty"`
 	// Read only. Represent the value of the same field in the associated _dhcp/fixed_address_ object.
 	DisableDhcp *bool `json:"disable_dhcp,omitempty"`
 	// The discovery attributes for this address in JSON format.

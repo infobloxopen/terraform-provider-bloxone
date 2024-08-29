@@ -19,11 +19,15 @@ var _ MappedNullable = &FixedAddressInheritance{}
 
 // FixedAddressInheritance The __FixedAddressInheritance__ object specifies how and which fields _FixedAddress_ object inherits from the parent.
 type FixedAddressInheritance struct {
-	DhcpOptions               *InheritedDHCPOptionList    `json:"dhcp_options,omitempty"`
-	HeaderOptionFilename      *InheritanceInheritedString `json:"header_option_filename,omitempty"`
+	// The inheritance configuration for _dhcp_options_ field.
+	DhcpOptions *InheritedDHCPOptionList `json:"dhcp_options,omitempty"`
+	// The inheritance configuration for _header_option_filename_ field.
+	HeaderOptionFilename *InheritanceInheritedString `json:"header_option_filename,omitempty"`
+	// The inheritance configuration for _header_option_server_address_ field.
 	HeaderOptionServerAddress *InheritanceInheritedString `json:"header_option_server_address,omitempty"`
-	HeaderOptionServerName    *InheritanceInheritedString `json:"header_option_server_name,omitempty"`
-	AdditionalProperties      map[string]interface{}
+	// The inheritance configuration for _header_option_server_name_ field.
+	HeaderOptionServerName *InheritanceInheritedString `json:"header_option_server_name,omitempty"`
+	AdditionalProperties   map[string]interface{}
 }
 
 type _FixedAddressInheritance FixedAddressInheritance

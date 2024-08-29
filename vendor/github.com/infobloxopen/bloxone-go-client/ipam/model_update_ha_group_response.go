@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateHAGroupResponse{}
 
 // UpdateHAGroupResponse The response format to update the __HAGroup__ object.
 type UpdateHAGroupResponse struct {
+	// The HAGroup object.
 	Result               *HAGroup `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -19,6 +19,7 @@ var _ MappedNullable = &HostInheritance{}
 
 // HostInheritance Inheritance configuration specifies how and which fields _Host_ object inherits from _Global_ or _Server_ parent.
 type HostInheritance struct {
+	// Optional. Field config for _kerberos_keys_ field from _Host_ object.
 	KerberosKeys         *InheritedKerberosKeys `json:"kerberos_keys,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

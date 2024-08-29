@@ -29,8 +29,9 @@ type ExternalPrimary struct {
 	// FQDN of nameserver in punycode.
 	ProtocolFqdn *string `json:"protocol_fqdn,omitempty"`
 	// Optional. If enabled, secondaries will use the configured TSIG key when requesting a zone transfer from this primary.
-	TsigEnabled *bool    `json:"tsig_enabled,omitempty"`
-	TsigKey     *TSIGKey `json:"tsig_key,omitempty"`
+	TsigEnabled *bool `json:"tsig_enabled,omitempty"`
+	// Optional. TSIG key.  Error if empty while _tsig_enabled_ is _true_.
+	TsigKey *TSIGKey `json:"tsig_key,omitempty"`
 	// Allowed values: * _nsg_, * _primary_.
 	Type                 string `json:"type"`
 	AdditionalProperties map[string]interface{}

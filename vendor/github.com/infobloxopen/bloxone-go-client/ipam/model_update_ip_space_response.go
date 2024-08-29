@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateIPSpaceResponse{}
 
 // UpdateIPSpaceResponse The response format to update the __IPSpace__ object.
 type UpdateIPSpaceResponse struct {
+	// The IPSpace object.
 	Result               *IPSpace `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateOptionCodeResponse{}
 
 // UpdateOptionCodeResponse The response format to update the __OptionCode__ object.
 type UpdateOptionCodeResponse struct {
+	// The OptionCode object.
 	Result               *OptionCode `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

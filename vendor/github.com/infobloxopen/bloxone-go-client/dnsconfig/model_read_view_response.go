@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadViewResponse{}
 
 // ReadViewResponse The View object read response format.
 type ReadViewResponse struct {
+	// The View object.
 	Result               *View `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

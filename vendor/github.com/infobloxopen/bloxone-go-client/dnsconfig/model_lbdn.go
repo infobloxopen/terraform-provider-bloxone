@@ -23,10 +23,12 @@ type LBDN struct {
 	// Optional. Comment for __LBDN__.
 	Comment *string `json:"comment,omitempty"`
 	// Optional. _true_ to disable object. A disabled object is effectively non-existent when generating configuration.
-	Disabled  *bool      `json:"disabled,omitempty"`
+	Disabled *bool `json:"disabled,omitempty"`
+	// Optional. __DTC Policy__ information.
 	DtcPolicy *DTCPolicy `json:"dtc_policy,omitempty"`
 	// The resource identifier.
-	Id                 *string         `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
+	// Optional. The inheritance configuration.
 	InheritanceSources *TTLInheritance `json:"inheritance_sources,omitempty"`
 	// Name of __LBDN__.
 	Name string `json:"name"`

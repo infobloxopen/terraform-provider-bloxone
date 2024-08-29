@@ -64,7 +64,8 @@ type Server struct {
 	// _gss_tsig_enabled_ enables/disables GSS-TSIG signed dynamic updates.  Defaults to _false_.
 	GssTsigEnabled *bool `json:"gss_tsig_enabled,omitempty"`
 	// The resource identifier.
-	Id                 *string            `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
+	// Optional. Inheritance configuration.
 	InheritanceSources *ServerInheritance `json:"inheritance_sources,omitempty"`
 	// _kerberos_keys_ contains a list of keys for GSS-TSIG signed dynamic updates.  Defaults to empty.
 	KerberosKeys []KerberosKey `json:"kerberos_keys,omitempty"`

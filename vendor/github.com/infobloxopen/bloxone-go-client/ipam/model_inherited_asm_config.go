@@ -19,12 +19,19 @@ var _ MappedNullable = &InheritedASMConfig{}
 
 // InheritedASMConfig The inheritance configuration for the __ASMConfig__ object.
 type InheritedASMConfig struct {
-	AsmEnableBlock       *InheritedAsmEnableBlock    `json:"asm_enable_block,omitempty"`
-	AsmGrowthBlock       *InheritedAsmGrowthBlock    `json:"asm_growth_block,omitempty"`
-	AsmThreshold         *InheritanceInheritedUInt32 `json:"asm_threshold,omitempty"`
-	ForecastPeriod       *InheritanceInheritedUInt32 `json:"forecast_period,omitempty"`
-	History              *InheritanceInheritedUInt32 `json:"history,omitempty"`
-	MinTotal             *InheritanceInheritedUInt32 `json:"min_total,omitempty"`
+	// The block of ASM fields: _enable_, _enable_notification_, _reenable_date_.
+	AsmEnableBlock *InheritedAsmEnableBlock `json:"asm_enable_block,omitempty"`
+	// The block of ASM fields: _growth_factor_, _growth_type_.
+	AsmGrowthBlock *InheritedAsmGrowthBlock `json:"asm_growth_block,omitempty"`
+	// ASM shows the number of addresses forecast to be used _forecast_period_ days in the future, if it is greater than _asm_threshold_percent_ * _dhcp_total_ (see _dhcp_utilization_) then the subnet is flagged.
+	AsmThreshold *InheritanceInheritedUInt32 `json:"asm_threshold,omitempty"`
+	// The forecast period in days.
+	ForecastPeriod *InheritanceInheritedUInt32 `json:"forecast_period,omitempty"`
+	// The minimum amount of history needed before ASM can run on this subnet.
+	History *InheritanceInheritedUInt32 `json:"history,omitempty"`
+	// The minimum size of range needed for ASM to run on this subnet.
+	MinTotal *InheritanceInheritedUInt32 `json:"min_total,omitempty"`
+	// The minimum percentage of addresses that must be available outside of the DHCP ranges and fixed addresses when making a suggested change.
 	MinUnused            *InheritanceInheritedUInt32 `json:"min_unused,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

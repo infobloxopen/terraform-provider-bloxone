@@ -20,12 +20,15 @@ var _ MappedNullable = &BulkCopyView{}
 
 // BulkCopyView struct for BulkCopyView
 type BulkCopyView struct {
-	AuthZoneConfig    *AuthZoneConfig    `json:"auth_zone_config,omitempty"`
+	// Optional. Authoritative zone related configuration.
+	AuthZoneConfig *AuthZoneConfig `json:"auth_zone_config,omitempty"`
+	// Optional. Forward zone related configuration.
 	ForwardZoneConfig *ForwardZoneConfig `json:"forward_zone_config,omitempty"`
 	// Indicates whether child objects should be copied or not.  Defaults to _false_. Reserved for future use.
 	Recursive *bool `json:"recursive,omitempty"`
 	// The resource identifier.
-	Resources           []string        `json:"resources"`
+	Resources []string `json:"resources"`
+	// Optional. Secondary zone related configuration.
 	SecondaryZoneConfig *AuthZoneConfig `json:"secondary_zone_config,omitempty"`
 	// Indicates whether copying should skip object in case of error and continue with next, or abort copying in case of error.  Defaults to _false_.
 	SkipOnError *bool `json:"skip_on_error,omitempty"`

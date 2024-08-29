@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateOptionSpaceResponse{}
 
 // CreateOptionSpaceResponse The response format to create the __OptionSpace__ object.
 type CreateOptionSpaceResponse struct {
+	// The created OptionSpace object.
 	Result               *OptionSpace `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

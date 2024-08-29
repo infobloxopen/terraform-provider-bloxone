@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateForwardNSGResponse{}
 
 // CreateForwardNSGResponse The ForwardNSG object create response format.
 type CreateForwardNSGResponse struct {
+	// The created ForwardNSG object.
 	Result               *ForwardNSG `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

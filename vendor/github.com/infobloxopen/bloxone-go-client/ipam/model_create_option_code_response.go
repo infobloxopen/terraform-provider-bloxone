@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateOptionCodeResponse{}
 
 // CreateOptionCodeResponse The response format to create the __OptionCode__ object.
 type CreateOptionCodeResponse struct {
+	// The created OptionCode object.
 	Result               *OptionCode `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

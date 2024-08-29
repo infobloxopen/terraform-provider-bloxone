@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateKerberosKeyResponse{}
 
 // UpdateKerberosKeyResponse The response format to update __KerberosKey__ resource extracted from the uploaded keytab file.
 type UpdateKerberosKeyResponse struct {
+	// The __KerberosKey__ object.
 	Result               *KerberosKey `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

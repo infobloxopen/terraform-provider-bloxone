@@ -42,7 +42,8 @@ type Range struct {
 	// The list of the inheritance assigned hosts of the object.
 	InheritanceAssignedHosts []InheritanceAssignedHost `json:"inheritance_assigned_hosts,omitempty"`
 	// The resource identifier.
-	InheritanceParent  *string                 `json:"inheritance_parent,omitempty"`
+	InheritanceParent *string `json:"inheritance_parent,omitempty"`
+	// The DHCP inheritance configuration for the range.
 	InheritanceSources *DHCPOptionsInheritance `json:"inheritance_sources,omitempty"`
 	// The name of the range. May contain 1 to 256 characters. Can include UTF-8.
 	Name *string `json:"name,omitempty"`
@@ -55,11 +56,14 @@ type Range struct {
 	// The start IP address of the range.
 	Start string `json:"start"`
 	// The tags for the range in JSON format.
-	Tags      map[string]interface{} `json:"tags,omitempty"`
-	Threshold *UtilizationThreshold  `json:"threshold,omitempty"`
+	Tags map[string]interface{} `json:"tags,omitempty"`
+	// The utilization threshold settings for the range.
+	Threshold *UtilizationThreshold `json:"threshold,omitempty"`
 	// Time when the object has been updated. Equals to _created_at_ if not updated after creation.
-	UpdatedAt            *time.Time     `json:"updated_at,omitempty"`
-	Utilization          *Utilization   `json:"utilization,omitempty"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	// The utilization statistics of IPV4 addresses for the range.
+	Utilization *Utilization `json:"utilization,omitempty"`
+	// The utilization of IPV6 addresses in the range.
 	UtilizationV6        *UtilizationV6 `json:"utilization_v6,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

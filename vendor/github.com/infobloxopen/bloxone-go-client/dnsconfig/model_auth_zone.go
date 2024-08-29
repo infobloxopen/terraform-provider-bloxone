@@ -40,7 +40,8 @@ type AuthZone struct {
 	Id *string `json:"id,omitempty"`
 	// The list of the inheritance assigned hosts of the object.
 	InheritanceAssignedHosts []Inheritance2AssignedHost `json:"inheritance_assigned_hosts,omitempty"`
-	InheritanceSources       *AuthZoneInheritance       `json:"inheritance_sources,omitempty"`
+	// Optional. Inheritance configuration.
+	InheritanceSources *AuthZoneInheritance `json:"inheritance_sources,omitempty"`
 	// On-create-only. SOA serial is allowed to be set when the authoritative zone is created.
 	InitialSoaSerial *int64 `json:"initial_soa_serial,omitempty"`
 	// Optional. BloxOne DDI hosts acting as internal secondaries. Order is not significant.
@@ -74,7 +75,8 @@ type AuthZone struct {
 	// The resource identifier.
 	View *string `json:"view,omitempty"`
 	// The list of an auth zone warnings.
-	Warnings             []Warning      `json:"warnings,omitempty"`
+	Warnings []Warning `json:"warnings,omitempty"`
+	// Optional. ZoneAuthority.
 	ZoneAuthority        *ZoneAuthority `json:"zone_authority,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

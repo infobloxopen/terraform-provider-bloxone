@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadAuthNSGResponse{}
 
 // ReadAuthNSGResponse The AuthNSG object read response format.
 type ReadAuthNSGResponse struct {
+	// The AuthNSG object.
 	Result               *AuthNSG `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

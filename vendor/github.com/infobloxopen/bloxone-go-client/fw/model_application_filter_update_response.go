@@ -19,6 +19,7 @@ var _ MappedNullable = &ApplicationFilterUpdateResponse{}
 
 // ApplicationFilterUpdateResponse The Application Filter update response.
 type ApplicationFilterUpdateResponse struct {
+	// The Application Filter object.
 	Results              *ApplicationFilter `json:"results,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

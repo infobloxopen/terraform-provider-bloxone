@@ -20,8 +20,9 @@ var _ MappedNullable = &DetailServiceHost{}
 // DetailServiceHost struct for DetailServiceHost
 type DetailServiceHost struct {
 	// Composite Status of the Host (`online`, `degraded`, `error`, `offline`, `pending`, `awaiting approval`).
-	CompositeStatus *string                  `json:"composite_status,omitempty"`
-	Config          *DetailServiceHostConfig `json:"config,omitempty"`
+	CompositeStatus *string `json:"composite_status,omitempty"`
+	// List of Host-specific configurations of this Service.
+	Config *DetailServiceHostConfig `json:"config,omitempty"`
 	// The name of the Host (unique).
 	DisplayName *string `json:"display_name,omitempty"`
 	// The resource identifier.

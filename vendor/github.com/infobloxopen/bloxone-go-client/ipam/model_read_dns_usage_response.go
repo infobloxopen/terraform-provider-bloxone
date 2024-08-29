@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadDNSUsageResponse{}
 
 // ReadDNSUsageResponse The response format to retrieve the __DNSUsage__ object.
 type ReadDNSUsageResponse struct {
+	// The DNSUsage object.
 	Result               *DNSUsage `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

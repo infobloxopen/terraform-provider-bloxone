@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateServerResponse{}
 
 // CreateServerResponse The Server object create response format.
 type CreateServerResponse struct {
+	// The created Server object.
 	Result               *Server `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

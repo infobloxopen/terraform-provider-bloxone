@@ -19,6 +19,7 @@ var _ MappedNullable = &SecurityPolicyCreateResponse{}
 
 // SecurityPolicyCreateResponse The Security Policy create response.
 type SecurityPolicyCreateResponse struct {
+	// The Security Policy object.
 	Results              *SecurityPolicy `json:"results,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

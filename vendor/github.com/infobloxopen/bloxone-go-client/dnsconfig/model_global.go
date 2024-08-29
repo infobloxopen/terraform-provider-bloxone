@@ -35,8 +35,9 @@ type Global struct {
 	// Optional. DNSSEC trust anchors.  Error if there are list items with duplicate (_zone_, _sep_, _algorithm_) combinations.  Defaults to empty.
 	DnssecTrustAnchors []TrustAnchor `json:"dnssec_trust_anchors,omitempty"`
 	// Optional. _true_ to reject expired DNSSEC keys. Ignored if either _dnssec_enabled_ or _dnssec_enable_validation_ is _false_.  Defaults to _true_.
-	DnssecValidateExpiry *bool      `json:"dnssec_validate_expiry,omitempty"`
-	DtcConfig            *DTCConfig `json:"dtc_config,omitempty"`
+	DnssecValidateExpiry *bool `json:"dnssec_validate_expiry,omitempty"`
+	// Optional. DTC Configuration.
+	DtcConfig *DTCConfig `json:"dtc_config,omitempty"`
 	// Optional. _true_ to enable EDNS client subnet for recursive queries. Other _ecs_*_ fields are ignored if this field is not enabled.  Defaults to _false_.
 	EcsEnabled *bool `json:"ecs_enabled,omitempty"`
 	// Optional. _true_ to enable ECS options in outbound queries. This functionality has additional overhead so it is disabled by default.  Defaults to _false_.
@@ -106,9 +107,10 @@ type Global struct {
 	// Optional. Use default forwarders to resolve queries for subzones.  Defaults to _true_.
 	UseForwardersForSubzones *bool `json:"use_forwarders_for_subzones,omitempty"`
 	// _use_root_forwarders_for_local_resolution_with_b1td_ allows DNS recursive queries sent to root forwarders for local resolution when deployed alongside BloxOne Thread Defense. Defaults to _false_.
-	UseRootForwardersForLocalResolutionWithB1td *bool          `json:"use_root_forwarders_for_local_resolution_with_b1td,omitempty"`
-	ZoneAuthority                               *ZoneAuthority `json:"zone_authority,omitempty"`
-	AdditionalProperties                        map[string]interface{}
+	UseRootForwardersForLocalResolutionWithB1td *bool `json:"use_root_forwarders_for_local_resolution_with_b1td,omitempty"`
+	// Optional. ZoneAuthority.
+	ZoneAuthority        *ZoneAuthority `json:"zone_authority,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _Global Global

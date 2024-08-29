@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadRecordResponse{}
 
 // ReadRecordResponse The response format to retrieve the __Record__ object.
 type ReadRecordResponse struct {
+	// The Record object.
 	Result               *Record `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

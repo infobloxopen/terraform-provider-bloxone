@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateRangeResponse{}
 
 // UpdateRangeResponse The response format to update the __Range__ object.
 type UpdateRangeResponse struct {
+	// The Range object.
 	Result               *Range `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

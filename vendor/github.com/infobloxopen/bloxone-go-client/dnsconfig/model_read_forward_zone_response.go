@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadForwardZoneResponse{}
 
 // ReadForwardZoneResponse The Forward Zone object read response format.
 type ReadForwardZoneResponse struct {
+	// The Forward Zone object.
 	Result               *ForwardZone `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

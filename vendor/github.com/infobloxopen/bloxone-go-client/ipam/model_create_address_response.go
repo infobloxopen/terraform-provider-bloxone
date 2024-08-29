@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateAddressResponse{}
 
 // CreateAddressResponse The response format to create the __Address__ object.
 type CreateAddressResponse struct {
+	// The created Address object.
 	Result               *Address `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

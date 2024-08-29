@@ -21,12 +21,12 @@ var _ MappedNullable = &BgpConfig{}
 type BgpConfig struct {
 	Asn *int64 `json:"asn,omitempty"`
 	// Examples:     ASDOT        ASPLAIN     INTEGER     VALID/INVALID     0.1          1           1           Valid     1            1           1           Valid     65535        65535       65535       Valid     0.65535      65535       65535       Valid     1.0          65536       65536       Valid     1.1          65537       65537       Valid     1.65535      131071      131071      Valid     65535.0      4294901760  4294901760  Valid     65535.1      4294901761  4294901761  Valid     65535.65535  4294967295  4294967295  Valid      0.65536                              Invalid     65535.655536                         Invalid     65536.0                              Invalid     65536.65535                          Invalid                  4294967296              Invalid
-	AsnText       *string       `json:"asn_text,omitempty"`
-	Fields        *BufFieldMask `json:"fields,omitempty"`
-	HolddownSecs  *int64        `json:"holddown_secs,omitempty"`
-	KeepAliveSecs *int64        `json:"keep_alive_secs,omitempty"`
-	LinkDetect    *bool         `json:"link_detect,omitempty"`
-	Neighbors     []BgpNeighbor `json:"neighbors,omitempty"`
+	AsnText       *string            `json:"asn_text,omitempty"`
+	Fields        *ProtobufFieldMask `json:"fields,omitempty"`
+	HolddownSecs  *int64             `json:"holddown_secs,omitempty"`
+	KeepAliveSecs *int64             `json:"keep_alive_secs,omitempty"`
+	LinkDetect    *bool              `json:"link_detect,omitempty"`
+	Neighbors     []BgpNeighbor      `json:"neighbors,omitempty"`
 	// Any predefined BGP configuration, with embedded new lines; the preamble will be prepended to the generated BGP configuration.
 	Preamble             *string `json:"preamble,omitempty"`
 	AdditionalProperties map[string]interface{}
@@ -116,9 +116,9 @@ func (o *BgpConfig) SetAsnText(v string) {
 }
 
 // GetFields returns the Fields field value if set, zero value otherwise.
-func (o *BgpConfig) GetFields() BufFieldMask {
+func (o *BgpConfig) GetFields() ProtobufFieldMask {
 	if o == nil || IsNil(o.Fields) {
-		var ret BufFieldMask
+		var ret ProtobufFieldMask
 		return ret
 	}
 	return *o.Fields
@@ -126,7 +126,7 @@ func (o *BgpConfig) GetFields() BufFieldMask {
 
 // GetFieldsOk returns a tuple with the Fields field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *BgpConfig) GetFieldsOk() (*BufFieldMask, bool) {
+func (o *BgpConfig) GetFieldsOk() (*ProtobufFieldMask, bool) {
 	if o == nil || IsNil(o.Fields) {
 		return nil, false
 	}
@@ -142,8 +142,8 @@ func (o *BgpConfig) HasFields() bool {
 	return false
 }
 
-// SetFields gets a reference to the given BufFieldMask and assigns it to the Fields field.
-func (o *BgpConfig) SetFields(v BufFieldMask) {
+// SetFields gets a reference to the given ProtobufFieldMask and assigns it to the Fields field.
+func (o *BgpConfig) SetFields(v ProtobufFieldMask) {
 	o.Fields = &v
 }
 

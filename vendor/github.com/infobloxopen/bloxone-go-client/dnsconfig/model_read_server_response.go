@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadServerResponse{}
 
 // ReadServerResponse The Server object read response format.
 type ReadServerResponse struct {
+	// The Server object.
 	Result               *Server `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -19,6 +19,7 @@ var _ MappedNullable = &InheritedDHCPOptionItem{}
 
 // InheritedDHCPOptionItem A wrapper of item (_dhcp/option_item_) in a list of Inherited DHCP options. It contains extra fields not covered by OptionItem.
 type InheritedDHCPOptionItem struct {
+	// Option inherited from the ancestor.
 	Option *OptionItem `json:"option,omitempty"`
 	// The resource identifier.
 	OverridingGroup      *string `json:"overriding_group,omitempty"`

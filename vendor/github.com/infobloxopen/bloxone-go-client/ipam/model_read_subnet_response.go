@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadSubnetResponse{}
 
 // ReadSubnetResponse The response format to retrieve the __Subnet__ object.
 type ReadSubnetResponse struct {
+	// The Subnet object.
 	Result               *Subnet `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

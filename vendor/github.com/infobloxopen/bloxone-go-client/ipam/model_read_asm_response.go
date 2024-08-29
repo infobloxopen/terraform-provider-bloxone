@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadASMResponse{}
 
 // ReadASMResponse The response format to retrieve the __ASM__ object.
 type ReadASMResponse struct {
+	// The ASM object.
 	Result               *ASM `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

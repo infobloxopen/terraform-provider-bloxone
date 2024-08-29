@@ -19,6 +19,7 @@ var _ MappedNullable = &NetworkListCreateResponse{}
 
 // NetworkListCreateResponse The Network List create response.
 type NetworkListCreateResponse struct {
+	// The Network List object.
 	Results              *NetworkList `json:"results,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

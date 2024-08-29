@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadTSIGKeyResponse{}
 
 // ReadTSIGKeyResponse The response format to retrieve the __TSIGKey__ object.
 type ReadTSIGKeyResponse struct {
+	// The TSIGKey object.
 	Result               *TSIGKey `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

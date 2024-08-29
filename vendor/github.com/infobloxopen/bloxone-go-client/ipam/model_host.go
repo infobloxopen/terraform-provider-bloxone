@@ -22,7 +22,8 @@ type Host struct {
 	// The primary IP address of the on-prem host.
 	Address *string `json:"address,omitempty"`
 	// Anycast address configured to the host. Order is not significant.
-	AnycastAddresses []string              `json:"anycast_addresses,omitempty"`
+	AnycastAddresses []string `json:"anycast_addresses,omitempty"`
+	// The DHCP Config Profile for the on-prem host.
 	AssociatedServer *HostAssociatedServer `json:"associated_server,omitempty"`
 	// The description for the on-prem host.
 	Comment *string `json:"comment,omitempty"`

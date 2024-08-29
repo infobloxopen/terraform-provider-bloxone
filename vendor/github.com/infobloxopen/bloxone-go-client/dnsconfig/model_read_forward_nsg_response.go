@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadForwardNSGResponse{}
 
 // ReadForwardNSGResponse The ForwardNSG object read response format.
 type ReadForwardNSGResponse struct {
+	// The ForwardNSG object.
 	Result               *ForwardNSG `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

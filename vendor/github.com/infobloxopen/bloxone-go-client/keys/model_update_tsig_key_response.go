@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateTSIGKeyResponse{}
 
 // UpdateTSIGKeyResponse The response format to update __TSIGKey__ object.
 type UpdateTSIGKeyResponse struct {
+	// The TSIGKey object.
 	Result               *TSIGKey `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

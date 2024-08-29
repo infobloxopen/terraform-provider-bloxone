@@ -19,6 +19,7 @@ var _ MappedNullable = &AccessCodeUpdateResponse{}
 
 // AccessCodeUpdateResponse struct for AccessCodeUpdateResponse
 type AccessCodeUpdateResponse struct {
+	// The Bypass Code object.
 	Results              *AccessCode `json:"results,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

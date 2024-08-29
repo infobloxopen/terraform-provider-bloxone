@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateASMResponse{}
 
 // CreateASMResponse The response format to update subnet and range for ASM.
 type CreateASMResponse struct {
+	// The ASM object.
 	Result               *ASM `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -27,7 +27,8 @@ type ACLItem struct {
 	// Optional. Data for _ip_ _element_.  Must be empty if _element_ is not _ip_.
 	Address *string `json:"address,omitempty"`
 	// Type of element.  Allowed values:  * _any_,  * _ip_,  * _acl_,  * _tsig_key_.
-	Element              string   `json:"element"`
+	Element string `json:"element"`
+	// Optional. TSIG key.  Must be empty if _element_ is not _tsig_key_.
 	TsigKey              *TSIGKey `json:"tsig_key,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

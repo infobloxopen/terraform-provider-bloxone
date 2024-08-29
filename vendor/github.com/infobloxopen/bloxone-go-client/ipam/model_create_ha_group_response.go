@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateHAGroupResponse{}
 
 // CreateHAGroupResponse The response format to create the __HAGroup__ object.
 type CreateHAGroupResponse struct {
+	// The created HAGroup object.
 	Result               *HAGroup `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

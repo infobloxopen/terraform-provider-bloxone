@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateHardwareFilterResponse{}
 
 // UpdateHardwareFilterResponse The response format to update the __HardwareFilter__ object.
 type UpdateHardwareFilterResponse struct {
+	// The HardwareFilter object.
 	Result               *HardwareFilter `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

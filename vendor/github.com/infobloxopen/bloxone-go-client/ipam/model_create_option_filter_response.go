@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateOptionFilterResponse{}
 
 // CreateOptionFilterResponse The response format to create the __OptionFilter__ object.
 type CreateOptionFilterResponse struct {
+	// The created OptionFilter object.
 	Result               *OptionFilter `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

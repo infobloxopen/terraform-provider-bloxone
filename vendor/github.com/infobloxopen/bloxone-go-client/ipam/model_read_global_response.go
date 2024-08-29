@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadGlobalResponse{}
 
 // ReadGlobalResponse The response format to retrieve the __Global__ object.
 type ReadGlobalResponse struct {
+	// The Global object.
 	Result               *Global `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

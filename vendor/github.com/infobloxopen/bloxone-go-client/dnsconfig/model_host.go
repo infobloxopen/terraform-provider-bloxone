@@ -24,7 +24,8 @@ type Host struct {
 	// Host's primary IP Address.
 	Address *string `json:"address,omitempty"`
 	// Anycast address configured to the host. Order is not significant.
-	AnycastAddresses []string              `json:"anycast_addresses,omitempty"`
+	AnycastAddresses []string `json:"anycast_addresses,omitempty"`
+	// Host associated server configuration.
 	AssociatedServer *HostAssociatedServer `json:"associated_server,omitempty"`
 	// Host description.
 	Comment *string `json:"comment,omitempty"`
@@ -35,7 +36,8 @@ type Host struct {
 	// DFP service indicates whether or not BloxOne DDI DNS and BloxOne TD DFP are both active on the host. If so, BloxOne DDI DNS will augment recursive queries and forward them to BloxOne TD DFP. Allowed values:  * _unavailable_: BloxOne TD DFP application is not available,  * _enabled_: BloxOne TD DFP application is available and enabled,  * _disabled_: BloxOne TD DFP application is available but disabled.
 	DfpService *string `json:"dfp_service,omitempty"`
 	// The resource identifier.
-	Id                 *string          `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
+	// Optional. Inheritance configuration.
 	InheritanceSources *HostInheritance `json:"inheritance_sources,omitempty"`
 	// Optional. _kerberos_keys_ contains a list of keys for GSS-TSIG signed dynamic updates.  Defaults to empty.
 	KerberosKeys []KerberosKey `json:"kerberos_keys,omitempty"`

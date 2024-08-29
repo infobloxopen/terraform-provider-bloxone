@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateSubnetResponse{}
 
 // CreateSubnetResponse The response format to create the __Subnet__ object.
 type CreateSubnetResponse struct {
+	// The created Subnet object.
 	Result               *Subnet `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -19,6 +19,7 @@ var _ MappedNullable = &CreateDelegationResponse{}
 
 // CreateDelegationResponse The Delegation object create response format.
 type CreateDelegationResponse struct {
+	// The created Delegation object.
 	Result               *Delegation `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadOptionFilterResponse{}
 
 // ReadOptionFilterResponse The response format to retrieve the __OptionFilter__ object.
 type ReadOptionFilterResponse struct {
+	// The OptionFilter object.
 	Result               *OptionFilter `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

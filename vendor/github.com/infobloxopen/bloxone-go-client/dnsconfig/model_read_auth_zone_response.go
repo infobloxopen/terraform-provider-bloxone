@@ -19,6 +19,7 @@ var _ MappedNullable = &ReadAuthZoneResponse{}
 
 // ReadAuthZoneResponse The Authoritative Zone object read response format.
 type ReadAuthZoneResponse struct {
+	// The AuthZone object.
 	Result               *AuthZone `json:"result,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
