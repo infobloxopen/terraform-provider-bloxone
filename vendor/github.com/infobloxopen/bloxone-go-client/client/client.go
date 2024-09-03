@@ -9,6 +9,7 @@ import (
 	"github.com/infobloxopen/bloxone-go-client/inframgmt"
 	"github.com/infobloxopen/bloxone-go-client/infraprovision"
 	"github.com/infobloxopen/bloxone-go-client/ipam"
+	"github.com/infobloxopen/bloxone-go-client/ipamfederation"
 	"github.com/infobloxopen/bloxone-go-client/keys"
 	"github.com/infobloxopen/bloxone-go-client/option"
 	"github.com/infobloxopen/bloxone-go-client/redirect"
@@ -18,6 +19,7 @@ import (
 // APIClient is an aggregation of different BloxOne API clients.
 type APIClient struct {
 	IPAddressManagementAPI *ipam.APIClient
+	IPAMFederation         *ipamfederation.APIClient
 	DNSConfigurationAPI    *dnsconfig.APIClient
 	DNSDataAPI             *dnsdata.APIClient
 	HostActivationAPI      *infraprovision.APIClient
@@ -34,6 +36,7 @@ type APIClient struct {
 // This is an aggregation of different BloxOne API clients.
 // The following clients are available:
 // - IPAddressManagementAPI
+// - IPAMFederation
 // - DNSConfigurationAPI
 // - DNSDataAPI
 // - HostActivationAPI
@@ -54,6 +57,7 @@ type APIClient struct {
 func NewAPIClient(options ...option.ClientOption) *APIClient {
 	return &APIClient{
 		IPAddressManagementAPI: ipam.NewAPIClient(options...),
+		IPAMFederation:         ipamfederation.NewAPIClient(options...),
 		DNSConfigurationAPI:    dnsconfig.NewAPIClient(options...),
 		DNSDataAPI:             dnsdata.NewAPIClient(options...),
 		HostActivationAPI:      infraprovision.NewAPIClient(options...),
