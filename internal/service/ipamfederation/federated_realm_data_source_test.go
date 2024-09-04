@@ -22,7 +22,7 @@ func TestAccFederatedRealmDataSource_Filters(t *testing.T) {
 		CheckDestroy:             testAccCheckFederatedRealmDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFederatedRealmDataSourceConfigFilters("NAME_REPLACE_ME"),
+				Config: testAccFederatedRealmDataSourceConfigFilters("REALM_TEST"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
@@ -43,7 +43,7 @@ func TestAccFederatedRealmDataSource_TagFilters(t *testing.T) {
 		CheckDestroy:             testAccCheckFederatedRealmDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFederatedRealmDataSourceConfigTagFilters("NAME_REPLACE_ME", "value1"),
+				Config: testAccFederatedRealmDataSourceConfigTagFilters("REALM_TEST", "value1"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),

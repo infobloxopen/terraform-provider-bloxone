@@ -24,11 +24,11 @@ func TestAccFederatedRealmResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedRealmBasicConfig("NAME_REPLACE_ME"),
+				Config: testAccFederatedRealmBasicConfig("REALM_TEST"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
 					// TODO: check and validate these
-					resource.TestCheckResourceAttr(resourceName, "name", "NAME_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "name", "REALM_TEST"),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
@@ -51,7 +51,7 @@ func TestAccFederatedRealmResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckFederatedRealmDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFederatedRealmBasicConfig("NAME_REPLACE_ME"),
+				Config: testAccFederatedRealmBasicConfig("REALM_TEST"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
 					testAccCheckFederatedRealmDisappears(context.Background(), &v),
@@ -62,6 +62,7 @@ func TestAccFederatedRealmResource_disappears(t *testing.T) {
 	})
 }
 
+// readonly fields
 func TestAccFederatedRealmResource_AllocationV4(t *testing.T) {
 	var resourceName = "bloxone_federated_realm.test_allocation_v4"
 	var v ipamfederation.FederatedRealm
@@ -101,18 +102,18 @@ func TestAccFederatedRealmResource_Comment(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedRealmComment("NAME_REPLACE_ME", "COMMENT_REPLACE_ME"),
+				Config: testAccFederatedRealmComment("REALM_TEST", "COMMENT_TEST"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_TEST"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccFederatedRealmComment("NAME_REPLACE_ME", "COMMENT_UPDATE_REPLACE_ME"),
+				Config: testAccFederatedRealmComment("REALM_TEST", "COMMENT_UPDATE_TEST"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_UPDATE_TEST"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -130,18 +131,18 @@ func TestAccFederatedRealmResource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedRealmName("NAME_REPLACE_ME"),
+				Config: testAccFederatedRealmName("REALM_TEST"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "NAME_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "name", "REALM_TEST"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccFederatedRealmName("NAME_REPLACE_ME"),
+				Config: testAccFederatedRealmName("REALM_TEST_UPDATE"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "NAME_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "name", "REALM_TEST_UPDATE"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -159,18 +160,26 @@ func TestAccFederatedRealmResource_Tags(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedRealmTags("NAME_REPLACE_ME", "TAGS_REPLACE_ME"),
+				Config: testAccFederatedRealmTags("REALM_TEST", map[string]string{
+					"site": "NA",
+				}),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "tags", "TAGS_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "tags.site", "NA"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.site", "NA"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccFederatedRealmTags("NAME_REPLACE_ME", "TAGS_UPDATE_REPLACE_ME"),
+				Config: testAccFederatedRealmTags("NAME_REPLACE_ME", map[string]string{
+					"site": "CA",
+				}),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "tags", "TAGS_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "tags.site", "CA"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.site", "CA"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -267,11 +276,18 @@ resource "bloxone_federated_realm" "test_name" {
 `, name)
 }
 
-func testAccFederatedRealmTags(name string, tags string) string {
+func testAccFederatedRealmTags(name string, tags map[string]string) string {
+	tagsStr := "{\n"
+	for k, v := range tags {
+		tagsStr += fmt.Sprintf(`
+		%s = %q
+`, k, v)
+	}
+	tagsStr += "\t}"
 	return fmt.Sprintf(`
 resource "bloxone_federated_realm" "test_tags" {
     name = %q
-    tags = %q
+    tags = %s
 }
-`, name, tags)
+`, name, tagsStr)
 }
