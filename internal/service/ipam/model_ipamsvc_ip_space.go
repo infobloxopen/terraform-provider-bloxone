@@ -29,6 +29,7 @@ type IpamsvcIPSpaceModel struct {
 	AsmConfig                       types.Object      `tfsdk:"asm_config"`
 	AsmScopeFlag                    types.Int64       `tfsdk:"asm_scope_flag"`
 	Comment                         types.String      `tfsdk:"comment"`
+	CompartmentId                   types.String      `tfsdk:"compartment_id"`
 	CreatedAt                       timetypes.RFC3339 `tfsdk:"created_at"`
 	DdnsClientUpdate                types.String      `tfsdk:"ddns_client_update"`
 	DdnsConflictResolutionMode      types.String      `tfsdk:"ddns_conflict_resolution_mode"`
@@ -39,6 +40,7 @@ type IpamsvcIPSpaceModel struct {
 	DdnsTtlPercent                  types.Float64     `tfsdk:"ddns_ttl_percent"`
 	DdnsUpdateOnRenew               types.Bool        `tfsdk:"ddns_update_on_renew"`
 	DdnsUseConflictResolution       types.Bool        `tfsdk:"ddns_use_conflict_resolution"`
+	DefaultRealms                   types.List        `tfsdk:"default_realms"`
 	DhcpConfig                      types.Object      `tfsdk:"dhcp_config"`
 	DhcpOptions                     types.List        `tfsdk:"dhcp_options"`
 	DhcpOptionsV6                   types.List        `tfsdk:"dhcp_options_v6"`
@@ -64,6 +66,7 @@ var IpamsvcIPSpaceAttrTypes = map[string]attr.Type{
 	"asm_config":                          types.ObjectType{AttrTypes: IpamsvcASMConfigAttrTypes},
 	"asm_scope_flag":                      types.Int64Type,
 	"comment":                             types.StringType,
+	"compartment_id":                      types.StringType,
 	"created_at":                          timetypes.RFC3339Type{},
 	"ddns_client_update":                  types.StringType,
 	"ddns_conflict_resolution_mode":       types.StringType,
@@ -74,6 +77,7 @@ var IpamsvcIPSpaceAttrTypes = map[string]attr.Type{
 	"ddns_ttl_percent":                    types.Float64Type,
 	"ddns_update_on_renew":                types.BoolType,
 	"ddns_use_conflict_resolution":        types.BoolType,
+	"default_realms":                      types.ListType{ElemType: types.StringType},
 	"dhcp_config":                         types.ObjectType{AttrTypes: IpamsvcDHCPConfigAttrTypes},
 	"dhcp_options":                        types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
 	"dhcp_options_v6":                     types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
@@ -122,6 +126,12 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: `The description for the IP space. May contain 0 to 1024 characters. Can include UTF-8.`,
+	},
+	"compartment_id": schema.StringAttribute{
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
+		MarkdownDescription: `The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.`,
 	},
 	"created_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -197,6 +207,11 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		Default:             booldefault.StaticBool(true),
 		MarkdownDescription: `When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.`,
 	},
+	"default_realms": schema.ListAttribute{
+		ElementType:         types.StringType,
+		Optional:            true,
+		MarkdownDescription: `Reserved for future use.`,
+	},
 	"dhcp_config": schema.SingleNestedAttribute{
 		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes(false),
 		Optional:   true,
@@ -209,6 +224,7 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 			"echo_client_id":            types.BoolValue(true),
 			"filters":                   types.ListNull(types.StringType),
 			"filters_v6":                types.ListNull(types.StringType),
+			"filters_large_selection":   types.ListNull(types.StringType),
 			"ignore_client_uid":         types.BoolValue(false),
 			"ignore_list":               types.ListNull(types.ObjectType{AttrTypes: IpamsvcIgnoreItemAttrTypes}),
 			"lease_time":                types.Int64Value(3600),
@@ -309,12 +325,14 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `Time when the object has been updated. Equals to _created_at_ if not updated after creation.`,
 	},
 	"utilization": schema.SingleNestedAttribute{
-		Attributes: IpamsvcUtilizationResourceSchemaAttributes,
-		Computed:   true,
+		Attributes:          IpamsvcUtilizationResourceSchemaAttributes,
+		Computed:            true,
+		MarkdownDescription: `The utilization of IPV4 addresses in the IP space.`,
 	},
 	"utilization_v6": schema.SingleNestedAttribute{
-		Attributes: IpamsvcUtilizationV6ResourceSchemaAttributes,
-		Computed:   true,
+		Attributes:          IpamsvcUtilizationV6ResourceSchemaAttributes,
+		Computed:            true,
+		MarkdownDescription: `The utilization of IPV6 addresses in the IP space.`,
 	},
 	"vendor_specific_option_option_space": schema.StringAttribute{
 		Optional:            true,
@@ -341,6 +359,7 @@ func (m *IpamsvcIPSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	to := &ipam.IPSpace{
 		AsmConfig:                       ExpandIpamsvcASMConfig(ctx, m.AsmConfig, diags),
 		Comment:                         flex.ExpandStringPointer(m.Comment),
+		CompartmentId:                   flex.ExpandStringPointer(m.CompartmentId),
 		DdnsClientUpdate:                m.DdnsClientUpdate.ValueStringPointer(),
 		DdnsConflictResolutionMode:      m.DdnsConflictResolutionMode.ValueStringPointer(),
 		DdnsDomain:                      m.DdnsDomain.ValueStringPointer(),
@@ -350,6 +369,7 @@ func (m *IpamsvcIPSpaceModel) Expand(ctx context.Context, diags *diag.Diagnostic
 		DdnsTtlPercent:                  utils.Ptr(float32(m.DdnsTtlPercent.ValueFloat64())),
 		DdnsUpdateOnRenew:               m.DdnsUpdateOnRenew.ValueBoolPointer(),
 		DdnsUseConflictResolution:       m.DdnsUseConflictResolution.ValueBoolPointer(),
+		DefaultRealms:                   flex.ExpandFrameworkListString(ctx, m.DefaultRealms, diags),
 		DhcpConfig:                      ExpandIpamsvcDHCPConfig(ctx, m.DhcpConfig, diags),
 		DhcpOptions:                     flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
 		DhcpOptionsV6:                   flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptionsV6, diags, ExpandIpamsvcOptionItem),
@@ -389,6 +409,7 @@ func (m *IpamsvcIPSpaceModel) Flatten(ctx context.Context, from *ipam.IPSpace, d
 	m.AsmConfig = FlattenIpamsvcASMConfig(ctx, from.AsmConfig, diags)
 	m.AsmScopeFlag = flex.FlattenInt64(int64(*from.AsmScopeFlag))
 	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.DdnsClientUpdate = flex.FlattenStringPointer(from.DdnsClientUpdate)
 	m.DdnsConflictResolutionMode = flex.FlattenStringPointer(from.DdnsConflictResolutionMode)
@@ -399,6 +420,7 @@ func (m *IpamsvcIPSpaceModel) Flatten(ctx context.Context, from *ipam.IPSpace, d
 	m.DdnsTtlPercent = flex.FlattenFloat64(float64(*from.DdnsTtlPercent))
 	m.DdnsUpdateOnRenew = types.BoolPointerValue(from.DdnsUpdateOnRenew)
 	m.DdnsUseConflictResolution = types.BoolPointerValue(from.DdnsUseConflictResolution)
+	m.DefaultRealms = flex.FlattenFrameworkListString(ctx, from.DefaultRealms, diags)
 	m.DhcpConfig = FlattenIpamsvcDHCPConfig(ctx, from.DhcpConfig, diags)
 	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DhcpOptionsV6 = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptionsV6, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)

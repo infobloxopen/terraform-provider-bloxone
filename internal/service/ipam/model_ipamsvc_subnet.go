@@ -31,6 +31,8 @@ type IpamsvcSubnetModel struct {
 	AsmScopeFlag               types.Int64       `tfsdk:"asm_scope_flag"`
 	Cidr                       types.Int64       `tfsdk:"cidr"`
 	Comment                    types.String      `tfsdk:"comment"`
+	CompartmentId              types.String      `tfsdk:"compartment_id"`
+	ConfigProfiles             types.List        `tfsdk:"config_profiles"`
 	CreatedAt                  timetypes.RFC3339 `tfsdk:"created_at"`
 	DdnsClientUpdate           types.String      `tfsdk:"ddns_client_update"`
 	DdnsConflictResolutionMode types.String      `tfsdk:"ddns_conflict_resolution_mode"`
@@ -48,6 +50,9 @@ type IpamsvcSubnetModel struct {
 	DisableDhcp                types.Bool        `tfsdk:"disable_dhcp"`
 	DiscoveryAttrs             types.Map         `tfsdk:"discovery_attrs"`
 	DiscoveryMetadata          types.Map         `tfsdk:"discovery_metadata"`
+	ExternalKeys               types.Map         `tfsdk:"external_keys"`
+	FederatedRealms            types.List        `tfsdk:"federated_realms"`
+	Federation                 types.String      `tfsdk:"federation"`
 	HeaderOptionFilename       types.String      `tfsdk:"header_option_filename"`
 	HeaderOptionServerAddress  types.String      `tfsdk:"header_option_server_address"`
 	HeaderOptionServerName     types.String      `tfsdk:"header_option_server_name"`
@@ -80,6 +85,8 @@ var IpamsvcSubnetAttrTypes = map[string]attr.Type{
 	"asm_scope_flag":                types.Int64Type,
 	"cidr":                          types.Int64Type,
 	"comment":                       types.StringType,
+	"compartment_id":                types.StringType,
+	"config_profiles":               types.ListType{ElemType: types.StringType},
 	"created_at":                    timetypes.RFC3339Type{},
 	"ddns_client_update":            types.StringType,
 	"ddns_conflict_resolution_mode": types.StringType,
@@ -97,6 +104,9 @@ var IpamsvcSubnetAttrTypes = map[string]attr.Type{
 	"disable_dhcp":                  types.BoolType,
 	"discovery_attrs":               types.MapType{ElemType: types.StringType},
 	"discovery_metadata":            types.MapType{ElemType: types.StringType},
+	"external_keys":                 types.MapType{ElemType: types.StringType},
+	"federated_realms":              types.ListType{ElemType: types.StringType},
+	"federation":                    types.StringType,
 	"header_option_filename":        types.StringType,
 	"header_option_server_address":  types.StringType,
 	"header_option_server_name":     types.StringType,
@@ -165,6 +175,16 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The description for the subnet. May contain 0 to 1024 characters. Can include UTF-8.",
+	},
+	"compartment_id": schema.StringAttribute{
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
+		MarkdownDescription: "The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.",
+	},
+	"config_profiles": schema.ListAttribute{
+		ElementType:         types.StringType,
+		Optional:            true,
+		MarkdownDescription: "The resource identifier.",
 	},
 	"created_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -249,6 +269,7 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 			"echo_client_id":            types.BoolNull(), // echo_id cannot be set for subnet
 			"filters":                   types.ListNull(types.StringType),
 			"filters_v6":                types.ListNull(types.StringType),
+			"filters_large_selection":   types.ListNull(types.StringType),
 			"ignore_client_uid":         types.BoolValue(false),
 			"ignore_list":               types.ListNull(types.ObjectType{AttrTypes: IpamsvcIgnoreItemAttrTypes}),
 			"lease_time":                types.Int64Value(3600),
@@ -269,8 +290,9 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The DHCP options of the subnet. This can either be a specific option or a group of options.",
 	},
 	"dhcp_utilization": schema.SingleNestedAttribute{
-		Attributes: IpamsvcDHCPUtilizationResourceSchemaAttributes,
-		Computed:   true,
+		Attributes:          IpamsvcDHCPUtilizationResourceSchemaAttributes,
+		Computed:            true,
+		MarkdownDescription: "The utilization of IP addresses within the DHCP ranges of the subnet.",
 	},
 	"disable_dhcp": schema.BoolAttribute{
 		Optional:            true,
@@ -287,6 +309,20 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		ElementType:         types.StringType,
 		Computed:            true,
 		MarkdownDescription: "The discovery metadata for this subnet in JSON format.",
+	},
+	"external_keys": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Optional:            true,
+		MarkdownDescription: "The external keys (source key) for this subnet in JSON format.",
+	},
+	"federated_realms": schema.ListAttribute{
+		ElementType:         types.StringType,
+		Optional:            true,
+		MarkdownDescription: "Federated realms to which this subnet belongs.",
+	},
+	"federation": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The delegation ID for the subnet.",
 	},
 	"header_option_filename": schema.StringAttribute{
 		Optional:            true,
@@ -392,8 +428,9 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The tags for the subnet in JSON format including default tags.",
 	},
 	"threshold": schema.SingleNestedAttribute{
-		Attributes: IpamsvcUtilizationThresholdResourceSchemaAttributes,
-		Computed:   true,
+		Attributes:          IpamsvcUtilizationThresholdResourceSchemaAttributes,
+		Computed:            true,
+		MarkdownDescription: "The IP address utilization threshold settings for the subnet.",
 	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -412,12 +449,14 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 			"  <br>",
 	},
 	"utilization": schema.SingleNestedAttribute{
-		Attributes: IpamsvcUtilizationResourceSchemaAttributes,
-		Computed:   true,
+		Attributes:          IpamsvcUtilizationResourceSchemaAttributes,
+		Computed:            true,
+		MarkdownDescription: "The IPV4 address utilization statistics of the subnet.",
 	},
 	"utilization_v6": schema.SingleNestedAttribute{
-		Attributes: IpamsvcUtilizationV6ResourceSchemaAttributes,
-		Computed:   true,
+		Attributes:          IpamsvcUtilizationV6ResourceSchemaAttributes,
+		Computed:            true,
+		MarkdownDescription: "The utilization of IPV6 addresses in the subnet.",
 	},
 	"next_available_id": schema.StringAttribute{
 		Optional:            true,
@@ -441,6 +480,7 @@ func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		AsmConfig:                  ExpandIpamsvcASMConfig(ctx, m.AsmConfig, diags),
 		Cidr:                       flex.ExpandInt64Pointer(m.Cidr),
 		Comment:                    flex.ExpandStringPointer(m.Comment),
+		ConfigProfiles:             flex.ExpandFrameworkListString(ctx, m.ConfigProfiles, diags),
 		DdnsClientUpdate:           flex.ExpandStringPointer(m.DdnsClientUpdate),
 		DdnsConflictResolutionMode: flex.ExpandStringPointer(m.DdnsConflictResolutionMode),
 		DdnsDomain:                 flex.ExpandStringPointer(m.DdnsDomain),
@@ -455,6 +495,8 @@ func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		DhcpOptions:                flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
 		DhcpUtilization:            ExpandIpamsvcDHCPUtilization(ctx, m.DhcpUtilization, diags),
 		DisableDhcp:                flex.ExpandBoolPointer(m.DisableDhcp),
+		ExternalKeys:               flex.ExpandFrameworkMapString(ctx, m.ExternalKeys, diags),
+		FederatedRealms:            flex.ExpandFrameworkListString(ctx, m.FederatedRealms, diags),
 		HeaderOptionFilename:       flex.ExpandStringPointer(m.HeaderOptionFilename),
 		HeaderOptionServerAddress:  flex.ExpandStringPointer(m.HeaderOptionServerAddress),
 		HeaderOptionServerName:     flex.ExpandStringPointer(m.HeaderOptionServerName),
@@ -507,6 +549,8 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.Subnet, dia
 	m.AsmScopeFlag = flex.FlattenInt64Pointer(from.AsmScopeFlag)
 	m.Cidr = flex.FlattenInt64Pointer(from.Cidr)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
+	m.ConfigProfiles = flex.FlattenFrameworkListString(ctx, from.ConfigProfiles, diags)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.DdnsClientUpdate = flex.FlattenStringPointer(from.DdnsClientUpdate)
 	m.DdnsConflictResolutionMode = flex.FlattenStringPointer(from.DdnsConflictResolutionMode)
@@ -524,6 +568,9 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.Subnet, dia
 	m.DisableDhcp = types.BoolPointerValue(from.DisableDhcp)
 	m.DiscoveryAttrs = flex.FlattenFrameworkMapString(ctx, from.DiscoveryAttrs, diags)
 	m.DiscoveryMetadata = flex.FlattenFrameworkMapString(ctx, from.DiscoveryMetadata, diags)
+	m.ExternalKeys = flex.FlattenFrameworkMapString(ctx, from.ExternalKeys, diags)
+	m.FederatedRealms = flex.FlattenFrameworkListString(ctx, from.FederatedRealms, diags)
+	m.Federation = flex.FlattenStringPointer(from.Federation)
 	m.HeaderOptionFilename = flex.FlattenStringPointer(from.HeaderOptionFilename)
 	m.HeaderOptionServerAddress = flex.FlattenStringPointer(from.HeaderOptionServerAddress)
 	m.HeaderOptionServerName = flex.FlattenStringPointer(from.HeaderOptionServerName)

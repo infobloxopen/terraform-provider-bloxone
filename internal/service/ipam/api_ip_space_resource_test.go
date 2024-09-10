@@ -21,6 +21,7 @@ import (
 // - dhcp_config.filters_v6
 // - dhcp_config.ignore_items
 // - vendor_specific_option
+// - default_realms
 
 func TestAccIpSpaceResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test"
@@ -168,6 +169,38 @@ func TestAccIpSpaceResource_Comment(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", ""),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+// The provider does not support creating user roles , which is a required field for creating a compartment
+// Hence, this test is completed with root compartment only
+func TestAccIpSpaceResource_CompartmentId(t *testing.T) {
+	var resourceName = "bloxone_ipam_ip_space.test_compartment_id"
+	var v ipam.IPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccIpSpaceCompartmentId(name, ""),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", ""),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccIpSpaceCompartmentId(name, ""),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", ""),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -963,6 +996,15 @@ resource "bloxone_ipam_ip_space" "test_comment" {
     comment = %q
 }
 `, name, comment)
+}
+
+func testAccIpSpaceCompartmentId(name string, compartmentId string) string {
+	return fmt.Sprintf(`
+resource "bloxone_ipam_ip_space" "test_compartment_id" {
+    name = %q
+    compartment_id = %q
+}
+`, name, compartmentId)
 }
 
 func testAccIpSpaceDdnsClientUpdate(name, ddnsClientUpdate string) string {

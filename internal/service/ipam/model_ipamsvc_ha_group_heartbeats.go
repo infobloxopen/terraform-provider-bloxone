@@ -15,13 +15,15 @@ import (
 )
 
 type IpamsvcHAGroupHeartbeatsModel struct {
-	Peer                types.String `tfsdk:"peer"`
-	SuccessfulHeartbeat types.String `tfsdk:"successful_heartbeat"`
+	Peer                  types.String `tfsdk:"peer"`
+	SuccessfulHeartbeat   types.String `tfsdk:"successful_heartbeat"`
+	SuccessfulHeartbeatV6 types.String `tfsdk:"successful_heartbeat_v6"`
 }
 
 var IpamsvcHAGroupHeartbeatsAttrTypes = map[string]attr.Type{
-	"peer":                 types.StringType,
-	"successful_heartbeat": types.StringType,
+	"peer":                    types.StringType,
+	"successful_heartbeat":    types.StringType,
+	"successful_heartbeat_v6": types.StringType,
 }
 
 var IpamsvcHAGroupHeartbeatsResourceSchemaAttributes = map[string]schema.Attribute{
@@ -32,6 +34,10 @@ var IpamsvcHAGroupHeartbeatsResourceSchemaAttributes = map[string]schema.Attribu
 	"successful_heartbeat": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: "The timestamp as a string of the last successful heartbeat received from the peer above.",
+	},
+	"successful_heartbeat_v6": schema.StringAttribute{
+		Optional:            true,
+		MarkdownDescription: "The timestamp as a string of the last successful DHCPv6 heartbeat received from the peer above.",
 	},
 }
 
@@ -52,8 +58,9 @@ func (m *IpamsvcHAGroupHeartbeatsModel) Expand(ctx context.Context, diags *diag.
 		return nil
 	}
 	to := &ipam.HAGroupHeartbeats{
-		Peer:                flex.ExpandStringPointer(m.Peer),
-		SuccessfulHeartbeat: flex.ExpandStringPointer(m.SuccessfulHeartbeat),
+		Peer:                  flex.ExpandStringPointer(m.Peer),
+		SuccessfulHeartbeat:   flex.ExpandStringPointer(m.SuccessfulHeartbeat),
+		SuccessfulHeartbeatV6: flex.ExpandStringPointer(m.SuccessfulHeartbeatV6),
 	}
 	return to
 }
@@ -78,4 +85,5 @@ func (m *IpamsvcHAGroupHeartbeatsModel) Flatten(ctx context.Context, from *ipam.
 	}
 	m.Peer = flex.FlattenStringPointer(from.Peer)
 	m.SuccessfulHeartbeat = flex.FlattenStringPointer(from.SuccessfulHeartbeat)
+	m.SuccessfulHeartbeatV6 = flex.FlattenStringPointer(from.SuccessfulHeartbeatV6)
 }
