@@ -26,6 +26,7 @@ type APIClient struct {
 	AddressAPI        AddressAPI
 	AddressBlockAPI   AddressBlockAPI
 	AsmAPI            AsmAPI
+	ConfigProfileAPI  ConfigProfileAPI
 	DhcpHostAPI       DhcpHostAPI
 	DnsUsageAPI       DnsUsageAPI
 	FilterAPI         FilterAPI
@@ -36,12 +37,14 @@ type APIClient struct {
 	IpSpaceAPI        IpSpaceAPI
 	IpamHostAPI       IpamHostAPI
 	LeasesCommandAPI  LeasesCommandAPI
+	MacAddressItemAPI MacAddressItemAPI
 	OptionCodeAPI     OptionCodeAPI
 	OptionFilterAPI   OptionFilterAPI
 	OptionGroupAPI    OptionGroupAPI
 	OptionSpaceAPI    OptionSpaceAPI
 	RangeAPI          RangeAPI
 	ServerAPI         ServerAPI
+	ServiceAPI        ServiceAPI
 	SubnetAPI         SubnetAPI
 }
 
@@ -66,6 +69,7 @@ func NewAPIClient(options ...option.ClientOption) *APIClient {
 	c.AddressAPI = (*AddressAPIService)(&c.Common)
 	c.AddressBlockAPI = (*AddressBlockAPIService)(&c.Common)
 	c.AsmAPI = (*AsmAPIService)(&c.Common)
+	c.ConfigProfileAPI = (*ConfigProfileAPIService)(&c.Common)
 	c.DhcpHostAPI = (*DhcpHostAPIService)(&c.Common)
 	c.DnsUsageAPI = (*DnsUsageAPIService)(&c.Common)
 	c.FilterAPI = (*FilterAPIService)(&c.Common)
@@ -76,12 +80,14 @@ func NewAPIClient(options ...option.ClientOption) *APIClient {
 	c.IpSpaceAPI = (*IpSpaceAPIService)(&c.Common)
 	c.IpamHostAPI = (*IpamHostAPIService)(&c.Common)
 	c.LeasesCommandAPI = (*LeasesCommandAPIService)(&c.Common)
+	c.MacAddressItemAPI = (*MacAddressItemAPIService)(&c.Common)
 	c.OptionCodeAPI = (*OptionCodeAPIService)(&c.Common)
 	c.OptionFilterAPI = (*OptionFilterAPIService)(&c.Common)
 	c.OptionGroupAPI = (*OptionGroupAPIService)(&c.Common)
 	c.OptionSpaceAPI = (*OptionSpaceAPIService)(&c.Common)
 	c.RangeAPI = (*RangeAPIService)(&c.Common)
 	c.ServerAPI = (*ServerAPIService)(&c.Common)
+	c.ServiceAPI = (*ServiceAPIService)(&c.Common)
 	c.SubnetAPI = (*SubnetAPIService)(&c.Common)
 
 	return c

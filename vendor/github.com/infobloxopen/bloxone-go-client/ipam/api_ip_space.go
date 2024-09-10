@@ -85,6 +85,21 @@ type IpSpaceAPI interface {
 	// DeleteExecute executes the request
 	DeleteExecute(r IpSpaceAPIDeleteRequest) (*http.Response, error)
 	/*
+			GetConflicts Retrieve Conflicted __AddressBlock__ and __Subnet__ objects in Federated Realms.
+
+			Use this endpoint to list Conflicts in an existing IP Space relative to a Federated Realm.
+		Conflicts are Address Blocks contained by or Subnets that overlap with existing Delegations.
+
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return IpSpaceAPIGetConflictsRequest
+	*/
+	GetConflicts(ctx context.Context, id string) IpSpaceAPIGetConflictsRequest
+
+	// GetConflictsExecute executes the request
+	//  @return RealmsConflictResponse
+	GetConflictsExecute(r IpSpaceAPIGetConflictsRequest) (*RealmsConflictResponse, *http.Response, error)
+	/*
 			List Retrieve IP spaces.
 
 			Use this method to retrieve __IPSpace__ objects.
@@ -565,6 +580,114 @@ func (a *IpSpaceAPIService) DeleteExecute(r IpSpaceAPIDeleteRequest) (*http.Resp
 	}
 
 	return localVarHTTPResponse, nil
+}
+
+type IpSpaceAPIGetConflictsRequest struct {
+	ctx             context.Context
+	ApiService      IpSpaceAPI
+	id              string
+	federatedRealms *[]string
+}
+
+// List of __FederatedRealm__ object ids.
+func (r IpSpaceAPIGetConflictsRequest) FederatedRealms(federatedRealms []string) IpSpaceAPIGetConflictsRequest {
+	r.federatedRealms = &federatedRealms
+	return r
+}
+
+func (r IpSpaceAPIGetConflictsRequest) Execute() (*RealmsConflictResponse, *http.Response, error) {
+	return r.ApiService.GetConflictsExecute(r)
+}
+
+/*
+GetConflicts Retrieve Conflicted __AddressBlock__ and __Subnet__ objects in Federated Realms.
+
+Use this endpoint to list Conflicts in an existing IP Space relative to a Federated Realm.
+Conflicts are Address Blocks contained by or Subnets that overlap with existing Delegations.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param id An application specific resource identity of a resource
+	@return IpSpaceAPIGetConflictsRequest
+*/
+func (a *IpSpaceAPIService) GetConflicts(ctx context.Context, id string) IpSpaceAPIGetConflictsRequest {
+	return IpSpaceAPIGetConflictsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+// Execute executes the request
+//
+//	@return RealmsConflictResponse
+func (a *IpSpaceAPIService) GetConflictsExecute(r IpSpaceAPIGetConflictsRequest) (*RealmsConflictResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []internal.FormFile
+		localVarReturnValue *RealmsConflictResponse
+	)
+
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "IpSpaceAPIService.GetConflicts")
+	if err != nil {
+		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
+	}
+
+	localVarPath := localBasePath + "/ipam/ip_space/{id}/conflicts"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", url.PathEscape(internal.ParameterValueToString(r.id, "id")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.federatedRealms != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "federated_realms", r.federatedRealms, "csv")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := internal.SelectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.Client.CallAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := internal.NewGenericOpenAPIErrorWithBody(localVarHTTPResponse.Status, localVarBody)
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.Client.Decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
 type IpSpaceAPIListRequest struct {

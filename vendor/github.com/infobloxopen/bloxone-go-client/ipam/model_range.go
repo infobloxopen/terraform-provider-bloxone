@@ -23,6 +23,8 @@ var _ MappedNullable = &Range{}
 type Range struct {
 	// The description for the range. May contain 0 to 1024 characters. Can include UTF-8.
 	Comment *string `json:"comment,omitempty"`
+	// The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.
+	CompartmentId *string `json:"compartment_id,omitempty"`
 	// Time when the object has been created.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// The resource identifier.
@@ -53,6 +55,8 @@ type Range struct {
 	Protocol *string `json:"protocol,omitempty"`
 	// The resource identifier.
 	Space *string `json:"space,omitempty"`
+	// The name of the IP Space the range belongs to.
+	SpaceName *string `json:"space_name,omitempty"`
 	// The start IP address of the range.
 	Start string `json:"start"`
 	// The tags for the range in JSON format.
@@ -119,6 +123,38 @@ func (o *Range) HasComment() bool {
 // SetComment gets a reference to the given string and assigns it to the Comment field.
 func (o *Range) SetComment(v string) {
 	o.Comment = &v
+}
+
+// GetCompartmentId returns the CompartmentId field value if set, zero value otherwise.
+func (o *Range) GetCompartmentId() string {
+	if o == nil || IsNil(o.CompartmentId) {
+		var ret string
+		return ret
+	}
+	return *o.CompartmentId
+}
+
+// GetCompartmentIdOk returns a tuple with the CompartmentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Range) GetCompartmentIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CompartmentId) {
+		return nil, false
+	}
+	return o.CompartmentId, true
+}
+
+// HasCompartmentId returns a boolean if a field has been set.
+func (o *Range) HasCompartmentId() bool {
+	if o != nil && !IsNil(o.CompartmentId) {
+		return true
+	}
+
+	return false
+}
+
+// SetCompartmentId gets a reference to the given string and assigns it to the CompartmentId field.
+func (o *Range) SetCompartmentId(v string) {
+	o.CompartmentId = &v
 }
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
@@ -593,6 +629,38 @@ func (o *Range) SetSpace(v string) {
 	o.Space = &v
 }
 
+// GetSpaceName returns the SpaceName field value if set, zero value otherwise.
+func (o *Range) GetSpaceName() string {
+	if o == nil || IsNil(o.SpaceName) {
+		var ret string
+		return ret
+	}
+	return *o.SpaceName
+}
+
+// GetSpaceNameOk returns a tuple with the SpaceName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Range) GetSpaceNameOk() (*string, bool) {
+	if o == nil || IsNil(o.SpaceName) {
+		return nil, false
+	}
+	return o.SpaceName, true
+}
+
+// HasSpaceName returns a boolean if a field has been set.
+func (o *Range) HasSpaceName() bool {
+	if o != nil && !IsNil(o.SpaceName) {
+		return true
+	}
+
+	return false
+}
+
+// SetSpaceName gets a reference to the given string and assigns it to the SpaceName field.
+func (o *Range) SetSpaceName(v string) {
+	o.SpaceName = &v
+}
+
 // GetStart returns the Start field value
 func (o *Range) GetStart() string {
 	if o == nil {
@@ -790,6 +858,9 @@ func (o Range) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Comment) {
 		toSerialize["comment"] = o.Comment
 	}
+	if !IsNil(o.CompartmentId) {
+		toSerialize["compartment_id"] = o.CompartmentId
+	}
 	if !IsNil(o.CreatedAt) {
 		toSerialize["created_at"] = o.CreatedAt
 	}
@@ -832,6 +903,9 @@ func (o Range) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Space) {
 		toSerialize["space"] = o.Space
+	}
+	if !IsNil(o.SpaceName) {
+		toSerialize["space_name"] = o.SpaceName
 	}
 	toSerialize["start"] = o.Start
 	if !IsNil(o.Tags) {
@@ -894,6 +968,7 @@ func (o *Range) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "comment")
+		delete(additionalProperties, "compartment_id")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "dhcp_host")
 		delete(additionalProperties, "dhcp_options")
@@ -909,6 +984,7 @@ func (o *Range) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "parent")
 		delete(additionalProperties, "protocol")
 		delete(additionalProperties, "space")
+		delete(additionalProperties, "space_name")
 		delete(additionalProperties, "start")
 		delete(additionalProperties, "tags")
 		delete(additionalProperties, "threshold")
