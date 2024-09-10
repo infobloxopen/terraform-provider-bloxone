@@ -76,7 +76,7 @@ var IpamsvcHAGroupHostResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The state of DHCP on the host. This field is set when the _collect_stats_ is set to _true_ in the _GET_ _/dhcp/ha_group_ request.",
 	},
 	"state_v6": schema.StringAttribute{
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The state of DHCPv6 on the host. This field is set when the _collect_stats_ is set to _true_ in the _GET_ _/dhcp/ha_group_ request.",
 	},
 }
