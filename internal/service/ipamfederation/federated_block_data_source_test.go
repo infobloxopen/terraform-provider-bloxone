@@ -3,6 +3,7 @@ package ipamfederation_test
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -15,6 +16,7 @@ func TestAccFederatedBlockDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_federated_blocks.test"
 	resourceName := "bloxone_federated_block.test"
 	var v ipamfederation.FederatedBlock
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -22,7 +24,7 @@ func TestAccFederatedBlockDataSource_Filters(t *testing.T) {
 		CheckDestroy:             testAccCheckFederatedBlockDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFederatedBlockDataSourceConfigFilters("FEDERATED_REALM_REPLACE_ME"),
+				Config: testAccFederatedBlockDataSourceConfigFilters("10.10.0.0", 16, "FEDERATED_REALM_TEST", realmName),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
@@ -37,13 +39,15 @@ func TestAccFederatedBlockDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_federated_blocks.test"
 	resourceName := "bloxone_federated_block.test"
 	var v ipamfederation.FederatedBlock
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckFederatedBlockDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFederatedBlockDataSourceConfigTagFilters("FEDERATED_REALM_REPLACE_ME", "value1"),
+				Config: testAccFederatedBlockDataSourceConfigTagFilters("10.10.0.0", 16, "FEDERATED_REALM_TEST", realmName, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
@@ -73,24 +77,31 @@ func testAccCheckFederatedBlockResourceAttrPair(resourceName, dataSourceName str
 	}
 }
 
-func testAccFederatedBlockDataSourceConfigFilters(federatedRealm string) string {
-	return fmt.Sprintf(`
+func testAccFederatedBlockDataSourceConfigFilters(address string, cidr int, federatedRealm, name string) string {
+	config := fmt.Sprintf(`
 resource "bloxone_federated_block" "test" {
-  federated_realm = %q
+  address = %q
+  cidr = %d
+  name = %q
+  federated_realm = bloxone_federated_realm.test.id
 }
 
 data "bloxone_federated_blocks" "test" {
   filters = {
-	federated_realm = bloxone_federated_block.test.federated_realm
+	name = bloxone_federated_block.test.name
   }
 }
-`, federatedRealm)
+`, address, cidr, name)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
 }
 
-func testAccFederatedBlockDataSourceConfigTagFilters(federatedRealm string, tagValue string) string {
-	return fmt.Sprintf(`
+func testAccFederatedBlockDataSourceConfigTagFilters(address string, cidr int, federatedRealm, name, tagValue string) string {
+	config := fmt.Sprintf(`
 resource "bloxone_federated_block" "test" {
-  federated_realm = %q
+  address = %q
+  cidr = %d
+  name = %q
+  federated_realm = bloxone_federated_realm.test.id
   tags = {
 	tag1 = %q
   }
@@ -101,5 +112,6 @@ data "bloxone_federated_blocks" "test" {
 	tag1 = bloxone_federated_block.test.tags.tag1
   }
 }
-`, federatedRealm, tagValue)
+`, address, cidr, name, tagValue)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
 }

@@ -156,7 +156,7 @@ func TestAccFederatedRealmResource_Tags(t *testing.T) {
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactoriesWithTags,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
@@ -194,7 +194,7 @@ func testAccCheckFederatedRealmExists(ctx context.Context, resourceName string, 
 		if !ok {
 			return fmt.Errorf("not found: %s", resourceName)
 		}
-		apiRes, _, err := acctest.BloxOneClient.IPAMFederation.
+		apiRes, _, err := acctest.BloxOneClient.IPAMFederationAPI.
 			FederatedRealmAPI.
 			Read(ctx, rs.Primary.ID).
 			Execute()
@@ -212,7 +212,7 @@ func testAccCheckFederatedRealmExists(ctx context.Context, resourceName string, 
 func testAccCheckFederatedRealmDestroy(ctx context.Context, v *ipamfederation.FederatedRealm) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
-		_, httpRes, err := acctest.BloxOneClient.IPAMFederation.
+		_, httpRes, err := acctest.BloxOneClient.IPAMFederationAPI.
 			FederatedRealmAPI.
 			Read(ctx, *v.Id).
 			Execute()
@@ -230,7 +230,7 @@ func testAccCheckFederatedRealmDestroy(ctx context.Context, v *ipamfederation.Fe
 func testAccCheckFederatedRealmDisappears(ctx context.Context, v *ipamfederation.FederatedRealm) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
-		_, err := acctest.BloxOneClient.IPAMFederation.
+		_, err := acctest.BloxOneClient.IPAMFederationAPI.
 			FederatedRealmAPI.
 			Delete(ctx, *v.Id).
 			Execute()

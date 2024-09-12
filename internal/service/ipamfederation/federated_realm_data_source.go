@@ -99,7 +99,7 @@ func (d *FederatedRealmDataSource) Read(ctx context.Context, req datasource.Read
 	}
 
 	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipamfederation.FederatedRealm, error) {
-		apiRes, _, err := d.client.IPAMFederation.
+		apiRes, _, err := d.client.IPAMFederationAPI.
 			FederatedRealmAPI.
 			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).

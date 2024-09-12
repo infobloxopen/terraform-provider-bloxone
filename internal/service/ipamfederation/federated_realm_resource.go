@@ -66,7 +66,7 @@ func (r *FederatedRealmResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	apiRes, _, err := r.client.IPAMFederation.
+	apiRes, _, err := r.client.IPAMFederationAPI.
 		FederatedRealmAPI.
 		Create(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
@@ -93,7 +93,7 @@ func (r *FederatedRealmResource) Read(ctx context.Context, req resource.ReadRequ
 		return
 	}
 
-	apiRes, httpRes, err := r.client.IPAMFederation.
+	apiRes, httpRes, err := r.client.IPAMFederationAPI.
 		FederatedRealmAPI.
 		Read(ctx, data.Id.ValueString()).
 		Execute()
@@ -123,7 +123,7 @@ func (r *FederatedRealmResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 
-	apiRes, _, err := r.client.IPAMFederation.
+	apiRes, _, err := r.client.IPAMFederationAPI.
 		FederatedRealmAPI.
 		Update(ctx, data.Id.ValueString()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
@@ -150,7 +150,7 @@ func (r *FederatedRealmResource) Delete(ctx context.Context, req resource.Delete
 		return
 	}
 
-	httpRes, err := r.client.IPAMFederation.
+	httpRes, err := r.client.IPAMFederationAPI.
 		FederatedRealmAPI.
 		Delete(ctx, data.Id.ValueString()).
 		Execute()

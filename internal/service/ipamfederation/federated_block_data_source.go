@@ -99,7 +99,7 @@ func (d *FederatedBlockDataSource) Read(ctx context.Context, req datasource.Read
 	}
 
 	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]ipamfederation.FederatedBlock, error) {
-		apiRes, _, err := d.client.IPAMFederation.
+		apiRes, _, err := d.client.IPAMFederationAPI.
 			FederatedBlockAPI.
 			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).

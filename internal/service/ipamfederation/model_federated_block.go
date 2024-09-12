@@ -2,11 +2,13 @@ package ipamfederation
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -27,6 +29,7 @@ type FederatedBlockModel struct {
 	Parent         types.String      `tfsdk:"parent"`
 	Protocol       types.String      `tfsdk:"protocol"`
 	Tags           types.Map         `tfsdk:"tags"`
+	TagsAll        types.Map         `tfsdk:"tags_all"`
 	UpdatedAt      timetypes.RFC3339 `tfsdk:"updated_at"`
 }
 
@@ -42,25 +45,35 @@ var FederatedBlockAttrTypes = map[string]attr.Type{
 	"parent":          types.StringType,
 	"protocol":        types.StringType,
 	"tags":            types.MapType{ElemType: types.StringType},
+	"tags_all":        types.MapType{ElemType: types.StringType},
 	"updated_at":      timetypes.RFC3339Type{},
 }
 
 var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: "The address field in form “a.b.c.d/n” where the “/n” may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form “a.b.c.d”.",
-	},
+		Optional: true,
+		Computed: true,
+		//Validators: []validator.String{
+		//	stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
+		//},
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
+		MarkdownDescription: "The address of the subnet in the form “a.b.c.d”"},
 	"allocation_v4": schema.SingleNestedAttribute{
 		Attributes:          AllocationResourceSchemaAttributes,
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The percentage of the Federated Block’s total address space that is consumed by Leaf Terminals.",
 	},
 	"cidr": schema.Int64Attribute{
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The CIDR of the federated block. This is required, if _address_ does not specify it in its input.",
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The description for the federated block. May contain 0 to 1024 characters. Can include UTF-8.",
 	},
 	"created_at": schema.StringAttribute{
@@ -69,15 +82,23 @@ var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Time when the object has been created.",
 	},
 	"federated_realm": schema.StringAttribute{
-		Required:            true,
+		Required: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "The resource identifier.",
 	},
 	"id": schema.StringAttribute{
-		Computed:            true,
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+		},
 		MarkdownDescription: "The resource identifier.",
 	},
 	"name": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The name of the federated block. May contain 1 to 256 characters. Can include UTF-8.",
 	},
 	"parent": schema.StringAttribute{
@@ -98,6 +119,11 @@ var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "Time when the object has been updated. Equals to _created_at_ if not updated after creation.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags of the federation block in JSON format including default tags.",
+	},
 }
 
 func ExpandFederatedBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipamfederation.FederatedBlock {
@@ -109,15 +135,14 @@ func ExpandFederatedBlock(ctx context.Context, o types.Object, diags *diag.Diagn
 	if diags.HasError() {
 		return nil
 	}
-	return m.Expand(ctx, diags)
+	return m.Expand(ctx, diags, false)
 }
 
-func (m *FederatedBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipamfederation.FederatedBlock {
+func (m *FederatedBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipamfederation.FederatedBlock {
 	if m == nil {
 		return nil
 	}
 	to := &ipamfederation.FederatedBlock{
-		Address:        flex.ExpandStringPointer(m.Address),
 		AllocationV4:   ExpandAllocation(ctx, m.AllocationV4, diags),
 		Cidr:           flex.ExpandInt64Pointer(m.Cidr),
 		Comment:        flex.ExpandStringPointer(m.Comment),
@@ -125,6 +150,9 @@ func (m *FederatedBlockModel) Expand(ctx context.Context, diags *diag.Diagnostic
 		Name:           flex.ExpandStringPointer(m.Name),
 		Parent:         flex.ExpandStringPointer(m.Parent),
 		Tags:           flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
+	}
+	if isCreate {
+		to.Address = flex.ExpandStringPointer(m.Address)
 	}
 	return to
 }
@@ -135,6 +163,7 @@ func FlattenFederatedBlock(ctx context.Context, from *ipamfederation.FederatedBl
 	}
 	m := FederatedBlockModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, FederatedBlockAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -157,6 +186,6 @@ func (m *FederatedBlockModel) Flatten(ctx context.Context, from *ipamfederation.
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Parent = flex.FlattenStringPointer(from.Parent)
 	m.Protocol = flex.FlattenStringPointer(from.Protocol)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }

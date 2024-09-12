@@ -66,10 +66,10 @@ func (r *FederatedBlockResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	apiRes, _, err := r.client.IPAMFederation.
+	apiRes, _, err := r.client.IPAMFederationAPI.
 		FederatedBlockAPI.
 		Create(ctx).
-		Body(*data.Expand(ctx, &resp.Diagnostics)).
+		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create FederatedBlock, got error: %s", err))
@@ -93,7 +93,7 @@ func (r *FederatedBlockResource) Read(ctx context.Context, req resource.ReadRequ
 		return
 	}
 
-	apiRes, httpRes, err := r.client.IPAMFederation.
+	apiRes, httpRes, err := r.client.IPAMFederationAPI.
 		FederatedBlockAPI.
 		Read(ctx, data.Id.ValueString()).
 		Execute()
@@ -123,10 +123,10 @@ func (r *FederatedBlockResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 
-	apiRes, _, err := r.client.IPAMFederation.
+	apiRes, _, err := r.client.IPAMFederationAPI.
 		FederatedBlockAPI.
 		Update(ctx, data.Id.ValueString()).
-		Body(*data.Expand(ctx, &resp.Diagnostics)).
+		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update FederatedBlock, got error: %s", err))
@@ -150,7 +150,7 @@ func (r *FederatedBlockResource) Delete(ctx context.Context, req resource.Delete
 		return
 	}
 
-	httpRes, err := r.client.IPAMFederation.
+	httpRes, err := r.client.IPAMFederationAPI.
 		FederatedBlockAPI.
 		Delete(ctx, data.Id.ValueString()).
 		Execute()

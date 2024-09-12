@@ -75,7 +75,7 @@ var FederatedRealmResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		Computed:            true,
 		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
-		MarkdownDescription: `The tags for the federation realm in JSON format.`,
+		MarkdownDescription: `The tags for the federation block in JSON format.`,
 	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},

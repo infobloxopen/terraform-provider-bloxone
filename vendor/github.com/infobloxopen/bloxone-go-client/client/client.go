@@ -19,7 +19,7 @@ import (
 // APIClient is an aggregation of different BloxOne API clients.
 type APIClient struct {
 	IPAddressManagementAPI *ipam.APIClient
-	IPAMFederation         *ipamfederation.APIClient
+	IPAMFederationAPI      *ipamfederation.APIClient
 	DNSConfigurationAPI    *dnsconfig.APIClient
 	DNSDataAPI             *dnsdata.APIClient
 	HostActivationAPI      *infraprovision.APIClient
@@ -36,7 +36,7 @@ type APIClient struct {
 // This is an aggregation of different BloxOne API clients.
 // The following clients are available:
 // - IPAddressManagementAPI
-// - IPAMFederation
+// - IPAMFederationAPI
 // - DNSConfigurationAPI
 // - DNSDataAPI
 // - HostActivationAPI
@@ -57,7 +57,7 @@ type APIClient struct {
 func NewAPIClient(options ...option.ClientOption) *APIClient {
 	return &APIClient{
 		IPAddressManagementAPI: ipam.NewAPIClient(options...),
-		IPAMFederation:         ipamfederation.NewAPIClient(options...),
+		IPAMFederationAPI:      ipamfederation.NewAPIClient(options...),
 		DNSConfigurationAPI:    dnsconfig.NewAPIClient(options...),
 		DNSDataAPI:             dnsdata.NewAPIClient(options...),
 		HostActivationAPI:      infraprovision.NewAPIClient(options...),
