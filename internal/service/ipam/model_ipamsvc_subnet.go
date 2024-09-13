@@ -257,6 +257,10 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		Default:             booldefault.StaticBool(true),
 		MarkdownDescription: "When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.",
 	},
+	"delegation": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The ID of the delegation associated with the subnet.",
+	},
 	"dhcp_config": schema.SingleNestedAttribute{
 		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes(true),
 		Optional:   true,
@@ -319,10 +323,6 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		ElementType:         types.StringType,
 		Optional:            true,
 		MarkdownDescription: "Federated realms to which this subnet belongs.",
-	},
-	"federation": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "The delegation ID for the subnet.",
 	},
 	"header_option_filename": schema.StringAttribute{
 		Optional:            true,

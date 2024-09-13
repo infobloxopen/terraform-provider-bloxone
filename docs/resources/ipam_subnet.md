@@ -128,10 +128,10 @@ resource "bloxone_ipam_subnet" "example_na_s" {
 - `asm_scope_flag` (Number) Set to 1 to indicate that the subnet may run out of addresses.
 - `compartment_id` (String) The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.
 - `created_at` (String) Time when the object has been created.
+- `delegation` (String) The ID of the delegation associated with the subnet.
 - `dhcp_utilization` (Attributes) The utilization of IP addresses within the DHCP ranges of the subnet. (see [below for nested schema](#nestedatt--dhcp_utilization))
 - `discovery_attrs` (Map of String) The discovery attributes for this subnet in JSON format.
 - `discovery_metadata` (Map of String) The discovery metadata for this subnet in JSON format.
-- `federation` (String) The delegation ID for the subnet.
 - `id` (String) The resource identifier.
 - `inheritance_assigned_hosts` (Attributes List) The list of the inheritance assigned hosts of the object. (see [below for nested schema](#nestedatt--inheritance_assigned_hosts))
 - `inheritance_parent` (String) The resource identifier.

@@ -104,7 +104,7 @@ Read-Only:
 
 - `asm_scope_flag` (Number) Incremented by 1 if the IP address usage limits for automated scope management are exceeded for any subnets in the address block.
 - `created_at` (String) Time when the object has been created.
-- `federation` (String) The delegation ID for the Address Block.
+- `delegation` (String) The ID of the delegation associated with the address block.
 - `id` (String) The resource identifier.
 - `parent` (String) The resource identifier.
 - `protocol` (String) The type of protocol of address block (_ip4_ or _ip6_).
