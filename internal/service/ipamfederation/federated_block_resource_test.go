@@ -385,15 +385,6 @@ resource "bloxone_federation_federated_block" "test_name" {
 	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
 }
 
-func testAccFederatedBlockParent(federatedRealm string, parent string) string {
-	return fmt.Sprintf(`
-resource "bloxone_federation_federated_block" "test_parent" {
-    federation_federated_realm = %q
-    parent = %q
-}
-`, federatedRealm, parent)
-}
-
 func testAccFederatedBlockTags(address string, federatedRealm string, cidr int, tags map[string]string) string {
 	tagsStr := "{\n"
 	for k, v := range tags {
