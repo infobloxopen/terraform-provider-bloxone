@@ -99,36 +99,6 @@ func TestAccFederatedBlockResource_Address(t *testing.T) {
 	})
 }
 
-// read only fields
-func TestAccFederatedBlockResource_AllocationV4(t *testing.T) {
-	var resourceName = "bloxone_federated_block.test_allocation_v4"
-	var v ipamfederation.FederatedBlock
-
-	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// Create and Read
-			{
-				Config: testAccFederatedBlockAllocationV4("FEDERATED_REALM_REPLACE_ME", "ALLOCATION_V4_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "allocation_v4", "ALLOCATION_V4_REPLACE_ME"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccFederatedBlockAllocationV4("FEDERATED_REALM_REPLACE_ME", "ALLOCATION_V4_UPDATE_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "allocation_v4", "ALLOCATION_V4_UPDATE_REPLACE_ME"),
-				),
-			},
-			// Delete testing automatically occurs in TestCase
-		},
-	})
-}
-
 func TestAccFederatedBlockResource_Cidr(t *testing.T) {
 	var resourceName = "bloxone_federated_block.test"
 	var v ipamfederation.FederatedBlock
@@ -397,33 +367,6 @@ resource "bloxone_federated_block" "test" {
 }
 `, address, cidr)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
-}
-
-func testAccFederatedBlockAddress(federatedRealm string, address string) string {
-	return fmt.Sprintf(`
-resource "bloxone_federated_block" "test_address" {
-    federated_realm = %q
-    address = %q
-}
-`, federatedRealm, address)
-}
-
-func testAccFederatedBlockAllocationV4(federatedRealm string, allocationV4 string) string {
-	return fmt.Sprintf(`
-resource "bloxone_federated_block" "test_allocation_v4" {
-    federated_realm = %q
-    allocation_v4 = %q
-}
-`, federatedRealm, allocationV4)
-}
-
-func testAccFederatedBlockCidr(federatedRealm string, cidr string) string {
-	return fmt.Sprintf(`
-resource "bloxone_federated_block" "test_cidr" {
-    federated_realm = %q
-    cidr = %q
-}
-`, federatedRealm, cidr)
 }
 
 func testAccFederatedBlockComment(address string, cidr int, federatedRealm string, comment string) string {

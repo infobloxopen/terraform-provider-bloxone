@@ -62,36 +62,6 @@ func TestAccFederatedRealmResource_disappears(t *testing.T) {
 	})
 }
 
-// readonly fields
-func TestAccFederatedRealmResource_AllocationV4(t *testing.T) {
-	var resourceName = "bloxone_federated_realm.test_allocation_v4"
-	var v ipamfederation.FederatedRealm
-
-	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// Create and Read
-			{
-				Config: testAccFederatedRealmAllocationV4("NAME_REPLACE_ME", "ALLOCATION_V4_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "allocation_v4", "ALLOCATION_V4_REPLACE_ME"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccFederatedRealmAllocationV4("NAME_REPLACE_ME", "ALLOCATION_V4_UPDATE_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "allocation_v4", "ALLOCATION_V4_UPDATE_REPLACE_ME"),
-				),
-			},
-			// Delete testing automatically occurs in TestCase
-		},
-	})
-}
-
 func TestAccFederatedRealmResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_federated_realm.test_comment"
 	var v ipamfederation.FederatedRealm
@@ -248,15 +218,6 @@ resource "bloxone_federated_realm" "test" {
     name = %q
 }
 `, name)
-}
-
-func testAccFederatedRealmAllocationV4(name string, allocationV4 string) string {
-	return fmt.Sprintf(`
-resource "bloxone_federated_realm" "test_allocation_v4" {
-    name = %q
-    allocation_v4 = %q
-}
-`, name, allocationV4)
 }
 
 func testAccFederatedRealmComment(name string, comment string) string {
