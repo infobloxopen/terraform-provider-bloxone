@@ -12,8 +12,8 @@ import (
 )
 
 func TestAccFederatedRealmDataSource_Filters(t *testing.T) {
-	dataSourceName := "data.bloxone_federated_realms.test"
-	resourceName := "bloxone_federated_realm.test"
+	dataSourceName := "data.bloxone_federation_federated_realms.test"
+	resourceName := "bloxone_federation_federated_realm.test"
 	var v ipamfederation.FederatedRealm
 
 	resource.Test(t, resource.TestCase{
@@ -34,8 +34,8 @@ func TestAccFederatedRealmDataSource_Filters(t *testing.T) {
 }
 
 func TestAccFederatedRealmDataSource_TagFilters(t *testing.T) {
-	dataSourceName := "data.bloxone_federated_realms.test"
-	resourceName := "bloxone_federated_realm.test"
+	dataSourceName := "data.bloxone_federation_federated_realms.test"
+	resourceName := "bloxone_federation_federated_realm.test"
 	var v ipamfederation.FederatedRealm
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -70,13 +70,13 @@ func testAccCheckFederatedRealmResourceAttrPair(resourceName, dataSourceName str
 
 func testAccFederatedRealmDataSourceConfigFilters(name string) string {
 	return fmt.Sprintf(`
-resource "bloxone_federated_realm" "test" {
+resource "bloxone_federation_federated_realm" "test" {
   name = %q
 }
 
-data "bloxone_federated_realms" "test" {
+data "bloxone_federation_federated_realms" "test" {
   filters = {
-	name = bloxone_federated_realm.test.name
+	name = bloxone_federation_federated_realm.test.name
   }
 }
 `, name)
@@ -84,16 +84,16 @@ data "bloxone_federated_realms" "test" {
 
 func testAccFederatedRealmDataSourceConfigTagFilters(name string, tagValue string) string {
 	return fmt.Sprintf(`
-resource "bloxone_federated_realm" "test" {
+resource "bloxone_federation_federated_realm" "test" {
   name = %q
   tags = {
 	tag1 = %q
   }
 }
 
-data "bloxone_federated_realms" "test" {
+data "bloxone_federation_federated_realms" "test" {
   tag_filters = {
-	tag1 = bloxone_federated_realm.test.tags.tag1
+	tag1 = bloxone_federation_federated_realm.test.tags.tag1
   }
 }
 `, name, tagValue)

@@ -26,7 +26,7 @@ type FederatedRealmResource struct {
 }
 
 func (r *FederatedRealmResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "federated_realm"
+	resp.TypeName = req.ProviderTypeName + "_" + "federation_federated_realm"
 }
 
 func (r *FederatedRealmResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {

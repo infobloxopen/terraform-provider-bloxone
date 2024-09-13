@@ -16,7 +16,7 @@ import (
 )
 
 func TestAccFederatedBlockResource_basic(t *testing.T) {
-	var resourceName = "bloxone_federated_block.test"
+	var resourceName = "bloxone_federation_federated_block.test"
 	var v ipamfederation.FederatedBlock
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -30,7 +30,7 @@ func TestAccFederatedBlockResource_basic(t *testing.T) {
 					testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
 					// TODO: check and validate these
 					resource.TestCheckResourceAttr(resourceName, "address", "10.10.0.0"),
-					resource.TestCheckResourceAttrPair(resourceName, "federated_realm", "bloxone_federated_realm.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federation_federated_realm", "bloxone_federation_federated_realm.test", "id"),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
@@ -45,7 +45,7 @@ func TestAccFederatedBlockResource_basic(t *testing.T) {
 }
 
 func TestAccFederatedBlockResource_disappears(t *testing.T) {
-	resourceName := "bloxone_federated_block.test"
+	resourceName := "bloxone_federation_federated_block.test"
 	var v ipamfederation.FederatedBlock
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -66,7 +66,7 @@ func TestAccFederatedBlockResource_disappears(t *testing.T) {
 }
 
 func TestAccFederatedBlockResource_Address(t *testing.T) {
-	var resourceName = "bloxone_federated_block.test"
+	var resourceName = "bloxone_federation_federated_block.test"
 	var v1 ipamfederation.FederatedBlock
 	var v2 ipamfederation.FederatedBlock
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
@@ -100,7 +100,7 @@ func TestAccFederatedBlockResource_Address(t *testing.T) {
 }
 
 func TestAccFederatedBlockResource_Cidr(t *testing.T) {
-	var resourceName = "bloxone_federated_block.test"
+	var resourceName = "bloxone_federation_federated_block.test"
 	var v ipamfederation.FederatedBlock
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
 
@@ -132,7 +132,7 @@ func TestAccFederatedBlockResource_Cidr(t *testing.T) {
 }
 
 func TestAccFederatedBlockResource_Comment(t *testing.T) {
-	var resourceName = "bloxone_federated_block.test_comment"
+	var resourceName = "bloxone_federation_federated_block.test_comment"
 	var v ipamfederation.FederatedBlock
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
 
@@ -162,7 +162,7 @@ func TestAccFederatedBlockResource_Comment(t *testing.T) {
 }
 
 func TestAccFederatedBlockResource_FederatedRealm(t *testing.T) {
-	var resourceName = "bloxone_federated_block.test_federated_realm"
+	var resourceName = "bloxone_federation_federated_block.test_federation_federated_realm"
 	var v ipamfederation.FederatedBlock
 	realmName1 := acctest.RandomNameWithPrefix("federated-realm")
 	realmName2 := acctest.RandomNameWithPrefix("federated-realm")
@@ -173,18 +173,18 @@ func TestAccFederatedBlockResource_FederatedRealm(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedBlockFederatedRealm(realmName1, realmName2, "bloxone_federated_realm.one"),
+				Config: testAccFederatedBlockFederatedRealm(realmName1, realmName2, "bloxone_federation_federated_realm.one"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttrPair(resourceName, "federated_realm", "bloxone_federated_realm.one", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federation_federated_realm", "bloxone_federation_federated_realm.one", "id"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccFederatedBlockFederatedRealm(realmName1, realmName2, "bloxone_federated_realm.two"),
+				Config: testAccFederatedBlockFederatedRealm(realmName1, realmName2, "bloxone_federation_federated_realm.two"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttrPair(resourceName, "federated_realm", "bloxone_federated_realm.two", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federation_federated_realm", "bloxone_federation_federated_realm.two", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -193,7 +193,7 @@ func TestAccFederatedBlockResource_FederatedRealm(t *testing.T) {
 }
 
 func TestAccFederatedBlockResource_Name(t *testing.T) {
-	var resourceName = "bloxone_federated_block.test_name"
+	var resourceName = "bloxone_federation_federated_block.test_name"
 	var v ipamfederation.FederatedBlock
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
 
@@ -222,37 +222,8 @@ func TestAccFederatedBlockResource_Name(t *testing.T) {
 	})
 }
 
-func TestAccFederatedBlockResource_Parent(t *testing.T) {
-	var resourceName = "bloxone_federated_block.test_parent"
-	var v ipamfederation.FederatedBlock
-
-	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// Create and Read
-			{
-				Config: testAccFederatedBlockParent("FEDERATED_REALM_REPLACE_ME", "PARENT_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "parent", "PARENT_REPLACE_ME"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccFederatedBlockParent("FEDERATED_REALM_REPLACE_ME", "PARENT_UPDATE_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "parent", "PARENT_UPDATE_REPLACE_ME"),
-				),
-			},
-			// Delete testing automatically occurs in TestCase
-		},
-	})
-}
-
 func TestAccFederatedBlockResource_Tags(t *testing.T) {
-	var resourceName = "bloxone_federated_block.test_tags"
+	var resourceName = "bloxone_federation_federated_block.test_tags"
 	var v ipamfederation.FederatedBlock
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
 
@@ -351,7 +322,7 @@ func testAccCheckFederatedBlockDisappears(ctx context.Context, v *ipamfederation
 
 func testAccBaseWithFederatedRealm(name string) string {
 	return fmt.Sprintf(`
-resource "bloxone_federated_realm" "test" {
+resource "bloxone_federation_federated_realm" "test" {
     name = %q
 }
 `, name)
@@ -360,10 +331,10 @@ resource "bloxone_federated_realm" "test" {
 func testAccFederatedBlockBasicConfig(address string, cidr int, federatedRealm string) string {
 	// TODO: create basic resource with required fields
 	config := fmt.Sprintf(`
-resource "bloxone_federated_block" "test" {
+resource "bloxone_federation_federated_block" "test" {
     address = %q
     cidr = %d
-    federated_realm = bloxone_federated_realm.test.id
+    federation_federated_realm = bloxone_federation_federated_realm.test.id
 }
 `, address, cidr)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
@@ -371,10 +342,10 @@ resource "bloxone_federated_block" "test" {
 
 func testAccFederatedBlockComment(address string, cidr int, federatedRealm string, comment string) string {
 	config := fmt.Sprintf(`
-resource "bloxone_federated_block" "test_comment" {
+resource "bloxone_federation_federated_block" "test_comment" {
     address = %q
     cidr = %d
-    federated_realm = bloxone_federated_realm.test.id
+    federation_federated_realm = bloxone_federation_federated_realm.test.id
     comment = %q
 }
 `, address, cidr, comment)
@@ -383,10 +354,10 @@ resource "bloxone_federated_block" "test_comment" {
 
 func testAccFederatedBlockFederatedRealm(federatedRealm1, federatedRealm2, realm string) string {
 	config := fmt.Sprintf(`
-resource "bloxone_federated_block" "test_federated_realm" {
+resource "bloxone_federation_federated_block" "test_federation_federated_realm" {
    address = "10.0.0.0"
     cidr = 16
-    federated_realm =%s.id
+    federation_federated_realm =%s.id
 }
 `, realm)
 	return strings.Join([]string{testAccBaseWithTwoFederatedRealm(federatedRealm1, federatedRealm2), config}, "")
@@ -394,20 +365,20 @@ resource "bloxone_federated_block" "test_federated_realm" {
 
 func testAccBaseWithTwoFederatedRealm(name1, name2 string) string {
 	return fmt.Sprintf(`
-resource "bloxone_federated_realm" "one" {
+resource "bloxone_federation_federated_realm" "one" {
 	name = %q
 }
-resource "bloxone_federated_realm" "two" {
+resource "bloxone_federation_federated_realm" "two" {
 	name = %q
 }`, name1, name2)
 }
 
 func testAccFederatedBlockName(address string, cidr int, federatedRealm string, name string) string {
 	config := fmt.Sprintf(`
-resource "bloxone_federated_block" "test_name" {
+resource "bloxone_federation_federated_block" "test_name" {
     address = %q
     cidr = %d
-    federated_realm = bloxone_federated_realm.test.id
+    federation_federated_realm = bloxone_federation_federated_realm.test.id
     name = %q
 }
 `, address, cidr, name)
@@ -416,8 +387,8 @@ resource "bloxone_federated_block" "test_name" {
 
 func testAccFederatedBlockParent(federatedRealm string, parent string) string {
 	return fmt.Sprintf(`
-resource "bloxone_federated_block" "test_parent" {
-    federated_realm = %q
+resource "bloxone_federation_federated_block" "test_parent" {
+    federation_federated_realm = %q
     parent = %q
 }
 `, federatedRealm, parent)
@@ -433,9 +404,9 @@ func testAccFederatedBlockTags(address string, federatedRealm string, cidr int, 
 	tagsStr += "\t}"
 
 	config := fmt.Sprintf(`
-resource "bloxone_federated_block" "test_tags" {
+resource "bloxone_federation_federated_block" "test_tags" {
     address = %q
-    federated_realm = bloxone_federated_realm.test.id
+    federation_federated_realm = bloxone_federation_federated_realm.test.id
     cidr = %d
     tags = %s
 }

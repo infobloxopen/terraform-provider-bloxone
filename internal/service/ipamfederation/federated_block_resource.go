@@ -26,7 +26,7 @@ type FederatedBlockResource struct {
 }
 
 func (r *FederatedBlockResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "federated_block"
+	resp.TypeName = req.ProviderTypeName + "_" + "federation_federated_block"
 }
 
 func (r *FederatedBlockResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {

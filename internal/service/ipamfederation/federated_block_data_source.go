@@ -28,7 +28,7 @@ type FederatedBlockDataSource struct {
 }
 
 func (d *FederatedBlockDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "federated_blocks"
+	resp.TypeName = req.ProviderTypeName + "_" + "federation_federated_blocks"
 }
 
 type FederatedBlockModelWithFilter struct {

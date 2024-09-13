@@ -28,7 +28,7 @@ type FederatedRealmDataSource struct {
 }
 
 func (d *FederatedRealmDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "federated_realms"
+	resp.TypeName = req.ProviderTypeName + "_" + "federation_federated_realms"
 }
 
 type FederatedRealmModelWithFilter struct {

@@ -15,7 +15,7 @@ import (
 )
 
 func TestAccFederatedRealmResource_basic(t *testing.T) {
-	var resourceName = "bloxone_federated_realm.test"
+	var resourceName = "bloxone_federation_federated_realm.test"
 	var v ipamfederation.FederatedRealm
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -42,7 +42,7 @@ func TestAccFederatedRealmResource_basic(t *testing.T) {
 }
 
 func TestAccFederatedRealmResource_disappears(t *testing.T) {
-	resourceName := "bloxone_federated_realm.test"
+	resourceName := "bloxone_federation_federated_realm.test"
 	var v ipamfederation.FederatedRealm
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -63,7 +63,7 @@ func TestAccFederatedRealmResource_disappears(t *testing.T) {
 }
 
 func TestAccFederatedRealmResource_Comment(t *testing.T) {
-	var resourceName = "bloxone_federated_realm.test_comment"
+	var resourceName = "bloxone_federation_federated_realm.test_comment"
 	var v ipamfederation.FederatedRealm
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -92,7 +92,7 @@ func TestAccFederatedRealmResource_Comment(t *testing.T) {
 }
 
 func TestAccFederatedRealmResource_Name(t *testing.T) {
-	var resourceName = "bloxone_federated_realm.test_name"
+	var resourceName = "bloxone_federation_federated_realm.test_name"
 	var v ipamfederation.FederatedRealm
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -121,7 +121,7 @@ func TestAccFederatedRealmResource_Name(t *testing.T) {
 }
 
 func TestAccFederatedRealmResource_Tags(t *testing.T) {
-	var resourceName = "bloxone_federated_realm.test_tags"
+	var resourceName = "bloxone_federation_federated_realm.test_tags"
 	var v ipamfederation.FederatedRealm
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -214,7 +214,7 @@ func testAccCheckFederatedRealmDisappears(ctx context.Context, v *ipamfederation
 func testAccFederatedRealmBasicConfig(name string) string {
 	// TODO: create basic resource with required fields
 	return fmt.Sprintf(`
-resource "bloxone_federated_realm" "test" {
+resource "bloxone_federation_federated_realm" "test" {
     name = %q
 }
 `, name)
@@ -222,7 +222,7 @@ resource "bloxone_federated_realm" "test" {
 
 func testAccFederatedRealmComment(name string, comment string) string {
 	return fmt.Sprintf(`
-resource "bloxone_federated_realm" "test_comment" {
+resource "bloxone_federation_federated_realm" "test_comment" {
     name = %q
     comment = %q
 }
@@ -231,7 +231,7 @@ resource "bloxone_federated_realm" "test_comment" {
 
 func testAccFederatedRealmName(name string) string {
 	return fmt.Sprintf(`
-resource "bloxone_federated_realm" "test_name" {
+resource "bloxone_federation_federated_realm" "test_name" {
     name = %q
 }
 `, name)
@@ -246,7 +246,7 @@ func testAccFederatedRealmTags(name string, tags map[string]string) string {
 	}
 	tagsStr += "\t}"
 	return fmt.Sprintf(`
-resource "bloxone_federated_realm" "test_tags" {
+resource "bloxone_federation_federated_realm" "test_tags" {
     name = %q
     tags = %s
 }

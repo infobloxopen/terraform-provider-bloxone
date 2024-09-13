@@ -13,8 +13,8 @@ import (
 )
 
 func TestAccFederatedBlockDataSource_Filters(t *testing.T) {
-	dataSourceName := "data.bloxone_federated_blocks.test"
-	resourceName := "bloxone_federated_block.test"
+	dataSourceName := "data.bloxone_federation_federated_blocks.test"
+	resourceName := "bloxone_federation_federated_block.test"
 	var v ipamfederation.FederatedBlock
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
 
@@ -36,8 +36,8 @@ func TestAccFederatedBlockDataSource_Filters(t *testing.T) {
 }
 
 func TestAccFederatedBlockDataSource_TagFilters(t *testing.T) {
-	dataSourceName := "data.bloxone_federated_blocks.test"
-	resourceName := "bloxone_federated_block.test"
+	dataSourceName := "data.bloxone_federation_federated_blocks.test"
+	resourceName := "bloxone_federation_federated_block.test"
 	var v ipamfederation.FederatedBlock
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
 
@@ -67,7 +67,7 @@ func testAccCheckFederatedBlockResourceAttrPair(resourceName, dataSourceName str
 		resource.TestCheckResourceAttrPair(resourceName, "cidr", dataSourceName, "results.0.cidr"),
 		resource.TestCheckResourceAttrPair(resourceName, "comment", dataSourceName, "results.0.comment"),
 		resource.TestCheckResourceAttrPair(resourceName, "created_at", dataSourceName, "results.0.created_at"),
-		resource.TestCheckResourceAttrPair(resourceName, "federated_realm", dataSourceName, "results.0.federated_realm"),
+		resource.TestCheckResourceAttrPair(resourceName, "federation_federated_realm", dataSourceName, "results.0.federation_federated_realm"),
 		resource.TestCheckResourceAttrPair(resourceName, "id", dataSourceName, "results.0.id"),
 		resource.TestCheckResourceAttrPair(resourceName, "name", dataSourceName, "results.0.name"),
 		resource.TestCheckResourceAttrPair(resourceName, "parent", dataSourceName, "results.0.parent"),
@@ -79,16 +79,16 @@ func testAccCheckFederatedBlockResourceAttrPair(resourceName, dataSourceName str
 
 func testAccFederatedBlockDataSourceConfigFilters(address string, cidr int, federatedRealm, name string) string {
 	config := fmt.Sprintf(`
-resource "bloxone_federated_block" "test" {
+resource "bloxone_federation_federated_block" "test" {
   address = %q
   cidr = %d
   name = %q
-  federated_realm = bloxone_federated_realm.test.id
+  federation_federated_realm = bloxone_federation_federated_realm.test.id
 }
 
-data "bloxone_federated_blocks" "test" {
+data "bloxone_federation_federated_blocks" "test" {
   filters = {
-	name = bloxone_federated_block.test.name
+	name = bloxone_federation_federated_block.test.name
   }
 }
 `, address, cidr, name)
@@ -97,19 +97,19 @@ data "bloxone_federated_blocks" "test" {
 
 func testAccFederatedBlockDataSourceConfigTagFilters(address string, cidr int, federatedRealm, name, tagValue string) string {
 	config := fmt.Sprintf(`
-resource "bloxone_federated_block" "test" {
+resource "bloxone_federation_federated_block" "test" {
   address = %q
   cidr = %d
   name = %q
-  federated_realm = bloxone_federated_realm.test.id
+  federation_federated_realm = bloxone_federation_federated_realm.test.id
   tags = {
 	tag1 = %q
   }
 }
 
-data "bloxone_federated_blocks" "test" {
+data "bloxone_federation_federated_blocks" "test" {
   tag_filters = {
-	tag1 = bloxone_federated_block.test.tags.tag1
+	tag1 = bloxone_federation_federated_block.test.tags.tag1
   }
 }
 `, address, cidr, name, tagValue)
