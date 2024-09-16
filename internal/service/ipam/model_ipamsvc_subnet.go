@@ -43,6 +43,7 @@ type IpamsvcSubnetModel struct {
 	DdnsTtlPercent             types.Float64     `tfsdk:"ddns_ttl_percent"`
 	DdnsUpdateOnRenew          types.Bool        `tfsdk:"ddns_update_on_renew"`
 	DdnsUseConflictResolution  types.Bool        `tfsdk:"ddns_use_conflict_resolution"`
+	Delegation                 types.String      `tfsdk:"delegation"`
 	DhcpConfig                 types.Object      `tfsdk:"dhcp_config"`
 	DhcpHost                   types.String      `tfsdk:"dhcp_host"`
 	DhcpOptions                types.List        `tfsdk:"dhcp_options"`
@@ -52,7 +53,6 @@ type IpamsvcSubnetModel struct {
 	DiscoveryMetadata          types.Map         `tfsdk:"discovery_metadata"`
 	ExternalKeys               types.Map         `tfsdk:"external_keys"`
 	FederatedRealms            types.List        `tfsdk:"federated_realms"`
-	Federation                 types.String      `tfsdk:"federation"`
 	HeaderOptionFilename       types.String      `tfsdk:"header_option_filename"`
 	HeaderOptionServerAddress  types.String      `tfsdk:"header_option_server_address"`
 	HeaderOptionServerName     types.String      `tfsdk:"header_option_server_name"`
@@ -97,6 +97,7 @@ var IpamsvcSubnetAttrTypes = map[string]attr.Type{
 	"ddns_ttl_percent":              types.Float64Type,
 	"ddns_update_on_renew":          types.BoolType,
 	"ddns_use_conflict_resolution":  types.BoolType,
+	"delegation":                    types.StringType,
 	"dhcp_config":                   types.ObjectType{AttrTypes: IpamsvcDHCPConfigAttrTypes},
 	"dhcp_host":                     types.StringType,
 	"dhcp_options":                  types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
@@ -106,7 +107,6 @@ var IpamsvcSubnetAttrTypes = map[string]attr.Type{
 	"discovery_metadata":            types.MapType{ElemType: types.StringType},
 	"external_keys":                 types.MapType{ElemType: types.StringType},
 	"federated_realms":              types.ListType{ElemType: types.StringType},
-	"federation":                    types.StringType,
 	"header_option_filename":        types.StringType,
 	"header_option_server_address":  types.StringType,
 	"header_option_server_name":     types.StringType,
@@ -561,6 +561,7 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.Subnet, dia
 	m.DdnsTtlPercent = flex.FlattenFloat64(float64(*from.DdnsTtlPercent))
 	m.DdnsUpdateOnRenew = types.BoolPointerValue(from.DdnsUpdateOnRenew)
 	m.DdnsUseConflictResolution = types.BoolPointerValue(from.DdnsUseConflictResolution)
+	m.Delegation = flex.FlattenStringPointer(from.Federation)
 	m.DhcpConfig = FlattenIpamsvcDHCPConfigForSubnetOrAddressBlock(ctx, from.DhcpConfig, diags)
 	m.DhcpHost = flex.FlattenStringPointerWithNilAsEmpty(from.DhcpHost)
 	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
@@ -570,7 +571,6 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.Subnet, dia
 	m.DiscoveryMetadata = flex.FlattenFrameworkMapString(ctx, from.DiscoveryMetadata, diags)
 	m.ExternalKeys = flex.FlattenFrameworkMapString(ctx, from.ExternalKeys, diags)
 	m.FederatedRealms = flex.FlattenFrameworkListString(ctx, from.FederatedRealms, diags)
-	m.Federation = flex.FlattenStringPointer(from.Federation)
 	m.HeaderOptionFilename = flex.FlattenStringPointer(from.HeaderOptionFilename)
 	m.HeaderOptionServerAddress = flex.FlattenStringPointer(from.HeaderOptionServerAddress)
 	m.HeaderOptionServerName = flex.FlattenStringPointer(from.HeaderOptionServerName)
