@@ -36,7 +36,7 @@ var IpamsvcHAGroupHeartbeatsResourceSchemaAttributes = map[string]schema.Attribu
 		MarkdownDescription: "The timestamp as a string of the last successful heartbeat received from the peer above.",
 	},
 	"successful_heartbeat_v6": schema.StringAttribute{
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The timestamp as a string of the last successful DHCPv6 heartbeat received from the peer above.",
 	},
 }

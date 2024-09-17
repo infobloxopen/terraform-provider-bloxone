@@ -65,6 +65,7 @@ func testAccCheckFixedAddressResourceAttrPair(resourceName, dataSourceName strin
 		resource.TestCheckResourceAttrPair(resourceName, "address", dataSourceName, "results.0.address"),
 		resource.TestCheckResourceAttrPair(resourceName, "comment", dataSourceName, "results.0.comment"),
 		resource.TestCheckResourceAttrPair(resourceName, "created_at", dataSourceName, "results.0.created_at"),
+		resource.TestCheckResourceAttrPair(resourceName, "compartment_id", dataSourceName, "results.0.compartment_id"),
 		resource.TestCheckResourceAttrPair(resourceName, "dhcp_options", dataSourceName, "results.0.dhcp_options"),
 		resource.TestCheckResourceAttrPair(resourceName, "disable_dhcp", dataSourceName, "results.0.disable_dhcp"),
 		resource.TestCheckResourceAttrPair(resourceName, "header_option_filename", dataSourceName, "results.0.header_option_filename"),

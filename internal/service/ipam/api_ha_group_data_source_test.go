@@ -97,15 +97,24 @@ func testAccCheckHaGroupResourceAttrPair(resourceName, dataSourceName string, co
 				}
 				return nil
 			}),
+			resource.TestCheckResourceAttrWith(dataSourceName, "results.0.status_v6", func(value string) error {
+				status := []string{"ok", "failure", "degraded", "intermediate", "unreachable", "unknown"}
+				if !slices.Contains(status, value) {
+					return fmt.Errorf("status not valid")
+				}
+				return nil
+			}),
 			resource.TestCheckResourceAttrWith(dataSourceName, "results.0.hosts.0.state", testAccCheckHAState),
 			resource.TestCheckResourceAttr(dataSourceName, "results.0.hosts.0.heartbeats.#", "1"),
 			resource.TestCheckResourceAttrSet(dataSourceName, "results.0.hosts.0.heartbeats.0.peer"),
 			resource.TestCheckResourceAttrSet(dataSourceName, "results.0.hosts.0.heartbeats.0.successful_heartbeat"),
+			resource.TestCheckResourceAttrSet(dataSourceName, "results.0.hosts.0.heartbeats.0.successful_heartbeat_v6"),
 
 			resource.TestCheckResourceAttrWith(dataSourceName, "results.0.hosts.1.state", testAccCheckHAState),
 			resource.TestCheckResourceAttr(dataSourceName, "results.0.hosts.1.heartbeats.#", "1"),
 			resource.TestCheckResourceAttrSet(dataSourceName, "results.0.hosts.1.heartbeats.0.peer"),
 			resource.TestCheckResourceAttrSet(dataSourceName, "results.0.hosts.1.heartbeats.0.successful_heartbeat"),
+			resource.TestCheckResourceAttrSet(dataSourceName, "results.0.hosts.0.heartbeats.0.successful_heartbeat_v6"),
 		}
 
 	}
@@ -113,6 +122,7 @@ func testAccCheckHaGroupResourceAttrPair(resourceName, dataSourceName string, co
 		resource.TestCheckResourceAttrPair(resourceName, "anycast_config_id", dataSourceName, "results.0.anycast_config_id"),
 		resource.TestCheckResourceAttrPair(resourceName, "comment", dataSourceName, "results.0.comment"),
 		resource.TestCheckResourceAttrPair(resourceName, "created_at", dataSourceName, "results.0.created_at"),
+		resource.TestCheckResourceAttrPair(resourceName, "", dataSourceName, "results.0.created_at"),
 		resource.TestCheckResourceAttrPair(resourceName, "hosts", dataSourceName, "results.0.hosts"),
 		resource.TestCheckResourceAttrPair(resourceName, "id", dataSourceName, "results.0.id"),
 		resource.TestCheckResourceAttrPair(resourceName, "ip_space", dataSourceName, "results.0.ip_space"),

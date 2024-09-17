@@ -95,6 +95,7 @@ func testAccCheckServerResourceAttrPair(resourceName, dataSourceName string) []r
 		resource.TestCheckResourceAttrPair(resourceName, "kerberos_tkey_lifetime", dataSourceName, "results.0.kerberos_tkey_lifetime"),
 		resource.TestCheckResourceAttrPair(resourceName, "kerberos_tkey_protocol", dataSourceName, "results.0.kerberos_tkey_protocol"),
 		resource.TestCheckResourceAttrPair(resourceName, "name", dataSourceName, "results.0.name"),
+		resource.TestCheckResourceAttrPair(resourceName, "profile_type", dataSourceName, "results.0.profile_type"),
 		resource.TestCheckResourceAttrPair(resourceName, "server_principal", dataSourceName, "results.0.server_principal"),
 		resource.TestCheckResourceAttrPair(resourceName, "tags", dataSourceName, "results.0.tags"),
 		resource.TestCheckResourceAttrPair(resourceName, "updated_at", dataSourceName, "results.0.updated_at"),

@@ -197,7 +197,7 @@ func TestAccIpSpaceResource_CompartmentId(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccIpSpaceCompartmentId(name, ""),
+				Config: testAccIpSpaceCompartmentIdNull(name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "compartment_id", ""),
@@ -1005,6 +1005,14 @@ resource "bloxone_ipam_ip_space" "test_compartment_id" {
     compartment_id = %q
 }
 `, name, compartmentId)
+}
+func testAccIpSpaceCompartmentIdNull(name string) string {
+	return fmt.Sprintf(`
+resource "bloxone_ipam_ip_space" "test_compartment_id" {
+    name = %q
+    compartment_id = null
+}
+`, name)
 }
 
 func testAccIpSpaceDdnsClientUpdate(name, ddnsClientUpdate string) string {

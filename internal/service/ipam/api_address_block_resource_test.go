@@ -242,7 +242,7 @@ func TestAccAddressBlockResource_CompartmentId(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAddressBlockCompartmentId(spaceName, "192.168.0.0", "16", ""),
+				Config: testAccAddressBlockCompartmentIdNull(spaceName, "192.168.0.0", "16"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "compartment_id", ""),
@@ -1100,6 +1100,19 @@ resource "bloxone_ipam_address_block" "test_compartment_id" {
     compartment_id = %q
 } 
 `, address, cidr, compartment_id)
+
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
+}
+
+func testAccAddressBlockCompartmentIdNull(spaceName, address string, cidr string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test_compartment_id" {
+    address = %q
+    cidr = %q
+    space = bloxone_ipam_ip_space.test.id
+    compartment_id = null
+} 
+`, address, cidr)
 
 	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
