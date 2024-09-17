@@ -146,11 +146,8 @@ Read-Only:
 <a id="nestedatt--hosts--heartbeats"></a>
 ### Nested Schema for `hosts.heartbeats`
 
-Optional:
-
-- `successful_heartbeat_v6` (String) The timestamp as a string of the last successful DHCPv6 heartbeat received from the peer above.
-
 Read-Only:
 
 - `peer` (String) The name of the peer.
 - `successful_heartbeat` (String) The timestamp as a string of the last successful heartbeat received from the peer above.
+- `successful_heartbeat_v6` (String) The timestamp as a string of the last successful DHCPv6 heartbeat received from the peer above.
