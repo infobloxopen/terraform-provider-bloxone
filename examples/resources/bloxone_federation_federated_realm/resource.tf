@@ -1,7 +1,7 @@
-resource "bloxone_federation_federated_realm" "test_name" {
+resource "bloxone_federation_federated_realm" "example" {
   name = "test_name_federation_federated_realm"
+
   tags = {
-    key1 = "value1"
-    key2 = "value2"
+    site = "Site A"
   }
 }

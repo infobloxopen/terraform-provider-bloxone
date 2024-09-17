@@ -39,3 +39,4 @@ terraform.tfstate
 
 .openapi-generator/
 internal/service/*/.openapi-generator-ignore
+internal/.DS_Store

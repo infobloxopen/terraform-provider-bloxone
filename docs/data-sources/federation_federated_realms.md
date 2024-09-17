@@ -3,12 +3,15 @@
 page_title: "bloxone_federation_federated_realms Data Source - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  Retrieves information about existing Federated Realm.
+  The Federated Realm object object is a unique set of federated blocks per realm.
 ---
 
 # bloxone_federation_federated_realms (Data Source)
 
+Retrieves information about existing Federated Realm.
 
+The Federated Realm object object is a unique set of federated blocks per realm.
 
 ## Example Usage
 
@@ -52,12 +55,12 @@ Required:
 
 Optional:
 
-- `allocation_v4` (Attributes) The aggregate of all Federated Blocks within the Realm. (see [below for nested schema](#nestedatt--results--allocation_v4))
 - `comment` (String) The description of the federated realm. May contain 0 to 1024 characters. Can include UTF-8.
 - `tags` (Map of String) The tags for the federation block in JSON format.
 
 Read-Only:
 
+- `allocation_v4` (Attributes) The aggregate of all Federated Blocks within the Realm. (see [below for nested schema](#nestedatt--results--allocation_v4))
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
 - `tags_all` (Map of String) The tags of the federation realm in JSON format including default tags.

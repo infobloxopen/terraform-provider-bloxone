@@ -31,7 +31,7 @@ func (r *FederatedRealmResource) Metadata(ctx context.Context, req resource.Meta
 
 func (r *FederatedRealmResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages the Federated Realm.\n\nThe Federated Realm object object is a unique set of federated blocks per realm.",
 		Attributes:          FederatedRealmResourceSchemaAttributes,
 	}
 }

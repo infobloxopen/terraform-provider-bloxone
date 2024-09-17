@@ -12,8 +12,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-
 	"github.com/infobloxopen/bloxone-go-client/ipamfederation"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -44,7 +42,6 @@ var FederatedRealmAttrTypes = map[string]attr.Type{
 var FederatedRealmResourceSchemaAttributes = map[string]schema.Attribute{
 	"allocation_v4": schema.SingleNestedAttribute{
 		Attributes:          AllocationResourceSchemaAttributes,
-		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "The aggregate of all Federated Blocks within the Realm.",
 	},
@@ -87,18 +84,6 @@ var FederatedRealmResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "The tags of the federation realm in JSON format including default tags.",
 	},
-}
-
-func ExpandFederatedRealm(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipamfederation.FederatedRealm {
-	if o.IsNull() || o.IsUnknown() {
-		return nil
-	}
-	var m FederatedRealmModel
-	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
-	if diags.HasError() {
-		return nil
-	}
-	return m.Expand(ctx, diags)
 }
 
 func (m *FederatedRealmModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipamfederation.FederatedRealm {

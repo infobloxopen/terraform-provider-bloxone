@@ -1,4 +1,4 @@
-## Get Federated Block filtered by an attribute
+# Get Federated Block filtered by an attribute
 data "bloxone_federation_federated_blocks" "example_by_attribute" {
   filters = {
     name = "example_federation_federated_block"

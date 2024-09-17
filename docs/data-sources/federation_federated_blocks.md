@@ -3,17 +3,20 @@
 page_title: "bloxone_federation_federated_blocks Data Source - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  Retrieves information about existing federated Blocks.
+  The Federated Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
 ---
 
 # bloxone_federation_federated_blocks (Data Source)
 
+Retrieves information about existing federated Blocks.
 
+The Federated Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
 
 ## Example Usage
 
 ```terraform
-## Get Federated Block filtered by an attribute
+# Get Federated Block filtered by an attribute
 data "bloxone_federation_federated_blocks" "example_by_attribute" {
   filters = {
     name = "example_federation_federated_block"
@@ -49,21 +52,21 @@ data "bloxone_federation_federated_blocks" "example_all" {}
 Required:
 
 - `cidr` (Number) The CIDR of the federated block. This is required, if _address_ does not specify it in its input.
-- `federation_federated_realm` (String) The resource identifier.
+- `federated_realm` (String) The resource identifier.
 
 Optional:
 
 - `address` (String) The address of the subnet in the form “a.b.c.d”
-- `allocation_v4` (Attributes) The percentage of the Federated Block’s total address space that is consumed by Leaf Terminals. (see [below for nested schema](#nestedatt--results--allocation_v4))
 - `comment` (String) The description for the federated block. May contain 0 to 1024 characters. Can include UTF-8.
 - `name` (String) The name of the federated block. May contain 1 to 256 characters. Can include UTF-8.
-- `parent` (String) The resource identifier.
 - `tags` (Map of String) The tags for the federated block in JSON format.
 
 Read-Only:
 
+- `allocation_v4` (Attributes) The percentage of the Federated Block’s total address space that is consumed by Leaf Terminals. (see [below for nested schema](#nestedatt--results--allocation_v4))
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
+- `parent` (String) The resource identifier.
 - `protocol` (String) The type of protocol of federated block (_ip4_ or _ip6_).
 - `tags_all` (Map of String) The tags of the federation block in JSON format including default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.

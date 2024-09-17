@@ -67,7 +67,7 @@ func testAccCheckFederatedBlockResourceAttrPair(resourceName, dataSourceName str
 		resource.TestCheckResourceAttrPair(resourceName, "cidr", dataSourceName, "results.0.cidr"),
 		resource.TestCheckResourceAttrPair(resourceName, "comment", dataSourceName, "results.0.comment"),
 		resource.TestCheckResourceAttrPair(resourceName, "created_at", dataSourceName, "results.0.created_at"),
-		resource.TestCheckResourceAttrPair(resourceName, "federation_federated_realm", dataSourceName, "results.0.federation_federated_realm"),
+		resource.TestCheckResourceAttrPair(resourceName, "federated_realm", dataSourceName, "results.0.federated_realm"),
 		resource.TestCheckResourceAttrPair(resourceName, "id", dataSourceName, "results.0.id"),
 		resource.TestCheckResourceAttrPair(resourceName, "name", dataSourceName, "results.0.name"),
 		resource.TestCheckResourceAttrPair(resourceName, "parent", dataSourceName, "results.0.parent"),
@@ -83,7 +83,7 @@ resource "bloxone_federation_federated_block" "test" {
   address = %q
   cidr = %d
   name = %q
-  federation_federated_realm = bloxone_federation_federated_realm.test.id
+  federated_realm = bloxone_federation_federated_realm.test.id
 }
 
 data "bloxone_federation_federated_blocks" "test" {
@@ -101,7 +101,7 @@ resource "bloxone_federation_federated_block" "test" {
   address = %q
   cidr = %d
   name = %q
-  federation_federated_realm = bloxone_federation_federated_realm.test.id
+  federated_realm = bloxone_federation_federated_realm.test.id
   tags = {
 	tag1 = %q
   }

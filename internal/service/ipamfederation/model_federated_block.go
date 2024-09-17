@@ -23,7 +23,7 @@ type FederatedBlockModel struct {
 	Cidr           types.Int64       `tfsdk:"cidr"`
 	Comment        types.String      `tfsdk:"comment"`
 	CreatedAt      timetypes.RFC3339 `tfsdk:"created_at"`
-	FederatedRealm types.String      `tfsdk:"federation_federated_realm"`
+	FederatedRealm types.String      `tfsdk:"federated_realm"`
 	Id             types.String      `tfsdk:"id"`
 	Name           types.String      `tfsdk:"name"`
 	Parent         types.String      `tfsdk:"parent"`
@@ -34,35 +34,31 @@ type FederatedBlockModel struct {
 }
 
 var FederatedBlockAttrTypes = map[string]attr.Type{
-	"address":                    types.StringType,
-	"allocation_v4":              types.ObjectType{AttrTypes: AllocationAttrTypes},
-	"cidr":                       types.Int64Type,
-	"comment":                    types.StringType,
-	"created_at":                 timetypes.RFC3339Type{},
-	"federation_federated_realm": types.StringType,
-	"id":                         types.StringType,
-	"name":                       types.StringType,
-	"parent":                     types.StringType,
-	"protocol":                   types.StringType,
-	"tags":                       types.MapType{ElemType: types.StringType},
-	"tags_all":                   types.MapType{ElemType: types.StringType},
-	"updated_at":                 timetypes.RFC3339Type{},
+	"address":         types.StringType,
+	"allocation_v4":   types.ObjectType{AttrTypes: AllocationAttrTypes},
+	"cidr":            types.Int64Type,
+	"comment":         types.StringType,
+	"created_at":      timetypes.RFC3339Type{},
+	"federated_realm": types.StringType,
+	"id":              types.StringType,
+	"name":            types.StringType,
+	"parent":          types.StringType,
+	"protocol":        types.StringType,
+	"tags":            types.MapType{ElemType: types.StringType},
+	"tags_all":        types.MapType{ElemType: types.StringType},
+	"updated_at":      timetypes.RFC3339Type{},
 }
 
 var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
 		Optional: true,
 		Computed: true,
-		//Validators: []validator.String{
-		//	stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
-		//},
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 		},
 		MarkdownDescription: "The address of the subnet in the form “a.b.c.d”"},
 	"allocation_v4": schema.SingleNestedAttribute{
 		Attributes:          AllocationResourceSchemaAttributes,
-		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "The percentage of the Federated Block’s total address space that is consumed by Leaf Terminals.",
 	},
@@ -81,7 +77,7 @@ var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "Time when the object has been created.",
 	},
-	"federation_federated_realm": schema.StringAttribute{
+	"federated_realm": schema.StringAttribute{
 		Required: true,
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
@@ -102,7 +98,7 @@ var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The name of the federated block. May contain 1 to 256 characters. Can include UTF-8.",
 	},
 	"parent": schema.StringAttribute{
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 	"protocol": schema.StringAttribute{

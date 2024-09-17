@@ -3,21 +3,24 @@
 page_title: "bloxone_federation_federated_realm Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  Manages the Federated Realm.
+  The Federated Realm object object is a unique set of federated blocks per realm.
 ---
 
 # bloxone_federation_federated_realm (Resource)
 
+Manages the Federated Realm.
 
+The Federated Realm object object is a unique set of federated blocks per realm.
 
 ## Example Usage
 
 ```terraform
-resource "bloxone_federation_federated_realm" "test_name" {
+resource "bloxone_federation_federated_realm" "example" {
   name = "test_name_federation_federated_realm"
+
   tags = {
-    key1 = "value1"
-    key2 = "value2"
+    site = "Site A"
   }
 }
 ```
@@ -31,12 +34,12 @@ resource "bloxone_federation_federated_realm" "test_name" {
 
 ### Optional
 
-- `allocation_v4` (Attributes) The aggregate of all Federated Blocks within the Realm. (see [below for nested schema](#nestedatt--allocation_v4))
 - `comment` (String) The description of the federated realm. May contain 0 to 1024 characters. Can include UTF-8.
 - `tags` (Map of String) The tags for the federation block in JSON format.
 
 ### Read-Only
 
+- `allocation_v4` (Attributes) The aggregate of all Federated Blocks within the Realm. (see [below for nested schema](#nestedatt--allocation_v4))
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
 - `tags_all` (Map of String) The tags of the federation realm in JSON format including default tags.

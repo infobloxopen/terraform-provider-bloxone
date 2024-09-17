@@ -17,6 +17,7 @@ import (
 func TestAccFederatedRealmResource_basic(t *testing.T) {
 	var resourceName = "bloxone_federation_federated_realm.test"
 	var v ipamfederation.FederatedRealm
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -24,11 +25,11 @@ func TestAccFederatedRealmResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedRealmBasicConfig("REALM_TEST"),
+				Config: testAccFederatedRealmBasicConfig(realmName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
 					// TODO: check and validate these
-					resource.TestCheckResourceAttr(resourceName, "name", "REALM_TEST"),
+					resource.TestCheckResourceAttr(resourceName, "name", realmName),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
@@ -44,6 +45,7 @@ func TestAccFederatedRealmResource_basic(t *testing.T) {
 func TestAccFederatedRealmResource_disappears(t *testing.T) {
 	resourceName := "bloxone_federation_federated_realm.test"
 	var v ipamfederation.FederatedRealm
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -51,7 +53,7 @@ func TestAccFederatedRealmResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckFederatedRealmDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFederatedRealmBasicConfig("REALM_TEST"),
+				Config: testAccFederatedRealmBasicConfig(realmName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
 					testAccCheckFederatedRealmDisappears(context.Background(), &v),
@@ -65,6 +67,7 @@ func TestAccFederatedRealmResource_disappears(t *testing.T) {
 func TestAccFederatedRealmResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_federation_federated_realm.test_comment"
 	var v ipamfederation.FederatedRealm
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -72,7 +75,7 @@ func TestAccFederatedRealmResource_Comment(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedRealmComment("REALM_TEST", "COMMENT_TEST"),
+				Config: testAccFederatedRealmComment(realmName, "COMMENT_TEST"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_TEST"),
@@ -80,7 +83,7 @@ func TestAccFederatedRealmResource_Comment(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFederatedRealmComment("REALM_TEST", "COMMENT_UPDATE_TEST"),
+				Config: testAccFederatedRealmComment(realmName, "COMMENT_UPDATE_TEST"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_UPDATE_TEST"),
@@ -94,6 +97,8 @@ func TestAccFederatedRealmResource_Comment(t *testing.T) {
 func TestAccFederatedRealmResource_Name(t *testing.T) {
 	var resourceName = "bloxone_federation_federated_realm.test_name"
 	var v ipamfederation.FederatedRealm
+	realmName1 := acctest.RandomNameWithPrefix("federated-realm")
+	realmName2 := acctest.RandomNameWithPrefix("federated-realm")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -101,18 +106,18 @@ func TestAccFederatedRealmResource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedRealmName("REALM_TEST"),
+				Config: testAccFederatedRealmName(realmName1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "REALM_TEST"),
+					resource.TestCheckResourceAttr(resourceName, "name", realmName1),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccFederatedRealmName("REALM_TEST_UPDATE"),
+				Config: testAccFederatedRealmName(realmName2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "REALM_TEST_UPDATE"),
+					resource.TestCheckResourceAttr(resourceName, "name", realmName2),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -123,6 +128,7 @@ func TestAccFederatedRealmResource_Name(t *testing.T) {
 func TestAccFederatedRealmResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_federation_federated_realm.test_tags"
 	var v ipamfederation.FederatedRealm
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -130,7 +136,7 @@ func TestAccFederatedRealmResource_Tags(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedRealmTags("REALM_TEST", map[string]string{
+				Config: testAccFederatedRealmTags(realmName, map[string]string{
 					"site": "NA",
 				}),
 				Check: resource.ComposeTestCheckFunc(
@@ -142,7 +148,7 @@ func TestAccFederatedRealmResource_Tags(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFederatedRealmTags("NAME_REPLACE_ME", map[string]string{
+				Config: testAccFederatedRealmTags(realmName, map[string]string{
 					"site": "CA",
 				}),
 				Check: resource.ComposeTestCheckFunc(

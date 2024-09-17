@@ -3,30 +3,32 @@
 page_title: "bloxone_federation_federated_block Resource - terraform-provider-bloxone"
 subcategory: ""
 description: |-
-  
+  Manages an federated Block.
+  The Federated Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
 ---
 
 # bloxone_federation_federated_block (Resource)
 
+Manages an federated Block.
 
+The Federated Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
 
 ## Example Usage
 
 ```terraform
-resource "bloxone_federation_federated_realm" "example" {
+resource "bloxone_federation_federated_realm" "example_federated_realm" {
   name = "example_federation_federated_realm"
 }
 
 resource "bloxone_federation_federated_block" "example" {
-  name                       = "example_federation_federated_block"
-  federation_federated_realm = bloxone_federation_federated_realm.example.id
-  cidr                       = 24
-  address                    = "10.10.0.0"
+  name            = "example_federation_federated_block"
+  federated_realm = bloxone_federation_federated_realm.example_federated_realm.id
+  cidr            = 24
+  address         = "10.10.0.0"
 
   //tags
   tags = {
-    key1 = "value1"
-    key2 = "value2"
+    site = "Site A"
   }
 }
 ```
@@ -37,21 +39,21 @@ resource "bloxone_federation_federated_block" "example" {
 ### Required
 
 - `cidr` (Number) The CIDR of the federated block. This is required, if _address_ does not specify it in its input.
-- `federation_federated_realm` (String) The resource identifier.
+- `federated_realm` (String) The resource identifier.
 
 ### Optional
 
 - `address` (String) The address of the subnet in the form “a.b.c.d”
-- `allocation_v4` (Attributes) The percentage of the Federated Block’s total address space that is consumed by Leaf Terminals. (see [below for nested schema](#nestedatt--allocation_v4))
 - `comment` (String) The description for the federated block. May contain 0 to 1024 characters. Can include UTF-8.
 - `name` (String) The name of the federated block. May contain 1 to 256 characters. Can include UTF-8.
-- `parent` (String) The resource identifier.
 - `tags` (Map of String) The tags for the federated block in JSON format.
 
 ### Read-Only
 
+- `allocation_v4` (Attributes) The percentage of the Federated Block’s total address space that is consumed by Leaf Terminals. (see [below for nested schema](#nestedatt--allocation_v4))
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
+- `parent` (String) The resource identifier.
 - `protocol` (String) The type of protocol of federated block (_ip4_ or _ip6_).
 - `tags_all` (Map of String) The tags of the federation block in JSON format including default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
