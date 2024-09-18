@@ -22,8 +22,10 @@ type IpamsvcHAGroupHostModel struct {
 	Heartbeats types.List   `tfsdk:"heartbeats"`
 	Host       types.String `tfsdk:"host"`
 	Port       types.Int64  `tfsdk:"port"`
+	PortV6     types.Int64  `tfsdk:"port_v6"`
 	Role       types.String `tfsdk:"role"`
 	State      types.String `tfsdk:"state"`
+	StateV6    types.String `tfsdk:"state_v6"`
 }
 
 var IpamsvcHAGroupHostAttrTypes = map[string]attr.Type{
@@ -31,8 +33,10 @@ var IpamsvcHAGroupHostAttrTypes = map[string]attr.Type{
 	"heartbeats": types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcHAGroupHeartbeatsAttrTypes}},
 	"host":       types.StringType,
 	"port":       types.Int64Type,
+	"port_v6":    types.Int64Type,
 	"role":       types.StringType,
 	"state":      types.StringType,
+	"state_v6":   types.StringType,
 }
 
 var IpamsvcHAGroupHostResourceSchemaAttributes = map[string]schema.Attribute{
@@ -56,6 +60,10 @@ var IpamsvcHAGroupHostResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "The HA port.",
 	},
+	"port_v6": schema.Int64Attribute{
+		Computed:            true,
+		MarkdownDescription: "The HA port used for IPv6 communication.",
+	},
 	"role": schema.StringAttribute{
 		Required: true,
 		Validators: []validator.String{
@@ -66,6 +74,10 @@ var IpamsvcHAGroupHostResourceSchemaAttributes = map[string]schema.Attribute{
 	"state": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: "The state of DHCP on the host. This field is set when the _collect_stats_ is set to _true_ in the _GET_ _/dhcp/ha_group_ request.",
+	},
+	"state_v6": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The state of DHCPv6 on the host. This field is set when the _collect_stats_ is set to _true_ in the _GET_ _/dhcp/ha_group_ request.",
 	},
 }
 
@@ -91,6 +103,7 @@ func (m *IpamsvcHAGroupHostModel) Expand(ctx context.Context, diags *diag.Diagno
 		Host:       flex.ExpandString(m.Host),
 		Role:       flex.ExpandStringPointer(m.Role),
 		State:      flex.ExpandStringPointer(m.State),
+		StateV6:    flex.ExpandStringPointer(m.StateV6),
 	}
 	return to
 }
@@ -117,6 +130,8 @@ func (m *IpamsvcHAGroupHostModel) Flatten(ctx context.Context, from *ipam.HAGrou
 	m.Heartbeats = flex.FlattenFrameworkListNestedBlock(ctx, from.Heartbeats, IpamsvcHAGroupHeartbeatsAttrTypes, diags, FlattenIpamsvcHAGroupHeartbeats)
 	m.Host = flex.FlattenString(from.Host)
 	m.Port = flex.FlattenInt64Pointer(from.Port)
+	m.PortV6 = flex.FlattenInt64Pointer(from.PortV6)
 	m.Role = flex.FlattenStringPointer(from.Role)
 	m.State = flex.FlattenStringPointer(from.State)
+	m.StateV6 = flex.FlattenStringPointer(from.StateV6)
 }

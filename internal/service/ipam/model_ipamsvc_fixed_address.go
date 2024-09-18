@@ -28,6 +28,7 @@ import (
 type IpamsvcFixedAddressModel struct {
 	Address                   types.String      `tfsdk:"address"`
 	Comment                   types.String      `tfsdk:"comment"`
+	CompartmentId             types.String      `tfsdk:"compartment_id"`
 	CreatedAt                 timetypes.RFC3339 `tfsdk:"created_at"`
 	DhcpOptions               types.List        `tfsdk:"dhcp_options"`
 	DisableDhcp               types.Bool        `tfsdk:"disable_dhcp"`
@@ -53,6 +54,7 @@ type IpamsvcFixedAddressModel struct {
 var IpamsvcFixedAddressAttrTypes = map[string]attr.Type{
 	"address":                      types.StringType,
 	"comment":                      types.StringType,
+	"compartment_id":               types.StringType,
 	"created_at":                   timetypes.RFC3339Type{},
 	"dhcp_options":                 types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
 	"disable_dhcp":                 types.BoolType,
@@ -92,6 +94,10 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The description for the fixed address. May contain 0 to 1024 characters. Can include UTF-8.",
+	},
+	"compartment_id": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.",
 	},
 	"created_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -284,6 +290,7 @@ func (m *IpamsvcFixedAddressModel) Flatten(ctx context.Context, from *ipam.Fixed
 	}
 	m.Address = flex.FlattenString(from.Address)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DisableDhcp = types.BoolPointerValue(from.DisableDhcp)

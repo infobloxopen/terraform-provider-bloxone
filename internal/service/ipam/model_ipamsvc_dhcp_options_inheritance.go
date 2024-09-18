@@ -22,9 +22,10 @@ var IpamsvcDHCPOptionsInheritanceAttrTypes = map[string]attr.Type{
 
 var IpamsvcDHCPOptionsInheritanceResourceSchemaAttributes = map[string]schema.Attribute{
 	"dhcp_options": schema.SingleNestedAttribute{
-		Attributes: IpamsvcInheritedDHCPOptionListResourceSchemaAttributes,
-		Optional:   true,
-		Computed:   true,
+		Attributes:          IpamsvcInheritedDHCPOptionListResourceSchemaAttributes,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "The inheritance configuration for the _dhcp_options_ field.",
 	},
 }
 

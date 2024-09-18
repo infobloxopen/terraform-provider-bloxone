@@ -97,6 +97,7 @@ Class | Method | HTTP request | Description
 *AddressBlockAPI* | [**CreateNextAvailableSubnet**](docs/AddressBlockAPI.md#createnextavailablesubnet) | **Post** /ipam/address_block/{id}/nextavailablesubnet | Create the Next Available Subnet object.
 *AddressBlockAPI* | [**Delete**](docs/AddressBlockAPI.md#delete) | **Delete** /ipam/address_block/{id} | Move the address block to the recycle bin.
 *AddressBlockAPI* | [**List**](docs/AddressBlockAPI.md#list) | **Get** /ipam/address_block | Retrieve the address blocks.
+*AddressBlockAPI* | [**ListAncestor**](docs/AddressBlockAPI.md#listancestor) | **Get** /ipam/address_block/{id}/ancestor | Retrieve address block ancestors.
 *AddressBlockAPI* | [**ListNextAvailableAB**](docs/AddressBlockAPI.md#listnextavailableab) | **Get** /ipam/address_block/{id}/nextavailableaddressblock | List Next Available Address Block objects.
 *AddressBlockAPI* | [**ListNextAvailableIP**](docs/AddressBlockAPI.md#listnextavailableip) | **Get** /ipam/address_block/{id}/nextavailableip | Retrieve the next available IP address.
 *AddressBlockAPI* | [**ListNextAvailableSubnet**](docs/AddressBlockAPI.md#listnextavailablesubnet) | **Get** /ipam/address_block/{id}/nextavailablesubnet | List Next Available Subnet objects.
@@ -105,6 +106,12 @@ Class | Method | HTTP request | Description
 *AsmAPI* | [**Create**](docs/AsmAPI.md#create) | **Post** /ipam/asm | Update subnet and ranges for Automated Scope Management.
 *AsmAPI* | [**List**](docs/AsmAPI.md#list) | **Get** /ipam/asm | Retrieve suggested updates for Automated Scope Management.
 *AsmAPI* | [**Read**](docs/AsmAPI.md#read) | **Get** /ipam/asm/{id} | Retrieve the suggested update for Automated Scope Management.
+*ConfigProfileAPI* | [**AssociateConfigProfileToObjects**](docs/ConfigProfileAPI.md#associateconfigprofiletoobjects) | **Post** /dhcp/config_profile/link_profile | Associate a config profile to objects.
+*ConfigProfileAPI* | [**AssociateObjectToConfigProfiles**](docs/ConfigProfileAPI.md#associateobjecttoconfigprofiles) | **Post** /dhcp/config_profile/link_object | Associate an object to config profiles.
+*ConfigProfileAPI* | [**DisassociateConfigProfileFromObjects**](docs/ConfigProfileAPI.md#disassociateconfigprofilefromobjects) | **Post** /dhcp/config_profile/delink_profile | Disassociate a config profile from objects.
+*ConfigProfileAPI* | [**DisassociateObjectFromConfigProfiles**](docs/ConfigProfileAPI.md#disassociateobjectfromconfigprofiles) | **Post** /dhcp/config_profile/delink_object | Disassociate an object from a config profile.
+*ConfigProfileAPI* | [**ListConfigProfiles**](docs/ConfigProfileAPI.md#listconfigprofiles) | **Get** /dhcp/config_profile/profiles | Retrieve config profiles.
+*ConfigProfileAPI* | [**ListSubnets**](docs/ConfigProfileAPI.md#listsubnets) | **Get** /dhcp/config_profile/subnets | Retrieve subnets associated with a config profile.
 *DhcpHostAPI* | [**List**](docs/DhcpHostAPI.md#list) | **Get** /dhcp/host | Retrieve DHCP hosts.
 *DhcpHostAPI* | [**ListAssociations**](docs/DhcpHostAPI.md#listassociations) | **Get** /dhcp/host/{id}/associations | Retrieve DHCP host associations.
 *DhcpHostAPI* | [**Read**](docs/DhcpHostAPI.md#read) | **Get** /dhcp/host/{id} | Retrieve the DHCP host.
@@ -135,6 +142,7 @@ Class | Method | HTTP request | Description
 *IpSpaceAPI* | [**Copy**](docs/IpSpaceAPI.md#copy) | **Post** /ipam/ip_space/{id}/copy | Copy the IP space.
 *IpSpaceAPI* | [**Create**](docs/IpSpaceAPI.md#create) | **Post** /ipam/ip_space | Create the IP space.
 *IpSpaceAPI* | [**Delete**](docs/IpSpaceAPI.md#delete) | **Delete** /ipam/ip_space/{id} | Move the IP space to the recycle bin.
+*IpSpaceAPI* | [**GetConflicts**](docs/IpSpaceAPI.md#getconflicts) | **Get** /ipam/ip_space/{id}/conflicts | Retrieve Conflicted __AddressBlock__ and __Subnet__ objects in Federated Realms.
 *IpSpaceAPI* | [**List**](docs/IpSpaceAPI.md#list) | **Get** /ipam/ip_space | Retrieve IP spaces.
 *IpSpaceAPI* | [**Read**](docs/IpSpaceAPI.md#read) | **Get** /ipam/ip_space/{id} | Retrieve the IP space.
 *IpSpaceAPI* | [**Update**](docs/IpSpaceAPI.md#update) | **Patch** /ipam/ip_space/{id} | Update the IP space.
@@ -144,6 +152,13 @@ Class | Method | HTTP request | Description
 *IpamHostAPI* | [**Read**](docs/IpamHostAPI.md#read) | **Get** /ipam/host/{id} | Retrieve the IPAM host.
 *IpamHostAPI* | [**Update**](docs/IpamHostAPI.md#update) | **Patch** /ipam/host/{id} | Update the IPAM host.
 *LeasesCommandAPI* | [**Create**](docs/LeasesCommandAPI.md#create) | **Post** /dhcp/leases_command | Perform actions like clearing DHCP lease(s).
+*MacAddressItemAPI* | [**BulkCreate**](docs/MacAddressItemAPI.md#bulkcreate) | **Post** /dhcp/mac_address_item/bulk_create | Bulk create the mac address items.
+*MacAddressItemAPI* | [**Create**](docs/MacAddressItemAPI.md#create) | **Post** /dhcp/mac_address_item | Create the mac address item.
+*MacAddressItemAPI* | [**Delete**](docs/MacAddressItemAPI.md#delete) | **Delete** /dhcp/mac_address_item/{id} | Delete the mac address item.
+*MacAddressItemAPI* | [**List**](docs/MacAddressItemAPI.md#list) | **Get** /dhcp/mac_address_item | Retrieve mac address items.
+*MacAddressItemAPI* | [**Read**](docs/MacAddressItemAPI.md#read) | **Get** /dhcp/mac_address_item/{id} | Retrieve the mac address item.
+*MacAddressItemAPI* | [**Update**](docs/MacAddressItemAPI.md#update) | **Patch** /dhcp/mac_address_item/{id} | Update the mac address item.
+*MacAddressItemAPI* | [**Upload**](docs/MacAddressItemAPI.md#upload) | **Post** /dhcp/mac_address_item/upload | Upload mac addresses to a large scale hardware filter.
 *OptionCodeAPI* | [**Create**](docs/OptionCodeAPI.md#create) | **Post** /dhcp/option_code | Create the DHCP option code.
 *OptionCodeAPI* | [**Delete**](docs/OptionCodeAPI.md#delete) | **Delete** /dhcp/option_code/{id} | Delete the DHCP option code.
 *OptionCodeAPI* | [**List**](docs/OptionCodeAPI.md#list) | **Get** /dhcp/option_code | Retrieve DHCP option codes.
@@ -176,11 +191,14 @@ Class | Method | HTTP request | Description
 *ServerAPI* | [**List**](docs/ServerAPI.md#list) | **Get** /dhcp/server | Retrieve DHCP configuration profiles.
 *ServerAPI* | [**Read**](docs/ServerAPI.md#read) | **Get** /dhcp/server/{id} | Retrieve the DHCP configuration profile.
 *ServerAPI* | [**Update**](docs/ServerAPI.md#update) | **Patch** /dhcp/server/{id} | Update the DHCP configuration profile.
+*ServiceAPI* | [**List**](docs/ServiceAPI.md#list) | **Get** /dhcp/service | List DHCP service instance objects.
+*ServiceAPI* | [**Read**](docs/ServiceAPI.md#read) | **Get** /dhcp/service/{id} | Read the DHCP service instance object.
 *SubnetAPI* | [**Copy**](docs/SubnetAPI.md#copy) | **Post** /ipam/subnet/{id}/copy | Copy the subnet.
 *SubnetAPI* | [**Create**](docs/SubnetAPI.md#create) | **Post** /ipam/subnet | Create the subnet.
 *SubnetAPI* | [**CreateNextAvailableIP**](docs/SubnetAPI.md#createnextavailableip) | **Post** /ipam/subnet/{id}/nextavailableip | Allocate the next available IP address.
 *SubnetAPI* | [**Delete**](docs/SubnetAPI.md#delete) | **Delete** /ipam/subnet/{id} | Move the subnet to the recycle bin.
 *SubnetAPI* | [**List**](docs/SubnetAPI.md#list) | **Get** /ipam/subnet | Retrieve subnets.
+*SubnetAPI* | [**ListAncestor**](docs/SubnetAPI.md#listancestor) | **Get** /ipam/subnet/{id}/ancestor | Retrieve subnet ancestors.
 *SubnetAPI* | [**ListNextAvailableIP**](docs/SubnetAPI.md#listnextavailableip) | **Get** /ipam/subnet/{id}/nextavailableip | Retrieve the next available IP address.
 *SubnetAPI* | [**Read**](docs/SubnetAPI.md#read) | **Get** /ipam/subnet/{id} | Retrieve the subnet.
 *SubnetAPI* | [**Update**](docs/SubnetAPI.md#update) | **Patch** /ipam/subnet/{id} | Update the subnet.
@@ -195,9 +213,16 @@ Class | Method | HTTP request | Description
  - [AddressBlock](docs/AddressBlock.md)
  - [AsmEnableBlock](docs/AsmEnableBlock.md)
  - [AsmGrowthBlock](docs/AsmGrowthBlock.md)
+ - [AssociateConfigProfileToObjectsRequest](docs/AssociateConfigProfileToObjectsRequest.md)
+ - [AssociateObjectToConfigProfilesRequest](docs/AssociateObjectToConfigProfilesRequest.md)
+ - [AssociatedHost](docs/AssociatedHost.md)
  - [BulkCopyError](docs/BulkCopyError.md)
  - [BulkCopyIPSpace](docs/BulkCopyIPSpace.md)
  - [BulkCopyIPSpaceResponse](docs/BulkCopyIPSpaceResponse.md)
+ - [BulkCreateMacAddressItemResponse](docs/BulkCreateMacAddressItemResponse.md)
+ - [BulkMacAddressItem](docs/BulkMacAddressItem.md)
+ - [CPSubnet](docs/CPSubnet.md)
+ - [CidrBlock](docs/CidrBlock.md)
  - [CopyAddressBlock](docs/CopyAddressBlock.md)
  - [CopyAddressBlockResponse](docs/CopyAddressBlockResponse.md)
  - [CopyIPSpace](docs/CopyIPSpace.md)
@@ -214,6 +239,7 @@ Class | Method | HTTP request | Description
  - [CreateIPSpaceResponse](docs/CreateIPSpaceResponse.md)
  - [CreateIpamHostResponse](docs/CreateIpamHostResponse.md)
  - [CreateLeasesCommandResponse](docs/CreateLeasesCommandResponse.md)
+ - [CreateMacAddressItemResponse](docs/CreateMacAddressItemResponse.md)
  - [CreateNextAvailableABResponse](docs/CreateNextAvailableABResponse.md)
  - [CreateNextAvailableIPResponse](docs/CreateNextAvailableIPResponse.md)
  - [CreateNextAvailableSubnetResponse](docs/CreateNextAvailableSubnetResponse.md)
@@ -233,9 +259,12 @@ Class | Method | HTTP request | Description
  - [DHCPInheritance](docs/DHCPInheritance.md)
  - [DHCPOptionsInheritance](docs/DHCPOptionsInheritance.md)
  - [DHCPPacketStats](docs/DHCPPacketStats.md)
+ - [DHCPServiceInstance](docs/DHCPServiceInstance.md)
  - [DHCPUtilization](docs/DHCPUtilization.md)
  - [DHCPUtilizationThreshold](docs/DHCPUtilizationThreshold.md)
  - [DNSUsage](docs/DNSUsage.md)
+ - [DisassociateConfigProfileFromObjectsRequest](docs/DisassociateConfigProfileFromObjectsRequest.md)
+ - [DisassociateObjectFromConfigProfilesRequest](docs/DisassociateObjectFromConfigProfilesRequest.md)
  - [ExclusionRange](docs/ExclusionRange.md)
  - [Filter](docs/Filter.md)
  - [FixedAddress](docs/FixedAddress.md)
@@ -282,6 +311,10 @@ Class | Method | HTTP request | Description
  - [ListASMResponse](docs/ListASMResponse.md)
  - [ListAddressBlockResponse](docs/ListAddressBlockResponse.md)
  - [ListAddressResponse](docs/ListAddressResponse.md)
+ - [ListAncestorResponse](docs/ListAncestorResponse.md)
+ - [ListCPSubnetResponse](docs/ListCPSubnetResponse.md)
+ - [ListConfigProfileResponse](docs/ListConfigProfileResponse.md)
+ - [ListDHCPServiceInstanceResponse](docs/ListDHCPServiceInstanceResponse.md)
  - [ListDNSUsageResponse](docs/ListDNSUsageResponse.md)
  - [ListFilterResponse](docs/ListFilterResponse.md)
  - [ListFixedAddressResponse](docs/ListFixedAddressResponse.md)
@@ -290,6 +323,7 @@ Class | Method | HTTP request | Description
  - [ListHostResponse](docs/ListHostResponse.md)
  - [ListIPSpaceResponse](docs/ListIPSpaceResponse.md)
  - [ListIpamHostResponse](docs/ListIpamHostResponse.md)
+ - [ListMacAddressItemResponse](docs/ListMacAddressItemResponse.md)
  - [ListOptionCodeResponse](docs/ListOptionCodeResponse.md)
  - [ListOptionFilterResponse](docs/ListOptionFilterResponse.md)
  - [ListOptionGroupResponse](docs/ListOptionGroupResponse.md)
@@ -297,6 +331,9 @@ Class | Method | HTTP request | Description
  - [ListRangeResponse](docs/ListRangeResponse.md)
  - [ListServerResponse](docs/ListServerResponse.md)
  - [ListSubnetResponse](docs/ListSubnetResponse.md)
+ - [MacAddressItem](docs/MacAddressItem.md)
+ - [MacAddressItemUpload](docs/MacAddressItemUpload.md)
+ - [MacAddressItemUploadResponse](docs/MacAddressItemUploadResponse.md)
  - [Name](docs/Name.md)
  - [Nameserver](docs/Nameserver.md)
  - [NextAvailableABResponse](docs/NextAvailableABResponse.md)
@@ -309,10 +346,12 @@ Class | Method | HTTP request | Description
  - [OptionGroup](docs/OptionGroup.md)
  - [OptionItem](docs/OptionItem.md)
  - [OptionSpace](docs/OptionSpace.md)
+ - [ProtobufFieldMask](docs/ProtobufFieldMask.md)
  - [Range](docs/Range.md)
  - [ReadASMResponse](docs/ReadASMResponse.md)
  - [ReadAddressBlockResponse](docs/ReadAddressBlockResponse.md)
  - [ReadAddressResponse](docs/ReadAddressResponse.md)
+ - [ReadDHCPServiceInstanceResponse](docs/ReadDHCPServiceInstanceResponse.md)
  - [ReadDNSUsageResponse](docs/ReadDNSUsageResponse.md)
  - [ReadFixedAddressResponse](docs/ReadFixedAddressResponse.md)
  - [ReadGlobalResponse](docs/ReadGlobalResponse.md)
@@ -321,6 +360,7 @@ Class | Method | HTTP request | Description
  - [ReadHostResponse](docs/ReadHostResponse.md)
  - [ReadIPSpaceResponse](docs/ReadIPSpaceResponse.md)
  - [ReadIpamHostResponse](docs/ReadIpamHostResponse.md)
+ - [ReadMacAddressItemResponse](docs/ReadMacAddressItemResponse.md)
  - [ReadOptionCodeResponse](docs/ReadOptionCodeResponse.md)
  - [ReadOptionFilterResponse](docs/ReadOptionFilterResponse.md)
  - [ReadOptionGroupResponse](docs/ReadOptionGroupResponse.md)
@@ -328,6 +368,8 @@ Class | Method | HTTP request | Description
  - [ReadRangeResponse](docs/ReadRangeResponse.md)
  - [ReadServerResponse](docs/ReadServerResponse.md)
  - [ReadSubnetResponse](docs/ReadSubnetResponse.md)
+ - [RealmsConflict](docs/RealmsConflict.md)
+ - [RealmsConflictResponse](docs/RealmsConflictResponse.md)
  - [Server](docs/Server.md)
  - [ServerInheritance](docs/ServerInheritance.md)
  - [Subnet](docs/Subnet.md)
@@ -341,6 +383,7 @@ Class | Method | HTTP request | Description
  - [UpdateHostResponse](docs/UpdateHostResponse.md)
  - [UpdateIPSpaceResponse](docs/UpdateIPSpaceResponse.md)
  - [UpdateIpamHostResponse](docs/UpdateIpamHostResponse.md)
+ - [UpdateMacAddressItemResponse](docs/UpdateMacAddressItemResponse.md)
  - [UpdateOptionCodeResponse](docs/UpdateOptionCodeResponse.md)
  - [UpdateOptionFilterResponse](docs/UpdateOptionFilterResponse.md)
  - [UpdateOptionGroupResponse](docs/UpdateOptionGroupResponse.md)

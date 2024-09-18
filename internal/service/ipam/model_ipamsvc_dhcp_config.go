@@ -23,6 +23,7 @@ type IpamsvcDHCPConfigModel struct {
 	AllowUnknownV6         types.Bool  `tfsdk:"allow_unknown_v6"`
 	EchoClientId           types.Bool  `tfsdk:"echo_client_id"`
 	Filters                types.List  `tfsdk:"filters"`
+	FiltersLargeSelection  types.List  `tfsdk:"filters_large_selection"`
 	FiltersV6              types.List  `tfsdk:"filters_v6"`
 	IgnoreClientUid        types.Bool  `tfsdk:"ignore_client_uid"`
 	IgnoreList             types.List  `tfsdk:"ignore_list"`
@@ -37,6 +38,7 @@ var IpamsvcDHCPConfigAttrTypes = map[string]attr.Type{
 	"allow_unknown_v6":          types.BoolType,
 	"echo_client_id":            types.BoolType,
 	"filters":                   types.ListType{ElemType: types.StringType},
+	"filters_large_selection":   types.ListType{ElemType: types.StringType},
 	"filters_v6":                types.ListType{ElemType: types.StringType},
 	"ignore_client_uid":         types.BoolType,
 	"ignore_list":               types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcIgnoreItemAttrTypes}},
@@ -77,6 +79,12 @@ func IpamsvcDHCPConfigResourceSchemaAttributes(forSubnetOrAddressBlock bool) map
 			ElementType:         types.StringType,
 			Optional:            true,
 			MarkdownDescription: `The resource identifier.`,
+		},
+		"filters_large_selection": schema.ListAttribute{
+			ElementType:         types.StringType,
+			Optional:            true,
+			Computed:            true,
+			MarkdownDescription: "The resource identifier.",
 		},
 		"filters_v6": schema.ListAttribute{
 			ElementType:         types.StringType,
@@ -134,6 +142,7 @@ func (m *IpamsvcDHCPConfigModel) Expand(ctx context.Context, diags *diag.Diagnos
 		AllowUnknownV6:         flex.ExpandBoolPointer(m.AllowUnknownV6),
 		EchoClientId:           flex.ExpandBoolPointer(m.EchoClientId),
 		Filters:                flex.ExpandFrameworkListString(ctx, m.Filters, diags),
+		FiltersLargeSelection:  flex.ExpandFrameworkListString(ctx, m.FiltersLargeSelection, diags),
 		FiltersV6:              flex.ExpandFrameworkListString(ctx, m.FiltersV6, diags),
 		IgnoreClientUid:        flex.ExpandBoolPointer(m.IgnoreClientUid),
 		IgnoreList:             flex.ExpandFrameworkListNestedBlock(ctx, m.IgnoreList, diags, ExpandIpamsvcIgnoreItem),
@@ -185,6 +194,7 @@ func (m *IpamsvcDHCPConfigModel) Flatten(ctx context.Context, from *ipam.DHCPCon
 	m.AllowUnknownV6 = types.BoolPointerValue(from.AllowUnknownV6)
 	m.EchoClientId = types.BoolPointerValue(from.EchoClientId)
 	m.Filters = flex.FlattenFrameworkListString(ctx, from.Filters, diags)
+	m.FiltersLargeSelection = flex.FlattenFrameworkListString(ctx, from.FiltersLargeSelection, diags)
 	m.FiltersV6 = flex.FlattenFrameworkListString(ctx, from.FiltersV6, diags)
 	m.IgnoreClientUid = types.BoolPointerValue(from.IgnoreClientUid)
 	m.IgnoreList = flex.FlattenFrameworkListNestedBlock(ctx, from.IgnoreList, IpamsvcIgnoreItemAttrTypes, diags, FlattenIpamsvcIgnoreItem)

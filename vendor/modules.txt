@@ -302,10 +302,11 @@ github.com/huandu/xstrings
 # github.com/imdario/mergo v0.3.15
 ## explicit; go 1.13
 github.com/imdario/mergo
-# github.com/infobloxopen/bloxone-go-client v0.3.1-0.20240904172840-22eca81afea5
+# github.com/infobloxopen/bloxone-go-client v0.3.1-0.20240910054020-3676fc1910eb
 ## explicit; go 1.19
 github.com/infobloxopen/bloxone-go-client/anycast
 github.com/infobloxopen/bloxone-go-client/client
+github.com/infobloxopen/bloxone-go-client/clouddiscovery
 github.com/infobloxopen/bloxone-go-client/dfp
 github.com/infobloxopen/bloxone-go-client/dnsconfig
 github.com/infobloxopen/bloxone-go-client/dnsdata

@@ -47,8 +47,9 @@ var IpamsvcInheritedDDNSBlockResourceSchemaAttributes = map[string]schema.Attrib
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.SingleNestedAttribute{
-		Attributes: utils.ToComputedAttributeMap(IpamsvcDDNSBlockResourceSchemaAttributes),
-		Computed:   true,
+		Attributes:          utils.ToComputedAttributeMap(IpamsvcDDNSBlockResourceSchemaAttributes),
+		Computed:            true,
+		MarkdownDescription: "The inherited value.",
 	},
 }
 

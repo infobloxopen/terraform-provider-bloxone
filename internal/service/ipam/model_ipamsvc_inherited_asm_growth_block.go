@@ -47,8 +47,9 @@ var IpamsvcInheritedAsmGrowthBlockResourceSchemaAttributes = map[string]schema.A
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.SingleNestedAttribute{
-		Attributes: utils.ToComputedAttributeMap(IpamsvcAsmGrowthBlockResourceSchemaAttributes),
-		Computed:   true,
+		Attributes:          utils.ToComputedAttributeMap(IpamsvcAsmGrowthBlockResourceSchemaAttributes),
+		Computed:            true,
+		MarkdownDescription: "The inherited value.",
 	},
 }
 

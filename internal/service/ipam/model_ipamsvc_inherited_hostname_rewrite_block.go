@@ -47,8 +47,9 @@ var IpamsvcInheritedHostnameRewriteBlockResourceSchemaAttributes = map[string]sc
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.SingleNestedAttribute{
-		Attributes: utils.ToComputedAttributeMap(IpamsvcHostnameRewriteBlockResourceSchemaAttributes),
-		Computed:   true,
+		Attributes:          utils.ToComputedAttributeMap(IpamsvcHostnameRewriteBlockResourceSchemaAttributes),
+		Computed:            true,
+		MarkdownDescription: "The inherited value.",
 	},
 }
 
