@@ -3,26 +3,26 @@
 page_title: "bloxone_federation_federated_block Resource - terraform-provider-bloxone"
 subcategory: "IPAM Federation""
 description: |-
-  Manages an federated Block.
+  Manages a Federated Block.
   The Federated Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
 ---
 
 # bloxone_federation_federated_block (Resource)
 
-Manages an federated Block.
+Manages a Federated Block.
 
 The Federated Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
 
 ## Example Usage
 
 ```terraform
-resource "bloxone_federation_federated_realm" "example_federated_realm" {
+resource "bloxone_federation_federated_realm" "example" {
   name = "example_federation_federated_realm"
 }
 
 resource "bloxone_federation_federated_block" "example" {
   name            = "example_federation_federated_block"
-  federated_realm = bloxone_federation_federated_realm.example_federated_realm.id
+  federated_realm = bloxone_federation_federated_realm.example.id
   cidr            = 24
   address         = "10.10.0.0"
 

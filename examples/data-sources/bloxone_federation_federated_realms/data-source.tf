@@ -8,7 +8,7 @@ data "bloxone_federation_federated_realms" "example_by_attribute" {
 #Get Federated Realm filtered by tag
 data "bloxone_federation_federated_realms" "example_by_tag" {
   tag_filters = {
-    key1 = "value1"
+    site = "Site A"
   }
 }
 

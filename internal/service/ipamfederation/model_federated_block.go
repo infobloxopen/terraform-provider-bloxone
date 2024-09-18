@@ -139,12 +139,10 @@ func (m *FederatedBlockModel) Expand(ctx context.Context, diags *diag.Diagnostic
 		return nil
 	}
 	to := &ipamfederation.FederatedBlock{
-		AllocationV4:   ExpandAllocation(ctx, m.AllocationV4, diags),
 		Cidr:           flex.ExpandInt64Pointer(m.Cidr),
 		Comment:        flex.ExpandStringPointer(m.Comment),
 		FederatedRealm: flex.ExpandString(m.FederatedRealm),
 		Name:           flex.ExpandStringPointer(m.Name),
-		Parent:         flex.ExpandStringPointer(m.Parent),
 		Tags:           flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 	if isCreate {
