@@ -57,11 +57,7 @@ func (m *IpamsvcHAGroupHeartbeatsModel) Expand(ctx context.Context, diags *diag.
 	if m == nil {
 		return nil
 	}
-	to := &ipam.HAGroupHeartbeats{
-		Peer:                  flex.ExpandStringPointer(m.Peer),
-		SuccessfulHeartbeat:   flex.ExpandStringPointer(m.SuccessfulHeartbeat),
-		SuccessfulHeartbeatV6: flex.ExpandStringPointer(m.SuccessfulHeartbeatV6),
-	}
+	to := &ipam.HAGroupHeartbeats{}
 	return to
 }
 

@@ -176,8 +176,6 @@ func TestAccIpSpaceResource_Comment(t *testing.T) {
 	})
 }
 
-// The provider does not support creating user roles , which is a required field for creating a compartment
-// Hence, this test is completed with root compartment only
 func TestAccIpSpaceResource_CompartmentId(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_compartment_id"
 	var v ipam.IPSpace

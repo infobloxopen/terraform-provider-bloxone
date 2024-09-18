@@ -221,8 +221,6 @@ func TestAccAddressBlockResource_Comment(t *testing.T) {
 	})
 }
 
-// The provider does not support creating user roles , which is a required field for creating a compartment
-// Hence, this test is completed with root compartment only
 func TestAccAddressBlockResource_CompartmentId(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_compartment_id"
 	var v ipam.AddressBlock
