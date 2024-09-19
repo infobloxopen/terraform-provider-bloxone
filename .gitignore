@@ -41,5 +41,5 @@ terraform.tfstate
 internal/service/*/.openapi-generator-ignore
 
 # Ignore the metadata files
-.DS_Store
+**/.DS_Store
 
