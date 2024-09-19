@@ -15,8 +15,8 @@ import (
 )
 
 // TODO: add tests for the following
-// Test to be enabled once DhcpOptions is implemented
-// Inheritance sources - After _inherit support is added
+// - federated_realms
+// - external_keys
 
 func TestAccAddressBlockResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test"
@@ -214,6 +214,36 @@ func TestAccAddressBlockResource_Comment(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "comment", "This address block was created through Terraform"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccAddressBlockResource_CompartmentId(t *testing.T) {
+	var resourceName = "bloxone_ipam_address_block.test_compartment_id"
+	var v ipam.AddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAddressBlockCompartmentId(spaceName, "192.168.0.0", "16", ""),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", ""),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAddressBlockCompartmentIdNull(spaceName, "192.168.0.0", "16"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", ""),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1056,6 +1086,32 @@ resource "bloxone_ipam_address_block" "test_comment" {
     comment = %q
 }
 `, address, cidr, comment)
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
+}
+
+func testAccAddressBlockCompartmentId(spaceName, address string, cidr, compartment_id string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test_compartment_id" {
+    address = %q
+    cidr = %q
+    space = bloxone_ipam_ip_space.test.id
+    compartment_id = %q
+} 
+`, address, cidr, compartment_id)
+
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
+}
+
+func testAccAddressBlockCompartmentIdNull(spaceName, address string, cidr string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test_compartment_id" {
+    address = %q
+    cidr = %q
+    space = bloxone_ipam_ip_space.test.id
+    compartment_id = null
+} 
+`, address, cidr)
+
 	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 

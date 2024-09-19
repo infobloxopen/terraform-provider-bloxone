@@ -95,6 +95,21 @@ type SubnetAPI interface {
 	//  @return ListSubnetResponse
 	ListExecute(r SubnetAPIListRequest) (*ListSubnetResponse, *http.Response, error)
 	/*
+			ListAncestor Retrieve subnet ancestors.
+
+			Use this method to retrieve the ancestors of the __Subnet__ object.
+		This returns all the ancestors of the subnet.
+
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return SubnetAPIListAncestorRequest
+	*/
+	ListAncestor(ctx context.Context, id string) SubnetAPIListAncestorRequest
+
+	// ListAncestorExecute executes the request
+	//  @return ListAncestorResponse
+	ListAncestorExecute(r SubnetAPIListAncestorRequest) (*ListAncestorResponse, *http.Response, error)
+	/*
 			ListNextAvailableIP Retrieve the next available IP address.
 
 			Use this method to retrieve the next available IP address.
@@ -726,6 +741,114 @@ func (a *SubnetAPIService) ListExecute(r SubnetAPIListRequest) (*ListSubnetRespo
 	if r.tfilter != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_tfilter", r.tfilter, "")
 	}
+	if r.inherit != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := internal.SelectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.Client.CallAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := internal.NewGenericOpenAPIErrorWithBody(localVarHTTPResponse.Status, localVarBody)
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.Client.Decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type SubnetAPIListAncestorRequest struct {
+	ctx        context.Context
+	ApiService SubnetAPI
+	id         string
+	inherit    *string
+}
+
+// This parameter is used for getting inheritance_sources.  Allowed values: * _none_, * _partial_, * _full_.  Defaults to _none
+func (r SubnetAPIListAncestorRequest) Inherit(inherit string) SubnetAPIListAncestorRequest {
+	r.inherit = &inherit
+	return r
+}
+
+func (r SubnetAPIListAncestorRequest) Execute() (*ListAncestorResponse, *http.Response, error) {
+	return r.ApiService.ListAncestorExecute(r)
+}
+
+/*
+ListAncestor Retrieve subnet ancestors.
+
+Use this method to retrieve the ancestors of the __Subnet__ object.
+This returns all the ancestors of the subnet.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param id An application specific resource identity of a resource
+	@return SubnetAPIListAncestorRequest
+*/
+func (a *SubnetAPIService) ListAncestor(ctx context.Context, id string) SubnetAPIListAncestorRequest {
+	return SubnetAPIListAncestorRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+// Execute executes the request
+//
+//	@return ListAncestorResponse
+func (a *SubnetAPIService) ListAncestorExecute(r SubnetAPIListAncestorRequest) (*ListAncestorResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []internal.FormFile
+		localVarReturnValue *ListAncestorResponse
+	)
+
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "SubnetAPIService.ListAncestor")
+	if err != nil {
+		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
+	}
+
+	localVarPath := localBasePath + "/ipam/subnet/{id}/ancestor"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", url.PathEscape(internal.ParameterValueToString(r.id, "id")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
 	if r.inherit != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "_inherit", r.inherit, "")
 	}

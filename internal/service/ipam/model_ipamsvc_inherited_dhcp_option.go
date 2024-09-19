@@ -47,8 +47,9 @@ var IpamsvcInheritedDHCPOptionResourceSchemaAttributes = map[string]schema.Attri
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"value": schema.SingleNestedAttribute{
-		Attributes: utils.ToComputedAttributeMap(IpamsvcInheritedDHCPOptionItemResourceSchemaAttributes),
-		Computed:   true,
+		Attributes:          utils.ToComputedAttributeMap(IpamsvcInheritedDHCPOptionItemResourceSchemaAttributes),
+		Computed:            true,
+		MarkdownDescription: "The inherited value for the DHCP option.",
 	},
 }
 

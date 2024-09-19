@@ -26,6 +26,8 @@ type BulkCopyIPSpace struct {
 	CopyObjects []string `json:"copy_objects"`
 	// Indicates whether child objects should be copied or not.  Defaults to _false_.
 	Recursive *bool `json:"recursive,omitempty"`
+	// Indicates whether the child objects are going to retain their compartment_id, or inherit from the object to copy into.  Defaults to false
+	RetainChildCompartment *bool `json:"retain_child_compartment,omitempty"`
 	// Indicates whether copying should skip object in case of error and continue with next, or abort copying in case of error.  Defaults to _false_.
 	SkipOnError *bool `json:"skip_on_error,omitempty"`
 	// The resource identifier.
@@ -142,6 +144,38 @@ func (o *BulkCopyIPSpace) SetRecursive(v bool) {
 	o.Recursive = &v
 }
 
+// GetRetainChildCompartment returns the RetainChildCompartment field value if set, zero value otherwise.
+func (o *BulkCopyIPSpace) GetRetainChildCompartment() bool {
+	if o == nil || IsNil(o.RetainChildCompartment) {
+		var ret bool
+		return ret
+	}
+	return *o.RetainChildCompartment
+}
+
+// GetRetainChildCompartmentOk returns a tuple with the RetainChildCompartment field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BulkCopyIPSpace) GetRetainChildCompartmentOk() (*bool, bool) {
+	if o == nil || IsNil(o.RetainChildCompartment) {
+		return nil, false
+	}
+	return o.RetainChildCompartment, true
+}
+
+// HasRetainChildCompartment returns a boolean if a field has been set.
+func (o *BulkCopyIPSpace) HasRetainChildCompartment() bool {
+	if o != nil && !IsNil(o.RetainChildCompartment) {
+		return true
+	}
+
+	return false
+}
+
+// SetRetainChildCompartment gets a reference to the given bool and assigns it to the RetainChildCompartment field.
+func (o *BulkCopyIPSpace) SetRetainChildCompartment(v bool) {
+	o.RetainChildCompartment = &v
+}
+
 // GetSkipOnError returns the SkipOnError field value if set, zero value otherwise.
 func (o *BulkCopyIPSpace) GetSkipOnError() bool {
 	if o == nil || IsNil(o.SkipOnError) {
@@ -215,6 +249,9 @@ func (o BulkCopyIPSpace) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Recursive) {
 		toSerialize["recursive"] = o.Recursive
 	}
+	if !IsNil(o.RetainChildCompartment) {
+		toSerialize["retain_child_compartment"] = o.RetainChildCompartment
+	}
 	if !IsNil(o.SkipOnError) {
 		toSerialize["skip_on_error"] = o.SkipOnError
 	}
@@ -266,6 +303,7 @@ func (o *BulkCopyIPSpace) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "copy_dhcp_options")
 		delete(additionalProperties, "copy_objects")
 		delete(additionalProperties, "recursive")
+		delete(additionalProperties, "retain_child_compartment")
 		delete(additionalProperties, "skip_on_error")
 		delete(additionalProperties, "target")
 		o.AdditionalProperties = additionalProperties

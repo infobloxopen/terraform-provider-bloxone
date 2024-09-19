@@ -59,6 +59,7 @@ type IpamsvcServerModel struct {
 	KerberosTkeyLifetime            types.Int64       `tfsdk:"kerberos_tkey_lifetime"`
 	KerberosTkeyProtocol            types.String      `tfsdk:"kerberos_tkey_protocol"`
 	Name                            types.String      `tfsdk:"name"`
+	ProfileType                     types.String      `tfsdk:"profile_type"`
 	ServerPrincipal                 types.String      `tfsdk:"server_principal"`
 	Tags                            types.Map         `tfsdk:"tags"`
 	TagsAll                         types.Map         `tfsdk:"tags_all"`
@@ -100,6 +101,7 @@ var IpamsvcServerAttrTypes = map[string]attr.Type{
 	"kerberos_tkey_lifetime":              types.Int64Type,
 	"kerberos_tkey_protocol":              types.StringType,
 	"name":                                types.StringType,
+	"profile_type":                        types.StringType,
 	"server_principal":                    types.StringType,
 	"tags":                                types.MapType{ElemType: types.StringType},
 	"tags_all":                            types.MapType{ElemType: types.StringType},
@@ -221,6 +223,7 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 			"allow_unknown_v6":          types.BoolValue(true),
 			"echo_client_id":            types.BoolValue(true),
 			"filters":                   types.ListNull(types.StringType),
+			"filters_large_selection":   types.ListNull(types.StringType),
 			"filters_v6":                types.ListNull(types.StringType),
 			"ignore_client_uid":         types.BoolValue(true),
 			"ignore_list":               types.ListNull(types.ObjectType{AttrTypes: IpamsvcIgnoreItemAttrTypes}),
@@ -301,6 +304,7 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 		PlanModifiers: []planmodifier.Object{
 			objectplanmodifier.UseStateForUnknown(),
 		},
+		MarkdownDescription: "The inheritance configuration.",
 	},
 	"kerberos_kdc": schema.StringAttribute{
 		Optional:            true,
@@ -341,6 +345,15 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 	"name": schema.StringAttribute{
 		Required:            true,
 		MarkdownDescription: "The name of the DHCP Config Profile. Must contain 1 to 256 characters. Can include UTF-8.",
+	},
+	"profile_type": schema.StringAttribute{
+		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString("server"),
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
+		MarkdownDescription: "The type of server object.  Defaults to _server_.  Valid values are: * _server_: The server profile type. * _subnet_: The subnet profile type.",
 	},
 	"server_principal": schema.StringAttribute{
 		Optional:            true,
@@ -407,6 +420,7 @@ func (m *IpamsvcServerModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		KerberosTkeyLifetime:            flex.ExpandInt64Pointer(m.KerberosTkeyLifetime),
 		KerberosTkeyProtocol:            flex.ExpandStringPointer(m.KerberosTkeyProtocol),
 		Name:                            flex.ExpandString(m.Name),
+		ProfileType:                     flex.ExpandStringPointer(m.ProfileType),
 		ServerPrincipal:                 flex.ExpandStringPointer(m.ServerPrincipal),
 		Tags:                            flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 		VendorSpecificOptionOptionSpace: flex.ExpandStringPointer(m.VendorSpecificOptionOptionSpace),
@@ -466,6 +480,7 @@ func (m *IpamsvcServerModel) Flatten(ctx context.Context, from *ipam.Server, dia
 	m.KerberosTkeyLifetime = flex.FlattenInt64Pointer(from.KerberosTkeyLifetime)
 	m.KerberosTkeyProtocol = flex.FlattenStringPointer(from.KerberosTkeyProtocol)
 	m.Name = flex.FlattenString(from.Name)
+	m.ProfileType = flex.FlattenStringPointer(from.ProfileType)
 	m.ServerPrincipal = flex.FlattenStringPointer(from.ServerPrincipal)
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)

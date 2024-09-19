@@ -15,6 +15,9 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
+// TODO: add tests for the following
+// - external_keys
+
 func TestAccAddressResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_address.test"
 	var v ipam.Address

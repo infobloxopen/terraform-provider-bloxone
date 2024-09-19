@@ -2,6 +2,7 @@ package client
 
 import (
 	"github.com/infobloxopen/bloxone-go-client/anycast"
+	"github.com/infobloxopen/bloxone-go-client/clouddiscovery"
 	"github.com/infobloxopen/bloxone-go-client/dfp"
 	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/bloxone-go-client/dnsdata"
@@ -18,18 +19,19 @@ import (
 
 // APIClient is an aggregation of different BloxOne API clients.
 type APIClient struct {
-	IPAddressManagementAPI *ipam.APIClient
-	IPAMFederationAPI      *ipamfederation.APIClient
-	DNSConfigurationAPI    *dnsconfig.APIClient
-	DNSDataAPI             *dnsdata.APIClient
-	HostActivationAPI      *infraprovision.APIClient
-	InfraManagementAPI     *inframgmt.APIClient
-	KeysAPI                *keys.APIClient
-	DNSForwardingProxyAPI  *dfp.APIClient
-	FWAPI                  *fw.APIClient
-	AnycastAPI             *anycast.APIClient
-	RedirectAPI            *redirect.APIClient
-	UpgradePolicyClientAPI *upgradepolicy.APIClient
+	IPAddressManagementAPI      *ipam.APIClient
+	IPAMFederationAPI           *ipamfederation.APIClient
+	DiscoveryConfigurationAPIV2 *clouddiscovery.APIClient
+	DNSConfigurationAPI         *dnsconfig.APIClient
+	DNSDataAPI                  *dnsdata.APIClient
+	HostActivationAPI           *infraprovision.APIClient
+	InfraManagementAPI          *inframgmt.APIClient
+	KeysAPI                     *keys.APIClient
+	DNSForwardingProxyAPI       *dfp.APIClient
+	FWAPI                       *fw.APIClient
+	AnycastAPI                  *anycast.APIClient
+	RedirectAPI                 *redirect.APIClient
+	UpgradePolicyClientAPI      *upgradepolicy.APIClient
 }
 
 // NewAPIClient creates a new BloxOne API Client.
@@ -37,6 +39,7 @@ type APIClient struct {
 // The following clients are available:
 // - IPAddressManagementAPI
 // - IPAMFederationAPI
+// - DiscoveryConfigurationAPIV2
 // - DNSConfigurationAPI
 // - DNSDataAPI
 // - HostActivationAPI
@@ -56,17 +59,18 @@ type APIClient struct {
 // - WithDebug() sets the debug mode.
 func NewAPIClient(options ...option.ClientOption) *APIClient {
 	return &APIClient{
-		IPAddressManagementAPI: ipam.NewAPIClient(options...),
-		IPAMFederationAPI:      ipamfederation.NewAPIClient(options...),
-		DNSConfigurationAPI:    dnsconfig.NewAPIClient(options...),
-		DNSDataAPI:             dnsdata.NewAPIClient(options...),
-		HostActivationAPI:      infraprovision.NewAPIClient(options...),
-		InfraManagementAPI:     inframgmt.NewAPIClient(options...),
-		KeysAPI:                keys.NewAPIClient(options...),
-		DNSForwardingProxyAPI:  dfp.NewAPIClient(options...),
-		FWAPI:                  fw.NewAPIClient(options...),
-		AnycastAPI:             anycast.NewAPIClient(options...),
-		RedirectAPI:            redirect.NewAPIClient(options...),
-		UpgradePolicyClientAPI: upgradepolicy.NewAPIClient(options...),
+		IPAddressManagementAPI:      ipam.NewAPIClient(options...),
+		IPAMFederationAPI:           ipamfederation.NewAPIClient(options...),
+		DiscoveryConfigurationAPIV2: clouddiscovery.NewAPIClient(options...),
+		DNSConfigurationAPI:         dnsconfig.NewAPIClient(options...),
+		DNSDataAPI:                  dnsdata.NewAPIClient(options...),
+		HostActivationAPI:           infraprovision.NewAPIClient(options...),
+		InfraManagementAPI:          inframgmt.NewAPIClient(options...),
+		KeysAPI:                     keys.NewAPIClient(options...),
+		DNSForwardingProxyAPI:       dfp.NewAPIClient(options...),
+		FWAPI:                       fw.NewAPIClient(options...),
+		AnycastAPI:                  anycast.NewAPIClient(options...),
+		RedirectAPI:                 redirect.NewAPIClient(options...),
+		UpgradePolicyClientAPI:      upgradepolicy.NewAPIClient(options...),
 	}
 }

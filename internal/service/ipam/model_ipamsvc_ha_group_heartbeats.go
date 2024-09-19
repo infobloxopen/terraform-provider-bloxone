@@ -7,21 +7,21 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
 type IpamsvcHAGroupHeartbeatsModel struct {
-	Peer                types.String `tfsdk:"peer"`
-	SuccessfulHeartbeat types.String `tfsdk:"successful_heartbeat"`
+	Peer                  types.String `tfsdk:"peer"`
+	SuccessfulHeartbeat   types.String `tfsdk:"successful_heartbeat"`
+	SuccessfulHeartbeatV6 types.String `tfsdk:"successful_heartbeat_v6"`
 }
 
 var IpamsvcHAGroupHeartbeatsAttrTypes = map[string]attr.Type{
-	"peer":                 types.StringType,
-	"successful_heartbeat": types.StringType,
+	"peer":                    types.StringType,
+	"successful_heartbeat":    types.StringType,
+	"successful_heartbeat_v6": types.StringType,
 }
 
 var IpamsvcHAGroupHeartbeatsResourceSchemaAttributes = map[string]schema.Attribute{
@@ -33,29 +33,10 @@ var IpamsvcHAGroupHeartbeatsResourceSchemaAttributes = map[string]schema.Attribu
 		Computed:            true,
 		MarkdownDescription: "The timestamp as a string of the last successful heartbeat received from the peer above.",
 	},
-}
-
-func ExpandIpamsvcHAGroupHeartbeats(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.HAGroupHeartbeats {
-	if o.IsNull() || o.IsUnknown() {
-		return nil
-	}
-	var m IpamsvcHAGroupHeartbeatsModel
-	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
-	if diags.HasError() {
-		return nil
-	}
-	return m.Expand(ctx, diags)
-}
-
-func (m *IpamsvcHAGroupHeartbeatsModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.HAGroupHeartbeats {
-	if m == nil {
-		return nil
-	}
-	to := &ipam.HAGroupHeartbeats{
-		Peer:                flex.ExpandStringPointer(m.Peer),
-		SuccessfulHeartbeat: flex.ExpandStringPointer(m.SuccessfulHeartbeat),
-	}
-	return to
+	"successful_heartbeat_v6": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The timestamp as a string of the last successful DHCPv6 heartbeat received from the peer above.",
+	},
 }
 
 func FlattenIpamsvcHAGroupHeartbeats(ctx context.Context, from *ipam.HAGroupHeartbeats, diags *diag.Diagnostics) types.Object {
@@ -78,4 +59,5 @@ func (m *IpamsvcHAGroupHeartbeatsModel) Flatten(ctx context.Context, from *ipam.
 	}
 	m.Peer = flex.FlattenStringPointer(from.Peer)
 	m.SuccessfulHeartbeat = flex.FlattenStringPointer(from.SuccessfulHeartbeat)
+	m.SuccessfulHeartbeatV6 = flex.FlattenStringPointer(from.SuccessfulHeartbeatV6)
 }

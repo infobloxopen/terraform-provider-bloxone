@@ -39,6 +39,8 @@ type HAGroup struct {
 	Name string `json:"name"`
 	// Status of the HA group. This field is set when the _collect_stats_ is set to _true_ in the _GET_ _/dhcp/ha_group_ request.
 	Status *string `json:"status,omitempty"`
+	// Status of the DHCPv6 HA group. This field is set when the _collect_stats_ is set to _true_ in the _GET_ _/dhcp/ha_group_ request.
+	StatusV6 *string `json:"status_v6,omitempty"`
 	// The tags for the HA group.
 	Tags map[string]interface{} `json:"tags,omitempty"`
 	// Time when the object has been updated. Equals to _created_at_ if not updated after creation.
@@ -339,6 +341,38 @@ func (o *HAGroup) SetStatus(v string) {
 	o.Status = &v
 }
 
+// GetStatusV6 returns the StatusV6 field value if set, zero value otherwise.
+func (o *HAGroup) GetStatusV6() string {
+	if o == nil || IsNil(o.StatusV6) {
+		var ret string
+		return ret
+	}
+	return *o.StatusV6
+}
+
+// GetStatusV6Ok returns a tuple with the StatusV6 field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *HAGroup) GetStatusV6Ok() (*string, bool) {
+	if o == nil || IsNil(o.StatusV6) {
+		return nil, false
+	}
+	return o.StatusV6, true
+}
+
+// HasStatusV6 returns a boolean if a field has been set.
+func (o *HAGroup) HasStatusV6() bool {
+	if o != nil && !IsNil(o.StatusV6) {
+		return true
+	}
+
+	return false
+}
+
+// SetStatusV6 gets a reference to the given string and assigns it to the StatusV6 field.
+func (o *HAGroup) SetStatusV6(v string) {
+	o.StatusV6 = &v
+}
+
 // GetTags returns the Tags field value if set, zero value otherwise.
 func (o *HAGroup) GetTags() map[string]interface{} {
 	if o == nil || IsNil(o.Tags) {
@@ -436,6 +470,9 @@ func (o HAGroup) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
+	if !IsNil(o.StatusV6) {
+		toSerialize["status_v6"] = o.StatusV6
+	}
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
@@ -495,6 +532,7 @@ func (o *HAGroup) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "mode")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "status")
+		delete(additionalProperties, "status_v6")
 		delete(additionalProperties, "tags")
 		delete(additionalProperties, "updated_at")
 		o.AdditionalProperties = additionalProperties

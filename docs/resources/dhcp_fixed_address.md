@@ -119,6 +119,7 @@ resource "bloxone_dhcp_fixed_address" "example_fixed_address_na" {
 
 ### Read-Only
 
+- `compartment_id` (String) The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
 - `inheritance_assigned_hosts` (Attributes List) The list of the inheritance assigned hosts of the object. (see [below for nested schema](#nestedatt--inheritance_assigned_hosts))
@@ -144,10 +145,10 @@ Optional:
 
 Optional:
 
-- `dhcp_options` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options))
-- `header_option_filename` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--header_option_filename))
-- `header_option_server_address` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--header_option_server_address))
-- `header_option_server_name` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--header_option_server_name))
+- `dhcp_options` (Attributes) The inheritance configuration for _dhcp_options_ field. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options))
+- `header_option_filename` (Attributes) The inheritance configuration for _header_option_filename_ field. (see [below for nested schema](#nestedatt--inheritance_sources--header_option_filename))
+- `header_option_server_address` (Attributes) The inheritance configuration for _header_option_server_address_ field. (see [below for nested schema](#nestedatt--inheritance_sources--header_option_server_address))
+- `header_option_server_name` (Attributes) The inheritance configuration for _header_option_server_name_ field. (see [below for nested schema](#nestedatt--inheritance_sources--header_option_server_name))
 
 <a id="nestedatt--inheritance_sources--dhcp_options"></a>
 ### Nested Schema for `inheritance_sources.dhcp_options`
@@ -176,14 +177,14 @@ Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
 - `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value))
+- `value` (Attributes) The inherited value for the DHCP option. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value))
 
 <a id="nestedatt--inheritance_sources--dhcp_options--value--value"></a>
 ### Nested Schema for `inheritance_sources.dhcp_options.value.value`
 
 Read-Only:
 
-- `option` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value--option))
+- `option` (Attributes) Option inherited from the ancestor. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value--option))
 - `overriding_group` (String) The resource identifier.
 
 <a id="nestedatt--inheritance_sources--dhcp_options--value--value--option"></a>

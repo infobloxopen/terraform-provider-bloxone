@@ -32,6 +32,7 @@ type IpamsvcHAGroupModel struct {
 	Mode            types.String      `tfsdk:"mode"`
 	Name            types.String      `tfsdk:"name"`
 	Status          types.String      `tfsdk:"status"`
+	StatusV6        types.String      `tfsdk:"status_v6"`
 	Tags            types.Map         `tfsdk:"tags"`
 	TagsAll         types.Map         `tfsdk:"tags_all"`
 	UpdatedAt       timetypes.RFC3339 `tfsdk:"updated_at"`
@@ -48,6 +49,7 @@ var IpamsvcHAGroupAttrTypes = map[string]attr.Type{
 	"mode":              types.StringType,
 	"name":              types.StringType,
 	"status":            types.StringType,
+	"status_v6":         types.StringType,
 	"tags":              types.MapType{ElemType: types.StringType},
 	"tags_all":          types.MapType{ElemType: types.StringType},
 	"updated_at":        timetypes.RFC3339Type{},
@@ -112,6 +114,10 @@ var IpamsvcHAGroupResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "Status of the HA group. This field is set when the _collect_stats_ is set to _true_ in the _GET_ _/dhcp/ha_group_ request.",
 	},
+	"status_v6": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "Status of the DHCPv6 HA group. This field is set when the _collect_stats_ is set to _true_ in the _GET_ _/dhcp/ha_group_ request.",
+	},
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
@@ -161,6 +167,7 @@ func (m *IpamsvcHAGroupModel) Expand(ctx context.Context, diags *diag.Diagnostic
 		Mode:            flex.ExpandStringPointer(m.Mode),
 		Name:            flex.ExpandString(m.Name),
 		Status:          flex.ExpandStringPointer(m.Status),
+		StatusV6:        flex.ExpandStringPointer(m.StatusV6),
 		Tags:            flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 	return to
@@ -194,6 +201,7 @@ func (m *IpamsvcHAGroupModel) Flatten(ctx context.Context, from *ipam.HAGroup, d
 	m.Mode = flex.FlattenStringPointer(from.Mode)
 	m.Name = flex.FlattenString(from.Name)
 	m.Status = flex.FlattenStringPointer(from.Status)
+	m.StatusV6 = flex.FlattenStringPointer(from.StatusV6)
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }
