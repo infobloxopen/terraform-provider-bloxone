@@ -3,7 +3,6 @@ package provider
 import (
 	"context"
 	"fmt"
-
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
@@ -19,6 +18,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_mgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/infra_provision"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/ipam"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/ipamfederation"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/keys"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/redirect"
 )
@@ -156,6 +156,9 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		fw.NewCategoryFilterResource,
 		fw.NewApplicationFilterResource,
 
+		ipamfederation.NewFederatedRealmResource,
+		ipamfederation.NewFederatedBlockResource,
+
 		redirect.NewCustomRedirectResource,
 	}
 }
@@ -226,6 +229,9 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		fw.NewApplicationFiltersDataSource,
 		fw.NewContentCategoriesDataSource,
 		fw.NewThreatFeedsDataSource,
+
+		ipamfederation.NewFederatedRealmDataSource,
+		ipamfederation.NewFederatedBlockDataSource,
 
 		redirect.NewCustomRedirectsDataSource,
 	}
