@@ -87,6 +87,8 @@ type Server struct {
 	KerberosTkeyProtocol *string `json:"kerberos_tkey_protocol,omitempty"`
 	// The name of the DHCP Config Profile. Must contain 1 to 256 characters. Can include UTF-8.
 	Name string `json:"name"`
+	// The type of server object.  Defaults to _server_.  Valid values are: * _server_: The server profile type. * _subnet_: The subnet profile type.
+	ProfileType *string `json:"profile_type,omitempty"`
 	// The Kerberos principal name of the external DNS server that will receive updates.  Defaults to empty.
 	ServerPrincipal *string `json:"server_principal,omitempty"`
 	// The tags for the DHCP Config Profile in JSON format.
@@ -1166,6 +1168,38 @@ func (o *Server) SetName(v string) {
 	o.Name = v
 }
 
+// GetProfileType returns the ProfileType field value if set, zero value otherwise.
+func (o *Server) GetProfileType() string {
+	if o == nil || IsNil(o.ProfileType) {
+		var ret string
+		return ret
+	}
+	return *o.ProfileType
+}
+
+// GetProfileTypeOk returns a tuple with the ProfileType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Server) GetProfileTypeOk() (*string, bool) {
+	if o == nil || IsNil(o.ProfileType) {
+		return nil, false
+	}
+	return o.ProfileType, true
+}
+
+// HasProfileType returns a boolean if a field has been set.
+func (o *Server) HasProfileType() bool {
+	if o != nil && !IsNil(o.ProfileType) {
+		return true
+	}
+
+	return false
+}
+
+// SetProfileType gets a reference to the given string and assigns it to the ProfileType field.
+func (o *Server) SetProfileType(v string) {
+	o.ProfileType = &v
+}
+
 // GetServerPrincipal returns the ServerPrincipal field value if set, zero value otherwise.
 func (o *Server) GetServerPrincipal() string {
 	if o == nil || IsNil(o.ServerPrincipal) {
@@ -1401,6 +1435,9 @@ func (o Server) ToMap() (map[string]interface{}, error) {
 		toSerialize["kerberos_tkey_protocol"] = o.KerberosTkeyProtocol
 	}
 	toSerialize["name"] = o.Name
+	if !IsNil(o.ProfileType) {
+		toSerialize["profile_type"] = o.ProfileType
+	}
 	if !IsNil(o.ServerPrincipal) {
 		toSerialize["server_principal"] = o.ServerPrincipal
 	}
@@ -1489,6 +1526,7 @@ func (o *Server) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "kerberos_tkey_lifetime")
 		delete(additionalProperties, "kerberos_tkey_protocol")
 		delete(additionalProperties, "name")
+		delete(additionalProperties, "profile_type")
 		delete(additionalProperties, "server_principal")
 		delete(additionalProperties, "tags")
 		delete(additionalProperties, "updated_at")

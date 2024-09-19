@@ -22,8 +22,10 @@ type HAGroupHeartbeats struct {
 	// The name of the peer.
 	Peer *string `json:"peer,omitempty"`
 	// The timestamp as a string of the last successful heartbeat received from the peer above.
-	SuccessfulHeartbeat  *string `json:"successful_heartbeat,omitempty"`
-	AdditionalProperties map[string]interface{}
+	SuccessfulHeartbeat *string `json:"successful_heartbeat,omitempty"`
+	// The timestamp as a string of the last successful DHCPv6 heartbeat received from the peer above.
+	SuccessfulHeartbeatV6 *string `json:"successful_heartbeat_v6,omitempty"`
+	AdditionalProperties  map[string]interface{}
 }
 
 type _HAGroupHeartbeats HAGroupHeartbeats
@@ -109,6 +111,38 @@ func (o *HAGroupHeartbeats) SetSuccessfulHeartbeat(v string) {
 	o.SuccessfulHeartbeat = &v
 }
 
+// GetSuccessfulHeartbeatV6 returns the SuccessfulHeartbeatV6 field value if set, zero value otherwise.
+func (o *HAGroupHeartbeats) GetSuccessfulHeartbeatV6() string {
+	if o == nil || IsNil(o.SuccessfulHeartbeatV6) {
+		var ret string
+		return ret
+	}
+	return *o.SuccessfulHeartbeatV6
+}
+
+// GetSuccessfulHeartbeatV6Ok returns a tuple with the SuccessfulHeartbeatV6 field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *HAGroupHeartbeats) GetSuccessfulHeartbeatV6Ok() (*string, bool) {
+	if o == nil || IsNil(o.SuccessfulHeartbeatV6) {
+		return nil, false
+	}
+	return o.SuccessfulHeartbeatV6, true
+}
+
+// HasSuccessfulHeartbeatV6 returns a boolean if a field has been set.
+func (o *HAGroupHeartbeats) HasSuccessfulHeartbeatV6() bool {
+	if o != nil && !IsNil(o.SuccessfulHeartbeatV6) {
+		return true
+	}
+
+	return false
+}
+
+// SetSuccessfulHeartbeatV6 gets a reference to the given string and assigns it to the SuccessfulHeartbeatV6 field.
+func (o *HAGroupHeartbeats) SetSuccessfulHeartbeatV6(v string) {
+	o.SuccessfulHeartbeatV6 = &v
+}
+
 func (o HAGroupHeartbeats) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -124,6 +158,9 @@ func (o HAGroupHeartbeats) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.SuccessfulHeartbeat) {
 		toSerialize["successful_heartbeat"] = o.SuccessfulHeartbeat
+	}
+	if !IsNil(o.SuccessfulHeartbeatV6) {
+		toSerialize["successful_heartbeat_v6"] = o.SuccessfulHeartbeatV6
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -149,6 +186,7 @@ func (o *HAGroupHeartbeats) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "peer")
 		delete(additionalProperties, "successful_heartbeat")
+		delete(additionalProperties, "successful_heartbeat_v6")
 		o.AdditionalProperties = additionalProperties
 	}
 

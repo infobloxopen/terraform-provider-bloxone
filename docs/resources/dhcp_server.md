@@ -113,13 +113,14 @@ resource "bloxone_dhcp_server" "example" {
 - `hostname_rewrite_char` (String) The character to replace non-matching characters with, when hostname rewrite is enabled.  Any single ASCII character or no character if the invalid characters should be removed without replacement.  Defaults to \"-\".
 - `hostname_rewrite_enabled` (Boolean) Indicates if client supplied hostnames will be rewritten prior to DDNS update by replacing every character that does not match _hostname_rewrite_regex_ by _hostname_rewrite_char_.  Defaults to _false_.
 - `hostname_rewrite_regex` (String) The regex bracket expression to match valid characters.  Must begin with \"[\" and end with \"]\" and be a compilable POSIX regex.  Defaults to \"[^a-zA-Z0-9_.]\".
-- `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources))
+- `inheritance_sources` (Attributes) The inheritance configuration. (see [below for nested schema](#nestedatt--inheritance_sources))
 - `kerberos_kdc` (String) Address of Kerberos Key Distribution Center.  Defaults to empty.
 - `kerberos_keys` (Attributes List) _kerberos_keys_ contains a list of keys for GSS-TSIG signed dynamic updates.  Defaults to empty. (see [below for nested schema](#nestedatt--kerberos_keys))
 - `kerberos_rekey_interval` (Number) Time interval (in seconds) the keys for each configured external DNS server are checked for rekeying, i.e. a new key is created to replace the current usable one when its age is greater than the _kerberos_rekey_interval_ value.  Defaults to 120 seconds.
 - `kerberos_retry_interval` (Number) Time interval (in seconds) to retry to create a key if any error occurred previously for any configured external DNS server.  Defaults to 30 seconds.
 - `kerberos_tkey_lifetime` (Number) Lifetime (in seconds) of GSS-TSIG keys in the TKEY protocol.  Defaults to 160 seconds.
 - `kerberos_tkey_protocol` (String) Determines which protocol is used to establish the security context with the external DNS servers, TCP or UDP.  Defaults to _tcp_.
+- `profile_type` (String) The type of server object.  Defaults to _server_.  Valid values are: * _server_: The server profile type. * _subnet_: The subnet profile type.
 - `server_principal` (String) The Kerberos principal name of the external DNS server that will receive updates.  Defaults to empty.
 - `tags` (Map of String) The tags for the DHCP Config Profile in JSON format.
 - `vendor_specific_option_option_space` (String) The resource identifier.
@@ -204,6 +205,7 @@ Optional:
 - `allow_unknown_v6` (Boolean) Disable to allow leases only for known IPV6 clients, those for which a fixed address is configured.
 - `echo_client_id` (Boolean) Enable/disable to include/exclude the client id when responding to discover or request.
 - `filters` (List of String) The resource identifier.
+- `filters_large_selection` (List of String) The resource identifier.
 - `filters_v6` (List of String) The resource identifier.
 - `ignore_client_uid` (Boolean) Enable to ignore the client UID when issuing a DHCP lease. Use this option to prevent assigning two IP addresses for a client which does not have a UID during one phase of PXE boot but acquires one for the other phase.
 - `ignore_list` (Attributes List) The list of clients to ignore requests from. (see [below for nested schema](#nestedatt--dhcp_config--ignore_list))
@@ -285,7 +287,7 @@ Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
 - `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--ddns_block--value))
+- `value` (Attributes) The inherited value. (see [below for nested schema](#nestedatt--inheritance_sources--ddns_block--value))
 
 <a id="nestedatt--inheritance_sources--ddns_block--value"></a>
 ### Nested Schema for `inheritance_sources.ddns_block.value`
@@ -422,7 +424,7 @@ Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
 - `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--ddns_hostname_block--value))
+- `value` (Attributes) The inherited value. (see [below for nested schema](#nestedatt--inheritance_sources--ddns_hostname_block--value))
 
 <a id="nestedatt--inheritance_sources--ddns_hostname_block--value"></a>
 ### Nested Schema for `inheritance_sources.ddns_hostname_block.value`
@@ -493,17 +495,17 @@ Read-Only:
 
 Optional:
 
-- `abandoned_reclaim_time` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--abandoned_reclaim_time))
-- `abandoned_reclaim_time_v6` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--abandoned_reclaim_time_v6))
-- `allow_unknown` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--allow_unknown))
-- `allow_unknown_v6` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--allow_unknown_v6))
-- `echo_client_id` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--echo_client_id))
-- `filters` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--filters))
-- `filters_v6` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--filters_v6))
-- `ignore_client_uid` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--ignore_client_uid))
-- `ignore_list` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--ignore_list))
-- `lease_time` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--lease_time))
-- `lease_time_v6` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--lease_time_v6))
+- `abandoned_reclaim_time` (Attributes) The inheritance configuration for _abandoned_reclaim_time_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--abandoned_reclaim_time))
+- `abandoned_reclaim_time_v6` (Attributes) The inheritance configuration for _abandoned_reclaim_time_v6_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--abandoned_reclaim_time_v6))
+- `allow_unknown` (Attributes) The inheritance configuration for _allow_unknown_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--allow_unknown))
+- `allow_unknown_v6` (Attributes) The inheritance configuration for _allow_unknown_v6_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--allow_unknown_v6))
+- `echo_client_id` (Attributes) The inheritance configuration for _echo_client_id_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--echo_client_id))
+- `filters` (Attributes) The inheritance configuration for filters field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--filters))
+- `filters_v6` (Attributes) The inheritance configuration for _filters_v6_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--filters_v6))
+- `ignore_client_uid` (Attributes) The inheritance configuration for _ignore_client_uid_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--ignore_client_uid))
+- `ignore_list` (Attributes) The inheritance configuration for _ignore_list_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--ignore_list))
+- `lease_time` (Attributes) The inheritance configuration for _lease_time_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--lease_time))
+- `lease_time_v6` (Attributes) The inheritance configuration for _lease_time_v6_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_config--lease_time_v6))
 
 <a id="nestedatt--inheritance_sources--dhcp_config--abandoned_reclaim_time"></a>
 ### Nested Schema for `inheritance_sources.dhcp_config.abandoned_reclaim_time`
@@ -743,14 +745,14 @@ Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
 - `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value))
+- `value` (Attributes) The inherited value for the DHCP option. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value))
 
 <a id="nestedatt--inheritance_sources--dhcp_options--value--value"></a>
 ### Nested Schema for `inheritance_sources.dhcp_options.value.value`
 
 Read-Only:
 
-- `option` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value--option))
+- `option` (Attributes) Option inherited from the ancestor. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value--option))
 - `overriding_group` (String) The resource identifier.
 
 <a id="nestedatt--inheritance_sources--dhcp_options--value--value--option"></a>
@@ -796,14 +798,14 @@ Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
 - `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options_v6--value--value))
+- `value` (Attributes) The inherited value for the DHCP option. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options_v6--value--value))
 
 <a id="nestedatt--inheritance_sources--dhcp_options_v6--value--value"></a>
 ### Nested Schema for `inheritance_sources.dhcp_options_v6.value.value`
 
 Read-Only:
 
-- `option` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options_v6--value--value--option))
+- `option` (Attributes) Option inherited from the ancestor. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options_v6--value--value--option))
 - `overriding_group` (String) The resource identifier.
 
 <a id="nestedatt--inheritance_sources--dhcp_options_v6--value--value--option"></a>
@@ -891,7 +893,7 @@ Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
 - `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--hostname_rewrite_block--value))
+- `value` (Attributes) The inherited value. (see [below for nested schema](#nestedatt--inheritance_sources--hostname_rewrite_block--value))
 
 <a id="nestedatt--inheritance_sources--hostname_rewrite_block--value"></a>
 ### Nested Schema for `inheritance_sources.hostname_rewrite_block.value`

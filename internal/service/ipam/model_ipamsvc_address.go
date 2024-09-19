@@ -25,11 +25,13 @@ import (
 type IpamsvcAddressModel struct {
 	Address           types.String      `tfsdk:"address"`
 	Comment           types.String      `tfsdk:"comment"`
+	CompartmentId     types.String      `tfsdk:"compartment_id"`
 	CreatedAt         timetypes.RFC3339 `tfsdk:"created_at"`
 	DhcpInfo          types.Object      `tfsdk:"dhcp_info"`
 	DisableDhcp       types.Bool        `tfsdk:"disable_dhcp"`
 	DiscoveryAttrs    types.Map         `tfsdk:"discovery_attrs"`
 	DiscoveryMetadata types.Map         `tfsdk:"discovery_metadata"`
+	ExternalKeys      types.Map         `tfsdk:"external_keys"`
 	Host              types.String      `tfsdk:"host"`
 	Hwaddr            types.String      `tfsdk:"hwaddr"`
 	Id                types.String      `tfsdk:"id"`
@@ -50,11 +52,13 @@ type IpamsvcAddressModel struct {
 var IpamsvcAddressAttrTypes = map[string]attr.Type{
 	"address":            types.StringType,
 	"comment":            types.StringType,
+	"compartment_id":     types.StringType,
 	"created_at":         timetypes.RFC3339Type{},
 	"dhcp_info":          types.ObjectType{AttrTypes: IpamsvcDHCPInfoAttrTypes},
 	"disable_dhcp":       types.BoolType,
 	"discovery_attrs":    types.MapType{ElemType: types.StringType},
 	"discovery_metadata": types.MapType{ElemType: types.StringType},
+	"external_keys":      types.MapType{ElemType: types.StringType},
 	"host":               types.StringType,
 	"hwaddr":             types.StringType,
 	"id":                 types.StringType,
@@ -87,6 +91,11 @@ var IpamsvcAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The description for the address object. May contain 0 to 1024 characters. Can include UTF-8.",
 	},
+	"compartment_id": schema.StringAttribute{
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
+		MarkdownDescription: "The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.",
+	},
 	"created_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
@@ -109,6 +118,11 @@ var IpamsvcAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		ElementType:         types.StringType,
 		Computed:            true,
 		MarkdownDescription: "The discovery metadata for this address in JSON format.",
+	},
+	"external_keys": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Optional:            true,
+		MarkdownDescription: "The external keys (source key) for this address in JSON format.",
 	},
 	"host": schema.StringAttribute{
 		Computed:            true,
@@ -217,12 +231,13 @@ func (m *IpamsvcAddressModel) Expand(ctx context.Context, diags *diag.Diagnostic
 		return nil
 	}
 	to := &ipam.Address{
-		Address:   flex.ExpandString(m.Address),
-		Comment:   flex.ExpandStringPointer(m.Comment),
-		Hwaddr:    flex.ExpandStringPointer(m.Hwaddr),
-		Interface: flex.ExpandStringPointer(m.Interface),
-		Names:     flex.ExpandFrameworkListNestedBlock(ctx, m.Names, diags, ExpandIpamsvcName),
-		Tags:      flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
+		Address:      flex.ExpandString(m.Address),
+		Comment:      flex.ExpandStringPointer(m.Comment),
+		ExternalKeys: flex.ExpandFrameworkMapString(ctx, m.ExternalKeys, diags),
+		Hwaddr:       flex.ExpandStringPointer(m.Hwaddr),
+		Interface:    flex.ExpandStringPointer(m.Interface),
+		Names:        flex.ExpandFrameworkListNestedBlock(ctx, m.Names, diags, ExpandIpamsvcName),
+		Tags:         flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 	if isCreate {
 		if !m.NextAvailableId.IsNull() && !m.NextAvailableId.IsUnknown() {
@@ -258,11 +273,13 @@ func (m *IpamsvcAddressModel) Flatten(ctx context.Context, from *ipam.Address, d
 	}
 	m.Address = flex.FlattenString(from.Address)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.DhcpInfo = FlattenIpamsvcDHCPInfo(ctx, from.DhcpInfo, diags)
 	m.DisableDhcp = types.BoolPointerValue(from.DisableDhcp)
 	m.DiscoveryAttrs = flex.FlattenFrameworkMapString(ctx, from.DiscoveryAttrs, diags)
 	m.DiscoveryMetadata = flex.FlattenFrameworkMapString(ctx, from.DiscoveryMetadata, diags)
+	m.ExternalKeys = flex.FlattenFrameworkMapString(ctx, from.ExternalKeys, diags)
 	m.Host = flex.FlattenStringPointer(from.Host)
 	m.Hwaddr = flex.FlattenStringPointer(from.Hwaddr)
 	m.Id = flex.FlattenStringPointer(from.Id)

@@ -30,6 +30,8 @@ type AddressBlock struct {
 	Cidr *int64 `json:"cidr,omitempty"`
 	// The description for the address block. May contain 0 to 1024 characters. Can include UTF-8.
 	Comment *string `json:"comment,omitempty"`
+	// The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.
+	CompartmentId *string `json:"compartment_id,omitempty"`
 	// Time when the object has been created.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Controls who does the DDNS updates.  Valid values are: * _client_: DHCP server updates DNS if requested by client. * _server_: DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _ignore_: DHCP server always updates DNS, even if the client says not to. * _over_client_update_: Same as _server_. DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _over_no_update_: DHCP server updates DNS even if the client requests that no updates be done. If the client requests to do the update, DHCP server allows it.  Defaults to _client_.
@@ -60,6 +62,12 @@ type AddressBlock struct {
 	DiscoveryAttrs map[string]interface{} `json:"discovery_attrs,omitempty"`
 	// The discovery metadata for this address block in JSON format.
 	DiscoveryMetadata map[string]interface{} `json:"discovery_metadata,omitempty"`
+	// The external keys (source key) for this address block in JSON format.
+	ExternalKeys map[string]interface{} `json:"external_keys,omitempty"`
+	// Reserved for future use.
+	FederatedRealms []string `json:"federated_realms,omitempty"`
+	// Reserved for future use.
+	Federation *string `json:"federation,omitempty"`
 	// The configuration for header option filename field.
 	HeaderOptionFilename *string `json:"header_option_filename,omitempty"`
 	// The configuration for header option server address field.
@@ -278,6 +286,38 @@ func (o *AddressBlock) HasComment() bool {
 // SetComment gets a reference to the given string and assigns it to the Comment field.
 func (o *AddressBlock) SetComment(v string) {
 	o.Comment = &v
+}
+
+// GetCompartmentId returns the CompartmentId field value if set, zero value otherwise.
+func (o *AddressBlock) GetCompartmentId() string {
+	if o == nil || IsNil(o.CompartmentId) {
+		var ret string
+		return ret
+	}
+	return *o.CompartmentId
+}
+
+// GetCompartmentIdOk returns a tuple with the CompartmentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AddressBlock) GetCompartmentIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CompartmentId) {
+		return nil, false
+	}
+	return o.CompartmentId, true
+}
+
+// HasCompartmentId returns a boolean if a field has been set.
+func (o *AddressBlock) HasCompartmentId() bool {
+	if o != nil && !IsNil(o.CompartmentId) {
+		return true
+	}
+
+	return false
+}
+
+// SetCompartmentId gets a reference to the given string and assigns it to the CompartmentId field.
+func (o *AddressBlock) SetCompartmentId(v string) {
+	o.CompartmentId = &v
 }
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
@@ -758,6 +798,102 @@ func (o *AddressBlock) HasDiscoveryMetadata() bool {
 // SetDiscoveryMetadata gets a reference to the given map[string]interface{} and assigns it to the DiscoveryMetadata field.
 func (o *AddressBlock) SetDiscoveryMetadata(v map[string]interface{}) {
 	o.DiscoveryMetadata = v
+}
+
+// GetExternalKeys returns the ExternalKeys field value if set, zero value otherwise.
+func (o *AddressBlock) GetExternalKeys() map[string]interface{} {
+	if o == nil || IsNil(o.ExternalKeys) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.ExternalKeys
+}
+
+// GetExternalKeysOk returns a tuple with the ExternalKeys field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AddressBlock) GetExternalKeysOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.ExternalKeys) {
+		return map[string]interface{}{}, false
+	}
+	return o.ExternalKeys, true
+}
+
+// HasExternalKeys returns a boolean if a field has been set.
+func (o *AddressBlock) HasExternalKeys() bool {
+	if o != nil && !IsNil(o.ExternalKeys) {
+		return true
+	}
+
+	return false
+}
+
+// SetExternalKeys gets a reference to the given map[string]interface{} and assigns it to the ExternalKeys field.
+func (o *AddressBlock) SetExternalKeys(v map[string]interface{}) {
+	o.ExternalKeys = v
+}
+
+// GetFederatedRealms returns the FederatedRealms field value if set, zero value otherwise.
+func (o *AddressBlock) GetFederatedRealms() []string {
+	if o == nil || IsNil(o.FederatedRealms) {
+		var ret []string
+		return ret
+	}
+	return o.FederatedRealms
+}
+
+// GetFederatedRealmsOk returns a tuple with the FederatedRealms field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AddressBlock) GetFederatedRealmsOk() ([]string, bool) {
+	if o == nil || IsNil(o.FederatedRealms) {
+		return nil, false
+	}
+	return o.FederatedRealms, true
+}
+
+// HasFederatedRealms returns a boolean if a field has been set.
+func (o *AddressBlock) HasFederatedRealms() bool {
+	if o != nil && !IsNil(o.FederatedRealms) {
+		return true
+	}
+
+	return false
+}
+
+// SetFederatedRealms gets a reference to the given []string and assigns it to the FederatedRealms field.
+func (o *AddressBlock) SetFederatedRealms(v []string) {
+	o.FederatedRealms = v
+}
+
+// GetFederation returns the Federation field value if set, zero value otherwise.
+func (o *AddressBlock) GetFederation() string {
+	if o == nil || IsNil(o.Federation) {
+		var ret string
+		return ret
+	}
+	return *o.Federation
+}
+
+// GetFederationOk returns a tuple with the Federation field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AddressBlock) GetFederationOk() (*string, bool) {
+	if o == nil || IsNil(o.Federation) {
+		return nil, false
+	}
+	return o.Federation, true
+}
+
+// HasFederation returns a boolean if a field has been set.
+func (o *AddressBlock) HasFederation() bool {
+	if o != nil && !IsNil(o.Federation) {
+		return true
+	}
+
+	return false
+}
+
+// SetFederation gets a reference to the given string and assigns it to the Federation field.
+func (o *AddressBlock) SetFederation(v string) {
+	o.Federation = &v
 }
 
 // GetHeaderOptionFilename returns the HeaderOptionFilename field value if set, zero value otherwise.
@@ -1393,6 +1529,9 @@ func (o AddressBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Comment) {
 		toSerialize["comment"] = o.Comment
 	}
+	if !IsNil(o.CompartmentId) {
+		toSerialize["compartment_id"] = o.CompartmentId
+	}
 	if !IsNil(o.CreatedAt) {
 		toSerialize["created_at"] = o.CreatedAt
 	}
@@ -1437,6 +1576,15 @@ func (o AddressBlock) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.DiscoveryMetadata) {
 		toSerialize["discovery_metadata"] = o.DiscoveryMetadata
+	}
+	if !IsNil(o.ExternalKeys) {
+		toSerialize["external_keys"] = o.ExternalKeys
+	}
+	if !IsNil(o.FederatedRealms) {
+		toSerialize["federated_realms"] = o.FederatedRealms
+	}
+	if !IsNil(o.Federation) {
+		toSerialize["federation"] = o.Federation
 	}
 	if !IsNil(o.HeaderOptionFilename) {
 		toSerialize["header_option_filename"] = o.HeaderOptionFilename
@@ -1522,6 +1670,7 @@ func (o *AddressBlock) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "asm_scope_flag")
 		delete(additionalProperties, "cidr")
 		delete(additionalProperties, "comment")
+		delete(additionalProperties, "compartment_id")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "ddns_client_update")
 		delete(additionalProperties, "ddns_conflict_resolution_mode")
@@ -1537,6 +1686,9 @@ func (o *AddressBlock) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "dhcp_utilization")
 		delete(additionalProperties, "discovery_attrs")
 		delete(additionalProperties, "discovery_metadata")
+		delete(additionalProperties, "external_keys")
+		delete(additionalProperties, "federated_realms")
+		delete(additionalProperties, "federation")
 		delete(additionalProperties, "header_option_filename")
 		delete(additionalProperties, "header_option_server_address")
 		delete(additionalProperties, "header_option_server_name")

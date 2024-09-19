@@ -25,6 +25,8 @@ type FixedAddress struct {
 	Address string `json:"address"`
 	// The description for the fixed address. May contain 0 to 1024 characters. Can include UTF-8.
 	Comment *string `json:"comment,omitempty"`
+	// The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.
+	CompartmentId *string `json:"compartment_id,omitempty"`
 	// Time when the object has been created.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// The list of DHCP options. May be either a specific option or a group of options.
@@ -140,6 +142,38 @@ func (o *FixedAddress) HasComment() bool {
 // SetComment gets a reference to the given string and assigns it to the Comment field.
 func (o *FixedAddress) SetComment(v string) {
 	o.Comment = &v
+}
+
+// GetCompartmentId returns the CompartmentId field value if set, zero value otherwise.
+func (o *FixedAddress) GetCompartmentId() string {
+	if o == nil || IsNil(o.CompartmentId) {
+		var ret string
+		return ret
+	}
+	return *o.CompartmentId
+}
+
+// GetCompartmentIdOk returns a tuple with the CompartmentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FixedAddress) GetCompartmentIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CompartmentId) {
+		return nil, false
+	}
+	return o.CompartmentId, true
+}
+
+// HasCompartmentId returns a boolean if a field has been set.
+func (o *FixedAddress) HasCompartmentId() bool {
+	if o != nil && !IsNil(o.CompartmentId) {
+		return true
+	}
+
+	return false
+}
+
+// SetCompartmentId gets a reference to the given string and assigns it to the CompartmentId field.
+func (o *FixedAddress) SetCompartmentId(v string) {
+	o.CompartmentId = &v
 }
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
@@ -716,6 +750,9 @@ func (o FixedAddress) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Comment) {
 		toSerialize["comment"] = o.Comment
 	}
+	if !IsNil(o.CompartmentId) {
+		toSerialize["compartment_id"] = o.CompartmentId
+	}
 	if !IsNil(o.CreatedAt) {
 		toSerialize["created_at"] = o.CreatedAt
 	}
@@ -813,6 +850,7 @@ func (o *FixedAddress) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "address")
 		delete(additionalProperties, "comment")
+		delete(additionalProperties, "compartment_id")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "dhcp_options")
 		delete(additionalProperties, "disable_dhcp")

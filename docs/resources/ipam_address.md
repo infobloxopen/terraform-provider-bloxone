@@ -124,6 +124,7 @@ resource "bloxone_ipam_address" "example_na_rng" {
 
 - `address` (String) The address in form "a.b.c.d".
 - `comment` (String) The description for the address object. May contain 0 to 1024 characters. Can include UTF-8.
+- `external_keys` (Map of String) The external keys (source key) for this address in JSON format.
 - `hwaddr` (String) The hardware address associated with this IP address.
 - `interface` (String) The name of the network interface card (NIC) associated with the address, if any.
 - `names` (Attributes List) The list of all names associated with this address. (see [below for nested schema](#nestedatt--names))
@@ -132,6 +133,7 @@ resource "bloxone_ipam_address" "example_na_rng" {
 
 ### Read-Only
 
+- `compartment_id` (String) The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.
 - `created_at` (String) Time when the object has been created.
 - `dhcp_info` (Attributes) (see [below for nested schema](#nestedatt--dhcp_info))
 - `disable_dhcp` (Boolean) Read only. Represent the value of the same field in the associated _dhcp/fixed_address_ object.

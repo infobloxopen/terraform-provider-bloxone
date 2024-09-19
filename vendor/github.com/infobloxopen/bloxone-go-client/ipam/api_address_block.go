@@ -125,6 +125,21 @@ type AddressBlockAPI interface {
 	//  @return ListAddressBlockResponse
 	ListExecute(r AddressBlockAPIListRequest) (*ListAddressBlockResponse, *http.Response, error)
 	/*
+			ListAncestor Retrieve address block ancestors.
+
+			Use this method to retrieve the ancestors of the __AddressBlock__ object.
+		This returns all the ancestors of the address block.
+
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@param id An application specific resource identity of a resource
+			@return AddressBlockAPIListAncestorRequest
+	*/
+	ListAncestor(ctx context.Context, id string) AddressBlockAPIListAncestorRequest
+
+	// ListAncestorExecute executes the request
+	//  @return ListAncestorResponse
+	ListAncestorExecute(r AddressBlockAPIListAncestorRequest) (*ListAncestorResponse, *http.Response, error)
+	/*
 			ListNextAvailableAB List Next Available Address Block objects.
 
 			Use this method to list Next Available __AddressBlock__ objects.
@@ -1130,14 +1145,114 @@ func (a *AddressBlockAPIService) ListExecute(r AddressBlockAPIListRequest) (*Lis
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type AddressBlockAPIListNextAvailableABRequest struct {
+type AddressBlockAPIListAncestorRequest struct {
 	ctx        context.Context
 	ApiService AddressBlockAPI
 	id         string
-	cidr       *int32
-	count      *int32
-	name       *string
-	comment    *string
+}
+
+func (r AddressBlockAPIListAncestorRequest) Execute() (*ListAncestorResponse, *http.Response, error) {
+	return r.ApiService.ListAncestorExecute(r)
+}
+
+/*
+ListAncestor Retrieve address block ancestors.
+
+Use this method to retrieve the ancestors of the __AddressBlock__ object.
+This returns all the ancestors of the address block.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param id An application specific resource identity of a resource
+	@return AddressBlockAPIListAncestorRequest
+*/
+func (a *AddressBlockAPIService) ListAncestor(ctx context.Context, id string) AddressBlockAPIListAncestorRequest {
+	return AddressBlockAPIListAncestorRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+// Execute executes the request
+//
+//	@return ListAncestorResponse
+func (a *AddressBlockAPIService) ListAncestorExecute(r AddressBlockAPIListAncestorRequest) (*ListAncestorResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []internal.FormFile
+		localVarReturnValue *ListAncestorResponse
+	)
+
+	localBasePath, err := a.Client.Cfg.ServerURLWithContext(r.ctx, "AddressBlockAPIService.ListAncestor")
+	if err != nil {
+		return localVarReturnValue, nil, internal.NewGenericOpenAPIError(err.Error())
+	}
+
+	localVarPath := localBasePath + "/ipam/address_block/{id}/ancestor"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", url.PathEscape(internal.ParameterValueToString(r.id, "id")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := internal.SelectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := internal.SelectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.Client.PrepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.Client.CallAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := internal.NewGenericOpenAPIErrorWithBody(localVarHTTPResponse.Status, localVarBody)
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.Client.Decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := internal.NewGenericOpenAPIErrorWithBody(err.Error(), localVarBody)
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type AddressBlockAPIListNextAvailableABRequest struct {
+	ctx             context.Context
+	ApiService      AddressBlockAPI
+	id              string
+	cidr            *int32
+	count           *int32
+	name            *string
+	comment         *string
+	federatedRealms *[]string
+	compartmentId   *string
 }
 
 // The cidr value of address blocks to be created.
@@ -1161,6 +1276,18 @@ func (r AddressBlockAPIListNextAvailableABRequest) Name(name string) AddressBloc
 // Comment of next available address blocks.
 func (r AddressBlockAPIListNextAvailableABRequest) Comment(comment string) AddressBlockAPIListNextAvailableABRequest {
 	r.comment = &comment
+	return r
+}
+
+// Reserved for future use.
+func (r AddressBlockAPIListNextAvailableABRequest) FederatedRealms(federatedRealms []string) AddressBlockAPIListNextAvailableABRequest {
+	r.federatedRealms = &federatedRealms
+	return r
+}
+
+// The compartment id of the address blocks to be created.
+func (r AddressBlockAPIListNextAvailableABRequest) CompartmentId(compartmentId string) AddressBlockAPIListNextAvailableABRequest {
+	r.compartmentId = &compartmentId
 	return r
 }
 
@@ -1220,6 +1347,12 @@ func (a *AddressBlockAPIService) ListNextAvailableABExecute(r AddressBlockAPILis
 	}
 	if r.comment != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "comment", r.comment, "")
+	}
+	if r.federatedRealms != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "federated_realms", r.federatedRealms, "csv")
+	}
+	if r.compartmentId != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "compartment_id", r.compartmentId, "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1387,14 +1520,15 @@ func (a *AddressBlockAPIService) ListNextAvailableIPExecute(r AddressBlockAPILis
 }
 
 type AddressBlockAPIListNextAvailableSubnetRequest struct {
-	ctx        context.Context
-	ApiService AddressBlockAPI
-	id         string
-	cidr       *int32
-	count      *int32
-	name       *string
-	comment    *string
-	dhcpHost   *string
+	ctx             context.Context
+	ApiService      AddressBlockAPI
+	id              string
+	cidr            *int32
+	count           *int32
+	name            *string
+	comment         *string
+	dhcpHost        *string
+	federatedRealms *[]string
 }
 
 // The cidr value of subnets to be created.
@@ -1424,6 +1558,12 @@ func (r AddressBlockAPIListNextAvailableSubnetRequest) Comment(comment string) A
 // Reference of OnPrem Host associated with the next available subnets to be created.
 func (r AddressBlockAPIListNextAvailableSubnetRequest) DhcpHost(dhcpHost string) AddressBlockAPIListNextAvailableSubnetRequest {
 	r.dhcpHost = &dhcpHost
+	return r
+}
+
+// Reserved for future use.
+func (r AddressBlockAPIListNextAvailableSubnetRequest) FederatedRealms(federatedRealms []string) AddressBlockAPIListNextAvailableSubnetRequest {
+	r.federatedRealms = &federatedRealms
 	return r
 }
 
@@ -1486,6 +1626,9 @@ func (a *AddressBlockAPIService) ListNextAvailableSubnetExecute(r AddressBlockAP
 	}
 	if r.dhcpHost != nil {
 		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "dhcp_host", r.dhcpHost, "")
+	}
+	if r.federatedRealms != nil {
+		internal.ParameterAddToHeaderOrQuery(localVarQueryParams, "federated_realms", r.federatedRealms, "csv")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}

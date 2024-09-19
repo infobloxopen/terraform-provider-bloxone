@@ -94,17 +94,19 @@ resource "bloxone_ipam_range" "example" {
 
 ### Read-Only
 
+- `compartment_id` (String) The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
 - `inheritance_assigned_hosts` (Attributes List) The list of the inheritance assigned hosts of the object. (see [below for nested schema](#nestedatt--inheritance_assigned_hosts))
 - `inheritance_parent` (String) The resource identifier.
 - `parent` (String) The resource identifier.
 - `protocol` (String) The type of protocol (_ip4_ or _ip6_).
+- `space_name` (String) The name of the IP Space the range belongs to.
 - `tags_all` (Map of String) The tags for the range in JSON format including default tags.
-- `threshold` (Attributes) (see [below for nested schema](#nestedatt--threshold))
+- `threshold` (Attributes) The utilization threshold settings for the range. (see [below for nested schema](#nestedatt--threshold))
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
-- `utilization` (Attributes) (see [below for nested schema](#nestedatt--utilization))
-- `utilization_v6` (Attributes) (see [below for nested schema](#nestedatt--utilization_v6))
+- `utilization` (Attributes) The utilization statistics of IPV4 addresses for the range. (see [below for nested schema](#nestedatt--utilization))
+- `utilization_v6` (Attributes) The utilization of IPV6 addresses in the range. (see [below for nested schema](#nestedatt--utilization_v6))
 
 <a id="nestedatt--dhcp_options"></a>
 ### Nested Schema for `dhcp_options`
@@ -150,7 +152,7 @@ Optional:
 
 Optional:
 
-- `dhcp_options` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options))
+- `dhcp_options` (Attributes) The inheritance configuration for the _dhcp_options_ field. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options))
 
 <a id="nestedatt--inheritance_sources--dhcp_options"></a>
 ### Nested Schema for `inheritance_sources.dhcp_options`
@@ -179,14 +181,14 @@ Read-Only:
 
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
 - `source` (String) The resource identifier.
-- `value` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value))
+- `value` (Attributes) The inherited value for the DHCP option. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value))
 
 <a id="nestedatt--inheritance_sources--dhcp_options--value--value"></a>
 ### Nested Schema for `inheritance_sources.dhcp_options.value.value`
 
 Read-Only:
 
-- `option` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value--option))
+- `option` (Attributes) Option inherited from the ancestor. (see [below for nested schema](#nestedatt--inheritance_sources--dhcp_options--value--value--option))
 - `overriding_group` (String) The resource identifier.
 
 <a id="nestedatt--inheritance_sources--dhcp_options--value--value--option"></a>

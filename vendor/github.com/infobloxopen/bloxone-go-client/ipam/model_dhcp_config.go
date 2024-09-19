@@ -32,6 +32,8 @@ type DHCPConfig struct {
 	// The resource identifier.
 	Filters []string `json:"filters,omitempty"`
 	// The resource identifier.
+	FiltersLargeSelection []string `json:"filters_large_selection,omitempty"`
+	// The resource identifier.
 	FiltersV6 []string `json:"filters_v6,omitempty"`
 	// Enable to ignore the client UID when issuing a DHCP lease. Use this option to prevent assigning two IP addresses for a client which does not have a UID during one phase of PXE boot but acquires one for the other phase.
 	IgnoreClientUid *bool `json:"ignore_client_uid,omitempty"`
@@ -287,6 +289,38 @@ func (o *DHCPConfig) SetFilters(v []string) {
 	o.Filters = v
 }
 
+// GetFiltersLargeSelection returns the FiltersLargeSelection field value if set, zero value otherwise.
+func (o *DHCPConfig) GetFiltersLargeSelection() []string {
+	if o == nil || IsNil(o.FiltersLargeSelection) {
+		var ret []string
+		return ret
+	}
+	return o.FiltersLargeSelection
+}
+
+// GetFiltersLargeSelectionOk returns a tuple with the FiltersLargeSelection field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DHCPConfig) GetFiltersLargeSelectionOk() ([]string, bool) {
+	if o == nil || IsNil(o.FiltersLargeSelection) {
+		return nil, false
+	}
+	return o.FiltersLargeSelection, true
+}
+
+// HasFiltersLargeSelection returns a boolean if a field has been set.
+func (o *DHCPConfig) HasFiltersLargeSelection() bool {
+	if o != nil && !IsNil(o.FiltersLargeSelection) {
+		return true
+	}
+
+	return false
+}
+
+// SetFiltersLargeSelection gets a reference to the given []string and assigns it to the FiltersLargeSelection field.
+func (o *DHCPConfig) SetFiltersLargeSelection(v []string) {
+	o.FiltersLargeSelection = v
+}
+
 // GetFiltersV6 returns the FiltersV6 field value if set, zero value otherwise.
 func (o *DHCPConfig) GetFiltersV6() []string {
 	if o == nil || IsNil(o.FiltersV6) {
@@ -475,6 +509,9 @@ func (o DHCPConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Filters) {
 		toSerialize["filters"] = o.Filters
 	}
+	if !IsNil(o.FiltersLargeSelection) {
+		toSerialize["filters_large_selection"] = o.FiltersLargeSelection
+	}
 	if !IsNil(o.FiltersV6) {
 		toSerialize["filters_v6"] = o.FiltersV6
 	}
@@ -518,6 +555,7 @@ func (o *DHCPConfig) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "allow_unknown_v6")
 		delete(additionalProperties, "echo_client_id")
 		delete(additionalProperties, "filters")
+		delete(additionalProperties, "filters_large_selection")
 		delete(additionalProperties, "filters_v6")
 		delete(additionalProperties, "ignore_client_uid")
 		delete(additionalProperties, "ignore_list")

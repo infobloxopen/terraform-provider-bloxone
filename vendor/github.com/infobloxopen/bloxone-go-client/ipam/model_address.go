@@ -25,6 +25,8 @@ type Address struct {
 	Address string `json:"address"`
 	// The description for the address object. May contain 0 to 1024 characters. Can include UTF-8.
 	Comment *string `json:"comment,omitempty"`
+	// The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.
+	CompartmentId *string `json:"compartment_id,omitempty"`
 	// Time when the object has been created.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// The DHCP information associated with this object.
@@ -35,6 +37,8 @@ type Address struct {
 	DiscoveryAttrs map[string]interface{} `json:"discovery_attrs,omitempty"`
 	// The discovery metadata for this address in JSON format.
 	DiscoveryMetadata map[string]interface{} `json:"discovery_metadata,omitempty"`
+	// The external keys (source key) for this address in JSON format.
+	ExternalKeys map[string]interface{} `json:"external_keys,omitempty"`
 	// The resource identifier.
 	Host *string `json:"host,omitempty"`
 	// The hardware address associated with this IP address.
@@ -138,6 +142,38 @@ func (o *Address) HasComment() bool {
 // SetComment gets a reference to the given string and assigns it to the Comment field.
 func (o *Address) SetComment(v string) {
 	o.Comment = &v
+}
+
+// GetCompartmentId returns the CompartmentId field value if set, zero value otherwise.
+func (o *Address) GetCompartmentId() string {
+	if o == nil || IsNil(o.CompartmentId) {
+		var ret string
+		return ret
+	}
+	return *o.CompartmentId
+}
+
+// GetCompartmentIdOk returns a tuple with the CompartmentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Address) GetCompartmentIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CompartmentId) {
+		return nil, false
+	}
+	return o.CompartmentId, true
+}
+
+// HasCompartmentId returns a boolean if a field has been set.
+func (o *Address) HasCompartmentId() bool {
+	if o != nil && !IsNil(o.CompartmentId) {
+		return true
+	}
+
+	return false
+}
+
+// SetCompartmentId gets a reference to the given string and assigns it to the CompartmentId field.
+func (o *Address) SetCompartmentId(v string) {
+	o.CompartmentId = &v
 }
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
@@ -298,6 +334,38 @@ func (o *Address) HasDiscoveryMetadata() bool {
 // SetDiscoveryMetadata gets a reference to the given map[string]interface{} and assigns it to the DiscoveryMetadata field.
 func (o *Address) SetDiscoveryMetadata(v map[string]interface{}) {
 	o.DiscoveryMetadata = v
+}
+
+// GetExternalKeys returns the ExternalKeys field value if set, zero value otherwise.
+func (o *Address) GetExternalKeys() map[string]interface{} {
+	if o == nil || IsNil(o.ExternalKeys) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.ExternalKeys
+}
+
+// GetExternalKeysOk returns a tuple with the ExternalKeys field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Address) GetExternalKeysOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.ExternalKeys) {
+		return map[string]interface{}{}, false
+	}
+	return o.ExternalKeys, true
+}
+
+// HasExternalKeys returns a boolean if a field has been set.
+func (o *Address) HasExternalKeys() bool {
+	if o != nil && !IsNil(o.ExternalKeys) {
+		return true
+	}
+
+	return false
+}
+
+// SetExternalKeys gets a reference to the given map[string]interface{} and assigns it to the ExternalKeys field.
+func (o *Address) SetExternalKeys(v map[string]interface{}) {
+	o.ExternalKeys = v
 }
 
 // GetHost returns the Host field value if set, zero value otherwise.
@@ -730,6 +798,9 @@ func (o Address) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Comment) {
 		toSerialize["comment"] = o.Comment
 	}
+	if !IsNil(o.CompartmentId) {
+		toSerialize["compartment_id"] = o.CompartmentId
+	}
 	if !IsNil(o.CreatedAt) {
 		toSerialize["created_at"] = o.CreatedAt
 	}
@@ -744,6 +815,9 @@ func (o Address) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.DiscoveryMetadata) {
 		toSerialize["discovery_metadata"] = o.DiscoveryMetadata
+	}
+	if !IsNil(o.ExternalKeys) {
+		toSerialize["external_keys"] = o.ExternalKeys
 	}
 	if !IsNil(o.Host) {
 		toSerialize["host"] = o.Host
@@ -829,11 +903,13 @@ func (o *Address) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "address")
 		delete(additionalProperties, "comment")
+		delete(additionalProperties, "compartment_id")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "dhcp_info")
 		delete(additionalProperties, "disable_dhcp")
 		delete(additionalProperties, "discovery_attrs")
 		delete(additionalProperties, "discovery_metadata")
+		delete(additionalProperties, "external_keys")
 		delete(additionalProperties, "host")
 		delete(additionalProperties, "hwaddr")
 		delete(additionalProperties, "id")
