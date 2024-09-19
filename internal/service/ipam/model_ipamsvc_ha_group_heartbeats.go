@@ -7,8 +7,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -39,26 +37,6 @@ var IpamsvcHAGroupHeartbeatsResourceSchemaAttributes = map[string]schema.Attribu
 		Computed:            true,
 		MarkdownDescription: "The timestamp as a string of the last successful DHCPv6 heartbeat received from the peer above.",
 	},
-}
-
-func ExpandIpamsvcHAGroupHeartbeats(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipam.HAGroupHeartbeats {
-	if o.IsNull() || o.IsUnknown() {
-		return nil
-	}
-	var m IpamsvcHAGroupHeartbeatsModel
-	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
-	if diags.HasError() {
-		return nil
-	}
-	return m.Expand(ctx, diags)
-}
-
-func (m *IpamsvcHAGroupHeartbeatsModel) Expand(ctx context.Context, diags *diag.Diagnostics) *ipam.HAGroupHeartbeats {
-	if m == nil {
-		return nil
-	}
-	to := &ipam.HAGroupHeartbeats{}
-	return to
 }
 
 func FlattenIpamsvcHAGroupHeartbeats(ctx context.Context, from *ipam.HAGroupHeartbeats, diags *diag.Diagnostics) types.Object {

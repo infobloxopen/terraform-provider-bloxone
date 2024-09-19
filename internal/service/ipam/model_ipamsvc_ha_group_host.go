@@ -98,12 +98,9 @@ func (m *IpamsvcHAGroupHostModel) Expand(ctx context.Context, diags *diag.Diagno
 		return nil
 	}
 	to := &ipam.HAGroupHost{
-		Address:    flex.ExpandStringPointer(m.Address),
-		Heartbeats: flex.ExpandFrameworkListNestedBlock(ctx, m.Heartbeats, diags, ExpandIpamsvcHAGroupHeartbeats),
-		Host:       flex.ExpandString(m.Host),
-		Role:       flex.ExpandStringPointer(m.Role),
-		State:      flex.ExpandStringPointer(m.State),
-		StateV6:    flex.ExpandStringPointer(m.StateV6),
+		Address: flex.ExpandStringPointer(m.Address),
+		Host:    flex.ExpandString(m.Host),
+		Role:    flex.ExpandStringPointer(m.Role),
 	}
 	return to
 }
