@@ -3,13 +3,13 @@
 page_title: "bloxone_federation_federated_blocks Data Source - terraform-provider-bloxone"
 subcategory: "IPAM Federation""
 description: |-
-  Retrieves information about existing federated Blocks.
+  Retrieves information about existing Federated Blocks.
   The Federated Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
 ---
 
 # bloxone_federation_federated_blocks (Data Source)
 
-Retrieves information about existing federated Blocks.
+Retrieves information about existing Federated Blocks.
 
 The Federated Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
 
@@ -26,7 +26,7 @@ data "bloxone_federation_federated_blocks" "example_by_attribute" {
 # Get Federated Block filtered by tag
 data "bloxone_federation_federated_blocks" "example_by_tag" {
   tag_filters = {
-    key1 = "value1"
+    site = "Site A"
   }
 }
 

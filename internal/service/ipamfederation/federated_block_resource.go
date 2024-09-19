@@ -31,7 +31,7 @@ func (r *FederatedBlockResource) Metadata(ctx context.Context, req resource.Meta
 
 func (r *FederatedBlockResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Manages an federated Block.\n\nThe Federated Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.",
+		MarkdownDescription: "Manages a Federated Block.\n\nThe Federated Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.",
 		Attributes:          FederatedBlockResourceSchemaAttributes,
 	}
 }

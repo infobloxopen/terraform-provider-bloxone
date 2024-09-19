@@ -46,7 +46,7 @@ func (m *FederatedBlockModelWithFilter) FlattenResults(ctx context.Context, from
 
 func (d *FederatedBlockDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Retrieves information about existing federated Blocks.\n\nThe Federated Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.",
+		MarkdownDescription: "Retrieves information about existing Federated Blocks.\n\nThe Federated Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.",
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				ElementType:         types.StringType,
