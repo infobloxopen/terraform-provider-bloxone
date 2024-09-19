@@ -322,6 +322,7 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	"federated_realms": schema.ListAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Federated realms to which this subnet belongs.",
 	},
 	"header_option_filename": schema.StringAttribute{
@@ -570,7 +571,7 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.Subnet, dia
 	m.DiscoveryAttrs = flex.FlattenFrameworkMapString(ctx, from.DiscoveryAttrs, diags)
 	m.DiscoveryMetadata = flex.FlattenFrameworkMapString(ctx, from.DiscoveryMetadata, diags)
 	m.ExternalKeys = flex.FlattenFrameworkMapString(ctx, from.ExternalKeys, diags)
-	m.FederatedRealms = flex.FlattenFrameworkListString(ctx, from.FederatedRealms, diags)
+	m.FederatedRealms = flex.FlattenFrameworkListStringNotNull(ctx, from.FederatedRealms, diags)
 	m.HeaderOptionFilename = flex.FlattenStringPointer(from.HeaderOptionFilename)
 	m.HeaderOptionServerAddress = flex.FlattenStringPointer(from.HeaderOptionServerAddress)
 	m.HeaderOptionServerName = flex.FlattenStringPointer(from.HeaderOptionServerName)

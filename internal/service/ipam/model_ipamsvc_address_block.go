@@ -292,6 +292,7 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"federated_realms": schema.ListAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Federated realms to which this address block belongs.",
 	},
 	"header_option_filename": schema.StringAttribute{
@@ -536,7 +537,7 @@ func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.Addre
 	m.DiscoveryAttrs = flex.FlattenFrameworkMapString(ctx, from.DiscoveryAttrs, diags)
 	m.DiscoveryMetadata = flex.FlattenFrameworkMapString(ctx, from.DiscoveryMetadata, diags)
 	m.ExternalKeys = flex.FlattenFrameworkMapString(ctx, from.ExternalKeys, diags)
-	m.FederatedRealms = flex.FlattenFrameworkListString(ctx, from.FederatedRealms, diags)
+	m.FederatedRealms = flex.FlattenFrameworkListStringNotNull(ctx, from.FederatedRealms, diags)
 	m.HeaderOptionFilename = flex.FlattenStringPointer(from.HeaderOptionFilename)
 	m.HeaderOptionServerAddress = flex.FlattenStringPointer(from.HeaderOptionServerAddress)
 	m.HeaderOptionServerName = flex.FlattenStringPointer(from.HeaderOptionServerName)
