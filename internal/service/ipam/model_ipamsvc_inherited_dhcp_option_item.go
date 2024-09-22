@@ -26,8 +26,9 @@ var IpamsvcInheritedDHCPOptionItemAttrTypes = map[string]attr.Type{
 
 var IpamsvcInheritedDHCPOptionItemResourceSchemaAttributes = map[string]schema.Attribute{
 	"option": schema.SingleNestedAttribute{
-		Attributes: IpamsvcOptionItemResourceSchemaAttributes,
-		Optional:   true,
+		Attributes:          IpamsvcOptionItemResourceSchemaAttributes,
+		Optional:            true,
+		MarkdownDescription: "Option inherited from the ancestor.",
 	},
 	"overriding_group": schema.StringAttribute{
 		Optional:            true,

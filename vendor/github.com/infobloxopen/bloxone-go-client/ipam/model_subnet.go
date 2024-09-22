@@ -54,8 +54,6 @@ type Subnet struct {
 	DdnsUpdateOnRenew *bool `json:"ddns_update_on_renew,omitempty"`
 	// When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.
 	DdnsUseConflictResolution *bool `json:"ddns_use_conflict_resolution,omitempty"`
-	// The ID of the delegation associated with the subnet.
-	Delegation *string `json:"delegation,omitempty"`
 	// The DHCP configuration of the subnet that controls how leases are issued.
 	DhcpConfig *DHCPConfig `json:"dhcp_config,omitempty"`
 	// The resource identifier.
@@ -74,6 +72,8 @@ type Subnet struct {
 	ExternalKeys map[string]interface{} `json:"external_keys,omitempty"`
 	// Reserved for future use.
 	FederatedRealms []string `json:"federated_realms,omitempty"`
+	// Reserved for future use.
+	Federation *string `json:"federation,omitempty"`
 	// The configuration for header option filename field.
 	HeaderOptionFilename *string `json:"header_option_filename,omitempty"`
 	// The configuration for header option server address field.
@@ -684,38 +684,6 @@ func (o *Subnet) SetDdnsUseConflictResolution(v bool) {
 	o.DdnsUseConflictResolution = &v
 }
 
-// GetDelegation returns the Delegation field value if set, zero value otherwise.
-func (o *Subnet) GetDelegation() string {
-	if o == nil || IsNil(o.Delegation) {
-		var ret string
-		return ret
-	}
-	return *o.Delegation
-}
-
-// GetDelegationOk returns a tuple with the Delegation field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Subnet) GetDelegationOk() (*string, bool) {
-	if o == nil || IsNil(o.Delegation) {
-		return nil, false
-	}
-	return o.Delegation, true
-}
-
-// HasDelegation returns a boolean if a field has been set.
-func (o *Subnet) HasDelegation() bool {
-	if o != nil && !IsNil(o.Delegation) {
-		return true
-	}
-
-	return false
-}
-
-// SetDelegation gets a reference to the given string and assigns it to the Delegation field.
-func (o *Subnet) SetDelegation(v string) {
-	o.Delegation = &v
-}
-
 // GetDhcpConfig returns the DhcpConfig field value if set, zero value otherwise.
 func (o *Subnet) GetDhcpConfig() DHCPConfig {
 	if o == nil || IsNil(o.DhcpConfig) {
@@ -1002,6 +970,38 @@ func (o *Subnet) HasFederatedRealms() bool {
 // SetFederatedRealms gets a reference to the given []string and assigns it to the FederatedRealms field.
 func (o *Subnet) SetFederatedRealms(v []string) {
 	o.FederatedRealms = v
+}
+
+// GetFederation returns the Federation field value if set, zero value otherwise.
+func (o *Subnet) GetFederation() string {
+	if o == nil || IsNil(o.Federation) {
+		var ret string
+		return ret
+	}
+	return *o.Federation
+}
+
+// GetFederationOk returns a tuple with the Federation field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Subnet) GetFederationOk() (*string, bool) {
+	if o == nil || IsNil(o.Federation) {
+		return nil, false
+	}
+	return o.Federation, true
+}
+
+// HasFederation returns a boolean if a field has been set.
+func (o *Subnet) HasFederation() bool {
+	if o != nil && !IsNil(o.Federation) {
+		return true
+	}
+
+	return false
+}
+
+// SetFederation gets a reference to the given string and assigns it to the Federation field.
+func (o *Subnet) SetFederation(v string) {
+	o.Federation = &v
 }
 
 // GetHeaderOptionFilename returns the HeaderOptionFilename field value if set, zero value otherwise.
@@ -1769,9 +1769,6 @@ func (o Subnet) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DdnsUseConflictResolution) {
 		toSerialize["ddns_use_conflict_resolution"] = o.DdnsUseConflictResolution
 	}
-	if !IsNil(o.Delegation) {
-		toSerialize["delegation"] = o.Delegation
-	}
 	if !IsNil(o.DhcpConfig) {
 		toSerialize["dhcp_config"] = o.DhcpConfig
 	}
@@ -1798,6 +1795,9 @@ func (o Subnet) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.FederatedRealms) {
 		toSerialize["federated_realms"] = o.FederatedRealms
+	}
+	if !IsNil(o.Federation) {
+		toSerialize["federation"] = o.Federation
 	}
 	if !IsNil(o.HeaderOptionFilename) {
 		toSerialize["header_option_filename"] = o.HeaderOptionFilename
@@ -1904,7 +1904,6 @@ func (o *Subnet) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "ddns_ttl_percent")
 		delete(additionalProperties, "ddns_update_on_renew")
 		delete(additionalProperties, "ddns_use_conflict_resolution")
-		delete(additionalProperties, "delegation")
 		delete(additionalProperties, "dhcp_config")
 		delete(additionalProperties, "dhcp_host")
 		delete(additionalProperties, "dhcp_options")
@@ -1914,6 +1913,7 @@ func (o *Subnet) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "discovery_metadata")
 		delete(additionalProperties, "external_keys")
 		delete(additionalProperties, "federated_realms")
+		delete(additionalProperties, "federation")
 		delete(additionalProperties, "header_option_filename")
 		delete(additionalProperties, "header_option_server_address")
 		delete(additionalProperties, "header_option_server_name")

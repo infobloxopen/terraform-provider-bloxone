@@ -25,6 +25,7 @@ import (
 
 type IpamsvcRangeModel struct {
 	Comment                  types.String      `tfsdk:"comment"`
+	CompartmentId            types.String      `tfsdk:"compartment_id"`
 	CreatedAt                timetypes.RFC3339 `tfsdk:"created_at"`
 	DhcpHost                 types.String      `tfsdk:"dhcp_host"`
 	DhcpOptions              types.List        `tfsdk:"dhcp_options"`
@@ -40,6 +41,7 @@ type IpamsvcRangeModel struct {
 	Parent                   types.String      `tfsdk:"parent"`
 	Protocol                 types.String      `tfsdk:"protocol"`
 	Space                    types.String      `tfsdk:"space"`
+	SpaceName                types.String      `tfsdk:"space_name"`
 	Start                    types.String      `tfsdk:"start"`
 	Tags                     types.Map         `tfsdk:"tags"`
 	TagsAll                  types.Map         `tfsdk:"tags_all"`
@@ -51,6 +53,7 @@ type IpamsvcRangeModel struct {
 
 var IpamsvcRangeAttrTypes = map[string]attr.Type{
 	"comment":                    types.StringType,
+	"compartment_id":             types.StringType,
 	"created_at":                 timetypes.RFC3339Type{},
 	"dhcp_host":                  types.StringType,
 	"dhcp_options":               types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
@@ -66,6 +69,7 @@ var IpamsvcRangeAttrTypes = map[string]attr.Type{
 	"parent":                     types.StringType,
 	"protocol":                   types.StringType,
 	"space":                      types.StringType,
+	"space_name":                 types.StringType,
 	"start":                      types.StringType,
 	"tags":                       types.MapType{ElemType: types.StringType},
 	"tags_all":                   types.MapType{ElemType: types.StringType},
@@ -84,6 +88,10 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 			stringvalidator.LengthBetween(0, 1024),
 		},
 		MarkdownDescription: "The description for the range. May contain 0 to 1024 characters. Can include UTF-8.",
+	},
+	"compartment_id": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.",
 	},
 	"created_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -177,6 +185,10 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		MarkdownDescription: "The resource identifier.",
 	},
+	"space_name": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The name of the IP Space the range belongs to.",
+	},
 	"start": schema.StringAttribute{
 		Required:            true,
 		MarkdownDescription: "The start IP address of the range.",
@@ -194,8 +206,9 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The tags for the range in JSON format including default tags.",
 	},
 	"threshold": schema.SingleNestedAttribute{
-		Attributes: IpamsvcUtilizationThresholdResourceSchemaAttributes,
-		Computed:   true,
+		Attributes:          IpamsvcUtilizationThresholdResourceSchemaAttributes,
+		Computed:            true,
+		MarkdownDescription: "The utilization threshold settings for the range.",
 	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -203,12 +216,14 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Time when the object has been updated. Equals to _created_at_ if not updated after creation.",
 	},
 	"utilization": schema.SingleNestedAttribute{
-		Attributes: IpamsvcUtilizationResourceSchemaAttributes,
-		Computed:   true,
+		Attributes:          IpamsvcUtilizationResourceSchemaAttributes,
+		Computed:            true,
+		MarkdownDescription: "The utilization statistics of IPV4 addresses for the range.",
 	},
 	"utilization_v6": schema.SingleNestedAttribute{
-		Attributes: IpamsvcUtilizationV6ResourceSchemaAttributes,
-		Computed:   true,
+		Attributes:          IpamsvcUtilizationV6ResourceSchemaAttributes,
+		Computed:            true,
+		MarkdownDescription: "The utilization of IPV6 addresses in the range.",
 	},
 }
 
@@ -272,6 +287,7 @@ func (m *IpamsvcRangeModel) Flatten(ctx context.Context, from *ipam.Range, diags
 		*m = IpamsvcRangeModel{}
 	}
 	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.DhcpHost = flex.FlattenStringPointerWithNilAsEmpty(from.DhcpHost)
 	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
@@ -287,6 +303,7 @@ func (m *IpamsvcRangeModel) Flatten(ctx context.Context, from *ipam.Range, diags
 	m.Parent = flex.FlattenStringPointer(from.Parent)
 	m.Protocol = flex.FlattenStringPointer(from.Protocol)
 	m.Space = flex.FlattenStringPointer(from.Space)
+	m.SpaceName = flex.FlattenStringPointer(from.SpaceName)
 	m.Start = flex.FlattenString(from.Start)
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Threshold = FlattenIpamsvcUtilizationThreshold(ctx, from.Threshold, diags)

@@ -32,6 +32,7 @@ type IpamsvcAddressBlockModel struct {
 	AsmScopeFlag               types.Int64       `tfsdk:"asm_scope_flag"`
 	Cidr                       types.Int64       `tfsdk:"cidr"`
 	Comment                    types.String      `tfsdk:"comment"`
+	CompartmentId              types.String      `tfsdk:"compartment_id"`
 	CreatedAt                  timetypes.RFC3339 `tfsdk:"created_at"`
 	DdnsClientUpdate           types.String      `tfsdk:"ddns_client_update"`
 	DdnsConflictResolutionMode types.String      `tfsdk:"ddns_conflict_resolution_mode"`
@@ -42,11 +43,14 @@ type IpamsvcAddressBlockModel struct {
 	DdnsTtlPercent             types.Float64     `tfsdk:"ddns_ttl_percent"`
 	DdnsUpdateOnRenew          types.Bool        `tfsdk:"ddns_update_on_renew"`
 	DdnsUseConflictResolution  types.Bool        `tfsdk:"ddns_use_conflict_resolution"`
+	Delegation                 types.String      `tfsdk:"delegation"`
 	DhcpConfig                 types.Object      `tfsdk:"dhcp_config"`
 	DhcpOptions                types.List        `tfsdk:"dhcp_options"`
 	DhcpUtilization            types.Object      `tfsdk:"dhcp_utilization"`
 	DiscoveryAttrs             types.Map         `tfsdk:"discovery_attrs"`
 	DiscoveryMetadata          types.Map         `tfsdk:"discovery_metadata"`
+	ExternalKeys               types.Map         `tfsdk:"external_keys"`
+	FederatedRealms            types.List        `tfsdk:"federated_realms"`
 	HeaderOptionFilename       types.String      `tfsdk:"header_option_filename"`
 	HeaderOptionServerAddress  types.String      `tfsdk:"header_option_server_address"`
 	HeaderOptionServerName     types.String      `tfsdk:"header_option_server_name"`
@@ -76,6 +80,7 @@ var IpamsvcAddressBlockAttrTypes = map[string]attr.Type{
 	"asm_scope_flag":                types.Int64Type,
 	"cidr":                          types.Int64Type,
 	"comment":                       types.StringType,
+	"compartment_id":                types.StringType,
 	"created_at":                    timetypes.RFC3339Type{},
 	"ddns_client_update":            types.StringType,
 	"ddns_conflict_resolution_mode": types.StringType,
@@ -86,11 +91,14 @@ var IpamsvcAddressBlockAttrTypes = map[string]attr.Type{
 	"ddns_ttl_percent":              types.Float64Type,
 	"ddns_update_on_renew":          types.BoolType,
 	"ddns_use_conflict_resolution":  types.BoolType,
+	"delegation":                    types.StringType,
 	"dhcp_config":                   types.ObjectType{AttrTypes: IpamsvcDHCPConfigAttrTypes},
 	"dhcp_options":                  types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
 	"dhcp_utilization":              types.ObjectType{AttrTypes: IpamsvcDHCPUtilizationAttrTypes},
 	"discovery_attrs":               types.MapType{ElemType: types.StringType},
 	"discovery_metadata":            types.MapType{ElemType: types.StringType},
+	"external_keys":                 types.MapType{ElemType: types.StringType},
+	"federated_realms":              types.ListType{ElemType: types.StringType},
 	"header_option_filename":        types.StringType,
 	"header_option_server_address":  types.StringType,
 	"header_option_server_name":     types.StringType,
@@ -156,6 +164,12 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The description for the address block. May contain 0 to 1024 characters. Can include UTF-8.",
+	},
+	"compartment_id": schema.StringAttribute{
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
+		MarkdownDescription: "The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.",
 	},
 	"created_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -223,6 +237,10 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		Default:             booldefault.StaticBool(true),
 		MarkdownDescription: "When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.",
 	},
+	"delegation": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The ID of the delegation associated with the address block.",
+	},
 	"dhcp_config": schema.SingleNestedAttribute{
 		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes(true),
 		Optional:   true,
@@ -235,6 +253,7 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 			"echo_client_id":            types.BoolNull(), // echo_client_id cannot be set for address block
 			"filters":                   types.ListNull(types.StringType),
 			"filters_v6":                types.ListNull(types.StringType),
+			"filters_large_selection":   types.ListNull(types.StringType),
 			"ignore_client_uid":         types.BoolValue(false),
 			"ignore_list":               types.ListNull(types.ObjectType{AttrTypes: IpamsvcIgnoreItemAttrTypes}),
 			"lease_time":                types.Int64Value(3600),
@@ -264,6 +283,17 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "The discovery metadata for this address block in JSON format.",
+	},
+	"external_keys": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Optional:            true,
+		MarkdownDescription: "The external keys (source key) for this address block in JSON format.",
+	},
+	"federated_realms": schema.ListAttribute{
+		ElementType:         types.StringType,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "Federated realms to which this address block belongs.",
 	},
 	"header_option_filename": schema.StringAttribute{
 		Optional:            true,
@@ -374,12 +404,14 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 			"  <br>",
 	},
 	"utilization": schema.SingleNestedAttribute{
-		Attributes: IpamsvcUtilizationResourceSchemaAttributes,
-		Computed:   true,
+		Attributes:          IpamsvcUtilizationResourceSchemaAttributes,
+		Computed:            true,
+		MarkdownDescription: "The IPV4 address utilization statistics for the address block.",
 	},
 	"utilization_v6": schema.SingleNestedAttribute{
-		Attributes: IpamsvcUtilizationV6ResourceSchemaAttributes,
-		Computed:   true,
+		Attributes:          IpamsvcUtilizationV6ResourceSchemaAttributes,
+		Computed:            true,
+		MarkdownDescription: "The utilization of IPV6 addresses in the Address block.",
 	},
 	"next_available_id": schema.StringAttribute{
 		Optional:            true,
@@ -416,6 +448,7 @@ func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagn
 		AsmConfig:                  ExpandIpamsvcASMConfig(ctx, m.AsmConfig, diags),
 		Cidr:                       flex.ExpandInt64Pointer(m.Cidr),
 		Comment:                    flex.ExpandStringPointer(m.Comment),
+		CompartmentId:              flex.ExpandStringPointer(m.CompartmentId),
 		DdnsClientUpdate:           flex.ExpandStringPointer(m.DdnsClientUpdate),
 		DdnsConflictResolutionMode: flex.ExpandStringPointer(m.DdnsConflictResolutionMode),
 		DdnsDomain:                 flex.ExpandStringPointer(m.DdnsDomain),
@@ -430,6 +463,8 @@ func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagn
 		DhcpUtilization:            ExpandIpamsvcDHCPUtilization(ctx, m.DhcpUtilization, diags),
 		DiscoveryAttrs:             flex.ExpandFrameworkMapString(ctx, m.DiscoveryAttrs, diags),
 		DiscoveryMetadata:          flex.ExpandFrameworkMapString(ctx, m.DiscoveryMetadata, diags),
+		ExternalKeys:               flex.ExpandFrameworkMapString(ctx, m.ExternalKeys, diags),
+		FederatedRealms:            flex.ExpandFrameworkListString(ctx, m.FederatedRealms, diags),
 		HeaderOptionFilename:       flex.ExpandStringPointer(m.HeaderOptionFilename),
 		HeaderOptionServerAddress:  flex.ExpandStringPointer(m.HeaderOptionServerAddress),
 		HeaderOptionServerName:     flex.ExpandStringPointer(m.HeaderOptionServerName),
@@ -484,6 +519,7 @@ func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.Addre
 	m.AsmScopeFlag = flex.FlattenInt64(*from.AsmScopeFlag)
 	m.Cidr = flex.FlattenInt64(*from.Cidr)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.DdnsClientUpdate = flex.FlattenStringPointer(from.DdnsClientUpdate)
 	m.DdnsConflictResolutionMode = flex.FlattenStringPointer(from.DdnsConflictResolutionMode)
@@ -494,11 +530,14 @@ func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.Addre
 	m.DdnsTtlPercent = flex.FlattenFloat64(float64(*from.DdnsTtlPercent))
 	m.DdnsUpdateOnRenew = types.BoolPointerValue(from.DdnsUpdateOnRenew)
 	m.DdnsUseConflictResolution = types.BoolPointerValue(from.DdnsUseConflictResolution)
+	m.Delegation = flex.FlattenStringPointer(from.Federation)
 	m.DhcpConfig = FlattenIpamsvcDHCPConfigForSubnetOrAddressBlock(ctx, from.DhcpConfig, diags)
 	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DhcpUtilization = FlattenIpamsvcDHCPUtilization(ctx, from.DhcpUtilization, diags)
 	m.DiscoveryAttrs = flex.FlattenFrameworkMapString(ctx, from.DiscoveryAttrs, diags)
 	m.DiscoveryMetadata = flex.FlattenFrameworkMapString(ctx, from.DiscoveryMetadata, diags)
+	m.ExternalKeys = flex.FlattenFrameworkMapString(ctx, from.ExternalKeys, diags)
+	m.FederatedRealms = flex.FlattenFrameworkListStringNotNull(ctx, from.FederatedRealms, diags)
 	m.HeaderOptionFilename = flex.FlattenStringPointer(from.HeaderOptionFilename)
 	m.HeaderOptionServerAddress = flex.FlattenStringPointer(from.HeaderOptionServerAddress)
 	m.HeaderOptionServerName = flex.FlattenStringPointer(from.HeaderOptionServerName)

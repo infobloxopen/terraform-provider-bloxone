@@ -865,6 +865,37 @@ func TestAccServerResource_Name(t *testing.T) {
 	})
 }
 
+func TestAccServerResource_ProfileType(t *testing.T) {
+	var resourceName = "bloxone_dhcp_server.test_comment"
+	var v1, v2 ipam.Server
+	var name = acctest.RandomNameWithPrefix("dhcp-server")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccServerProfileType(name, "server"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttr(resourceName, "profile_type", "server"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccServerProfileType(name, "subnet"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerDestroy(context.Background(), &v1),
+					testAccCheckServerExists(context.Background(), resourceName, &v2),
+					resource.TestCheckResourceAttr(resourceName, "profile_type", "subnet"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccServerResource_ServerPrincipal(t *testing.T) {
 	var resourceName = "bloxone_dhcp_server.test_server_principal"
 	var v ipam.Server
@@ -1348,6 +1379,15 @@ resource "bloxone_dhcp_server" "test_server_principal" {
     server_principal = %q
 }
 `, name, serverPrincipal)
+}
+
+func testAccServerProfileType(name string, profileType string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dhcp_server" "test_comment" {
+    name = %q
+    profile_type = %q
+}
+`, name, profileType)
 }
 
 func testAccServerTags(name string, tags map[string]string) string {

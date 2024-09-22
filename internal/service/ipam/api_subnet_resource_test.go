@@ -22,6 +22,9 @@ import (
 // - dhcp_config.ignore_items
 // - dhcp_host
 // - dhcp_options
+// - external_keys
+// - federated_realms
+// - config_profiles
 
 func TestAccSubnetResource_basic(t *testing.T) {
 	var resourceName = "bloxone_ipam_subnet.test"
