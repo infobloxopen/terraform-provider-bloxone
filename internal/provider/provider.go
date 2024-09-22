@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/clouddiscovery"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
@@ -88,7 +89,7 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 		option.WithAPIKey(data.APIKey.ValueString()),
 		option.WithCSPUrl(data.CSPUrl.ValueString()),
 		option.WithDefaultTags(dfTags),
-		option.WithDebug(false),
+		option.WithDebug(true),
 	)
 
 	resp.DataSourceData = client
@@ -157,6 +158,8 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		fw.NewApplicationFilterResource,
 
 		redirect.NewCustomRedirectResource,
+
+		clouddiscovery.NewProvidersResource,
 	}
 }
 
@@ -228,6 +231,8 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		fw.NewThreatFeedsDataSource,
 
 		redirect.NewCustomRedirectsDataSource,
+
+		clouddiscovery.NewProvidersDataSource,
 	}
 }
 

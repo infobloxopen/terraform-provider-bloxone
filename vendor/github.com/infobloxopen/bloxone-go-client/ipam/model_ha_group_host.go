@@ -28,10 +28,14 @@ type HAGroupHost struct {
 	Host string `json:"host"`
 	// The HA port.
 	Port *int64 `json:"port,omitempty"`
+	// The HA port used for IPv6 communication.
+	PortV6 *int64 `json:"port_v6,omitempty"`
 	// The role of this host in the HA relationship: _active_ or _passive_.
 	Role *string `json:"role,omitempty"`
 	// The state of DHCP on the host. This field is set when the _collect_stats_ is set to _true_ in the _GET_ _/dhcp/ha_group_ request.
-	State                *string `json:"state,omitempty"`
+	State *string `json:"state,omitempty"`
+	// The state of DHCPv6 on the host. This field is set when the _collect_stats_ is set to _true_ in the _GET_ _/dhcp/ha_group_ request.
+	StateV6              *string `json:"state_v6,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -175,6 +179,38 @@ func (o *HAGroupHost) SetPort(v int64) {
 	o.Port = &v
 }
 
+// GetPortV6 returns the PortV6 field value if set, zero value otherwise.
+func (o *HAGroupHost) GetPortV6() int64 {
+	if o == nil || IsNil(o.PortV6) {
+		var ret int64
+		return ret
+	}
+	return *o.PortV6
+}
+
+// GetPortV6Ok returns a tuple with the PortV6 field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *HAGroupHost) GetPortV6Ok() (*int64, bool) {
+	if o == nil || IsNil(o.PortV6) {
+		return nil, false
+	}
+	return o.PortV6, true
+}
+
+// HasPortV6 returns a boolean if a field has been set.
+func (o *HAGroupHost) HasPortV6() bool {
+	if o != nil && !IsNil(o.PortV6) {
+		return true
+	}
+
+	return false
+}
+
+// SetPortV6 gets a reference to the given int64 and assigns it to the PortV6 field.
+func (o *HAGroupHost) SetPortV6(v int64) {
+	o.PortV6 = &v
+}
+
 // GetRole returns the Role field value if set, zero value otherwise.
 func (o *HAGroupHost) GetRole() string {
 	if o == nil || IsNil(o.Role) {
@@ -239,6 +275,38 @@ func (o *HAGroupHost) SetState(v string) {
 	o.State = &v
 }
 
+// GetStateV6 returns the StateV6 field value if set, zero value otherwise.
+func (o *HAGroupHost) GetStateV6() string {
+	if o == nil || IsNil(o.StateV6) {
+		var ret string
+		return ret
+	}
+	return *o.StateV6
+}
+
+// GetStateV6Ok returns a tuple with the StateV6 field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *HAGroupHost) GetStateV6Ok() (*string, bool) {
+	if o == nil || IsNil(o.StateV6) {
+		return nil, false
+	}
+	return o.StateV6, true
+}
+
+// HasStateV6 returns a boolean if a field has been set.
+func (o *HAGroupHost) HasStateV6() bool {
+	if o != nil && !IsNil(o.StateV6) {
+		return true
+	}
+
+	return false
+}
+
+// SetStateV6 gets a reference to the given string and assigns it to the StateV6 field.
+func (o *HAGroupHost) SetStateV6(v string) {
+	o.StateV6 = &v
+}
+
 func (o HAGroupHost) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -259,11 +327,17 @@ func (o HAGroupHost) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Port) {
 		toSerialize["port"] = o.Port
 	}
+	if !IsNil(o.PortV6) {
+		toSerialize["port_v6"] = o.PortV6
+	}
 	if !IsNil(o.Role) {
 		toSerialize["role"] = o.Role
 	}
 	if !IsNil(o.State) {
 		toSerialize["state"] = o.State
+	}
+	if !IsNil(o.StateV6) {
+		toSerialize["state_v6"] = o.StateV6
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -312,8 +386,10 @@ func (o *HAGroupHost) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "heartbeats")
 		delete(additionalProperties, "host")
 		delete(additionalProperties, "port")
+		delete(additionalProperties, "port_v6")
 		delete(additionalProperties, "role")
 		delete(additionalProperties, "state")
+		delete(additionalProperties, "state_v6")
 		o.AdditionalProperties = additionalProperties
 	}
 

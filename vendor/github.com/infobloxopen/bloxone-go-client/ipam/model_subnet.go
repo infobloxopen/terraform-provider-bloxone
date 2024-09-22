@@ -30,6 +30,10 @@ type Subnet struct {
 	Cidr *int64 `json:"cidr,omitempty"`
 	// The description for the subnet. May contain 0 to 1024 characters. Can include UTF-8.
 	Comment *string `json:"comment,omitempty"`
+	// The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.
+	CompartmentId *string `json:"compartment_id,omitempty"`
+	// The resource identifier.
+	ConfigProfiles []string `json:"config_profiles,omitempty"`
 	// Time when the object has been created.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Controls who does the DDNS updates.  Valid values are: * _client_: DHCP server updates DNS if requested by client. * _server_: DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _ignore_: DHCP server always updates DNS, even if the client says not to. * _over_client_update_: Same as _server_. DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _over_no_update_: DHCP server updates DNS even if the client requests that no updates be done. If the client requests to do the update, DHCP server allows it.  Defaults to _client_.
@@ -50,6 +54,8 @@ type Subnet struct {
 	DdnsUpdateOnRenew *bool `json:"ddns_update_on_renew,omitempty"`
 	// When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.
 	DdnsUseConflictResolution *bool `json:"ddns_use_conflict_resolution,omitempty"`
+	// The ID of the delegation associated with the subnet.
+	Delegation *string `json:"delegation,omitempty"`
 	// The DHCP configuration of the subnet that controls how leases are issued.
 	DhcpConfig *DHCPConfig `json:"dhcp_config,omitempty"`
 	// The resource identifier.
@@ -64,6 +70,10 @@ type Subnet struct {
 	DiscoveryAttrs map[string]interface{} `json:"discovery_attrs,omitempty"`
 	// The discovery metadata for this subnet in JSON format.
 	DiscoveryMetadata map[string]interface{} `json:"discovery_metadata,omitempty"`
+	// The external keys (source key) for this subnet in JSON format.
+	ExternalKeys map[string]interface{} `json:"external_keys,omitempty"`
+	// Reserved for future use.
+	FederatedRealms []string `json:"federated_realms,omitempty"`
 	// The configuration for header option filename field.
 	HeaderOptionFilename *string `json:"header_option_filename,omitempty"`
 	// The configuration for header option server address field.
@@ -288,6 +298,70 @@ func (o *Subnet) HasComment() bool {
 // SetComment gets a reference to the given string and assigns it to the Comment field.
 func (o *Subnet) SetComment(v string) {
 	o.Comment = &v
+}
+
+// GetCompartmentId returns the CompartmentId field value if set, zero value otherwise.
+func (o *Subnet) GetCompartmentId() string {
+	if o == nil || IsNil(o.CompartmentId) {
+		var ret string
+		return ret
+	}
+	return *o.CompartmentId
+}
+
+// GetCompartmentIdOk returns a tuple with the CompartmentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Subnet) GetCompartmentIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CompartmentId) {
+		return nil, false
+	}
+	return o.CompartmentId, true
+}
+
+// HasCompartmentId returns a boolean if a field has been set.
+func (o *Subnet) HasCompartmentId() bool {
+	if o != nil && !IsNil(o.CompartmentId) {
+		return true
+	}
+
+	return false
+}
+
+// SetCompartmentId gets a reference to the given string and assigns it to the CompartmentId field.
+func (o *Subnet) SetCompartmentId(v string) {
+	o.CompartmentId = &v
+}
+
+// GetConfigProfiles returns the ConfigProfiles field value if set, zero value otherwise.
+func (o *Subnet) GetConfigProfiles() []string {
+	if o == nil || IsNil(o.ConfigProfiles) {
+		var ret []string
+		return ret
+	}
+	return o.ConfigProfiles
+}
+
+// GetConfigProfilesOk returns a tuple with the ConfigProfiles field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Subnet) GetConfigProfilesOk() ([]string, bool) {
+	if o == nil || IsNil(o.ConfigProfiles) {
+		return nil, false
+	}
+	return o.ConfigProfiles, true
+}
+
+// HasConfigProfiles returns a boolean if a field has been set.
+func (o *Subnet) HasConfigProfiles() bool {
+	if o != nil && !IsNil(o.ConfigProfiles) {
+		return true
+	}
+
+	return false
+}
+
+// SetConfigProfiles gets a reference to the given []string and assigns it to the ConfigProfiles field.
+func (o *Subnet) SetConfigProfiles(v []string) {
+	o.ConfigProfiles = v
 }
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
@@ -610,6 +684,38 @@ func (o *Subnet) SetDdnsUseConflictResolution(v bool) {
 	o.DdnsUseConflictResolution = &v
 }
 
+// GetDelegation returns the Delegation field value if set, zero value otherwise.
+func (o *Subnet) GetDelegation() string {
+	if o == nil || IsNil(o.Delegation) {
+		var ret string
+		return ret
+	}
+	return *o.Delegation
+}
+
+// GetDelegationOk returns a tuple with the Delegation field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Subnet) GetDelegationOk() (*string, bool) {
+	if o == nil || IsNil(o.Delegation) {
+		return nil, false
+	}
+	return o.Delegation, true
+}
+
+// HasDelegation returns a boolean if a field has been set.
+func (o *Subnet) HasDelegation() bool {
+	if o != nil && !IsNil(o.Delegation) {
+		return true
+	}
+
+	return false
+}
+
+// SetDelegation gets a reference to the given string and assigns it to the Delegation field.
+func (o *Subnet) SetDelegation(v string) {
+	o.Delegation = &v
+}
+
 // GetDhcpConfig returns the DhcpConfig field value if set, zero value otherwise.
 func (o *Subnet) GetDhcpConfig() DHCPConfig {
 	if o == nil || IsNil(o.DhcpConfig) {
@@ -832,6 +938,70 @@ func (o *Subnet) HasDiscoveryMetadata() bool {
 // SetDiscoveryMetadata gets a reference to the given map[string]interface{} and assigns it to the DiscoveryMetadata field.
 func (o *Subnet) SetDiscoveryMetadata(v map[string]interface{}) {
 	o.DiscoveryMetadata = v
+}
+
+// GetExternalKeys returns the ExternalKeys field value if set, zero value otherwise.
+func (o *Subnet) GetExternalKeys() map[string]interface{} {
+	if o == nil || IsNil(o.ExternalKeys) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.ExternalKeys
+}
+
+// GetExternalKeysOk returns a tuple with the ExternalKeys field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Subnet) GetExternalKeysOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.ExternalKeys) {
+		return map[string]interface{}{}, false
+	}
+	return o.ExternalKeys, true
+}
+
+// HasExternalKeys returns a boolean if a field has been set.
+func (o *Subnet) HasExternalKeys() bool {
+	if o != nil && !IsNil(o.ExternalKeys) {
+		return true
+	}
+
+	return false
+}
+
+// SetExternalKeys gets a reference to the given map[string]interface{} and assigns it to the ExternalKeys field.
+func (o *Subnet) SetExternalKeys(v map[string]interface{}) {
+	o.ExternalKeys = v
+}
+
+// GetFederatedRealms returns the FederatedRealms field value if set, zero value otherwise.
+func (o *Subnet) GetFederatedRealms() []string {
+	if o == nil || IsNil(o.FederatedRealms) {
+		var ret []string
+		return ret
+	}
+	return o.FederatedRealms
+}
+
+// GetFederatedRealmsOk returns a tuple with the FederatedRealms field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Subnet) GetFederatedRealmsOk() ([]string, bool) {
+	if o == nil || IsNil(o.FederatedRealms) {
+		return nil, false
+	}
+	return o.FederatedRealms, true
+}
+
+// HasFederatedRealms returns a boolean if a field has been set.
+func (o *Subnet) HasFederatedRealms() bool {
+	if o != nil && !IsNil(o.FederatedRealms) {
+		return true
+	}
+
+	return false
+}
+
+// SetFederatedRealms gets a reference to the given []string and assigns it to the FederatedRealms field.
+func (o *Subnet) SetFederatedRealms(v []string) {
+	o.FederatedRealms = v
 }
 
 // GetHeaderOptionFilename returns the HeaderOptionFilename field value if set, zero value otherwise.
@@ -1563,6 +1733,12 @@ func (o Subnet) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Comment) {
 		toSerialize["comment"] = o.Comment
 	}
+	if !IsNil(o.CompartmentId) {
+		toSerialize["compartment_id"] = o.CompartmentId
+	}
+	if !IsNil(o.ConfigProfiles) {
+		toSerialize["config_profiles"] = o.ConfigProfiles
+	}
 	if !IsNil(o.CreatedAt) {
 		toSerialize["created_at"] = o.CreatedAt
 	}
@@ -1593,6 +1769,9 @@ func (o Subnet) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DdnsUseConflictResolution) {
 		toSerialize["ddns_use_conflict_resolution"] = o.DdnsUseConflictResolution
 	}
+	if !IsNil(o.Delegation) {
+		toSerialize["delegation"] = o.Delegation
+	}
 	if !IsNil(o.DhcpConfig) {
 		toSerialize["dhcp_config"] = o.DhcpConfig
 	}
@@ -1613,6 +1792,12 @@ func (o Subnet) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.DiscoveryMetadata) {
 		toSerialize["discovery_metadata"] = o.DiscoveryMetadata
+	}
+	if !IsNil(o.ExternalKeys) {
+		toSerialize["external_keys"] = o.ExternalKeys
+	}
+	if !IsNil(o.FederatedRealms) {
+		toSerialize["federated_realms"] = o.FederatedRealms
 	}
 	if !IsNil(o.HeaderOptionFilename) {
 		toSerialize["header_option_filename"] = o.HeaderOptionFilename
@@ -1707,6 +1892,8 @@ func (o *Subnet) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "asm_scope_flag")
 		delete(additionalProperties, "cidr")
 		delete(additionalProperties, "comment")
+		delete(additionalProperties, "compartment_id")
+		delete(additionalProperties, "config_profiles")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "ddns_client_update")
 		delete(additionalProperties, "ddns_conflict_resolution_mode")
@@ -1717,6 +1904,7 @@ func (o *Subnet) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "ddns_ttl_percent")
 		delete(additionalProperties, "ddns_update_on_renew")
 		delete(additionalProperties, "ddns_use_conflict_resolution")
+		delete(additionalProperties, "delegation")
 		delete(additionalProperties, "dhcp_config")
 		delete(additionalProperties, "dhcp_host")
 		delete(additionalProperties, "dhcp_options")
@@ -1724,6 +1912,8 @@ func (o *Subnet) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "disable_dhcp")
 		delete(additionalProperties, "discovery_attrs")
 		delete(additionalProperties, "discovery_metadata")
+		delete(additionalProperties, "external_keys")
+		delete(additionalProperties, "federated_realms")
 		delete(additionalProperties, "header_option_filename")
 		delete(additionalProperties, "header_option_server_address")
 		delete(additionalProperties, "header_option_server_name")

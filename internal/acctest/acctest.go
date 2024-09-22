@@ -47,6 +47,11 @@ func RandomIP() string {
 	return fmt.Sprintf("%d.%d.%d.%d", rand.Intn(255), rand.Intn(255), rand.Intn(255), rand.Intn(255))
 }
 
+// RandomNumber Function to generate a random 12-digit number for cloud discovery Role ARN
+func RandomNumber() string {
+	return fmt.Sprintf("%d", rand.Intn(999999999999))
+}
+
 func RandomName() string {
 	b := make([]byte, 6)
 	for i := range b {

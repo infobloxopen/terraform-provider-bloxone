@@ -27,6 +27,8 @@ type IPSpace struct {
 	AsmScopeFlag *int64 `json:"asm_scope_flag,omitempty"`
 	// The description for the IP space. May contain 0 to 1024 characters. Can include UTF-8.
 	Comment *string `json:"comment,omitempty"`
+	// The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.
+	CompartmentId *string `json:"compartment_id,omitempty"`
 	// Time when the object has been created.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Controls who does the DDNS updates.  Valid values are: * _client_: DHCP server updates DNS if requested by client. * _server_: DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _ignore_: DHCP server always updates DNS, even if the client says not to. * _over_client_update_: Same as _server_. DHCP server always updates DNS, overriding an update request from the client, unless the client requests no updates. * _over_no_update_: DHCP server updates DNS even if the client requests that no updates be done. If the client requests to do the update, DHCP server allows it.  Defaults to _client_.
@@ -47,6 +49,8 @@ type IPSpace struct {
 	DdnsUpdateOnRenew *bool `json:"ddns_update_on_renew,omitempty"`
 	// When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.
 	DdnsUseConflictResolution *bool `json:"ddns_use_conflict_resolution,omitempty"`
+	// Reserved for future use.
+	DefaultRealms []string `json:"default_realms,omitempty"`
 	// The shared DHCP configuration for the IP space that controls how leases are issued.
 	DhcpConfig *DHCPConfig `json:"dhcp_config,omitempty"`
 	// The list of IPv4 DHCP options for IP space. May be either a specific option or a group of options.
@@ -240,6 +244,38 @@ func (o *IPSpace) HasComment() bool {
 // SetComment gets a reference to the given string and assigns it to the Comment field.
 func (o *IPSpace) SetComment(v string) {
 	o.Comment = &v
+}
+
+// GetCompartmentId returns the CompartmentId field value if set, zero value otherwise.
+func (o *IPSpace) GetCompartmentId() string {
+	if o == nil || IsNil(o.CompartmentId) {
+		var ret string
+		return ret
+	}
+	return *o.CompartmentId
+}
+
+// GetCompartmentIdOk returns a tuple with the CompartmentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IPSpace) GetCompartmentIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CompartmentId) {
+		return nil, false
+	}
+	return o.CompartmentId, true
+}
+
+// HasCompartmentId returns a boolean if a field has been set.
+func (o *IPSpace) HasCompartmentId() bool {
+	if o != nil && !IsNil(o.CompartmentId) {
+		return true
+	}
+
+	return false
+}
+
+// SetCompartmentId gets a reference to the given string and assigns it to the CompartmentId field.
+func (o *IPSpace) SetCompartmentId(v string) {
+	o.CompartmentId = &v
 }
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
@@ -560,6 +596,38 @@ func (o *IPSpace) HasDdnsUseConflictResolution() bool {
 // SetDdnsUseConflictResolution gets a reference to the given bool and assigns it to the DdnsUseConflictResolution field.
 func (o *IPSpace) SetDdnsUseConflictResolution(v bool) {
 	o.DdnsUseConflictResolution = &v
+}
+
+// GetDefaultRealms returns the DefaultRealms field value if set, zero value otherwise.
+func (o *IPSpace) GetDefaultRealms() []string {
+	if o == nil || IsNil(o.DefaultRealms) {
+		var ret []string
+		return ret
+	}
+	return o.DefaultRealms
+}
+
+// GetDefaultRealmsOk returns a tuple with the DefaultRealms field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IPSpace) GetDefaultRealmsOk() ([]string, bool) {
+	if o == nil || IsNil(o.DefaultRealms) {
+		return nil, false
+	}
+	return o.DefaultRealms, true
+}
+
+// HasDefaultRealms returns a boolean if a field has been set.
+func (o *IPSpace) HasDefaultRealms() bool {
+	if o != nil && !IsNil(o.DefaultRealms) {
+		return true
+	}
+
+	return false
+}
+
+// SetDefaultRealms gets a reference to the given []string and assigns it to the DefaultRealms field.
+func (o *IPSpace) SetDefaultRealms(v []string) {
+	o.DefaultRealms = v
 }
 
 // GetDhcpConfig returns the DhcpConfig field value if set, zero value otherwise.
@@ -1149,6 +1217,9 @@ func (o IPSpace) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Comment) {
 		toSerialize["comment"] = o.Comment
 	}
+	if !IsNil(o.CompartmentId) {
+		toSerialize["compartment_id"] = o.CompartmentId
+	}
 	if !IsNil(o.CreatedAt) {
 		toSerialize["created_at"] = o.CreatedAt
 	}
@@ -1178,6 +1249,9 @@ func (o IPSpace) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.DdnsUseConflictResolution) {
 		toSerialize["ddns_use_conflict_resolution"] = o.DdnsUseConflictResolution
+	}
+	if !IsNil(o.DefaultRealms) {
+		toSerialize["default_realms"] = o.DefaultRealms
 	}
 	if !IsNil(o.DhcpConfig) {
 		toSerialize["dhcp_config"] = o.DhcpConfig
@@ -1277,6 +1351,7 @@ func (o *IPSpace) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "asm_config")
 		delete(additionalProperties, "asm_scope_flag")
 		delete(additionalProperties, "comment")
+		delete(additionalProperties, "compartment_id")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "ddns_client_update")
 		delete(additionalProperties, "ddns_conflict_resolution_mode")
@@ -1287,6 +1362,7 @@ func (o *IPSpace) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "ddns_ttl_percent")
 		delete(additionalProperties, "ddns_update_on_renew")
 		delete(additionalProperties, "ddns_use_conflict_resolution")
+		delete(additionalProperties, "default_realms")
 		delete(additionalProperties, "dhcp_config")
 		delete(additionalProperties, "dhcp_options")
 		delete(additionalProperties, "dhcp_options_v6")

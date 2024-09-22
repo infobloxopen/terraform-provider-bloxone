@@ -78,6 +78,13 @@ func FlattenFloat64Pointer(f *float64) types.Float64 {
 	return FlattenFloat64(*f)
 }
 
+func FlattenFloat32Pointer(f *float32) types.Float64 {
+	if f == nil {
+		return types.Float64Null()
+	}
+	return FlattenFloat64(float64(*f))
+}
+
 func FlattenFrameworkMapString(ctx context.Context, m map[string]interface{}, diags *diag.Diagnostics) types.Map {
 	if len(m) == 0 {
 		return types.MapNull(types.StringType)
