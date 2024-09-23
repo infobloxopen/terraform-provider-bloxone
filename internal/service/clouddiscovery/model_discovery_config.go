@@ -218,8 +218,8 @@ func (m *DiscoveryConfigModel) Expand(ctx context.Context, diags *diag.Diagnosti
 	to := &clouddiscovery.DiscoveryConfig{
 		Name:                 flex.ExpandString(m.Name),
 		CredentialPreference: ExpandCredentialPreference(ctx, m.CredentialPreference, diags),
-		AccountPreference:    flex.ExpandString(m.AccountPreference),
-		ProviderType:         flex.ExpandString(m.ProviderType),
+		AccountPreference:    flex.ExpandStringPointer(m.AccountPreference),
+		ProviderType:         flex.ExpandStringPointer(m.ProviderType),
 		AdditionalConfig:     ExpandAdditionalConfig(ctx, m.AdditionalConfig, diags),
 		Description:          flex.ExpandStringPointer(m.Description),
 		DesiredState:         flex.ExpandStringPointer(m.DesiredState),
@@ -253,7 +253,7 @@ func (m *DiscoveryConfigModel) Flatten(ctx context.Context, from *clouddiscovery
 	if m == nil {
 		*m = DiscoveryConfigModel{}
 	}
-	m.AccountPreference = flex.FlattenString(from.AccountPreference)
+	m.AccountPreference = flex.FlattenStringPointer(from.AccountPreference)
 	m.AdditionalConfig = FlattenAdditionalConfig(ctx, from.AdditionalConfig, diags)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.CredentialPreference = FlattenCredentialPreference(ctx, from.CredentialPreference, diags)
@@ -265,7 +265,7 @@ func (m *DiscoveryConfigModel) Flatten(ctx context.Context, from *clouddiscovery
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.LastSync = timetypes.NewRFC3339TimePointerValue(from.LastSync)
 	m.Name = flex.FlattenString(from.Name)
-	m.ProviderType = flex.FlattenString(from.ProviderType)
+	m.ProviderType = flex.FlattenStringPointer(from.ProviderType)
 	m.SourceConfigs = flex.FlattenFrameworkListNestedBlock(ctx, from.SourceConfigs, SourceConfigAttrTypes, diags, FlattenSourceConfig)
 	m.Status = flex.FlattenStringPointer(from.Status)
 	m.StatusMessage = flex.FlattenStringPointer(from.StatusMessage)
