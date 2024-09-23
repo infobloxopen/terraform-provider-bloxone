@@ -26,12 +26,14 @@ var ResourceAttrTypes = map[string]attr.Type{
 
 var ResourceResourceSchemaAttributes = map[string]schema.Attribute{
 	"excluded": schema.BoolAttribute{
-		Optional: true,
-		Computed: true,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "If set true , the resource set of a particular category is excluded from discovery.",
 	},
 	"id": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "The resource set ID.",
 	},
 }
 

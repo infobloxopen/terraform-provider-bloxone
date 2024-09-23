@@ -35,7 +35,10 @@ func TestAccProvidersResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
+					resource.TestCheckResourceAttrSet(resourceName, "destination_types_enabled.#"),
 					// Test fields with default value
+					resource.TestCheckResourceAttr(resourceName, "desired_state", "enabled"),
+					resource.TestCheckResourceAttr(resourceName, "sync_interval", "Auto"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -137,8 +140,6 @@ func TestAccProvidersResource_AdditionalConfig(t *testing.T) {
 	})
 }
 
-// As Static Credentials has not been implemented ,
-// This test case contains only the values for dynamic credentials
 func TestAccProvidersResource_CredentialPreference(t *testing.T) {
 	var resourceName = "bloxone_cloud_discovery_provider.test_credential_preference"
 	var v clouddiscovery.DiscoveryConfig

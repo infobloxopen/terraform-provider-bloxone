@@ -32,10 +32,12 @@ var CredentialConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Access identifier of the account",
 	},
 	"enclave": schema.StringAttribute{
-		Optional: true,
+		Optional:            true,
+		MarkdownDescription: "Enclave of the account",
 	},
 	"region": schema.StringAttribute{
-		Optional: true,
+		Optional:            true,
+		MarkdownDescription: "Region of the account",
 	},
 }
 

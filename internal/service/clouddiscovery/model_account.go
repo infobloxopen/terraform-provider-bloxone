@@ -113,15 +113,17 @@ var AccountResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Sync progress as a percentage.",
 	},
 	"provider_account_id": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "Provider account ID.",
 	},
 	"schedule_id": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: "Schedule ID.",
 	},
 	"state": schema.StringAttribute{
-		Computed: true,
+		Computed:            true,
+		MarkdownDescription: "State of the sync operation.",
 	},
 	"status": schema.StringAttribute{
 		Computed:            true,

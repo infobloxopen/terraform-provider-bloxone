@@ -5,7 +5,7 @@ data "bloxone_cloud_discovery_providers" "example_by_attribute" {
   }
 }
 
-//Get Cloud Discovery Providers filtered by tag
+# Get Cloud Discovery Providers filtered by tag
 data "bloxone_cloud_discovery_providers" "example_by_tag" {
   tag_filters = {
     site = "Site A"
@@ -14,7 +14,3 @@ data "bloxone_cloud_discovery_providers" "example_by_tag" {
 
 # Get all Cloud Discovery Providers
 data "bloxone_cloud_discovery_providers" "example_all" {}
-
-output "cloud_discovery_providers_by_tag" {
-  value = length(data.bloxone_cloud_discovery_providers.example_by_tag.results)
-}

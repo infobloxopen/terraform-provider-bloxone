@@ -2,6 +2,7 @@ package clouddiscovery
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -14,10 +15,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/infobloxopen/bloxone-go-client/clouddiscovery"
-	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 
+	"github.com/infobloxopen/bloxone-go-client/clouddiscovery"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
 type DiscoveryConfigModel struct {
@@ -52,19 +53,18 @@ var DiscoveryConfigAttrTypes = map[string]attr.Type{
 	"description":               types.StringType,
 	"desired_state":             types.StringType,
 	"destination_types_enabled": types.ListType{ElemType: types.StringType},
-	//"destinations":              internaltypes.UnorderedListOfStringType,
-	"destinations":   types.ListType{ElemType: types.ObjectType{AttrTypes: DestinationAttrTypes}},
-	"id":             types.StringType,
-	"last_sync":      timetypes.RFC3339Type{},
-	"name":           types.StringType,
-	"provider_type":  types.StringType,
-	"source_configs": types.ListType{ElemType: types.ObjectType{AttrTypes: SourceConfigAttrTypes}},
-	"status":         types.StringType,
-	"status_message": types.StringType,
-	"sync_interval":  types.StringType,
-	"tags":           types.MapType{ElemType: types.StringType},
-	"tags_all":       types.MapType{ElemType: types.StringType},
-	"updated_at":     timetypes.RFC3339Type{},
+	"destinations":              types.ListType{ElemType: types.ObjectType{AttrTypes: DestinationAttrTypes}},
+	"id":                        types.StringType,
+	"last_sync":                 timetypes.RFC3339Type{},
+	"name":                      types.StringType,
+	"provider_type":             types.StringType,
+	"source_configs":            types.ListType{ElemType: types.ObjectType{AttrTypes: SourceConfigAttrTypes}},
+	"status":                    types.StringType,
+	"status_message":            types.StringType,
+	"sync_interval":             types.StringType,
+	"tags":                      types.MapType{ElemType: types.StringType},
+	"tags_all":                  types.MapType{ElemType: types.StringType},
+	"updated_at":                timetypes.RFC3339Type{},
 }
 
 var DiscoveryConfigResourceSchemaAttributes = map[string]schema.Attribute{
@@ -93,7 +93,7 @@ var DiscoveryConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		Attributes:          CredentialPreferenceResourceSchemaAttributes,
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Credential preference. Ex.: '{    \"type\": \"static\" or \"dynamic\",    \"access_identifier_type\": \"role_arn\" or \"tenant_id\" or \"project_id\"  }'.",
+		MarkdownDescription: "Credential preference. Ex.: '{    \"type\": \"dynamic\",    \"access_identifier_type\": \"role_arn\" or \"tenant_id\" or \"project_id\"  }'.",
 	},
 	"deleted_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -136,7 +136,7 @@ var DiscoveryConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		//		"updated_at":       timetypes.NewRFC3339Null(),
 		//	}),
 		//})),
-		MarkdownDescription: "Destinations.",
+		MarkdownDescription: "Destinations For the discovery config.",
 	},
 	"id": schema.StringAttribute{
 		Computed: true,

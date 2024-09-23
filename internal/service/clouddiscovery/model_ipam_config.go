@@ -26,12 +26,14 @@ var IPAMConfigAttrTypes = map[string]attr.Type{
 
 var IPAMConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"dhcp_server": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "Address of the DHCP Server.",
 	},
 	"ip_space": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "IP Space.",
 	},
 }
 
