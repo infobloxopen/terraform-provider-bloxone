@@ -50,7 +50,6 @@ var SourceConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: AccountResourceSchemaAttributes,
 		},
-		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "List of accounts to be discovered.",
 	},

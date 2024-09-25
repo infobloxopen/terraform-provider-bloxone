@@ -54,8 +54,8 @@ Required:
 
 Optional:
 
-- `additional_config` (Attributes) Additional configuration. Ex.: '{    "excluded_object_types": [],    "exclusion_account_list": [],    "zone_forwarding": "true" or "false" }'. (see [below for nested schema](#nestedatt--results--additional_config))
-- `credential_preference` (Attributes) Credential preference. Ex.: '{    "type": "dynamic",    "access_identifier_type": "role_arn" or "tenant_id" or "project_id"  }'. (see [below for nested schema](#nestedatt--results--credential_preference))
+- `additional_config` (Attributes) Additional configuration for the Discovery Job (see [below for nested schema](#nestedatt--results--additional_config))
+- `credential_preference` (Attributes) Credential preference for the discovery job . Note - Static credentials are not supported. (see [below for nested schema](#nestedatt--results--credential_preference))
 - `deleted_at` (String) Timestamp when the object has been deleted.
 - `description` (String) Description of the discovery config. Optional.
 - `desired_state` (String) Desired state. Default is "enabled".
@@ -81,8 +81,8 @@ Read-Only:
 Optional:
 
 - `excluded_accounts` (List of String) List of account IDs to exclude from discovery.
-- `forward_zone_enabled` (Boolean) Enable forward zone discovery.
-- `internal_ranges_enabled` (Boolean) Enable internal ranges discovery.
+- `forward_zone_enabled` (Boolean) Enable/Disable forward zone discovery.
+- `internal_ranges_enabled` (Boolean) Enable/Disable internal ranges discovery.
 - `object_type` (Attributes) Object type to discover. (see [below for nested schema](#nestedatt--results--additional_config--object_type))
 
 <a id="nestedatt--results--additional_config--object_type"></a>
@@ -129,7 +129,7 @@ Optional:
 Optional:
 
 - `access_identifier_type` (String) Access identifier type. Possible values: role_arn, tenant_id, project_id.
-- `credential_type` (String) Credential type. Possible values: `dynamic`.
+- `credential_type` (String) Credential type. Possible values: `dynamic`. Support for Static Credentials is not present
 
 
 <a id="nestedatt--results--destinations"></a>
@@ -137,7 +137,7 @@ Optional:
 
 Optional:
 
-- `config` (Attributes) Destination configuration. Ex.: '{  "dns": {    "view_name": "view 1",    "view_id": "dns/view/v1",    "consolidated_zone_data_enabled": false,    "sync_type": "read_only/read_write"    "split_view_enabled": false  },  "ipam": {    "ip_space": "",  },  "account": {},  }'. (see [below for nested schema](#nestedatt--results--destinations--config))
+- `config` (Attributes) Destination configuration. (see [below for nested schema](#nestedatt--results--destinations--config))
 - `destination_type` (String) Destination type: DNS or IPAM/DHCP.
 
 Read-Only:
@@ -183,7 +183,6 @@ Optional:
 
 Optional:
 
-- `accounts` (Attributes List) List of accounts to be discovered. (see [below for nested schema](#nestedatt--results--source_configs--accounts))
 - `cloud_credential_id` (String) Cloud Credential ID.
 - `credential_config` (Attributes) Credential configuration. Ex.: '{    "access_identifier": "arn:aws:iam::1234:role/access_for_discovery",    "region": "us-east-1",    "enclave": "commercial/gov"  }'. (see [below for nested schema](#nestedatt--results--source_configs--credential_config))
 - `restricted_to_accounts` (List of String) Provider account IDs such as accountID/ SubscriptionID to be restricted for a given source_config.
@@ -191,10 +190,21 @@ Optional:
 Read-Only:
 
 - `account_schedule_id` (String) Account Schedule ID.
+- `accounts` (Attributes List) List of accounts to be discovered. (see [below for nested schema](#nestedatt--results--source_configs--accounts))
 - `created_at` (String) Timestamp when the object has been created.
 - `deleted_at` (String) Timestamp when the object has been deleted.
 - `id` (String) Auto-generated unique source config ID. Format BloxID.
 - `updated_at` (String) Timestamp when the object has been updated.
+
+<a id="nestedatt--results--source_configs--credential_config"></a>
+### Nested Schema for `results.source_configs.credential_config`
+
+Optional:
+
+- `access_identifier` (String) Access identifier of the account
+- `enclave` (String) Enclave of the account
+- `region` (String) Region of the account
+
 
 <a id="nestedatt--results--source_configs--accounts"></a>
 ### Nested Schema for `results.source_configs.accounts`
@@ -222,13 +232,3 @@ Read-Only:
 - `status` (String) Status of the sync operation.
 - `status_message` (String) Status message of the sync operation.
 - `updated_at` (String) Timestamp when the object has been updated.
-
-
-<a id="nestedatt--results--source_configs--credential_config"></a>
-### Nested Schema for `results.source_configs.credential_config`
-
-Optional:
-
-- `access_identifier` (String) Access identifier of the account
-- `enclave` (String) Enclave of the account
-- `region` (String) Region of the account
