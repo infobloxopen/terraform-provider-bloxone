@@ -37,12 +37,12 @@ var AdditionalConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"forward_zone_enabled": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Enable forward zone discovery.",
+		MarkdownDescription: "Enable/Disable forward zone discovery.",
 	},
 	"internal_ranges_enabled": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Enable internal ranges discovery.",
+		MarkdownDescription: "Enable/Disable internal ranges discovery.",
 	},
 	"object_type": schema.SingleNestedAttribute{
 		Attributes:          ObjectTypeResourceSchemaAttributes,

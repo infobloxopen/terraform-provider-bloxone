@@ -82,7 +82,7 @@ var DiscoveryConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		Attributes:          AdditionalConfigResourceSchemaAttributes,
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Additional configuration. Ex.: '{    \"excluded_object_types\": [],    \"exclusion_account_list\": [],    \"zone_forwarding\": \"true\" or \"false\" }'.",
+		MarkdownDescription: "Additional configuration for the Discovery Job",
 	},
 	"created_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -93,7 +93,7 @@ var DiscoveryConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		Attributes:          CredentialPreferenceResourceSchemaAttributes,
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Credential preference. Ex.: '{    \"type\": \"dynamic\",    \"access_identifier_type\": \"role_arn\" or \"tenant_id\" or \"project_id\"  }'.",
+		MarkdownDescription: "Credential preference for the discovery job . Note - Static credentials are not supported.",
 	},
 	"deleted_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},

@@ -39,7 +39,7 @@ var CredentialPreferenceResourceSchemaAttributes = map[string]schema.Attribute{
 		Validators: []validator.String{
 			stringvalidator.OneOf("dynamic"),
 		},
-		MarkdownDescription: "Credential type. Possible values: `dynamic`.",
+		MarkdownDescription: "Credential type. Possible values: `dynamic`. Support for Static Credentials is not present",
 	},
 }
 

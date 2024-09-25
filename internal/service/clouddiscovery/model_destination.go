@@ -40,7 +40,7 @@ var DestinationResourceSchemaAttributes = map[string]schema.Attribute{
 		Attributes:          DestinationConfigResourceSchemaAttributes,
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Destination configuration. Ex.: '{  \"dns\": {    \"view_name\": \"view 1\",    \"view_id\": \"dns/view/v1\",    \"consolidated_zone_data_enabled\": false,    \"sync_type\": \"read_only/read_write\"    \"split_view_enabled\": false  },  \"ipam\": {    \"ip_space\": \"\",  },  \"account\": {},  }'.",
+		MarkdownDescription: "Destination configuration.",
 	},
 	"created_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
