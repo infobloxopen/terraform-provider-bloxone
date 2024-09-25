@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"testing"
 
@@ -18,7 +19,7 @@ func TestAccProvidersResource_basic(t *testing.T) {
 	var resourceName = "bloxone_cloud_discovery_provider.test"
 	var v clouddiscovery.DiscoveryConfig
 	name := acctest.RandomName()
-	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", acctest.RandomNumber())
+	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randomNumber())
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -50,7 +51,7 @@ func TestAccProvidersResource_disappears(t *testing.T) {
 	resourceName := "bloxone_cloud_discovery_provider.test"
 	var v clouddiscovery.DiscoveryConfig
 	name := acctest.RandomName()
-	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", acctest.RandomNumber())
+	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randomNumber())
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -74,7 +75,7 @@ func TestAccProvidersResource_AccountPreference(t *testing.T) {
 	var resourceName = "bloxone_cloud_discovery_provider.test_account_preference"
 	var v1, v2 clouddiscovery.DiscoveryConfig
 	name := acctest.RandomName()
-	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", acctest.RandomNumber())
+	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randomNumber())
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -108,7 +109,7 @@ func TestAccProvidersResource_AdditionalConfig(t *testing.T) {
 	var resourceName = "bloxone_cloud_discovery_provider.test_additional_config"
 	var v clouddiscovery.DiscoveryConfig
 	name := acctest.RandomName()
-	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", acctest.RandomNumber())
+	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randomNumber())
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -144,7 +145,7 @@ func TestAccProvidersResource_CredentialPreference(t *testing.T) {
 	var resourceName = "bloxone_cloud_discovery_provider.test_credential_preference"
 	var v clouddiscovery.DiscoveryConfig
 	name := acctest.RandomName()
-	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", acctest.RandomNumber())
+	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randomNumber())
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -169,7 +170,7 @@ func TestAccProvidersResource_Description(t *testing.T) {
 	var resourceName = "bloxone_cloud_discovery_provider.test_description"
 	var v clouddiscovery.DiscoveryConfig
 	name := acctest.RandomName()
-	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", acctest.RandomNumber())
+	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randomNumber())
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -204,7 +205,7 @@ func TestAccProvidersResource_DesiredState(t *testing.T) {
 	var resourceName = "bloxone_cloud_discovery_provider.test_desired_state"
 	var v clouddiscovery.DiscoveryConfig
 	name := acctest.RandomName()
-	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", acctest.RandomNumber())
+	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randomNumber())
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -239,7 +240,7 @@ func TestAccProvidersResource_Destinations(t *testing.T) {
 	var resourceName = "bloxone_cloud_discovery_provider.test_destinations"
 	var v clouddiscovery.DiscoveryConfig
 	name := acctest.RandomName()
-	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", acctest.RandomNumber())
+	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randomNumber())
 	viewName := acctest.RandomNameWithPrefix("view")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -285,7 +286,7 @@ func TestAccProvidersResource_Name(t *testing.T) {
 	var v1, v2 clouddiscovery.DiscoveryConfig
 	name1 := acctest.RandomName()
 	name2 := acctest.RandomName()
-	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", acctest.RandomNumber())
+	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randomNumber())
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -321,7 +322,7 @@ func TestAccProvidersResource_ProviderType(t *testing.T) {
 	var resourceName = "bloxone_cloud_discovery_provider.test_provider_type"
 	var v1, v2, v3 clouddiscovery.DiscoveryConfig
 	name := acctest.RandomName()
-	randNumber := acctest.RandomNumber()
+	randNumber := randomNumber()
 	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randNumber)
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -369,7 +370,7 @@ func TestAccProvidersResource_SourceConfigs(t *testing.T) {
 	var resourceName = "bloxone_cloud_discovery_provider.test_source_configs"
 	var v1, v2 clouddiscovery.DiscoveryConfig
 	name := acctest.RandomName()
-	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", acctest.RandomNumber())
+	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randomNumber())
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -405,7 +406,7 @@ func TestAccProvidersResource_SyncInterval(t *testing.T) {
 	var resourceName = "bloxone_cloud_discovery_provider.test_sync_interval"
 	var v clouddiscovery.DiscoveryConfig
 	name := acctest.RandomName()
-	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", acctest.RandomNumber())
+	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randomNumber())
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -438,7 +439,7 @@ func TestAccProvidersResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_cloud_discovery_provider.test_tags"
 	var v clouddiscovery.DiscoveryConfig
 	name := acctest.RandomName()
-	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", acctest.RandomNumber())
+	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randomNumber())
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -527,6 +528,11 @@ func testAccCheckProvidersDisappears(ctx context.Context, v *clouddiscovery.Disc
 		}
 		return nil
 	}
+}
+
+// RandomNumber Function to generate a random 12-digit number for cloud discovery Role ARN
+func randomNumber() string {
+	return fmt.Sprintf("%d", rand.Intn(999999999999))
 }
 
 func testAccProvidersBasicConfig(name, providerType, accountPreference, accessIdType, credType, configAccessId string) string {
