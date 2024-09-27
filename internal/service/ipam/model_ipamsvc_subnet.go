@@ -562,7 +562,7 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.Subnet, dia
 	m.DdnsTtlPercent = flex.FlattenFloat64(float64(*from.DdnsTtlPercent))
 	m.DdnsUpdateOnRenew = types.BoolPointerValue(from.DdnsUpdateOnRenew)
 	m.DdnsUseConflictResolution = types.BoolPointerValue(from.DdnsUseConflictResolution)
-	m.Delegation = flex.FlattenStringPointer(from.Federation)
+	m.Delegation = flex.FlattenStringPointer(from.Delegation)
 	m.DhcpConfig = FlattenIpamsvcDHCPConfigForSubnetOrAddressBlock(ctx, from.DhcpConfig, diags)
 	m.DhcpHost = flex.FlattenStringPointerWithNilAsEmpty(from.DhcpHost)
 	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
