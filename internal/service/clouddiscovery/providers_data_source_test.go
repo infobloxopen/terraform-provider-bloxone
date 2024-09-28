@@ -36,31 +36,6 @@ func TestAccProvidersDataSource_Filters(t *testing.T) {
 	})
 }
 
-func TestAccProvidersDataSource_TagFilters(t *testing.T) {
-	dataSourceName := "data.bloxone_cloud_discovery_providers.test"
-	resourceName := "bloxone_cloud_discovery_provider.test"
-	var v clouddiscovery.DiscoveryConfig
-	name := acctest.RandomName()
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckProvidersDestroy(context.Background(), &v),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccProvidersDataSourceConfigTagFilters(name, "Amazon Web Services",
-					"single", "role_arn", "dynamic",
-					"arn:aws:iam::123456789012:role/infoblox_discovery", "value1"),
-				Check: resource.ComposeTestCheckFunc(
-					append([]resource.TestCheckFunc{
-						testAccCheckProvidersExists(context.Background(), resourceName, &v),
-					}, testAccCheckProvidersResourceAttrPair(resourceName, dataSourceName)...)...,
-				),
-			},
-		},
-	})
-}
-
 // below all TestAcc functions
 
 func testAccCheckProvidersResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
@@ -108,32 +83,4 @@ data "bloxone_cloud_discovery_providers" "test" {
   }
 }
 `, name, providerType, accountPreference, accessIdType, credType, configAccessId)
-}
-
-func testAccProvidersDataSourceConfigTagFilters(name, providerType, accountPreference, accessIdType, credType, configAccessId, tagValue string) string {
-	return fmt.Sprintf(`
-resource "bloxone_cloud_discovery_provider" "test" {
-    name = %q
-	provider_type = %q
-	account_preference = %q
-	credential_preference = {
-		access_identifier_type = %q
-		credential_type = %q
-	}
-	source_configs = [ {
-		credential_config = {
-				access_identifier = %q
-			}
-	}]
-	tags = {
-		tag1 = %q
-  	}
-}
-
-data "bloxone_cloud_discovery_providers" "test" {
-  tag_filters = {
-	tag1 = bloxone_cloud_discovery_provider.test.tags.tag1
-  }
-}
-`, name, providerType, accountPreference, accessIdType, credType, configAccessId, tagValue)
 }

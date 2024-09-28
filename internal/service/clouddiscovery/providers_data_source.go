@@ -53,11 +53,6 @@ func (d *ProvidersDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				ElementType: types.StringType,
 				Optional:    true,
 			},
-			"tag_filters": schema.MapAttribute{
-				Description: "Tag Filters are used to return a more specific list of results filtered by tags. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
-				ElementType: types.StringType,
-				Optional:    true,
-			},
 			"results": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: utils.DataSourceAttributeMap(DiscoveryConfigResourceSchemaAttributes, &resp.Diagnostics),
