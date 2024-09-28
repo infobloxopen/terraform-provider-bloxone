@@ -57,7 +57,7 @@ var DestinationResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed: true,
 		Validators: []validator.String{
 			internalvalidator.StringNotNull(),
-			stringvalidator.OneOf("DNS", "IPAM/DHCP"),
+			stringvalidator.OneOf("DNS", "IPAM/DHCP", "ACCOUNTS"),
 		},
 		MarkdownDescription: "Destination type: DNS or IPAM/DHCP.",
 	},

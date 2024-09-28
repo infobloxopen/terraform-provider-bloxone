@@ -55,10 +55,11 @@ Required:
 Optional:
 
 - `additional_config` (Attributes) Additional configuration for the Discovery Job (see [below for nested schema](#nestedatt--results--additional_config))
-- `credential_preference` (Attributes) Credential preference for the discovery job . Note - Static credentials are not supported. (see [below for nested schema](#nestedatt--results--credential_preference))
+- `credential_preference` (Attributes) Credential preference for the discovery job. (see [below for nested schema](#nestedatt--results--credential_preference))
 - `deleted_at` (String) Timestamp when the object has been deleted.
 - `description` (String) Description of the discovery config. Optional.
 - `desired_state` (String) Desired state. Default is "enabled".
+- `destination_types_enabled` (List of String) Destinations types enabled: Ex.: DNS, IPAM and ACCOUNTS.
 - `destinations` (Attributes List) Destinations For the discovery config. (see [below for nested schema](#nestedatt--results--destinations))
 - `source_configs` (Attributes List) Source configs. (see [below for nested schema](#nestedatt--results--source_configs))
 - `sync_interval` (String) Sync interval. Default is "Auto".
@@ -67,7 +68,6 @@ Optional:
 Read-Only:
 
 - `created_at` (String) Timestamp when the object has been created.
-- `destination_types_enabled` (List of String) Destinations types enabled: Ex.: DNS, IPAM and ACCOUNT.
 - `id` (String) Auto-generated unique discovery config ID. Format BloxID.
 - `last_sync` (String) Last sync timestamp.
 - `status` (String) Status of the sync operation. In single account case, Its the combined status of account & all the destinations statuses In auto discover case, Its the status of the account discovery only.
@@ -129,7 +129,7 @@ Optional:
 Optional:
 
 - `access_identifier_type` (String) Access identifier type. Possible values: role_arn, tenant_id, project_id.
-- `credential_type` (String) Credential type. Possible values: `dynamic`. Support for Static Credentials is not present
+- `credential_type` (String) Credential type. Possible values: dynamic, static .
 
 
 <a id="nestedatt--results--destinations"></a>
@@ -160,9 +160,9 @@ Optional:
 
 Optional:
 
-- `consolidated_zone_data_enabled` (Boolean)
+- `consolidated_zone_data_enabled` (Boolean) consolidated_zone_data_enabled consolidates private zones into a single view, which is separate from the public zone view.
 - `split_view_enabled` (Boolean) split_view_enabled consolidates private zones into a single view, which is separate from the public zone view.
-- `sync_type` (String) Type of sync.
+- `sync_type` (String) Type of sync.Sync_type values: "read_only", "read_write"
 - `view_id` (String) Unique identifier of the view.
 - `view_name` (String) Name of the view.
 
@@ -184,7 +184,7 @@ Optional:
 Optional:
 
 - `cloud_credential_id` (String) Cloud Credential ID.
-- `credential_config` (Attributes) Credential configuration. Ex.: '{    "access_identifier": "arn:aws:iam::1234:role/access_for_discovery",    "region": "us-east-1",    "enclave": "commercial/gov"  }'. (see [below for nested schema](#nestedatt--results--source_configs--credential_config))
+- `credential_config` (Attributes) Credential configuration For the discovery job. (see [below for nested schema](#nestedatt--results--source_configs--credential_config))
 - `restricted_to_accounts` (List of String) Provider account IDs such as accountID/ SubscriptionID to be restricted for a given source_config.
 
 Read-Only:
@@ -201,7 +201,7 @@ Read-Only:
 
 Optional:
 
-- `access_identifier` (String) Access identifier of the account
+- `access_identifier` (String) access_identifier values: role_arn_1, tenant_id_123,project_id_123
 - `enclave` (String) Enclave of the account
 - `region` (String) Region of the account
 
@@ -211,24 +211,24 @@ Optional:
 
 Optional:
 
-- `composite_status` (String)
+- `composite_status` (String) Combined status of the account and the all the destinations statuses.
 - `composite_status_message` (String) Status message of the sync operation.
 - `name` (String) Name of the source account.
 - `parent_id` (String) Parent ID.
-- `provider_account_id` (String) Provider account ID.
+- `provider_account_id` (String) Provider Account ID value, such as aws account_id, azure subscription_id, gcp project_id.
 
 Read-Only:
 
 - `created_at` (String) Timestamp when the object has been created.
 - `deleted_at` (String) Timestamp when the object has been deleted.
-- `dhcp_server_id` (String)
+- `dhcp_server_id` (String) DHCP Server ID. MSAD case.
 - `dns_server_id` (String) DNS Server ID.
 - `id` (String) Auto-generated unique source account ID. Format BloxID.
 - `last_successful_sync` (String) Last successful sync timestamp.
 - `last_sync` (String) Last sync timestamp.
 - `percent_complete` (Number) Sync progress as a percentage.
 - `schedule_id` (String) Schedule ID.
-- `state` (String) State of the sync operation.
+- `state` (String) State represents the current state of the account, ex.: authorized, unauthorized, excluded, disabled.
 - `status` (String) Status of the sync operation.
 - `status_message` (String) Status message of the sync operation.
 - `updated_at` (String) Timestamp when the object has been updated.

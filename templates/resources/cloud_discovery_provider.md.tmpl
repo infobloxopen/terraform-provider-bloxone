@@ -3,23 +3,7 @@
 page_title: "{{.Name}} {{.Type}} - {{.RenderedProviderName}}"
 subcategory: "{{- $group := index (split .Name "_") 1 -}}
 {{- $subgroup := index (split .Name "_") 2 -}}
-{{- if eq $group "dhcp" -}}
-  IPAM/DHCP
-{{- else if eq $group "ipam" -}}
-  IPAM/DHCP
-{{- else if eq $group "dns" -}}
-  DNS
-{{- else if eq $group "infra" -}}
-  Infrastructure
-{{- else if eq $group "keys" -}}
-  Keys
-{{- else if eq $group "anycast" -}}
-  Anycast
-{{- else if eq $group "dfp" -}}
-  Threat Defense
-{{- else if eq $group "td" -}}
-  Threat Defense
-{{- else if and (eq $group "cloud") (eq $subgroup "discovery") -}}
+{{- if and (eq $group "cloud") (eq $subgroup "discovery") -}}
   Cloud Discovery Providers
 {{- end -}}"
 description: |-

@@ -2,7 +2,6 @@ package clouddiscovery
 
 import (
 	"context"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -15,6 +14,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 
 	"github.com/infobloxopen/bloxone-go-client/clouddiscovery"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
@@ -22,26 +23,26 @@ import (
 )
 
 type DiscoveryConfigModel struct {
-	AccountPreference       types.String      `tfsdk:"account_preference"`
-	AdditionalConfig        types.Object      `tfsdk:"additional_config"`
-	CreatedAt               timetypes.RFC3339 `tfsdk:"created_at"`
-	CredentialPreference    types.Object      `tfsdk:"credential_preference"`
-	DeletedAt               timetypes.RFC3339 `tfsdk:"deleted_at"`
-	Description             types.String      `tfsdk:"description"`
-	DesiredState            types.String      `tfsdk:"desired_state"`
-	DestinationTypesEnabled types.List        `tfsdk:"destination_types_enabled"`
-	Destinations            types.List        `tfsdk:"destinations"`
-	Id                      types.String      `tfsdk:"id"`
-	LastSync                timetypes.RFC3339 `tfsdk:"last_sync"`
-	Name                    types.String      `tfsdk:"name"`
-	ProviderType            types.String      `tfsdk:"provider_type"`
-	SourceConfigs           types.List        `tfsdk:"source_configs"`
-	Status                  types.String      `tfsdk:"status"`
-	StatusMessage           types.String      `tfsdk:"status_message"`
-	SyncInterval            types.String      `tfsdk:"sync_interval"`
-	Tags                    types.Map         `tfsdk:"tags"`
-	TagsAll                 types.Map         `tfsdk:"tags_all"`
-	UpdatedAt               timetypes.RFC3339 `tfsdk:"updated_at"`
+	AccountPreference       types.String                     `tfsdk:"account_preference"`
+	AdditionalConfig        types.Object                     `tfsdk:"additional_config"`
+	CreatedAt               timetypes.RFC3339                `tfsdk:"created_at"`
+	CredentialPreference    types.Object                     `tfsdk:"credential_preference"`
+	DeletedAt               timetypes.RFC3339                `tfsdk:"deleted_at"`
+	Description             types.String                     `tfsdk:"description"`
+	DesiredState            types.String                     `tfsdk:"desired_state"`
+	DestinationTypesEnabled internaltypes.UnorderedListValue `tfsdk:"destination_types_enabled"`
+	Destinations            internaltypes.UnorderedListValue `tfsdk:"destinations"`
+	Id                      types.String                     `tfsdk:"id"`
+	LastSync                timetypes.RFC3339                `tfsdk:"last_sync"`
+	Name                    types.String                     `tfsdk:"name"`
+	ProviderType            types.String                     `tfsdk:"provider_type"`
+	SourceConfigs           types.List                       `tfsdk:"source_configs"`
+	Status                  types.String                     `tfsdk:"status"`
+	StatusMessage           types.String                     `tfsdk:"status_message"`
+	SyncInterval            types.String                     `tfsdk:"sync_interval"`
+	Tags                    types.Map                        `tfsdk:"tags"`
+	TagsAll                 types.Map                        `tfsdk:"tags_all"`
+	UpdatedAt               timetypes.RFC3339                `tfsdk:"updated_at"`
 }
 
 var DiscoveryConfigAttrTypes = map[string]attr.Type{
@@ -52,8 +53,8 @@ var DiscoveryConfigAttrTypes = map[string]attr.Type{
 	"deleted_at":                timetypes.RFC3339Type{},
 	"description":               types.StringType,
 	"desired_state":             types.StringType,
-	"destination_types_enabled": types.ListType{ElemType: types.StringType},
-	"destinations":              types.ListType{ElemType: types.ObjectType{AttrTypes: DestinationAttrTypes}},
+	"destination_types_enabled": internaltypes.UnorderedListOfStringType,
+	"destinations":              types.SetType{ElemType: types.ObjectType{AttrTypes: DestinationAttrTypes}},
 	"id":                        types.StringType,
 	"last_sync":                 timetypes.RFC3339Type{},
 	"name":                      types.StringType,
@@ -93,7 +94,7 @@ var DiscoveryConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		Attributes:          CredentialPreferenceResourceSchemaAttributes,
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Credential preference for the discovery job . Note - Static credentials are not supported.",
+		MarkdownDescription: "Credential preference for the discovery job.",
 	},
 	"deleted_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -111,11 +112,14 @@ var DiscoveryConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Desired state. Default is \"enabled\".",
 	},
 	"destination_types_enabled": schema.ListAttribute{
+		CustomType:          internaltypes.UnorderedListOfStringType,
 		ElementType:         types.StringType,
 		Computed:            true,
-		MarkdownDescription: "Destinations types enabled: Ex.: DNS, IPAM and ACCOUNT.",
+		Optional:            true,
+		MarkdownDescription: "Destinations types enabled: Ex.: DNS, IPAM and ACCOUNTS.",
 	},
 	"destinations": schema.ListNestedAttribute{
+		CustomType: internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: DestinationAttrTypes}}},
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: DestinationResourceSchemaAttributes,
 		},
@@ -173,9 +177,9 @@ var DiscoveryConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Computed: true,
 		Optional: true,
-		PlanModifiers: []planmodifier.List{
-			listplanmodifier.RequiresReplaceIfConfigured(),
-		},
+		//PlanModifiers: []planmodifier.List{
+		//	listplanmodifier.RequiresReplaceIfConfigured(),
+		//},
 		MarkdownDescription: "Source configs.",
 	},
 	"status": schema.StringAttribute{
@@ -216,16 +220,17 @@ func (m *DiscoveryConfigModel) Expand(ctx context.Context, diags *diag.Diagnosti
 		return nil
 	}
 	to := &clouddiscovery.DiscoveryConfig{
-		Name:                 flex.ExpandString(m.Name),
-		CredentialPreference: ExpandCredentialPreference(ctx, m.CredentialPreference, diags),
-		AccountPreference:    flex.ExpandStringPointer(m.AccountPreference),
-		ProviderType:         flex.ExpandStringPointer(m.ProviderType),
-		AdditionalConfig:     ExpandAdditionalConfig(ctx, m.AdditionalConfig, diags),
-		Description:          flex.ExpandStringPointer(m.Description),
-		DesiredState:         flex.ExpandStringPointer(m.DesiredState),
-		Destinations:         flex.ExpandFrameworkListNestedBlock(ctx, m.Destinations, diags, ExpandDestination),
-		SyncInterval:         flex.ExpandStringPointer(m.SyncInterval),
-		Tags:                 flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
+		Name:                    flex.ExpandString(m.Name),
+		CredentialPreference:    ExpandCredentialPreference(ctx, m.CredentialPreference, diags),
+		AccountPreference:       flex.ExpandString(m.AccountPreference),
+		ProviderType:            flex.ExpandString(m.ProviderType),
+		AdditionalConfig:        ExpandAdditionalConfig(ctx, m.AdditionalConfig, diags),
+		Description:             flex.ExpandStringPointer(m.Description),
+		DesiredState:            flex.ExpandStringPointer(m.DesiredState),
+		Destinations:            flex.ExpandFrameworkListNestedBlock(ctx, m.Destinations, diags, ExpandDestination),
+		DestinationTypesEnabled: flex.ExpandFrameworkListString(ctx, m.DestinationTypesEnabled, diags),
+		SyncInterval:            flex.ExpandStringPointer(m.SyncInterval),
+		Tags:                    flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 	if isCreate {
 		to.SourceConfigs = flex.ExpandFrameworkListNestedBlock(ctx, m.SourceConfigs, diags, ExpandSourceConfig)
@@ -253,19 +258,19 @@ func (m *DiscoveryConfigModel) Flatten(ctx context.Context, from *clouddiscovery
 	if m == nil {
 		*m = DiscoveryConfigModel{}
 	}
-	m.AccountPreference = flex.FlattenStringPointer(from.AccountPreference)
+	m.AccountPreference = flex.FlattenString(from.AccountPreference)
 	m.AdditionalConfig = FlattenAdditionalConfig(ctx, from.AdditionalConfig, diags)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.CredentialPreference = FlattenCredentialPreference(ctx, from.CredentialPreference, diags)
 	m.DeletedAt = timetypes.NewRFC3339TimePointerValue(from.DeletedAt)
 	m.Description = flex.FlattenStringPointer(from.Description)
 	m.DesiredState = flex.FlattenStringPointer(from.DesiredState)
-	m.DestinationTypesEnabled = flex.FlattenFrameworkListString(ctx, from.DestinationTypesEnabled, diags)
-	m.Destinations = flex.FlattenFrameworkListNestedBlock(ctx, from.Destinations, DestinationAttrTypes, diags, FlattenDestination)
+	m.DestinationTypesEnabled = flex.FlattenFrameworkUnorderedList(ctx, types.StringType, from.DestinationTypesEnabled, diags)
+	m.Destinations = flex.FlattenFrameworkUnorderedListNestedBlock(ctx, from.Destinations, DestinationAttrTypes, diags, FlattenDestination)
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.LastSync = timetypes.NewRFC3339TimePointerValue(from.LastSync)
 	m.Name = flex.FlattenString(from.Name)
-	m.ProviderType = flex.FlattenStringPointer(from.ProviderType)
+	m.ProviderType = flex.FlattenString(from.ProviderType)
 	m.SourceConfigs = flex.FlattenFrameworkListNestedBlock(ctx, from.SourceConfigs, SourceConfigAttrTypes, diags, FlattenSourceConfig)
 	m.Status = flex.FlattenStringPointer(from.Status)
 	m.StatusMessage = flex.FlattenStringPointer(from.StatusMessage)

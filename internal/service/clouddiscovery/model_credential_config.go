@@ -29,7 +29,7 @@ var CredentialConfigAttrTypes = map[string]attr.Type{
 var CredentialConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"access_identifier": schema.StringAttribute{
 		Optional:            true,
-		MarkdownDescription: "Access identifier of the account",
+		MarkdownDescription: "access_identifier values: role_arn_1, tenant_id_123,project_id_123",
 	},
 	"enclave": schema.StringAttribute{
 		Optional:            true,

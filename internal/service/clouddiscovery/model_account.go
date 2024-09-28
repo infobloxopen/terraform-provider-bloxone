@@ -59,8 +59,9 @@ var AccountAttrTypes = map[string]attr.Type{
 
 var AccountResourceSchemaAttributes = map[string]schema.Attribute{
 	"composite_status": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "Combined status of the account and the all the destinations statuses.",
 	},
 	"composite_status_message": schema.StringAttribute{
 		Optional:            true,
@@ -78,7 +79,8 @@ var AccountResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Timestamp when the object has been deleted.",
 	},
 	"dhcp_server_id": schema.StringAttribute{
-		Computed: true,
+		Computed:            true,
+		MarkdownDescription: "DHCP Server ID. MSAD case.",
 	},
 	"dns_server_id": schema.StringAttribute{
 		Computed:            true,
@@ -115,7 +117,7 @@ var AccountResourceSchemaAttributes = map[string]schema.Attribute{
 	"provider_account_id": schema.StringAttribute{
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Provider account ID.",
+		MarkdownDescription: "Provider Account ID value, such as aws account_id, azure subscription_id, gcp project_id.",
 	},
 	"schedule_id": schema.StringAttribute{
 		Computed:            true,
@@ -123,7 +125,7 @@ var AccountResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"state": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "State of the sync operation.",
+		MarkdownDescription: "State represents the current state of the account, ex.: authorized, unauthorized, excluded, disabled.",
 	},
 	"status": schema.StringAttribute{
 		Computed:            true,

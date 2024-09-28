@@ -65,7 +65,7 @@ var SourceConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"credential_config": schema.SingleNestedAttribute{
 		Attributes:          CredentialConfigResourceSchemaAttributes,
 		Optional:            true,
-		MarkdownDescription: "Credential configuration. Ex.: '{    \"access_identifier\": \"arn:aws:iam::1234:role/access_for_discovery\",    \"region\": \"us-east-1\",    \"enclave\": \"commercial/gov\"  }'.",
+		MarkdownDescription: "Credential configuration For the discovery job.",
 	},
 	"deleted_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},

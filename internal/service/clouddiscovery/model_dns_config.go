@@ -32,8 +32,9 @@ var DNSConfigAttrTypes = map[string]attr.Type{
 
 var DNSConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"consolidated_zone_data_enabled": schema.BoolAttribute{
-		Optional: true,
-		Computed: true,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "consolidated_zone_data_enabled consolidates private zones into a single view, which is separate from the public zone view.",
 	},
 	"split_view_enabled": schema.BoolAttribute{
 		Optional:            true,
@@ -43,7 +44,7 @@ var DNSConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"sync_type": schema.StringAttribute{
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Type of sync.",
+		MarkdownDescription: "Type of sync.Sync_type values: \"read_only\", \"read_write\"",
 	},
 	"view_id": schema.StringAttribute{
 		Optional:            true,
