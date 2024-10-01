@@ -141,6 +141,12 @@ func FlattenFrameworkUnorderedList[T any](ctx context.Context, elemType attr.Typ
 	return tfList
 }
 
+func FlattenFrameworkUnorderedListNotNull[T any](ctx context.Context, elemType attr.Type, data []T, diags *diag.Diagnostics) internaltypes.UnorderedListValue {
+	tfList, d := internaltypes.NewUnorderedListValueFrom(ctx, elemType, data)
+	diags.Append(d...)
+	return tfList
+}
+
 func FlattenFrameworkListInt32(ctx context.Context, l []int32, diags *diag.Diagnostics) types.List {
 	if len(l) == 0 {
 		return types.ListNull(types.Int64Type)
