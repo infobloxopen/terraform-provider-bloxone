@@ -2,7 +2,6 @@ package ipam
 
 import (
 	"context"
-	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
@@ -25,6 +24,7 @@ import (
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 )
 
 type IpamsvcAddressBlockModel struct {
@@ -99,7 +99,7 @@ var IpamsvcAddressBlockAttrTypes = map[string]attr.Type{
 	"discovery_attrs":               types.MapType{ElemType: types.StringType},
 	"discovery_metadata":            types.MapType{ElemType: types.StringType},
 	"external_keys":                 types.MapType{ElemType: types.StringType},
-	"federated_realms":              types.ListType{ElemType: types.StringType},
+	"federated_realms":              internaltypes.UnorderedListOfStringType,
 	"header_option_filename":        types.StringType,
 	"header_option_server_address":  types.StringType,
 	"header_option_server_name":     types.StringType,

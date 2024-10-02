@@ -2,7 +2,6 @@ package ipam
 
 import (
 	"context"
-	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
@@ -24,6 +23,7 @@ import (
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 )
 
 type IpamsvcSubnetModel struct {
