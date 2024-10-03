@@ -55,7 +55,7 @@ var DiscoveryConfigAttrTypes = map[string]attr.Type{
 	"description":               types.StringType,
 	"desired_state":             types.StringType,
 	"destination_types_enabled": internaltypes.UnorderedListOfStringType,
-	"destinations":              types.SetType{ElemType: types.ObjectType{AttrTypes: DestinationAttrTypes}},
+	"destinations":              internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: DestinationAttrTypes}}},
 	"id":                        types.StringType,
 	"last_sync":                 timetypes.RFC3339Type{},
 	"name":                      types.StringType,

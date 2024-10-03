@@ -32,9 +32,8 @@ func (d *ProvidersDataSource) Metadata(ctx context.Context, req datasource.Metad
 }
 
 type DiscoveryConfigModelWithFilter struct {
-	Filters    types.Map  `tfsdk:"filters"`
-	TagFilters types.Map  `tfsdk:"tag_filters"`
-	Results    types.List `tfsdk:"results"`
+	Filters types.Map  `tfsdk:"filters"`
+	Results types.List `tfsdk:"results"`
 }
 
 func (m *DiscoveryConfigModelWithFilter) FlattenResults(ctx context.Context, from []clouddiscovery.DiscoveryConfig, diags *diag.Diagnostics) {
@@ -98,7 +97,6 @@ func (d *ProvidersDataSource) Read(ctx context.Context, req datasource.ReadReque
 			ProvidersAPI.
 			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).
 			Limit(limit).
 			Execute()
