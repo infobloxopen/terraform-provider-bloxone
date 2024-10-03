@@ -234,7 +234,7 @@ Optional:
 Optional:
 
 - `dhcp_server` (String) Address of the DHCP Server.
-- `disable_ipam_projection` (Boolean) Controls the IPAM Sync/Reconciliation for the provider.
+- `disable_ipam_projection` (Boolean) This flag controls the IPAM Sync/Reconciliation for the provider.
 - `ip_space` (String) IP Space.
 
 

@@ -19,7 +19,8 @@ var _ MappedNullable = &IPAMConfig{}
 
 // IPAMConfig struct for IPAMConfig
 type IPAMConfig struct {
-	DhcpServer            *string `json:"dhcp_server,omitempty"`
+	DhcpServer *string `json:"dhcp_server,omitempty"`
+	// This flag controls the IPAM Sync/Reconciliation for the provider
 	DisableIpamProjection *bool   `json:"disable_ipam_projection,omitempty"`
 	IpSpace               *string `json:"ip_space,omitempty"`
 	AdditionalProperties  map[string]interface{}
