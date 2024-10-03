@@ -78,10 +78,7 @@ var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Time when the object has been created.",
 	},
 	"federated_realm": schema.StringAttribute{
-		Required: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
-		},
+		Required:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 	"id": schema.StringAttribute{
