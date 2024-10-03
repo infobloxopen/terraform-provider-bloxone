@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
@@ -15,10 +16,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 
 	"github.com/infobloxopen/bloxone-go-client/clouddiscovery"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
@@ -128,18 +129,14 @@ var DiscoveryConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		Validators: []validator.List{
 			internalvalidator.DestinationTypeDependency(),
 		},
-		//Default: listdefault.StaticValue(types.ListValueMust(types.ObjectType{
-		//	AttrTypes: DestinationAttrTypes,
-		//}, []attr.Value{
-		//	types.ObjectValueMust(DestinationAttrTypes, map[string]attr.Value{
-		//		"config":           types.ObjectNull(DestinationConfigAttrTypes),
-		//		"destination_type": types.StringValue("IPAM/DHCP"),
-		//		"id":               types.StringNull(),
-		//		"created_at":       timetypes.NewRFC3339Null(),
-		//		"deleted_at":       timetypes.NewRFC3339Null(),
-		//		"updated_at":       timetypes.NewRFC3339Null(),
-		//	}),
-		//})),
+		Default: listdefault.StaticValue(types.ListValueMust(types.ObjectType{
+			AttrTypes: DestinationAttrTypes,
+		}, []attr.Value{
+			types.ObjectValueMust(DestinationAttrTypes, map[string]attr.Value{
+				"config":           types.ObjectNull(DestinationConfigAttrTypes),
+				"destination_type": types.StringValue("IPAM/DHCP"),
+			}),
+		})),
 		MarkdownDescription: "Destinations For the discovery config.",
 	},
 	"id": schema.StringAttribute{
@@ -175,11 +172,8 @@ var DiscoveryConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: SourceConfigResourceSchemaAttributes,
 		},
-		Computed: true,
-		Optional: true,
-		//PlanModifiers: []planmodifier.List{
-		//	listplanmodifier.RequiresReplaceIfConfigured(),
-		//},
+		Computed:            true,
+		Optional:            true,
 		MarkdownDescription: "Source configs.",
 	},
 	"status": schema.StringAttribute{

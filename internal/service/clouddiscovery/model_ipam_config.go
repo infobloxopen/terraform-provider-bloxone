@@ -15,24 +15,28 @@ import (
 )
 
 type IPAMConfigModel struct {
-	DhcpServer types.String `tfsdk:"dhcp_server"`
-	IpSpace    types.String `tfsdk:"ip_space"`
+	DhcpServer            types.String `tfsdk:"dhcp_server"`
+	DisableIpamProjection types.Bool   `tfsdk:"disable_ipam_projection"`
+	IpSpace               types.String `tfsdk:"ip_space"`
 }
 
 var IPAMConfigAttrTypes = map[string]attr.Type{
-	"dhcp_server": types.StringType,
-	"ip_space":    types.StringType,
+	"dhcp_server":             types.StringType,
+	"disable_ipam_projection": types.BoolType,
+	"ip_space":                types.StringType,
 }
 
 var IPAMConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"dhcp_server": schema.StringAttribute{
 		Optional:            true,
-		Computed:            true,
 		MarkdownDescription: "Address of the DHCP Server.",
+	},
+	"disable_ipam_projection": schema.BoolAttribute{
+		Optional:            true,
+		MarkdownDescription: "Controls the IPAM Sync/Reconciliation for the provider.",
 	},
 	"ip_space": schema.StringAttribute{
 		Optional:            true,
-		Computed:            true,
 		MarkdownDescription: "IP Space.",
 	},
 }
@@ -54,8 +58,9 @@ func (m *IPAMConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *
 		return nil
 	}
 	to := &clouddiscovery.IPAMConfig{
-		DhcpServer: flex.ExpandStringPointer(m.DhcpServer),
-		IpSpace:    flex.ExpandStringPointer(m.IpSpace),
+		DhcpServer:            flex.ExpandStringPointer(m.DhcpServer),
+		DisableIpamProjection: flex.ExpandBoolPointer(m.DisableIpamProjection),
+		IpSpace:               flex.ExpandStringPointer(m.IpSpace),
 	}
 	return to
 }
@@ -79,5 +84,6 @@ func (m *IPAMConfigModel) Flatten(ctx context.Context, from *clouddiscovery.IPAM
 		*m = IPAMConfigModel{}
 	}
 	m.DhcpServer = flex.FlattenStringPointer(from.DhcpServer)
+	m.DisableIpamProjection = types.BoolPointerValue(from.DisableIpamProjection)
 	m.IpSpace = flex.FlattenStringPointer(from.IpSpace)
 }

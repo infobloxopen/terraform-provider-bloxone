@@ -2,7 +2,7 @@ package clouddiscovery
 
 import (
 	"context"
-	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
+
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -10,29 +10,21 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 
 	"github.com/infobloxopen/bloxone-go-client/clouddiscovery"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
 type DestinationModel struct {
-	Config          types.Object      `tfsdk:"config"`
-	CreatedAt       timetypes.RFC3339 `tfsdk:"created_at"`
-	DeletedAt       timetypes.RFC3339 `tfsdk:"deleted_at"`
-	DestinationType types.String      `tfsdk:"destination_type"`
-	Id              types.String      `tfsdk:"id"`
-	UpdatedAt       timetypes.RFC3339 `tfsdk:"updated_at"`
+	Config          types.Object `tfsdk:"config"`
+	DestinationType types.String `tfsdk:"destination_type"`
 }
 
 var DestinationAttrTypes = map[string]attr.Type{
 	"config":           types.ObjectType{AttrTypes: DestinationConfigAttrTypes},
-	"created_at":       timetypes.RFC3339Type{},
-	"deleted_at":       timetypes.RFC3339Type{},
 	"destination_type": types.StringType,
-	"id":               types.StringType,
-	"updated_at":       timetypes.RFC3339Type{},
 }
 
 var DestinationResourceSchemaAttributes = map[string]schema.Attribute{
@@ -42,16 +34,6 @@ var DestinationResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "Destination configuration.",
 	},
-	"created_at": schema.StringAttribute{
-		CustomType:          timetypes.RFC3339Type{},
-		Computed:            true,
-		MarkdownDescription: "Timestamp when the object has been created.",
-	},
-	"deleted_at": schema.StringAttribute{
-		CustomType:          timetypes.RFC3339Type{},
-		Computed:            true,
-		MarkdownDescription: "Timestamp when the object has been deleted.",
-	},
 	"destination_type": schema.StringAttribute{
 		Optional: true,
 		Computed: true,
@@ -59,16 +41,7 @@ var DestinationResourceSchemaAttributes = map[string]schema.Attribute{
 			internalvalidator.StringNotNull(),
 			stringvalidator.OneOf("DNS", "IPAM/DHCP", "ACCOUNTS"),
 		},
-		MarkdownDescription: "Destination type: DNS or IPAM/DHCP.",
-	},
-	"id": schema.StringAttribute{
-		Computed:            true,
-		MarkdownDescription: "Auto-generated unique destination ID. Format BloxID.",
-	},
-	"updated_at": schema.StringAttribute{
-		CustomType:          timetypes.RFC3339Type{},
-		Computed:            true,
-		MarkdownDescription: "Timestamp when the object has been updated.",
+		MarkdownDescription: "Destination type: DNS or IPAM/DHCP or ACCOUNTS.",
 	},
 }
 
@@ -114,9 +87,5 @@ func (m *DestinationModel) Flatten(ctx context.Context, from *clouddiscovery.Des
 		*m = DestinationModel{}
 	}
 	m.Config = FlattenDestinationConfig(ctx, from.Config, diags)
-	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
-	m.DeletedAt = timetypes.NewRFC3339TimePointerValue(from.DeletedAt)
 	m.DestinationType = flex.FlattenString(from.DestinationType)
-	m.Id = flex.FlattenStringPointer(from.Id)
-	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }

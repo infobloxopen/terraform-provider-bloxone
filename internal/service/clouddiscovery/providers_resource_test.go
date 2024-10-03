@@ -267,15 +267,6 @@ func TestAccProvidersResource_Destinations(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "destinations.1.destination_type", "DNS"),
 				),
 			},
-			//{
-			//	Config: testAccProvidersDestinationsNull(name, "Amazon Web Services",
-			//		"single", "role_arn", "dynamic",
-			//		configAccessId),
-			//	Check: resource.ComposeTestCheckFunc(
-			//		testAccCheckProvidersExists(context.Background(), resourceName, &v),
-			//		resource.TestCheckResourceAttr(resourceName, "destinations.#", "0"),
-			//	),
-			//},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
@@ -665,13 +656,13 @@ resource "bloxone_cloud_discovery_provider" "test_desired_state" {
 
 func testAccProvidersDestinations(viewName, name, providerType, accountPreference, accessIdType, credType, configAccessId, destinationType string) string {
 	destinationsStr := ""
+	destinationTypeEnabledStr := ""
 	if destinationType == "IPAM/DHCP" {
 		destinationsStr = "{\n\t\t\tconfig = {}\n\t\t\tdestination_type = \"IPAM/DHCP\"\n\t\t}"
+		destinationTypeEnabledStr = "\"IPAM/DHCP\""
 	}
-	//if destinationType == "DNS2" {
-	//	destinationsStr = fmt.Sprintf("{\n\t\t\tconfig = {\n\t\t\t\tdns = {\n\t\t\t\t\tview_id = bloxone_dns_view.test.id\n\t\t\t\t}\n\t\t\t}\n\t\t\tdestination_type = \"DNS\"\n\t\t},\n\t\t{\n\t\t\tconfig = {}\n\t\t\tdestination_type = \"IPAM/DHCP\"\n\t\t}")
-	//}
 	if destinationType == "DNS" {
+		destinationTypeEnabledStr = "\"IPAM/DHCP\" , \"DNS\""
 		destinationsStr = "{\n\t\t\tconfig = {}\n\t\t\tdestination_type = \"IPAM/DHCP\"\n\t\t},\n\t\t{\n\t\t\tconfig = {\n\t\t\t\tdns = {\n\t\t\t\t\tview_id = bloxone_dns_view.test.id\n\t\t\t\t}\n\t\t\t}\n\t\t\tdestination_type = \"DNS\"\n\t\t}"
 	}
 	return fmt.Sprintf(`
@@ -692,32 +683,13 @@ resource "bloxone_cloud_discovery_provider" "test_destinations" {
 				access_identifier = %q
 			}
 	}]
+	destination_types_enabled = [%s]
 	destinations = [
 		%s
 	]
 }
-`, viewName, name, providerType, accountPreference, accessIdType, credType, configAccessId, destinationsStr)
+`, viewName, name, providerType, accountPreference, accessIdType, credType, configAccessId, destinationTypeEnabledStr, destinationsStr)
 }
-
-//func testAccProvidersDestinationsNull(name string, providerType, accountPreference, accessIdType, credType, configAccessId string) string {
-//	return fmt.Sprintf(`
-//resource "bloxone_cloud_discovery_provider" "test_destinations" {
-//    name = %q
-//	provider_type = %q
-//	account_preference = %q
-//	credential_preference = {
-//		access_identifier_type = %q
-//		credential_type = %q
-//	}
-//	source_configs = [ {
-//		credential_config = {
-//				access_identifier = %q
-//			}
-//	}]
-//	destinations = []
-//}
-//`, name, providerType, accountPreference, accessIdType, credType, configAccessId)
-//}
 
 func testAccProvidersName(name, providerType, accountPreference, accessIdType, credType, configAccessId string) string {
 	return fmt.Sprintf(`

@@ -206,14 +206,7 @@ Optional:
 Optional:
 
 - `config` (Attributes) Destination configuration. (see [below for nested schema](#nestedatt--destinations--config))
-- `destination_type` (String) Destination type: DNS or IPAM/DHCP.
-
-Read-Only:
-
-- `created_at` (String) Timestamp when the object has been created.
-- `deleted_at` (String) Timestamp when the object has been deleted.
-- `id` (String) Auto-generated unique destination ID. Format BloxID.
-- `updated_at` (String) Timestamp when the object has been updated.
+- `destination_type` (String) Destination type: DNS or IPAM/DHCP or ACCOUNTS.
 
 <a id="nestedatt--destinations--config"></a>
 ### Nested Schema for `destinations.config`
@@ -241,6 +234,7 @@ Optional:
 Optional:
 
 - `dhcp_server` (String) Address of the DHCP Server.
+- `disable_ipam_projection` (Boolean) Controls the IPAM Sync/Reconciliation for the provider.
 - `ip_space` (String) IP Space.
 
 

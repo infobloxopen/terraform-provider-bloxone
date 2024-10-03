@@ -2,6 +2,7 @@ package clouddiscovery
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -54,7 +55,10 @@ var SourceConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "List of accounts to be discovered.",
 	},
 	"cloud_credential_id": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "Cloud Credential ID.",
 	},
 	"created_at": schema.StringAttribute{
@@ -80,9 +84,12 @@ var SourceConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Auto-generated unique source config ID. Format BloxID.",
 	},
 	"restricted_to_accounts": schema.ListAttribute{
-		ElementType:         types.StringType,
-		Optional:            true,
-		Computed:            true,
+		ElementType: types.StringType,
+		Optional:    true,
+		Computed:    true,
+		PlanModifiers: []planmodifier.List{
+			listplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "Provider account IDs such as accountID/ SubscriptionID to be restricted for a given source_config.",
 	},
 	"updated_at": schema.StringAttribute{

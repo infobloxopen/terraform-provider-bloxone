@@ -6,6 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -28,7 +30,10 @@ var CredentialConfigAttrTypes = map[string]attr.Type{
 
 var CredentialConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"access_identifier": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "access_identifier values: role_arn_1, tenant_id_123,project_id_123",
 	},
 	"enclave": schema.StringAttribute{

@@ -19,9 +19,10 @@ var _ MappedNullable = &IPAMConfig{}
 
 // IPAMConfig struct for IPAMConfig
 type IPAMConfig struct {
-	DhcpServer           *string `json:"dhcp_server,omitempty"`
-	IpSpace              *string `json:"ip_space,omitempty"`
-	AdditionalProperties map[string]interface{}
+	DhcpServer            *string `json:"dhcp_server,omitempty"`
+	DisableIpamProjection *bool   `json:"disable_ipam_projection,omitempty"`
+	IpSpace               *string `json:"ip_space,omitempty"`
+	AdditionalProperties  map[string]interface{}
 }
 
 type _IPAMConfig IPAMConfig
@@ -75,6 +76,38 @@ func (o *IPAMConfig) SetDhcpServer(v string) {
 	o.DhcpServer = &v
 }
 
+// GetDisableIpamProjection returns the DisableIpamProjection field value if set, zero value otherwise.
+func (o *IPAMConfig) GetDisableIpamProjection() bool {
+	if o == nil || IsNil(o.DisableIpamProjection) {
+		var ret bool
+		return ret
+	}
+	return *o.DisableIpamProjection
+}
+
+// GetDisableIpamProjectionOk returns a tuple with the DisableIpamProjection field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IPAMConfig) GetDisableIpamProjectionOk() (*bool, bool) {
+	if o == nil || IsNil(o.DisableIpamProjection) {
+		return nil, false
+	}
+	return o.DisableIpamProjection, true
+}
+
+// HasDisableIpamProjection returns a boolean if a field has been set.
+func (o *IPAMConfig) HasDisableIpamProjection() bool {
+	if o != nil && !IsNil(o.DisableIpamProjection) {
+		return true
+	}
+
+	return false
+}
+
+// SetDisableIpamProjection gets a reference to the given bool and assigns it to the DisableIpamProjection field.
+func (o *IPAMConfig) SetDisableIpamProjection(v bool) {
+	o.DisableIpamProjection = &v
+}
+
 // GetIpSpace returns the IpSpace field value if set, zero value otherwise.
 func (o *IPAMConfig) GetIpSpace() string {
 	if o == nil || IsNil(o.IpSpace) {
@@ -120,6 +153,9 @@ func (o IPAMConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DhcpServer) {
 		toSerialize["dhcp_server"] = o.DhcpServer
 	}
+	if !IsNil(o.DisableIpamProjection) {
+		toSerialize["disable_ipam_projection"] = o.DisableIpamProjection
+	}
 	if !IsNil(o.IpSpace) {
 		toSerialize["ip_space"] = o.IpSpace
 	}
@@ -146,6 +182,7 @@ func (o *IPAMConfig) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "dhcp_server")
+		delete(additionalProperties, "disable_ipam_projection")
 		delete(additionalProperties, "ip_space")
 		o.AdditionalProperties = additionalProperties
 	}
