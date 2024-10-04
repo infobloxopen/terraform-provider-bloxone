@@ -18,7 +18,10 @@ resource "bloxone_cloud_discovery_provider" "example_aws" {
       }
     }
   ]
-
+  destination_types_enabled = [
+    "IPAM/DHCP",
+    "DNS"
+  ]
   # Other Optional fields
   destinations = [
     {

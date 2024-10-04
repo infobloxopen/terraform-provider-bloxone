@@ -31,6 +31,7 @@ func (v destinationTypeDependencyValidator) ValidateList(ctx context.Context, re
 
 	hasDNS := false
 	hasIPAM := false
+	hasACCOUNTS := false
 
 	for _, item := range req.ConfigValue.Elements() {
 		if destination, ok := item.(types.Object); ok {
@@ -42,15 +43,18 @@ func (v destinationTypeDependencyValidator) ValidateList(ctx context.Context, re
 				if destType.Equal(types.StringValue("IPAM/DHCP")) {
 					hasIPAM = true
 				}
+				if destType.Equal(types.StringValue("ACCOUNTS")) {
+					hasACCOUNTS = true
+				}
 			}
 		}
 	}
 
-	if hasDNS && !hasIPAM {
+	if (hasDNS && !hasIPAM) || (hasACCOUNTS && !hasIPAM) {
 		resp.Diagnostics.AddAttributeError(
 			req.Path,
 			"Missing Required Destination Type",
-			"When a destination of type 'DNS' is provided, a destination of type 'IPAM/DHCP' must also be included.",
+			"When a destination of type 'DNS' or 'ACCOUNTS' is provided, a destination of type 'IPAM/DHCP' must also be included.",
 		)
 	}
 }

@@ -236,6 +236,42 @@ func TestAccProvidersResource_DesiredState(t *testing.T) {
 	})
 }
 
+func TestAccProvidersResource_DestinationTypeEnabled(t *testing.T) {
+	var resourceName = "bloxone_cloud_discovery_provider.test_destination_type_enabled"
+	var v clouddiscovery.DiscoveryConfig
+	name := acctest.RandomName()
+	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randomNumber())
+	viewName := acctest.RandomNameWithPrefix("view")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccProvidersDestinationTypeEnabled(viewName, name, "Amazon Web Services",
+					"single", "role_arn", "dynamic",
+					configAccessId, "DNS"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckProvidersExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "destinations.0.destination_type", "IPAM/DHCP"),
+					resource.TestCheckResourceAttr(resourceName, "destinations.1.destination_type", "DNS"),
+				),
+			},
+			{
+				Config: testAccProvidersDestinationTypeEnabled(viewName, name, "Amazon Web Services",
+					"single", "role_arn", "dynamic",
+					configAccessId, "IPAM/DHCP"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckProvidersExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "destinations.0.destination_type", "IPAM/DHCP"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccProvidersResource_Destinations(t *testing.T) {
 	var resourceName = "bloxone_cloud_discovery_provider.test_destinations"
 	var v clouddiscovery.DiscoveryConfig
@@ -671,6 +707,43 @@ resource "bloxone_dns_view" "test" {
 }
 
 resource "bloxone_cloud_discovery_provider" "test_destinations" {
+    name = %q
+	provider_type = %q
+	account_preference = %q
+	credential_preference = {
+		access_identifier_type = %q
+		credential_type = %q
+	}
+	source_configs = [ {
+		credential_config = {
+				access_identifier = %q
+			}
+	}]
+	destination_types_enabled = [%s]
+	destinations = [
+		%s
+	]
+}
+`, viewName, name, providerType, accountPreference, accessIdType, credType, configAccessId, destinationTypeEnabledStr, destinationsStr)
+}
+
+func testAccProvidersDestinationTypeEnabled(viewName, name, providerType, accountPreference, accessIdType, credType, configAccessId, destinationType string) string {
+	destinationsStr := ""
+	destinationTypeEnabledStr := ""
+	if destinationType == "IPAM/DHCP" {
+		destinationTypeEnabledStr = "\"IPAM/DHCP\""
+		destinationsStr = "{\n\t\t\tconfig = {}\n\t\t\tdestination_type = \"IPAM/DHCP\"\n\t\t},\n\t\t{\n\t\t\tconfig = {\n\t\t\t\tdns = {\n\t\t\t\t\tview_id = bloxone_dns_view.test.id\n\t\t\t\t}\n\t\t\t}\n\t\t\tdestination_type = \"DNS\"\n\t\t}"
+	}
+	if destinationType == "DNS" {
+		destinationTypeEnabledStr = "\"IPAM/DHCP\" , \"DNS\""
+		destinationsStr = "{\n\t\t\tconfig = {}\n\t\t\tdestination_type = \"IPAM/DHCP\"\n\t\t},\n\t\t{\n\t\t\tconfig = {\n\t\t\t\tdns = {\n\t\t\t\t\tview_id = bloxone_dns_view.test.id\n\t\t\t\t}\n\t\t\t}\n\t\t\tdestination_type = \"DNS\"\n\t\t}"
+	}
+	return fmt.Sprintf(`
+resource "bloxone_dns_view" "test" {
+    name = %q
+}
+
+resource "bloxone_cloud_discovery_provider" "test_destination_type_enabled" {
     name = %q
 	provider_type = %q
 	account_preference = %q

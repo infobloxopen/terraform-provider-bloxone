@@ -3,9 +3,11 @@ package clouddiscovery
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -31,8 +33,11 @@ var CategoryResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "If set true , the category is excluded from discovery.",
 	},
 	"id": schema.StringAttribute{
-		Computed:            true,
-		Optional:            true,
+		Computed: true,
+		Optional: true,
+		Validators: []validator.String{
+			stringvalidator.OneOf("security", "networking-basics", "lbs", "compute", "azure-storage", "networking-advanced"),
+		},
 		MarkdownDescription: "Category ID.",
 	},
 }
