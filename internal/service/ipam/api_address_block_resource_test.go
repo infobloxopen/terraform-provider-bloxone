@@ -824,17 +824,30 @@ func TestAccAddressBlockResource_MultipleFederatedRealms(t *testing.T) {
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckAddressBlockDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
-			// Create address block with multiple federated realms and verify
+			// Step 1: Create address block with multiple federated realms and verify
 			{
 				Config: testAccAddressBlockMultipleFederatedRealms(ipSpaceName, address, cidr, realmName1, realmName2, realmName3, realmName4, realmName5),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "federated_realms.#", "5"),
-					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.0", "bloxone_federation_federated_realm.realm1", "id"),
-					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.1", "bloxone_federation_federated_realm.realm2", "id"),
-					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.2", "bloxone_federation_federated_realm.realm3", "id"),
-					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.3", "bloxone_federation_federated_realm.realm4", "id"),
-					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.4", "bloxone_federation_federated_realm.realm5", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.0", "bloxone_federation_federated_realm."+realmName1, "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.1", "bloxone_federation_federated_realm."+realmName2, "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.2", "bloxone_federation_federated_realm."+realmName3, "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.3", "bloxone_federation_federated_realm."+realmName4, "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.4", "bloxone_federation_federated_realm."+realmName5, "id"),
+				),
+			},
+			// Step 2: Update address block with federated realms with different order and verify
+			{
+				Config: testAccAddressBlockMultipleFederatedRealms(ipSpaceName, address, cidr, realmName2, realmName3, realmName1, realmName5, realmName4),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "federated_realms.#", "5"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.0", "bloxone_federation_federated_realm."+realmName2, "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.1", "bloxone_federation_federated_realm."+realmName3, "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.2", "bloxone_federation_federated_realm."+realmName1, "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.3", "bloxone_federation_federated_realm."+realmName5, "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.4", "bloxone_federation_federated_realm."+realmName4, "id"),
 				),
 			},
 		},
@@ -1452,21 +1465,21 @@ resource "bloxone_ipam_address_block" "test_federated_realms" {
     cidr = %q
     space = bloxone_ipam_ip_space.test.id
     federated_realms = [
-		bloxone_federation_federated_realm.realm1.id,
-		bloxone_federation_federated_realm.realm2.id,
-		bloxone_federation_federated_realm.realm3.id,
-		bloxone_federation_federated_realm.realm4.id,
-		bloxone_federation_federated_realm.realm5.id
+		bloxone_federation_federated_realm.%s.id,
+		bloxone_federation_federated_realm.%s.id,
+		bloxone_federation_federated_realm.%s.id,
+		bloxone_federation_federated_realm.%s.id,
+		bloxone_federation_federated_realm.%s.id
 	]
 }
-`, address, cidr)
+`, address, cidr, realmName1, realmName2, realmName3, realmName4, realmName5)
 	return strings.Join([]string{
 		testAccBaseWithIPSpace(spaceName),
-		testAccBaseWithFederatedRealm(realmName1, "realm1"),
-		testAccBaseWithFederatedRealm(realmName2, "realm2"),
-		testAccBaseWithFederatedRealm(realmName3, "realm3"),
-		testAccBaseWithFederatedRealm(realmName4, "realm4"),
-		testAccBaseWithFederatedRealm(realmName5, "realm5"),
+		testAccBaseWithFederatedRealm(realmName1, realmName1),
+		testAccBaseWithFederatedRealm(realmName2, realmName2),
+		testAccBaseWithFederatedRealm(realmName3, realmName3),
+		testAccBaseWithFederatedRealm(realmName4, realmName4),
+		testAccBaseWithFederatedRealm(realmName5, realmName5),
 		config,
 	}, "")
 }
