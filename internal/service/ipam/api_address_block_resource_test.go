@@ -807,6 +807,40 @@ func TestAccAddressBlockResource_InheritanceSources(t *testing.T) {
 	})
 }
 
+func TestAccAddressBlockResource_MultipleFederatedRealms(t *testing.T) {
+	var resourceName = "bloxone_ipam_address_block.test_federated_realms"
+	var v ipam.AddressBlock
+	var ipSpaceName = acctest.RandomNameWithPrefix("ip-space")
+	var address = "192.168.0.0"
+	var cidr = "16"
+	var realmName1 = acctest.RandomNameWithPrefix("realm1")
+	var realmName2 = acctest.RandomNameWithPrefix("realm2")
+	var realmName3 = acctest.RandomNameWithPrefix("realm3")
+	var realmName4 = acctest.RandomNameWithPrefix("realm4")
+	var realmName5 = acctest.RandomNameWithPrefix("realm5")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckAddressBlockDestroy(context.Background(), &v),
+		Steps: []resource.TestStep{
+			// Create address block with multiple federated realms and verify
+			{
+				Config: testAccAddressBlockMultipleFederatedRealms(ipSpaceName, address, cidr, realmName1, realmName2, realmName3, realmName4, realmName5),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "federated_realms.#", "5"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.0", "bloxone_federation_federated_realm.realm1", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.1", "bloxone_federation_federated_realm.realm2", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.2", "bloxone_federation_federated_realm.realm3", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.3", "bloxone_federation_federated_realm.realm4", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.4", "bloxone_federation_federated_realm.realm5", "id"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccAddressBlockResource_Name(t *testing.T) {
 	var resourceName = "bloxone_ipam_address_block.test_name"
 	var v ipam.AddressBlock
@@ -1409,6 +1443,32 @@ resource "bloxone_ipam_address_block" "test_inheritance_sources" {
 }
 `, address, cidr, action)
 	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
+}
+
+func testAccAddressBlockMultipleFederatedRealms(spaceName, address, cidr, realmName1, realmName2, realmName3, realmName4, realmName5 string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test_federated_realms" {
+    address = %q
+    cidr = %q
+    space = bloxone_ipam_ip_space.test.id
+    federated_realms = [
+		bloxone_federation_federated_realm.realm1.id,
+		bloxone_federation_federated_realm.realm2.id,
+		bloxone_federation_federated_realm.realm3.id,
+		bloxone_federation_federated_realm.realm4.id,
+		bloxone_federation_federated_realm.realm5.id
+	]
+}
+`, address, cidr)
+	return strings.Join([]string{
+		testAccBaseWithIPSpace(spaceName),
+		testAccBaseWithFederatedRealm(realmName1, "realm1"),
+		testAccBaseWithFederatedRealm(realmName2, "realm2"),
+		testAccBaseWithFederatedRealm(realmName3, "realm3"),
+		testAccBaseWithFederatedRealm(realmName4, "realm4"),
+		testAccBaseWithFederatedRealm(realmName5, "realm5"),
+		config,
+	}, "")
 }
 
 func testAccAddressBlockName(spaceName, address, cidr, name string) string {
