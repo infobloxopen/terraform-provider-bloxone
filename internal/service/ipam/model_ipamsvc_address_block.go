@@ -24,54 +24,55 @@ import (
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 )
 
 type IpamsvcAddressBlockModel struct {
-	Address                    types.String      `tfsdk:"address"`
-	AsmConfig                  types.Object      `tfsdk:"asm_config"`
-	AsmScopeFlag               types.Int64       `tfsdk:"asm_scope_flag"`
-	Cidr                       types.Int64       `tfsdk:"cidr"`
-	Comment                    types.String      `tfsdk:"comment"`
-	CompartmentId              types.String      `tfsdk:"compartment_id"`
-	CreatedAt                  timetypes.RFC3339 `tfsdk:"created_at"`
-	DdnsClientUpdate           types.String      `tfsdk:"ddns_client_update"`
-	DdnsConflictResolutionMode types.String      `tfsdk:"ddns_conflict_resolution_mode"`
-	DdnsDomain                 types.String      `tfsdk:"ddns_domain"`
-	DdnsGenerateName           types.Bool        `tfsdk:"ddns_generate_name"`
-	DdnsGeneratedPrefix        types.String      `tfsdk:"ddns_generated_prefix"`
-	DdnsSendUpdates            types.Bool        `tfsdk:"ddns_send_updates"`
-	DdnsTtlPercent             types.Float64     `tfsdk:"ddns_ttl_percent"`
-	DdnsUpdateOnRenew          types.Bool        `tfsdk:"ddns_update_on_renew"`
-	DdnsUseConflictResolution  types.Bool        `tfsdk:"ddns_use_conflict_resolution"`
-	Delegation                 types.String      `tfsdk:"delegation"`
-	DhcpConfig                 types.Object      `tfsdk:"dhcp_config"`
-	DhcpOptions                types.List        `tfsdk:"dhcp_options"`
-	DhcpUtilization            types.Object      `tfsdk:"dhcp_utilization"`
-	DiscoveryAttrs             types.Map         `tfsdk:"discovery_attrs"`
-	DiscoveryMetadata          types.Map         `tfsdk:"discovery_metadata"`
-	ExternalKeys               types.Map         `tfsdk:"external_keys"`
-	FederatedRealms            types.List        `tfsdk:"federated_realms"`
-	HeaderOptionFilename       types.String      `tfsdk:"header_option_filename"`
-	HeaderOptionServerAddress  types.String      `tfsdk:"header_option_server_address"`
-	HeaderOptionServerName     types.String      `tfsdk:"header_option_server_name"`
-	HostnameRewriteChar        types.String      `tfsdk:"hostname_rewrite_char"`
-	HostnameRewriteEnabled     types.Bool        `tfsdk:"hostname_rewrite_enabled"`
-	HostnameRewriteRegex       types.String      `tfsdk:"hostname_rewrite_regex"`
-	Id                         types.String      `tfsdk:"id"`
-	InheritanceParent          types.String      `tfsdk:"inheritance_parent"`
-	InheritanceSources         types.Object      `tfsdk:"inheritance_sources"`
-	Name                       types.String      `tfsdk:"name"`
-	Parent                     types.String      `tfsdk:"parent"`
-	Protocol                   types.String      `tfsdk:"protocol"`
-	Space                      types.String      `tfsdk:"space"`
-	Tags                       types.Map         `tfsdk:"tags"`
-	TagsAll                    types.Map         `tfsdk:"tags_all"`
-	Threshold                  types.Object      `tfsdk:"threshold"`
-	UpdatedAt                  timetypes.RFC3339 `tfsdk:"updated_at"`
-	Usage                      types.List        `tfsdk:"usage"`
-	Utilization                types.Object      `tfsdk:"utilization"`
-	UtilizationV6              types.Object      `tfsdk:"utilization_v6"`
-	NextAvailableId            types.String      `tfsdk:"next_available_id"`
+	Address                    types.String                     `tfsdk:"address"`
+	AsmConfig                  types.Object                     `tfsdk:"asm_config"`
+	AsmScopeFlag               types.Int64                      `tfsdk:"asm_scope_flag"`
+	Cidr                       types.Int64                      `tfsdk:"cidr"`
+	Comment                    types.String                     `tfsdk:"comment"`
+	CompartmentId              types.String                     `tfsdk:"compartment_id"`
+	CreatedAt                  timetypes.RFC3339                `tfsdk:"created_at"`
+	DdnsClientUpdate           types.String                     `tfsdk:"ddns_client_update"`
+	DdnsConflictResolutionMode types.String                     `tfsdk:"ddns_conflict_resolution_mode"`
+	DdnsDomain                 types.String                     `tfsdk:"ddns_domain"`
+	DdnsGenerateName           types.Bool                       `tfsdk:"ddns_generate_name"`
+	DdnsGeneratedPrefix        types.String                     `tfsdk:"ddns_generated_prefix"`
+	DdnsSendUpdates            types.Bool                       `tfsdk:"ddns_send_updates"`
+	DdnsTtlPercent             types.Float64                    `tfsdk:"ddns_ttl_percent"`
+	DdnsUpdateOnRenew          types.Bool                       `tfsdk:"ddns_update_on_renew"`
+	DdnsUseConflictResolution  types.Bool                       `tfsdk:"ddns_use_conflict_resolution"`
+	Delegation                 types.String                     `tfsdk:"delegation"`
+	DhcpConfig                 types.Object                     `tfsdk:"dhcp_config"`
+	DhcpOptions                types.List                       `tfsdk:"dhcp_options"`
+	DhcpUtilization            types.Object                     `tfsdk:"dhcp_utilization"`
+	DiscoveryAttrs             types.Map                        `tfsdk:"discovery_attrs"`
+	DiscoveryMetadata          types.Map                        `tfsdk:"discovery_metadata"`
+	ExternalKeys               types.Map                        `tfsdk:"external_keys"`
+	FederatedRealms            internaltypes.UnorderedListValue `tfsdk:"federated_realms"`
+	HeaderOptionFilename       types.String                     `tfsdk:"header_option_filename"`
+	HeaderOptionServerAddress  types.String                     `tfsdk:"header_option_server_address"`
+	HeaderOptionServerName     types.String                     `tfsdk:"header_option_server_name"`
+	HostnameRewriteChar        types.String                     `tfsdk:"hostname_rewrite_char"`
+	HostnameRewriteEnabled     types.Bool                       `tfsdk:"hostname_rewrite_enabled"`
+	HostnameRewriteRegex       types.String                     `tfsdk:"hostname_rewrite_regex"`
+	Id                         types.String                     `tfsdk:"id"`
+	InheritanceParent          types.String                     `tfsdk:"inheritance_parent"`
+	InheritanceSources         types.Object                     `tfsdk:"inheritance_sources"`
+	Name                       types.String                     `tfsdk:"name"`
+	Parent                     types.String                     `tfsdk:"parent"`
+	Protocol                   types.String                     `tfsdk:"protocol"`
+	Space                      types.String                     `tfsdk:"space"`
+	Tags                       types.Map                        `tfsdk:"tags"`
+	TagsAll                    types.Map                        `tfsdk:"tags_all"`
+	Threshold                  types.Object                     `tfsdk:"threshold"`
+	UpdatedAt                  timetypes.RFC3339                `tfsdk:"updated_at"`
+	Usage                      types.List                       `tfsdk:"usage"`
+	Utilization                types.Object                     `tfsdk:"utilization"`
+	UtilizationV6              types.Object                     `tfsdk:"utilization_v6"`
+	NextAvailableId            types.String                     `tfsdk:"next_available_id"`
 }
 
 var IpamsvcAddressBlockAttrTypes = map[string]attr.Type{
@@ -98,7 +99,7 @@ var IpamsvcAddressBlockAttrTypes = map[string]attr.Type{
 	"discovery_attrs":               types.MapType{ElemType: types.StringType},
 	"discovery_metadata":            types.MapType{ElemType: types.StringType},
 	"external_keys":                 types.MapType{ElemType: types.StringType},
-	"federated_realms":              types.ListType{ElemType: types.StringType},
+	"federated_realms":              internaltypes.UnorderedListOfStringType,
 	"header_option_filename":        types.StringType,
 	"header_option_server_address":  types.StringType,
 	"header_option_server_name":     types.StringType,
@@ -290,6 +291,7 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The external keys (source key) for this address block in JSON format.",
 	},
 	"federated_realms": schema.ListAttribute{
+		CustomType:          internaltypes.UnorderedListOfStringType,
 		ElementType:         types.StringType,
 		Optional:            true,
 		Computed:            true,
@@ -537,7 +539,7 @@ func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.Addre
 	m.DiscoveryAttrs = flex.FlattenFrameworkMapString(ctx, from.DiscoveryAttrs, diags)
 	m.DiscoveryMetadata = flex.FlattenFrameworkMapString(ctx, from.DiscoveryMetadata, diags)
 	m.ExternalKeys = flex.FlattenFrameworkMapString(ctx, from.ExternalKeys, diags)
-	m.FederatedRealms = flex.FlattenFrameworkListStringNotNull(ctx, from.FederatedRealms, diags)
+	m.FederatedRealms = flex.FlattenFrameworkUnorderedListNotNull(ctx, types.StringType, from.FederatedRealms, diags)
 	m.HeaderOptionFilename = flex.FlattenStringPointer(from.HeaderOptionFilename)
 	m.HeaderOptionServerAddress = flex.FlattenStringPointer(from.HeaderOptionServerAddress)
 	m.HeaderOptionServerName = flex.FlattenStringPointer(from.HeaderOptionServerName)
