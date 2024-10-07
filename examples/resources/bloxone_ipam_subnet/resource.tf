@@ -14,6 +14,12 @@ data "bloxone_dhcp_option_codes" "option_code" {
   }
 }
 
+data "bloxone_federation_federated_realms" "federated_realm" {
+  filters = {
+    name = "example_federation_federated_realm"
+  }
+}
+
 # Static address
 resource "bloxone_ipam_subnet" "example" {
   address = "10.0.0.0"
@@ -34,6 +40,9 @@ resource "bloxone_ipam_subnet" "example" {
       type         = "option"
     }
   ]
+
+  //federated realms
+  federated_realms = [data.bloxone_federation_federated_realms.federated_realm.results.0.id]
 }
 
 # Next available subnet
