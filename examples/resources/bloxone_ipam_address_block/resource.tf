@@ -11,6 +11,10 @@ data "bloxone_dhcp_option_codes" "option_code" {
   }
 }
 
+resource "bloxone_federation_federated_realm" "example" {
+  name = "example_federation_federated_realm"
+}
+
 resource "bloxone_ipam_address_block" "example" {
   address = "192.168.1.0"
   cidr    = 24
@@ -67,6 +71,8 @@ resource "bloxone_ipam_address_block" "example_tags" {
       }
     ]
   }
+
+  federated_realms = [bloxone_federation_federated_realm.example.id]
 }
 
 # Next available address block
