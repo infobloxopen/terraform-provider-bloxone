@@ -29,10 +29,8 @@ data "bloxone_dhcp_option_codes" "option_code" {
   }
 }
 
-data "bloxone_federation_federated_realms" "federated_realm" {
-  filters = {
-    name = "example_federation_federated_realm"
-  }
+resource "bloxone_federation_federated_realm" "example" {
+  name = "example_federation_federated_realm"
 }
 
 resource "bloxone_ipam_address_block" "example" {
@@ -92,8 +90,7 @@ resource "bloxone_ipam_address_block" "example_tags" {
     ]
   }
 
-  //federated realms
-  federated_realms = [data.bloxone_federation_federated_realms.federated_realm.results.0.id]
+  federated_realms = [bloxone_federation_federated_realm.example.id]
 }
 
 # Next available address block

@@ -26,10 +26,8 @@ data "bloxone_dhcp_option_codes" "option_code" {
   }
 }
 
-data "bloxone_federation_federated_realms" "federated_realm" {
-  filters = {
-    name = "example_federation_federated_realm"
-  }
+resource "bloxone_federation_federated_realm" "example" {
+  name = "example_federation_federated_realm"
 }
 
 resource "bloxone_ipam_ip_space" "example_tags" {
@@ -39,7 +37,6 @@ resource "bloxone_ipam_ip_space" "example_tags" {
     location = "site1"
   }
 
-  //dhcp options
   dhcp_options = [
     {
       option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
@@ -48,8 +45,7 @@ resource "bloxone_ipam_ip_space" "example_tags" {
     }
   ]
 
-  //federated realms
-  default_realms = [data.bloxone_federation_federated_realms.federated_realm.results.0.id]
+  default_realms = [bloxone_federation_federated_realm.example.id]
 }
 ```
 

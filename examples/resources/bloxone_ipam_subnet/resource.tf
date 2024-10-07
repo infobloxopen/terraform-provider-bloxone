@@ -14,10 +14,8 @@ data "bloxone_dhcp_option_codes" "option_code" {
   }
 }
 
-data "bloxone_federation_federated_realms" "federated_realm" {
-  filters = {
-    name = "example_federation_federated_realm"
-  }
+resource "bloxone_federation_federated_realm" "example" {
+  name = "example_federation_federated_realm"
 }
 
 # Static address
@@ -32,7 +30,7 @@ resource "bloxone_ipam_subnet" "example" {
   tags = {
     site = "Site A"
   }
-  //dhcp options
+
   dhcp_options = [
     {
       option_code  = data.bloxone_dhcp_option_codes.option_code.results.0.id
@@ -41,8 +39,7 @@ resource "bloxone_ipam_subnet" "example" {
     }
   ]
 
-  //federated realms
-  federated_realms = [data.bloxone_federation_federated_realms.federated_realm.results.0.id]
+  federated_realms = [bloxone_federation_federated_realm.example.id]
 }
 
 # Next available subnet
