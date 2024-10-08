@@ -119,7 +119,7 @@ func TestAccProvidersResource_AdditionalConfig(t *testing.T) {
 			{
 				Config: testAccProvidersAdditionalConfig(name, "Amazon Web Services",
 					"single", "role_arn", "dynamic",
-					configAccessId, "storage", "true"),
+					configAccessId, "storage", "true", "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckProvidersExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "additional_config.object_type.objects.0.category.excluded", "true"),
@@ -130,7 +130,7 @@ func TestAccProvidersResource_AdditionalConfig(t *testing.T) {
 			{
 				Config: testAccProvidersAdditionalConfig(name, "Amazon Web Services",
 					"single", "role_arn", "dynamic",
-					configAccessId, "security", "true"),
+					configAccessId, "security", "true", "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckProvidersExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "additional_config.object_type.objects.0.category.excluded", "true"),
@@ -601,7 +601,7 @@ resource "bloxone_cloud_discovery_provider" "test_account_preference" {
 `, name, providerType, accountPreference, accessIdType, credType, configAccessId)
 }
 
-func testAccProvidersAdditionalConfig(name, providerType, accountPreference, accessIdType, credType, configAccessId, addConfigCategoryId, addConfigCategoryExcluded string) string {
+func testAccProvidersAdditionalConfig(name, providerType, accountPreference, accessIdType, credType, configAccessId, addConfigCategoryId, addConfigCategoryExcluded, forwardZoneEnabled string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cloud_discovery_provider" "test_additional_config" {
     name = %q
@@ -611,6 +611,7 @@ resource "bloxone_cloud_discovery_provider" "test_additional_config" {
 		access_identifier_type = %q
 		credential_type = %q
 	}
+	
 	source_configs = [ {
 		credential_config = {
 				access_identifier = %q
@@ -626,9 +627,10 @@ resource "bloxone_cloud_discovery_provider" "test_additional_config" {
 				}
 			] 
 		}
+		forward_zone_enabled = %s
 	}
 }
-`, name, providerType, accountPreference, accessIdType, credType, configAccessId, addConfigCategoryExcluded, addConfigCategoryId)
+`, name, providerType, accountPreference, accessIdType, credType, configAccessId, addConfigCategoryExcluded, addConfigCategoryId, forwardZoneEnabled)
 }
 
 func testAccProvidersCredentialPreference(name, providerType, accountPreference, accessIdType, credType, configAccessId string) string {

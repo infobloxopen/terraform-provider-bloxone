@@ -7,6 +7,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -40,6 +42,20 @@ var DestinationResourceSchemaAttributes = map[string]schema.Attribute{
 		Validators: []validator.String{
 			internalvalidator.StringNotNull(),
 			stringvalidator.OneOf("DNS", "IPAM/DHCP", "ACCOUNTS"),
+		},
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIf(
+				func(ctx context.Context, request planmodifier.StringRequest, response *stringplanmodifier.RequiresReplaceIfFuncResponse) {
+					if !request.ConfigValue.IsNull() && !request.StateValue.IsNull() {
+						if request.ConfigValue.String() != request.StateValue.String() {
+							response.RequiresReplace = true
+						}
+					}
+
+				},
+				"If the value of the destination_type is configured and changes, Terraform will destroy and recreate the resource.",
+				"If the value of the destination_type is configured and changes, Terraform will destroy and recreate the resource.",
+			),
 		},
 		MarkdownDescription: "Destination type: DNS or IPAM/DHCP or ACCOUNTS.",
 	},

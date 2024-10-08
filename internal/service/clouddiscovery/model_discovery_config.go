@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
@@ -129,14 +128,6 @@ var DiscoveryConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		Validators: []validator.List{
 			internalvalidator.DestinationTypeDependency(),
 		},
-		Default: listdefault.StaticValue(types.ListValueMust(types.ObjectType{
-			AttrTypes: DestinationAttrTypes,
-		}, []attr.Value{
-			types.ObjectValueMust(DestinationAttrTypes, map[string]attr.Value{
-				"config":           types.ObjectNull(DestinationConfigAttrTypes),
-				"destination_type": types.StringValue("IPAM/DHCP"),
-			}),
-		})),
 		MarkdownDescription: "Destinations For the discovery config.",
 	},
 	"id": schema.StringAttribute{

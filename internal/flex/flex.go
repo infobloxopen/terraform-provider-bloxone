@@ -43,6 +43,18 @@ func FlattenStringPointerWithNilAsEmpty(s *string) types.String {
 	return FlattenString(*s)
 }
 
+// FlattenBoolPointerFalseAsNull is a helper function to flatten a bool pointer to a bool.
+// It returns false if the pointer is nil.
+
+// For most fields, API returns false as expected from the provider, so use types.BoolPointerValue() instead.
+// In cases where the API returns null instead of False, use FlattenBoolPointerFalseAsNull.
+func FlattenBoolPointerFalseAsNull(b *bool) types.Bool {
+	if b == nil {
+		return types.BoolValue(false)
+	}
+	return types.BoolValue(*b)
+}
+
 func FlattenInt64(i int64) types.Int64 {
 	if i == 0 {
 		return types.Int64Null()

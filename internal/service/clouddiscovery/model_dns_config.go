@@ -6,6 +6,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -32,11 +35,39 @@ var DNSConfigAttrTypes = map[string]attr.Type{
 
 var DNSConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"consolidated_zone_data_enabled": schema.BoolAttribute{
-		Optional:            true,
+		Optional: true,
+		PlanModifiers: []planmodifier.Bool{
+			boolplanmodifier.RequiresReplaceIf(
+				func(ctx context.Context, request planmodifier.BoolRequest, response *boolplanmodifier.RequiresReplaceIfFuncResponse) {
+					if !request.ConfigValue.IsNull() && !request.StateValue.IsNull() {
+						if request.ConfigValue.String() != request.StateValue.String() {
+							response.RequiresReplace = true
+						}
+					}
+
+				},
+				"If the value of the consolidated_zone_data_enabled is configured and changes, Terraform will destroy and recreate the resource.",
+				"If the value of the consolidated_zone_data_enabled is configured and changes, Terraform will destroy and recreate the resource.",
+			),
+		},
 		MarkdownDescription: "consolidated_zone_data_enabled consolidates private zones into a single view, which is separate from the public zone view.",
 	},
 	"split_view_enabled": schema.BoolAttribute{
-		Optional:            true,
+		Optional: true,
+		PlanModifiers: []planmodifier.Bool{
+			boolplanmodifier.RequiresReplaceIf(
+				func(ctx context.Context, request planmodifier.BoolRequest, response *boolplanmodifier.RequiresReplaceIfFuncResponse) {
+					if !request.ConfigValue.IsNull() && !request.StateValue.IsNull() {
+						if request.ConfigValue.String() != request.StateValue.String() {
+							response.RequiresReplace = true
+						}
+					}
+
+				},
+				"If the value of the split_view_enabled is configured and changes, Terraform will destroy and recreate the resource.",
+				"If the value of the split_view_enabled is configured and changes, Terraform will destroy and recreate the resource.",
+			),
+		},
 		MarkdownDescription: "split_view_enabled consolidates private zones into a single view, which is separate from the public zone view.",
 	},
 	"sync_type": schema.StringAttribute{
@@ -44,11 +75,39 @@ var DNSConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Type of sync.Sync_type values: \"read_only\", \"read_write\"",
 	},
 	"view_id": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIf(
+				func(ctx context.Context, request planmodifier.StringRequest, response *stringplanmodifier.RequiresReplaceIfFuncResponse) {
+					if !request.ConfigValue.IsNull() && !request.StateValue.IsNull() {
+						if request.ConfigValue.String() != request.StateValue.String() {
+							response.RequiresReplace = true
+						}
+					}
+
+				},
+				"If the value of the view_id is configured and changes, Terraform will destroy and recreate the resource.",
+				"If the value of the view_id is configured and changes, Terraform will destroy and recreate the resource.",
+			),
+		},
 		MarkdownDescription: "Unique identifier of the view.",
 	},
 	"view_name": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIf(
+				func(ctx context.Context, request planmodifier.StringRequest, response *stringplanmodifier.RequiresReplaceIfFuncResponse) {
+					if !request.ConfigValue.IsNull() && !request.StateValue.IsNull() {
+						if request.ConfigValue.String() != request.StateValue.String() {
+							response.RequiresReplace = true
+						}
+					}
+
+				},
+				"If the value of the view_name is configured and changes, Terraform will destroy and recreate the resource.",
+				"If the value of the view_name is configured and changes, Terraform will destroy and recreate the resource.",
+			),
+		},
 		MarkdownDescription: "Name of the view.",
 	},
 }

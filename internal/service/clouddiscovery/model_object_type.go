@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -30,6 +31,7 @@ var ObjectTypeResourceSchemaAttributes = map[string]schema.Attribute{
 	"discover_new": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
+		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: "Discover new objects.",
 	},
 	"objects": schema.ListNestedAttribute{
@@ -89,7 +91,7 @@ func (m *ObjectTypeModel) Flatten(ctx context.Context, from *clouddiscovery.Obje
 	if m == nil {
 		*m = ObjectTypeModel{}
 	}
-	m.DiscoverNew = types.BoolPointerValue(from.DiscoverNew)
+	m.DiscoverNew = flex.FlattenBoolPointerFalseAsNull(from.DiscoverNew)
 	m.Objects = flex.FlattenFrameworkListNestedBlock(ctx, from.Objects, ObjectAttrTypes, diags, FlattenObject)
 	m.Version = flex.FlattenFloat32Pointer(from.Version)
 }

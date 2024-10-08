@@ -6,8 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -26,26 +24,8 @@ var DestinationConfigAttrTypes = map[string]attr.Type{
 
 var DestinationConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"dns": schema.SingleNestedAttribute{
-		Attributes: DNSConfigResourceSchemaAttributes,
-		Optional:   true,
-		PlanModifiers: []planmodifier.Object{
-			objectplanmodifier.RequiresReplaceIf(
-				func(ctx context.Context, request planmodifier.ObjectRequest, response *objectplanmodifier.RequiresReplaceIfFuncResponse) {
-					if !request.ConfigValue.IsNull() && !request.StateValue.IsNull() {
-						planVal := request.PlanValue.Attributes()
-						stateVal := request.StateValue.Attributes()
-						if !(planVal["view_id"].String() == stateVal["view_id"].String()) ||
-							!(planVal["view_name"].String() == stateVal["view_name"].String()) ||
-							!(planVal["consolidated_zone_data_enabled"].String() == stateVal["consolidated_zone_data_enabled"].String()) ||
-							!(planVal["split_view_enabled"].String() == stateVal["split_view_enabled"].String()) {
-							response.RequiresReplace = true
-						}
-					}
-				},
-				"If the value of the view_id , view_name , consolidated_zone_data_enabled or split_view_enabled is configured and changes, Terraform will destroy and recreate the resource.",
-				"If the value of the view_id , view_name , consolidated_zone_data_enabled or split_view_enabled is configured and changes, Terraform will destroy and recreate the resource.",
-			),
-		},
+		Attributes:          DNSConfigResourceSchemaAttributes,
+		Optional:            true,
 		MarkdownDescription: "Destination Config for DNS",
 	},
 	"ipam": schema.SingleNestedAttribute{

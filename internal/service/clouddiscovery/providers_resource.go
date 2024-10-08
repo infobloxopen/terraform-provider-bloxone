@@ -13,30 +13,30 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &ProvidersResource{}
-var _ resource.ResourceWithImportState = &ProvidersResource{}
+var _ resource.Resource = &ProviderResource{}
+var _ resource.ResourceWithImportState = &ProviderResource{}
 
-func NewProvidersResource() resource.Resource {
-	return &ProvidersResource{}
+func NewProviderResource() resource.Resource {
+	return &ProviderResource{}
 }
 
-// ProvidersResource defines the resource implementation.
-type ProvidersResource struct {
+// ProviderResource defines the resource implementation.
+type ProviderResource struct {
 	client *bloxoneclient.APIClient
 }
 
-func (r *ProvidersResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *ProviderResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + "cloud_discovery_provider"
 }
 
-func (r *ProvidersResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *ProviderResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manages Cloud Discovery Providers.",
 		Attributes:          DiscoveryConfigResourceSchemaAttributes,
 	}
 }
 
-func (r *ProvidersResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *ProviderResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -56,7 +56,7 @@ func (r *ProvidersResource) Configure(ctx context.Context, req resource.Configur
 	r.client = client
 }
 
-func (r *ProvidersResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *ProviderResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data DiscoveryConfigModel
 
 	// Read Terraform plan data into the model
@@ -83,7 +83,7 @@ func (r *ProvidersResource) Create(ctx context.Context, req resource.CreateReque
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *ProvidersResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *ProviderResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var data DiscoveryConfigModel
 
 	// Read Terraform prior state data into the model
@@ -113,7 +113,7 @@ func (r *ProvidersResource) Read(ctx context.Context, req resource.ReadRequest, 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *ProvidersResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *ProviderResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data DiscoveryConfigModel
 
 	// Read Terraform plan data into the model
@@ -140,7 +140,7 @@ func (r *ProvidersResource) Update(ctx context.Context, req resource.UpdateReque
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *ProvidersResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+func (r *ProviderResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var data DiscoveryConfigModel
 
 	// Read Terraform prior state data into the model
@@ -163,6 +163,6 @@ func (r *ProvidersResource) Delete(ctx context.Context, req resource.DeleteReque
 	}
 }
 
-func (r *ProvidersResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *ProviderResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

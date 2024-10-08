@@ -2,9 +2,11 @@ package clouddiscovery
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -37,11 +39,13 @@ var AdditionalConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"forward_zone_enabled": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
+		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: "Enable/Disable forward zone discovery.",
 	},
 	"internal_ranges_enabled": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
+		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: "Enable/Disable internal ranges discovery.",
 	},
 	"object_type": schema.SingleNestedAttribute{
@@ -96,7 +100,7 @@ func (m *AdditionalConfigModel) Flatten(ctx context.Context, from *clouddiscover
 		*m = AdditionalConfigModel{}
 	}
 	m.ExcludedAccounts = flex.FlattenFrameworkListString(ctx, from.ExcludedAccounts, diags)
-	m.ForwardZoneEnabled = types.BoolPointerValue(from.ForwardZoneEnabled)
-	m.InternalRangesEnabled = types.BoolPointerValue(from.InternalRangesEnabled)
+	m.ForwardZoneEnabled = flex.FlattenBoolPointerFalseAsNull(from.ForwardZoneEnabled)
+	m.InternalRangesEnabled = flex.FlattenBoolPointerFalseAsNull(from.InternalRangesEnabled)
 	m.ObjectType = FlattenObjectType(ctx, from.ObjectType, diags)
 }

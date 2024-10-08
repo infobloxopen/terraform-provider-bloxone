@@ -163,7 +163,7 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 
 		redirect.NewCustomRedirectResource,
 
-		clouddiscovery.NewProvidersResource,
+		clouddiscovery.NewProviderResource,
 	}
 }
 

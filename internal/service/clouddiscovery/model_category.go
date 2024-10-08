@@ -36,7 +36,7 @@ var CategoryResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed: true,
 		Optional: true,
 		Validators: []validator.String{
-			stringvalidator.OneOf("security", "networking-basics", "lbs", "compute", "azure-storage", "networking-advanced"),
+			stringvalidator.OneOf("security", "networking-basics", "lbs", "compute", "azure-storage", "networking-advanced", "storage"),
 		},
 		MarkdownDescription: "Category ID.",
 	},
