@@ -176,36 +176,6 @@ func TestAccIpSpaceResource_Comment(t *testing.T) {
 	})
 }
 
-func TestAccIpSpaceResource_CompartmentId(t *testing.T) {
-	var resourceName = "bloxone_ipam_ip_space.test_compartment_id"
-	var v ipam.IPSpace
-	var name = acctest.RandomNameWithPrefix("ip-space")
-
-	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// Create and Read
-			{
-				Config: testAccIpSpaceCompartmentId(name, ""),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "compartment_id", ""),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccIpSpaceCompartmentIdNull(name),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "compartment_id", ""),
-				),
-			},
-			// Delete testing automatically occurs in TestCase
-		},
-	})
-}
-
 func TestAccIpSpaceResource_DdnsClientUpdate(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_ddns_client_update"
 	var v ipam.IPSpace
@@ -570,6 +540,38 @@ func TestAccIpSpaceResource_DhcpConfig(t *testing.T) {
 	})
 }
 
+func TestAccIpSpaceResource_DefaultRealms(t *testing.T) {
+	var resourceName = "bloxone_ipam_ip_space.test_default_realms"
+	var v ipam.IPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
+	var realmName = acctest.RandomNameWithPrefix("realm")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckIpSpaceDestroy(context.Background(), &v),
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccIpSpaceDefaultRealms(name, realmName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "default_realms.#", "1"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccIpSpaceDefaultRealmsNull(name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "default_realms.#", "0"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccIpSpaceResource_HeaderOptionFilename(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_header_option_filename"
 	var v ipam.IPSpace
@@ -860,6 +862,51 @@ func TestAccIpSpaceResource_InheritanceSources(t *testing.T) {
 	})
 }
 
+func TestAccIpSpaceResource_MultipleDefaultRealms(t *testing.T) {
+	var resourceName = "bloxone_ipam_ip_space.test_default_realms"
+	var v ipam.IPSpace
+	var name = acctest.RandomNameWithPrefix("ip-space")
+	var realmName1 = acctest.RandomNameWithPrefix("realm1")
+	var realmName2 = acctest.RandomNameWithPrefix("realm2")
+	var realmName3 = acctest.RandomNameWithPrefix("realm3")
+	var realmName4 = acctest.RandomNameWithPrefix("realm4")
+	var realmName5 = acctest.RandomNameWithPrefix("realm5")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckIpSpaceDestroy(context.Background(), &v),
+		Steps: []resource.TestStep{
+			// Create IP space with multiple realms and verify
+			{
+				Config: testAccIpSpaceMultipleRealms(name, realmName1, realmName2, realmName3, realmName4, realmName5),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "default_realms.#", "5"),
+					resource.TestCheckResourceAttrPair(resourceName, "default_realms.0", "bloxone_federation_federated_realm.realm1", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "default_realms.1", "bloxone_federation_federated_realm.realm2", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "default_realms.2", "bloxone_federation_federated_realm.realm3", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "default_realms.3", "bloxone_federation_federated_realm.realm4", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "default_realms.4", "bloxone_federation_federated_realm.realm5", "id"),
+				),
+			},
+			// Update and verify realms
+			{
+				Config: testAccIpSpaceMultipleRealmsUpdated(name, realmName1+"_updated", realmName2+"_updated", realmName3+"_updated", realmName4+"_updated", realmName5+"_updated"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "default_realms.#", "5"),
+					resource.TestCheckResourceAttrPair(resourceName, "default_realms.0", "bloxone_federation_federated_realm.realm1_updated", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "default_realms.1", "bloxone_federation_federated_realm.realm2_updated", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "default_realms.2", "bloxone_federation_federated_realm.realm3_updated", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "default_realms.3", "bloxone_federation_federated_realm.realm4_updated", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "default_realms.4", "bloxone_federation_federated_realm.realm5_updated", "id"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccIpSpaceResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_ipam_ip_space.test_tags"
 	var v ipam.IPSpace
@@ -994,23 +1041,6 @@ resource "bloxone_ipam_ip_space" "test_comment" {
     comment = %q
 }
 `, name, comment)
-}
-
-func testAccIpSpaceCompartmentId(name string, compartmentId string) string {
-	return fmt.Sprintf(`
-resource "bloxone_ipam_ip_space" "test_compartment_id" {
-    name = %q
-    compartment_id = %q
-}
-`, name, compartmentId)
-}
-func testAccIpSpaceCompartmentIdNull(name string) string {
-	return fmt.Sprintf(`
-resource "bloxone_ipam_ip_space" "test_compartment_id" {
-    name = %q
-    compartment_id = null
-}
-`, name)
 }
 
 func testAccIpSpaceDdnsClientUpdate(name, ddnsClientUpdate string) string {
@@ -1168,6 +1198,83 @@ resource "bloxone_ipam_ip_space" "test_dhcp_options_v6" {
 }
 `, name, optionItemType)
 	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip6"), config}, "")
+}
+
+func testAccIpSpaceDefaultRealms(name, realmName string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_ip_space" "test_default_realms" {
+	name = %q
+	default_realms = [
+		bloxone_federation_federated_realm.realm1.id
+	]
+}
+`, name)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName, "realm1"), config}, "")
+}
+
+func testAccIpSpaceDefaultRealmsNull(name string) string {
+	return fmt.Sprintf(`
+resource "bloxone_ipam_ip_space" "test_default_realms" {
+	name = %q
+	default_realms = [
+		
+	]
+}
+`, name)
+}
+
+func testAccBaseWithFederatedRealm(name, alias string) string {
+	return fmt.Sprintf(`
+resource "bloxone_federation_federated_realm" "%s" {
+    name = %q
+}
+`, alias, name)
+}
+
+func testAccIpSpaceMultipleRealms(name, realmName1, realmName2, realmName3, realmName4, realmName5 string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_ip_space" "test_default_realms" {
+	name = %q
+	default_realms = [
+		bloxone_federation_federated_realm.realm1.id,
+		bloxone_federation_federated_realm.realm2.id,
+		bloxone_federation_federated_realm.realm3.id,
+		bloxone_federation_federated_realm.realm4.id,
+		bloxone_federation_federated_realm.realm5.id
+	]
+}
+`, name)
+	return strings.Join([]string{
+		testAccBaseWithFederatedRealm(realmName1, "realm1"),
+		testAccBaseWithFederatedRealm(realmName2, "realm2"),
+		testAccBaseWithFederatedRealm(realmName3, "realm3"),
+		testAccBaseWithFederatedRealm(realmName4, "realm4"),
+		testAccBaseWithFederatedRealm(realmName5, "realm5"),
+		config,
+	}, "")
+}
+
+func testAccIpSpaceMultipleRealmsUpdated(name, realmName1, realmName2, realmName3, realmName4, realmName5 string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_ip_space" "test_default_realms" {
+	name = %q
+	default_realms = [
+		bloxone_federation_federated_realm.realm1_updated.id,
+		bloxone_federation_federated_realm.realm2_updated.id,
+		bloxone_federation_federated_realm.realm3_updated.id,
+		bloxone_federation_federated_realm.realm4_updated.id,
+		bloxone_federation_federated_realm.realm5_updated.id
+	]
+}
+`, name)
+	return strings.Join([]string{
+		testAccBaseWithFederatedRealm(realmName1, "realm1_updated"),
+		testAccBaseWithFederatedRealm(realmName2, "realm2_updated"),
+		testAccBaseWithFederatedRealm(realmName3, "realm3_updated"),
+		testAccBaseWithFederatedRealm(realmName4, "realm4_updated"),
+		testAccBaseWithFederatedRealm(realmName5, "realm5_updated"),
+		config,
+	}, "")
 }
 
 func testAccIpSpaceHeaderOptionFilename(name, headerOptionFilename string) string {
