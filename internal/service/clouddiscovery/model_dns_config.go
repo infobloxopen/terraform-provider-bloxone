@@ -37,37 +37,15 @@ var DNSConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"consolidated_zone_data_enabled": schema.BoolAttribute{
 		Optional: true,
 		PlanModifiers: []planmodifier.Bool{
-			boolplanmodifier.RequiresReplaceIf(
-				func(ctx context.Context, request planmodifier.BoolRequest, response *boolplanmodifier.RequiresReplaceIfFuncResponse) {
-					if !request.ConfigValue.IsNull() && !request.StateValue.IsNull() {
-						if request.ConfigValue.String() != request.StateValue.String() {
-							response.RequiresReplace = true
-						}
-					}
-
-				},
-				"If the value of the consolidated_zone_data_enabled is configured and changes, Terraform will destroy and recreate the resource.",
-				"If the value of the consolidated_zone_data_enabled is configured and changes, Terraform will destroy and recreate the resource.",
-			),
-		},
+			boolplanmodifier.RequiresReplaceIfConfigured(),
+		},	
 		MarkdownDescription: "consolidated_zone_data_enabled consolidates private zones into a single view, which is separate from the public zone view.",
 	},
 	"split_view_enabled": schema.BoolAttribute{
 		Optional: true,
 		PlanModifiers: []planmodifier.Bool{
-			boolplanmodifier.RequiresReplaceIf(
-				func(ctx context.Context, request planmodifier.BoolRequest, response *boolplanmodifier.RequiresReplaceIfFuncResponse) {
-					if !request.ConfigValue.IsNull() && !request.StateValue.IsNull() {
-						if request.ConfigValue.String() != request.StateValue.String() {
-							response.RequiresReplace = true
-						}
-					}
-
-				},
-				"If the value of the split_view_enabled is configured and changes, Terraform will destroy and recreate the resource.",
-				"If the value of the split_view_enabled is configured and changes, Terraform will destroy and recreate the resource.",
-			),
-		},
+			boolplanmodifier.RequiresReplaceIfConfigured(),
+		},	
 		MarkdownDescription: "split_view_enabled consolidates private zones into a single view, which is separate from the public zone view.",
 	},
 	"sync_type": schema.StringAttribute{
@@ -77,37 +55,15 @@ var DNSConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"view_id": schema.StringAttribute{
 		Optional: true,
 		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIf(
-				func(ctx context.Context, request planmodifier.StringRequest, response *stringplanmodifier.RequiresReplaceIfFuncResponse) {
-					if !request.ConfigValue.IsNull() && !request.StateValue.IsNull() {
-						if request.ConfigValue.String() != request.StateValue.String() {
-							response.RequiresReplace = true
-						}
-					}
-
-				},
-				"If the value of the view_id is configured and changes, Terraform will destroy and recreate the resource.",
-				"If the value of the view_id is configured and changes, Terraform will destroy and recreate the resource.",
-			),
-		},
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},	
 		MarkdownDescription: "Unique identifier of the view.",
 	},
 	"view_name": schema.StringAttribute{
 		Optional: true,
 		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIf(
-				func(ctx context.Context, request planmodifier.StringRequest, response *stringplanmodifier.RequiresReplaceIfFuncResponse) {
-					if !request.ConfigValue.IsNull() && !request.StateValue.IsNull() {
-						if request.ConfigValue.String() != request.StateValue.String() {
-							response.RequiresReplace = true
-						}
-					}
-
-				},
-				"If the value of the view_name is configured and changes, Terraform will destroy and recreate the resource.",
-				"If the value of the view_name is configured and changes, Terraform will destroy and recreate the resource.",
-			),
-		},
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},	
 		MarkdownDescription: "Name of the view.",
 	},
 }

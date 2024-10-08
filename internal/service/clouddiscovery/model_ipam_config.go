@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -33,6 +34,7 @@ var IPAMConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"disable_ipam_projection": schema.BoolAttribute{
 		Optional:            true,
+		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: "This flag controls the IPAM Sync/Reconciliation for the provider.",
 	},
 	"ip_space": schema.StringAttribute{
@@ -84,6 +86,6 @@ func (m *IPAMConfigModel) Flatten(ctx context.Context, from *clouddiscovery.IPAM
 		*m = IPAMConfigModel{}
 	}
 	m.DhcpServer = flex.FlattenStringPointer(from.DhcpServer)
-	m.DisableIpamProjection = types.BoolPointerValue(from.DisableIpamProjection)
+	m.DisableIpamProjection = flex.FlattenBoolPointerFalseAsNull(from.DisableIpamProjection)
 	m.IpSpace = flex.FlattenStringPointer(from.IpSpace)
 }

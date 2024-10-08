@@ -63,19 +63,8 @@ var DestinationResourceSchemaAttributes = map[string]schema.Attribute{
 			stringvalidator.OneOf("DNS", "IPAM/DHCP", "ACCOUNTS"),
 		},
 		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIf(
-				func(ctx context.Context, request planmodifier.StringRequest, response *stringplanmodifier.RequiresReplaceIfFuncResponse) {
-					if !request.ConfigValue.IsNull() && !request.StateValue.IsNull() {
-						if request.ConfigValue.String() != request.StateValue.String() {
-							response.RequiresReplace = true
-						}
-					}
-
-				},
-				"If the value of the destination_type is configured and changes, Terraform will destroy and recreate the resource.",
-				"If the value of the destination_type is configured and changes, Terraform will destroy and recreate the resource.",
-			),
-		},
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},		
 		MarkdownDescription: "Destination type: DNS or IPAM/DHCP.",
 	},
 	"id": schema.StringAttribute{
