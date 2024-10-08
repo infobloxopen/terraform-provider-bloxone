@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
@@ -11,6 +12,7 @@ import (
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/option"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/anycast"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/clouddiscovery"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dfp"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_data"
@@ -160,6 +162,8 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		ipamfederation.NewFederatedBlockResource,
 
 		redirect.NewCustomRedirectResource,
+
+		clouddiscovery.NewProviderResource,
 	}
 }
 
@@ -234,6 +238,8 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		ipamfederation.NewFederatedBlockDataSource,
 
 		redirect.NewCustomRedirectsDataSource,
+
+		clouddiscovery.NewProvidersDataSource,
 	}
 }
 
