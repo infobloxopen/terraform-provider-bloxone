@@ -251,20 +251,20 @@ func TestAccProvidersResource_DestinationTypeEnabled(t *testing.T) {
 			{
 				Config: testAccProvidersDestinationTypeEnabled(viewName, name, "Amazon Web Services",
 					"single", "role_arn", "dynamic",
-					configAccessId, "DNS"),
+					configAccessId, "IPAM/DHCP"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckProvidersExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "destinations.0.destination_type", "IPAM/DHCP"),
-					resource.TestCheckResourceAttr(resourceName, "destinations.1.destination_type", "DNS"),
 				),
 			},
 			{
 				Config: testAccProvidersDestinationTypeEnabled(viewName, name, "Amazon Web Services",
 					"single", "role_arn", "dynamic",
-					configAccessId, "IPAM/DHCP"),
+					configAccessId, "DNS"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckProvidersExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "destinations.0.destination_type", "IPAM/DHCP"),
+					resource.TestCheckResourceAttr(resourceName, "destinations.1.destination_type", "DNS"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -734,7 +734,7 @@ func testAccProvidersDestinationTypeEnabled(viewName, name, providerType, accoun
 	destinationTypeEnabledStr := ""
 	if destinationType == "IPAM/DHCP" {
 		destinationTypeEnabledStr = "\"IPAM/DHCP\""
-		destinationsStr = "{\n\t\t\tconfig = {}\n\t\t\tdestination_type = \"IPAM/DHCP\"\n\t\t},\n\t\t{\n\t\t\tconfig = {\n\t\t\t\tdns = {\n\t\t\t\t\tview_id = bloxone_dns_view.test.id\n\t\t\t\t}\n\t\t\t}\n\t\t\tdestination_type = \"DNS\"\n\t\t}"
+		destinationsStr = "{\n\t\t\tconfig = {}\n\t\t\tdestination_type = \"IPAM/DHCP\"\n\t\t}"
 	}
 	if destinationType == "DNS" {
 		destinationTypeEnabledStr = "\"IPAM/DHCP\" , \"DNS\""
