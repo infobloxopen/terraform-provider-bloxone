@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.4.0 (October 9, 2024)
+## v1.4.0 (October 8, 2024)
 
 FEATURES
 * **New Resource and Data Source:** `bloxone_cloud_discovery_provider`, `bloxone_cloud_discovery_providers` ([#150](https://github.com/infobloxopen/terraform-provider-bloxone/pull/150))
