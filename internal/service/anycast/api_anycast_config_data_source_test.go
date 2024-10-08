@@ -13,7 +13,7 @@ import (
 
 func TestAccAnycastConfigDataSource_Services(t *testing.T) {
 	dataSourceName := "data.bloxone_anycast_configs.test"
-	resourceName := "bloxone_anycast_config.test_onprem_hosts"
+	resourceName := "bloxone_anycast_config.test"
 	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
@@ -36,7 +36,7 @@ func TestAccAnycastConfigDataSource_Services(t *testing.T) {
 
 func TestAccAnycastConfigDataSource_IsConfigured(t *testing.T) {
 	dataSourceName := "data.bloxone_anycast_configs.test"
-	resourceName := "bloxone_anycast_config.test_onprem_hosts"
+	resourceName := "bloxone_anycast_config.test"
 	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
 
@@ -119,14 +119,14 @@ data "bloxone_anycast_configs" "test" {
 
 func testAccAnycastConfigDataSourceConfigIsConfigured(anycastIpAddress, name, service string) string {
 	return fmt.Sprintf(`
-resource "bloxone_anycast_config" "test_onprem_hosts" {
+resource "bloxone_anycast_config" "test" {
     anycast_ip_address = %q
     name = %q
     service = %q
 }
 data "bloxone_anycast_configs" "test" {
 	is_configured = false
-	depends_on = [bloxone_anycast_config.test_onprem_hosts]
+	depends_on = [bloxone_anycast_config.test]
 }
 `, anycastIpAddress, name, service)
 }
