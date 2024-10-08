@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.4.0 (October 9, 2024)
+
+FEATURES
+* **New Resource and Data Source:** `bloxone_cloud_discovery_provider`, `bloxone_cloud_discovery_providers` ([#150](https://github.com/infobloxopen/terraform-provider-bloxone/pull/150))
+* **New Resource and Data Source:** `bloxone_federation_federated_realm`, `bloxone_federation_federated_realms` ([#143](https://github.com/infobloxopen/terraform-provider-bloxone/pull/143))
+* **New Resource and Data Source:** `bloxone_federation_federated_block`, `bloxone_federation_federated_blocks` ([#143](https://github.com/infobloxopen/terraform-provider-bloxone/pull/143))
+
+FIXES 
+* Fixed `delegation_servers.address` giving non-empty plan when not provided in `bloxone_dns_delegation` ([#148](https://github.com/infobloxopen/terraform-provider-bloxone/pull/148))
+* Fixed acceptance test for `bloxone_anycast_configs` data source  ([#154](https://github.com/infobloxopen/terraform-provider-bloxone/pull/154))
+
+ENHANCEMENTS 
+* DHCP/IPAM: add support for compartment, federated realms ([#145](https://github.com/infobloxopen/terraform-provider-bloxone/pull/145))
+
 ## v1.3.1 (August 1, 2024)
 
 FIXES:
