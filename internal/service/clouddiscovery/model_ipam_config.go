@@ -34,7 +34,7 @@ var IPAMConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"disable_ipam_projection": schema.BoolAttribute{
 		Optional:            true,
-		Computed:			 true,
+		Computed:            true,
 		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: "This flag controls the IPAM Sync/Reconciliation for the provider.",
 	},
