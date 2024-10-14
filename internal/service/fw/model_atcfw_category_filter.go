@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int32planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
@@ -23,7 +23,7 @@ type AtcfwCategoryFilterModel struct {
 	Categories  types.List        `tfsdk:"categories"`
 	CreatedTime timetypes.RFC3339 `tfsdk:"created_time"`
 	Description types.String      `tfsdk:"description"`
-	Id          types.Int64       `tfsdk:"id"`
+	Id          types.Int32       `tfsdk:"id"`
 	Name        types.String      `tfsdk:"name"`
 	Policies    types.List        `tfsdk:"policies"`
 	Tags        types.Map         `tfsdk:"tags"`
@@ -58,10 +58,10 @@ var AtcfwCategoryFilterResourceSchemaAttributes = map[string]schema.Attribute{
 		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The brief description for the category filter.",
 	},
-	"id": schema.Int64Attribute{
+	"id": schema.Int32Attribute{
 		Computed: true,
-		PlanModifiers: []planmodifier.Int64{
-			int64planmodifier.UseStateForUnknown(),
+		PlanModifiers: []planmodifier.Int32{
+			int32planmodifier.UseStateForUnknown(),
 		},
 		MarkdownDescription: "The Category Filter object identifier.",
 	},

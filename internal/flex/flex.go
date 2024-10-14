@@ -14,7 +14,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 type FrameworkElementFlExFunc[T any, U any] func(context.Context, T, *diag.Diagnostics) U
@@ -69,11 +68,18 @@ func FlattenInt64Pointer(i *int64) types.Int64 {
 	return FlattenInt64(*i)
 }
 
-func FlattenInt32Pointer(i *int32) types.Int64 {
-	if i == nil {
-		return types.Int64Null()
+func FlattenInt32(i int32) types.Int32 {
+	if i == 0 {
+		return types.Int32Null()
 	}
-	return FlattenInt64(int64(*i))
+	return types.Int32Value(i)
+}
+
+func FlattenInt32Pointer(i *int32) types.Int32 {
+	if i == nil {
+		return types.Int32Null()
+	}
+	return FlattenInt32(*i)
 }
 
 func FlattenFloat64(f float64) types.Float64 {
@@ -83,6 +89,13 @@ func FlattenFloat64(f float64) types.Float64 {
 	return types.Float64Value(f)
 }
 
+func FlattenFloat32(f float32) types.Float32 {
+	if f == 0 {
+		return types.Float32Null()
+	}
+	return types.Float32Value(f)
+}
+
 func FlattenFloat64Pointer(f *float64) types.Float64 {
 	if f == nil {
 		return types.Float64Null()
@@ -90,11 +103,11 @@ func FlattenFloat64Pointer(f *float64) types.Float64 {
 	return FlattenFloat64(*f)
 }
 
-func FlattenFloat32Pointer(f *float32) types.Float64 {
+func FlattenFloat32Pointer(f *float32) types.Float32 {
 	if f == nil {
-		return types.Float64Null()
+		return types.Float32Null()
 	}
-	return FlattenFloat64(float64(*f))
+	return FlattenFloat32(*f)
 }
 
 func FlattenFrameworkMapString(ctx context.Context, m map[string]interface{}, diags *diag.Diagnostics) types.Map {
@@ -168,15 +181,15 @@ func FlattenFrameworkUnorderedListNotNull[T any](ctx context.Context, elemType a
 
 func FlattenFrameworkListInt32(ctx context.Context, l []int32, diags *diag.Diagnostics) types.List {
 	if len(l) == 0 {
-		return types.ListNull(types.Int64Type)
+		return types.ListNull(types.Int32Type)
 	}
-	tfList, d := types.ListValueFrom(ctx, types.Int64Type, l)
+	tfList, d := types.ListValueFrom(ctx, types.Int32Type, l)
 	diags.Append(d...)
 	return tfList
 }
 
 func FlattenFrameworkListInt32NotNull(ctx context.Context, l []int32, diags *diag.Diagnostics) types.List {
-	tfList, d := types.ListValueFrom(ctx, types.Int64Type, l)
+	tfList, d := types.ListValueFrom(ctx, types.Int32Type, l)
 	diags.Append(d...)
 	return tfList
 }
@@ -359,6 +372,10 @@ func ExpandStringPointer(v types.String) *string {
 	return v.ValueStringPointer()
 }
 
+func ExpandInt32(v types.Int32) int32 {
+	return v.ValueInt32()
+}
+
 func ExpandInt64(v types.Int64) int64 {
 	return v.ValueInt64()
 }
@@ -370,11 +387,11 @@ func ExpandInt64Pointer(v types.Int64) *int64 {
 	return v.ValueInt64Pointer()
 }
 
-func ExpandInt32Pointer(v types.Int64) *int32 {
+func ExpandInt32Pointer(v types.Int32) *int32 {
 	if v.IsNull() || v.IsUnknown() {
 		return nil
 	}
-	return utils.Ptr(int32(v.ValueInt64()))
+	return v.ValueInt32Pointer()
 }
 
 func ExpandFloat64(v types.Float64) float64 {
@@ -388,15 +405,15 @@ func ExpandFloat64Pointer(v types.Float64) *float64 {
 	return v.ValueFloat64Pointer()
 }
 
-func ExpandFloat32(v types.Float64) float32 {
-	return float32(v.ValueFloat64())
+func ExpandFloat32(v types.Float32) float32 {
+	return v.ValueFloat32()
 }
 
-func ExpandFloat32Pointer(v types.Float64) *float32 {
+func ExpandFloat32Pointer(v types.Float32) *float32 {
 	if v.IsNull() || v.IsUnknown() {
 		return nil
 	}
-	return utils.Ptr(float32(v.ValueFloat64()))
+	return v.ValueFloat32Pointer()
 }
 
 func ExpandBool(v types.Bool) bool {

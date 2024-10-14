@@ -2,12 +2,11 @@ package dfp
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int32planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -22,13 +21,13 @@ type DfpModel struct {
 	ElbIpList           types.List        `tfsdk:"elb_ip_list"`
 	ForwardingPolicy    types.String      `tfsdk:"forwarding_policy"`
 	Host                types.List        `tfsdk:"host"`
-	Id                  types.Int64       `tfsdk:"id"`
+	Id                  types.Int32       `tfsdk:"id"`
 	InternalDomainLists types.List        `tfsdk:"internal_domain_lists"`
 	Name                types.String      `tfsdk:"name"`
 	NetAddrPolicyIds    types.List        `tfsdk:"net_addr_policy_ids"`
 	Ophid               types.String      `tfsdk:"ophid"`
-	PolicyId            types.Int64       `tfsdk:"policy_id"`
-	PopRegionId         types.Int64       `tfsdk:"pop_region_id"`
+	PolicyId            types.Int32       `tfsdk:"policy_id"`
+	PopRegionId         types.Int32       `tfsdk:"pop_region_id"`
 	ResolversAll        types.List        `tfsdk:"resolvers_all"`
 	ServiceId           types.String      `tfsdk:"service_id"`
 	ServiceName         types.String      `tfsdk:"service_name"`
@@ -41,13 +40,13 @@ var DfpAttrTypes = map[string]attr.Type{
 	"elb_ip_list":           types.ListType{ElemType: types.StringType},
 	"forwarding_policy":     types.StringType,
 	"host":                  types.ListType{ElemType: types.ObjectType{AttrTypes: DfpHostAttrTypes}},
-	"id":                    types.Int64Type,
+	"id":                    types.Int32Type,
 	"internal_domain_lists": types.ListType{ElemType: types.Int64Type},
 	"name":                  types.StringType,
 	"net_addr_policy_ids":   types.ListType{ElemType: types.ObjectType{AttrTypes: NetAddrPolicyAssignmentAttrTypes}},
 	"ophid":                 types.StringType,
-	"policy_id":             types.Int64Type,
-	"pop_region_id":         types.Int64Type,
+	"policy_id":             types.Int32Type,
+	"pop_region_id":         types.Int32Type,
 	"resolvers_all":         types.ListType{ElemType: types.ObjectType{AttrTypes: ResolverAttrTypes}},
 	"service_id":            types.StringType,
 	"service_name":          types.StringType,
@@ -78,10 +77,10 @@ var DfpResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "host information. For internal Use only.",
 	},
-	"id": schema.Int64Attribute{
+	"id": schema.Int32Attribute{
 		Computed: true,
-		PlanModifiers: []planmodifier.Int64{
-			int64planmodifier.UseStateForUnknown(),
+		PlanModifiers: []planmodifier.Int32{
+			int32planmodifier.UseStateForUnknown(),
 		},
 		MarkdownDescription: "The DNS Forwarding Proxy object identifier.",
 	},
@@ -105,11 +104,11 @@ var DfpResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "The On-Prem Host identifier.",
 	},
-	"policy_id": schema.Int64Attribute{
+	"policy_id": schema.Int32Attribute{
 		Computed:            true,
 		MarkdownDescription: "The identifier of the security policy with which the DNS Forwarding Proxy is associated.",
 	},
-	"pop_region_id": schema.Int64Attribute{
+	"pop_region_id": schema.Int32Attribute{
 		Computed:            true,
 		MarkdownDescription: "Point of Presence (PoP) region",
 	},

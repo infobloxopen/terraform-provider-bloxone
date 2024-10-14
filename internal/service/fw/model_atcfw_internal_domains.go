@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int32planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
@@ -23,7 +23,7 @@ import (
 type AtcfwInternalDomainsModel struct {
 	CreatedTime     timetypes.RFC3339                `tfsdk:"created_time"`
 	Description     types.String                     `tfsdk:"description"`
-	Id              types.Int64                      `tfsdk:"id"`
+	Id              types.Int32                      `tfsdk:"id"`
 	InternalDomains internaltypes.UnorderedListValue `tfsdk:"internal_domains"`
 	IsDefault       types.Bool                       `tfsdk:"is_default"`
 	Name            types.String                     `tfsdk:"name"`
@@ -35,7 +35,7 @@ type AtcfwInternalDomainsModel struct {
 var AtcfwInternalDomainsAttrTypes = map[string]attr.Type{
 	"created_time":     timetypes.RFC3339Type{},
 	"description":      types.StringType,
-	"id":               types.Int64Type,
+	"id":               types.Int32Type,
 	"internal_domains": internaltypes.UnorderedListOfStringType,
 	"is_default":       types.BoolType,
 	"name":             types.StringType,
@@ -56,10 +56,10 @@ var AtcfwInternalDomainsResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "The brief description for the internal domain list.",
 	},
-	"id": schema.Int64Attribute{
+	"id": schema.Int32Attribute{
 		Computed: true,
-		PlanModifiers: []planmodifier.Int64{
-			int64planmodifier.UseStateForUnknown(),
+		PlanModifiers: []planmodifier.Int32{
+			int32planmodifier.UseStateForUnknown(),
 		},
 		MarkdownDescription: "The Internal Domain object identifier.",
 	},

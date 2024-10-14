@@ -15,7 +15,7 @@ import (
 )
 
 type DfpHostModel struct {
-	LegacyHostId types.Int64  `tfsdk:"legacy_host_id"`
+	LegacyHostId types.Int32  `tfsdk:"legacy_host_id"`
 	Name         types.String `tfsdk:"name"`
 	Ophid        types.String `tfsdk:"ophid"`
 	SiteId       types.String `tfsdk:"site_id"`
@@ -29,7 +29,7 @@ var DfpHostAttrTypes = map[string]attr.Type{
 }
 
 var DfpHostResourceSchemaAttributes = map[string]schema.Attribute{
-	"legacy_host_id": schema.Int64Attribute{
+	"legacy_host_id": schema.Int32Attribute{
 		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "The DNS Forwarding Proxy legacy ID object identifier.",

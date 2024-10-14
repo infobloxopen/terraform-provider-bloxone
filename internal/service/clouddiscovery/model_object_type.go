@@ -18,13 +18,13 @@ import (
 type ObjectTypeModel struct {
 	DiscoverNew types.Bool    `tfsdk:"discover_new"`
 	Objects     types.List    `tfsdk:"objects"`
-	Version     types.Float64 `tfsdk:"version"`
+	Version     types.Float32 `tfsdk:"version"`
 }
 
 var ObjectTypeAttrTypes = map[string]attr.Type{
 	"discover_new": types.BoolType,
 	"objects":      types.ListType{ElemType: types.ObjectType{AttrTypes: ObjectAttrTypes}},
-	"version":      types.Float64Type,
+	"version":      types.Float32Type,
 }
 
 var ObjectTypeResourceSchemaAttributes = map[string]schema.Attribute{
@@ -42,7 +42,7 @@ var ObjectTypeResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "List of objects to discover.",
 	},
-	"version": schema.Float64Attribute{
+	"version": schema.Float32Attribute{
 		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "Version of the object type.",

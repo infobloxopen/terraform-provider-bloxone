@@ -95,7 +95,7 @@ func (r *CustomRedirectResource) Read(ctx context.Context, req resource.ReadRequ
 
 	apiRes, httpRes, err := r.client.RedirectAPI.
 		CustomRedirectsAPI.
-		ReadCustomRedirect(ctx, int32(data.Id.ValueInt64())).
+		ReadCustomRedirect(ctx, data.Id.ValueInt32()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *CustomRedirectResource) Update(ctx context.Context, req resource.Update
 
 	apiRes, _, err := r.client.RedirectAPI.
 		CustomRedirectsAPI.
-		UpdateCustomRedirect(ctx, int32(data.Id.ValueInt64())).
+		UpdateCustomRedirect(ctx, data.Id.ValueInt32()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *CustomRedirectResource) Delete(ctx context.Context, req resource.Delete
 
 	httpRes, err := r.client.RedirectAPI.
 		CustomRedirectsAPI.
-		DeleteSingleCustomRedirect(ctx, int32(data.Id.ValueInt64())).
+		DeleteSingleCustomRedirect(ctx, data.Id.ValueInt32()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
