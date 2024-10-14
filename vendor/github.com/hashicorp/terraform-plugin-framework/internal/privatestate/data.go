@@ -72,9 +72,9 @@ func (d *Data) Bytes(ctx context.Context) ([]byte, diag.Diagnostics) {
 			if !json.Valid(v) {
 				diags.AddError(
 					"Error Encoding Private State",
-					fmt.Sprintf("An error was encountered when validating private state value."+
+					"An error was encountered when validating private state value."+
 						fmt.Sprintf("The value associated with key %q is is not valid JSON.\n\n", k)+
-						"This is always a problem with Terraform or terraform-plugin-framework. Please report this to the provider developer."),
+						"This is always a problem with Terraform or terraform-plugin-framework. Please report this to the provider developer.",
 				)
 
 				tflog.Error(ctx, "error encoding private state: invalid JSON value", map[string]interface{}{"key": k, "value": v})
@@ -324,6 +324,13 @@ func (d *ProviderData) SetKey(ctx context.Context, key string, value []byte) dia
 	diags.Append(ValidateProviderDataKey(ctx, key)...)
 
 	if diags.HasError() {
+		return diags
+	}
+
+	// Support removing keys by setting them to nil or zero-length value.
+	if len(value) == 0 {
+		delete(d.data, key)
+
 		return diags
 	}
 

@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/internal/fwschema"
 	"github.com/hashicorp/terraform-plugin-framework/internal/fwschema/fwxschema"
+	"github.com/hashicorp/terraform-plugin-framework/internal/fwtype"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/defaults"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -27,7 +28,7 @@ var (
 	_ fwxschema.AttributeWithMapValidators         = MapAttribute{}
 )
 
-// MapAttribute represents a schema attribute that is a list with a single
+// MapAttribute represents a schema attribute that is a map with a single
 // element type. When retrieving the value for this attribute, use types.Map
 // as the value type unless the CustomType field is set. The ElementType field
 // must be set.
@@ -36,7 +37,7 @@ var (
 // require definition beyond type information.
 //
 // Terraform configurations configure this attribute using expressions that
-// return a list or directly via curly brace syntax.
+// return a map or directly via curly brace syntax.
 //
 //	# map of strings
 //	example_attribute = {
@@ -52,6 +53,10 @@ var (
 type MapAttribute struct {
 	// ElementType is the type for all elements of the map. This field must be
 	// set.
+	//
+	// Element types that contain a dynamic type (i.e. types.Dynamic) are not supported.
+	// If underlying dynamic values are required, replace this attribute definition with
+	// DynamicAttribute instead.
 	ElementType attr.Type
 
 	// CustomType enables the use of a custom attribute type in place of the
@@ -254,7 +259,34 @@ func (a MapAttribute) ValidateImplementation(ctx context.Context, req fwschema.V
 		resp.Diagnostics.Append(fwschema.AttributeMissingElementTypeDiag(req.Path))
 	}
 
-	if !a.IsComputed() && a.MapDefaultValue() != nil {
-		resp.Diagnostics.Append(nonComputedAttributeWithDefaultDiag(req.Path))
+	if a.CustomType == nil && fwtype.ContainsCollectionWithDynamic(a.GetType()) {
+		resp.Diagnostics.Append(fwtype.AttributeCollectionWithDynamicTypeDiag(req.Path))
+	}
+
+	if a.MapDefaultValue() != nil {
+		if !a.IsComputed() {
+			resp.Diagnostics.Append(nonComputedAttributeWithDefaultDiag(req.Path))
+		}
+
+		// Validate Default implementation. This is safe unless the framework
+		// ever allows more dynamic Default implementations at which the
+		// implementation would be required to be validated at runtime.
+		// Reference: https://github.com/hashicorp/terraform-plugin-framework/issues/930
+		defaultReq := defaults.MapRequest{
+			Path: req.Path,
+		}
+		defaultResp := &defaults.MapResponse{}
+
+		a.MapDefaultValue().DefaultMap(ctx, defaultReq, defaultResp)
+
+		resp.Diagnostics.Append(defaultResp.Diagnostics...)
+
+		if defaultResp.Diagnostics.HasError() {
+			return
+		}
+
+		if a.ElementType != nil && !a.ElementType.Equal(defaultResp.PlanValue.ElementType(ctx)) {
+			resp.Diagnostics.Append(fwschema.AttributeDefaultElementTypeMismatchDiag(req.Path, a.ElementType, defaultResp.PlanValue.ElementType(ctx)))
+		}
 	}
 }
