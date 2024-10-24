@@ -54,20 +54,6 @@ func FlattenBoolPointerFalseAsNull(b *bool) types.Bool {
 	return types.BoolValue(*b)
 }
 
-func FlattenInt64(i int64) types.Int64 {
-	if i == 0 {
-		return types.Int64Null()
-	}
-	return types.Int64Value(i)
-}
-
-func FlattenInt64Pointer(i *int64) types.Int64 {
-	if i == nil {
-		return types.Int64Null()
-	}
-	return FlattenInt64(*i)
-}
-
 func FlattenInt32(i int32) types.Int32 {
 	if i == 0 {
 		return types.Int32Null()
@@ -82,11 +68,18 @@ func FlattenInt32Pointer(i *int32) types.Int32 {
 	return FlattenInt32(*i)
 }
 
-func FlattenFloat64(f float64) types.Float64 {
-	if f == 0 {
-		return types.Float64Null()
+func FlattenInt64(i int64) types.Int64 {
+	if i == 0 {
+		return types.Int64Null()
 	}
-	return types.Float64Value(f)
+	return types.Int64Value(i)
+}
+
+func FlattenInt64Pointer(i *int64) types.Int64 {
+	if i == nil {
+		return types.Int64Null()
+	}
+	return FlattenInt64(*i)
 }
 
 func FlattenFloat32(f float32) types.Float32 {
@@ -96,18 +89,25 @@ func FlattenFloat32(f float32) types.Float32 {
 	return types.Float32Value(f)
 }
 
-func FlattenFloat64Pointer(f *float64) types.Float64 {
-	if f == nil {
-		return types.Float64Null()
-	}
-	return FlattenFloat64(*f)
-}
-
 func FlattenFloat32Pointer(f *float32) types.Float32 {
 	if f == nil {
 		return types.Float32Null()
 	}
 	return FlattenFloat32(*f)
+}
+
+func FlattenFloat64(f float64) types.Float64 {
+	if f == 0 {
+		return types.Float64Null()
+	}
+	return types.Float64Value(f)
+}
+
+func FlattenFloat64Pointer(f *float64) types.Float64 {
+	if f == nil {
+		return types.Float64Null()
+	}
+	return FlattenFloat64(*f)
 }
 
 func FlattenFrameworkMapString(ctx context.Context, m map[string]interface{}, diags *diag.Diagnostics) types.Map {
@@ -376,6 +376,13 @@ func ExpandInt32(v types.Int32) int32 {
 	return v.ValueInt32()
 }
 
+func ExpandInt32Pointer(v types.Int32) *int32 {
+	if v.IsNull() || v.IsUnknown() {
+		return nil
+	}
+	return v.ValueInt32Pointer()
+}
+
 func ExpandInt64(v types.Int64) int64 {
 	return v.ValueInt64()
 }
@@ -387,11 +394,15 @@ func ExpandInt64Pointer(v types.Int64) *int64 {
 	return v.ValueInt64Pointer()
 }
 
-func ExpandInt32Pointer(v types.Int32) *int32 {
+func ExpandFloat32(v types.Float32) float32 {
+	return v.ValueFloat32()
+}
+
+func ExpandFloat32Pointer(v types.Float32) *float32 {
 	if v.IsNull() || v.IsUnknown() {
 		return nil
 	}
-	return v.ValueInt32Pointer()
+	return v.ValueFloat32Pointer()
 }
 
 func ExpandFloat64(v types.Float64) float64 {
@@ -403,17 +414,6 @@ func ExpandFloat64Pointer(v types.Float64) *float64 {
 		return nil
 	}
 	return v.ValueFloat64Pointer()
-}
-
-func ExpandFloat32(v types.Float32) float32 {
-	return v.ValueFloat32()
-}
-
-func ExpandFloat32Pointer(v types.Float32) *float32 {
-	if v.IsNull() || v.IsUnknown() {
-		return nil
-	}
-	return v.ValueFloat32Pointer()
 }
 
 func ExpandBool(v types.Bool) bool {
