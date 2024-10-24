@@ -95,7 +95,7 @@ func (r *ApplicationFilterResource) Read(ctx context.Context, req resource.ReadR
 
 	apiRes, httpRes, err := r.client.FWAPI.
 		ApplicationFiltersAPI.
-		ReadApplicationFilter(ctx, int32(data.Id.ValueInt64())).
+		ReadApplicationFilter(ctx, data.Id.ValueInt32()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *ApplicationFilterResource) Update(ctx context.Context, req resource.Upd
 
 	apiRes, _, err := r.client.FWAPI.
 		ApplicationFiltersAPI.
-		UpdateApplicationFilter(ctx, int32(data.Id.ValueInt64())).
+		UpdateApplicationFilter(ctx, data.Id.ValueInt32()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *ApplicationFilterResource) Delete(ctx context.Context, req resource.Del
 
 	httpRes, err := r.client.FWAPI.
 		ApplicationFiltersAPI.
-		DeleteSingleApplicationFilters(ctx, int32(data.Id.ValueInt64())).
+		DeleteSingleApplicationFilters(ctx, data.Id.ValueInt32()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

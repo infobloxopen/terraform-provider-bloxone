@@ -3,15 +3,14 @@ package fw
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
-
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int32planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
@@ -24,8 +23,8 @@ type AtcfwNamedListModel struct {
 	ConfidenceLevel types.String      `tfsdk:"confidence_level"`
 	CreatedTime     timetypes.RFC3339 `tfsdk:"created_time"`
 	Description     types.String      `tfsdk:"description"`
-	Id              types.Int64       `tfsdk:"id"`
-	ItemCount       types.Int64       `tfsdk:"item_count"`
+	Id              types.Int32       `tfsdk:"id"`
+	ItemCount       types.Int32       `tfsdk:"item_count"`
 	Items           types.List        `tfsdk:"items"`
 	ItemsDescribed  types.List        `tfsdk:"items_described"`
 	Name            types.String      `tfsdk:"name"`
@@ -41,8 +40,8 @@ var AtcfwNamedListAttrTypes = map[string]attr.Type{
 	"confidence_level": types.StringType,
 	"created_time":     timetypes.RFC3339Type{},
 	"description":      types.StringType,
-	"id":               types.Int64Type,
-	"item_count":       types.Int64Type,
+	"id":               types.Int32Type,
+	"item_count":       types.Int32Type,
 	"items":            types.ListType{ElemType: types.StringType},
 	"items_described":  types.ListType{ElemType: types.ObjectType{AttrTypes: AtcfwItemStructsAttrTypes}},
 	"name":             types.StringType,
@@ -71,14 +70,14 @@ var AtcfwNamedListResourceSchemaAttributes = map[string]schema.Attribute{
 		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The brief description for the named list.",
 	},
-	"id": schema.Int64Attribute{
+	"id": schema.Int32Attribute{
 		Computed: true,
-		PlanModifiers: []planmodifier.Int64{
-			int64planmodifier.UseStateForUnknown(),
+		PlanModifiers: []planmodifier.Int32{
+			int32planmodifier.UseStateForUnknown(),
 		},
 		MarkdownDescription: "The Named List object identifier.",
 	},
-	"item_count": schema.Int64Attribute{
+	"item_count": schema.Int32Attribute{
 		Computed:            true,
 		MarkdownDescription: "The number of items in this named list.",
 	},

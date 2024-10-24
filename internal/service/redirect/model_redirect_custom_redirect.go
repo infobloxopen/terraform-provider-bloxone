@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int32planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -20,7 +20,7 @@ import (
 type RedirectCustomRedirectModel struct {
 	CreatedTime timetypes.RFC3339 `tfsdk:"created_time"`
 	Data        types.String      `tfsdk:"data"`
-	Id          types.Int64       `tfsdk:"id"`
+	Id          types.Int32       `tfsdk:"id"`
 	Name        types.String      `tfsdk:"name"`
 	PolicyIds   types.List        `tfsdk:"policy_ids"`
 	PolicyNames types.List        `tfsdk:"policy_names"`
@@ -30,7 +30,7 @@ type RedirectCustomRedirectModel struct {
 var RedirectCustomRedirectAttrTypes = map[string]attr.Type{
 	"created_time": timetypes.RFC3339Type{},
 	"data":         types.StringType,
-	"id":           types.Int64Type,
+	"id":           types.Int32Type,
 	"name":         types.StringType,
 	"policy_ids":   types.ListType{ElemType: types.Int64Type},
 	"policy_names": types.ListType{ElemType: types.StringType},
@@ -47,10 +47,10 @@ var RedirectCustomRedirectResourceSchemaAttributes = map[string]schema.Attribute
 		Required:            true,
 		MarkdownDescription: "The list of csv custom IPv4/IPv6 or a single domain redirect address.",
 	},
-	"id": schema.Int64Attribute{
+	"id": schema.Int32Attribute{
 		Computed: true,
-		PlanModifiers: []planmodifier.Int64{
-			int64planmodifier.UseStateForUnknown(),
+		PlanModifiers: []planmodifier.Int32{
+			int32planmodifier.UseStateForUnknown(),
 		},
 		MarkdownDescription: "The Custom Redirect object identifier.",
 	},

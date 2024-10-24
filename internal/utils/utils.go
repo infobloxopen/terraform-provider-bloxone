@@ -63,8 +63,32 @@ func DataSourceAttribute(name string, val resourceschema.Attribute, diags *diag.
 			DeprecationMessage:  a.DeprecationMessage,
 			Validators:          a.Validators,
 		}
+	case resourceschema.Int32Attribute:
+		return datasourceschema.Int32Attribute{
+			CustomType:          a.CustomType,
+			Required:            a.Required,
+			Optional:            a.Optional,
+			Computed:            a.Computed,
+			Sensitive:           a.Sensitive,
+			Description:         a.Description,
+			MarkdownDescription: a.MarkdownDescription,
+			DeprecationMessage:  a.DeprecationMessage,
+			Validators:          a.Validators,
+		}
 	case resourceschema.Int64Attribute:
 		return datasourceschema.Int64Attribute{
+			CustomType:          a.CustomType,
+			Required:            a.Required,
+			Optional:            a.Optional,
+			Computed:            a.Computed,
+			Sensitive:           a.Sensitive,
+			Description:         a.Description,
+			MarkdownDescription: a.MarkdownDescription,
+			DeprecationMessage:  a.DeprecationMessage,
+			Validators:          a.Validators,
+		}
+	case resourceschema.Float32Attribute:
+		return datasourceschema.Float32Attribute{
 			CustomType:          a.CustomType,
 			Required:            a.Required,
 			Optional:            a.Optional,
@@ -259,7 +283,17 @@ func ToComputedAttribute(name string, val resourceschema.Attribute) resourcesche
 		a.Optional = false
 		a.Computed = true
 		return a
+	case resourceschema.Int32Attribute:
+		a.Required = false
+		a.Optional = false
+		a.Computed = true
+		return a
 	case resourceschema.Int64Attribute:
+		a.Required = false
+		a.Optional = false
+		a.Computed = true
+		return a
+	case resourceschema.Float32Attribute:
 		a.Required = false
 		a.Optional = false
 		a.Computed = true

@@ -27,7 +27,7 @@ type AccountModel struct {
 	LastSync               timetypes.RFC3339 `tfsdk:"last_sync"`
 	Name                   types.String      `tfsdk:"name"`
 	ParentId               types.String      `tfsdk:"parent_id"`
-	PercentComplete        types.Int64       `tfsdk:"percent_complete"`
+	PercentComplete        types.Int32       `tfsdk:"percent_complete"`
 	ProviderAccountId      types.String      `tfsdk:"provider_account_id"`
 	ScheduleId             types.String      `tfsdk:"schedule_id"`
 	State                  types.String      `tfsdk:"state"`
@@ -48,7 +48,7 @@ var AccountAttrTypes = map[string]attr.Type{
 	"last_sync":                timetypes.RFC3339Type{},
 	"name":                     types.StringType,
 	"parent_id":                types.StringType,
-	"percent_complete":         types.Int64Type,
+	"percent_complete":         types.Int32Type,
 	"provider_account_id":      types.StringType,
 	"schedule_id":              types.StringType,
 	"state":                    types.StringType,
@@ -110,7 +110,7 @@ var AccountResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "Parent ID.",
 	},
-	"percent_complete": schema.Int64Attribute{
+	"percent_complete": schema.Int32Attribute{
 		Computed:            true,
 		MarkdownDescription: "Sync progress as a percentage.",
 	},

@@ -95,7 +95,7 @@ func (r *CategoryFilterResource) Read(ctx context.Context, req resource.ReadRequ
 
 	apiRes, httpRes, err := r.client.FWAPI.
 		CategoryFiltersAPI.
-		ReadCategoryFilter(ctx, int32(data.Id.ValueInt64())).
+		ReadCategoryFilter(ctx, data.Id.ValueInt32()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *CategoryFilterResource) Update(ctx context.Context, req resource.Update
 
 	apiRes, _, err := r.client.FWAPI.
 		CategoryFiltersAPI.
-		UpdateCategoryFilter(ctx, int32(data.Id.ValueInt64())).
+		UpdateCategoryFilter(ctx, data.Id.ValueInt32()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *CategoryFilterResource) Delete(ctx context.Context, req resource.Delete
 
 	httpRes, err := r.client.FWAPI.
 		CategoryFiltersAPI.
-		DeleteSingleCategoryFilters(ctx, int32(data.Id.ValueInt64())).
+		DeleteSingleCategoryFilters(ctx, data.Id.ValueInt32()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

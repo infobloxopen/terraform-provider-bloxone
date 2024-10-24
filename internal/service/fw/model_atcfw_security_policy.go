@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int32planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -30,13 +30,13 @@ type AtcfwSecurityPolicyModel struct {
 	DfpServices         types.List        `tfsdk:"dfp_services"`
 	Dfps                types.List        `tfsdk:"dfps"`
 	Ecs                 types.Bool        `tfsdk:"ecs"`
-	Id                  types.Int64       `tfsdk:"id"`
+	Id                  types.Int32       `tfsdk:"id"`
 	IsDefault           types.Bool        `tfsdk:"is_default"`
 	Name                types.String      `tfsdk:"name"`
 	NetAddressDfps      types.List        `tfsdk:"net_address_dfps"`
 	NetworkLists        types.List        `tfsdk:"network_lists"`
 	OnpremResolve       types.Bool        `tfsdk:"onprem_resolve"`
-	Precedence          types.Int64       `tfsdk:"precedence"`
+	Precedence          types.Int32       `tfsdk:"precedence"`
 	RoamingDeviceGroups types.List        `tfsdk:"roaming_device_groups"`
 	Rules               types.List        `tfsdk:"rules"`
 	SafeSearch          types.Bool        `tfsdk:"safe_search"`
@@ -55,13 +55,13 @@ var AtcfwSecurityPolicyAttrTypes = map[string]attr.Type{
 	"dfp_services":          types.ListType{ElemType: types.StringType},
 	"dfps":                  types.ListType{ElemType: types.Int64Type},
 	"ecs":                   types.BoolType,
-	"id":                    types.Int64Type,
+	"id":                    types.Int32Type,
 	"is_default":            types.BoolType,
 	"name":                  types.StringType,
 	"net_address_dfps":      types.ListType{ElemType: types.ObjectType{AttrTypes: AtcfwNetAddrDfpAssignmentAttrTypes}},
 	"network_lists":         types.ListType{ElemType: types.Int64Type},
 	"onprem_resolve":        types.BoolType,
-	"precedence":            types.Int64Type,
+	"precedence":            types.Int32Type,
 	"roaming_device_groups": types.ListType{ElemType: types.Int64Type},
 	"rules":                 types.ListType{ElemType: types.ObjectType{AttrTypes: AtcfwSecurityPolicyRuleAttrTypes}},
 	"safe_search":           types.BoolType,
@@ -119,10 +119,10 @@ var AtcfwSecurityPolicyResourceSchemaAttributes = map[string]schema.Attribute{
 		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: "Use ECS for handling policy",
 	},
-	"id": schema.Int64Attribute{
+	"id": schema.Int32Attribute{
 		Computed: true,
-		PlanModifiers: []planmodifier.Int64{
-			int64planmodifier.UseStateForUnknown(),
+		PlanModifiers: []planmodifier.Int32{
+			int32planmodifier.UseStateForUnknown(),
 		},
 		MarkdownDescription: "The Security Policy object identifier.",
 	},
@@ -155,7 +155,7 @@ var AtcfwSecurityPolicyResourceSchemaAttributes = map[string]schema.Attribute{
 		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: "Use DNS resolve on onprem side",
 	},
-	"precedence": schema.Int64Attribute{
+	"precedence": schema.Int32Attribute{
 		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "Security precedence enable selection of the highest priority policy, in cases where a query matches multiple policies.",

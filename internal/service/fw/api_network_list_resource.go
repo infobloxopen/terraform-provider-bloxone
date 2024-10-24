@@ -95,7 +95,7 @@ func (r *NetworkListResource) Read(ctx context.Context, req resource.ReadRequest
 
 	apiRes, httpRes, err := r.client.FWAPI.
 		NetworkListsAPI.
-		ReadNetworkList(ctx, int32(data.Id.ValueInt64())).
+		ReadNetworkList(ctx, data.Id.ValueInt32()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -125,7 +125,7 @@ func (r *NetworkListResource) Update(ctx context.Context, req resource.UpdateReq
 
 	apiRes, _, err := r.client.FWAPI.
 		NetworkListsAPI.
-		UpdateNetworkList(ctx, int32(data.Id.ValueInt64())).
+		UpdateNetworkList(ctx, data.Id.ValueInt32()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -152,7 +152,7 @@ func (r *NetworkListResource) Delete(ctx context.Context, req resource.DeleteReq
 
 	httpRes, err := r.client.FWAPI.
 		NetworkListsAPI.
-		DeleteSingleNetworkLists(ctx, int32(data.Id.ValueInt64())).
+		DeleteSingleNetworkLists(ctx, data.Id.ValueInt32()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {

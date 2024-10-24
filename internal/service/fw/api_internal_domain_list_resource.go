@@ -103,7 +103,7 @@ func (r *InternalDomainListResource) Read(ctx context.Context, req resource.Read
 
 	apiRes, httpRes, err := r.client.FWAPI.
 		InternalDomainListsAPI.
-		ReadInternalDomains(ctx, int32(data.Id.ValueInt64())).
+		ReadInternalDomains(ctx, data.Id.ValueInt32()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
@@ -133,7 +133,7 @@ func (r *InternalDomainListResource) Update(ctx context.Context, req resource.Up
 
 	apiRes, _, err := r.client.FWAPI.
 		InternalDomainListsAPI.
-		UpdateInternalDomains(ctx, int32(data.Id.ValueInt64())).
+		UpdateInternalDomains(ctx, data.Id.ValueInt32()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
@@ -161,7 +161,7 @@ func (r *InternalDomainListResource) Delete(ctx context.Context, req resource.De
 	err := retry.RetryContext(ctx, InternalDomainListOperationTimeout, func() *retry.RetryError {
 		httpRes, err := r.client.FWAPI.
 			InternalDomainListsAPI.
-			DeleteSingleInternalDomains(ctx, int32(data.Id.ValueInt64())).
+			DeleteSingleInternalDomains(ctx, data.Id.ValueInt32()).
 			Execute()
 		if err != nil {
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
