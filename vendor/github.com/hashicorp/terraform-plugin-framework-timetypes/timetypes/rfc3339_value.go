@@ -9,12 +9,16 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/attr/xattr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/function"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
 
 var (
-	_ basetypes.StringValuable = (*RFC3339)(nil)
+	_ basetypes.StringValuable       = (*RFC3339)(nil)
+	_ xattr.ValidateableAttribute    = (*RFC3339)(nil)
+	_ function.ValidateableParameter = (*RFC3339)(nil)
 )
 
 // RFC3339 represents a valid RFC3339-formatted string. Semantic equality logic is defined for RFC3339
@@ -74,6 +78,46 @@ func (v RFC3339) StringSemanticEquals(_ context.Context, newValuable basetypes.S
 	currentRFC3339time, _ := time.Parse(time.RFC3339, v.ValueString())
 
 	return currentRFC3339time.Format(time.RFC3339) == newRFC3339time.Format(time.RFC3339), diags
+}
+
+// ValidateAttribute implements attribute value validation. This type requires the value to be a String value that
+// is valid RFC 3339 format. This utilizes the Go `time` library which does not strictly adhere to the RFC 3339
+// standard and may allow strings that are not valid RFC 3339 strings
+//
+// See https://github.com/golang/go/issues/54580 for more info on the Go `time` library's RFC 3339 parsing differences.
+func (v RFC3339) ValidateAttribute(ctx context.Context, req xattr.ValidateAttributeRequest, resp *xattr.ValidateAttributeResponse) {
+	if v.IsUnknown() || v.IsNull() {
+		return
+	}
+
+	if _, err := time.Parse(time.RFC3339, v.ValueString()); err != nil {
+		resp.Diagnostics.Append(diag.WithPath(req.Path, rfc3339InvalidStringDiagnostic(v.ValueString(), err)))
+
+		return
+	}
+}
+
+// ValidateParameter implements provider-defined function parameter value validation. This type requires the value to
+// be a String value that is valid RFC 3339 format. This utilizes the Go `time` library which does not strictly
+// adhere to the RFC 3339 standard and may allow strings that are not valid RFC 3339 strings
+//
+// See https://github.com/golang/go/issues/54580 for more info on the Go `time` library's RFC 3339 parsing differences.
+func (v RFC3339) ValidateParameter(ctx context.Context, req function.ValidateParameterRequest, resp *function.ValidateParameterResponse) {
+	if v.IsUnknown() || v.IsNull() {
+		return
+	}
+
+	if _, err := time.Parse(time.RFC3339, v.ValueString()); err != nil {
+		resp.Error = function.NewArgumentFuncError(
+			req.Position,
+			"Invalid RFC3339 String Value: "+
+				"A string value was provided that is not valid RFC3339 string format.\n\n"+
+				"Given Value: "+v.ValueString()+"\n"+
+				"Error: "+err.Error(),
+		)
+
+		return
+	}
 }
 
 // ValueRFC3339Time creates a new time.Time instance with the RFC3339 StringValue. A null or unknown value will produce an error diagnostic.
