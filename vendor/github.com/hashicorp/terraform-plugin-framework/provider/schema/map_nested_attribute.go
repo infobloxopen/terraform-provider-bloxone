@@ -4,6 +4,7 @@
 package schema
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
@@ -11,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/internal/fwschema"
 	"github.com/hashicorp/terraform-plugin-framework/internal/fwschema/fwxschema"
+	"github.com/hashicorp/terraform-plugin-framework/internal/fwtype"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -22,7 +24,7 @@ var (
 	_ fwxschema.AttributeWithMapValidators = MapNestedAttribute{}
 )
 
-// MapNestedAttribute represents an attribute that is a set of objects where
+// MapNestedAttribute represents an attribute that is a map of objects where
 // the object attributes can be fully defined, including further nested
 // attributes. When retrieving the value for this attribute, use types.Map
 // as the value type unless the CustomType field is set. The NestedObject field
@@ -32,7 +34,7 @@ var (
 // not require definition beyond type information.
 //
 // Terraform configurations configure this attribute using expressions that
-// return a set of objects or directly via curly brace syntax.
+// return a map of objects or directly via curly brace syntax.
 //
 //	# map of objects
 //	example_attribute = {
@@ -52,6 +54,10 @@ var (
 type MapNestedAttribute struct {
 	// NestedObject is the underlying object that contains nested attributes.
 	// This field must be set.
+	//
+	// Nested attributes that contain a dynamic type (i.e. DynamicAttribute) are not supported.
+	// If underlying dynamic values are required, replace this attribute definition with
+	// DynamicAttribute instead.
 	NestedObject NestedAttributeObject
 
 	// CustomType enables the use of a custom attribute type in place of the
@@ -181,7 +187,7 @@ func (a MapNestedAttribute) GetNestedObject() fwschema.NestedAttributeObject {
 	return a.NestedObject
 }
 
-// GetNestingMode always returns NestingModeList.
+// GetNestingMode always returns NestingModeMap.
 func (a MapNestedAttribute) GetNestingMode() fwschema.NestingMode {
 	return fwschema.NestingModeMap
 }
@@ -220,4 +226,14 @@ func (a MapNestedAttribute) IsSensitive() bool {
 // MapValidators returns the Validators field value.
 func (a MapNestedAttribute) MapValidators() []validator.Map {
 	return a.Validators
+}
+
+// ValidateImplementation contains logic for validating the
+// provider-defined implementation of the attribute to prevent unexpected
+// errors or panics. This logic runs during the GetProviderSchema RPC and
+// should never include false positives.
+func (a MapNestedAttribute) ValidateImplementation(ctx context.Context, req fwschema.ValidateImplementationRequest, resp *fwschema.ValidateImplementationResponse) {
+	if a.CustomType == nil && fwtype.ContainsCollectionWithDynamic(a.GetType()) {
+		resp.Diagnostics.Append(fwtype.AttributeCollectionWithDynamicTypeDiag(req.Path))
+	}
 }

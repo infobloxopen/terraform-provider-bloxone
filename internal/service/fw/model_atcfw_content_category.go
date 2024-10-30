@@ -15,19 +15,19 @@ import (
 )
 
 type AtcfwContentCategoryModel struct {
-	CategoryCode    types.Int64  `tfsdk:"category_code"`
+	CategoryCode    types.Int32  `tfsdk:"category_code"`
 	CategoryName    types.String `tfsdk:"category_name"`
 	FunctionalGroup types.String `tfsdk:"functional_group"`
 }
 
 var AtcfwContentCategoryAttrTypes = map[string]attr.Type{
-	"category_code":    types.Int64Type,
+	"category_code":    types.Int32Type,
 	"category_name":    types.StringType,
 	"functional_group": types.StringType,
 }
 
 var AtcfwContentCategoryResourceSchemaAttributes = map[string]schema.Attribute{
-	"category_code": schema.Int64Attribute{
+	"category_code": schema.Int32Attribute{
 		Optional:            true,
 		MarkdownDescription: "The category code.",
 	},

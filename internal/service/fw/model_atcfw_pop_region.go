@@ -15,14 +15,14 @@ import (
 
 type AtcfwPoPRegionModel struct {
 	Addresses types.List   `tfsdk:"addresses"`
-	Id        types.Int64  `tfsdk:"id"`
+	Id        types.Int32  `tfsdk:"id"`
 	Location  types.String `tfsdk:"location"`
 	Region    types.String `tfsdk:"region"`
 }
 
 var AtcfwPoPRegionAttrTypes = map[string]attr.Type{
 	"addresses": types.ListType{ElemType: types.StringType},
-	"id":        types.Int64Type,
+	"id":        types.Int32Type,
 	"location":  types.StringType,
 	"region":    types.StringType,
 }
@@ -33,7 +33,7 @@ var AtcfwPoPRegionResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		MarkdownDescription: "PoP Region's IP addresses",
 	},
-	"id": schema.Int64Attribute{
+	"id": schema.Int32Attribute{
 		Computed:            true,
 		MarkdownDescription: "The PoP Region's serial, unique ID",
 	},

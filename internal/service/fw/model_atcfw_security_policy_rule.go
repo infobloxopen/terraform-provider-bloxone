@@ -17,8 +17,8 @@ import (
 type AtcfwSecurityPolicyRuleModel struct {
 	Action       types.String `tfsdk:"action"`
 	Data         types.String `tfsdk:"data"`
-	ListId       types.Int64  `tfsdk:"list_id"`
-	PolicyId     types.Int64  `tfsdk:"policy_id"`
+	ListId       types.Int32  `tfsdk:"list_id"`
+	PolicyId     types.Int32  `tfsdk:"policy_id"`
 	PolicyName   types.String `tfsdk:"policy_name"`
 	RedirectName types.String `tfsdk:"redirect_name"`
 	Type         types.String `tfsdk:"type"`
@@ -27,8 +27,8 @@ type AtcfwSecurityPolicyRuleModel struct {
 var AtcfwSecurityPolicyRuleAttrTypes = map[string]attr.Type{
 	"action":        types.StringType,
 	"data":          types.StringType,
-	"list_id":       types.Int64Type,
-	"policy_id":     types.Int64Type,
+	"list_id":       types.Int32Type,
+	"policy_id":     types.Int32Type,
 	"policy_name":   types.StringType,
 	"redirect_name": types.StringType,
 	"type":          types.StringType,
@@ -45,11 +45,11 @@ var AtcfwSecurityPolicyRuleResourceSchemaAttributes = map[string]schema.Attribut
 		Computed:            true,
 		MarkdownDescription: "The data source for the policy rule, that can be either a name of the predefined feed for \"named_feed\", custom list name for \"custom_list\" type, category filter name for \"category_filter\" type and application filter name for \"application_filter\" type.",
 	},
-	"list_id": schema.Int64Attribute{
+	"list_id": schema.Int32Attribute{
 		Computed:            true,
 		MarkdownDescription: "The Custom List object identifier with which the policy rule is associated. 0 value means no custom list is associated with this policy rule.",
 	},
-	"policy_id": schema.Int64Attribute{
+	"policy_id": schema.Int32Attribute{
 		Computed:            true,
 		MarkdownDescription: "The identifier of the Security Policy object with which the policy rule is associated.",
 	},

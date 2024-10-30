@@ -36,7 +36,7 @@ type IpamsvcServerModel struct {
 	DdnsGenerateName                types.Bool        `tfsdk:"ddns_generate_name"`
 	DdnsGeneratedPrefix             types.String      `tfsdk:"ddns_generated_prefix"`
 	DdnsSendUpdates                 types.Bool        `tfsdk:"ddns_send_updates"`
-	DdnsTtlPercent                  types.Float64     `tfsdk:"ddns_ttl_percent"`
+	DdnsTtlPercent                  types.Float32     `tfsdk:"ddns_ttl_percent"`
 	DdnsUpdateOnRenew               types.Bool        `tfsdk:"ddns_update_on_renew"`
 	DdnsUseConflictResolution       types.Bool        `tfsdk:"ddns_use_conflict_resolution"`
 	DdnsZones                       types.List        `tfsdk:"ddns_zones"`
@@ -78,7 +78,7 @@ var IpamsvcServerAttrTypes = map[string]attr.Type{
 	"ddns_generate_name":                  types.BoolType,
 	"ddns_generated_prefix":               types.StringType,
 	"ddns_send_updates":                   types.BoolType,
-	"ddns_ttl_percent":                    types.Float64Type,
+	"ddns_ttl_percent":                    types.Float32Type,
 	"ddns_update_on_renew":                types.BoolType,
 	"ddns_use_conflict_resolution":        types.BoolType,
 	"ddns_zones":                          types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcDDNSZoneAttrTypes}},
@@ -186,7 +186,7 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 		Default:             booldefault.StaticBool(true),
 		MarkdownDescription: `Determines if DDNS updates are enabled at the IP space level. Defaults to _true_.`,
 	},
-	"ddns_ttl_percent": schema.Float64Attribute{
+	"ddns_ttl_percent": schema.Float32Attribute{
 		Optional:            true,
 		MarkdownDescription: "DDNS TTL value - to be calculated as a simple percentage of the lease's lifetime, using the parameter's value as the percentage. It is specified as a percentage (e.g. 25, 75). Defaults to unspecified.",
 	},
@@ -457,7 +457,7 @@ func (m *IpamsvcServerModel) Flatten(ctx context.Context, from *ipam.Server, dia
 	m.DdnsGenerateName = types.BoolPointerValue(from.DdnsGenerateName)
 	m.DdnsGeneratedPrefix = flex.FlattenStringPointer(from.DdnsGeneratedPrefix)
 	m.DdnsSendUpdates = types.BoolPointerValue(from.DdnsSendUpdates)
-	m.DdnsTtlPercent = flex.FlattenFloat64(float64(*from.DdnsTtlPercent))
+	m.DdnsTtlPercent = flex.FlattenFloat32(*from.DdnsTtlPercent)
 	m.DdnsUpdateOnRenew = types.BoolPointerValue(from.DdnsUpdateOnRenew)
 	m.DdnsUseConflictResolution = types.BoolPointerValue(from.DdnsUseConflictResolution)
 	m.DdnsZones = flex.FlattenFrameworkListNestedBlock(ctx, from.DdnsZones, IpamsvcDDNSZoneAttrTypes, diags, FlattenIpamsvcDDNSZone)

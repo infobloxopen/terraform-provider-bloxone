@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int32planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -21,20 +21,20 @@ import (
 type AtcfwNetworkListModel struct {
 	CreatedTime timetypes.RFC3339 `tfsdk:"created_time"`
 	Description types.String      `tfsdk:"description"`
-	Id          types.Int64       `tfsdk:"id"`
+	Id          types.Int32       `tfsdk:"id"`
 	Items       types.List        `tfsdk:"items"`
 	Name        types.String      `tfsdk:"name"`
-	PolicyId    types.Int64       `tfsdk:"policy_id"`
+	PolicyId    types.Int32       `tfsdk:"policy_id"`
 	UpdatedTime timetypes.RFC3339 `tfsdk:"updated_time"`
 }
 
 var AtcfwNetworkListAttrTypes = map[string]attr.Type{
 	"created_time": timetypes.RFC3339Type{},
 	"description":  types.StringType,
-	"id":           types.Int64Type,
+	"id":           types.Int32Type,
 	"items":        types.ListType{ElemType: types.StringType},
 	"name":         types.StringType,
-	"policy_id":    types.Int64Type,
+	"policy_id":    types.Int32Type,
 	"updated_time": timetypes.RFC3339Type{},
 }
 
@@ -50,10 +50,10 @@ var AtcfwNetworkListResourceSchemaAttributes = map[string]schema.Attribute{
 		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The brief description for the network list.",
 	},
-	"id": schema.Int64Attribute{
+	"id": schema.Int32Attribute{
 		Computed: true,
-		PlanModifiers: []planmodifier.Int64{
-			int64planmodifier.UseStateForUnknown(),
+		PlanModifiers: []planmodifier.Int32{
+			int32planmodifier.UseStateForUnknown(),
 		},
 		MarkdownDescription: "The Network List object identifier.",
 	},
@@ -66,7 +66,7 @@ var AtcfwNetworkListResourceSchemaAttributes = map[string]schema.Attribute{
 		Required:            true,
 		MarkdownDescription: "The name of the network list.",
 	},
-	"policy_id": schema.Int64Attribute{
+	"policy_id": schema.Int32Attribute{
 		Computed:            true,
 		MarkdownDescription: "The identifier of the security policy with which the network list is associated.",
 	},

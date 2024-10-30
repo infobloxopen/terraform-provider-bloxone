@@ -16,12 +16,12 @@ import (
 
 type NetAddrPolicyAssignmentModel struct {
 	AddrNet  types.String `tfsdk:"addr_net"`
-	PolicyId types.Int64  `tfsdk:"policy_id"`
+	PolicyId types.Int32  `tfsdk:"policy_id"`
 }
 
 var NetAddrPolicyAssignmentAttrTypes = map[string]attr.Type{
 	"addr_net":  types.StringType,
-	"policy_id": types.Int64Type,
+	"policy_id": types.Int32Type,
 }
 
 var NetAddrPolicyAssignmentResourceSchemaAttributes = map[string]schema.Attribute{
@@ -29,7 +29,7 @@ var NetAddrPolicyAssignmentResourceSchemaAttributes = map[string]schema.Attribut
 		Optional:            true,
 		MarkdownDescription: "Network address in IPv4 CIDR (address/bitmask length) string format",
 	},
-	"policy_id": schema.Int64Attribute{
+	"policy_id": schema.Int32Attribute{
 		Optional:            true,
 		MarkdownDescription: "Identifier of the security policy associated with this address block",
 	},
