@@ -15,3 +15,16 @@ func rfc3339InvalidStringDiagnostic(value string, err error) diag.Diagnostic {
 			"Error: "+err.Error(),
 	)
 }
+
+// goDurationInvalidStringDiagnostic returns an error diagnostic intended to report
+// when a string is not a time duration.
+func goDurationInvalidStringDiagnostic(value string, err error) diag.Diagnostic {
+	return diag.NewErrorDiagnostic(
+		"Invalid Time Duration String Value",
+		"A string value was provided that is not a valid Go Time Duration string format. "+
+			`A duration string is a sequence of numbers, each with optional fraction and a unit suffix, such as "300ms", "-1.5h" or "2h45m". `+
+			`Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".\n\n`+
+			"Given Value: "+value+"\n"+
+			"Error: "+err.Error(),
+	)
+}
