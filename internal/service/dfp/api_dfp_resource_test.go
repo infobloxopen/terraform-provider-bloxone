@@ -122,7 +122,7 @@ func TestAccDfpResource_ResolversAll_Protocols_Multiple(t *testing.T) {
 	var v dfp.Dfp
 	hostName := acctest.RandomNameWithPrefix("host")
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
