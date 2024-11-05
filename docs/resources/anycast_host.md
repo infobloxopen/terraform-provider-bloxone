@@ -34,7 +34,7 @@ resource "bloxone_anycast_host" "example" {
   # Adding the anycast config profile and enabling BGP routing protocol
   anycast_config_refs = [
     {
-      anycast_config_name = bloxone_anycast_config.test_onprem_hosts.name
+      anycast_config_name = bloxone_anycast_config.example.name
       routing_protocols   = ["BGP", "OSPF"]
     }
   ]
@@ -42,7 +42,6 @@ resource "bloxone_anycast_host" "example" {
   # Adding the BGP configuration
   config_bgp = {
     asn           = "6500"
-    asn_text      = "6500"
     holddown_secs = 180
     neighbors = [
       {
