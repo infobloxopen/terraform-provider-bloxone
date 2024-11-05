@@ -345,10 +345,10 @@ func TestAccSecurityPolicyResource_Precedence(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSecurityPolicyPrecedence(name, 5),
+				Config: testAccSecurityPolicyPrecedence(name, 2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityPolicyExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "precedence", "5"),
+					resource.TestCheckResourceAttr(resourceName, "precedence", "2"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
