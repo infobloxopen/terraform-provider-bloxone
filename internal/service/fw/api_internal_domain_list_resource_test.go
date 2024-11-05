@@ -98,7 +98,7 @@ func TestAccInternalDomainListResource_InternalDomains(t *testing.T) {
 	var v fw.InternalDomains
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -164,7 +164,7 @@ func TestAccInternalDomainListResource_Name(t *testing.T) {
 	var name1 = acctest.RandomNameWithPrefix("td-internal_domain_list")
 	var name2 = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{

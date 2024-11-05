@@ -20,7 +20,7 @@ func TestAccCategoryFiltersResource_basic(t *testing.T) {
 	var v fw.CategoryFilter
 	name := acctest.RandomNameWithPrefix("category-filter")
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -47,7 +47,7 @@ func TestAccCategoryFiltersResource_disappears(t *testing.T) {
 	var v fw.CategoryFilter
 	name := acctest.RandomNameWithPrefix("category-filter")
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckCategoryFiltersDestroy(context.Background(), &v),
@@ -69,7 +69,7 @@ func TestAccCategoryFiltersResource_Categories(t *testing.T) {
 	var v fw.CategoryFilter
 	name := acctest.RandomNameWithPrefix("category-filter")
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -130,7 +130,7 @@ func TestAccCategoryFiltersResource_Name(t *testing.T) {
 	name1 := acctest.RandomNameWithPrefix("category-filter")
 	name2 := acctest.RandomNameWithPrefix("category-filter")
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -160,7 +160,7 @@ func TestAccCategoryFiltersResource_Tags(t *testing.T) {
 	var v fw.CategoryFilter
 	name := acctest.RandomNameWithPrefix("category-filter")
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
