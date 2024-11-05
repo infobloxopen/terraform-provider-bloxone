@@ -282,6 +282,7 @@ func (m *DhcpHostModel) Flatten(ctx context.Context, from *ipam.Host, diags *dia
 	if m == nil {
 		*m = DhcpHostModel{}
 	}
+	m.Id = flex.FlattenStringPointer(from.Id)
 	m.Address = flex.FlattenStringPointer(from.Address)
 	m.AnycastAddresses = flex.FlattenFrameworkListString(ctx, from.AnycastAddresses, diags)
 	m.AssociatedServer = FlattenIpamsvcHostAssociatedServer(ctx, from.AssociatedServer, diags)
