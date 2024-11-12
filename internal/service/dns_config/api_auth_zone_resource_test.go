@@ -100,11 +100,11 @@ func TestAccAuthZoneResource_FQDN(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneBasicConfig("tf-infoblox-test.com.", "cloud"),
+				Config: testAccAuthZoneBasicConfig(fqdn, "cloud"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneDestroy(context.Background(), &v1),
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v2),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-infoblox-test.com."),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn),
 					resource.TestCheckResourceAttr(resourceName, "primary_type", "cloud"),
 				),
 			},

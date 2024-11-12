@@ -91,11 +91,11 @@ func TestAccForwardZoneResource_FQDN(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccForwardZoneBasicConfig("tf-infoblox-test.com."),
+				Config: testAccForwardZoneBasicConfig(fqdn),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneDestroy(context.Background(), &v1),
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v2),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-infoblox-test.com."),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
