@@ -73,7 +73,8 @@ func TestAccForwardZoneResource_disappears(t *testing.T) {
 
 func TestAccForwardZoneResource_FQDN(t *testing.T) {
 	var resourceName = "bloxone_dns_forward_zone.test"
-	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
+	var fqdn1 = acctest.RandomNameWithPrefix("fw-zone") + ".com."
+	var fqdn2 = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v1 dnsconfig.ForwardZone
 	var v2 dnsconfig.ForwardZone
 
@@ -83,19 +84,19 @@ func TestAccForwardZoneResource_FQDN(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccForwardZoneBasicConfig(fqdn),
+				Config: testAccForwardZoneBasicConfig(fqdn1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v1),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn1),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccForwardZoneBasicConfig("tf-infoblox-test.com."),
+				Config: testAccForwardZoneBasicConfig(fqdn2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardZoneDestroy(context.Background(), &v1),
 					testAccCheckForwardZoneExists(context.Background(), resourceName, &v2),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-infoblox-test.com."),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn2),
 				),
 			},
 			// Delete testing automatically occurs in TestCase

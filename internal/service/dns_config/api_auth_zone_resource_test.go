@@ -83,7 +83,8 @@ func TestAccAuthZoneResource_FQDN(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test"
 	var v1 dnsconfig.AuthZone
 	var v2 dnsconfig.AuthZone
-	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
+	var fqdn1 = acctest.RandomNameWithPrefix("auth-zone") + ".com."
+	var fqdn2 = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -91,20 +92,20 @@ func TestAccAuthZoneResource_FQDN(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneBasicConfig(fqdn, "cloud"),
+				Config: testAccAuthZoneBasicConfig(fqdn1, "cloud"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v1),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn1),
 					resource.TestCheckResourceAttr(resourceName, "primary_type", "cloud"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneBasicConfig("tf-infoblox-test.com.", "cloud"),
+				Config: testAccAuthZoneBasicConfig(fqdn2, "cloud"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneDestroy(context.Background(), &v1),
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v2),
-					resource.TestCheckResourceAttr(resourceName, "fqdn", "tf-infoblox-test.com."),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn2),
 					resource.TestCheckResourceAttr(resourceName, "primary_type", "cloud"),
 				),
 			},
