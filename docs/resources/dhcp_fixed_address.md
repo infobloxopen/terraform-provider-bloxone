@@ -79,7 +79,7 @@ resource "bloxone_dhcp_fixed_address" "example_fixed_address_na" {
   next_available_id = bloxone_ipam_subnet.example.id
   ip_space          = bloxone_ipam_ip_space.example.id
   match_type        = "mac"
-  match_value       = "00:00:00:00:00:00"
+  match_value       = "00:00:00:00:00:01"
   comment           = "Example Fixed Address created by the terraform provider"
   tags = {
     location : "site1"
