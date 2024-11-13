@@ -6,19 +6,15 @@ package timetypes
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
-	"github.com/hashicorp/terraform-plugin-framework/attr/xattr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
 var (
 	_ basetypes.StringTypable = (*RFC3339Type)(nil)
-	_ xattr.TypeWithValidate  = (*RFC3339Type)(nil)
 )
 
 // RFC3339Type is an attribute type that represents a valid RFC 3339 string. Semantic equality logic is defined
@@ -46,55 +42,6 @@ func (t RFC3339Type) Equal(o attr.Type) bool {
 	}
 
 	return t.StringType.Equal(other.StringType)
-}
-
-// Validate implements type validation. This type requires the value provided to be a String value that is
-// valid RFC 3339 format. This utilizes the Go `time` library which does not strictly adhere to the RFC 3339
-// standard and may allow strings that are not valid RFC 3339 strings
-//
-// See https://github.com/golang/go/issues/54580 for more info on the Go `time` library's RFC 3339 parsing differences.
-func (t RFC3339Type) Validate(ctx context.Context, in tftypes.Value, path path.Path) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if in.Type() == nil {
-		return diags
-	}
-
-	if !in.Type().Is(tftypes.String) {
-		err := fmt.Errorf("expected String value, received %T with value: %v", in, in)
-		diags.AddAttributeError(
-			path,
-			"RFC3339 Time Type Validation Error",
-			"An unexpected error was encountered trying to validate an attribute value. This is always an error in the provider. "+
-				"Please report the following to the provider developer:\n\n"+err.Error(),
-		)
-		return diags
-	}
-
-	if !in.IsKnown() || in.IsNull() {
-		return diags
-	}
-
-	var valueString string
-
-	if err := in.As(&valueString); err != nil {
-		diags.AddAttributeError(
-			path,
-			"RFC3339 Time Type Validation Error",
-			"An unexpected error was encountered trying to validate an attribute value. This is always an error in the provider. "+
-				"Please report the following to the provider developer:\n\n"+err.Error(),
-		)
-
-		return diags
-	}
-
-	if _, err := time.Parse(time.RFC3339, valueString); err != nil {
-		diags.Append(diag.WithPath(path, rfc3339InvalidStringDiagnostic(valueString, err)))
-
-		return diags
-	}
-
-	return diags
 }
 
 // ValueFromString returns a StringValuable type given a StringValue.
