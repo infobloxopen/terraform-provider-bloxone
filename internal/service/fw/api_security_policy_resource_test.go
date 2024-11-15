@@ -59,7 +59,7 @@ func TestAccSecurityPolicyResource_disappears(t *testing.T) {
 	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckSecurityPolicyDestroy(context.Background(), &v),
@@ -82,7 +82,7 @@ func TestAccSecurityPolicyResource_Name(t *testing.T) {
 	name1 := acctest.RandomNameWithPrefix("sec-policy")
 	name2 := acctest.RandomNameWithPrefix("sec-policy")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -112,7 +112,7 @@ func TestAccSecurityPolicyResource_Description(t *testing.T) {
 	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -145,7 +145,7 @@ func TestAccSecurityPolicyResource_AccessCodes(t *testing.T) {
 	accessCodeName1 := acctest.RandomNameWithPrefix("ac")
 	accessCodeName2 := acctest.RandomNameWithPrefix("ac")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -207,7 +207,7 @@ func TestAccSecurityPolicyResource_DefaultRedirectName(t *testing.T) {
 	redirectName1 := acctest.RandomNameWithPrefix("redirect")
 	redirectName2 := acctest.RandomNameWithPrefix("redirect")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -237,7 +237,7 @@ func TestAccSecurityPolicyResource_Ecs(t *testing.T) {
 	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -271,7 +271,7 @@ func TestAccSecurityPolicyResource_NetworkLists(t *testing.T) {
 	ip1 := acctest.RandomIP() + "/32"
 	ip2 := acctest.RandomIP() + "/32"
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -301,7 +301,7 @@ func TestAccSecurityPolicyResource_OnpremResolve(t *testing.T) {
 	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -331,7 +331,7 @@ func TestAccSecurityPolicyResource_Precedence(t *testing.T) {
 	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -363,7 +363,7 @@ func TestAccSecurityPolicyResource_Rules(t *testing.T) {
 	namedListName1 := acctest.RandomNameWithPrefix("named-list")
 	namedListName2 := acctest.RandomNameWithPrefix("named-list")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -393,7 +393,7 @@ func TestAccSecurityPolicyResource_SafeSearch(t *testing.T) {
 	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -423,7 +423,7 @@ func TestAccSecurityPolicyResource_Tags(t *testing.T) {
 	var v fw.SecurityPolicy
 	var name = acctest.RandomNameWithPrefix("td-internal_domain_list")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{

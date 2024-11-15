@@ -20,7 +20,7 @@ func TestAccApplicationFiltersResource_basic(t *testing.T) {
 	var v fw.ApplicationFilter
 	name := acctest.RandomNameWithPrefix("app-filter")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -48,7 +48,7 @@ func TestAccApplicationFiltersResource_disappears(t *testing.T) {
 	var v fw.ApplicationFilter
 	name := acctest.RandomNameWithPrefix("app-filter")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		CheckDestroy:             testAccCheckApplicationFiltersDestroy(context.Background(), &v),
@@ -70,7 +70,7 @@ func TestAccApplicationFiltersResource_CriteriaCategory(t *testing.T) {
 	var v fw.ApplicationFilter
 	name := acctest.RandomNameWithPrefix("app-filter")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -100,7 +100,7 @@ func TestAccApplicationFiltersResource_CriteriaName(t *testing.T) {
 	var v fw.ApplicationFilter
 	name := acctest.RandomNameWithPrefix("app-filter")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -130,7 +130,7 @@ func TestAccApplicationFiltersResource_Description(t *testing.T) {
 	var v fw.ApplicationFilter
 	name := acctest.RandomNameWithPrefix("app-filter")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -161,7 +161,7 @@ func TestAccApplicationFiltersResource_Name(t *testing.T) {
 	name1 := acctest.RandomNameWithPrefix("app-filter")
 	name2 := acctest.RandomNameWithPrefix("app-filter")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -191,7 +191,7 @@ func TestAccApplicationFiltersResource_Tags(t *testing.T) {
 	var v fw.ApplicationFilter
 	name := acctest.RandomNameWithPrefix("app-filter")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
