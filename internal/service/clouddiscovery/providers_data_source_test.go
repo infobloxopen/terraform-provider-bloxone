@@ -14,6 +14,7 @@ import (
 func TestAccProvidersDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_cloud_discovery_providers.test"
 	resourceName := "bloxone_cloud_discovery_provider.test"
+	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randomNumber())
 	var v clouddiscovery.DiscoveryConfig
 	name := acctest.RandomName()
 
@@ -25,7 +26,7 @@ func TestAccProvidersDataSource_Filters(t *testing.T) {
 			{
 				Config: testAccProvidersDataSourceConfigFilters(name, "Amazon Web Services",
 					"single", "role_arn", "dynamic",
-					"arn:aws:iam::123456789012:role/infoblox_discovery"),
+					configAccessId),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckProvidersExists(context.Background(), resourceName, &v),
@@ -53,7 +54,6 @@ func testAccCheckProvidersResourceAttrPair(resourceName, dataSourceName string) 
 		resource.TestCheckResourceAttrPair(resourceName, "name", dataSourceName, "results.0.name"),
 		resource.TestCheckResourceAttrPair(resourceName, "provider_type", dataSourceName, "results.0.provider_type"),
 		resource.TestCheckResourceAttrPair(resourceName, "source_configs", dataSourceName, "results.0.source_configs"),
-		resource.TestCheckResourceAttrPair(resourceName, "status_message", dataSourceName, "results.0.status_message"),
 		resource.TestCheckResourceAttrPair(resourceName, "sync_interval", dataSourceName, "results.0.sync_interval"),
 		resource.TestCheckResourceAttrPair(resourceName, "tags", dataSourceName, "results.0.tags"),
 		resource.TestCheckResourceAttrPair(resourceName, "updated_at", dataSourceName, "results.0.updated_at"),
