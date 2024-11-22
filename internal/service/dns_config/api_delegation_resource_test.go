@@ -48,6 +48,9 @@ func TestAccDelegationResource_basic(t *testing.T) {
 }
 
 func TestAccDelegationResource_disappears(t *testing.T) {
+
+	t.Skip("Test Skipped due to inconsistent error codes returned by the API [NORTHSTAR-12575]")
+
 	resourceName := "bloxone_dns_delegation.test"
 	var v dnsconfig.Delegation
 	viewName := acctest.RandomNameWithPrefix("view")

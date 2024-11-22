@@ -41,6 +41,9 @@ func TestAccCustomRedirectsResource_basic(t *testing.T) {
 }
 
 func TestAccCustomRedirectsResource_disappears(t *testing.T) {
+
+	t.Skip("Test Skipped due to inconsistent error codes returned by the API [TDDFW-397]")
+
 	resourceName := "bloxone_td_custom_redirect.test"
 	var v redirect.CustomRedirect
 	name := acctest.RandomNameWithPrefix("custom-redirect")
