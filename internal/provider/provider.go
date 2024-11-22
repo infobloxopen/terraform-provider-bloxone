@@ -3,8 +3,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"os"
-	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
@@ -92,24 +90,10 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 		option.WithAPIKey(data.APIKey.ValueString()),
 		option.WithCSPUrl(data.CSPUrl.ValueString()),
 		option.WithDefaultTags(dfTags),
-		option.WithDebug(p.LookUpLevel("LOG_LEVEL")),
 	)
 
 	resp.DataSourceData = client
 	resp.ResourceData = client
-}
-
-func (p *BloxOneProvider) LookUpLevel(debug string) bool {
-	logLvlStr := os.Getenv(debug)
-	if logLvlStr == "" {
-		logLvlStr = "false"
-	}
-
-	logLvl, err := strconv.ParseBool(logLvlStr)
-	if err != nil {
-		return false
-	}
-	return logLvl
 }
 
 func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resource {
