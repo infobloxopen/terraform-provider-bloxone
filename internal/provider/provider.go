@@ -90,7 +90,6 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 		option.WithAPIKey(data.APIKey.ValueString()),
 		option.WithCSPUrl(data.CSPUrl.ValueString()),
 		option.WithDefaultTags(dfTags),
-		option.WithDebug(false),
 	)
 
 	resp.DataSourceData = client

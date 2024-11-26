@@ -30,6 +30,7 @@ const (
 
 	envBloxOneCSPURL = "BLOXONE_CSP_URL"
 	envBloxOneAPIKey = "BLOXONE_API_KEY"
+	envIBLogLevel    = "IB_LOG_LEVEL"
 
 	version       = "0.1"
 	sdkIdentifier = "golang-sdk"
