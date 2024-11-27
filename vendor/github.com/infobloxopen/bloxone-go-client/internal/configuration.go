@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -79,7 +80,7 @@ func NewConfiguration() *Configuration {
 		CSPURL:           lookupEnv(envBloxOneCSPURL, "https://csp.infoblox.com"),
 		APIKey:           lookupEnv(envBloxOneAPIKey, ""),
 		DefaultHeader:    make(map[string]string),
-		Debug:            false,
+		Debug:            lookupEnvBool(envIBLogLevel, false),
 		UserAgent:        fmt.Sprintf("bloxone-%s/%s", sdkIdentifier, version),
 		Servers:          ServerConfigurations{},
 		OperationServers: map[string]ServerConfigurations{},
@@ -207,6 +208,15 @@ func (c *Configuration) ServerURLWithContext(ctx context.Context, endpoint strin
 func lookupEnv(key, def string) string {
 	if v, ok := os.LookupEnv(key); ok {
 		return v
+	}
+	return def
+}
+
+func lookupEnvBool(key string, def bool) bool {
+	if logLvlStr, ok := os.LookupEnv(key); ok {
+		if logLvl, err := strconv.ParseBool(logLvlStr); err == nil {
+			return logLvl
+		}
 	}
 	return def
 }
