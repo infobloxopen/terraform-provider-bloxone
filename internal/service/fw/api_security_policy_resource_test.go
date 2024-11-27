@@ -55,6 +55,9 @@ func TestAccSecurityPolicyResource_basic(t *testing.T) {
 }
 
 func TestAccSecurityPolicyResource_disappears(t *testing.T) {
+
+	t.Skip("Test Skipped due to inconsistent error codes returned by the API [TDDFW-397]")
+
 	resourceName := "bloxone_td_security_policy.test"
 	var v fw.SecurityPolicy
 	name := acctest.RandomNameWithPrefix("sec-policy")

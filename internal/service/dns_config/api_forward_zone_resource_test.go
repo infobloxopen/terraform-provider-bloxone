@@ -50,6 +50,9 @@ func TestAccForwardZoneResource_basic(t *testing.T) {
 }
 
 func TestAccForwardZoneResource_disappears(t *testing.T) {
+
+	t.Skip("Test Skipped due to inconsistent error codes returned by the API [NORTHSTAR-12575]")
+
 	resourceName := "bloxone_dns_forward_zone.test"
 	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
 	var v dnsconfig.ForwardZone

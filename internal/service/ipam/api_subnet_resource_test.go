@@ -481,6 +481,9 @@ func TestAccSubnetResource_DdnsSendUpdates(t *testing.T) {
 }
 
 func TestAccSubnetResource_DdnsTtlPercent(t *testing.T) {
+
+	t.Skip("Test Skipped due to issue with TTL percentage update [NORTHSTAR-12587]")
+
 	var resourceName = "bloxone_ipam_subnet.test_ddns_ttl_percent"
 	var v ipam.Subnet
 	spaceName := acctest.RandomNameWithPrefix("ip-space")

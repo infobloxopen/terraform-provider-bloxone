@@ -43,6 +43,9 @@ func TestAccCategoryFiltersResource_basic(t *testing.T) {
 }
 
 func TestAccCategoryFiltersResource_disappears(t *testing.T) {
+
+	t.Skip("Test Skipped due to inconsistent error codes returned by the API [TDDFW-397]")
+
 	resourceName := "bloxone_td_category_filter.test"
 	var v fw.CategoryFilter
 	name := acctest.RandomNameWithPrefix("category-filter")

@@ -16,6 +16,7 @@ func TestAccAnycastConfigDataSource_Services(t *testing.T) {
 	resourceName := "bloxone_anycast_config.test"
 	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
+	anycastIP := acctest.RandomIP()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -23,7 +24,7 @@ func TestAccAnycastConfigDataSource_Services(t *testing.T) {
 		CheckDestroy:             testAccCheckAnycastConfigResourceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAnycastConfigDataSourceConfigService("10.1.1.2", anycastName, "DNS"),
+				Config: testAccAnycastConfigDataSourceConfigService(anycastIP, anycastName, "DNS"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
@@ -39,6 +40,7 @@ func TestAccAnycastConfigDataSource_IsConfigured(t *testing.T) {
 	resourceName := "bloxone_anycast_config.test"
 	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
+	anycastIP := acctest.RandomIP()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -46,7 +48,7 @@ func TestAccAnycastConfigDataSource_IsConfigured(t *testing.T) {
 		CheckDestroy:             testAccCheckAnycastConfigResourceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAnycastConfigDataSourceConfigIsConfigured("10.1.1.2", anycastName, "DNS"),
+				Config: testAccAnycastConfigDataSourceConfigIsConfigured(anycastIP, anycastName, "DNS"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
@@ -62,6 +64,7 @@ func TestAccAnycastConfigDataSource_TagFilters(t *testing.T) {
 	resourceName := "bloxone_anycast_config.test"
 	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
+	anycastIP := acctest.RandomIP()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -69,7 +72,7 @@ func TestAccAnycastConfigDataSource_TagFilters(t *testing.T) {
 		CheckDestroy:             testAccCheckAnycastConfigResourceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAnycastConfigDataSourceConfigTagFilters("10.1.1.2", anycastName, "DNS", "value1"),
+				Config: testAccAnycastConfigDataSourceConfigTagFilters(anycastIP, anycastName, "DNS", "value1"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
