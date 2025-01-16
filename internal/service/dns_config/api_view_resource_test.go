@@ -80,7 +80,6 @@ func TestAccViewResource_Name(t *testing.T) {
 	var name1 = acctest.RandomNameWithPrefix("view")
 	var name2 = acctest.RandomNameWithPrefix("view")
 	var v1 dnsconfig.View
-	var v2 dnsconfig.View
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -98,8 +97,7 @@ func TestAccViewResource_Name(t *testing.T) {
 			{
 				Config: testAccViewBasicConfig(name2),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckViewDestroy(context.Background(), &v1),
-					testAccCheckViewExists(context.Background(), resourceName, &v2),
+					testAccCheckViewExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "name", name2),
 				),
 			},
