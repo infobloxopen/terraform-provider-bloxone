@@ -19,6 +19,7 @@ func TestAccAnycastConfigResource_basic(t *testing.T) {
 	var resourceName = "bloxone_anycast_config.test"
 	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
+	anycastIP := acctest.RandomIP()
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -26,7 +27,7 @@ func TestAccAnycastConfigResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAnycastConfigResourceBasicConfig(anycastName, "DHCP", "10.0.0.8"),
+				Config: testAccAnycastConfigResourceBasicConfig(anycastName, "DHCP", anycastIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					// Test Read Only fields
@@ -45,6 +46,7 @@ func TestAccAnycastConfigResource_disappears(t *testing.T) {
 	resourceName := "bloxone_anycast_config.test"
 	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
+	anycastIP := acctest.RandomIP()
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -52,7 +54,7 @@ func TestAccAnycastConfigResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckAnycastConfigResourceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAnycastConfigResourceBasicConfig(anycastName, "DHCP", "10.0.0.7"),
+				Config: testAccAnycastConfigResourceBasicConfig(anycastName, "DHCP", anycastIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					testAccCheckAnycastConfigResourceDisappears(context.Background(), &v),
@@ -67,6 +69,8 @@ func TestAccAnycastConfigResource_AnycastIpAddress(t *testing.T) {
 	var resourceName = "bloxone_anycast_config.test_anycast_ip_address"
 	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
+	anycastIP1 := acctest.RandomIP()
+	anycastIP2 := acctest.RandomIP()
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -74,20 +78,20 @@ func TestAccAnycastConfigResource_AnycastIpAddress(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAnycastConfigResourceAnycastIpAddress("10.0.0.2", anycastName, "DHCP"),
+				Config: testAccAnycastConfigResourceAnycastIpAddress(anycastIP1, anycastName, "DHCP"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", anycastName),
-					resource.TestCheckResourceAttr(resourceName, "anycast_ip_address", "10.0.0.2"),
+					resource.TestCheckResourceAttr(resourceName, "anycast_ip_address", anycastIP1),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccAnycastConfigResourceAnycastIpAddress("10.0.0.3", anycastName, "DHCP"),
+				Config: testAccAnycastConfigResourceAnycastIpAddress(anycastIP2, anycastName, "DHCP"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", anycastName),
-					resource.TestCheckResourceAttr(resourceName, "anycast_ip_address", "10.0.0.3"),
+					resource.TestCheckResourceAttr(resourceName, "anycast_ip_address", anycastIP2),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -99,6 +103,7 @@ func TestAccAnycastConfigResource_Description(t *testing.T) {
 	var resourceName = "bloxone_anycast_config.test_description"
 	var v anycast.AnycastConfig
 	anycastName := acctest.RandomNameWithPrefix("anycast")
+	anycastIP := acctest.RandomIP()
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -106,7 +111,7 @@ func TestAccAnycastConfigResource_Description(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAnycastConfigResourceDescription("10.0.0.2", anycastName, "DNS", "Anycast comment"),
+				Config: testAccAnycastConfigResourceDescription(anycastIP, anycastName, "DNS", "Anycast comment"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "Anycast comment"),
@@ -114,7 +119,7 @@ func TestAccAnycastConfigResource_Description(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAnycastConfigResourceDescription("10.0.0.2", anycastName, "DNS", "Anycast comment updated"),
+				Config: testAccAnycastConfigResourceDescription(anycastIP, anycastName, "DNS", "Anycast comment updated"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "Anycast comment updated"),
@@ -130,6 +135,7 @@ func TestAccAnycastConfigResource_Name(t *testing.T) {
 	var v anycast.AnycastConfig
 	anycastName1 := acctest.RandomNameWithPrefix("anycast")
 	anycastName2 := acctest.RandomNameWithPrefix("anycast")
+	anycastIP := acctest.RandomIP()
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -137,7 +143,7 @@ func TestAccAnycastConfigResource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAnycastConfigResourceName("10.0.0.1", anycastName1, "DNS"),
+				Config: testAccAnycastConfigResourceName(anycastIP, anycastName1, "DNS"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", anycastName1),
@@ -145,7 +151,7 @@ func TestAccAnycastConfigResource_Name(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAnycastConfigResourceName("10.0.0.1", anycastName2, "DNS"),
+				Config: testAccAnycastConfigResourceName(anycastIP, anycastName2, "DNS"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", anycastName2),
