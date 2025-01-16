@@ -15,14 +15,15 @@ resource "bloxone_ipam_subnet" "example" {
 }
 
 resource "bloxone_ipam_range" "example" {
-  address = "10.1.0.10"
-  end     = "10.1.0.20"
-  space   = bloxone_ipam_ip_space.example.id
+  start      = "10.1.0.10"
+  end        = "10.1.0.20"
+  space      = bloxone_ipam_ip_space.example.id
+  depends_on = [bloxone_ipam_subnet.example]
 }
 
 
 resource "bloxone_ipam_address" "example" {
-  address = "10.1.0.1"
+  address = "10.1.0.5"
   space   = bloxone_ipam_ip_space.example.id
 
   # Other optional fields
