@@ -19,7 +19,7 @@ subcategory: "{{- $group := index (split .Name "_") 1 -}}
 {{- else if eq $group "td" -}}
   Threat Defense
 {{- else if eq $group "federation" -}}
-  IPAM Federation"
+  IPAM Federation
 {{- end -}}"
 description: |-
 {{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
