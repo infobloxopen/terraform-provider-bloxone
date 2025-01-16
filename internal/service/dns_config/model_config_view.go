@@ -362,10 +362,7 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `Optional. When enabled, the DNS server will only add records to the authority and additional data sections when they are required.  Defaults to _false_.`,
 	},
 	"name": schema.StringAttribute{
-		Required: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
-		},
+		Required:            true,
 		MarkdownDescription: `Name of view.`,
 	},
 	"notify": schema.BoolAttribute{

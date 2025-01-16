@@ -58,6 +58,9 @@ func TestAccAuthZoneResource_basic(t *testing.T) {
 }
 
 func TestAccAuthZoneResource_disappears(t *testing.T) {
+
+	t.Skip("Test Skipped due to inconsistent error codes returned by the API [NORTHSTAR-12575]")
+
 	resourceName := "bloxone_dns_auth_zone.test"
 	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
