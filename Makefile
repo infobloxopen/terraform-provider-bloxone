@@ -6,7 +6,7 @@ BINARY=terraform-provider-${NAME}
 VERSION=1.3.1
 OS_ARCH=$(shell uname -s | tr '[:upper:]' '[:lower:]')_$(shell uname -m)
 MODULES_DIR=./modules
-TERRAFORM_DOCS_IMAGE=quay.io/terraform-docs/terraform-docs:0.17.0
+TERRAFORM_DOCS_IMAGE=quay.io/terraform-docs/terraform-docs:0.19.0
 
 default: install
 
