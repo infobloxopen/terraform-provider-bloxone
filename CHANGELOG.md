@@ -1,7 +1,8 @@
 # Changelog
 
 ## v1.4.1 (January 21, 2024)
-Fixes :
+
+FIXES :
 
 * DHCP/IPAM: Fixed `bloxone_dhcp_hosts` data source which was unable to retieve DHCP Host ID  ([#162](https://github.com/infobloxopen/terraform-provider-bloxone/pull/162))
 * DNS: Change in `bloxone_dns_view.name` forced replacement of the view ([#174](https://github.com/infobloxopen/terraform-provider-bloxone/pull/174))
