@@ -8,7 +8,7 @@ FIXES :
 * DNS: Change in `bloxone_dns_view.name` forced replacement of the view ([#174](https://github.com/infobloxopen/terraform-provider-bloxone/pull/174))
 * Fixed Miscellaneous Acceptance Tests for various object groups ([#170](https://github.com/infobloxopen/terraform-provider-bloxone/pull/170))
 
-Enhancements :
+ENHANCEMENTS :
 
 * Added Support for Debug Mode to be enabled via Environment variable called `IB_LOG_LEVEL`  , which was earlier done via provider.go ([#169](https://github.com/infobloxopen/terraform-provider-bloxone/pull/169))
 * Updated Plugin Framework and other dependencies and changed types to `Int32Type` and `Float32Type` for certain attributes ([#158](https://github.com/infobloxopen/terraform-provider-bloxone/pull/158))
