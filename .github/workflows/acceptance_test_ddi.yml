@@ -1,4 +1,4 @@
-name: Acceptance Tests for DDI objects
+name: Acceptance Tests for DDI object groups
 
 on:
   workflow_dispatch:
