@@ -31,4 +31,4 @@ jobs:
           DHCP_HOST: ${{ secrets.DHCP_HOST }}
           DNS_HOST: ${{ secrets.DNS_HOST }}
         run: |
-          go test $(go list ./... | grep -v 'vendor') -timeout 120m -v -cover
+          go test -parallel=1 $(go list ./... | grep -v 'vendor') -timeout 120m -v -cover
