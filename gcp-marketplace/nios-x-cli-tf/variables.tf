@@ -63,6 +63,12 @@ variable "join_token" {
   default     = ""
 }
 
+variable "http_proxy" {
+  description = "(Optional) HTTP Proxy of your environment"
+  type        = string
+  default     = ""
+}
+
 variable "nios_x_tags" {
   description = "The tags to use for the NIOS-X Server in Infoblox Portal."
   type        = map(string)

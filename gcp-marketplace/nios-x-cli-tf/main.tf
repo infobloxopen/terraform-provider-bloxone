@@ -21,6 +21,7 @@ locals {
     {
       user-data = templatefile("${path.module}/userdata.tftpl", {
         join_token = var.join_token
+        http_proxy = var.http_proxy
         tags       = var.nios_x_tags
       })
     }
