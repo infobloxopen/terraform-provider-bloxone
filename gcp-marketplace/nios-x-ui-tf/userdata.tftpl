@@ -1,6 +1,9 @@
 #cloud-config
 host_setup:
   jointoken: ${join_token}
+  %{if http_proxy != "" }
+  "access_http_proxy": ${http_proxy},
+  %{ endif }
   tags:
   %{ for k, v in tags ~}
   - "${k}=${v}"

@@ -71,6 +71,10 @@ spec:
         description: (Required) The Token generated from Infoblox Portal for NIOS-X server authentication
         varType: string
         defaultValue: ""
+      - name: http_proxy
+        description: (Optional) The HTTP Proxy required for the Environment.
+        varType: string
+        defaultValue: ""
       - name: nios_x_tags
         description: The tags to assign for the NIOS-X Server in Infoblox Portal.
         varType: string
