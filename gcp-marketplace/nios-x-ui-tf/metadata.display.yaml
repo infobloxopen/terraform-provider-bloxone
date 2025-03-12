@@ -41,7 +41,7 @@ spec:
           title: External IP
           tooltip: An external IP address associated with this instance. Selecting "None" will result in the instance having no external internet access. <a href="https://cloud.google.com/compute/docs/configure-instance-ip-addresses">Learn more</a>
           minItems: 1
-          maxItems: 1
+          maxItems: 4
           section: networking
           xGoogleProperty:
             type: ET_GCE_EXTERNAL_IP
@@ -55,6 +55,11 @@ spec:
           name: join_token
           title: Join Token
           tooltip: Token generated from Infoblox portal for NIOS-X server authentication
+          section: nios_x_detail
+        http_proxy:
+          name: http_proxy
+          title: HTTP Proxy
+          tooltip: HTTP Proxy for this environment default empty
           section: nios_x_detail
         labels:
           name: labels
@@ -77,7 +82,7 @@ spec:
           name: networks
           title: Network name
           minItems: 1
-          maxItems: 1
+          maxItems: 4
           section: networking
           xGoogleProperty:
             type: ET_GCE_NETWORK
@@ -105,7 +110,7 @@ spec:
           name: subnetworks
           title: Subnetwork name
           minItems: 1
-          maxItems: 1
+          maxItems: 4
           section: networking
           xGoogleProperty:
             type: ET_GCE_SUBNETWORK

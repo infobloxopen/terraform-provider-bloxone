@@ -1,5 +1,8 @@
 provider "google" {
   project = var.project_id
+  default_labels = {
+    goog-partner-solution = "isol_plb32_0014m00001h31caqay_vcrx7g5d6abwbyhqip2tvj7lspfpallp"
+  }
 }
 
 locals {
@@ -15,6 +18,7 @@ locals {
   #  google-logging-enable = var.google-logging-enable == true ? 0 : 1
   #  google-monitoring-enable = var.google-monitoring-enable == true ? 0 : 1
   # }
+
   labels = jsondecode(var.labels)
   nios_x_tags = jsondecode(var.nios_x_tags)
   
@@ -23,6 +27,7 @@ locals {
     {
       user-data = templatefile("${path.module}/userdata.tftpl", {
         join_token = var.join_token
+        http_proxy = var.http_proxy
         tags       = local.nios_x_tags
       })
     }

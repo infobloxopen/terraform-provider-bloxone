@@ -1,5 +1,8 @@
 provider "google" {
   project = var.project_id
+  default_labels = {
+    goog-partner-solution = "isol_plb32_0014m00001h31caqay_vcrx7g5d6abwbyhqip2tvj7lspfpallp"
+  }
 }
 
 locals {
@@ -21,6 +24,7 @@ locals {
     {
       user-data = templatefile("${path.module}/userdata.tftpl", {
         join_token = var.join_token
+        http_proxy = var.http_proxy
         tags       = var.nios_x_tags
       })
     }

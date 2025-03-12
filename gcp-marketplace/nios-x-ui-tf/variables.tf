@@ -63,6 +63,12 @@ variable "join_token" {
   default     = ""
 }
 
+variable "http_proxy" {
+  description = "(Optional) HTTP Proxy of your environment"
+  type        = string
+  default     = ""
+}
+
 # Workaround as Deploy config UI doesn't support map(string) type
 # "{\"key1\":\"value1\",\"key2\":\"value2\"}"
 variable "nios_x_tags" {

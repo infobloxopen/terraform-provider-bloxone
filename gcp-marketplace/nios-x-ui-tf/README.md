@@ -23,6 +23,7 @@ terraform plan --var-file marketplace_test.tfvars --var project_id=<YOUR_PROJECT
 | sub_networks | The sub network name to attach the VM instance. | `list(string)` | `[]` | no |
 | external_ips | The external IPs assigned to the VM for public access. | `list(string)` | `["EPHEMERAL"]` | no |
 | join_token | The token generated from Infoblox Portal for NIOS-X Server authentication  | `string` | `""` | yes |
+| http_proxy | The HTTP Proxy for this environment | `string` | `""` | no |
 | nios_x_tags | The tags to use for the NIOS-X Server in Infoblox Portal. | `map(string)` | `{}` | no |
 | labels | A map of key/value label pairs to assign to the instance. | `map(string)` | `{}` | no |
 | enable_cloud_api | Allow full access to all of Google Cloud Platform APIs on the VM | `bool` | `true` | no |
