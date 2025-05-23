@@ -43,6 +43,23 @@ func TestDataSourceNextAvailableSubnet(t *testing.T) {
 					resource.TestCheckResourceAttrSet(dataSourceName, "results.2"),
 				),
 			},
+			{
+				Config: testAccDataSourceNextAvailableSubnetWithSingleTagFilter(24, 2),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(dataSourceName, "results.#", "2"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.0"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.1"),
+				),
+			},
+			{
+				Config: testAccDataSourceNextAvailableSubnetWithMultipleTagFilters(24, 3),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(dataSourceName, "results.#", "3"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.0"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.1"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.2"),
+				),
+			},
 		},
 	})
 }
@@ -60,6 +77,7 @@ func testAccDataSourceNextAvailableSubnetBaseConfig() string {
 	}
 `, acctest.RandomNameWithPrefix("nextAvailableIPSpace"), acctest.RandomNameWithPrefix("nextAvailableAB"))
 }
+
 func testAccDataSourceNextAvailableSubnet(count, cidr int) string {
 	var config string
 	if count == 1 {
@@ -78,4 +96,73 @@ func testAccDataSourceNextAvailableSubnet(count, cidr int) string {
 	}
 
 	return strings.Join([]string{testAccDataSourceNextAvailableSubnetBaseConfig(), config}, "")
+}
+
+// testAccDataSourceNextAvailableSubnetWithSingleTagFilter creates test configuration for next available subnet with a single tag filter
+func testAccDataSourceNextAvailableSubnetWithSingleTagFilter(cidr, count int) string {
+	config := fmt.Sprintf(`
+    data "bloxone_ipam_next_available_subnets" "test" {
+        cidr = %d
+        subnet_count = %d
+        tag_filters = {
+            environment = "prd"
+        }
+      depends_on = [
+        "bloxone_ipam_address_block.test_tagged_env_only"
+    ]
+    }`, cidr, count)
+
+	return strings.Join([]string{testAccDataSourceNextAvailableSubnetWithTagsBaseConfig(), config}, "")
+}
+
+// testAccDataSourceNextAvailableSubnetWithMultipleTagFilters creates test configuration for next available subnet with multiple tag filters
+func testAccDataSourceNextAvailableSubnetWithMultipleTagFilters(cidr, count int) string {
+	config := fmt.Sprintf(`
+    data "bloxone_ipam_next_available_subnets" "test" {
+        cidr = %d
+        subnet_count = %d
+        tag_filters = {
+            environment = "prd"
+            location = "data-center-1"
+        }
+    depends_on = [
+        "bloxone_ipam_address_block.test_tagged_env_only"
+    ]
+    }`, cidr, count)
+
+	return strings.Join([]string{testAccDataSourceNextAvailableSubnetWithTagsBaseConfig(), config}, "")
+}
+
+// testAccDataSourceNextAvailableSubnetWithTagsBaseConfig creates base resources with tags for testing
+func testAccDataSourceNextAvailableSubnetWithTagsBaseConfig() string {
+	return `
+    resource "bloxone_ipam_ip_space" "test" {
+        name = "test-acc-next-available-subnets-tags"
+    }
+
+    resource "bloxone_ipam_address_block" "test_tagged" {
+        address = "192.168.0.0"
+        cidr = 16
+        space = bloxone_ipam_ip_space.test.id
+    }
+    
+    resource "bloxone_ipam_address_block" "test_tagged2" {
+        address = "13.0.0.0"
+        cidr = 16
+        space = bloxone_ipam_ip_space.test.id
+        tags = {
+            environment = "prd"
+            location = "data-center-1"
+        }
+    }
+
+    resource "bloxone_ipam_address_block" "test_tagged_env_only" {
+        address = "10.0.0.0"
+        cidr = 16
+        space = bloxone_ipam_ip_space.test.id
+        tags = {
+            environment = "prd"
+        }
+    }
+    `
 }
