@@ -14,3 +14,11 @@ data "bloxone_ipam_next_available_address_blocks" "example_next_available_ab" {
 data "bloxone_ipam_next_available_address_blocks" "example_next_available_ab_default_count" {
   id = data.bloxone_ipam_address_blocks.example_by_attribute.results.0.id
 }
+
+data "bloxone_ipam_next_available_address_blocks" "example_next_available_ab_by_tag" {
+  cidr                = 30
+  address_block_count = 15
+  tag_filters = {
+    environment = "prd"
+  }
+}
