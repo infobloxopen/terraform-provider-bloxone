@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -78,6 +79,9 @@ func (d *NextAvailableAddressBlockDataSource) Schema(ctx context.Context, req da
 			"address_block_count": schema.Int64Attribute{
 				Optional:            true,
 				MarkdownDescription: `Number of address blocks to generate. Default 1 if not set.`,
+				Validators: []validator.Int64{
+					int64validator.AtLeast(1),
+				},
 			},
 			"results": schema.ListAttribute{
 				ElementType:         types.StringType,
@@ -263,7 +267,10 @@ func (d *NextAvailableAddressBlockDataSource) findAddressBlock(ctx context.Conte
 		if httpRes != nil && httpRes.StatusCode == 400 {
 			// Convert response body to string if it's available from httpRes
 			bodyBytes, _ := io.ReadAll(httpRes.Body)
-			httpRes.Body.Close() // Close the body after reading
+			errMsg := httpRes.Body.Close() // Close the body after reading
+			if errMsg != nil {
+				return nil, errMsg
+			}
 
 			// Try to extract available count
 			availableCount := d.extractAvailableCountFromError(bodyBytes)
