@@ -190,6 +190,9 @@ func (d *NextAvailableAddressBlockDataSource) Read(ctx context.Context, req data
 						return
 					}
 					findResults = append(findResults, partialResult...)
+				} else {
+					resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Address, got error: %s", err))
+					return
 				}
 				continue
 			}
