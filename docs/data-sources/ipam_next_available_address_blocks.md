@@ -24,7 +24,7 @@ data "bloxone_ipam_address_blocks" "example_by_attribute" {
 data "bloxone_ipam_next_available_address_blocks" "example_next_available_ab" {
   id                  = data.bloxone_ipam_address_blocks.example_by_attribute.results.0.id
   address_block_count = 5
-  cidr                = 24
+  cidr                = 28
 }
 
 data "bloxone_ipam_next_available_address_blocks" "example_next_available_ab_default_count" {
