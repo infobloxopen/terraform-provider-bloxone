@@ -11,9 +11,11 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
+var envTag = acctest.RandomNameWithPrefix("prd")
+var locTag = acctest.RandomNameWithPrefix("data-center-1")
+
 func TestDataSourceNextAvailableSubnet(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_next_available_subnets.test"
-
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
@@ -105,12 +107,13 @@ func testAccDataSourceNextAvailableSubnetWithSingleTagFilter(cidr, count int) st
         cidr = %d
         subnet_count = %d
         tag_filters = {
-            environment = "prd"
+            environment = %q
         }
       depends_on = [
-        "bloxone_ipam_address_block.test_tagged_env_only"
+        "bloxone_ipam_address_block.test_single_tag",
+		"bloxone_ipam_address_block.test_multiple_tags"
     ]
-    }`, cidr, count)
+    }`, cidr, count, envTag)
 
 	return strings.Join([]string{testAccDataSourceNextAvailableSubnetWithTagsBaseConfig(), config}, "")
 }
@@ -122,47 +125,47 @@ func testAccDataSourceNextAvailableSubnetWithMultipleTagFilters(cidr, count int)
         cidr = %d
         subnet_count = %d
         tag_filters = {
-            environment = "prd"
-            location = "data-center-1"
+            environment = %q
+            location = %q
         }
     depends_on = [
-        "bloxone_ipam_address_block.test_tagged_env_only"
+		"bloxone_ipam_address_block.test_multiple_tags"
     ]
-    }`, cidr, count)
+    }`, cidr, count, envTag, locTag)
 
 	return strings.Join([]string{testAccDataSourceNextAvailableSubnetWithTagsBaseConfig(), config}, "")
 }
 
 // testAccDataSourceNextAvailableSubnetWithTagsBaseConfig creates base resources with tags for testing
 func testAccDataSourceNextAvailableSubnetWithTagsBaseConfig() string {
-	return `
-    resource "bloxone_ipam_ip_space" "test" {
-        name = "test-acc-next-available-subnets-tags"
-    }
-
-    resource "bloxone_ipam_address_block" "test_tagged" {
+	space := acctest.RandomNameWithPrefix("IPSpace")
+	config := fmt.Sprintf(`
+	
+    resource "bloxone_ipam_address_block" "test_tags" {
         address = "192.168.0.0"
         cidr = 16
         space = bloxone_ipam_ip_space.test.id
     }
     
-    resource "bloxone_ipam_address_block" "test_tagged2" {
+    resource "bloxone_ipam_address_block" "test_multiple_tags" {
         address = "13.0.0.0"
         cidr = 16
         space = bloxone_ipam_ip_space.test.id
         tags = {
-            environment = "prd"
-            location = "data-center-1"
+            environment = %q
+            location = %q
         }
     }
 
-    resource "bloxone_ipam_address_block" "test_tagged_env_only" {
+    resource "bloxone_ipam_address_block" "test_single_tag" {
         address = "10.0.0.0"
         cidr = 16
         space = bloxone_ipam_ip_space.test.id
         tags = {
-            environment = "prd"
+            environment = %q
         }
     }
-    `
+    `, envTag, locTag, envTag)
+
+	return strings.Join([]string{testAccBaseWithIPSpace(space), config}, "")
 }

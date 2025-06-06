@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int32validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -22,6 +22,7 @@ import (
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -37,11 +38,11 @@ type NextAvailableSubnetDataSource struct {
 }
 
 type IpamsvcNextAvailableSubnetModel struct {
-	Id         types.String            `tfsdk:"id"`
-	Cidr       types.Int64             `tfsdk:"cidr"`
-	Count      types.Int64             `tfsdk:"subnet_count"`
-	Results    types.List              `tfsdk:"results"`
-	TagFilters map[string]types.String `tfsdk:"tag_filters"`
+	Id         types.String `tfsdk:"id"`
+	Cidr       types.Int64  `tfsdk:"cidr"`
+	Count      types.Int32  `tfsdk:"subnet_count"`
+	Results    types.List   `tfsdk:"results"`
+	TagFilters types.Map    `tfsdk:"tag_filters"`
 }
 
 func (m *IpamsvcNextAvailableSubnetModel) FlattenResults(ctx context.Context, from []ipam.Subnet, diags *diag.Diagnostics) {
@@ -66,6 +67,7 @@ func (d *NextAvailableSubnetDataSource) Schema(ctx context.Context, req datasour
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Optional:            true,
+				Computed:            true,
 				MarkdownDescription: `An application specific resource identity of a resource.`,
 				Validators: []validator.String{
 					stringvalidator.RegexMatches(regexp.MustCompile(`^ipam/address_block/[0-9a-f-].*$`), "invalid resource ID specified"),
@@ -76,11 +78,11 @@ func (d *NextAvailableSubnetDataSource) Schema(ctx context.Context, req datasour
 				Required:            true,
 				MarkdownDescription: `The cidr value of subnets to be created.`,
 			},
-			"subnet_count": schema.Int64Attribute{
+			"subnet_count": schema.Int32Attribute{
 				Optional:            true,
 				MarkdownDescription: `Number of subnets to generate. Default 1 if not set.`,
-				Validators: []validator.Int64{
-					int64validator.AtLeast(1),
+				Validators: []validator.Int32{
+					int32validator.AtLeast(1),
 				},
 			},
 			"results": schema.ListAttribute{
@@ -91,7 +93,7 @@ func (d *NextAvailableSubnetDataSource) Schema(ctx context.Context, req datasour
 			"tag_filters": schema.MapAttribute{
 				ElementType:         types.StringType,
 				Optional:            true,
-				MarkdownDescription: "Filter subnets by tags. Key-value pairs to match.",
+				MarkdownDescription: "Key-value pairs to filter subnets by tags.",
 			},
 		},
 	}
@@ -116,20 +118,6 @@ func (d *NextAvailableSubnetDataSource) Configure(_ context.Context, req datasou
 	d.client = client
 }
 
-// buildTagFilterString constructs a tag filter string from a map of tag key-value pairs
-func (d *NextAvailableSubnetDataSource) buildTagFilterString(tagFilters map[string]types.String) string {
-	if len(tagFilters) == 0 {
-		return ""
-	}
-
-	filters := make([]string, 0, len(tagFilters))
-	for k, v := range tagFilters {
-		filters = append(filters, fmt.Sprintf("%s=='%s'", k, v.ValueString()))
-	}
-
-	return strings.Join(filters, " and ")
-}
-
 func (d *NextAvailableSubnetDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data IpamsvcNextAvailableSubnetModel
 
@@ -142,47 +130,33 @@ func (d *NextAvailableSubnetDataSource) Read(ctx context.Context, req datasource
 
 	// Ensure subnet_count has a default value
 	if data.Count.IsNull() {
-		data.Count = types.Int64Value(1)
+		data.Count = types.Int32Value(1)
 	}
 
-	count := int32(data.Count.ValueInt64())
-
 	// Check if tag filters are specified
-	tagFilters := make(map[string]types.String)
-	req.Config.GetAttribute(ctx, path.Root("tag_filters"), &tagFilters)
+	tagFilters := data.TagFilters
 
-	if len(tagFilters) > 0 {
+	count := data.Count
+	if len(tagFilters.Elements()) > 0 {
 		// Find subnets by tags
-		tagFilterStr := d.buildTagFilterString(tagFilters)
+		tagFilterStr := flex.ExpandFrameworkMapFilterString(ctx, tagFilters, &resp.Diagnostics)
 
 		var allAddressBlocks []ipam.AddressBlock
-		const limit int32 = 1000
-		offset := int32(0)
-
-		// Fetch all address blocks matching the tag filters
-		for {
-			listAPI := d.client.IPAddressManagementAPI.AddressBlockAPI.
+		allAddressBlocks, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.AddressBlock, error) {
+			apiRes, _, err := d.client.IPAddressManagementAPI.AddressBlockAPI.
 				List(ctx).
 				Tfilter(tagFilterStr).
 				Offset(offset).
 				Limit(limit).
-				Inherit("full")
-
-			apiRes, _, err := listAPI.Execute()
+				Execute()
 			if err != nil {
-				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to list Address Blocks by tags, got error: %s", err))
-				return
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Address, got error: %s", err))
+				return nil, err
 			}
-
-			results := apiRes.GetResults()
-			allAddressBlocks = append(allAddressBlocks, results...)
-
-			// If we got fewer results than the limit, we've reached the end
-			if int32(len(results)) < limit {
-				break
-			}
-
-			offset += limit
+			return apiRes.GetResults(), nil
+		})
+		if err != nil {
+			return
 		}
 
 		if len(allAddressBlocks) == 0 {
@@ -191,50 +165,46 @@ func (d *NextAvailableSubnetDataSource) Read(ctx context.Context, req datasource
 		}
 
 		var findResults []ipam.Subnet
+
 		for _, ab := range allAddressBlocks {
-			if *ab.Cidr >= *flex.ExpandInt64Pointer(data.Cidr) {
+			if *ab.Cidr >= data.Cidr.ValueInt64() {
 				continue
 			}
-			if int32(len(findResults)) >= count {
+			findResultsLen := int32(len(findResults))
+			if findResultsLen >= count.ValueInt32() {
 				break
 			}
 
-			remainingCount := count - int32(len(findResults))
+			remainingCount := count.ValueInt32() - findResultsLen
 			findResult, err := d.findSubnet(ctx, *ab.Id, int32(data.Cidr.ValueInt64()), remainingCount)
 			if err != nil {
 				// Check if the error contains relevant information about available blocks
-				if strings.Contains(err.Error(), "available networks") {
-					// Extract error message body for parsing
-					errorMsg := err.Error()
-					// Try to extract the body from the error message
-					startIdx := strings.Index(errorMsg, "{")
-					if startIdx != -1 {
-						errorBody := []byte(errorMsg[startIdx:])
-						availableCount := d.extractAvailableCountFromError(errorBody)
-						if availableCount > 0 {
-							// Retry with the available count
-							partialResult, retryErr := d.findSubnet(ctx, *ab.Id, int32(data.Cidr.ValueInt64()), availableCount)
-							if retryErr != nil {
-								resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Error finding address block after retry: %s", retryErr))
-								return
-							}
-							findResults = append(findResults, partialResult...)
-						}
-						continue
+				errorBody := []byte(err.Error())
+				availableCount := d.extractAvailableCountFromError(errorBody)
+				if availableCount > 0 {
+					// Retry with the available count
+					partialResult, retryErr := d.findSubnet(ctx, *ab.Id, int32(data.Cidr.ValueInt64()), availableCount)
+					if retryErr != nil {
+						resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Error finding address block after retry: %s", retryErr))
+						return
 					}
+					findResults = append(findResults, partialResult...)
+				} else {
+					resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Next Available Subnet, got error: %s", err))
+					return
 				}
-				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Error finding address block: %s", err))
-				return
+				continue
 			}
 
 			if len(findResult) > 0 {
 				findResults = append(findResults, findResult...)
 			}
 		}
-		if int32(len(findResults)) < count {
+		finalResultsCount := int32(len(findResults))
+		if finalResultsCount < count.ValueInt32() {
 			resp.Diagnostics.AddError(
 				"Insufficient Available Subnets",
-				fmt.Sprintf("Requested %d subnets with CIDR %d, but only %d were found. Not enough subnets available across all checked address blocks.", count, data.Cidr.ValueInt64(), len(findResults)),
+				fmt.Sprintf("Requested %d subnets with CIDR %d, but only %d were found. Not enough subnets available across all checked address blocks.", count.ValueInt32(), data.Cidr.ValueInt64(), finalResultsCount),
 			)
 			return
 		}
@@ -245,10 +215,10 @@ func (d *NextAvailableSubnetDataSource) Read(ctx context.Context, req datasource
 			AddressBlockAPI.
 			ListNextAvailableSubnet(ctx, data.Id.ValueString()).
 			Cidr(int32(data.Cidr.ValueInt64())).
-			Count(count).
+			Count(count.ValueInt32()).
 			Execute()
 		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read AddressBlock Next Available Address Block API, got error: %s", err))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Next Available Subnet API, got error: %s", err))
 			return
 		}
 
@@ -268,14 +238,14 @@ func (d *NextAvailableSubnetDataSource) findSubnet(ctx context.Context, id strin
 		Execute()
 	if err != nil {
 		// Check for 400 status code without relying on specific error type
+
 		if httpRes != nil && httpRes.StatusCode == 400 {
 			// Convert response body to string if it's available from httpRes
 			bodyBytes, _ := io.ReadAll(httpRes.Body)
-			errMsg := httpRes.Body.Close()
+			errMsg := httpRes.Body.Close() // Close the body after reading
 			if errMsg != nil {
 				return nil, errMsg
-			} // Close the body after reading
-
+			}
 			// Try to extract available count
 			availableCount := d.extractAvailableCountFromError(bodyBytes)
 			if availableCount > 0 {
