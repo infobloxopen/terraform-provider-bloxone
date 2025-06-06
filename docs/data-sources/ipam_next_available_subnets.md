@@ -48,7 +48,7 @@ data "bloxone_ipam_next_available_subnets" "example_next_available_subnet_by_tag
 
 - `id` (String) An application specific resource identity of a resource.
 - `subnet_count` (Number) Number of subnets to generate. Default 1 if not set.
-- `tag_filters` (Map of String) Filter subnets by tags. Key-value pairs to match.
+- `tag_filters` (Map of String) Key-value pairs to filter subnets by tags.
 
 ### Read-Only
 
