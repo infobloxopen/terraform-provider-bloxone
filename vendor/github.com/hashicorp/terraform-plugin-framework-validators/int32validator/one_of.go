@@ -1,7 +1,7 @@
 // Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
-package int64validator
+package int32validator
 
 import (
 	"context"
@@ -15,11 +15,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-validators/helpers/validatorfuncerr"
 )
 
-var _ validator.Int64 = oneOfValidator{}
-var _ function.Int64ParameterValidator = oneOfValidator{}
+var _ validator.Int32 = oneOfValidator{}
+var _ function.Int32ParameterValidator = oneOfValidator{}
 
 type oneOfValidator struct {
-	values []types.Int64
+	values []types.Int32
 }
 
 func (v oneOfValidator) Description(ctx context.Context) string {
@@ -30,7 +30,7 @@ func (v oneOfValidator) MarkdownDescription(_ context.Context) string {
 	return fmt.Sprintf("value must be one of: %q", v.values)
 }
 
-func (v oneOfValidator) ValidateInt64(ctx context.Context, request validator.Int64Request, response *validator.Int64Response) {
+func (v oneOfValidator) ValidateInt32(ctx context.Context, request validator.Int32Request, response *validator.Int32Response) {
 	if request.ConfigValue.IsNull() || request.ConfigValue.IsUnknown() {
 		return
 	}
@@ -50,7 +50,7 @@ func (v oneOfValidator) ValidateInt64(ctx context.Context, request validator.Int
 	))
 }
 
-func (v oneOfValidator) ValidateParameterInt64(ctx context.Context, request function.Int64ParameterValidatorRequest, response *function.Int64ParameterValidatorResponse) {
+func (v oneOfValidator) ValidateParameterInt32(ctx context.Context, request function.Int32ParameterValidatorRequest, response *function.Int32ParameterValidatorResponse) {
 	if request.Value.IsNull() || request.Value.IsUnknown() {
 		return
 	}
@@ -70,13 +70,13 @@ func (v oneOfValidator) ValidateParameterInt64(ctx context.Context, request func
 	)
 }
 
-// OneOf checks that the Int64 held in the attribute or function parameter
+// OneOf checks that the Int32 held in the attribute or function parameter
 // is one of the given `values`.
-func OneOf(values ...int64) oneOfValidator {
-	frameworkValues := make([]types.Int64, 0, len(values))
+func OneOf(values ...int32) oneOfValidator {
+	frameworkValues := make([]types.Int32, 0, len(values))
 
 	for _, value := range values {
-		frameworkValues = append(frameworkValues, types.Int64Value(value))
+		frameworkValues = append(frameworkValues, types.Int32Value(value))
 	}
 
 	return oneOfValidator{

@@ -1,7 +1,7 @@
 // Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
-package int64validator
+package int32validator
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -21,7 +21,7 @@ import (
 // This implements the validation logic declaratively within the schema.
 // Refer to [resourcevalidator.PreferWriteOnlyAttribute]
 // for declaring this type of validation outside the schema definition.
-func PreferWriteOnlyAttribute(writeOnlyAttribute path.Expression) validator.Int64 {
+func PreferWriteOnlyAttribute(writeOnlyAttribute path.Expression) validator.Int32 {
 	return schemavalidator.PreferWriteOnlyAttribute{
 		WriteOnlyAttribute: writeOnlyAttribute,
 	}

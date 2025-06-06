@@ -12,7 +12,8 @@ data "bloxone_ipam_next_available_address_blocks" "example_next_available_ab" {
 }
 
 data "bloxone_ipam_next_available_address_blocks" "example_next_available_ab_default_count" {
-  id = data.bloxone_ipam_address_blocks.example_by_attribute.results.0.id
+  id   = data.bloxone_ipam_address_blocks.example_by_attribute.results.0.id
+  cidr = 24
 }
 
 data "bloxone_ipam_next_available_address_blocks" "example_next_available_ab_by_tag" {
