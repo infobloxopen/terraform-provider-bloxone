@@ -140,7 +140,6 @@ func (d *NextAvailableAddressBlockDataSource) Read(ctx context.Context, req data
 		tagFilterStr := flex.ExpandFrameworkMapFilterString(ctx, tagFilters, &resp.Diagnostics)
 
 		var allAddressBlocks []ipam.AddressBlock
-		const limit int32 = 1000
 
 		// Fetch all address blocks matching the tag filters
 		allAddressBlocks, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.AddressBlock, error) {
