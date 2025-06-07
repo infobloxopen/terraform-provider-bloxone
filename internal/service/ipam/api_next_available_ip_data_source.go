@@ -223,7 +223,10 @@ func (d *NextAvailableIPDataSource) findNextAvailableIPsByTags(ctx context.Conte
 	for k, v := range resp {
 		strValue, _ := v.ToTerraformValue(ctx)
 		var stringVal string
-		strValue.As(&stringVal)
+		if err := strValue.As(&stringVal); err != nil {
+			return nil, fmt.Errorf("failed to convert tag value for key %s: %w", k, err)
+
+		}
 		tagMap[k] = stringVal
 	}
 
