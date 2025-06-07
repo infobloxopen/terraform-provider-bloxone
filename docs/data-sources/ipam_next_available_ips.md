@@ -53,21 +53,21 @@ data "bloxone_ipam_next_available_ips" "example_next_ip_range" {
 }
 
 // next_available_ips by tag
-data "bloxone_ipam_next_available_ips" "example_address_block_next_ip_ab_by_tag" {
+data "bloxone_ipam_next_available_ips" "example_next_ip_ab_by_tag" {
   tags = {
     name = "example_address_block"
   }
   ip_count      = 5
   resource_type = "address_block"
 }
-data "bloxone_ipam_next_available_ips" "example_subnet_next_ip_sub_by_tag" {
+data "bloxone_ipam_next_available_ips" "example_next_ip_sub_by_tag" {
   tags = {
     name = "example_subnet"
   }
   ip_count      = 5
   resource_type = "subnet"
 }
-data "bloxone_ipam_next_available_ips" "example_range_next_ip_range_by_tag" {
+data "bloxone_ipam_next_available_ips" "example_next_ip_range_by_tag" {
   tags = {
     name = "example_range"
   }
