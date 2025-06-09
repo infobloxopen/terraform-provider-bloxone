@@ -12,7 +12,7 @@ variable "goog_cm_deployment_name" {
 variable "source_image" {
   description = "The image name for the disk for the VM instance."
   type        = string
-  default     = "projects/infoblox-public-436917/global/images/nios-x-virtual-server-3-8-1"
+  default     = "projects/infoblox-public-436917/global/images/nios-x-virtual-server-3-8-10"
 }
 
 variable "zone" {
