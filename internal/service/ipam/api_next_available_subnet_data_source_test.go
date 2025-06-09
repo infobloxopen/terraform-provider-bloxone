@@ -110,8 +110,8 @@ func testAccDataSourceNextAvailableSubnetWithSingleTagFilter(cidr, count int) st
             environment = %q
         }
       depends_on = [
-        "bloxone_ipam_address_block.test_single_tag",
-		"bloxone_ipam_address_block.test_multiple_tags"
+        "bloxone_ipam_address_block.test_next_available_by_single_tag",
+		"bloxone_ipam_address_block.test_next_available_by_mulitple_tags"
     ]
     }`, cidr, count, envTag)
 
@@ -129,7 +129,7 @@ func testAccDataSourceNextAvailableSubnetWithMultipleTagFilters(cidr, count int)
             location = %q
         }
     depends_on = [
-		"bloxone_ipam_address_block.test_multiple_tags"
+		"bloxone_ipam_address_block.test_next_available_by_mulitple_tags",
     ]
     }`, cidr, count, envTag, locTag)
 
@@ -141,13 +141,13 @@ func testAccDataSourceNextAvailableSubnetWithTagsBaseConfig() string {
 	space := acctest.RandomNameWithPrefix("IPSpace")
 	config := fmt.Sprintf(`
 	
-    resource "bloxone_ipam_address_block" "test_tags" {
+    resource "bloxone_ipam_address_block" "test_next_available_by_id" {
         address = "192.168.0.0"
         cidr = 16
         space = bloxone_ipam_ip_space.test.id
     }
     
-    resource "bloxone_ipam_address_block" "test_multiple_tags" {
+    resource "bloxone_ipam_address_block" "test_next_available_by_mulitple_tags" {
         address = "13.0.0.0"
         cidr = 16
         space = bloxone_ipam_ip_space.test.id
@@ -157,7 +157,7 @@ func testAccDataSourceNextAvailableSubnetWithTagsBaseConfig() string {
         }
     }
 
-    resource "bloxone_ipam_address_block" "test_single_tag" {
+    resource "bloxone_ipam_address_block" "test_next_available_by_single_tag" {
         address = "10.0.0.0"
         cidr = 16
         space = bloxone_ipam_ip_space.test.id
