@@ -6,16 +6,19 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/mapvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
 	"github.com/infobloxopen/bloxone-go-client/ipam"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -80,9 +83,12 @@ func (d *NextAvailableIPDataSource) Schema(_ context.Context, _ datasource.Schem
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Optional:            true,
+				Computed:            true,
 				MarkdownDescription: `An application specific resource identity of a resource`,
 				Validators: []validator.String{
 					stringvalidator.RegexMatches(regexp.MustCompile(`^ipam/(range|subnet|address_block)/[0-9a-f-].*$`), "invalid resource ID specified"),
+					stringvalidator.ConflictsWith(path.MatchRoot("tag_filters")),
+					stringvalidator.ConflictsWith(path.MatchRoot("resource_type")),
 				},
 			},
 			// Query parameter
@@ -104,12 +110,16 @@ func (d *NextAvailableIPDataSource) Schema(_ context.Context, _ datasource.Schem
 				ElementType:         types.StringType,
 				Optional:            true,
 				MarkdownDescription: "Map of tag key/value pairs to filter resources",
+				Validators: []validator.Map{
+					mapvalidator.AlsoRequires(path.MatchRoot("resource_type")),
+				},
 			},
 			"resource_type": schema.StringAttribute{
 				Optional:            true,
 				MarkdownDescription: "Resource type to search when using tag filters (address_block, subnet, or range)",
 				Validators: []validator.String{
 					stringvalidator.OneOf("address_block", "subnet", "range"),
+					stringvalidator.AlsoRequires(path.MatchRoot("tag_filters")),
 				},
 			},
 		},
@@ -217,24 +227,7 @@ func (d *NextAvailableIPDataSource) getNextAvailableIPsByID(ctx context.Context,
 }
 
 func (d *NextAvailableIPDataSource) findNextAvailableIPsByTags(ctx context.Context, data IpamsvcNextAvailableIPModel) ([]ipam.Address, error) {
-	// Convert tag_filters to tfilter string
-	tagMap := make(map[string]string)
-	resp := data.TagFilters.Elements()
-	for k, v := range resp {
-		strValue, _ := v.ToTerraformValue(ctx)
-		var stringVal string
-		if err := strValue.As(&stringVal); err != nil {
-			return nil, fmt.Errorf("failed to convert tag value for key %s: %w", k, err)
-
-		}
-		tagMap[k] = stringVal
-	}
-
-	var tagFilterParts []string
-	for k, v := range tagMap {
-		tagFilterParts = append(tagFilterParts, fmt.Sprintf("%s=='%s'", k, v))
-	}
-	tagFilterStr := strings.Join(tagFilterParts, " and ")
+	tagFilterStr := flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, nil)
 
 	resourceType := data.ResourceType.ValueString()
 	var resources []string
@@ -243,7 +236,7 @@ func (d *NextAvailableIPDataSource) findNextAvailableIPsByTags(ctx context.Conte
 	// Get resources matching tags
 	switch resourceType {
 	case "address_block":
-		resources, err = d.findAddressBlocksByTags(ctx, tagFilterStr)
+		resources, err = d.findAddressBlocksByTags(ctx, tagFilterStr)	
 	case "subnet":
 		resources, err = d.findSubnetsByTags(ctx, tagFilterStr)
 	case "range":
@@ -287,97 +280,91 @@ func (d *NextAvailableIPDataSource) findNextAvailableIPsByTags(ctx context.Conte
 }
 
 func (d *NextAvailableIPDataSource) findAddressBlocksByTags(ctx context.Context, tagFilter string) ([]string, error) {
-	const limit = 1000
-	offset := int32(0)
-	var allResources []string
 
-	for {
-		resp, _, err := d.client.IPAddressManagementAPI.AddressBlockAPI.
+	var allResources []ipam.AddressBlock
+
+	allResources, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.AddressBlock, error) {
+		apiRes, _, err := d.client.IPAddressManagementAPI.AddressBlockAPI.
 			List(ctx).
 			Tfilter(tagFilter).
-			Limit(limit).
 			Offset(offset).
+			Limit(limit).
 			Execute()
-
 		if err != nil {
 			return nil, err
 		}
 
-		results := resp.GetResults()
-		for _, result := range results {
-			allResources = append(allResources, result.GetId())
-		}
+		return apiRes.GetResults(), nil
+	})
 
-		// Break if we got fewer results than limit
-		if len(results) < limit {
-			break
-		}
-		offset += limit
+	if err != nil {
+		return nil, err
+	}
+	// Convert the address blocks to a slice of string IDs
+	var resourceIDs []string
+	for _, block := range allResources {
+		resourceIDs = append(resourceIDs, block.GetId())
 	}
 
-	return allResources, nil
+	return resourceIDs, nil
 }
 
 func (d *NextAvailableIPDataSource) findSubnetsByTags(ctx context.Context, tagFilter string) ([]string, error) {
-	const limit = 1000
-	offset := int32(0)
-	var allResources []string
 
-	for {
-		resp, _, err := d.client.IPAddressManagementAPI.SubnetAPI.
+	var allResources []ipam.Subnet
+
+	allResources, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.Subnet, error) {
+		apiRes, _, err := d.client.IPAddressManagementAPI.SubnetAPI.
 			List(ctx).
 			Tfilter(tagFilter).
-			Limit(limit).
 			Offset(offset).
+			Limit(limit).
 			Execute()
-
 		if err != nil {
 			return nil, err
 		}
 
-		results := resp.GetResults()
-		for _, result := range results {
-			allResources = append(allResources, result.GetId())
-		}
+		return apiRes.GetResults(), nil
+	})
 
-		// Break if we got fewer results than limit
-		if len(results) < limit {
-			break
-		}
-		offset += limit
+	if err != nil {
+		return nil, err
+	}
+	// Convert the address blocks to a slice of string IDs
+	var resourceIDs []string
+	for _, block := range allResources {
+		resourceIDs = append(resourceIDs, block.GetId())
 	}
 
-	return allResources, nil
+	return resourceIDs, nil
 }
 
 func (d *NextAvailableIPDataSource) findRangesByTags(ctx context.Context, tagFilter string) ([]string, error) {
-	const limit = 1000
-	offset := int32(0)
-	var allResources []string
 
-	for {
-		resp, _, err := d.client.IPAddressManagementAPI.RangeAPI.
+	var allResources []ipam.Range
+
+	allResources, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.Range, error) {
+		apiRes, _, err := d.client.IPAddressManagementAPI.RangeAPI.
 			List(ctx).
 			Tfilter(tagFilter).
-			Limit(limit).
 			Offset(offset).
+			Limit(limit).
 			Execute()
-
 		if err != nil {
 			return nil, err
 		}
 
-		results := resp.GetResults()
-		for _, result := range results {
-			allResources = append(allResources, result.GetId())
-		}
+		return apiRes.GetResults(), nil
+	})
 
-		// Break if we got fewer results than limit
-		if len(results) < limit {
-			break
-		}
-		offset += limit
+	if err != nil {
+		return nil, err
+	}
+	// Convert the address blocks to a slice of string IDs
+	var resourceIDs []string
+	for _, block := range allResources {
+		resourceIDs = append(resourceIDs, block.GetId())
 	}
 
-	return allResources, nil
+	return resourceIDs, nil
 }

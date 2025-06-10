@@ -11,6 +11,8 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
+var randomTag = acctest.RandomNameWithPrefix("prd")
+
 func TestDataSourceNextAvailableIP_AddressBlock(t *testing.T) {
 	dataSourceName := "data.bloxone_ipam_next_available_ips.test"
 	spaceName := acctest.RandomNameWithPrefix("ip-space")
@@ -119,15 +121,15 @@ func TestDataSourceNextAvailableIP_ByTags(t *testing.T) {
 			// Test with missing resource_type
 			{
 				Config: `
-                    data "bloxone_ipam_next_available_ips" "test_tags" {
-                        tag_filters = {
-                            environment = "test"
-                        }
-                    } 
-                `,
-				ExpectError: regexp.MustCompile("resource_type is required when using tag_filters"),
+			        data "bloxone_ipam_next_available_ips" "test_tags" {
+			            tag_filters = {
+			                environment = "test"
+			            }
+			        }
+			    `,
+				ExpectError: regexp.MustCompile(`Attribute "resource_type" must be specified when "tag_filters" is specified`),
 			},
-			// Test getting IPs from address blocks by tags
+			//Test getting IPs from address blocks by tags
 			{
 				Config: testAccDataSourceNextAvailableIPByTags(spaceName, 1, "address_block"),
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -181,38 +183,39 @@ func testAccDataSourceNextAvailableIPBaseConfig(spaceName string) string {
 
 func testAccDataSourceNextAvailableIPBaseConfigWithTags(spaceName string) string {
 	return fmt.Sprintf(`
-    resource "bloxone_ipam_ip_space" "test_tags" {
+    resource "bloxone_ipam_ip_space" "test_ipspace" {
         name = %q
     }
-    resource "bloxone_ipam_address_block" "test_tags" {
+    resource "bloxone_ipam_address_block" "test_ab_tags" {
         address = "10.0.0.0"
         cidr = "16"
-        space = bloxone_ipam_ip_space.test_tags.id
+        space = bloxone_ipam_ip_space.test_ipspace.id
         tags = {
-            environment = "test"
+            environment = %q
             purpose = "terraform-testing"
         }
     }
-    resource "bloxone_ipam_subnet" "test_tags" {
+    resource "bloxone_ipam_subnet" "test_subnet_tags" {
         address = "10.0.0.0"
         cidr = "24"
-        space = bloxone_ipam_ip_space.test_tags.id
+        space = bloxone_ipam_ip_space.test_ipspace.id
         tags = {
-            environment = "test"
+            environment = %q
             purpose = "terraform-testing"
         }
+		depends_on = [bloxone_ipam_address_block.test_ab_tags]
     }
-    resource "bloxone_ipam_range" "test_tags" {
+    resource "bloxone_ipam_range" "test_range_tags" {
         start = "10.0.0.15"
         end = "10.0.0.30"
-        space = bloxone_ipam_ip_space.test_tags.id
+        space = bloxone_ipam_ip_space.test_ipspace.id
         tags = {
-            environment = "test"
+            environment = %q
             purpose = "terraform-testing"
         }
-        depends_on = [bloxone_ipam_subnet.test_tags]
+        depends_on = [bloxone_ipam_subnet.test_subnet_tags]
     }
-`, spaceName)
+`, spaceName, randomTag, randomTag, randomTag)
 }
 
 func testAccDataSourceNextAvailableIP(spaceName string, count int, id string) string {
@@ -237,17 +240,17 @@ func testAccDataSourceNextAvailableIPByTags(spaceName string, count int, resourc
 	config := fmt.Sprintf(`
     data "bloxone_ipam_next_available_ips" "test_tags" {
         tag_filters = {
-            environment = "test"
+            environment = %q
             purpose = "terraform-testing"
         }
         resource_type = %q
         ip_count = %d
         depends_on = [
-            bloxone_ipam_address_block.test_tags,
-            bloxone_ipam_subnet.test_tags,
-            bloxone_ipam_range.test_tags
+            bloxone_ipam_address_block.test_ab_tags,
+            bloxone_ipam_subnet.test_subnet_tags,
+            bloxone_ipam_range.test_range_tags
         ]
-    }`, resourceType, count)
+    }`, randomTag, resourceType, count)
 
 	return strings.Join([]string{testAccDataSourceNextAvailableIPBaseConfigWithTags(spaceName), config}, "")
 }
