@@ -111,7 +111,7 @@ func testAccDataSourceNextAvailableSubnetWithSingleTagFilter(cidr, count int) st
         }
       depends_on = [
         "bloxone_ipam_address_block.test_next_available_by_single_tag",
-		"bloxone_ipam_address_block.test_next_available_by_mulitple_tags"
+		"bloxone_ipam_address_block.test_next_available_by_mulitple_tags", 
     ]
     }`, cidr, count, envTag)
 
