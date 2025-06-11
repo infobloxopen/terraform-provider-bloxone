@@ -2,12 +2,9 @@ package ipam
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"regexp"
-	"strconv"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/int32validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -130,32 +127,20 @@ func (d *NextAvailableAddressBlockDataSource) Read(ctx context.Context, req data
 	if data.Count.IsNull() {
 		data.Count = types.Int32Value(1)
 	}
-
-	// Check if tag filters are specified
-	tagFilters := data.TagFilters
-
-	count := data.Count
+	count := data.Count.ValueInt32()
+	cidrData := data.Cidr.ValueInt64()
+	tagFilters := data.TagFilters // Check if tag filters are specified
 	if len(tagFilters.Elements()) > 0 {
 		// Find address blocks by tags
 		tagFilterStr := flex.ExpandFrameworkMapFilterString(ctx, tagFilters, &resp.Diagnostics)
 
 		var allAddressBlocks []ipam.AddressBlock
 
-		// Fetch all address blocks matching the tag filters
-		allAddressBlocks, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.AddressBlock, error) {
-			apiRes, _, err := d.client.IPAddressManagementAPI.AddressBlockAPI.
-				List(ctx).
-				Tfilter(tagFilterStr).
-				Offset(offset).
-				Limit(limit).
-				Execute()
-			if err != nil {
-				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Address, got error: %s", err))
-				return nil, err
-			}
-			return apiRes.GetResults(), nil
-		})
+		allAddressBlocks, err := FetchAddressBlocksByTagFilter(ctx, d.client, tagFilterStr, &resp.Diagnostics)
+
 		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Address Blocks with tags, got error: %s", err))
+
 			return
 		}
 
@@ -167,31 +152,31 @@ func (d *NextAvailableAddressBlockDataSource) Read(ctx context.Context, req data
 		var findResults []ipam.AddressBlock
 
 		for _, ab := range allAddressBlocks {
-			if *ab.Cidr >= data.Cidr.ValueInt64() {
+			if *ab.Cidr >= cidrData {
 				continue
 			}
 			findResultsLen := int32(len(findResults))
-			if findResultsLen >= count.ValueInt32() {
+			if findResultsLen >= count {
 				break
 			}
 
-			remainingCount := count.ValueInt32() - findResultsLen
-			findResult, err := d.findAddressBlock(ctx, *ab.Id, int32(data.Cidr.ValueInt64()), remainingCount)
-			if err != nil {
+			remainingCount := count - findResultsLen
+			findResult, findErr := d.findAddressBlock(ctx, *ab.Id, int32(cidrData), remainingCount)
+			if findErr != nil {
 				// Check if the error contains relevant information about available blocks
-				errorBody := []byte(err.Error())
-				availableCount := d.extractAvailableCountFromError(errorBody)
+				errorBody := []byte(findErr.Error())
+				availableCount := utils.ExtractAvailableCountFromError(errorBody)
 
 				if availableCount > 0 {
 					// Retry with the available count
-					partialResult, retryErr := d.findAddressBlock(ctx, *ab.Id, int32(data.Cidr.ValueInt64()), availableCount)
+					partialResult, retryErr := d.findAddressBlock(ctx, *ab.Id, int32(cidrData), availableCount)
 					if retryErr != nil {
-						resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Error finding address block after retry: %s", retryErr))
+						resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Error finding Address Block after retry: %s", retryErr))
 						return
 					}
 					findResults = append(findResults, partialResult...)
 				} else {
-					resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Address, got error: %s", err))
+					resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Address Block, got error: %s", findErr))
 					return
 				}
 				continue
@@ -202,10 +187,10 @@ func (d *NextAvailableAddressBlockDataSource) Read(ctx context.Context, req data
 			}
 		}
 		finalResultsCount := int32(len(findResults))
-		if finalResultsCount < count.ValueInt32() {
+		if finalResultsCount < count {
 			resp.Diagnostics.AddError(
 				"Insufficient Available Address Blocks",
-				fmt.Sprintf("Requested %d Address Blocks with CIDR %d, but only %d were found. Not enough Address Blocks available across all checked address blocks.", count.ValueInt32(), data.Cidr.ValueInt64(), finalResultsCount),
+				fmt.Sprintf("Requested %d Address Blocks with CIDR %d, but only %d were found. Not enough Address Blocks available across all checked address blocks.", count, cidrData, finalResultsCount),
 			)
 			return
 		}
@@ -215,8 +200,8 @@ func (d *NextAvailableAddressBlockDataSource) Read(ctx context.Context, req data
 		apiRes, _, err := d.client.IPAddressManagementAPI.
 			AddressBlockAPI.
 			ListNextAvailableAB(ctx, data.Id.ValueString()).
-			Cidr(int32(data.Cidr.ValueInt64())).
-			Count(count.ValueInt32()).
+			Cidr(int32(cidrData)).
+			Count(count).
 			Execute()
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read AddressBlock Next Available Address Block API, got error: %s", err))
@@ -228,6 +213,28 @@ func (d *NextAvailableAddressBlockDataSource) Read(ctx context.Context, req data
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+}
+
+// Helper funtion to fecth address blocks by tag
+func FetchAddressBlocksByTagFilter(ctx context.Context, client *bloxoneclient.APIClient, tagFilterStr string, diagnostics *diag.Diagnostics) ([]ipam.AddressBlock, error) {
+
+	addressBlocks, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.AddressBlock, error) {
+		apiRes, _, err := client.IPAddressManagementAPI.AddressBlockAPI.
+			List(ctx).
+			Tfilter(tagFilterStr).
+			Offset(offset).
+			Limit(limit).
+			Execute()
+		if err != nil {
+			if diagnostics != nil {
+				diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Address Blocks, got error: %s", err))
+			}
+			return nil, err
+		}
+		return apiRes.GetResults(), nil
+	})
+
+	return addressBlocks, err
 }
 
 // Helper function to find address blocks by ID and count
@@ -247,7 +254,7 @@ func (d *NextAvailableAddressBlockDataSource) findAddressBlock(ctx context.Conte
 				return nil, errMsg
 			}
 			// Try to extract available count
-			availableCount := d.extractAvailableCountFromError(bodyBytes)
+			availableCount := utils.ExtractAvailableCountFromError(bodyBytes)
 			if availableCount > 0 {
 				// Retry with the available count
 				retryRes, _, retryErr := d.client.IPAddressManagementAPI.AddressBlockAPI.
@@ -264,33 +271,4 @@ func (d *NextAvailableAddressBlockDataSource) findAddressBlock(ctx context.Conte
 	}
 
 	return apiRes.GetResults(), nil
-}
-
-func (d *NextAvailableAddressBlockDataSource) extractAvailableCountFromError(body []byte) int32 {
-	var errorResponse struct {
-		Error []struct {
-			Message string `json:"message"`
-		} `json:"error"`
-	}
-
-	// Parse the JSON error body
-	if err := json.Unmarshal(body, &errorResponse); err != nil {
-		return 0
-	}
-
-	// Extract the available count from the error message
-	for _, err := range errorResponse.Error {
-		if strings.Contains(err.Message, "The available networks are:") {
-			// Use regex to extract the number after "The available networks are: "
-			re := regexp.MustCompile(`The available networks are: (\d+)`)
-			match := re.FindStringSubmatch(err.Message)
-			if len(match) > 1 {
-				count, parseErr := strconv.Atoi(match[1])
-				if parseErr == nil {
-					return int32(count)
-				}
-			}
-		}
-	}
-	return 0
 }
