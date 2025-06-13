@@ -29,6 +29,7 @@ func NewIpamNextAvailableIPDataSource() datasource.DataSource {
 }
 
 // NextAvailableIPDataSource defines the data source implementation.
+
 type NextAvailableIPDataSource struct {
 	client *bloxoneclient.APIClient
 }
@@ -236,7 +237,7 @@ func (d *NextAvailableIPDataSource) findNextAvailableIPsByTags(ctx context.Conte
 	// Get resources matching tags
 	switch resourceType {
 	case "address_block":
-		resources, err = d.findAddressBlocksByTags(ctx, tagFilterStr)	
+		resources, err = d.findAddressBlocksByTags(ctx, tagFilterStr)
 	case "subnet":
 		resources, err = d.findSubnetsByTags(ctx, tagFilterStr)
 	case "range":
@@ -263,10 +264,25 @@ func (d *NextAvailableIPDataSource) findNextAvailableIPsByTags(ctx context.Conte
 			continue
 		}
 
-		// Get as many IPs as needed from this resource
+		// Try to get as many IPs as needed from this resource
 		remainingCount := int64(count) - int64(len(allAddresses))
+
+		// Start with requesting the full remaining count
 		apiRes, err := d.getNextAvailableIPsByID(ctx, resourceID, remainingCount, contiguous)
-		if err == nil && len(apiRes.GetResults()) > 0 {
+
+		if err != nil {
+			// If error occurs, try with progressively smaller counts
+			// This mimics the Python while loop that decrements remaining_count
+			for tryCount := remainingCount - 1; tryCount > 0; tryCount-- {
+				retryRes, retryErr := d.getNextAvailableIPsByID(ctx, resourceID, tryCount, contiguous)
+				if retryErr == nil && len(retryRes.GetResults()) > 0 {
+					// Found some IPs with the smaller count
+					allAddresses = append(allAddresses, retryRes.GetResults()...)
+					break
+				}
+			}
+		} else if len(apiRes.GetResults()) > 0 {
+			// Successfully got some IPs
 			allAddresses = append(allAddresses, apiRes.GetResults()...)
 		}
 
@@ -276,6 +292,7 @@ func (d *NextAvailableIPDataSource) findNextAvailableIPsByTags(ctx context.Conte
 		}
 	}
 
+	// Unlike the original code, we return whatever IPs we found, even if less than requested
 	return allAddresses, nil
 }
 
@@ -300,11 +317,10 @@ func (d *NextAvailableIPDataSource) findAddressBlocksByTags(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
-	// Convert the address blocks to a slice of string IDs
-	var resourceIDs []string
-	for _, block := range allResources {
-		resourceIDs = append(resourceIDs, block.GetId())
-	}
+
+	resourceIDs := extractResourceIDs(allResources, func(block ipam.AddressBlock) string {
+		return block.GetId()
+	})
 
 	return resourceIDs, nil
 }
@@ -330,12 +346,10 @@ func (d *NextAvailableIPDataSource) findSubnetsByTags(ctx context.Context, tagFi
 	if err != nil {
 		return nil, err
 	}
-	// Convert the address blocks to a slice of string IDs
-	var resourceIDs []string
-	for _, block := range allResources {
-		resourceIDs = append(resourceIDs, block.GetId())
-	}
 
+	resourceIDs := extractResourceIDs(allResources, func(subnet ipam.Subnet) string {
+		return subnet.GetId()
+	})
 	return resourceIDs, nil
 }
 
@@ -360,11 +374,18 @@ func (d *NextAvailableIPDataSource) findRangesByTags(ctx context.Context, tagFil
 	if err != nil {
 		return nil, err
 	}
-	// Convert the address blocks to a slice of string IDs
-	var resourceIDs []string
-	for _, block := range allResources {
-		resourceIDs = append(resourceIDs, block.GetId())
-	}
+
+	resourceIDs := extractResourceIDs(allResources, func(rng ipam.Range) string {
+		return rng.GetId()
+	})
 
 	return resourceIDs, nil
+}
+
+func extractResourceIDs[T any](resources []T, getID func(T) string) []string {
+	var resourceIDs []string
+	for _, resource := range resources {
+		resourceIDs = append(resourceIDs, getID(resource))
+	}
+	return resourceIDs
 }
