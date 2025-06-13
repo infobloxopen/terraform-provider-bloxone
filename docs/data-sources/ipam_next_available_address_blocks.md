@@ -37,11 +37,12 @@ data "bloxone_ipam_next_available_address_blocks" "example_next_available_ab_def
 ### Required
 
 - `cidr` (Number) The cidr value of address blocks to be created.
-- `id` (String) An application specific resource identity of a resource.
 
 ### Optional
 
 - `address_block_count` (Number) Number of address blocks to generate. Default 1 if not set.
+- `id` (String) An application specific resource identity of a resource.
+- `tag_filters` (Map of String) Key-value pairs to filter address blocks by tags.
 
 ### Read-Only
 
