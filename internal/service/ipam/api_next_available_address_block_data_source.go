@@ -215,7 +215,7 @@ func (d *NextAvailableAddressBlockDataSource) Read(ctx context.Context, req data
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-// Helper funtion to fecth address blocks by tag
+// FetchAddressBlocksByTagFilter is a helper function used to fetch address blocks by tags.
 func FetchAddressBlocksByTagFilter(ctx context.Context, client *bloxoneclient.APIClient, tagFilterStr string, diagnostics *diag.Diagnostics) ([]ipam.AddressBlock, error) {
 
 	addressBlocks, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.AddressBlock, error) {
@@ -237,7 +237,7 @@ func FetchAddressBlocksByTagFilter(ctx context.Context, client *bloxoneclient.AP
 	return addressBlocks, err
 }
 
-// Helper function to find address blocks by ID and count
+// findAddressBlock is a helper function to find address blocks by ID and count
 func (d *NextAvailableAddressBlockDataSource) findAddressBlock(ctx context.Context, id string, cidr int32, count int32) ([]ipam.AddressBlock, error) {
 	apiRes, httpRes, err := d.client.IPAddressManagementAPI.AddressBlockAPI.
 		ListNextAvailableAB(ctx, id).
