@@ -375,8 +375,6 @@ func ExtractResourceId(id string) string {
 	}
 }
 
-// ExtractAvailableCountFromError parses an API error response and extracts an available count
-// from error messages with format "The available networks are: X" or similar patterns.
 func ExtractAvailableCountFromError(body []byte) int32 {
 	var errorResponse struct {
 		Error []struct {
@@ -391,7 +389,6 @@ func ExtractAvailableCountFromError(body []byte) int32 {
 
 	// Extract the available count from the error message
 	for _, err := range errorResponse.Error {
-		// Check for the specific message pattern
 		if strings.Contains(err.Message, "The available networks are:") {
 			// Use regex to extract the number after "The available networks are: "
 			re := regexp.MustCompile(`The available networks are: (\d+)`)
@@ -404,6 +401,5 @@ func ExtractAvailableCountFromError(body []byte) int32 {
 			}
 		}
 	}
-
 	return 0
 }
