@@ -24,10 +24,20 @@ data "bloxone_ipam_address_blocks" "example_by_attribute" {
 data "bloxone_ipam_next_available_address_blocks" "example_next_available_ab" {
   id                  = data.bloxone_ipam_address_blocks.example_by_attribute.results.0.id
   address_block_count = 5
+  cidr                = 27
 }
 
 data "bloxone_ipam_next_available_address_blocks" "example_next_available_ab_default_count" {
-  id = data.bloxone_ipam_address_blocks.example_by_attribute.results.0.id
+  id   = data.bloxone_ipam_address_blocks.example_by_attribute.results.0.id
+  cidr = 24
+}
+
+data "bloxone_ipam_next_available_address_blocks" "example_next_available_ab_by_tag" {
+  cidr                = 30
+  address_block_count = 15
+  tag_filters = {
+    environment = "prd"
+  }
 }
 ```
 
@@ -37,11 +47,12 @@ data "bloxone_ipam_next_available_address_blocks" "example_next_available_ab_def
 ### Required
 
 - `cidr` (Number) The cidr value of address blocks to be created.
-- `id` (String) An application specific resource identity of a resource.
 
 ### Optional
 
 - `address_block_count` (Number) Number of address blocks to generate. Default 1 if not set.
+- `id` (String) An application specific resource identity of a resource.
+- `tag_filters` (Map of String) Key-value pairs to filter address blocks by tags.
 
 ### Read-Only
 

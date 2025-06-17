@@ -1,7 +1,7 @@
 // Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
-package stringvalidator
+package int32validator
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -21,10 +21,7 @@ import (
 // This implements the validation logic declaratively within the schema.
 // Refer to [resourcevalidator.PreferWriteOnlyAttribute]
 // for declaring this type of validation outside the schema definition.
-//
-// NOTE: This validator will produce persistent warnings for practitioners on every Terraform run as long as the specified non-write-only attribute
-// has a value in the configuration. The validator will also produce warnings for users of shared modules who cannot immediately take action on the warning.
-func PreferWriteOnlyAttribute(writeOnlyAttribute path.Expression) validator.String {
+func PreferWriteOnlyAttribute(writeOnlyAttribute path.Expression) validator.Int32 {
 	return schemavalidator.PreferWriteOnlyAttribute{
 		WriteOnlyAttribute: writeOnlyAttribute,
 	}
