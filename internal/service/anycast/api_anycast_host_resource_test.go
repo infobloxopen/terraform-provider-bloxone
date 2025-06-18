@@ -20,7 +20,6 @@ func TestAccAnycastHostResource_basic(t *testing.T) {
 	var resourceName = "bloxone_anycast_host.test"
 	var v anycast.OnpremHost
 	var anycastConfigName = acctest.RandomNameWithPrefix("anycast")
-	var anycastHostname = acctest.RandomNameWithPrefix("anycast_host")
 	anycastIP := acctest.RandomIP()
 
 	resource.Test(t, resource.TestCase{
@@ -29,7 +28,7 @@ func TestAccAnycastHostResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAnycastHostBasicConfig(anycastHostname, anycastConfigName, anycastIP),
+				Config: testAccAnycastHostBasicConfig("TF_TEST_HOST_01", anycastConfigName, anycastIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
@@ -48,7 +47,6 @@ func TestAccAnycastHostResource_disappears(t *testing.T) {
 	var v anycast.OnpremHost
 	var anycastConfigName = acctest.RandomNameWithPrefix("anycast")
 	var anycastIP = acctest.RandomIP()
-	var anycastHostname = acctest.RandomNameWithPrefix("anycast_host")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -56,7 +54,7 @@ func TestAccAnycastHostResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckAnycastHostDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAnycastHostBasicConfig(anycastHostname, anycastConfigName, anycastIP),
+				Config: testAccAnycastHostBasicConfig("TF_TEST_HOST_01", anycastConfigName, anycastIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastHostExists(context.Background(), resourceName, &v),
 					testAccCheckAnycastHostDisappears(context.Background(), &v),
@@ -70,7 +68,6 @@ func TestAccAnycastHostResource_disappears(t *testing.T) {
 func TestAccAnycastHostResource_AnycastConfigRefs(t *testing.T) {
 	var resourceName = "bloxone_anycast_host.test"
 	var v anycast.OnpremHost
-	var anycastHostname = acctest.RandomNameWithPrefix("anycast_host")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -78,7 +75,7 @@ func TestAccAnycastHostResource_AnycastConfigRefs(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAnycastHostAnycastConfigRefs(anycastHostname, map[string]string{
+				Config: testAccAnycastHostAnycastConfigRefs("TF_TEST_HOST_01", map[string]string{
 					acctest.RandomNameWithPrefix("anycast"): acctest.RandomIP(),
 					acctest.RandomNameWithPrefix("anycast"): acctest.RandomIP(),
 				}),
@@ -97,7 +94,6 @@ func TestAccAnycastHostResource_enableRouting(t *testing.T) {
 	var v anycast.OnpremHost
 	var anycastConfigName = acctest.RandomNameWithPrefix("anycast")
 	var anycastIP = acctest.RandomIP()
-	var anycastHostname = acctest.RandomNameWithPrefix("anycast_host")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -105,7 +101,7 @@ func TestAccAnycastHostResource_enableRouting(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAnycastHostEnableRoutingBGP("BGP", anycastHostname, anycastConfigName, anycastIP),
+				Config: testAccAnycastHostEnableRoutingBGP("BGP", "TF_TEST_HOST_01", anycastConfigName, anycastIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "config_bgp.asn", "6500"),
@@ -116,7 +112,7 @@ func TestAccAnycastHostResource_enableRouting(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAnycastHostEnableRoutingOSPF("OSPF", anycastHostname, anycastConfigName, anycastIP),
+				Config: testAccAnycastHostEnableRoutingOSPF("OSPF", "TF_TEST_HOST_01", anycastConfigName, anycastIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "config_ospf.area_type", "STANDARD"),
@@ -137,7 +133,6 @@ func TestAccAnycastHostResource_BGP(t *testing.T) {
 	var v anycast.OnpremHost
 	var anycastConfigName = acctest.RandomNameWithPrefix("anycast")
 	var anycastIP = acctest.RandomIP()
-	var anycastHostname = acctest.RandomNameWithPrefix("anycast_host")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -145,7 +140,7 @@ func TestAccAnycastHostResource_BGP(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAnycastHostBGP("BGP", anycastHostname, anycastConfigName, anycastIP, 6500, 180),
+				Config: testAccAnycastHostBGP("BGP", "TF_TEST_HOST_01", anycastConfigName, anycastIP, 6500, 180),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "config_bgp.asn", "6500"),
@@ -154,7 +149,7 @@ func TestAccAnycastHostResource_BGP(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAnycastHostBGP("BGP", anycastHostname, anycastConfigName, anycastIP, 6601, 200),
+				Config: testAccAnycastHostBGP("BGP", "TF_TEST_HOST_01", anycastConfigName, anycastIP, 6601, 200),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "config_bgp.asn", "6601"),
@@ -171,7 +166,6 @@ func TestAccAnycastHostResource_OSPF(t *testing.T) {
 	var v anycast.OnpremHost
 	var anycastConfigName = acctest.RandomNameWithPrefix("anycast")
 	var anycastIP = acctest.RandomIP()
-	var anycastHostname = acctest.RandomNameWithPrefix("anycast_host")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -179,7 +173,7 @@ func TestAccAnycastHostResource_OSPF(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAnycastHostOSPF("OSPF", "STANDARD", "10.10.0.1", "Clear", "eth0", anycastHostname, anycastConfigName, anycastIP, 10, 40, 5, 1),
+				Config: testAccAnycastHostOSPF("OSPF", "STANDARD", "10.10.0.1", "Clear", "eth0", "TF_TEST_HOST_01", anycastConfigName, anycastIP, 10, 40, 5, 1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "config_ospf.area_type", "STANDARD"),
@@ -195,7 +189,7 @@ func TestAccAnycastHostResource_OSPF(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAnycastHostOSPF("OSPF", "NSSA", "10.10.0.2", "MD5", "ens160", anycastHostname, anycastConfigName, anycastIP, 20, 50, 10, 2),
+				Config: testAccAnycastHostOSPF("OSPF", "NSSA", "10.10.0.2", "MD5", "ens160", "TF_TEST_HOST_01", anycastConfigName, anycastIP, 20, 50, 10, 2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastHostExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "config_ospf.area_type", "NSSA"),
@@ -274,8 +268,10 @@ func testAccCheckAnycastHostDisappears(ctx context.Context, v *anycast.OnpremHos
 
 func testAccBaseWithAnycastConfig(hostName, name, anycastIpAddress string) string {
 	return fmt.Sprintf(`
-resource "bloxone_infra_host" "test_host" {
-    display_name = %q
+data "bloxone_infra_hosts" "test_host" {
+	filters = {
+		display_name = %q
+	}
 }
 
 resource "bloxone_anycast_config" "test_onprem_hosts" {
@@ -290,7 +286,7 @@ resource "bloxone_anycast_config" "test_onprem_hosts" {
 func testAccAnycastHostBasicConfig(hostName, anycastConfigName, anycastIP string) string {
 	config := `
 resource "bloxone_anycast_host" "test" {
-  id = bloxone_infra_host.test_host.legacy_id
+  id = data.bloxone_infra_hosts.test_host.results.0.legacy_id
 
  anycast_config_refs = [
     {
@@ -306,8 +302,10 @@ func testAccAnycastHostAnycastConfigRefs(hostName string, anycastIPs map[string]
 	var configs []string
 
 	configs = append(configs, fmt.Sprintf(`
-resource "bloxone_infra_host" "test" {
-	display_name = %q
+data "bloxone_infra_hosts" "test" {
+	filters = {
+		display_name = %q
+	}
 }
 `, hostName))
 
@@ -330,7 +328,7 @@ resource "bloxone_anycast_config" %[1]q {
 
 	configs = append(configs, fmt.Sprintf(`
 resource "bloxone_anycast_host" "test" {
-	id = bloxone_infra_host.test.legacy_id
+	id = data.bloxone_infra_hosts.test.results.0.legacy_id
 	anycast_config_refs = [
 		%[1]s
 	]
@@ -342,7 +340,7 @@ resource "bloxone_anycast_host" "test" {
 func testAccAnycastHostEnableRoutingBGP(routingProtocols, hostName, anycastConfigName, anycastIP string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_anycast_host" "test" {
-  id = bloxone_infra_host.test_host.legacy_id
+  id = data.bloxone_infra_hosts.test_host.results.0.legacy_id
 
  anycast_config_refs = [
     {
@@ -369,7 +367,7 @@ resource "bloxone_anycast_host" "test" {
 func testAccAnycastHostEnableRoutingOSPF(routing_protocols, hostName, anycastConfigName, anycastIP string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_anycast_host" "test" {
-  id = bloxone_infra_host.test_host.legacy_id
+  id = data.bloxone_infra_hosts.test_host.results.0.legacy_id
 
  anycast_config_refs = [
     {
@@ -397,7 +395,7 @@ resource "bloxone_anycast_host" "test" {
 func testAccAnycastHostBGP(routingProtocols, hostName, anycastConfigName, anycastIP string, asn, holddown_secs int64) string {
 	config := fmt.Sprintf(`
 resource "bloxone_anycast_host" "test" {
-  id = bloxone_infra_host.test_host.legacy_id
+  id = data.bloxone_infra_hosts.test_host.results.0.legacy_id
 
  anycast_config_refs = [
     {
@@ -424,7 +422,7 @@ resource "bloxone_anycast_host" "test" {
 func testAccAnycastHostOSPF(routing_protocols, area_type, area, authentication_type, ospfInterface, hostName, anycastConfigName, anycastIP string, hello_interval, dead_interval, retransmit_interval, transmit_delay int64) string {
 	config := fmt.Sprintf(`
 resource "bloxone_anycast_host" "test" {
-  id = bloxone_infra_host.test_host.legacy_id
+  id = data.bloxone_infra_hosts.test_host.results.0.legacy_id
 
  anycast_config_refs = [
     {
