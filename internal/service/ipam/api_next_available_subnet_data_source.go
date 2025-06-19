@@ -172,7 +172,7 @@ func (d *NextAvailableSubnetDataSource) Read(ctx context.Context, req datasource
 					// Retry with the available count
 					partialResult, retryErr := d.findSubnet(ctx, *ab.Id, int32(cidrData), availableCount)
 					if retryErr != nil {
-						resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Error finding address block after retry: %s", retryErr))
+						resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Error finding subnet after retry: %s", retryErr))
 						return
 					}
 					findResults = append(findResults, partialResult...)
