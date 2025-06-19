@@ -12,3 +12,11 @@ data "bloxone_ipam_next_available_subnets" "example_tf_subs" {
   cidr         = 29
   subnet_count = 5
 }
+
+data "bloxone_ipam_next_available_subnets" "example_next_available_subnet_by_tag" {
+  cidr         = 30
+  subnet_count = 15
+  tag_filters = {
+    environment = "prd"
+  }
+}
