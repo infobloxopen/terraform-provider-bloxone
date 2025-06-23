@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/mapvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -99,7 +100,10 @@ func (d *NextAvailableIPDataSource) Schema(_ context.Context, _ datasource.Schem
 			},
 			// Query parameter
 			"ip_count": schema.Int64Attribute{
-				Optional:            true,
+				Optional: true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 20),
+				},
 				MarkdownDescription: `The number of IP addresses requested. Defaults to 1.`,
 			},
 			"results": schema.ListAttribute{
@@ -137,11 +141,10 @@ func (d *NextAvailableIPDataSource) Read(ctx context.Context, req datasource.Rea
 		return
 	}
 
-	// Set default count if not provided
-	count := int64(1)
-	if !data.Count.IsNull() {
-		count = data.Count.ValueInt64()
+	if data.Count.IsNull() {
+		data.Count = types.Int64Value(1)
 	}
+	count := data.Count.ValueInt64()
 
 	// Validate count is within allowed range (1-20)
 	if count < 1 || count > 20 {
@@ -177,8 +180,7 @@ func (d *NextAvailableIPDataSource) Read(ctx context.Context, req datasource.Rea
 		data.FlattenResults(ctx, addresses, &resp.Diagnostics)
 	} else if !data.Id.IsNull() {
 		// Using direct resource ID
-		addressStr := data.Id.ValueString()
-		apiRes, err := d.getNextAvailableIPsByID(ctx, addressStr, count, data.Contiguous.ValueBool())
+		apiRes, err := d.getNextAvailableIPsByID(ctx, data.Id.ValueString(), count, data.Contiguous.ValueBool())
 
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Address, got error: %s", err))
@@ -254,23 +256,23 @@ func (d *NextAvailableIPDataSource) findNextAvailableIPsByTags(ctx context.Conte
 
 	// Try to get next available IPs from each resource
 	var allAddresses []ipam.Address
-	count := int64(data.Count.ValueInt64())
+	count := data.Count.ValueInt64()
 	contiguous := data.Contiguous.ValueBool()
 
 	for _, resourceID := range resources {
 		// First check if this resource has at least one available IP
-		checkRes, err := d.getNextAvailableIPsByID(ctx, resourceID, 1, contiguous)
-		if err != nil || len(checkRes.GetResults()) == 0 {
+		checkRes, checkErr := d.getNextAvailableIPsByID(ctx, resourceID, 1, contiguous)
+		if checkErr != nil || len(checkRes.GetResults()) == 0 {
 			continue
 		}
 
 		// Try to get as many IPs as needed from this resource
-		remainingCount := int64(count) - int64(len(allAddresses))
+		remainingCount := count - int64(len(allAddresses))
 
 		// Start with requesting the full remaining count
-		apiRes, err := d.getNextAvailableIPsByID(ctx, resourceID, remainingCount, contiguous)
+		apiRes, apiErr := d.getNextAvailableIPsByID(ctx, resourceID, remainingCount, contiguous)
 
-		if err != nil {
+		if apiErr != nil {
 			// If error occurs, try with progressively smaller counts
 			// This mimics the Python while loop that decrements remaining_count
 			for tryCount := remainingCount - 1; tryCount > 0; tryCount-- {
