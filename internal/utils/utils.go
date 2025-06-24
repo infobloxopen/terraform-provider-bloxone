@@ -394,9 +394,11 @@ func ExtractAvailableCountFromError(body []byte) int32 {
 			re := regexp.MustCompile(`The available networks are: (\d+)`)
 			match := re.FindStringSubmatch(err.Message)
 			if len(match) > 1 {
-				count, parseErr := strconv.Atoi(match[1])
+				count, parseErr := strconv.ParseInt(match[1], 10, 32)
 				if parseErr == nil {
 					return int32(count)
+				} else {
+					tflog.Error(context.Background(), fmt.Sprintf("Failed to parse available count from error message: %s", err.Message))
 				}
 			}
 		}
