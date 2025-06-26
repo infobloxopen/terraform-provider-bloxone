@@ -238,7 +238,7 @@ github.com/hashicorp/terraform-plugin-framework-validators/internal/schemavalida
 github.com/hashicorp/terraform-plugin-framework-validators/listvalidator
 github.com/hashicorp/terraform-plugin-framework-validators/mapvalidator
 github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator
-# github.com/hashicorp/terraform-plugin-go v0.27.0
+# github.com/hashicorp/terraform-plugin-go v0.28.0
 ## explicit; go 1.23.0
 github.com/hashicorp/terraform-plugin-go/internal/logging
 github.com/hashicorp/terraform-plugin-go/tfprotov5
