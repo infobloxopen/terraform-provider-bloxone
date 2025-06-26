@@ -49,7 +49,8 @@ func (m *IpamsvcNextAvailableAddressBlockModel) FlattenResults(ctx context.Conte
 	var listOfAddress []string
 
 	for _, address := range from {
-		listOfAddress = append(listOfAddress, types.StringValue(*address.Address).String())
+		cidrNotation := fmt.Sprintf("%s/%d", *address.Address, *address.Cidr)
+		listOfAddress = append(listOfAddress, types.StringValue(cidrNotation).String())
 	}
 	m.Results = flex.FlattenFrameworkListString(ctx, listOfAddress, diags)
 }
