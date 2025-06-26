@@ -2,7 +2,10 @@ package utils
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"regexp"
+	"strconv"
 	"strings"
 
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -370,4 +373,35 @@ func ExtractResourceId(id string) string {
 	default:
 		return id
 	}
+}
+
+func ExtractAvailableCountFromError(body []byte) int32 {
+	var errorResponse struct {
+		Error []struct {
+			Message string `json:"message"`
+		} `json:"error"`
+	}
+
+	// Parse the JSON error body
+	if err := json.Unmarshal(body, &errorResponse); err != nil {
+		return 0
+	}
+
+	// Extract the available count from the error message
+	for _, err := range errorResponse.Error {
+		if strings.Contains(err.Message, "The available networks are:") {
+			// Use regex to extract the number after "The available networks are: "
+			re := regexp.MustCompile(`The available networks are: (\d+)`)
+			match := re.FindStringSubmatch(err.Message)
+			if len(match) > 1 {
+				count, parseErr := strconv.ParseInt(match[1], 10, 32)
+				if parseErr == nil {
+					return int32(count)
+				} else {
+					tflog.Error(context.Background(), fmt.Sprintf("Failed to parse available count from error message: %s", err.Message))
+				}
+			}
+		}
+	}
+	return 0
 }
