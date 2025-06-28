@@ -104,8 +104,8 @@ spec:
           xGoogleProperty:
             type: ET_GCE_DISK_IMAGE
           enumValueLabels:
-            - label: nios-x-virtual-server-3-8-1
-              value: projects/infoblox-public-436917/global/images/nios-x-virtual-server-3-8-1
+            - label: nios-x-virtual-server-3-8-10
+              value: projects/infoblox-public-436917/global/images/nios-x-virtual-server-3-8-10
         sub_networks:
           name: subnetworks
           title: Subnetwork name
