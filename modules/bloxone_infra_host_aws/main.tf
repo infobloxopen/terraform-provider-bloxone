@@ -55,7 +55,7 @@ data "aws_ami" "bloxone" {
   owners = ["aws-marketplace"]
   filter {
     name   = "name"
-    values = ["Bloxone_v3.8.*"]
+    values = ["bloxone_v3.8.*"]
   }
 }
 

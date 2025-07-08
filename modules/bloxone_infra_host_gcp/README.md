@@ -16,11 +16,38 @@ The service will be named `<service_type>_<host_display_name>`.
 ## Example Usage
 
 ```hcl
+terraform {
+  required_version = ">= 1.5"
+  required_providers {
+    bloxone = {
+      source = "infobloxopen/bloxone"
+    # Other parameters
+    }
+    google = {
+      source = "hashicorp/google"
+    }
+  }
+}
+
+provider "google" {
+  project     = "<gcp-project-id>"
+  credentials = file("<path-to-service-account-key>.json")  
+  region      = "us-west1"      
+  zone        = "us-west1-c" 
+}
+
+provider "bloxone" {
+  csp_url = "<csp-url>" 
+  api_key = "<api-key>"           
+}
+
 module "bloxone_infra_host_gcp" {
   source = "github.com/infobloxopen/terraform-provider-bloxone//modules/bloxone_infra_host_gcp"
 
   name         = "bloxone-vm"
   source_image = "bloxone-v381"
+
+  machine_type = "machine-type"
 
   network_interfaces = [
     {
@@ -38,8 +65,17 @@ module "bloxone_infra_host_gcp" {
     environment = "dev"
   }
 
+  gcp_disk_labels = {
+    environment = "dev"
+    module      = "bloxone"
+  }
+
   tags = {
     location = "office1"
+  }
+
+  metadata = {
+    purpose = "IaaC-testing"
   }
 
   services = {

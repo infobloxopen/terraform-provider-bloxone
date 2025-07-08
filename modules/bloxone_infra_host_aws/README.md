@@ -16,6 +16,30 @@ The service will be named `<service_type>_<host_display_name>`.
 ## Example Usage
 
 ```hcl
+terraform {
+  required_providers {
+    bloxone = {
+      source  = "infobloxopen/bloxone"
+      # Other parameters...
+    }
+    aws = {
+      source  = "hashicorp/aws"
+    }
+  }
+}
+
+provider "aws" {
+  access_key = "<access-key>"
+  secret_key = "<secret-key>"
+  token      = "<session-token>"
+  region     = "us-east-1"
+}
+
+provider "bloxone" {
+  csp_url = "<csp-url>"
+  api_key = "<api-key>"
+}
+
 module "bloxone_infra_host_aws" {
   source = "github.com/infobloxopen/terraform-provider-bloxone//modules/bloxone_infra_host_aws"
 
@@ -26,6 +50,16 @@ module "bloxone_infra_host_aws" {
   services = {
     dhcp = "start"
     dns = "start"
+  }
+
+  aws_instance_tags= {
+    Name = "bloxone-instance"
+    Environment = "dev"
+  }
+  
+  tags = {
+    location = "aws-east"
+    purpose  = "terraform-deployment"
   }
 }
 ```
