@@ -17,7 +17,6 @@ The service will be named `<service_type>_<host_display_name>`.
 
 ```hcl
 terraform {
-  required_version = ">= 1.5"
   required_providers {
     bloxone = {
       source = "infobloxopen/bloxone"
