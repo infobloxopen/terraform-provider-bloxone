@@ -32,7 +32,7 @@ provider "aws" {
   access_key = "<access-key>"
   secret_key = "<secret-key>"
   token      = "<session-token>"
-  region     = "us-east-1"
+  region     = "selected-region"
 }
 
 provider "bloxone" {
@@ -58,7 +58,7 @@ module "bloxone_infra_host_aws" {
   }
   
   tags = {
-    location = "aws-east"
+    location = "office1"
     purpose  = "terraform-deployment"
   }
 }
