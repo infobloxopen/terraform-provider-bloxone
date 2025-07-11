@@ -31,8 +31,8 @@ terraform {
 provider "google" {
   project     = "<gcp-project-id>"
   credentials = file("<path-to-service-account-key>.json")  
-  region      = "selected-region"      
-  zone        = "selected-zone" 
+  region      = "<selected-region>"      
+  zone        = "<selected-zone>"    
 }
 
 provider "bloxone" {

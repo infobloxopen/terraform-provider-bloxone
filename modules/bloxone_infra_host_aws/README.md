@@ -32,7 +32,7 @@ provider "aws" {
   access_key = "<access-key>"
   secret_key = "<secret-key>"
   token      = "<session-token>"
-  region     = "selected-region"
+  region     = "<selected-region>"   
 }
 
 provider "bloxone" {
