@@ -15,6 +15,7 @@ The service will be named `<service_type>_<host_display_name>`.
 
 ## Example Usage
 
+### Provider Configuration
 ```hcl
 terraform {
   required_providers {
@@ -39,7 +40,10 @@ provider "bloxone" {
   csp_url = "<csp-url>"
   api_key = "<api-key>"
 }
+```
+### Module Configuration
 
+```hcl
 module "bloxone_infra_host_aws" {
   source = "github.com/infobloxopen/terraform-provider-bloxone//modules/bloxone_infra_host_aws"
 

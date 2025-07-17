@@ -13,8 +13,11 @@ A `tf_module_host_id` tag will be added to the tags variable so that the data so
 This module will also create a BloxOne Infra Service for each service type provided in the `services` variable.
 The service will be named `<service_type>_<host_display_name>`.
 
+If no image is available, it can be built by following the steps outlined in this documentation: https://docs.infoblox.com/space/BloxOneInfrastructure/350027851/Google+Cloud+Portal+(GCP)+Deployment
+
 ## Example Usage
 
+### Provider Configuration
 ```hcl
 terraform {
   required_providers {
@@ -39,7 +42,10 @@ provider "bloxone" {
   csp_url = "<csp-url>" 
   api_key = "<api-key>"           
 }
+```
 
+### Module Configuration
+```hcl
 module "bloxone_infra_host_gcp" {
   source = "github.com/infobloxopen/terraform-provider-bloxone//modules/bloxone_infra_host_gcp"
 
