@@ -41,8 +41,8 @@ provider "bloxone" {
   api_key = "<api-key>"
 }
 ```
-### Module Configuration
 
+### Module Configuration
 ```hcl
 module "bloxone_infra_host_aws" {
   source = "github.com/infobloxopen/terraform-provider-bloxone//modules/bloxone_infra_host_aws"
