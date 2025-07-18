@@ -23,7 +23,7 @@ variable "subnet_id" {
 variable "vnet_id" {
   description = "The ID of the virtual network in which the virtual machine will be created"
   type        = string
-  default = null
+  default     = null
 }
 
 variable "location" {
