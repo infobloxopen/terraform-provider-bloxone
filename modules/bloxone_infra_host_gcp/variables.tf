@@ -15,6 +15,12 @@ variable "machine_type" {
   default     = "e2-standard-4"
 }
 
+variable "zone" {
+  description = "The zone for the solution to be deployed."
+  type        = string
+  default     = "us-east1-b"
+}
+
 variable "network_interfaces" {
   description = "List of network interfaces to be attached to the virtual machine."
   type = list(object({
@@ -47,8 +53,20 @@ variable "gcp_instance_labels" {
   default     = {}
 }
 
+variable "gcp_disk_labels" {
+  description = "The labels to associate with the virtual machine disk."
+  type        = map(string)
+  default     = {}
+}
+
 variable "tags" {
   description = "The tags to use for the BloxOne Host."
+  type        = map(string)
+  default     = {}
+}
+
+variable "metadata" {
+  description = "(Optional) Metadata key/value pairs to make available from within the VM instance."
   type        = map(string)
   default     = {}
 }
