@@ -17,11 +17,13 @@ variable "resource_group_name" {
 variable "subnet_id" {
   description = "The ID of the subnet in which the virtual machine will be created"
   type        = string
+  default     = null
 }
 
 variable "vnet_id" {
   description = "The ID of the virtual network in which the virtual machine will be created"
   type        = string
+  default = null
 }
 
 variable "location" {
