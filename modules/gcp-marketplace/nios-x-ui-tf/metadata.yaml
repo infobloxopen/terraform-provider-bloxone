@@ -36,7 +36,7 @@ spec:
       - name: source_image
         description: The image name for the disk for the VM instance.
         varType: string
-        defaultValue: projects/infoblox-public-436917/global/images/nios-x-virtual-server-3-8-1
+        defaultValue: projects/infoblox-public-436917/global/images/nios-x-virtual-server-3-8-10
       - name: zone
         description: (Optional) The zone that the machine should be created in. If it is not provided, the provider zone is used.
         varType: string
