@@ -62,6 +62,15 @@ locals {
       "tf_module_host_id" = "bloxone-host-${random_uuid.this.result}"
     }
   )
+    metadata = merge(
+    var.metadata,
+    {
+      user-data = templatefile("${path.module}/userdata.tftpl", {
+        join_token = local.join_token
+        tags       = local.tags
+      })
+    }
+  )
 }
 
 resource "bloxone_infra_join_token" "this" {
@@ -74,13 +83,14 @@ resource "google_compute_instance" "this" {
   machine_type        = var.machine_type
   labels              = var.gcp_instance_labels
   deletion_protection = var.deletion_protection
+  zone                = var.zone
 
   boot_disk {
     initialize_params {
       image  = var.source_image
       type   = var.disk_type
       size   = var.disk_size
-      labels = var.gcp_instance_labels
+      labels = var.gcp_disk_labels
     }
   }
 
@@ -107,12 +117,7 @@ resource "google_compute_instance" "this" {
     }
   }
 
-  metadata = {
-    user-data = templatefile("${path.module}/userdata.tftpl", {
-      join_token = local.join_token
-      tags       = local.tags
-    })
-  }
+  metadata = local.metadata
 }
 
 data "bloxone_infra_hosts" "this" {
