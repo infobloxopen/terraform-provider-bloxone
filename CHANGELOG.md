@@ -177,5 +177,5 @@ ENHANCEMENTS:
 
 ENHANCEMENTS:
 * Updated cloud modules (AWS, Azure, and GCP) along with their corresponding documentation ([#214](https://github.com/infobloxopen/terraform-provider-bloxone/pull/214))
-* Upgraded Terraform Plugin Framework to v1.5.1 ([#216](https://github.com/infobloxopen/terraform-provider-bloxone/pull/216))
+* Upgraded Terraform Plugin Framework to v1.15.1 ([#216](https://github.com/infobloxopen/terraform-provider-bloxone/pull/216))
 * Upgraded Terraform Plugin Testing to v1.13.3 ([#217](https://github.com/infobloxopen/terraform-provider-bloxone/pull/217))
