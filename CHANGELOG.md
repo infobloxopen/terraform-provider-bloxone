@@ -165,3 +165,10 @@ FEATURES:
 * **New Resource and Data Source:** `bloxone_keys_tsig`, `bloxone_keys_tsigs` ([#33](https://github.com/infobloxopen/terraform-provider-bloxone/pull/33))
 * **New Data Source:** `bloxone_keys_kerberos` ([#40](https://github.com/infobloxopen/terraform-provider-bloxone/pull/40))
 * `bloxone_infra_host_aws` module for provisioning BloxOne host in AWS ([#53](https://github.com/infobloxopen/terraform-provider-bloxone/pull/54))
+
+## v1.5.0 (June 30, 2025)
+
+ENHANCEMENTS:
+* Next available address block by tags ([#201](https://github.com/infobloxopen/terraform-provider-bloxone/pull/201))
+* Next available subnet by tags ([#202](https://github.com/infobloxopen/terraform-provider-bloxone/pull/202))
+* Next available IPs by tags ([#205](https://github.com/infobloxopen/terraform-provider-bloxone/pull/205))

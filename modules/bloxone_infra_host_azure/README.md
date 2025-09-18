@@ -15,6 +15,37 @@ The service will be named `<service_type>_<host_display_name>`.
 
 ## Example Usage
 
+### Provider Configuration
+```hcl
+terraform {
+  required_providers {
+    bloxone = {
+      source = "infobloxopen/bloxone"
+      # Other parameters
+    }
+    azurerm = {
+      source = "hashicorp/azurerm"
+    }
+  }
+}
+
+provider "azurerm" {
+  client_id = "<client-id>"
+  client_secret = "<client-secret>"
+  subscription_id = "<subscription-id>"
+  tenant_id = "<tenant-id>"
+
+  features {}
+  
+}
+
+provider "bloxone" {
+  csp_url = "<csp-url>"
+  api_key = "<api-key>"
+}
+```
+
+### Module Configuration
 ```hcl
 module "bloxone_infra_host_azure" {
   source = "github.com/infobloxopen/terraform-provider-bloxone//modules/bloxone_infra_host_azure"
@@ -25,6 +56,8 @@ module "bloxone_infra_host_azure" {
   subnet_id                 = "subnet-id"
   vnet_id                   = "vnet-id"
   vm_network_interface_ids  = ["nic-id"]
+
+ ssh_public_key_path = "${path.module}/<public-key-file>.pub"
 
   azure_instance_tags       = {
     environment = "dev"

@@ -13,8 +13,38 @@ A `tf_module_host_id` tag will be added to the tags variable so that the data so
 This module will also create a BloxOne Infra Service for each service type provided in the `services` variable.
 The service will be named `<service_type>_<host_display_name>`.
 
+If no image is available, it can be built by following the steps outlined in this documentation: https://docs.infoblox.com/space/BloxOneInfrastructure/350027851/Google+Cloud+Portal+(GCP)+Deployment
+
 ## Example Usage
 
+### Provider Configuration
+```hcl
+terraform {
+  required_providers {
+    bloxone = {
+      source = "infobloxopen/bloxone"
+    # Other parameters
+    }
+    google = {
+      source = "hashicorp/google"
+    }
+  }
+}
+
+provider "google" {
+  project     = "<gcp-project-id>"
+  credentials = file("<path-to-service-account-key>.json")  
+  region      = "<selected-region>"      
+  zone        = "<selected-zone>"    
+}
+
+provider "bloxone" {
+  csp_url = "<csp-url>" 
+  api_key = "<api-key>"           
+}
+```
+
+### Module Configuration
 ```hcl
 module "bloxone_infra_host_gcp" {
   source = "github.com/infobloxopen/terraform-provider-bloxone//modules/bloxone_infra_host_gcp"
@@ -38,8 +68,17 @@ module "bloxone_infra_host_gcp" {
     environment = "dev"
   }
 
+  gcp_disk_labels = {
+    environment = "dev"
+    module      = "bloxone"
+  }
+
   tags = {
     location = "office1"
+  }
+
+  metadata = {
+    purpose = "IaaC-testing"
   }
 
   services = {
@@ -83,6 +122,7 @@ module "bloxone_infra_host_gcp" {
 | <a name="input_disk_size"></a> [disk\_size](#input\_disk\_size) | The size of the data disk in GB. | `number` | `59` | no |
 | <a name="input_disk_type"></a> [disk\_type](#input\_disk\_type) | The type of the data disk. | `string` | `"pd-standard"` | no |
 | <a name="input_gcp_instance_labels"></a> [gcp\_instance\_labels](#input\_gcp\_instance\_labels) | The labels to associate with the virtual machine. For `tags` to be used for the BloxOne Host, use the `tags` variable. | `map(string)` | `{}` | no |
+| <a name="input_gcp_disk_labels"></a> [gcp\_disk\_labels](#input\_gcp\_disk\_labels) | The labels to associate with the virtual machine disks. | `map(string)` | `{}` | no |
 | <a name="input_join_token"></a> [join\_token](#input\_join\_token) | The join token to use for the BloxOne Host. If not provided, a join token will be created. | `string` | `null` | no |
 | <a name="input_machine_type"></a> [machine\_type](#input\_machine\_type) | The machine type to use for the virtual machine | `string` | `"e2-standard-4"` | no |
 | <a name="input_name"></a> [name](#input\_name) | The name of the virtual machine | `string` | n/a | yes |
@@ -93,6 +133,7 @@ module "bloxone_infra_host_gcp" {
 | <a name="input_tags"></a> [tags](#input\_tags) | The tags to use for the BloxOne Host. | `map(string)` | `{}` | no |
 | <a name="input_timeouts"></a> [timeouts](#input\_timeouts) | The timeouts to use for the BloxOne Host. The timeout value is a string that can be parsed as a duration consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). If not provided, the default timeouts will be used. | <pre>object({<br/>    create = string<br/>    update = string<br/>    read   = string<br/>  })</pre> | `null` | no |
 | <a name="input_wait_for_state"></a> [wait\_for\_state](#input\_wait\_for\_state) | If set to `true`, the resource will wait for the desired state to be reached before returning. If set to `false`, the resource will return immediately after the request is sent to the API. | `bool` | `null` | no |
+| <a name="input_zone"></a> [zone](#input\_zone) | (Optional) The zone that the machine should be created in. If it is not provided, the provider zone is used. | `map(string)` | `{}` | no |
 
 ## Outputs
 
