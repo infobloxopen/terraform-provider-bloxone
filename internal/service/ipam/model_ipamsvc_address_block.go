@@ -197,6 +197,9 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 			"  * _check_exists_with_dhcid_: This will check if there is an existing DHCID record but does not verify the value of the record matches the update. This will also update the DHCID record for the entry.\n" +
 			"  * _no_check_without_dhcid_: This ignores conflict detection and will not add a DHCID record when creating/updating a DDNS entry.\n" +
 			"  Defaults to _check_with_dhcid_.",
+		Validators: []validator.String{
+			stringvalidator.OneOf("check_with_dhcid", "no_check_with_dhcid", "check_exists_with_dhcid", "no_check_without_dhcid"),
+		},
 	},
 	"ddns_domain": schema.StringAttribute{
 		Optional:            true,
