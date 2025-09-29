@@ -153,7 +153,7 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 			"  * _no_check_without_dhcid_: This ignores conflict detection and will not add a DHCID record when creating/updating a DDNS entry.\n\n" +
 			"  Defaults to _check_with_dhcid_.",
 		Validators: []validator.String{
-			stringvalidator.OneOf("check_with_dhcid", "no_check_with_dhcid", "check_exists_with_dhcid"),
+			stringvalidator.OneOf("check_with_dhcid", "no_check_with_dhcid", "check_exists_with_dhcid", "no_check_without_dhcid"),
 		},
 	},
 	"ddns_domain": schema.StringAttribute{
