@@ -182,5 +182,5 @@ ENHANCEMENTS:
 ## v1.5.2 (September 30, 2025)
 
 FIXES:
-* Extended support for DDNS Conflict Resolution mode with option as no_check_without_dhcid in `bloxone_dhcp_server`, `bloxone_ipam_address_block`,`bloxone_ipam_subnet`,`bloxone_ipam_ip_space` 
+* Extended support for DDNS Conflict Resolution mode, with the option `no_check_without_dhcid` in `bloxone_dhcp_server`, `bloxone_ipam_address_block`,`bloxone_ipam_subnet`,`bloxone_ipam_ip_space` 
 ([#227](https://github.com/infobloxopen/terraform-provider-bloxone/pull/227))
