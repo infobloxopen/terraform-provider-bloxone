@@ -1,6 +1,6 @@
 module github.com/infobloxopen/terraform-provider-bloxone
 
-go 1.23.7
+go 1.24.0
 
 require (
 	github.com/hashicorp/terraform-plugin-docs v0.22.0

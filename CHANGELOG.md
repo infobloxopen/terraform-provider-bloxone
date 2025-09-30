@@ -178,3 +178,10 @@ ENHANCEMENTS:
 ENHANCEMENTS:
 * Updated cloud modules (AWS, Azure, and GCP) along with their corresponding documentation ([#214](https://github.com/infobloxopen/terraform-provider-bloxone/pull/214))
 * Upgraded Terraform Plugin Framework to v1.15.1 ([#216](https://github.com/infobloxopen/terraform-provider-bloxone/pull/216))
+
+## v1.5.2 (September 29, 2025)
+
+FIXES:
+* Extended support for DDNS Conflict Resolution mode with option as no_check_without_dhcid in `bloxone_dhcp_server`, `bloxone_ipam_address_block`,`bloxone_ipam_subnet`,`bloxone_ipam_ip_space` 
+([#227](https://github.com/infobloxopen/terraform-provider-bloxone/pull/227))
+* Upgraded Terraform Plugin Framework to v1.16.1 ([#228](https://github.com/infobloxopen/terraform-provider-bloxone/pull/228))
