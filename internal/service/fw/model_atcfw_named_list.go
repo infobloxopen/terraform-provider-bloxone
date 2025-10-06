@@ -198,7 +198,7 @@ func (m *AtcfwNamedListModel) Flatten(ctx context.Context, from *fw.NamedList, d
 	m.ItemCount = flex.FlattenInt32Pointer(from.ItemCount)
 	m.Items = flex.FlattenFrameworkListString(ctx, from.Items, diags)
 
-	// Properly flatten ItemsDescribed to UnorderedListValue
+	// Flatten ItemsDescribed to UnorderedListValue
 	itemsList := flex.FlattenFrameworkListNestedBlock(ctx, from.ItemsDescribed, AtcfwItemStructsAttrTypes, diags, FlattenAtcfwItemStructs)
 	if itemsList.IsNull() {
 		m.ItemsDescribed = internaltypes.NewUnorderedListValueNull(types.ObjectType{AttrTypes: AtcfwItemStructsAttrTypes})
