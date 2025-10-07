@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -27,11 +28,13 @@ var AtcfwItemStructsAttrTypes = map[string]attr.Type{
 var AtcfwItemStructsResourceSchemaAttributes = map[string]schema.Attribute{
 	"description": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The description of the item",
 	},
 	"item": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: "The data of the Item",
+		Required:            true,
+		MarkdownDescription: "The data of the Item. This can be a valid IP address with CIDR or a domain name.",
 	},
 }
 

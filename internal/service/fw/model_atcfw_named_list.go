@@ -13,28 +13,29 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/fw"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
-	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 type AtcfwNamedListModel struct {
-	ConfidenceLevel types.String                     `tfsdk:"confidence_level"`
-	CreatedTime     timetypes.RFC3339                `tfsdk:"created_time"`
-	Description     types.String                     `tfsdk:"description"`
-	Id              types.Int32                      `tfsdk:"id"`
-	ItemCount       types.Int32                      `tfsdk:"item_count"`
-	Items           types.List                       `tfsdk:"items"`
-	ItemsDescribed  internaltypes.UnorderedListValue `tfsdk:"items_described"`
-	Name            types.String                     `tfsdk:"name"`
-	Policies        types.List                       `tfsdk:"policies"`
-	Tags            types.Map                        `tfsdk:"tags"`
-	TagsAll         types.Map                        `tfsdk:"tags_all"`
-	ThreatLevel     types.String                     `tfsdk:"threat_level"`
-	Type            types.String                     `tfsdk:"type"`
-	UpdatedTime     timetypes.RFC3339                `tfsdk:"updated_time"`
+	ConfidenceLevel types.String      `tfsdk:"confidence_level"`
+	CreatedTime     timetypes.RFC3339 `tfsdk:"created_time"`
+	Description     types.String      `tfsdk:"description"`
+	Id              types.Int32       `tfsdk:"id"`
+	ItemCount       types.Int32       `tfsdk:"item_count"`
+	Items           types.List        `tfsdk:"items"`
+	ItemsDescribed  types.List        `tfsdk:"items_described"`
+	Name            types.String      `tfsdk:"name"`
+	Policies        types.List        `tfsdk:"policies"`
+	Tags            types.Map         `tfsdk:"tags"`
+	TagsAll         types.Map         `tfsdk:"tags_all"`
+	ThreatLevel     types.String      `tfsdk:"threat_level"`
+	Type            types.String      `tfsdk:"type"`
+	UpdatedTime     timetypes.RFC3339 `tfsdk:"updated_time"`
 }
 
 var AtcfwNamedListAttrTypes = map[string]attr.Type{
@@ -44,7 +45,7 @@ var AtcfwNamedListAttrTypes = map[string]attr.Type{
 	"id":               types.Int32Type,
 	"item_count":       types.Int32Type,
 	"items":            types.ListType{ElemType: types.StringType},
-	"items_described":  internaltypes.NewUnorderedListOfObjects(AtcfwItemStructsAttrTypes),
+	"items_described":  types.ListType{ElemType: types.ObjectType{AttrTypes: AtcfwItemStructsAttrTypes}},
 	"name":             types.StringType,
 	"policies":         types.ListType{ElemType: types.StringType},
 	"tags":             types.MapType{ElemType: types.StringType},
@@ -88,11 +89,11 @@ var AtcfwNamedListResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The list of the FQDN or IPv4/IPv6 CIDRs to define whitelists and blacklists for additional protection.",
 	},
 	"items_described": schema.ListNestedAttribute{
-		CustomType: internaltypes.NewUnorderedListOfObjects(AtcfwItemStructsAttrTypes),
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: AtcfwItemStructsResourceSchemaAttributes,
 		},
-		Required:            true,
+		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The List of ItemStructs structure which contains the item and its description",
 	},
 	"name": schema.StringAttribute{
@@ -141,33 +142,15 @@ func (m *AtcfwNamedListModel) Expand(ctx context.Context, diags *diag.Diagnostic
 		return nil
 	}
 
-	// Convert UnorderedListValue to regular ListValue for expansion
-	var itemsDescribedList types.List
-	if m.ItemsDescribed.IsNull() {
-		itemsDescribedList = types.ListNull(types.ObjectType{AttrTypes: AtcfwItemStructsAttrTypes})
-	} else if m.ItemsDescribed.IsUnknown() {
-		itemsDescribedList = types.ListUnknown(types.ObjectType{AttrTypes: AtcfwItemStructsAttrTypes})
-	} else {
-		// Convert UnorderedListValue to ListValue
-		listValue, d := m.ItemsDescribed.ToListValue(ctx)
-		diags.Append(d...)
-		if diags.HasError() {
-			itemsDescribedList = types.ListNull(types.ObjectType{AttrTypes: AtcfwItemStructsAttrTypes})
-		} else {
-			itemsDescribedList = listValue
-		}
-	}
-
 	to := &fw.NamedList{
 		ConfidenceLevel: flex.ExpandStringPointer(m.ConfidenceLevel),
 		Description:     flex.ExpandStringPointer(m.Description),
 		Items:           flex.ExpandFrameworkListString(ctx, m.Items, diags),
-		ItemsDescribed:  flex.ExpandFrameworkListNestedBlock(ctx, itemsDescribedList, diags, ExpandAtcfwItemStructs),
-		Name:            flex.ExpandStringPointer(m.Name),
-		Policies:        flex.ExpandFrameworkListString(ctx, m.Policies, diags),
-		Tags:            flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
-		ThreatLevel:     flex.ExpandStringPointer(m.ThreatLevel),
-		Type:            flex.ExpandStringPointer(m.Type),
+		ItemsDescribed:  flex.ExpandFrameworkListNestedBlock(ctx, m.ItemsDescribed, diags, ExpandAtcfwItemStructs), Name: flex.ExpandStringPointer(m.Name),
+		Policies:    flex.ExpandFrameworkListString(ctx, m.Policies, diags),
+		Tags:        flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
+		ThreatLevel: flex.ExpandStringPointer(m.ThreatLevel),
+		Type:        flex.ExpandStringPointer(m.Type),
 	}
 	return to
 }
@@ -197,19 +180,14 @@ func (m *AtcfwNamedListModel) Flatten(ctx context.Context, from *fw.NamedList, d
 	m.Id = flex.FlattenInt32Pointer(from.Id)
 	m.ItemCount = flex.FlattenInt32Pointer(from.ItemCount)
 	m.Items = flex.FlattenFrameworkListString(ctx, from.Items, diags)
-
-	// Flatten ItemsDescribed to UnorderedListValue
-	itemsList := flex.FlattenFrameworkListNestedBlock(ctx, from.ItemsDescribed, AtcfwItemStructsAttrTypes, diags, FlattenAtcfwItemStructs)
-	if itemsList.IsNull() {
-		m.ItemsDescribed = internaltypes.NewUnorderedListValueNull(types.ObjectType{AttrTypes: AtcfwItemStructsAttrTypes})
-	} else if itemsList.IsUnknown() {
-		m.ItemsDescribed = internaltypes.NewUnorderedListValueUnknown(types.ObjectType{AttrTypes: AtcfwItemStructsAttrTypes})
-	} else {
-		unorderedList, d := internaltypes.NewUnorderedListValueFrom(ctx, types.ObjectType{AttrTypes: AtcfwItemStructsAttrTypes}, itemsList.Elements())
-		diags.Append(d...)
-		m.ItemsDescribed = unorderedList
+	planList := m.ItemsDescribed
+	m.ItemsDescribed = flex.FlattenFrameworkListNestedBlock(ctx, from.ItemsDescribed, AtcfwItemStructsAttrTypes, diags, FlattenAtcfwItemStructs)
+	if !planList.IsUnknown() {
+		reOrderedList, diags := utils.ReorderAndFilterNestedListResponse(ctx, planList, m.ItemsDescribed, "item")
+		if !diags.HasError() {
+			m.ItemsDescribed = reOrderedList.(basetypes.ListValue)
+		}
 	}
-
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Policies = flex.FlattenFrameworkListString(ctx, from.Policies, diags)
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
@@ -231,7 +209,7 @@ func (m *AtcfwNamedListModel) FlattenRead(ctx context.Context, from *fw.NamedLis
 	m.Id = flex.FlattenInt32Pointer(from.Id)
 	m.ItemCount = flex.FlattenInt32Pointer(from.ItemCount)
 	m.Items = types.ListNull(types.StringType)
-	m.ItemsDescribed = internaltypes.NewUnorderedListValueNull(types.ObjectType{AttrTypes: AtcfwItemStructsAttrTypes})
+	m.ItemsDescribed = types.ListNull(types.ObjectType{AttrTypes: AtcfwItemStructsAttrTypes})
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Policies = flex.FlattenFrameworkListString(ctx, from.Policies, diags)
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)

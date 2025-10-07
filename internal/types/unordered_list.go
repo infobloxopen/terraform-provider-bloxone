@@ -178,7 +178,3 @@ func NewUnorderedListValueFrom(ctx context.Context, elemType attr.Type, elements
 
 	return UnorderedListValue{ListValue: v}, diags
 }
-
-func NewUnorderedListOfObjects(attrTypes map[string]attr.Type) UnorderedList {
-	return UnorderedList{basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: attrTypes}}}
-}
