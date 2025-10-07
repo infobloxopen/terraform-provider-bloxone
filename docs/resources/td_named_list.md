@@ -38,13 +38,13 @@ resource "bloxone_td_named_list" "example" {
 
 ### Required
 
-- `items_described` (Attributes List) The List of ItemStructs structure which contains the item and its description (see [below for nested schema](#nestedatt--items_described))
 - `name` (String) The name of the named list.
 
 ### Optional
 
 - `confidence_level` (String) The confidence level for a custom list. The possible values are ["LOW", "MEDIUM", "HIGH"]
 - `description` (String) The brief description for the named list.
+- `items_described` (Attributes List) The List of ItemStructs structure which contains the item and its description (see [below for nested schema](#nestedatt--items_described))
 - `tags` (Map of String) The tags for the named list.
 - `threat_level` (String) The threat level for a custom list. The possible values are ["INFO", "LOW", "MEDIUM", "HIGH"]
 - `type` (String) The type of the named list, that can be "custom_list", "threat_insight", "fast_flux", "dga", "dnsm", "threat_insight_nde", "default_allow", "default_block" or "threat_insight_nde".
@@ -62,7 +62,10 @@ resource "bloxone_td_named_list" "example" {
 <a id="nestedatt--items_described"></a>
 ### Nested Schema for `items_described`
 
+Required:
+
+- `item` (String) The data of the Item. This can be a valid IP address with CIDR or a domain name.
+
 Optional:
 
 - `description` (String) The description of the item
-- `item` (String) The data of the Item
