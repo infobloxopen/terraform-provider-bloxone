@@ -34,7 +34,7 @@ var AtcfwItemStructsResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"item": schema.StringAttribute{
 		Required:            true,
-		MarkdownDescription: "The data of the Item. This can be a valid IP address with CIDR or a domain name.",
+		MarkdownDescription: "The data of the Item.",
 	},
 }
 

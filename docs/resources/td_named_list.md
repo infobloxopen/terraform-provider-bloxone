@@ -64,7 +64,7 @@ resource "bloxone_td_named_list" "example" {
 
 Required:
 
-- `item` (String) The data of the Item. This can be a valid IP address with CIDR or a domain name.
+- `item` (String) The data of the Item.
 
 Optional:
 

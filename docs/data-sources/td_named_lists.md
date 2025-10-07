@@ -67,7 +67,7 @@ Read-Only:
 
 Required:
 
-- `item` (String) The data of the Item. This can be a valid IP address with CIDR or a domain name.
+- `item` (String) The data of the Item.
 
 Optional:
 
