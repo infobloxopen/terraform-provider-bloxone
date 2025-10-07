@@ -67,7 +67,7 @@ Read-Only:
 
 Required:
 
-- `item` (String) The data of the Item.
+- `item` (String) The data of the Item
 
 Optional:
 

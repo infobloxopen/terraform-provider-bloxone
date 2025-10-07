@@ -34,7 +34,7 @@ var AtcfwItemStructsResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"item": schema.StringAttribute{
 		Required:            true,
-		MarkdownDescription: "The data of the Item.",
+		MarkdownDescription: "The data of the Item",
 	},
 }
 
