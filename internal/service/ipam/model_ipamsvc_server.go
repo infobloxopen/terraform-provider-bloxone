@@ -4,13 +4,14 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
@@ -206,11 +207,13 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: IpamsvcDDNSZoneResourceSchemaAttributes,
 		},
-		Optional:            true,
-		MarkdownDescription: "The DNS zones that DDNS updates can be sent to. There is no resolver fallback. The target zone must be explicitly configured for the update to be performed.  Updates are sent to the closest enclosing zone.  Error if _ddns_enabled_ is _true_ and the _ddns_domain_ does not have a corresponding entry in _ddns_zones_.  Error if there are items with duplicate zone in the list.  Defaults to empty list.",
-		PlanModifiers: []planmodifier.List{
-			listplanmodifier.RequiresReplaceIfConfigured(),
+		Optional: true,
+		Computed: true,
+		Default:  listdefault.StaticValue(types.ListNull(types.ObjectType{AttrTypes: IpamsvcDDNSZoneAttrTypes})),
+		Validators: []validator.List{
+			listvalidator.SizeAtLeast(1),
 		},
+		MarkdownDescription: "The DNS zones that DDNS updates can be sent to. There is no resolver fallback. The target zone must be explicitly configured for the update to be performed.  Updates are sent to the closest enclosing zone.  Error if _ddns_enabled_ is _true_ and the _ddns_domain_ does not have a corresponding entry in _ddns_zones_.  Error if there are items with duplicate zone in the list.  Defaults to empty list.",
 	},
 	"dhcp_config": schema.SingleNestedAttribute{
 		Attributes: IpamsvcDHCPConfigResourceSchemaAttributes(false),
@@ -401,7 +404,7 @@ func (m *IpamsvcServerModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		DdnsTtlPercent:                  flex.ExpandFloat32Pointer(m.DdnsTtlPercent),
 		DdnsUpdateOnRenew:               flex.ExpandBoolPointer(m.DdnsUpdateOnRenew),
 		DdnsUseConflictResolution:       flex.ExpandBoolPointer(m.DdnsUseConflictResolution),
-		DdnsZones:                       flex.ExpandFrameworkListNestedBlock(ctx, m.DdnsZones, diags, ExpandIpamsvcDDNSZone),
+		DdnsZones:                       flex.ExpandFrameworkListNestedBlockEmptyAsNil(ctx, m.DdnsZones, diags, ExpandIpamsvcDDNSZone),
 		DhcpConfig:                      ExpandIpamsvcDHCPConfig(ctx, m.DhcpConfig, diags),
 		DhcpOptions:                     flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
 		DhcpOptionsV6:                   flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptionsV6, diags, ExpandIpamsvcOptionItem),

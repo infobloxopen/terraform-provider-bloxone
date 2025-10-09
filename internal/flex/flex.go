@@ -311,6 +311,24 @@ func ExpandFrameworkListNestedBlock[T any, U any](ctx context.Context, tfList in
 
 }
 
+func ExpandFrameworkListNestedBlockEmptyAsNil[T any, U any](ctx context.Context, tfList interface {
+	basetypes.ListValuable
+	ElementsAs(ctx context.Context, target interface{}, allowUnhandled bool) diag.Diagnostics
+}, diags *diag.Diagnostics, f FrameworkElementFlExFunc[T, *U]) []U {
+	if tfList.IsNull() || tfList.IsUnknown() {
+		return make([]U, 0)
+	}
+
+	var data []T
+
+	diags.Append(tfList.ElementsAs(ctx, &data, false)...)
+
+	return ApplyToAll(data, func(t T) U {
+		return *f(ctx, t, diags)
+	})
+
+}
+
 func ExpandFrameworkMapFilterString(ctx context.Context, tfMap types.Map, diags *diag.Diagnostics) string {
 	if tfMap.IsNull() || tfMap.IsUnknown() {
 		return ""
