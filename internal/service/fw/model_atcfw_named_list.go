@@ -146,11 +146,12 @@ func (m *AtcfwNamedListModel) Expand(ctx context.Context, diags *diag.Diagnostic
 		ConfidenceLevel: flex.ExpandStringPointer(m.ConfidenceLevel),
 		Description:     flex.ExpandStringPointer(m.Description),
 		Items:           flex.ExpandFrameworkListString(ctx, m.Items, diags),
-		ItemsDescribed:  flex.ExpandFrameworkListNestedBlock(ctx, m.ItemsDescribed, diags, ExpandAtcfwItemStructs), Name: flex.ExpandStringPointer(m.Name),
-		Policies:    flex.ExpandFrameworkListString(ctx, m.Policies, diags),
-		Tags:        flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
-		ThreatLevel: flex.ExpandStringPointer(m.ThreatLevel),
-		Type:        flex.ExpandStringPointer(m.Type),
+		ItemsDescribed:  flex.ExpandFrameworkListNestedBlock(ctx, m.ItemsDescribed, diags, ExpandAtcfwItemStructs),
+		Name:            flex.ExpandStringPointer(m.Name),
+		Policies:        flex.ExpandFrameworkListString(ctx, m.Policies, diags),
+		Tags:            flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
+		ThreatLevel:     flex.ExpandStringPointer(m.ThreatLevel),
+		Type:            flex.ExpandStringPointer(m.Type),
 	}
 	return to
 }
