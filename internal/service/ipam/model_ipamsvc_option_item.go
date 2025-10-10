@@ -35,6 +35,7 @@ var IpamsvcOptionItemAttrTypes = map[string]attr.Type{
 var IpamsvcOptionItemResourceSchemaAttributes = map[string]schema.Attribute{
 	"group": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
 		Validators: []validator.String{
 			stringvalidator.ExactlyOneOf(path.MatchRelative().AtParent().AtName("option_code"), path.MatchRelative().AtParent().AtName("group")),
 		},
@@ -42,6 +43,7 @@ var IpamsvcOptionItemResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"option_code": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
 		Validators: []validator.String{
 			stringvalidator.ExactlyOneOf(path.MatchRelative().AtParent().AtName("option_code"), path.MatchRelative().AtParent().AtName("group")),
 		},
@@ -58,6 +60,7 @@ var IpamsvcOptionItemResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"type": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
 		Validators: []validator.String{
 			stringvalidator.OneOf("group", "option"),
 		},
