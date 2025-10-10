@@ -51,7 +51,6 @@ var IpamsvcInheritedDHCPOptionResourceSchemaAttributes = map[string]schema.Attri
 	"value": schema.SingleNestedAttribute{
 		Attributes: utils.ToComputedAttributeMap(IpamsvcInheritedDHCPOptionItemResourceSchemaAttributes),
 		Computed:   true,
-		Optional:   true,
 		PlanModifiers: []planmodifier.Object{
 			objectplanmodifier.UseStateForUnknown(),
 		},
