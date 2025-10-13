@@ -6,8 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -28,12 +26,9 @@ var IpamsvcInheritedDHCPOptionItemAttrTypes = map[string]attr.Type{
 
 var IpamsvcInheritedDHCPOptionItemResourceSchemaAttributes = map[string]schema.Attribute{
 	"option": schema.SingleNestedAttribute{
-		Attributes: IpamsvcOptionItemResourceSchemaAttributes,
-		Optional:   true,
-		Computed:   true,
-		PlanModifiers: []planmodifier.Object{
-			objectplanmodifier.UseStateForUnknown(),
-		},
+		Attributes:          IpamsvcOptionItemResourceSchemaAttributes,
+		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Option inherited from the ancestor.",
 	},
 	"overriding_group": schema.StringAttribute{
