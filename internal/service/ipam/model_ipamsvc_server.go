@@ -404,7 +404,7 @@ func (m *IpamsvcServerModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		DdnsTtlPercent:                  flex.ExpandFloat32Pointer(m.DdnsTtlPercent),
 		DdnsUpdateOnRenew:               flex.ExpandBoolPointer(m.DdnsUpdateOnRenew),
 		DdnsUseConflictResolution:       flex.ExpandBoolPointer(m.DdnsUseConflictResolution),
-		DdnsZones:                       flex.ExpandFrameworkListNestedBlockEmptyAsNil(ctx, m.DdnsZones, diags, ExpandIpamsvcDDNSZone),
+		DdnsZones:                       flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.DdnsZones, diags, ExpandIpamsvcDDNSZone),
 		DhcpConfig:                      ExpandIpamsvcDHCPConfig(ctx, m.DhcpConfig, diags),
 		DhcpOptions:                     flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
 		DhcpOptionsV6:                   flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptionsV6, diags, ExpandIpamsvcOptionItem),

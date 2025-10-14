@@ -311,7 +311,7 @@ func ExpandFrameworkListNestedBlock[T any, U any](ctx context.Context, tfList in
 
 }
 
-func ExpandFrameworkListNestedBlockEmptyAsNil[T any, U any](ctx context.Context, tfList interface {
+func ExpandFrameworkListNestedBlockNilAsEmpty[T any, U any](ctx context.Context, tfList interface {
 	basetypes.ListValuable
 	ElementsAs(ctx context.Context, target interface{}, allowUnhandled bool) diag.Diagnostics
 }, diags *diag.Diagnostics, f FrameworkElementFlExFunc[T, *U]) []U {
