@@ -49,7 +49,6 @@ var IpamsvcOptionItemResourceSchemaAttributes = map[string]schema.Attribute{
 	"option_value": schema.StringAttribute{
 		Optional: true,
 		Computed: true,
-		//Default:  stringdefault.StaticString(""),
 		Validators: []validator.String{
 			stringvalidator.AlsoRequires(path.MatchRelative().AtParent().AtName("option_code")),
 		},
