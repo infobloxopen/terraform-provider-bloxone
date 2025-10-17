@@ -8,9 +8,11 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	datasourceschema "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	resourceschema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
@@ -404,4 +406,73 @@ func ExtractAvailableCountFromError(body []byte) int32 {
 		}
 	}
 	return 0
+}
+
+// ReorderAndFilterNestedListResponse reorders and filters the state list to match the order of the plan list based on a primary key field.
+func ReorderAndFilterNestedListResponse(
+	ctx context.Context,
+	planValue attr.Value,
+	stateValue attr.Value,
+	primaryKey string,
+) (attr.Value, *diag.Diagnostics) {
+
+	var diags diag.Diagnostics
+
+	if planValue.IsNull() || planValue.IsUnknown() {
+		return stateValue, &diags
+	}
+	if stateValue.IsNull() || stateValue.IsUnknown() {
+		return planValue, &diags
+	}
+
+	planList, ok := planValue.(basetypes.ListValue)
+	if !ok {
+		diags.AddError("Type Error", "planValue must be a ListValue")
+		return stateValue, &diags
+	}
+	stateList, ok := stateValue.(basetypes.ListValue)
+	if !ok {
+		diags.AddError("Type Error", "stateValue must be a ListValue")
+		return planValue, &diags
+	}
+
+	// Convert state list into a lookup by primary key
+	stateMap := make(map[string]attr.Value)
+	for _, elem := range stateList.Elements() {
+		obj := elem.(basetypes.ObjectValue)
+		keyAttr, ok := obj.Attributes()[primaryKey]
+		if !ok {
+			diags.AddError("Missing Primary Key", fmt.Sprintf("State object missing primary key: %s", primaryKey))
+			continue
+		}
+		if keyAttr.IsNull() || keyAttr.IsUnknown() {
+			continue
+		}
+		key := keyAttr.(basetypes.StringValue).ValueString()
+		stateMap[key] = elem
+	}
+
+	// Rebuild state list in the same order as plan
+	var reordered []attr.Value
+	for _, elem := range planList.Elements() {
+		obj := elem.(basetypes.ObjectValue)
+		keyAttr := obj.Attributes()[primaryKey]
+		if keyAttr.IsNull() || keyAttr.IsUnknown() {
+			continue
+		}
+		key := keyAttr.(basetypes.StringValue).ValueString()
+
+		// Use existing state object if found, else use planned object
+		if stateObj, exists := stateMap[key]; exists {
+			reordered = append(reordered, stateObj)
+		} else {
+			reordered = append(reordered, elem)
+		}
+	}
+
+	// Build new ListValue
+	newList, d := basetypes.NewListValue(planList.ElementType(ctx), reordered)
+	diags.Append(d...)
+
+	return newList, &diags
 }
