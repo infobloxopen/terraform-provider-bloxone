@@ -1,7 +1,7 @@
 /*
 IP Address Management API
 
-The IPAM/DHCP Application is a BloxOne DDI service providing IP address management and DHCP protocol features. The IPAM component provides visibility into and provisioning tools to manage networking spaces, monitoring and reporting of entire IP address infrastructures, and integration with DNS and DHCP protocols. The DHCP component provides DHCP protocol configuration service with on-prem host serving DHCP protocol. It is part of the full-featured, DDI cloud solution that enables customers to deploy large numbers of protocol servers to deliver DNS and DHCP throughout their enterprise network.
+The IPAM/DHCP Application is a Universal DDI service providing IP address management and DHCP protocol features. The IPAM component provides visibility into and provisioning tools to manage networking spaces, monitoring and reporting of entire IP address infrastructures, and integration with DNS and DHCP protocols. The DHCP component provides DHCP protocol configuration service with on-prem host serving DHCP protocol. It is part of the full-featured, DDI cloud solution that enables customers to deploy large numbers of protocol servers to deliver DNS and DHCP throughout their enterprise network.
 
 API version: v1
 */
@@ -27,12 +27,18 @@ type InheritedDHCPConfig struct {
 	AllowUnknown *InheritanceInheritedBool `json:"allow_unknown,omitempty"`
 	// The inheritance configuration for _allow_unknown_v6_ field from _DHCPConfig_ object.
 	AllowUnknownV6 *InheritanceInheritedBool `json:"allow_unknown_v6,omitempty"`
+	// The inheritance configuration for _authoritative_dhcp_ field from _DHCPConfig_ object.
+	AuthoritativeDhcp *InheritanceInheritedBool `json:"authoritative_dhcp,omitempty"`
 	// The inheritance configuration for _echo_client_id_ field from _DHCPConfig_ object.
 	EchoClientId *InheritanceInheritedBool `json:"echo_client_id,omitempty"`
 	// The inheritance configuration for filters field from _DHCPConfig_ object.
 	Filters *InheritedDHCPConfigFilterList `json:"filters,omitempty"`
 	// The inheritance configuration for _filters_v6_ field from _DHCPConfig_ object.
 	FiltersV6 *InheritedDHCPConfigFilterList `json:"filters_v6,omitempty"`
+	// The inheritance configuration for _hold_reclaimed_time_ field from _DHCPConfig_ object.
+	HoldReclaimedTime *InheritanceInheritedUInt32 `json:"hold_reclaimed_time,omitempty"`
+	// The inheritance configuration for _hold_reclaimed_time_v6_ field from _DHCPConfig_ object.
+	HoldReclaimedTimeV6 *InheritanceInheritedUInt32 `json:"hold_reclaimed_time_v6,omitempty"`
 	// The inheritance configuration for _ignore_client_uid_ field from _DHCPConfig_ object.
 	IgnoreClientUid *InheritanceInheritedBool `json:"ignore_client_uid,omitempty"`
 	// The inheritance configuration for _ignore_list_ field from _DHCPConfig_ object.
@@ -191,6 +197,38 @@ func (o *InheritedDHCPConfig) SetAllowUnknownV6(v InheritanceInheritedBool) {
 	o.AllowUnknownV6 = &v
 }
 
+// GetAuthoritativeDhcp returns the AuthoritativeDhcp field value if set, zero value otherwise.
+func (o *InheritedDHCPConfig) GetAuthoritativeDhcp() InheritanceInheritedBool {
+	if o == nil || IsNil(o.AuthoritativeDhcp) {
+		var ret InheritanceInheritedBool
+		return ret
+	}
+	return *o.AuthoritativeDhcp
+}
+
+// GetAuthoritativeDhcpOk returns a tuple with the AuthoritativeDhcp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InheritedDHCPConfig) GetAuthoritativeDhcpOk() (*InheritanceInheritedBool, bool) {
+	if o == nil || IsNil(o.AuthoritativeDhcp) {
+		return nil, false
+	}
+	return o.AuthoritativeDhcp, true
+}
+
+// HasAuthoritativeDhcp returns a boolean if a field has been set.
+func (o *InheritedDHCPConfig) HasAuthoritativeDhcp() bool {
+	if o != nil && !IsNil(o.AuthoritativeDhcp) {
+		return true
+	}
+
+	return false
+}
+
+// SetAuthoritativeDhcp gets a reference to the given InheritanceInheritedBool and assigns it to the AuthoritativeDhcp field.
+func (o *InheritedDHCPConfig) SetAuthoritativeDhcp(v InheritanceInheritedBool) {
+	o.AuthoritativeDhcp = &v
+}
+
 // GetEchoClientId returns the EchoClientId field value if set, zero value otherwise.
 func (o *InheritedDHCPConfig) GetEchoClientId() InheritanceInheritedBool {
 	if o == nil || IsNil(o.EchoClientId) {
@@ -285,6 +323,70 @@ func (o *InheritedDHCPConfig) HasFiltersV6() bool {
 // SetFiltersV6 gets a reference to the given InheritedDHCPConfigFilterList and assigns it to the FiltersV6 field.
 func (o *InheritedDHCPConfig) SetFiltersV6(v InheritedDHCPConfigFilterList) {
 	o.FiltersV6 = &v
+}
+
+// GetHoldReclaimedTime returns the HoldReclaimedTime field value if set, zero value otherwise.
+func (o *InheritedDHCPConfig) GetHoldReclaimedTime() InheritanceInheritedUInt32 {
+	if o == nil || IsNil(o.HoldReclaimedTime) {
+		var ret InheritanceInheritedUInt32
+		return ret
+	}
+	return *o.HoldReclaimedTime
+}
+
+// GetHoldReclaimedTimeOk returns a tuple with the HoldReclaimedTime field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InheritedDHCPConfig) GetHoldReclaimedTimeOk() (*InheritanceInheritedUInt32, bool) {
+	if o == nil || IsNil(o.HoldReclaimedTime) {
+		return nil, false
+	}
+	return o.HoldReclaimedTime, true
+}
+
+// HasHoldReclaimedTime returns a boolean if a field has been set.
+func (o *InheritedDHCPConfig) HasHoldReclaimedTime() bool {
+	if o != nil && !IsNil(o.HoldReclaimedTime) {
+		return true
+	}
+
+	return false
+}
+
+// SetHoldReclaimedTime gets a reference to the given InheritanceInheritedUInt32 and assigns it to the HoldReclaimedTime field.
+func (o *InheritedDHCPConfig) SetHoldReclaimedTime(v InheritanceInheritedUInt32) {
+	o.HoldReclaimedTime = &v
+}
+
+// GetHoldReclaimedTimeV6 returns the HoldReclaimedTimeV6 field value if set, zero value otherwise.
+func (o *InheritedDHCPConfig) GetHoldReclaimedTimeV6() InheritanceInheritedUInt32 {
+	if o == nil || IsNil(o.HoldReclaimedTimeV6) {
+		var ret InheritanceInheritedUInt32
+		return ret
+	}
+	return *o.HoldReclaimedTimeV6
+}
+
+// GetHoldReclaimedTimeV6Ok returns a tuple with the HoldReclaimedTimeV6 field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InheritedDHCPConfig) GetHoldReclaimedTimeV6Ok() (*InheritanceInheritedUInt32, bool) {
+	if o == nil || IsNil(o.HoldReclaimedTimeV6) {
+		return nil, false
+	}
+	return o.HoldReclaimedTimeV6, true
+}
+
+// HasHoldReclaimedTimeV6 returns a boolean if a field has been set.
+func (o *InheritedDHCPConfig) HasHoldReclaimedTimeV6() bool {
+	if o != nil && !IsNil(o.HoldReclaimedTimeV6) {
+		return true
+	}
+
+	return false
+}
+
+// SetHoldReclaimedTimeV6 gets a reference to the given InheritanceInheritedUInt32 and assigns it to the HoldReclaimedTimeV6 field.
+func (o *InheritedDHCPConfig) SetHoldReclaimedTimeV6(v InheritanceInheritedUInt32) {
+	o.HoldReclaimedTimeV6 = &v
 }
 
 // GetIgnoreClientUid returns the IgnoreClientUid field value if set, zero value otherwise.
@@ -437,6 +539,9 @@ func (o InheritedDHCPConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.AllowUnknownV6) {
 		toSerialize["allow_unknown_v6"] = o.AllowUnknownV6
 	}
+	if !IsNil(o.AuthoritativeDhcp) {
+		toSerialize["authoritative_dhcp"] = o.AuthoritativeDhcp
+	}
 	if !IsNil(o.EchoClientId) {
 		toSerialize["echo_client_id"] = o.EchoClientId
 	}
@@ -445,6 +550,12 @@ func (o InheritedDHCPConfig) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.FiltersV6) {
 		toSerialize["filters_v6"] = o.FiltersV6
+	}
+	if !IsNil(o.HoldReclaimedTime) {
+		toSerialize["hold_reclaimed_time"] = o.HoldReclaimedTime
+	}
+	if !IsNil(o.HoldReclaimedTimeV6) {
+		toSerialize["hold_reclaimed_time_v6"] = o.HoldReclaimedTimeV6
 	}
 	if !IsNil(o.IgnoreClientUid) {
 		toSerialize["ignore_client_uid"] = o.IgnoreClientUid
@@ -484,9 +595,12 @@ func (o *InheritedDHCPConfig) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "abandoned_reclaim_time_v6")
 		delete(additionalProperties, "allow_unknown")
 		delete(additionalProperties, "allow_unknown_v6")
+		delete(additionalProperties, "authoritative_dhcp")
 		delete(additionalProperties, "echo_client_id")
 		delete(additionalProperties, "filters")
 		delete(additionalProperties, "filters_v6")
+		delete(additionalProperties, "hold_reclaimed_time")
+		delete(additionalProperties, "hold_reclaimed_time_v6")
 		delete(additionalProperties, "ignore_client_uid")
 		delete(additionalProperties, "ignore_list")
 		delete(additionalProperties, "lease_time")

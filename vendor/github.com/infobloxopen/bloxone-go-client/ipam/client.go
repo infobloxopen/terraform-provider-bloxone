@@ -1,7 +1,7 @@
 /*
 IP Address Management API
 
-The IPAM/DHCP Application is a BloxOne DDI service providing IP address management and DHCP protocol features. The IPAM component provides visibility into and provisioning tools to manage networking spaces, monitoring and reporting of entire IP address infrastructures, and integration with DNS and DHCP protocols. The DHCP component provides DHCP protocol configuration service with on-prem host serving DHCP protocol. It is part of the full-featured, DDI cloud solution that enables customers to deploy large numbers of protocol servers to deliver DNS and DHCP throughout their enterprise network.
+The IPAM/DHCP Application is a Universal DDI service providing IP address management and DHCP protocol features. The IPAM component provides visibility into and provisioning tools to manage networking spaces, monitoring and reporting of entire IP address infrastructures, and integration with DNS and DHCP protocols. The DHCP component provides DHCP protocol configuration service with on-prem host serving DHCP protocol. It is part of the full-featured, DDI cloud solution that enables customers to deploy large numbers of protocol servers to deliver DNS and DHCP throughout their enterprise network.
 
 API version: v1
 */
@@ -23,29 +23,29 @@ type APIClient struct {
 	*internal.APIClient
 
 	// API Services
-	AddressAPI        AddressAPI
-	AddressBlockAPI   AddressBlockAPI
-	AsmAPI            AsmAPI
-	ConfigProfileAPI  ConfigProfileAPI
-	DhcpHostAPI       DhcpHostAPI
-	DnsUsageAPI       DnsUsageAPI
-	FilterAPI         FilterAPI
-	FixedAddressAPI   FixedAddressAPI
-	GlobalAPI         GlobalAPI
-	HaGroupAPI        HaGroupAPI
+	AddressAPI AddressAPI
+	AddressBlockAPI AddressBlockAPI
+	AsmAPI AsmAPI
+	ConfigProfileAPI ConfigProfileAPI
+	DhcpHostAPI DhcpHostAPI
+	DnsUsageAPI DnsUsageAPI
+	FilterAPI FilterAPI
+	FixedAddressAPI FixedAddressAPI
+	GlobalAPI GlobalAPI
+	HaGroupAPI HaGroupAPI
 	HardwareFilterAPI HardwareFilterAPI
-	IpSpaceAPI        IpSpaceAPI
-	IpamHostAPI       IpamHostAPI
-	LeasesCommandAPI  LeasesCommandAPI
+	IpSpaceAPI IpSpaceAPI
+	IpamHostAPI IpamHostAPI
+	LeasesCommandAPI LeasesCommandAPI
 	MacAddressItemAPI MacAddressItemAPI
-	OptionCodeAPI     OptionCodeAPI
-	OptionFilterAPI   OptionFilterAPI
-	OptionGroupAPI    OptionGroupAPI
-	OptionSpaceAPI    OptionSpaceAPI
-	RangeAPI          RangeAPI
-	ServerAPI         ServerAPI
-	ServiceAPI        ServiceAPI
-	SubnetAPI         SubnetAPI
+	OptionCodeAPI OptionCodeAPI
+	OptionFilterAPI OptionFilterAPI
+	OptionGroupAPI OptionGroupAPI
+	OptionSpaceAPI OptionSpaceAPI
+	RangeAPI RangeAPI
+	ServerAPI ServerAPI
+	ServiceAPI ServiceAPI
+	SubnetAPI SubnetAPI
 }
 
 // NewAPIClient creates a new API client.
