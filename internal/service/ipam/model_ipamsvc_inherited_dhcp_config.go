@@ -17,9 +17,12 @@ type IpamsvcInheritedDHCPConfigModel struct {
 	AbandonedReclaimTimeV6 types.Object `tfsdk:"abandoned_reclaim_time_v6"`
 	AllowUnknown           types.Object `tfsdk:"allow_unknown"`
 	AllowUnknownV6         types.Object `tfsdk:"allow_unknown_v6"`
+	AuthoritativeDhcp      types.Object `tfsdk:"authoritative_dhcp"`
 	EchoClientId           types.Object `tfsdk:"echo_client_id"`
 	Filters                types.Object `tfsdk:"filters"`
 	FiltersV6              types.Object `tfsdk:"filters_v6"`
+	HoldReclaimedTime      types.Object `tfsdk:"hold_reclaimed_time"`
+	HoldReclaimedTimeV6    types.Object `tfsdk:"hold_reclaimed_time_v6"`
 	IgnoreClientUid        types.Object `tfsdk:"ignore_client_uid"`
 	IgnoreList             types.Object `tfsdk:"ignore_list"`
 	LeaseTime              types.Object `tfsdk:"lease_time"`
@@ -31,9 +34,12 @@ var IpamsvcInheritedDHCPConfigAttrTypes = map[string]attr.Type{
 	"abandoned_reclaim_time_v6": types.ObjectType{AttrTypes: InheritanceInheritedUInt32AttrTypes},
 	"allow_unknown":             types.ObjectType{AttrTypes: InheritanceInheritedBoolAttrTypes},
 	"allow_unknown_v6":          types.ObjectType{AttrTypes: InheritanceInheritedBoolAttrTypes},
+	"authoritative_dhcp":        types.ObjectType{AttrTypes: InheritanceInheritedBoolAttrTypes},
 	"echo_client_id":            types.ObjectType{AttrTypes: InheritanceInheritedBoolAttrTypes},
 	"filters":                   types.ObjectType{AttrTypes: InheritedDHCPConfigFilterListAttrTypes},
 	"filters_v6":                types.ObjectType{AttrTypes: InheritedDHCPConfigFilterListAttrTypes},
+	"hold_reclaimed_time":       types.ObjectType{AttrTypes: InheritanceInheritedUInt32AttrTypes},
+	"hold_reclaimed_time_v6":    types.ObjectType{AttrTypes: InheritanceInheritedUInt32AttrTypes},
 	"ignore_client_uid":         types.ObjectType{AttrTypes: InheritanceInheritedBoolAttrTypes},
 	"ignore_list":               types.ObjectType{AttrTypes: InheritedDHCPConfigIgnoreItemListAttrTypes},
 	"lease_time":                types.ObjectType{AttrTypes: InheritanceInheritedUInt32AttrTypes},
@@ -65,6 +71,12 @@ var IpamsvcInheritedDHCPConfigResourceSchemaAttributes = map[string]schema.Attri
 		Computed:            true,
 		MarkdownDescription: "The inheritance configuration for _allow_unknown_v6_ field from _DHCPConfig_ object.",
 	},
+	"authoritative_dhcp": schema.SingleNestedAttribute{
+		Attributes:          InheritanceInheritedBoolResourceSchemaAttributes,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "Set DHCP server as authoritative.",
+	},
 	"echo_client_id": schema.SingleNestedAttribute{
 		Attributes:          InheritanceInheritedBoolResourceSchemaAttributes,
 		Optional:            true,
@@ -82,6 +94,18 @@ var IpamsvcInheritedDHCPConfigResourceSchemaAttributes = map[string]schema.Attri
 		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "The inheritance configuration for _filters_v6_ field from _DHCPConfig_ object.",
+	},
+	"hold_reclaimed_time": schema.SingleNestedAttribute{
+		Attributes:          InheritanceInheritedUInt32ResourceSchemaAttributes,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "The hold reclaimed time in seconds for IPV4 clients.",
+	},
+	"hold_reclaimed_time_v6": schema.SingleNestedAttribute{
+		Attributes:          InheritanceInheritedUInt32ResourceSchemaAttributes,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "The hold reclaimed time in seconds for IPV6 clients.",
 	},
 	"ignore_client_uid": schema.SingleNestedAttribute{
 		Attributes:          InheritanceInheritedBoolResourceSchemaAttributes,
@@ -130,9 +154,12 @@ func (m *IpamsvcInheritedDHCPConfigModel) Expand(ctx context.Context, diags *dia
 		AbandonedReclaimTimeV6: ExpandInheritanceInheritedUInt32(ctx, m.AbandonedReclaimTimeV6, diags),
 		AllowUnknown:           ExpandInheritanceInheritedBool(ctx, m.AllowUnknown, diags),
 		AllowUnknownV6:         ExpandInheritanceInheritedBool(ctx, m.AllowUnknownV6, diags),
+		AuthoritativeDhcp:      ExpandInheritanceInheritedBool(ctx, m.AuthoritativeDhcp, diags),
 		EchoClientId:           ExpandInheritanceInheritedBool(ctx, m.EchoClientId, diags),
 		Filters:                ExpandInheritedDHCPConfigFilterList(ctx, m.Filters, diags),
 		FiltersV6:              ExpandInheritedDHCPConfigFilterList(ctx, m.FiltersV6, diags),
+		HoldReclaimedTime:      ExpandInheritanceInheritedUInt32(ctx, m.HoldReclaimedTime, diags),
+		HoldReclaimedTimeV6:    ExpandInheritanceInheritedUInt32(ctx, m.HoldReclaimedTime, diags),
 		IgnoreClientUid:        ExpandInheritanceInheritedBool(ctx, m.IgnoreClientUid, diags),
 		IgnoreList:             ExpandInheritedDHCPConfigIgnoreItemList(ctx, m.IgnoreList, diags),
 		LeaseTime:              ExpandInheritanceInheritedUInt32(ctx, m.LeaseTime, diags),
@@ -163,9 +190,12 @@ func (m *IpamsvcInheritedDHCPConfigModel) Flatten(ctx context.Context, from *ipa
 	m.AbandonedReclaimTimeV6 = FlattenInheritanceInheritedUInt32(ctx, from.AbandonedReclaimTimeV6, diags)
 	m.AllowUnknown = FlattenInheritanceInheritedBool(ctx, from.AllowUnknown, diags)
 	m.AllowUnknownV6 = FlattenInheritanceInheritedBool(ctx, from.AllowUnknownV6, diags)
+	m.AuthoritativeDhcp = FlattenInheritanceInheritedBool(ctx, from.AuthoritativeDhcp, diags)
 	m.EchoClientId = FlattenInheritanceInheritedBool(ctx, from.EchoClientId, diags)
 	m.Filters = FlattenInheritedDHCPConfigFilterList(ctx, from.Filters, diags)
 	m.FiltersV6 = FlattenInheritedDHCPConfigFilterList(ctx, from.FiltersV6, diags)
+	m.HoldReclaimedTime = FlattenInheritanceInheritedUInt32(ctx, from.HoldReclaimedTime, diags)
+	m.HoldReclaimedTimeV6 = FlattenInheritanceInheritedUInt32(ctx, from.HoldReclaimedTimeV6, diags)
 	m.IgnoreClientUid = FlattenInheritanceInheritedBool(ctx, from.IgnoreClientUid, diags)
 	m.IgnoreList = FlattenInheritedDHCPConfigIgnoreItemList(ctx, from.IgnoreList, diags)
 	m.LeaseTime = FlattenInheritanceInheritedUInt32(ctx, from.LeaseTime, diags)
