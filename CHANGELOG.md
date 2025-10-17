@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.5.3 (October 17, 2025)
+
+ENHANCEMENTS:
+* Upgraded Go version to 1.25.1 ([#234](https://github.com/infobloxopen/terraform-provider-bloxone/pull/234))
+
+FIXES:
+* FW: Fixed ordering issue of `items_described` attribute in `bloxone_td_named_list` ([#230](https://github.com/infobloxopen/terraform-provider-bloxone/pull/230))
+* DHCP: Improved DDNS zone configuration and list handling in `bloxone_dhcp_server` ([#231](https://github.com/infobloxopen/terraform-provider-bloxone/pull/231))
+* DHCP: Removed default value assignment for inherited DHCP Option Value ([#233](https://github.com/infobloxopen/terraform-provider-bloxone/pull/233))
+
 ## v1.5.2 (September 30, 2025)
 
 FIXES:
