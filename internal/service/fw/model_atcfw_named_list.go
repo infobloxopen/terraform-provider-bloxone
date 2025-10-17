@@ -13,10 +13,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/bloxone-go-client/fw"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 type AtcfwNamedListModel struct {
@@ -90,7 +92,8 @@ var AtcfwNamedListResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: AtcfwItemStructsResourceSchemaAttributes,
 		},
-		Required:            true,
+		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The List of ItemStructs structure which contains the item and its description",
 	},
 	"name": schema.StringAttribute{
@@ -138,6 +141,7 @@ func (m *AtcfwNamedListModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	if m == nil {
 		return nil
 	}
+
 	to := &fw.NamedList{
 		ConfidenceLevel: flex.ExpandStringPointer(m.ConfidenceLevel),
 		Description:     flex.ExpandStringPointer(m.Description),
@@ -177,7 +181,14 @@ func (m *AtcfwNamedListModel) Flatten(ctx context.Context, from *fw.NamedList, d
 	m.Id = flex.FlattenInt32Pointer(from.Id)
 	m.ItemCount = flex.FlattenInt32Pointer(from.ItemCount)
 	m.Items = flex.FlattenFrameworkListString(ctx, from.Items, diags)
+	planList := m.ItemsDescribed
 	m.ItemsDescribed = flex.FlattenFrameworkListNestedBlock(ctx, from.ItemsDescribed, AtcfwItemStructsAttrTypes, diags, FlattenAtcfwItemStructs)
+	if !planList.IsUnknown() {
+		reOrderedList, diags := utils.ReorderAndFilterNestedListResponse(ctx, planList, m.ItemsDescribed, "item")
+		if !diags.HasError() {
+			m.ItemsDescribed = reOrderedList.(basetypes.ListValue)
+		}
+	}
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Policies = flex.FlattenFrameworkListString(ctx, from.Policies, diags)
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)

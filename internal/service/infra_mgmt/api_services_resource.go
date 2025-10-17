@@ -191,13 +191,14 @@ func (r *ServicesResource) ImportState(ctx context.Context, req resource.ImportS
 }
 
 func (r *ServicesResource) waitServiceStartStop(ctx context.Context, name, desiredState string, timeout time.Duration, diags *diag.Diagnostics) {
-	if desiredState == "start" {
+	switch desiredState {
+	case "start":
 		err := r.waitServiceStarted(ctx, name, timeout)
 		if err != nil {
 			diags.AddError("Client Error", fmt.Sprintf("waiting for service to be started, got error: %s", err))
 			return
 		}
-	} else if desiredState == "stop" {
+	case "stop":
 		err := r.waitServiceStopped(ctx, name, timeout)
 		if err != nil {
 			diags.AddError("Client Error", fmt.Sprintf("waiting for service to be stopped, got error: %s", err))
