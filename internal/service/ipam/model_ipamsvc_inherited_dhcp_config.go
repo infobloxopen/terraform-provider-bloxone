@@ -159,7 +159,7 @@ func (m *IpamsvcInheritedDHCPConfigModel) Expand(ctx context.Context, diags *dia
 		Filters:                ExpandInheritedDHCPConfigFilterList(ctx, m.Filters, diags),
 		FiltersV6:              ExpandInheritedDHCPConfigFilterList(ctx, m.FiltersV6, diags),
 		HoldReclaimedTime:      ExpandInheritanceInheritedUInt32(ctx, m.HoldReclaimedTime, diags),
-		HoldReclaimedTimeV6:    ExpandInheritanceInheritedUInt32(ctx, m.HoldReclaimedTime, diags),
+		HoldReclaimedTimeV6:    ExpandInheritanceInheritedUInt32(ctx, m.HoldReclaimedTimeV6, diags),
 		IgnoreClientUid:        ExpandInheritanceInheritedBool(ctx, m.IgnoreClientUid, diags),
 		IgnoreList:             ExpandInheritedDHCPConfigIgnoreItemList(ctx, m.IgnoreList, diags),
 		LeaseTime:              ExpandInheritanceInheritedUInt32(ctx, m.LeaseTime, diags),
