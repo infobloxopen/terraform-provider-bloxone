@@ -75,7 +75,7 @@ var IpamsvcInheritedDHCPConfigResourceSchemaAttributes = map[string]schema.Attri
 		Attributes:          InheritanceInheritedBoolResourceSchemaAttributes,
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Set DHCP server as authoritative.",
+		MarkdownDescription: "The inheritance configuration for authoritative_dhcp field to set DHCP server as authoritative.",
 	},
 	"echo_client_id": schema.SingleNestedAttribute{
 		Attributes:          InheritanceInheritedBoolResourceSchemaAttributes,

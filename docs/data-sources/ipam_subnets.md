@@ -544,7 +544,7 @@ Optional:
 - `abandoned_reclaim_time_v6` (Attributes) The inheritance configuration for _abandoned_reclaim_time_v6_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--abandoned_reclaim_time_v6))
 - `allow_unknown` (Attributes) The inheritance configuration for _allow_unknown_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--allow_unknown))
 - `allow_unknown_v6` (Attributes) The inheritance configuration for _allow_unknown_v6_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--allow_unknown_v6))
-- `authoritative_dhcp` (Attributes) Set DHCP server as authoritative. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--authoritative_dhcp))
+- `authoritative_dhcp` (Attributes) The inheritance configuration for authoritative_dhcp field to set DHCP server as authoritative. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--authoritative_dhcp))
 - `echo_client_id` (Attributes) The inheritance configuration for _echo_client_id_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--echo_client_id))
 - `filters` (Attributes) The inheritance configuration for filters field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--filters))
 - `filters_v6` (Attributes) The inheritance configuration for _filters_v6_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--filters_v6))
