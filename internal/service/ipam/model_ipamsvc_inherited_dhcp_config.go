@@ -99,13 +99,13 @@ var IpamsvcInheritedDHCPConfigResourceSchemaAttributes = map[string]schema.Attri
 		Attributes:          InheritanceInheritedUInt32ResourceSchemaAttributes,
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "The hold reclaimed time in seconds for IPV4 clients.",
+		MarkdownDescription: "The inheritance configuration for hold_reclaimed_time in seconds from _DHCPConfig_ object.",
 	},
 	"hold_reclaimed_time_v6": schema.SingleNestedAttribute{
 		Attributes:          InheritanceInheritedUInt32ResourceSchemaAttributes,
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "The hold reclaimed time in seconds for IPV6 clients.",
+		MarkdownDescription: "The inheritance configuration for hold_reclaimed_time_v6 in seconds from _DHCPConfig_ object.",
 	},
 	"ignore_client_uid": schema.SingleNestedAttribute{
 		Attributes:          InheritanceInheritedBoolResourceSchemaAttributes,
