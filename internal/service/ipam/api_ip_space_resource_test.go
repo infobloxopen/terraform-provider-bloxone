@@ -863,6 +863,7 @@ func TestAccIpSpaceResource_InheritanceSources(t *testing.T) {
 }
 
 func TestAccIpSpaceResource_MultipleDefaultRealms(t *testing.T) {
+	t.Skip("Skipping test temporarily due to Multiple realms not being supported in the current test environment.")
 	var resourceName = "bloxone_ipam_ip_space.test_default_realms"
 	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
