@@ -2,6 +2,9 @@
 
 ## v1.5.3 (October 17, 2025)
 
+ENHANCEMENTS:
+* Updated DHCP Config Profile Schema for Inheritance Sources to add support for new fields([#237](https://github.com/infobloxopen/terraform-provider-bloxone/pull/237))
+
 FIXES:
 * FW: Fixed ordering issue of `items_described` attribute in `bloxone_td_named_list` ([#230](https://github.com/infobloxopen/terraform-provider-bloxone/pull/230))
 * DHCP: Improved DDNS zone configuration and list handling in `bloxone_dhcp_server` ([#231](https://github.com/infobloxopen/terraform-provider-bloxone/pull/231))
