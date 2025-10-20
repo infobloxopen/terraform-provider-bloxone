@@ -1,7 +1,7 @@
 /*
 IP Address Management API
 
-The IPAM/DHCP Application is a BloxOne DDI service providing IP address management and DHCP protocol features. The IPAM component provides visibility into and provisioning tools to manage networking spaces, monitoring and reporting of entire IP address infrastructures, and integration with DNS and DHCP protocols. The DHCP component provides DHCP protocol configuration service with on-prem host serving DHCP protocol. It is part of the full-featured, DDI cloud solution that enables customers to deploy large numbers of protocol servers to deliver DNS and DHCP throughout their enterprise network.
+The IPAM/DHCP Application is a Universal DDI service providing IP address management and DHCP protocol features. The IPAM component provides visibility into and provisioning tools to manage networking spaces, monitoring and reporting of entire IP address infrastructures, and integration with DNS and DHCP protocols. The DHCP component provides DHCP protocol configuration service with on-prem host serving DHCP protocol. It is part of the full-featured, DDI cloud solution that enables customers to deploy large numbers of protocol servers to deliver DNS and DHCP throughout their enterprise network.
 
 API version: v1
 */
@@ -27,6 +27,8 @@ type DHCPConfig struct {
 	AllowUnknown *bool `json:"allow_unknown,omitempty"`
 	// Disable to allow leases only for known IPV6 clients, those for which a fixed address is configured.
 	AllowUnknownV6 *bool `json:"allow_unknown_v6,omitempty"`
+	// Set DHCP server as authoritative.
+	AuthoritativeDhcp *bool `json:"authoritative_dhcp,omitempty"`
 	// Enable/disable to include/exclude the client id when responding to discover or request.
 	EchoClientId *bool `json:"echo_client_id,omitempty"`
 	// The resource identifier.
@@ -35,6 +37,10 @@ type DHCPConfig struct {
 	FiltersLargeSelection []string `json:"filters_large_selection,omitempty"`
 	// The resource identifier.
 	FiltersV6 []string `json:"filters_v6,omitempty"`
+	// The hold reclaimed time in seconds for IPv4 clients.
+	HoldReclaimedTime *int64 `json:"hold_reclaimed_time,omitempty"`
+	// The hold reclaimed time in seconds for IPv6 clients.
+	HoldReclaimedTimeV6 *int64 `json:"hold_reclaimed_time_v6,omitempty"`
 	// Enable to ignore the client UID when issuing a DHCP lease. Use this option to prevent assigning two IP addresses for a client which does not have a UID during one phase of PXE boot but acquires one for the other phase.
 	IgnoreClientUid *bool `json:"ignore_client_uid,omitempty"`
 	// The list of clients to ignore requests from.
@@ -62,8 +68,14 @@ func NewDHCPConfig() *DHCPConfig {
 	this.AllowUnknown = &allowUnknown
 	var allowUnknownV6 bool = true
 	this.AllowUnknownV6 = &allowUnknownV6
+	var authoritativeDhcp bool = false
+	this.AuthoritativeDhcp = &authoritativeDhcp
 	var echoClientId bool = false
 	this.EchoClientId = &echoClientId
+	var holdReclaimedTime int64 = 3600
+	this.HoldReclaimedTime = &holdReclaimedTime
+	var holdReclaimedTimeV6 int64 = 3600
+	this.HoldReclaimedTimeV6 = &holdReclaimedTimeV6
 	var ignoreClientUid bool = false
 	this.IgnoreClientUid = &ignoreClientUid
 	var leaseTime int64 = 3600
@@ -86,8 +98,14 @@ func NewDHCPConfigWithDefaults() *DHCPConfig {
 	this.AllowUnknown = &allowUnknown
 	var allowUnknownV6 bool = true
 	this.AllowUnknownV6 = &allowUnknownV6
+	var authoritativeDhcp bool = false
+	this.AuthoritativeDhcp = &authoritativeDhcp
 	var echoClientId bool = false
 	this.EchoClientId = &echoClientId
+	var holdReclaimedTime int64 = 3600
+	this.HoldReclaimedTime = &holdReclaimedTime
+	var holdReclaimedTimeV6 int64 = 3600
+	this.HoldReclaimedTimeV6 = &holdReclaimedTimeV6
 	var ignoreClientUid bool = false
 	this.IgnoreClientUid = &ignoreClientUid
 	var leaseTime int64 = 3600
@@ -225,6 +243,38 @@ func (o *DHCPConfig) SetAllowUnknownV6(v bool) {
 	o.AllowUnknownV6 = &v
 }
 
+// GetAuthoritativeDhcp returns the AuthoritativeDhcp field value if set, zero value otherwise.
+func (o *DHCPConfig) GetAuthoritativeDhcp() bool {
+	if o == nil || IsNil(o.AuthoritativeDhcp) {
+		var ret bool
+		return ret
+	}
+	return *o.AuthoritativeDhcp
+}
+
+// GetAuthoritativeDhcpOk returns a tuple with the AuthoritativeDhcp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DHCPConfig) GetAuthoritativeDhcpOk() (*bool, bool) {
+	if o == nil || IsNil(o.AuthoritativeDhcp) {
+		return nil, false
+	}
+	return o.AuthoritativeDhcp, true
+}
+
+// HasAuthoritativeDhcp returns a boolean if a field has been set.
+func (o *DHCPConfig) HasAuthoritativeDhcp() bool {
+	if o != nil && !IsNil(o.AuthoritativeDhcp) {
+		return true
+	}
+
+	return false
+}
+
+// SetAuthoritativeDhcp gets a reference to the given bool and assigns it to the AuthoritativeDhcp field.
+func (o *DHCPConfig) SetAuthoritativeDhcp(v bool) {
+	o.AuthoritativeDhcp = &v
+}
+
 // GetEchoClientId returns the EchoClientId field value if set, zero value otherwise.
 func (o *DHCPConfig) GetEchoClientId() bool {
 	if o == nil || IsNil(o.EchoClientId) {
@@ -351,6 +401,70 @@ func (o *DHCPConfig) HasFiltersV6() bool {
 // SetFiltersV6 gets a reference to the given []string and assigns it to the FiltersV6 field.
 func (o *DHCPConfig) SetFiltersV6(v []string) {
 	o.FiltersV6 = v
+}
+
+// GetHoldReclaimedTime returns the HoldReclaimedTime field value if set, zero value otherwise.
+func (o *DHCPConfig) GetHoldReclaimedTime() int64 {
+	if o == nil || IsNil(o.HoldReclaimedTime) {
+		var ret int64
+		return ret
+	}
+	return *o.HoldReclaimedTime
+}
+
+// GetHoldReclaimedTimeOk returns a tuple with the HoldReclaimedTime field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DHCPConfig) GetHoldReclaimedTimeOk() (*int64, bool) {
+	if o == nil || IsNil(o.HoldReclaimedTime) {
+		return nil, false
+	}
+	return o.HoldReclaimedTime, true
+}
+
+// HasHoldReclaimedTime returns a boolean if a field has been set.
+func (o *DHCPConfig) HasHoldReclaimedTime() bool {
+	if o != nil && !IsNil(o.HoldReclaimedTime) {
+		return true
+	}
+
+	return false
+}
+
+// SetHoldReclaimedTime gets a reference to the given int64 and assigns it to the HoldReclaimedTime field.
+func (o *DHCPConfig) SetHoldReclaimedTime(v int64) {
+	o.HoldReclaimedTime = &v
+}
+
+// GetHoldReclaimedTimeV6 returns the HoldReclaimedTimeV6 field value if set, zero value otherwise.
+func (o *DHCPConfig) GetHoldReclaimedTimeV6() int64 {
+	if o == nil || IsNil(o.HoldReclaimedTimeV6) {
+		var ret int64
+		return ret
+	}
+	return *o.HoldReclaimedTimeV6
+}
+
+// GetHoldReclaimedTimeV6Ok returns a tuple with the HoldReclaimedTimeV6 field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DHCPConfig) GetHoldReclaimedTimeV6Ok() (*int64, bool) {
+	if o == nil || IsNil(o.HoldReclaimedTimeV6) {
+		return nil, false
+	}
+	return o.HoldReclaimedTimeV6, true
+}
+
+// HasHoldReclaimedTimeV6 returns a boolean if a field has been set.
+func (o *DHCPConfig) HasHoldReclaimedTimeV6() bool {
+	if o != nil && !IsNil(o.HoldReclaimedTimeV6) {
+		return true
+	}
+
+	return false
+}
+
+// SetHoldReclaimedTimeV6 gets a reference to the given int64 and assigns it to the HoldReclaimedTimeV6 field.
+func (o *DHCPConfig) SetHoldReclaimedTimeV6(v int64) {
+	o.HoldReclaimedTimeV6 = &v
 }
 
 // GetIgnoreClientUid returns the IgnoreClientUid field value if set, zero value otherwise.
@@ -503,6 +617,9 @@ func (o DHCPConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.AllowUnknownV6) {
 		toSerialize["allow_unknown_v6"] = o.AllowUnknownV6
 	}
+	if !IsNil(o.AuthoritativeDhcp) {
+		toSerialize["authoritative_dhcp"] = o.AuthoritativeDhcp
+	}
 	if !IsNil(o.EchoClientId) {
 		toSerialize["echo_client_id"] = o.EchoClientId
 	}
@@ -514,6 +631,12 @@ func (o DHCPConfig) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.FiltersV6) {
 		toSerialize["filters_v6"] = o.FiltersV6
+	}
+	if !IsNil(o.HoldReclaimedTime) {
+		toSerialize["hold_reclaimed_time"] = o.HoldReclaimedTime
+	}
+	if !IsNil(o.HoldReclaimedTimeV6) {
+		toSerialize["hold_reclaimed_time_v6"] = o.HoldReclaimedTimeV6
 	}
 	if !IsNil(o.IgnoreClientUid) {
 		toSerialize["ignore_client_uid"] = o.IgnoreClientUid
@@ -553,10 +676,13 @@ func (o *DHCPConfig) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "abandoned_reclaim_time_v6")
 		delete(additionalProperties, "allow_unknown")
 		delete(additionalProperties, "allow_unknown_v6")
+		delete(additionalProperties, "authoritative_dhcp")
 		delete(additionalProperties, "echo_client_id")
 		delete(additionalProperties, "filters")
 		delete(additionalProperties, "filters_large_selection")
 		delete(additionalProperties, "filters_v6")
+		delete(additionalProperties, "hold_reclaimed_time")
+		delete(additionalProperties, "hold_reclaimed_time_v6")
 		delete(additionalProperties, "ignore_client_uid")
 		delete(additionalProperties, "ignore_list")
 		delete(additionalProperties, "lease_time")
