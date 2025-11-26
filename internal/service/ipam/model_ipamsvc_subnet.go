@@ -178,8 +178,7 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The description for the subnet. May contain 0 to 1024 characters. Can include UTF-8.",
 	},
 	"compartment_id": schema.StringAttribute{
-		Computed:            true,
-		Default:             stringdefault.StaticString(""),
+		Computed: true,
 		MarkdownDescription: "The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.",
 	},
 	"config_profiles": schema.ListAttribute{
