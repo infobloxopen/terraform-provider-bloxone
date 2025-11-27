@@ -867,6 +867,7 @@ func TestAccSubnetResource_InheritanceSources(t *testing.T) {
 }
 
 func TestAccSubnetResource_MultipleFederatedRealms(t *testing.T) {
+	t.Skip("Skipping this test as there is no support for multiple realms on the UI")
 	var resourceName = "bloxone_ipam_subnet.test_federated_realms"
 	var v ipam.Subnet
 	var ipSpaceName = acctest.RandomNameWithPrefix("ip-space")
