@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.5.4 (December 2, 2025)
+## v1.5.4 (December 3, 2025)
 
 FIXES:
 * IPAM: Updated schema to remove default value for compartment_id in `bloxone_ipam_address_block`,`bloxone_ipam_subnet` and `bloxone_ipam_address`([#242](https://github.com/infobloxopen/terraform-provider-bloxone/pull/242))
