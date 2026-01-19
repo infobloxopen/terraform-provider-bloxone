@@ -158,64 +158,82 @@ func TestDataSourceNextAvailableIP_ByTags(t *testing.T) {
 }
 
 func testAccDataSourceNextAvailableIPBaseConfig(spaceName string) string {
+	federatedRealmName := acctest.RandomNameWithPrefix("fed-realm-next-av")
 	return fmt.Sprintf(`
-    resource "bloxone_ipam_ip_space" "test" {
-        name = %q
-    }
-    resource "bloxone_ipam_address_block" "test" {
-        address = "192.168.0.0"
-        cidr = "16"
-        space = bloxone_ipam_ip_space.test.id
-    }
-    resource "bloxone_ipam_subnet" "test" {
-        address = "192.168.0.0"
-        cidr = "24"
-        space = bloxone_ipam_ip_space.test.id
-    }
-    resource "bloxone_ipam_range" "test" {
-        start = "192.168.0.15"
-        end = "192.168.0.30"
-        space = bloxone_ipam_ip_space.test.id
-        depends_on = [bloxone_ipam_subnet.test]
-    }
-`, spaceName)
+resource "bloxone_federation_federated_realm" "test" {
+    name = %q
+}
+
+resource "bloxone_ipam_ip_space" "test" {
+    name = %q
+    default_realms = [bloxone_federation_federated_realm.test.id]
+}
+
+resource "bloxone_ipam_address_block" "test" {
+    address = "192.168.0.0"
+    cidr = "16"
+    space = bloxone_ipam_ip_space.test.id
+}
+
+resource "bloxone_ipam_subnet" "test" {
+    address = "192.168.0.0"
+    cidr = "24"
+    space = bloxone_ipam_ip_space.test.id
+}
+
+resource "bloxone_ipam_range" "test" {
+    start = "192.168.0.15"
+    end = "192.168.0.30"
+    space = bloxone_ipam_ip_space.test.id
+    depends_on = [bloxone_ipam_subnet.test]
+}
+`, federatedRealmName, spaceName)
 }
 
 func testAccDataSourceNextAvailableIPBaseConfigWithTags(spaceName string) string {
+	federatedRealmName := acctest.RandomNameWithPrefix("fed-realm-next-av-tags")
 	return fmt.Sprintf(`
-    resource "bloxone_ipam_ip_space" "test_ipspace" {
-        name = %q
+resource "bloxone_federation_federated_realm" "test_tags" {
+    name = %q
+}
+
+resource "bloxone_ipam_ip_space" "test_ipspace" {
+    name = %q
+    default_realms = [bloxone_federation_federated_realm.test_tags.id]
+}
+
+resource "bloxone_ipam_address_block" "test_ab_tags" {
+    address = "10.0.0.0"
+    cidr = "16"
+    space = bloxone_ipam_ip_space.test_ipspace.id
+    tags = {
+        environment = %q
+        purpose = "terraform-testing"
     }
-    resource "bloxone_ipam_address_block" "test_ab_tags" {
-        address = "10.0.0.0"
-        cidr = "16"
-        space = bloxone_ipam_ip_space.test_ipspace.id
-        tags = {
-            environment = %q
-            purpose = "terraform-testing"
-        }
+}
+
+resource "bloxone_ipam_subnet" "test_subnet_tags" {
+    address = "10.0.0.0"
+    cidr = "24"
+    space = bloxone_ipam_ip_space.test_ipspace.id
+    tags = {
+        environment = %q
+        purpose = "terraform-testing"
     }
-    resource "bloxone_ipam_subnet" "test_subnet_tags" {
-        address = "10.0.0.0"
-        cidr = "24"
-        space = bloxone_ipam_ip_space.test_ipspace.id
-        tags = {
-            environment = %q
-            purpose = "terraform-testing"
-        }
-		depends_on = [bloxone_ipam_address_block.test_ab_tags]
+    depends_on = [bloxone_ipam_address_block.test_ab_tags]
+}
+
+resource "bloxone_ipam_range" "test_range_tags" {
+    start = "10.0.0.15"
+    end = "10.0.0.30"
+    space = bloxone_ipam_ip_space.test_ipspace.id
+    tags = {
+        environment = %q
+        purpose = "terraform-testing"
     }
-    resource "bloxone_ipam_range" "test_range_tags" {
-        start = "10.0.0.15"
-        end = "10.0.0.30"
-        space = bloxone_ipam_ip_space.test_ipspace.id
-        tags = {
-            environment = %q
-            purpose = "terraform-testing"
-        }
-        depends_on = [bloxone_ipam_subnet.test_subnet_tags]
-    }
-`, spaceName, randomTag, randomTag, randomTag)
+    depends_on = [bloxone_ipam_subnet.test_subnet_tags]
+}
+`, federatedRealmName, spaceName, randomTag, randomTag, randomTag)
 }
 
 func testAccDataSourceNextAvailableIP(spaceName string, count int, id string) string {
