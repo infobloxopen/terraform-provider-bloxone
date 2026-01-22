@@ -581,8 +581,8 @@ resource "bloxone_ipam_address" "test_names" {
 }
 
 func testAccAddressSpace(spaceName1, spaceName2, address string, space string) string {
-	federatedRealmName1 := acctest.RandomNameWithPrefix("fed-realm")
-	federatedRealmName2 := acctest.RandomNameWithPrefix("fed-realm")
+	federatedRealmName1 := acctest.RandomNameWithPrefix("fed-realm-1")
+	federatedRealmName2 := acctest.RandomNameWithPrefix("fed-realm-2")
 
 	config := fmt.Sprintf(`
 
@@ -668,6 +668,7 @@ resource "bloxone_ipam_subnet" "test" {
     address = %q
     cidr = 26
     space = bloxone_ipam_ip_space.test.id
+	depends_on = [bloxone_ipam_address_block.test]
 }
 
 resource "bloxone_ipam_address" "test_next_available" {

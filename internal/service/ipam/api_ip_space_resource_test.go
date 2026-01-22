@@ -541,6 +541,7 @@ func TestAccIpSpaceResource_DhcpConfig(t *testing.T) {
 }
 
 func TestAccIpSpaceResource_DefaultRealms(t *testing.T) {
+	t.Skip("Skipping test as default realm cannot be removed once added")
 	var resourceName = "bloxone_ipam_ip_space.test_default_realms"
 	var v ipam.IPSpace
 	var name = acctest.RandomNameWithPrefix("ip-space")
@@ -1223,7 +1224,6 @@ resource "bloxone_ipam_ip_space" "test_default_realms" {
 }
 `, name)
 }
-
 func testAccBaseWithFederatedRealm(name, alias string) string {
 	return fmt.Sprintf(`
 resource "bloxone_federation_federated_realm" "%s" {

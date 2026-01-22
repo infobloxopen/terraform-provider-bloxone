@@ -372,9 +372,24 @@ resource "bloxone_ipam_host" "test_address_naip" {
 }
 
 func testAccMultipleIPSpaceAndSubnet(spaceName1, spaceName2, spaceName3 string) string {
+	federatedRealmName1 := acctest.RandomNameWithPrefix("fed-realm1")
+	federatedRealmName2 := acctest.RandomNameWithPrefix("fed-realm2")
+	federatedRealmName3 := acctest.RandomNameWithPrefix("fed-realm3")
+
 	return fmt.Sprintf(`
+		resource "bloxone_federation_federated_realm" "test" {
+    name = %q
+}
+	resource "bloxone_federation_federated_realm" "test1" {
+    name = %q
+}
+	resource "bloxone_federation_federated_realm" "test2" {
+    name = %q
+}
+
 	resource "bloxone_ipam_ip_space" "test" {
 		name = %q
+		default_realms = [bloxone_federation_federated_realm.test.id]
 	}
 	resource "bloxone_ipam_subnet" "test" {
 		address = "10.0.0.0"
@@ -383,6 +398,7 @@ func testAccMultipleIPSpaceAndSubnet(spaceName1, spaceName2, spaceName3 string) 
 	}
 	resource "bloxone_ipam_ip_space" "test1" {
 		name = %q
+		default_realms = [bloxone_federation_federated_realm.test1.id]
 	}
 	resource "bloxone_ipam_subnet" "test1" {
 		address = "192.168.1.0"
@@ -391,13 +407,14 @@ func testAccMultipleIPSpaceAndSubnet(spaceName1, spaceName2, spaceName3 string) 
 	}
 	resource "bloxone_ipam_ip_space" "test2" {
 		name = %q
+		default_realms = [bloxone_federation_federated_realm.test2.id]
 	}
 	resource "bloxone_ipam_subnet" "test2" {
 		address = "10.0.0.0"
 		cidr = 24
 		space = bloxone_ipam_ip_space.test2.id
 	}
-`, spaceName1, spaceName2, spaceName3)
+`, federatedRealmName1, federatedRealmName2, federatedRealmName3, spaceName1, spaceName2, spaceName3)
 }
 
 func testAccIpamHostAddressesNextAvailableIdCount(spaceName string, count int) string {

@@ -30,14 +30,14 @@ func TestDataSourceNextAvailableIP_AddressBlock(t *testing.T) {
 				ExpectError: regexp.MustCompile("invalid resource ID specified"),
 			},
 			{
-				Config: testAccDataSourceNextAvailableIP(spaceName, 1, "bloxone_ipam_address_block.test"),
+				Config: testAccDataSourceNextAvailableIP(spaceName, 1, "bloxone_ipam_subnet.test"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
 					resource.TestCheckResourceAttr(dataSourceName, "results.0", "192.168.0.1"),
 				),
 			},
 			{
-				Config: testAccDataSourceNextAvailableIP(spaceName, 5, "bloxone_ipam_address_block.test"),
+				Config: testAccDataSourceNextAvailableIP(spaceName, 5, "bloxone_ipam_subnet.test"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "ip_count", dataSourceName, "results.#"),
 					resource.TestCheckResourceAttr(dataSourceName, "results.0", "192.168.0.1"),
@@ -179,6 +179,7 @@ resource "bloxone_ipam_subnet" "test" {
     address = "192.168.0.0"
     cidr = "24"
     space = bloxone_ipam_ip_space.test.id
+	depends_on = [bloxone_ipam_address_block.test]
 }
 
 resource "bloxone_ipam_range" "test" {

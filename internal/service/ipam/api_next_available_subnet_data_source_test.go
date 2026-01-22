@@ -66,18 +66,32 @@ func TestDataSourceNextAvailableSubnet(t *testing.T) {
 	})
 }
 
+// // Add this function to ensure proper cleanup order
+// func testAccCheckAddressBlockDestroy(s *terraform.State) error {
+// 	// This function can be empty - it just ensures Terraform follows proper dependency order
+// 	return nil
+// }
+
 func testAccDataSourceNextAvailableSubnetBaseConfig() string {
+	federatedRealmName := acctest.RandomNameWithPrefix("fed-realm")
+
 	return fmt.Sprintf(`
-	resource "bloxone_ipam_ip_space" "test" {
-		name = %q
-	}
-	resource "bloxone_ipam_address_block" "test" {
-		name = %q
-		address = "192.168.0.0"
-		cidr = "24"
-		space = bloxone_ipam_ip_space.test.id
-	}
-`, acctest.RandomNameWithPrefix("nextAvailableIPSpace"), acctest.RandomNameWithPrefix("nextAvailableAB"))
+resource "bloxone_federation_federated_realm" "test" {
+    name = %q
+}
+
+resource "bloxone_ipam_ip_space" "test" {
+    name = %q
+    default_realms = [bloxone_federation_federated_realm.test.id]
+}
+
+resource "bloxone_ipam_address_block" "test" {
+    name = %q
+    address = "192.168.0.0"
+    cidr = "24"
+    space = bloxone_ipam_ip_space.test.id
+}
+`, federatedRealmName, acctest.RandomNameWithPrefix("nextAvailableIPSpace"), acctest.RandomNameWithPrefix("nextAvailableAB"))
 }
 
 func testAccDataSourceNextAvailableSubnet(count, cidr int) string {
