@@ -66,12 +66,6 @@ func TestDataSourceNextAvailableSubnet(t *testing.T) {
 	})
 }
 
-// // Add this function to ensure proper cleanup order
-// func testAccCheckAddressBlockDestroy(s *terraform.State) error {
-// 	// This function can be empty - it just ensures Terraform follows proper dependency order
-// 	return nil
-// }
-
 func testAccDataSourceNextAvailableSubnetBaseConfig() string {
 	federatedRealmName := acctest.RandomNameWithPrefix("fed-realm")
 
