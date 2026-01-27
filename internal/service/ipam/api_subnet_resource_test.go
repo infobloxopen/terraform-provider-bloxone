@@ -37,11 +37,11 @@ func TestAccSubnetResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSubnetBasicConfig(spaceName, "80.77.0.0", 16),
+				Config: testAccSubnetBasicConfig(spaceName, "10.0.0.0", 24),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "address", "80.77.0.0"),
-					resource.TestCheckResourceAttr(resourceName, "cidr", "16"),
+					resource.TestCheckResourceAttr(resourceName, "address", "10.0.0.0"),
+					resource.TestCheckResourceAttr(resourceName, "cidr", "24"),
 					resource.TestCheckResourceAttrPair(resourceName, "space", "bloxone_ipam_ip_space.test", "id"),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
@@ -1117,14 +1117,6 @@ func testAccCheckSubnetDisappears(ctx context.Context, v *ipam.Subnet) resource.
 	}
 }
 
-// func testAccBaseWithIPSpace(name string) string {
-// 	return fmt.Sprintf(`
-// resource "bloxone_ipam_ip_space" "test" {
-//     name = %q
-// }
-// `, name)
-// }
-
 func testAccBaseWithIPSpace(name string) string {
 	federatedRealmName := acctest.RandomNameWithPrefix("fed-realm")
 	return fmt.Sprintf(`
@@ -1138,16 +1130,6 @@ resource "bloxone_ipam_ip_space" "test" {
 }
 `, federatedRealmName, name)
 }
-
-// func testAccBaseWithTwoIPSpace(name1, name2 string) string {
-// 	return fmt.Sprintf(`
-// resource "bloxone_ipam_ip_space" "one" {
-//     name = %q
-// }
-// resource "bloxone_ipam_ip_space" "two" {
-//     name = %q
-// }`, name1, name2)
-// }
 
 func testAccBaseWithTwoIPSpace(name1, name2 string) string {
 	federatedRealmName := acctest.RandomNameWithPrefix("fed-realm")
