@@ -42,6 +42,17 @@ func FlattenStringPointerWithNilAsEmpty(s *string) types.String {
 	return FlattenString(*s)
 }
 
+func ExpandStringPointerEmptyAsNil(v types.String) *string {
+	if v.IsNull() || v.IsUnknown() {
+		return nil // Not set in config → API will inherit
+	}
+	if v.ValueString() == "" {
+		empty := ""
+		return &empty // Explicitly set to empty → API will unset
+	}
+	return v.ValueStringPointer() // Has a value → API will use it
+}
+
 // FlattenBoolPointerFalseAsNull is a helper function to flatten a bool pointer to a bool.
 // It returns false if the pointer is nil.
 

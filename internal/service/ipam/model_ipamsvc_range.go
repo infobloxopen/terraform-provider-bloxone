@@ -99,10 +99,12 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Time when the object has been created.",
 	},
 	"dhcp_host": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
-		Default:             stringdefault.StaticString(""),
-		MarkdownDescription: "The resource identifier.",
+		Optional: true,
+		Computed: true,
+		MarkdownDescription: "The resource identifier for the DHCP Host. " +
+			"Omit or set to `null` to inherit from parent subnet. " +
+			"Set to empty string (`\"\"`) to explicitly unset. " +
+			"Provide a resource ID to assign a specific DHCP host.",
 	},
 	"dhcp_options": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
