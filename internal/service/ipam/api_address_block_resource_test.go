@@ -808,6 +808,8 @@ func TestAccAddressBlockResource_InheritanceSources(t *testing.T) {
 }
 
 func TestAccAddressBlockResource_MultipleFederatedRealms(t *testing.T) {
+	t.Skip("Skipping this test as Multiple federated realms are not supported")
+
 	var resourceName = "bloxone_ipam_address_block.test_federated_realms"
 	var v ipam.AddressBlock
 	var ipSpaceName = acctest.RandomNameWithPrefix("ip-space")
