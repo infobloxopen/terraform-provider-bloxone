@@ -83,7 +83,7 @@ resource "bloxone_ipam_range" "example" {
 ### Optional
 
 - `comment` (String) The description for the range. May contain 0 to 1024 characters. Can include UTF-8.
-- `dhcp_host` (String) The resource identifier.
+- `dhcp_host` (String) The resource identifier for the DHCP Host. Omit or set to `null` to inherit from parent subnet. Set to empty string (`""`) to explicitly unset. Provide a resource ID to assign a specific DHCP host.
 - `dhcp_options` (Attributes List) The list of DHCP options. May be either a specific option or a group of options. (see [below for nested schema](#nestedatt--dhcp_options))
 - `disable_dhcp` (Boolean) Optional. _true_ to disable object. A disabled object is effectively non-existent when generating configuration.  Defaults to _false_.
 - `exclusion_ranges` (Attributes List) The list of all exclusion ranges in the scope of the range. (see [below for nested schema](#nestedatt--exclusion_ranges))

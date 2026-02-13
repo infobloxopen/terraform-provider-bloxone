@@ -83,7 +83,7 @@ Optional:
 - `ddns_update_on_renew` (Boolean) Instructs the DHCP server to always update the DNS information when a lease is renewed even if its DNS information has not changed.  Defaults to _false_.
 - `ddns_use_conflict_resolution` (Boolean) When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_. Can be set to true only when ddns_conflict_resolution_mode is check_with_dhcid.
 - `dhcp_config` (Attributes) (see [below for nested schema](#nestedatt--results--dhcp_config))
-- `dhcp_host` (String) The resource identifier.
+- `dhcp_host` (String) The resource identifier for the DHCP Host associated with this subnet. Omit or set to `null` to inherit from the parent address block (if applicable). Set to empty string (`""`) to explicitly unset the DHCP host. Provide a resource ID to assign a specific DHCP host.
 - `dhcp_options` (Attributes List) The DHCP options of the subnet. This can either be a specific option or a group of options. (see [below for nested schema](#nestedatt--results--dhcp_options))
 - `disable_dhcp` (Boolean) Optional. _true_ to disable object. A disabled object is effectively non-existent when generating configuration.  Defaults to _false_.
 - `external_keys` (Map of String) The external keys (source key) for this subnet in JSON format.
