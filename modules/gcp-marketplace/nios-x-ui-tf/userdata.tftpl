@@ -1,15 +1,5 @@
 #cloud-config
-bootcmd:
-- sed -i '5i -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT' /etc/firewall.d/firewall.4.rules
-- sed -i '/^PasswordAuthentication no/d' /etc/ssh/sshd_config
-- sed -i '/^PermitRootLogin prohibit-password/d' /etc/ssh/sshd_config
-- echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
-- echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
-- sed -i '/^AllowUsers/d; $a AllowUsers root' /etc/ssh/sshd_config
-- systemctl restart firewalld
-- systemctl enable ssh
-- systemctl --no-block restart ssh
-- echo 'root:InfobloxAdmin@1234'| chpasswd
+
 host_setup:
   jointoken: ${join_token}
   %{~ if http_proxy != "" ~}
