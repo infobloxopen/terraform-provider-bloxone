@@ -135,6 +135,7 @@ func TestAccOptionGroupResource_Name(t *testing.T) {
 	var resourceName = "bloxone_dhcp_option_group.test_name"
 	var v ipam.OptionGroup
 	optionGroupName := acctest.RandomNameWithPrefix("option-group")
+	updatedoptionGroupName := acctest.RandomNameWithPrefix("updated-option-group")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -150,10 +151,10 @@ func TestAccOptionGroupResource_Name(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccOptionGroupName("option_group_test_1", "ip4"),
+				Config: testAccOptionGroupName(updatedoptionGroupName, "ip4"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOptionGroupExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "option_group_test_1"),
+					resource.TestCheckResourceAttr(resourceName, "name", updatedoptionGroupName),
 				),
 			},
 			// Delete testing automatically occurs in TestCase

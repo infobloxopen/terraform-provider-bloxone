@@ -152,5 +152,5 @@ func testAccDataSourceNextAvailableAddressBlockWithTagsBaseConfig() string {
 		}
 	}
 	`, tagValue, tagValue)
-	return strings.Join([]string{testAccIpSpaceBasicConfig("test", space), config}, "")
+	return strings.Join([]string{testAccBaseWithIPSpace(space), config}, "")
 }

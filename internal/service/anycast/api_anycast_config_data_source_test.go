@@ -36,6 +36,8 @@ func TestAccAnycastConfigDataSource_Services(t *testing.T) {
 }
 
 func TestAccAnycastConfigDataSource_IsConfigured(t *testing.T) {
+	t.Skip("Skipping test as attribute 'is_configured' is not returned in the response payload from the API.")
+
 	dataSourceName := "data.bloxone_anycast_configs.test"
 	resourceName := "bloxone_anycast_config.test"
 	var v anycast.AnycastConfig

@@ -1118,21 +1118,33 @@ func testAccCheckSubnetDisappears(ctx context.Context, v *ipam.Subnet) resource.
 }
 
 func testAccBaseWithIPSpace(name string) string {
+	federatedRealmName := acctest.RandomNameWithPrefix("fed-realm")
 	return fmt.Sprintf(`
-resource "bloxone_ipam_ip_space" "test" {
+resource "bloxone_federation_federated_realm" "test" {
     name = %q
 }
-`, name)
+
+resource "bloxone_ipam_ip_space" "test" {
+    name = %q
+    default_realms = [bloxone_federation_federated_realm.test.id]
+}
+`, federatedRealmName, name)
 }
 
 func testAccBaseWithTwoIPSpace(name1, name2 string) string {
+	federatedRealmName := acctest.RandomNameWithPrefix("fed-realm")
 	return fmt.Sprintf(`
+	resource "bloxone_federation_federated_realm" "test" {
+    name = %q
+}
 resource "bloxone_ipam_ip_space" "one" {
     name = %q
+    default_realms = [bloxone_federation_federated_realm.test.id]
 }
 resource "bloxone_ipam_ip_space" "two" {
     name = %q
-}`, name1, name2)
+    default_realms = [bloxone_federation_federated_realm.test.id]
+}`, federatedRealmName, name1, name2)
 }
 
 func testAccSubnetBasicConfig(spaceName, address string, cidr int) string {

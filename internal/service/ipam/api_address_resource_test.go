@@ -483,16 +483,22 @@ func testAccCheckAddressDisappears(ctx context.Context, v *ipam.Address) resourc
 }
 
 func testAccBaseWithIPSpaceAndSubnet(name string) string {
+	federatedRealmName := acctest.RandomNameWithPrefix("fed-realm")
 	return fmt.Sprintf(`
+	resource "bloxone_federation_federated_realm" "test" {
+    name = %q
+}
+
 resource "bloxone_ipam_ip_space" "test" {
     name = %q
+	default_realms = [bloxone_federation_federated_realm.test.id]
 }
 resource "bloxone_ipam_subnet" "test" {
     address = "10.0.0.0"
     cidr = 24
     space = bloxone_ipam_ip_space.test.id
 }
-`, name)
+`, federatedRealmName, name)
 }
 
 func testAccAddressBasicConfig(spaceName, address string) string {
@@ -575,9 +581,21 @@ resource "bloxone_ipam_address" "test_names" {
 }
 
 func testAccAddressSpace(spaceName1, spaceName2, address string, space string) string {
+	federatedRealmName1 := acctest.RandomNameWithPrefix("fed-realm-1")
+	federatedRealmName2 := acctest.RandomNameWithPrefix("fed-realm-2")
+
 	config := fmt.Sprintf(`
-resource "bloxone_ipam_ip_space" "one" {
+
+	resource "bloxone_federation_federated_realm" "test1" {
     name = %[1]q
+}
+resource "bloxone_federation_federated_realm" "test2" {
+    name = %[2]q
+}
+
+resource "bloxone_ipam_ip_space" "one" {
+    name = %[3]q
+	default_realms = [bloxone_federation_federated_realm.test1.id]
 }
 resource "bloxone_ipam_subnet" "one" {
     address = "10.0.0.0"
@@ -585,7 +603,8 @@ resource "bloxone_ipam_subnet" "one" {
 	space = bloxone_ipam_ip_space.one.id
 }
 resource "bloxone_ipam_ip_space" "two" {
-    name = %[2]q
+    name = %[4]q
+	default_realms = [bloxone_federation_federated_realm.test2.id]
 }
 resource "bloxone_ipam_subnet" "two" {
     address = "10.0.0.0"
@@ -593,11 +612,11 @@ resource "bloxone_ipam_subnet" "two" {
 	space = bloxone_ipam_ip_space.two.id
 }
 resource "bloxone_ipam_address" "test_space" {
-    address = %[3]q
-    space = %[4]s.id
+    address = %[5]q
+    space = %[6]s.id
     depends_on = [bloxone_ipam_subnet.one, bloxone_ipam_subnet.two]
 }
-`, spaceName1, spaceName2, address, space)
+`, federatedRealmName1, federatedRealmName2, spaceName1, spaceName2, address, space)
 	return config
 }
 
@@ -649,6 +668,7 @@ resource "bloxone_ipam_subnet" "test" {
     address = %q
     cidr = 26
     space = bloxone_ipam_ip_space.test.id
+	depends_on = [bloxone_ipam_address_block.test]
 }
 
 resource "bloxone_ipam_address" "test_next_available" {
