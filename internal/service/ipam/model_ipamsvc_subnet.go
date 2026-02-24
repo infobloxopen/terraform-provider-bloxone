@@ -179,7 +179,6 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"compartment_id": schema.StringAttribute{
 		Computed:            true,
-		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.",
 	},
 	"config_profiles": schema.ListAttribute{
@@ -282,10 +281,12 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		})),
 	},
 	"dhcp_host": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
-		Default:             stringdefault.StaticString(""),
-		MarkdownDescription: "The resource identifier.",
+		Optional: true,
+		Computed: true,
+		MarkdownDescription: "The resource identifier for the DHCP Host associated with this subnet. " +
+			"Omit or set to `null` to inherit from the parent address block (if applicable). " +
+			"Set to empty string (`\"\"`) to explicitly unset the DHCP host. " +
+			"Provide a resource ID to assign a specific DHCP host.",
 	},
 	"dhcp_options": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
