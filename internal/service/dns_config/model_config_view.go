@@ -145,7 +145,9 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `Optional. Comment for view.`,
 	},
 	"compartment_id": schema.StringAttribute{
+		Optional:            true,
 		Computed:            true,
+		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.",
 	},
 	"created_at": schema.StringAttribute{
