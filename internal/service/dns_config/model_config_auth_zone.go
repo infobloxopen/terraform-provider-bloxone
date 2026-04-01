@@ -303,7 +303,7 @@ func (m *ConfigAuthZoneModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	}
 	to := &dnsconfig.AuthZone{
 		Comment:                  m.Comment.ValueStringPointer(),
-		CompartmentId:            m.CompartmentId.ValueStringPointer(),
+		CompartmentId:            flex.ExpandStringPointer(m.CompartmentId),
 		Disabled:                 m.Disabled.ValueBoolPointer(),
 		ExternalPrimaries:        flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalPrimaries, diags, ExpandConfigExternalPrimary),
 		ExternalSecondaries:      flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalSecondaries, diags, ExpandConfigExternalSecondary),
