@@ -55,6 +55,7 @@ Required:
 Optional:
 
 - `comment` (String) Optional. Comment for zone delegation.
+- `compartment_id` (String) The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.
 - `disabled` (Boolean) Optional. _true_ to disable object. A disabled object is effectively non-existent when generating resource records.
 - `tags` (Map of String) Tagging specifics.
 - `view` (String) The resource identifier.

@@ -49,6 +49,7 @@ data "bloxone_dns_forward_zones" "example_all" {}
 Optional:
 
 - `comment` (String) Optional. Comment for zone configuration.
+- `compartment_id` (String) The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.
 - `disabled` (Boolean) Optional. _true_ to disable object. A disabled object is effectively non-existent when generating configuration.
 - `external_forwarders` (Attributes List) Optional. External DNS servers to forward to. Order is not significant. (see [below for nested schema](#nestedatt--results--external_forwarders))
 - `forward_only` (Boolean) Optional. _true_ to only forward.

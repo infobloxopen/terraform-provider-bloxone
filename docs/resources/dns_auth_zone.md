@@ -85,6 +85,7 @@ resource "bloxone_dns_auth_zone" "example" {
 ### Optional
 
 - `comment` (String) Optional. Comment for zone configuration.
+- `compartment_id` (String) The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.
 - `disabled` (Boolean) Optional. _true_ to disable object. A disabled object is effectively non-existent when generating configuration.
 - `external_primaries` (Attributes List) Optional. DNS primaries external to BloxOne DDI. Order is not significant. (see [below for nested schema](#nestedatt--external_primaries))
 - `external_secondaries` (Attributes List) DNS secondaries external to BloxOne DDI. Order is not significant. (see [below for nested schema](#nestedatt--external_secondaries))

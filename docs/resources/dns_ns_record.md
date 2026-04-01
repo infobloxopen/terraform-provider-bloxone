@@ -57,6 +57,7 @@ resource "bloxone_dns_ns_record" "example" {
 ### Read-Only
 
 - `absolute_zone_name` (String) The absolute domain name of the zone where this record belongs.
+- `compartment_id` (String) The compartment identifier.
 - `created_at` (String) The timestamp when the object has been created.
 - `delegation` (String) The resource identifier.
 - `dns_absolute_name_spec` (String) The DNS protocol textual representation of _absolute_name_spec_.
