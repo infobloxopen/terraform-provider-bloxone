@@ -151,6 +151,40 @@ func TestAccAuthZoneResource_PrimaryType(t *testing.T) {
 	})
 }
 
+func TestAccAuthZoneResource_CompartmentId(t *testing.T) {
+	var resourceName = "bloxone_dns_auth_zone.test_compartment_id"
+	var v dnsconfig.AuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAuthZoneCompartmentId(fqdn, "cloud", "c4695."),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn),
+					resource.TestCheckResourceAttr(resourceName, "primary_type", "cloud"),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", "c4695."),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAuthZoneCompartmentId(fqdn, "cloud", ""),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn),
+					resource.TestCheckResourceAttr(resourceName, "primary_type", "cloud"),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", ""),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccAuthZoneResource_Comment(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_comment"
 	var v dnsconfig.AuthZone
@@ -866,6 +900,20 @@ resource "bloxone_dns_auth_zone" "test" {
 }
 `, fqdn, primaryType)
 }
+
+// ...existing code...
+
+func testAccAuthZoneCompartmentId(fqdn, primaryType, compartmentId string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_auth_zone" "test_compartment_id" {
+    fqdn = %q
+    primary_type = %q
+    compartment_id = %q
+}
+`, fqdn, primaryType, compartmentId)
+}
+
+// ...existing code...
 
 func testAccAuthZoneComment(fqdn, primaryType, comment string) string {
 	return fmt.Sprintf(`
