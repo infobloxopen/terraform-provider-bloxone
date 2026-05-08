@@ -55,6 +55,15 @@ func RandomName() string {
 	return string(b)
 }
 
+func RandomAlphaNumeric(length int) string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(b)
+}
+
 func PreCheck(t *testing.T) {
 	cspURL := os.Getenv("BLOXONE_CSP_URL")
 	if cspURL == "" {
