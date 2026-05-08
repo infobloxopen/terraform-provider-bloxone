@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
@@ -74,18 +75,28 @@ func (r *SecurityPolicyResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	apiRes, _, err := r.client.FWAPI.
-		SecurityPoliciesAPI.
-		CreateSecurityPolicy(ctx).
-		Body(*data.Expand(ctx, &resp.Diagnostics)).
-		Execute()
+	err := retry.RetryContext(ctx, NetworkListOperationTimeout, func() *retry.RetryError {
+		apiRes, _, err := r.client.FWAPI.
+			SecurityPoliciesAPI.
+			CreateSecurityPolicy(ctx).
+			Body(*data.Expand(ctx, &resp.Diagnostics)).
+			Execute()
+		if err != nil {
+			if strings.Contains(err.Error(), "Internal Server Error") {
+				tflog.Debug(ctx, "Waiting for related objects to be present, will retry", map[string]interface{}{"error": err.Error()})
+				return retry.RetryableError(err)
+			}
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create SecurityPolicies, got error: %s", err))
+			return retry.NonRetryableError(err)
+		}
+		res := apiRes.GetResults()
+		data.Flatten(ctx, &res, &resp.Diagnostics)
+
+		return nil
+	})
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create SecurityPolicies, got error: %s", err))
 		return
 	}
-
-	res := apiRes.GetResults()
-	data.Flatten(ctx, &res, &resp.Diagnostics)
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

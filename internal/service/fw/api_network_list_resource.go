@@ -169,15 +169,24 @@ func (r *NetworkListResource) Delete(ctx context.Context, req resource.DeleteReq
 		return
 	}
 
-	httpRes, err := r.client.FWAPI.
-		NetworkListsAPI.
-		DeleteSingleNetworkLists(ctx, data.Id.ValueInt32()).
-		Execute()
-	if err != nil {
-		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
-			return
+	err := retry.RetryContext(ctx, NetworkListOperationTimeout, func() *retry.RetryError {
+		httpRes, err := r.client.FWAPI.
+			NetworkListsAPI.
+			DeleteSingleNetworkLists(ctx, data.Id.ValueInt32()).
+			Execute()
+		if err != nil {
+			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
+				return nil
+			}
+			if strings.Contains(err.Error(), "Internal Server Error") || strings.Contains(err.Error(), "Operation timed out") {
+				return retry.RetryableError(err)
+			}
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete NetworkLists, got error: %s", err))
+			return retry.NonRetryableError(err)
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete NetworkLists, got error: %s", err))
+		return nil
+	})
+	if err != nil {
 		return
 	}
 }
