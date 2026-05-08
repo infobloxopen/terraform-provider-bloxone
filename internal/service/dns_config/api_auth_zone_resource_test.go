@@ -901,8 +901,6 @@ resource "bloxone_dns_auth_zone" "test" {
 `, fqdn, primaryType)
 }
 
-// ...existing code...
-
 func testAccAuthZoneCompartmentId(fqdn, primaryType, compartmentId string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_auth_zone" "test_compartment_id" {
@@ -912,8 +910,6 @@ resource "bloxone_dns_auth_zone" "test_compartment_id" {
 }
 `, fqdn, primaryType, compartmentId)
 }
-
-// ...existing code...
 
 func testAccAuthZoneComment(fqdn, primaryType, comment string) string {
 	return fmt.Sprintf(`
