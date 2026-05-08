@@ -46,7 +46,7 @@ func TestAccCategoryFiltersDataSource_TagFilters(t *testing.T) {
 		CheckDestroy:             testAccCheckCategoryFiltersDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCategoryFiltersDataSourceConfigTagFilters(name, "College", "value1"),
+				Config: testAccCategoryFiltersDataSourceConfigTagFilters(name, "College", acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckCategoryFiltersExists(context.Background(), resourceName, &v),

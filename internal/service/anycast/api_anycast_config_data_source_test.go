@@ -115,6 +115,7 @@ resource "bloxone_anycast_config" "test" {
 }
 data "bloxone_anycast_configs" "test" {
 	service = %q
+	name = bloxone_anycast_config.test.name
 	depends_on = [bloxone_anycast_config.test]
 }
 `, anycastIpAddress, name, service, service)

@@ -27,7 +27,7 @@ func TestAccAnycastConfigResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAnycastConfigResourceBasicConfig(anycastName, "DHCP", anycastIP),
+				Config: testAccAnycastConfigResourceBasicConfig(anycastName, "DNS", anycastIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					// Test Read Only fields
@@ -54,7 +54,7 @@ func TestAccAnycastConfigResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckAnycastConfigResourceDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAnycastConfigResourceBasicConfig(anycastName, "DHCP", anycastIP),
+				Config: testAccAnycastConfigResourceBasicConfig(anycastName, "DNS", anycastIP),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					testAccCheckAnycastConfigResourceDisappears(context.Background(), &v),
@@ -78,7 +78,7 @@ func TestAccAnycastConfigResource_AnycastIpAddress(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAnycastConfigResourceAnycastIpAddress(anycastIP1, anycastName, "DHCP"),
+				Config: testAccAnycastConfigResourceAnycastIpAddress(anycastIP1, anycastName, "DNS"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", anycastName),
@@ -87,7 +87,7 @@ func TestAccAnycastConfigResource_AnycastIpAddress(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAnycastConfigResourceAnycastIpAddress(anycastIP2, anycastName, "DHCP"),
+				Config: testAccAnycastConfigResourceAnycastIpAddress(anycastIP2, anycastName, "DNS"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", anycastName),
@@ -174,18 +174,18 @@ func TestAccAnycastConfigResource_Service(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAnycastConfigResourceService(anycastIP, anycastName, "DHCP"),
+				Config: testAccAnycastConfigResourceService(anycastIP, anycastName, "DFP"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "service", "DHCP"),
+					resource.TestCheckResourceAttr(resourceName, "service", "DFP"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccAnycastConfigResourceService(anycastIP, anycastName, "DNS"),
+				Config: testAccAnycastConfigResourceService(anycastIP, anycastName, "NTP"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAnycastConfigResourceExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "service", "DNS"),
+					resource.TestCheckResourceAttr(resourceName, "service", "NTP"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
