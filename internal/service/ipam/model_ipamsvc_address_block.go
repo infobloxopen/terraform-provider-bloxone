@@ -132,6 +132,7 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
+			stringplanmodifier.UseStateForUnknown(),
 		},
 		MarkdownDescription: "The address field in form 'a.b.c.d'.",
 	},
