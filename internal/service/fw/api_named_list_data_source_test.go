@@ -77,7 +77,7 @@ resource "bloxone_td_named_list" "test" {
 	]
 	type = "custom_list"
 	tags = {
-		display_name = "Terraform Example Named List"
+		display_name = %q
 	}
 }
 
@@ -86,7 +86,7 @@ data "bloxone_td_named_lists" "test" {
 		display_name = bloxone_td_named_list.test.tags.display_name
 	}
 }
-`, name)
+`, name, acctest.RandomName())
 }
 
 func testAccNamedListDataSourceConfigTagFilters(name, tagValue string) string {

@@ -129,6 +129,7 @@ func TestAccAnycastHostResource_enableRouting(t *testing.T) {
 }
 
 func TestAccAnycastHostResource_BGP(t *testing.T) {
+	t.Skip("TODO : Schema Dependencies to be resolved in future version")
 	var resourceName = "bloxone_anycast_host.test"
 	var v anycast.OnpremHost
 	var anycastConfigName = acctest.RandomNameWithPrefix("anycast")

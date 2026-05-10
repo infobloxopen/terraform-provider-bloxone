@@ -559,9 +559,9 @@ func TestAccIpSpaceResource_DefaultRealms(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "default_realms.#", "1"),
 				),
 			},
-			// Update and Read
+			// Update and Read - Unassign realm from Space and Delete the Realm
 			{
-				Config: testAccIpSpaceDefaultRealmsNull(name),
+				Config: testAccIpSpaceDefaultRealmsNull(name, realmName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "default_realms.#", "0"),
@@ -1208,20 +1208,20 @@ resource "bloxone_ipam_ip_space" "test_default_realms" {
 	default_realms = [
 		bloxone_federation_federated_realm.realm1.id
 	]
+	depends_on = [ bloxone_federation_federated_realm.realm1 ]
 }
 `, name)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName, "realm1"), config}, "")
 }
 
-func testAccIpSpaceDefaultRealmsNull(name string) string {
-	return fmt.Sprintf(`
+func testAccIpSpaceDefaultRealmsNull(name, realmName string) string {
+	config := fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_default_realms" {
 	name = %q
-	default_realms = [
-		
-	]
+	default_realms = []
 }
 `, name)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName, "realm1"), config}, "")
 }
 
 func testAccBaseWithFederatedRealm(name, alias string) string {
