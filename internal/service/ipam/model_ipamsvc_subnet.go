@@ -144,6 +144,7 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
+			stringplanmodifier.UseStateForUnknown(),
 		},
 	},
 	"asm_config": schema.SingleNestedAttribute{

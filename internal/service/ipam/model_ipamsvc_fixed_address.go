@@ -86,6 +86,7 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
+			stringplanmodifier.UseStateForUnknown(),
 		},
 		MarkdownDescription: "The reserved address.",
 	},
