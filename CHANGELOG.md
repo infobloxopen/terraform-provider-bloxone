@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.5.5 (May 11, 2026)
+
+ENHANCEMENTS:
+* IPAM: Added `UseStateForUnknown` plan modifier for `address` field in `bloxone_ipam_address`, `bloxone_ipam_address_block`, `bloxone_ipam_subnet` and `bloxone_dhcp_fixed_address` ([#260](https://github.com/infobloxopen/terraform-provider-bloxone/pull/260))
+
+FIXES:
+* DNS: Extended support for compartment/access view on DNS Zones ([#258](https://github.com/infobloxopen/terraform-provider-bloxone/pull/258))
+
 ## v1.5.4 (December 3, 2025)
 
 FIXES:
