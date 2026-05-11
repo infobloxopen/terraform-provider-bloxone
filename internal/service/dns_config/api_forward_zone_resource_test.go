@@ -108,33 +108,33 @@ func TestAccForwardZoneResource_FQDN(t *testing.T) {
 }
 
 func TestAccForwardZoneResource_CompartmentId(t *testing.T) {
-    var resourceName = "bloxone_dns_forward_zone.test_compartment_id"
-    var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
-    var v dnsconfig.ForwardZone
+	var resourceName = "bloxone_dns_forward_zone.test_compartment_id"
+	var fqdn = acctest.RandomNameWithPrefix("fw-zone") + ".com."
+	var v dnsconfig.ForwardZone
 
-    resource.ParallelTest(t, resource.TestCase{
-        PreCheck:                 func() { acctest.PreCheck(t) },
-        ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-        Steps: []resource.TestStep{
-            // Create and Read
-            {
-                Config: testAccForwardZoneCompartmentId(fqdn, "c4695."),
-                Check: resource.ComposeTestCheckFunc(
-                    testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
-                    resource.TestCheckResourceAttr(resourceName, "compartment_id", "c4695."),
-                ),
-            },
-            // Update and Read
-            {
-                Config: testAccForwardZoneCompartmentId(fqdn, ""),
-                Check: resource.ComposeTestCheckFunc(
-                    testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
-                    resource.TestCheckResourceAttr(resourceName, "compartment_id", ""),
-                ),
-            },
-            // Delete testing automatically occurs in TestCase
-        },
-    })
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccForwardZoneCompartmentId(fqdn, "c4695."),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", "c4695."),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccForwardZoneCompartmentId(fqdn, ""),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckForwardZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", ""),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
 }
 
 func TestAccForwardZoneResource_Comment(t *testing.T) {
@@ -510,7 +510,7 @@ resource "bloxone_dns_forward_zone" "test" {
 }
 
 func testAccForwardZoneCompartmentId(fqdn, compartmentId string) string {
-    return fmt.Sprintf(`
+	return fmt.Sprintf(`
 resource "bloxone_dns_forward_zone" "test_compartment_id" {
     fqdn = %q
     compartment_id = %q
