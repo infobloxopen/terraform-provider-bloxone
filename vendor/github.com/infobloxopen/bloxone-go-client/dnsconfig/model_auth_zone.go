@@ -1,7 +1,7 @@
 /*
 DNS Configuration API
 
-The DNS application is a BloxOne DDI service that provides cloud-based DNS configuration with on-prem host serving DNS protocol. It is part of the full-featured BloxOne DDI solution that enables customers the ability to deploy large numbers of protocol servers in the delivery of DNS and DHCP throughout their enterprise network.
+The DNS application is a Universal DDI service that provides cloud-based DNS configuration with on-prem host serving DNS protocol. It is part of the full-featured Universal DDI solution that enables customers the ability to deploy large numbers of protocol servers in the delivery of DNS and DHCP throughout their enterprise network.
 
 API version: v1
 */
@@ -22,18 +22,32 @@ var _ MappedNullable = &AuthZone{}
 type AuthZone struct {
 	// Optional. Comment for zone configuration.
 	Comment *string `json:"comment,omitempty"`
+	// The access view associated with the object. If no access view is associated with the object, the value defaults to empty.
+	CompartmentId *string `json:"compartment_id,omitempty"`
 	// Time when the object has been created.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Optional. _true_ to disable object. A disabled object is effectively non-existent when generating configuration.
 	Disabled *bool `json:"disabled,omitempty"`
+	// The list of DNSSEC keys used by the _AuthZone_ for zone signing.
+	DnssecKeys []DNSSECKey `json:"dnssec_keys,omitempty"`
+	// Optional. DNSSEC zone signing settings.
+	DnssecSigningPolicy *DNSSECSigningPolicy `json:"dnssec_signing_policy,omitempty"`
+	// Read Only.  DNSSEC status indicates the current DNSSEC signing status of the zone.  Possible values: - _UNSIGNED_: The zone is not signed with DNSSEC - _SIGNED_: The zone is fully signed with DNSSEC - _ROLLOVER_IN_PROGRESS_: DNSSEC key rollover is currently in progress - _SIGN_IN_PROGRESS_: The zone is currently being signed with DNSSEC - _UNSIGN_IN_PROGRESS_: The zone is currently being unsigned (DNSSEC removal in progress)
+	DnssecStatus *string `json:"dnssec_status,omitempty"`
 	// Optional. DNS primaries external to BloxOne DDI. Order is not significant.
 	ExternalPrimaries []ExternalPrimary `json:"external_primaries,omitempty"`
 	// list of external providers for the auth zone.
 	ExternalProviders []AuthZoneExternalProvider `json:"external_providers,omitempty"`
+	// External DNS providers metadata.
+	ExternalProvidersMetadata map[string]interface{} `json:"external_providers_metadata,omitempty"`
 	// DNS secondaries external to BloxOne DDI. Order is not significant.
 	ExternalSecondaries []ExternalSecondary `json:"external_secondaries,omitempty"`
 	// Zone FQDN. The FQDN supplied at creation will be converted to canonical form.  Read-only after creation.
 	Fqdn *string `json:"fqdn,omitempty"`
+	// Optional. The list of the NIOS Grid Primaries assigned to an AuthZone, only applicable for the NIOS Zones.
+	GridPrimaries []MemberServer `json:"grid_primaries,omitempty"`
+	// Optional. The list of the NIOS Grid Secondaries assigned to an AuthZone, only applicable for the NIOS Zones.
+	GridSecondaries []MemberServer `json:"grid_secondaries,omitempty"`
 	// _gss_tsig_enabled_ enables/disables GSS-TSIG signed dynamic updates.  Defaults to _false_.
 	GssTsigEnabled *bool `json:"gss_tsig_enabled,omitempty"`
 	// The resource identifier.
@@ -50,8 +64,18 @@ type AuthZone struct {
 	MappedSubnet *string `json:"mapped_subnet,omitempty"`
 	// Zone mapping type. Allowed values:  * _forward_,  * _ipv4_reverse_.  * _ipv6_reverse_.  Defaults to forward.
 	Mapping *string `json:"mapping,omitempty"`
+	// The maximum number of records that can be stored in an RRset (records of same name and type), to prevent a slowdown in query processing due to an excessive number of those RRsets. The limit is enforced when serving the zone on-prem, not at the time of record creation or update. Exceeding the limit will result in the zone failing to load or to be updated. If 0, it means there is no limit. Defauts to _2000_.
+	MaxRecordsPerType *int64 `json:"max_records_per_type,omitempty"`
+	// The maximum number of record types that can be stored for an owner name, to prevent a slowdown in query processing due to an excessive number of those records. The limit is enforced when serving the zone on-prem, not at the time of record creation or update. Exceeding the limit will result in the zone failing to load or to be updated. If 0, it means there is no limit. Defauts to _100_.
+	MaxTypesPerName *int64 `json:"max_types_per_name,omitempty"`
+	// Optional. A list of DNS Nameservers of various roles. Cannot be configured if _nsg_ is configured.
+	Nameservers []Nameserver `json:"nameservers,omitempty"`
+	// NIOS Grids Metadata holds multiple NIOS grids data.
+	NiosGridsMetadata map[string]interface{} `json:"nios_grids_metadata,omitempty"`
 	// Also notify all external secondary DNS servers if enabled.  Defaults to _false_.
 	Notify *bool `json:"notify,omitempty"`
+	// The resource identifier.
+	Nsg *string `json:"nsg,omitempty"`
 	// The resource identifier.
 	Nsgs []string `json:"nsgs,omitempty"`
 	// The resource identifier.
@@ -62,6 +86,8 @@ type AuthZone struct {
 	ProtocolFqdn *string `json:"protocol_fqdn,omitempty"`
 	// Optional. Clients must match this ACL to make authoritative queries. Also used for recursive queries if that ACL is unset.  Defaults to empty.
 	QueryAcl []ACLItem `json:"query_acl,omitempty"`
+	// Optional. Defines if secondary zone records should be synchronized.  Defaults to _false_. Only allowed to update when primary_type is \"external\".
+	SecondaryZoneRecordsSync *bool `json:"secondary_zone_records_sync,omitempty"`
 	// Tagging specifics.
 	Tags map[string]interface{} `json:"tags,omitempty"`
 	// Optional. Clients must match this ACL to receive zone transfers.
@@ -132,6 +158,38 @@ func (o *AuthZone) SetComment(v string) {
 	o.Comment = &v
 }
 
+// GetCompartmentId returns the CompartmentId field value if set, zero value otherwise.
+func (o *AuthZone) GetCompartmentId() string {
+	if o == nil || IsNil(o.CompartmentId) {
+		var ret string
+		return ret
+	}
+	return *o.CompartmentId
+}
+
+// GetCompartmentIdOk returns a tuple with the CompartmentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuthZone) GetCompartmentIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CompartmentId) {
+		return nil, false
+	}
+	return o.CompartmentId, true
+}
+
+// HasCompartmentId returns a boolean if a field has been set.
+func (o *AuthZone) HasCompartmentId() bool {
+	if o != nil && !IsNil(o.CompartmentId) {
+		return true
+	}
+
+	return false
+}
+
+// SetCompartmentId gets a reference to the given string and assigns it to the CompartmentId field.
+func (o *AuthZone) SetCompartmentId(v string) {
+	o.CompartmentId = &v
+}
+
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
 func (o *AuthZone) GetCreatedAt() time.Time {
 	if o == nil || IsNil(o.CreatedAt) {
@@ -194,6 +252,102 @@ func (o *AuthZone) HasDisabled() bool {
 // SetDisabled gets a reference to the given bool and assigns it to the Disabled field.
 func (o *AuthZone) SetDisabled(v bool) {
 	o.Disabled = &v
+}
+
+// GetDnssecKeys returns the DnssecKeys field value if set, zero value otherwise.
+func (o *AuthZone) GetDnssecKeys() []DNSSECKey {
+	if o == nil || IsNil(o.DnssecKeys) {
+		var ret []DNSSECKey
+		return ret
+	}
+	return o.DnssecKeys
+}
+
+// GetDnssecKeysOk returns a tuple with the DnssecKeys field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuthZone) GetDnssecKeysOk() ([]DNSSECKey, bool) {
+	if o == nil || IsNil(o.DnssecKeys) {
+		return nil, false
+	}
+	return o.DnssecKeys, true
+}
+
+// HasDnssecKeys returns a boolean if a field has been set.
+func (o *AuthZone) HasDnssecKeys() bool {
+	if o != nil && !IsNil(o.DnssecKeys) {
+		return true
+	}
+
+	return false
+}
+
+// SetDnssecKeys gets a reference to the given []DNSSECKey and assigns it to the DnssecKeys field.
+func (o *AuthZone) SetDnssecKeys(v []DNSSECKey) {
+	o.DnssecKeys = v
+}
+
+// GetDnssecSigningPolicy returns the DnssecSigningPolicy field value if set, zero value otherwise.
+func (o *AuthZone) GetDnssecSigningPolicy() DNSSECSigningPolicy {
+	if o == nil || IsNil(o.DnssecSigningPolicy) {
+		var ret DNSSECSigningPolicy
+		return ret
+	}
+	return *o.DnssecSigningPolicy
+}
+
+// GetDnssecSigningPolicyOk returns a tuple with the DnssecSigningPolicy field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuthZone) GetDnssecSigningPolicyOk() (*DNSSECSigningPolicy, bool) {
+	if o == nil || IsNil(o.DnssecSigningPolicy) {
+		return nil, false
+	}
+	return o.DnssecSigningPolicy, true
+}
+
+// HasDnssecSigningPolicy returns a boolean if a field has been set.
+func (o *AuthZone) HasDnssecSigningPolicy() bool {
+	if o != nil && !IsNil(o.DnssecSigningPolicy) {
+		return true
+	}
+
+	return false
+}
+
+// SetDnssecSigningPolicy gets a reference to the given DNSSECSigningPolicy and assigns it to the DnssecSigningPolicy field.
+func (o *AuthZone) SetDnssecSigningPolicy(v DNSSECSigningPolicy) {
+	o.DnssecSigningPolicy = &v
+}
+
+// GetDnssecStatus returns the DnssecStatus field value if set, zero value otherwise.
+func (o *AuthZone) GetDnssecStatus() string {
+	if o == nil || IsNil(o.DnssecStatus) {
+		var ret string
+		return ret
+	}
+	return *o.DnssecStatus
+}
+
+// GetDnssecStatusOk returns a tuple with the DnssecStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuthZone) GetDnssecStatusOk() (*string, bool) {
+	if o == nil || IsNil(o.DnssecStatus) {
+		return nil, false
+	}
+	return o.DnssecStatus, true
+}
+
+// HasDnssecStatus returns a boolean if a field has been set.
+func (o *AuthZone) HasDnssecStatus() bool {
+	if o != nil && !IsNil(o.DnssecStatus) {
+		return true
+	}
+
+	return false
+}
+
+// SetDnssecStatus gets a reference to the given string and assigns it to the DnssecStatus field.
+func (o *AuthZone) SetDnssecStatus(v string) {
+	o.DnssecStatus = &v
 }
 
 // GetExternalPrimaries returns the ExternalPrimaries field value if set, zero value otherwise.
@@ -260,6 +414,38 @@ func (o *AuthZone) SetExternalProviders(v []AuthZoneExternalProvider) {
 	o.ExternalProviders = v
 }
 
+// GetExternalProvidersMetadata returns the ExternalProvidersMetadata field value if set, zero value otherwise.
+func (o *AuthZone) GetExternalProvidersMetadata() map[string]interface{} {
+	if o == nil || IsNil(o.ExternalProvidersMetadata) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.ExternalProvidersMetadata
+}
+
+// GetExternalProvidersMetadataOk returns a tuple with the ExternalProvidersMetadata field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuthZone) GetExternalProvidersMetadataOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.ExternalProvidersMetadata) {
+		return map[string]interface{}{}, false
+	}
+	return o.ExternalProvidersMetadata, true
+}
+
+// HasExternalProvidersMetadata returns a boolean if a field has been set.
+func (o *AuthZone) HasExternalProvidersMetadata() bool {
+	if o != nil && !IsNil(o.ExternalProvidersMetadata) {
+		return true
+	}
+
+	return false
+}
+
+// SetExternalProvidersMetadata gets a reference to the given map[string]interface{} and assigns it to the ExternalProvidersMetadata field.
+func (o *AuthZone) SetExternalProvidersMetadata(v map[string]interface{}) {
+	o.ExternalProvidersMetadata = v
+}
+
 // GetExternalSecondaries returns the ExternalSecondaries field value if set, zero value otherwise.
 func (o *AuthZone) GetExternalSecondaries() []ExternalSecondary {
 	if o == nil || IsNil(o.ExternalSecondaries) {
@@ -322,6 +508,70 @@ func (o *AuthZone) HasFqdn() bool {
 // SetFqdn gets a reference to the given string and assigns it to the Fqdn field.
 func (o *AuthZone) SetFqdn(v string) {
 	o.Fqdn = &v
+}
+
+// GetGridPrimaries returns the GridPrimaries field value if set, zero value otherwise.
+func (o *AuthZone) GetGridPrimaries() []MemberServer {
+	if o == nil || IsNil(o.GridPrimaries) {
+		var ret []MemberServer
+		return ret
+	}
+	return o.GridPrimaries
+}
+
+// GetGridPrimariesOk returns a tuple with the GridPrimaries field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuthZone) GetGridPrimariesOk() ([]MemberServer, bool) {
+	if o == nil || IsNil(o.GridPrimaries) {
+		return nil, false
+	}
+	return o.GridPrimaries, true
+}
+
+// HasGridPrimaries returns a boolean if a field has been set.
+func (o *AuthZone) HasGridPrimaries() bool {
+	if o != nil && !IsNil(o.GridPrimaries) {
+		return true
+	}
+
+	return false
+}
+
+// SetGridPrimaries gets a reference to the given []MemberServer and assigns it to the GridPrimaries field.
+func (o *AuthZone) SetGridPrimaries(v []MemberServer) {
+	o.GridPrimaries = v
+}
+
+// GetGridSecondaries returns the GridSecondaries field value if set, zero value otherwise.
+func (o *AuthZone) GetGridSecondaries() []MemberServer {
+	if o == nil || IsNil(o.GridSecondaries) {
+		var ret []MemberServer
+		return ret
+	}
+	return o.GridSecondaries
+}
+
+// GetGridSecondariesOk returns a tuple with the GridSecondaries field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuthZone) GetGridSecondariesOk() ([]MemberServer, bool) {
+	if o == nil || IsNil(o.GridSecondaries) {
+		return nil, false
+	}
+	return o.GridSecondaries, true
+}
+
+// HasGridSecondaries returns a boolean if a field has been set.
+func (o *AuthZone) HasGridSecondaries() bool {
+	if o != nil && !IsNil(o.GridSecondaries) {
+		return true
+	}
+
+	return false
+}
+
+// SetGridSecondaries gets a reference to the given []MemberServer and assigns it to the GridSecondaries field.
+func (o *AuthZone) SetGridSecondaries(v []MemberServer) {
+	o.GridSecondaries = v
 }
 
 // GetGssTsigEnabled returns the GssTsigEnabled field value if set, zero value otherwise.
@@ -580,6 +830,134 @@ func (o *AuthZone) SetMapping(v string) {
 	o.Mapping = &v
 }
 
+// GetMaxRecordsPerType returns the MaxRecordsPerType field value if set, zero value otherwise.
+func (o *AuthZone) GetMaxRecordsPerType() int64 {
+	if o == nil || IsNil(o.MaxRecordsPerType) {
+		var ret int64
+		return ret
+	}
+	return *o.MaxRecordsPerType
+}
+
+// GetMaxRecordsPerTypeOk returns a tuple with the MaxRecordsPerType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuthZone) GetMaxRecordsPerTypeOk() (*int64, bool) {
+	if o == nil || IsNil(o.MaxRecordsPerType) {
+		return nil, false
+	}
+	return o.MaxRecordsPerType, true
+}
+
+// HasMaxRecordsPerType returns a boolean if a field has been set.
+func (o *AuthZone) HasMaxRecordsPerType() bool {
+	if o != nil && !IsNil(o.MaxRecordsPerType) {
+		return true
+	}
+
+	return false
+}
+
+// SetMaxRecordsPerType gets a reference to the given int64 and assigns it to the MaxRecordsPerType field.
+func (o *AuthZone) SetMaxRecordsPerType(v int64) {
+	o.MaxRecordsPerType = &v
+}
+
+// GetMaxTypesPerName returns the MaxTypesPerName field value if set, zero value otherwise.
+func (o *AuthZone) GetMaxTypesPerName() int64 {
+	if o == nil || IsNil(o.MaxTypesPerName) {
+		var ret int64
+		return ret
+	}
+	return *o.MaxTypesPerName
+}
+
+// GetMaxTypesPerNameOk returns a tuple with the MaxTypesPerName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuthZone) GetMaxTypesPerNameOk() (*int64, bool) {
+	if o == nil || IsNil(o.MaxTypesPerName) {
+		return nil, false
+	}
+	return o.MaxTypesPerName, true
+}
+
+// HasMaxTypesPerName returns a boolean if a field has been set.
+func (o *AuthZone) HasMaxTypesPerName() bool {
+	if o != nil && !IsNil(o.MaxTypesPerName) {
+		return true
+	}
+
+	return false
+}
+
+// SetMaxTypesPerName gets a reference to the given int64 and assigns it to the MaxTypesPerName field.
+func (o *AuthZone) SetMaxTypesPerName(v int64) {
+	o.MaxTypesPerName = &v
+}
+
+// GetNameservers returns the Nameservers field value if set, zero value otherwise.
+func (o *AuthZone) GetNameservers() []Nameserver {
+	if o == nil || IsNil(o.Nameservers) {
+		var ret []Nameserver
+		return ret
+	}
+	return o.Nameservers
+}
+
+// GetNameserversOk returns a tuple with the Nameservers field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuthZone) GetNameserversOk() ([]Nameserver, bool) {
+	if o == nil || IsNil(o.Nameservers) {
+		return nil, false
+	}
+	return o.Nameservers, true
+}
+
+// HasNameservers returns a boolean if a field has been set.
+func (o *AuthZone) HasNameservers() bool {
+	if o != nil && !IsNil(o.Nameservers) {
+		return true
+	}
+
+	return false
+}
+
+// SetNameservers gets a reference to the given []Nameserver and assigns it to the Nameservers field.
+func (o *AuthZone) SetNameservers(v []Nameserver) {
+	o.Nameservers = v
+}
+
+// GetNiosGridsMetadata returns the NiosGridsMetadata field value if set, zero value otherwise.
+func (o *AuthZone) GetNiosGridsMetadata() map[string]interface{} {
+	if o == nil || IsNil(o.NiosGridsMetadata) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.NiosGridsMetadata
+}
+
+// GetNiosGridsMetadataOk returns a tuple with the NiosGridsMetadata field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuthZone) GetNiosGridsMetadataOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.NiosGridsMetadata) {
+		return map[string]interface{}{}, false
+	}
+	return o.NiosGridsMetadata, true
+}
+
+// HasNiosGridsMetadata returns a boolean if a field has been set.
+func (o *AuthZone) HasNiosGridsMetadata() bool {
+	if o != nil && !IsNil(o.NiosGridsMetadata) {
+		return true
+	}
+
+	return false
+}
+
+// SetNiosGridsMetadata gets a reference to the given map[string]interface{} and assigns it to the NiosGridsMetadata field.
+func (o *AuthZone) SetNiosGridsMetadata(v map[string]interface{}) {
+	o.NiosGridsMetadata = v
+}
+
 // GetNotify returns the Notify field value if set, zero value otherwise.
 func (o *AuthZone) GetNotify() bool {
 	if o == nil || IsNil(o.Notify) {
@@ -610,6 +988,38 @@ func (o *AuthZone) HasNotify() bool {
 // SetNotify gets a reference to the given bool and assigns it to the Notify field.
 func (o *AuthZone) SetNotify(v bool) {
 	o.Notify = &v
+}
+
+// GetNsg returns the Nsg field value if set, zero value otherwise.
+func (o *AuthZone) GetNsg() string {
+	if o == nil || IsNil(o.Nsg) {
+		var ret string
+		return ret
+	}
+	return *o.Nsg
+}
+
+// GetNsgOk returns a tuple with the Nsg field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuthZone) GetNsgOk() (*string, bool) {
+	if o == nil || IsNil(o.Nsg) {
+		return nil, false
+	}
+	return o.Nsg, true
+}
+
+// HasNsg returns a boolean if a field has been set.
+func (o *AuthZone) HasNsg() bool {
+	if o != nil && !IsNil(o.Nsg) {
+		return true
+	}
+
+	return false
+}
+
+// SetNsg gets a reference to the given string and assigns it to the Nsg field.
+func (o *AuthZone) SetNsg(v string) {
+	o.Nsg = &v
 }
 
 // GetNsgs returns the Nsgs field value if set, zero value otherwise.
@@ -770,6 +1180,38 @@ func (o *AuthZone) HasQueryAcl() bool {
 // SetQueryAcl gets a reference to the given []ACLItem and assigns it to the QueryAcl field.
 func (o *AuthZone) SetQueryAcl(v []ACLItem) {
 	o.QueryAcl = v
+}
+
+// GetSecondaryZoneRecordsSync returns the SecondaryZoneRecordsSync field value if set, zero value otherwise.
+func (o *AuthZone) GetSecondaryZoneRecordsSync() bool {
+	if o == nil || IsNil(o.SecondaryZoneRecordsSync) {
+		var ret bool
+		return ret
+	}
+	return *o.SecondaryZoneRecordsSync
+}
+
+// GetSecondaryZoneRecordsSyncOk returns a tuple with the SecondaryZoneRecordsSync field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuthZone) GetSecondaryZoneRecordsSyncOk() (*bool, bool) {
+	if o == nil || IsNil(o.SecondaryZoneRecordsSync) {
+		return nil, false
+	}
+	return o.SecondaryZoneRecordsSync, true
+}
+
+// HasSecondaryZoneRecordsSync returns a boolean if a field has been set.
+func (o *AuthZone) HasSecondaryZoneRecordsSync() bool {
+	if o != nil && !IsNil(o.SecondaryZoneRecordsSync) {
+		return true
+	}
+
+	return false
+}
+
+// SetSecondaryZoneRecordsSync gets a reference to the given bool and assigns it to the SecondaryZoneRecordsSync field.
+func (o *AuthZone) SetSecondaryZoneRecordsSync(v bool) {
+	o.SecondaryZoneRecordsSync = &v
 }
 
 // GetTags returns the Tags field value if set, zero value otherwise.
@@ -1041,11 +1483,23 @@ func (o AuthZone) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Comment) {
 		toSerialize["comment"] = o.Comment
 	}
+	if !IsNil(o.CompartmentId) {
+		toSerialize["compartment_id"] = o.CompartmentId
+	}
 	if !IsNil(o.CreatedAt) {
 		toSerialize["created_at"] = o.CreatedAt
 	}
 	if !IsNil(o.Disabled) {
 		toSerialize["disabled"] = o.Disabled
+	}
+	if !IsNil(o.DnssecKeys) {
+		toSerialize["dnssec_keys"] = o.DnssecKeys
+	}
+	if !IsNil(o.DnssecSigningPolicy) {
+		toSerialize["dnssec_signing_policy"] = o.DnssecSigningPolicy
+	}
+	if !IsNil(o.DnssecStatus) {
+		toSerialize["dnssec_status"] = o.DnssecStatus
 	}
 	if !IsNil(o.ExternalPrimaries) {
 		toSerialize["external_primaries"] = o.ExternalPrimaries
@@ -1053,11 +1507,20 @@ func (o AuthZone) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ExternalProviders) {
 		toSerialize["external_providers"] = o.ExternalProviders
 	}
+	if !IsNil(o.ExternalProvidersMetadata) {
+		toSerialize["external_providers_metadata"] = o.ExternalProvidersMetadata
+	}
 	if !IsNil(o.ExternalSecondaries) {
 		toSerialize["external_secondaries"] = o.ExternalSecondaries
 	}
 	if !IsNil(o.Fqdn) {
 		toSerialize["fqdn"] = o.Fqdn
+	}
+	if !IsNil(o.GridPrimaries) {
+		toSerialize["grid_primaries"] = o.GridPrimaries
+	}
+	if !IsNil(o.GridSecondaries) {
+		toSerialize["grid_secondaries"] = o.GridSecondaries
 	}
 	if !IsNil(o.GssTsigEnabled) {
 		toSerialize["gss_tsig_enabled"] = o.GssTsigEnabled
@@ -1083,8 +1546,23 @@ func (o AuthZone) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Mapping) {
 		toSerialize["mapping"] = o.Mapping
 	}
+	if !IsNil(o.MaxRecordsPerType) {
+		toSerialize["max_records_per_type"] = o.MaxRecordsPerType
+	}
+	if !IsNil(o.MaxTypesPerName) {
+		toSerialize["max_types_per_name"] = o.MaxTypesPerName
+	}
+	if !IsNil(o.Nameservers) {
+		toSerialize["nameservers"] = o.Nameservers
+	}
+	if !IsNil(o.NiosGridsMetadata) {
+		toSerialize["nios_grids_metadata"] = o.NiosGridsMetadata
+	}
 	if !IsNil(o.Notify) {
 		toSerialize["notify"] = o.Notify
+	}
+	if !IsNil(o.Nsg) {
+		toSerialize["nsg"] = o.Nsg
 	}
 	if !IsNil(o.Nsgs) {
 		toSerialize["nsgs"] = o.Nsgs
@@ -1100,6 +1578,9 @@ func (o AuthZone) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.QueryAcl) {
 		toSerialize["query_acl"] = o.QueryAcl
+	}
+	if !IsNil(o.SecondaryZoneRecordsSync) {
+		toSerialize["secondary_zone_records_sync"] = o.SecondaryZoneRecordsSync
 	}
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
@@ -1148,12 +1629,19 @@ func (o *AuthZone) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "comment")
+		delete(additionalProperties, "compartment_id")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "disabled")
+		delete(additionalProperties, "dnssec_keys")
+		delete(additionalProperties, "dnssec_signing_policy")
+		delete(additionalProperties, "dnssec_status")
 		delete(additionalProperties, "external_primaries")
 		delete(additionalProperties, "external_providers")
+		delete(additionalProperties, "external_providers_metadata")
 		delete(additionalProperties, "external_secondaries")
 		delete(additionalProperties, "fqdn")
+		delete(additionalProperties, "grid_primaries")
+		delete(additionalProperties, "grid_secondaries")
 		delete(additionalProperties, "gss_tsig_enabled")
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "inheritance_assigned_hosts")
@@ -1162,12 +1650,18 @@ func (o *AuthZone) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "internal_secondaries")
 		delete(additionalProperties, "mapped_subnet")
 		delete(additionalProperties, "mapping")
+		delete(additionalProperties, "max_records_per_type")
+		delete(additionalProperties, "max_types_per_name")
+		delete(additionalProperties, "nameservers")
+		delete(additionalProperties, "nios_grids_metadata")
 		delete(additionalProperties, "notify")
+		delete(additionalProperties, "nsg")
 		delete(additionalProperties, "nsgs")
 		delete(additionalProperties, "parent")
 		delete(additionalProperties, "primary_type")
 		delete(additionalProperties, "protocol_fqdn")
 		delete(additionalProperties, "query_acl")
+		delete(additionalProperties, "secondary_zone_records_sync")
 		delete(additionalProperties, "tags")
 		delete(additionalProperties, "transfer_acl")
 		delete(additionalProperties, "update_acl")

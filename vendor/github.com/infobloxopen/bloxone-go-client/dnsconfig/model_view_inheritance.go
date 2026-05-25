@@ -1,7 +1,7 @@
 /*
 DNS Configuration API
 
-The DNS application is a BloxOne DDI service that provides cloud-based DNS configuration with on-prem host serving DNS protocol. It is part of the full-featured BloxOne DDI solution that enables customers the ability to deploy large numbers of protocol servers in the delivery of DNS and DHCP throughout their enterprise network.
+The DNS application is a Universal DDI service that provides cloud-based DNS configuration with on-prem host serving DNS protocol. It is part of the full-featured Universal DDI solution that enables customers the ability to deploy large numbers of protocol servers in the delivery of DNS and DHCP throughout their enterprise network.
 
 API version: v1
 */
@@ -23,6 +23,8 @@ type ViewInheritance struct {
 	AddEdnsOptionInOutgoingQuery *Inheritance2InheritedBool `json:"add_edns_option_in_outgoing_query,omitempty"`
 	// Optional. Field config for _custom_root_ns_block_ field from _View_ object.
 	CustomRootNsBlock *InheritedCustomRootNSBlock `json:"custom_root_ns_block,omitempty"`
+	// Optional. Field configuration for _dnssec_signing_policy_ field from _View_ object.
+	DnssecSigningPolicy *InheritedDNSSECSigningPolicy `json:"dnssec_signing_policy,omitempty"`
 	// Optional. Field config for _dnssec_validation_block_ field from _View_ object.
 	DnssecValidationBlock *InheritedDNSSECValidationBlock `json:"dnssec_validation_block,omitempty"`
 	// Optional. Field config for _dtc_config_ field from _View_ object.
@@ -155,6 +157,38 @@ func (o *ViewInheritance) HasCustomRootNsBlock() bool {
 // SetCustomRootNsBlock gets a reference to the given InheritedCustomRootNSBlock and assigns it to the CustomRootNsBlock field.
 func (o *ViewInheritance) SetCustomRootNsBlock(v InheritedCustomRootNSBlock) {
 	o.CustomRootNsBlock = &v
+}
+
+// GetDnssecSigningPolicy returns the DnssecSigningPolicy field value if set, zero value otherwise.
+func (o *ViewInheritance) GetDnssecSigningPolicy() InheritedDNSSECSigningPolicy {
+	if o == nil || IsNil(o.DnssecSigningPolicy) {
+		var ret InheritedDNSSECSigningPolicy
+		return ret
+	}
+	return *o.DnssecSigningPolicy
+}
+
+// GetDnssecSigningPolicyOk returns a tuple with the DnssecSigningPolicy field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ViewInheritance) GetDnssecSigningPolicyOk() (*InheritedDNSSECSigningPolicy, bool) {
+	if o == nil || IsNil(o.DnssecSigningPolicy) {
+		return nil, false
+	}
+	return o.DnssecSigningPolicy, true
+}
+
+// HasDnssecSigningPolicy returns a boolean if a field has been set.
+func (o *ViewInheritance) HasDnssecSigningPolicy() bool {
+	if o != nil && !IsNil(o.DnssecSigningPolicy) {
+		return true
+	}
+
+	return false
+}
+
+// SetDnssecSigningPolicy gets a reference to the given InheritedDNSSECSigningPolicy and assigns it to the DnssecSigningPolicy field.
+func (o *ViewInheritance) SetDnssecSigningPolicy(v InheritedDNSSECSigningPolicy) {
+	o.DnssecSigningPolicy = &v
 }
 
 // GetDnssecValidationBlock returns the DnssecValidationBlock field value if set, zero value otherwise.
@@ -941,6 +975,9 @@ func (o ViewInheritance) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.CustomRootNsBlock) {
 		toSerialize["custom_root_ns_block"] = o.CustomRootNsBlock
 	}
+	if !IsNil(o.DnssecSigningPolicy) {
+		toSerialize["dnssec_signing_policy"] = o.DnssecSigningPolicy
+	}
 	if !IsNil(o.DnssecValidationBlock) {
 		toSerialize["dnssec_validation_block"] = o.DnssecValidationBlock
 	}
@@ -1037,6 +1074,7 @@ func (o *ViewInheritance) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "add_edns_option_in_outgoing_query")
 		delete(additionalProperties, "custom_root_ns_block")
+		delete(additionalProperties, "dnssec_signing_policy")
 		delete(additionalProperties, "dnssec_validation_block")
 		delete(additionalProperties, "dtc_config")
 		delete(additionalProperties, "ecs_block")
