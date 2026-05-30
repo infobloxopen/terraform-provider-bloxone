@@ -34,13 +34,13 @@ type AuthZone struct {
 	DnssecSigningPolicy *DNSSECSigningPolicy `json:"dnssec_signing_policy,omitempty"`
 	// Read Only.  DNSSEC status indicates the current DNSSEC signing status of the zone.  Possible values: - _UNSIGNED_: The zone is not signed with DNSSEC - _SIGNED_: The zone is fully signed with DNSSEC - _ROLLOVER_IN_PROGRESS_: DNSSEC key rollover is currently in progress - _SIGN_IN_PROGRESS_: The zone is currently being signed with DNSSEC - _UNSIGN_IN_PROGRESS_: The zone is currently being unsigned (DNSSEC removal in progress)
 	DnssecStatus *string `json:"dnssec_status,omitempty"`
-	// Optional. DNS primaries external to BloxOne DDI. Order is not significant.
+	// Optional. DNS primaries external to Universal DDI. Order is not significant.
 	ExternalPrimaries []ExternalPrimary `json:"external_primaries,omitempty"`
 	// list of external providers for the auth zone.
 	ExternalProviders []AuthZoneExternalProvider `json:"external_providers,omitempty"`
 	// External DNS providers metadata.
 	ExternalProvidersMetadata map[string]interface{} `json:"external_providers_metadata,omitempty"`
-	// DNS secondaries external to BloxOne DDI. Order is not significant.
+	// DNS secondaries external to Universal DDI. Order is not significant.
 	ExternalSecondaries []ExternalSecondary `json:"external_secondaries,omitempty"`
 	// Zone FQDN. The FQDN supplied at creation will be converted to canonical form.  Read-only after creation.
 	Fqdn *string `json:"fqdn,omitempty"`
@@ -58,7 +58,7 @@ type AuthZone struct {
 	InheritanceSources *AuthZoneInheritance `json:"inheritance_sources,omitempty"`
 	// On-create-only. SOA serial is allowed to be set when the authoritative zone is created.
 	InitialSoaSerial *int64 `json:"initial_soa_serial,omitempty"`
-	// Optional. BloxOne DDI hosts acting as internal secondaries. Order is not significant.
+	// Optional. Universal DDI hosts acting as internal secondaries. Order is not significant.
 	InternalSecondaries []InternalSecondary `json:"internal_secondaries,omitempty"`
 	// Reverse zone network address in the following format: \"ip-address/cidr\". Defaults to empty.
 	MappedSubnet *string `json:"mapped_subnet,omitempty"`
@@ -80,7 +80,7 @@ type AuthZone struct {
 	Nsgs []string `json:"nsgs,omitempty"`
 	// The resource identifier.
 	Parent *string `json:"parent,omitempty"`
-	// Primary type for an authoritative zone. Read only after creation. Allowed values:  * _external_: zone data owned by an external nameserver,  * _cloud_: zone data is owned by a BloxOne DDI host.
+	// Primary type for an authoritative zone. Read only after creation. Allowed values:  * _external_: zone data owned by an external nameserver,  * _cloud_: zone data is owned by a Universal DDI host.
 	PrimaryType *string `json:"primary_type,omitempty"`
 	// Zone FQDN in punycode.
 	ProtocolFqdn *string `json:"protocol_fqdn,omitempty"`

@@ -170,6 +170,7 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 	"external_providers_metadata": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "External DNS providers metadata.",
 	},
 	"external_secondaries": schema.ListNestedAttribute{
@@ -276,6 +277,7 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 	"nios_grids_metadata": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "NIOS Grids Metadata holds multiple NIOS grids data.",
 	},
 	"notify": schema.BoolAttribute{

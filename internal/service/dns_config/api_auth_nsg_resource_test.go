@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -16,7 +17,6 @@ import (
 
 //TODO: add tests
 // The following require additional resource/data source objects to be supported.
-// - internal_secondaries
 // - TSIG keys
 
 func TestAccAuthNsgResource_basic(t *testing.T) {
@@ -275,6 +275,139 @@ func TestAccAuthNsgResource_Tags(t *testing.T) {
 	})
 }
 
+func TestAccAuthNsgResource_GridPrimaries(t *testing.T) {
+	var resourceName = "bloxone_dns_auth_nsg.test_grid_primaries"
+	var v dnsconfig.AuthNSG
+	name := acctest.RandomNameWithPrefix("auth-nsg")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAuthNsgGridPrimaries(name, "one"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthNsgExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "grid_primaries.#", "1"),
+					resource.TestCheckResourceAttrPair(resourceName, "grid_primaries.0.host", "data.bloxone_dns_hosts.one", "results.0.id"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAuthNsgGridPrimaries(name, "two"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthNsgExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "grid_primaries.#", "1"),
+					resource.TestCheckResourceAttrPair(resourceName, "grid_primaries.0.host", "data.bloxone_dns_hosts.two", "results.0.id"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccAuthNsgResource_GridSecondaries(t *testing.T) {
+	var resourceName = "bloxone_dns_auth_nsg.test_grid_secondaries"
+	var v dnsconfig.AuthNSG
+	name := acctest.RandomNameWithPrefix("auth-nsg")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAuthNsgGridSecondaries(name, "one"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthNsgExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "grid_secondaries.#", "1"),
+					resource.TestCheckResourceAttrPair(resourceName, "grid_secondaries.0.host", "data.bloxone_dns_hosts.one", "results.0.id"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAuthNsgGridSecondaries(name, "two"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthNsgExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "grid_secondaries.#", "1"),
+					resource.TestCheckResourceAttrPair(resourceName, "grid_secondaries.0.host", "data.bloxone_dns_hosts.two", "results.0.id"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccAuthNsgResource_Nameservers(t *testing.T) {
+	t.Skip("Nameservers can be specified only when Unified Nameservers is enabled.")
+	var resourceName = "bloxone_dns_auth_nsg.test_nameservers"
+	var v dnsconfig.AuthNSG
+	name := acctest.RandomNameWithPrefix("auth-nsg")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAuthNsgNameservers(name, "1.1.1.1", "a.com."),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthNsgExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "nameservers.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "nameservers.0.address", "1.1.1.1"),
+					resource.TestCheckResourceAttr(resourceName, "nameservers.0.fqdn", "a.com."),
+					resource.TestCheckResourceAttr(resourceName, "nameservers.0.role", "primary"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAuthNsgNameservers(name, "2.2.2.2", "b.com."),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthNsgExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "nameservers.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "nameservers.0.address", "2.2.2.2"),
+					resource.TestCheckResourceAttr(resourceName, "nameservers.0.fqdn", "b.com."),
+					resource.TestCheckResourceAttr(resourceName, "nameservers.0.role", "primary"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccAuthNsgResource_InternalSecondaries(t *testing.T) {
+	var resourceName = "bloxone_dns_auth_nsg.test_internal_secondaries"
+	var v dnsconfig.AuthNSG
+	name := acctest.RandomNameWithPrefix("auth-nsg")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAuthNsgInternalSecondaries(name, "one"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthNsgExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "internal_secondaries.#", "1"),
+					resource.TestCheckResourceAttrPair(resourceName, "internal_secondaries.0.host", "data.bloxone_dns_hosts.one", "results.0.id"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAuthNsgInternalSecondaries(name, "two"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthNsgExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "internal_secondaries.#", "1"),
+					resource.TestCheckResourceAttrPair(resourceName, "internal_secondaries.0.host", "data.bloxone_dns_hosts.two", "results.0.id"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func testAccCheckAuthNsgExists(ctx context.Context, resourceName string, v *dnsconfig.AuthNSG) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
@@ -439,4 +572,76 @@ resource "bloxone_dns_auth_nsg" "test_tags" {
     tags = %s
 }
 `, name, tagsStr)
+}
+
+func testAccAuthNsgBaseWithTwoHosts() string {
+	return `
+data "bloxone_dns_hosts" "one" {
+    filters = {
+        name = "TF_TEST_HOST_01"
+    }
+}
+data "bloxone_dns_hosts" "two" {
+    filters = {
+        name = "TF_TEST_HOST_02"
+    }
+}
+`
+}
+
+func testAccAuthNsgGridPrimaries(name string, host string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dns_auth_nsg" "test_grid_primaries" {
+    name = %q
+    grid_primaries = [
+        {
+            host = data.bloxone_dns_hosts.%s.results.0.id
+        }
+    ]
+}
+`, name, host)
+	return strings.Join([]string{testAccAuthNsgBaseWithTwoHosts(), config}, "")
+}
+
+func testAccAuthNsgGridSecondaries(name string, host string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dns_auth_nsg" "test_grid_secondaries" {
+    name = %q
+    grid_secondaries = [
+        {
+            host = data.bloxone_dns_hosts.%s.results.0.id
+        }
+    ]
+}
+`, name, host)
+	return strings.Join([]string{testAccAuthNsgBaseWithTwoHosts(), config}, "")
+}
+
+func testAccAuthNsgNameservers(name string, address string, fqdn string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_auth_nsg" "test_nameservers" {
+    name = %q
+    nameservers = [
+        {
+            address = %q
+            fqdn    = %q
+            role    = "primary"
+        }
+    ]
+}
+`, name, address, fqdn)
+}
+
+func testAccAuthNsgInternalSecondaries(name string, host string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dns_auth_nsg" "test_internal_secondaries" {
+    name = %q
+    internal_secondaries = [
+        {
+            host = data.bloxone_dns_hosts.%s.results.0.id
+        }
+    ]
+}
+`, name, host)
+	return strings.Join([]string{testAccAuthNsgBaseWithTwoHosts(), config}, "")
 }

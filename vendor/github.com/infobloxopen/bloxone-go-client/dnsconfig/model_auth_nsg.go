@@ -22,9 +22,9 @@ var _ MappedNullable = &AuthNSG{}
 type AuthNSG struct {
 	// Optional. Comment for the object.
 	Comment *string `json:"comment,omitempty"`
-	// Optional. DNS primaries external to BloxOne DDI. Order is not significant.
+	// Optional. DNS primaries external to Universal DDI. Order is not significant.
 	ExternalPrimaries []ExternalPrimary `json:"external_primaries,omitempty"`
-	// DNS secondaries external to BloxOne DDI. Order is not significant.
+	// DNS secondaries external to Universal DDI. Order is not significant.
 	ExternalSecondaries []ExternalSecondary `json:"external_secondaries,omitempty"`
 	// Optional. The list of the NIOS Grid Primaries assigned to an AuthNSG, only applicable for the NIOS.
 	GridPrimaries []MemberServer `json:"grid_primaries,omitempty"`
@@ -32,7 +32,7 @@ type AuthNSG struct {
 	GridSecondaries []MemberServer `json:"grid_secondaries,omitempty"`
 	// The resource identifier.
 	Id *string `json:"id,omitempty"`
-	// Optional. BloxOne DDI hosts acting as internal secondaries. Order is not significant.
+	// Optional. Universal DDI hosts acting as internal secondaries. Order is not significant.
 	InternalSecondaries []InternalSecondary `json:"internal_secondaries,omitempty"`
 	// Name of the object.
 	Name string `json:"name"`

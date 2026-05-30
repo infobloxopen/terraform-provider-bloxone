@@ -52,14 +52,16 @@ var ConfigNameserverResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The resource identifier.",
 	},
 	"origin": schema.StringAttribute{
-		Required: true,
+		Computed:            true,
+		MarkdownDescription: "Origin of the Name Server.",
 	},
 	"protocol_fqdn": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: "FQDN of the nameserver in punycode.",
 	},
 	"role": schema.StringAttribute{
-		Required: true,
+		Required:            true,
+		MarkdownDescription: "Role of the nameserver. Valid values are _primary_ and _secondary_.",
 	},
 	"stealth": schema.BoolAttribute{
 		Optional:            true,
@@ -70,8 +72,9 @@ var ConfigNameserverResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Optional. If enabled, secondaries will use the configured TSIG key when requesting a zone transfer from a primary.",
 	},
 	"tsig_key": schema.SingleNestedAttribute{
-		Attributes: ConfigTSIGKeyResourceSchemaAttributes,
-		Optional:   true,
+		Attributes:          ConfigTSIGKeyResourceSchemaAttributes,
+		Optional:            true,
+		MarkdownDescription: "Object representing TSIG key synced from Keys Service.",
 	},
 }
 
@@ -95,7 +98,6 @@ func (m *ConfigNameserverModel) Expand(ctx context.Context, diags *diag.Diagnost
 		Address:     flex.ExpandStringPointer(m.Address),
 		Fqdn:        flex.ExpandStringPointer(m.Fqdn),
 		Host:        flex.ExpandStringPointer(m.Host),
-		Origin:      flex.ExpandString(m.Origin),
 		Role:        flex.ExpandString(m.Role),
 		Stealth:     flex.ExpandBoolPointer(m.Stealth),
 		TsigEnabled: flex.ExpandBoolPointer(m.TsigEnabled),
@@ -125,7 +127,7 @@ func (m *ConfigNameserverModel) Flatten(ctx context.Context, from *dnsconfig.Nam
 	m.Address = flex.FlattenStringPointer(from.Address)
 	m.Fqdn = flex.FlattenStringPointer(from.Fqdn)
 	m.Host = flex.FlattenStringPointer(from.Host)
-	m.Origin = flex.FlattenString(from.Origin)
+	m.Origin = flex.FlattenStringPointer(from.Origin)
 	m.ProtocolFqdn = flex.FlattenStringPointer(from.ProtocolFqdn)
 	m.Role = flex.FlattenString(from.Role)
 	m.Stealth = types.BoolPointerValue(from.Stealth)

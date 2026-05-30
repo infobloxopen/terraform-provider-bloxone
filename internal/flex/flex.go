@@ -346,6 +346,8 @@ func ExpandFrameworkMapFilterString(ctx context.Context, tfMap types.Map, diags 
 			filters = append(filters, fmt.Sprintf("%s==%s", k, v))
 		} else if _, err := strconv.ParseFloat(v, 64); err == nil {
 			filters = append(filters, fmt.Sprintf("%s==%s", k, v))
+		} else if strings.Contains(k, "/") || strings.Contains(k, " ") {
+			filters = append(filters, fmt.Sprintf("'%s'=='%s'", k, v))
 		} else {
 			filters = append(filters, fmt.Sprintf("%s=='%s'", k, v))
 		}

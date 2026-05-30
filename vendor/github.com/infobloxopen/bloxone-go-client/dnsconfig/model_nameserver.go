@@ -26,7 +26,7 @@ type Nameserver struct {
 	Fqdn *string `json:"fqdn,omitempty"`
 	// The resource identifier.
 	Host   *string `json:"host,omitempty"`
-	Origin string  `json:"origin"`
+	Origin *string `json:"origin,omitempty"`
 	// FQDN of the nameserver in punycode.
 	ProtocolFqdn *string `json:"protocol_fqdn,omitempty"`
 	Role         string  `json:"role"`
@@ -45,9 +45,8 @@ type _Nameserver Nameserver
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewNameserver(origin string, role string) *Nameserver {
+func NewNameserver(role string) *Nameserver {
 	this := Nameserver{}
-	this.Origin = origin
 	this.Role = role
 	return &this
 }
@@ -156,28 +155,36 @@ func (o *Nameserver) SetHost(v string) {
 	o.Host = &v
 }
 
-// GetOrigin returns the Origin field value
+// GetOrigin returns the Origin field value if set, zero value otherwise.
 func (o *Nameserver) GetOrigin() string {
-	if o == nil {
+	if o == nil || IsNil(o.Origin) {
 		var ret string
 		return ret
 	}
-
-	return o.Origin
+	return *o.Origin
 }
 
-// GetOriginOk returns a tuple with the Origin field value
+// GetOriginOk returns a tuple with the Origin field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Nameserver) GetOriginOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Origin) {
 		return nil, false
 	}
-	return &o.Origin, true
+	return o.Origin, true
 }
 
-// SetOrigin sets field value
+// HasOrigin returns a boolean if a field has been set.
+func (o *Nameserver) HasOrigin() bool {
+	if o != nil && !IsNil(o.Origin) {
+		return true
+	}
+
+	return false
+}
+
+// SetOrigin gets a reference to the given string and assigns it to the Origin field.
 func (o *Nameserver) SetOrigin(v string) {
-	o.Origin = v
+	o.Origin = &v
 }
 
 // GetProtocolFqdn returns the ProtocolFqdn field value if set, zero value otherwise.
@@ -351,7 +358,9 @@ func (o Nameserver) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Host) {
 		toSerialize["host"] = o.Host
 	}
-	toSerialize["origin"] = o.Origin
+	if !IsNil(o.Origin) {
+		toSerialize["origin"] = o.Origin
+	}
 	if !IsNil(o.ProtocolFqdn) {
 		toSerialize["protocol_fqdn"] = o.ProtocolFqdn
 	}
@@ -378,7 +387,6 @@ func (o *Nameserver) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"origin",
 		"role",
 	}
 
