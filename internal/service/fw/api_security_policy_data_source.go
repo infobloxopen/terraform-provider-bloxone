@@ -102,7 +102,7 @@ func (d *SecurityPoliciesDataSource) Read(ctx context.Context, req datasource.Re
 		SecurityPoliciesAPI.
 		ListSecurityPolicies(ctx).
 		Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+		Tfilter(flex.ExpandFrameworkMapTagFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read SecurityPolicies, got error: %s", err))
