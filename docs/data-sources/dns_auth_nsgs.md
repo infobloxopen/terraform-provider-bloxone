@@ -53,9 +53,12 @@ Required:
 Optional:
 
 - `comment` (String) Optional. Comment for the object.
-- `external_primaries` (Attributes List) Optional. DNS primaries external to BloxOne DDI. Order is not significant. (see [below for nested schema](#nestedatt--results--external_primaries))
-- `external_secondaries` (Attributes List) DNS secondaries external to BloxOne DDI. Order is not significant. (see [below for nested schema](#nestedatt--results--external_secondaries))
-- `internal_secondaries` (Attributes List) Optional. BloxOne DDI hosts acting as internal secondaries. Order is not significant. (see [below for nested schema](#nestedatt--results--internal_secondaries))
+- `external_primaries` (Attributes List) Optional. DNS primaries external to Universal DDI. Order is not significant. (see [below for nested schema](#nestedatt--results--external_primaries))
+- `external_secondaries` (Attributes List) DNS secondaries external to Universal DDI. Order is not significant. (see [below for nested schema](#nestedatt--results--external_secondaries))
+- `grid_primaries` (Attributes List) Optional. The list of the NIOS Grid Primaries assigned to an AuthNSG, only applicable for the NIOS. (see [below for nested schema](#nestedatt--results--grid_primaries))
+- `grid_secondaries` (Attributes List) Optional. The list of the NIOS Grid Secondaries assigned to an AuthNSG, only applicable for the NIOS. (see [below for nested schema](#nestedatt--results--grid_secondaries))
+- `internal_secondaries` (Attributes List) Optional. Universal DDI hosts acting as internal secondaries. Order is not significant. (see [below for nested schema](#nestedatt--results--internal_secondaries))
+- `nameservers` (Attributes List) Optional. A list of DNS Nameservers of various roles. (see [below for nested schema](#nestedatt--results--nameservers))
 - `nsgs` (List of String) The resource identifier.
 - `tags` (Map of String) Tagging specifics.
 
@@ -67,17 +70,14 @@ Read-Only:
 <a id="nestedatt--results--external_primaries"></a>
 ### Nested Schema for `results.external_primaries`
 
-Required:
-
-- `type` (String) Allowed values: * _nsg_, * _primary_.
-
 Optional:
 
 - `address` (String) Optional. Required only if _type_ is _server_. IP Address of nameserver.
 - `fqdn` (String) Optional. Required only if _type_ is _server_. FQDN of nameserver.
 - `nsg` (String) The resource identifier.
 - `tsig_enabled` (Boolean) Optional. If enabled, secondaries will use the configured TSIG key when requesting a zone transfer from this primary.
-- `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--results--external_primaries--tsig_key))
+- `tsig_key` (Attributes) Optional. Required if _tsig_enabled_ is true. The TSIG key to use when requesting a zone transfer from this primary. (see [below for nested schema](#nestedatt--results--external_primaries--tsig_key))
+- `type` (String) Allowed values: * _nsg_, * _primary_. Required when External Primaries are configured.
 
 Read-Only:
 
@@ -110,13 +110,10 @@ Read-Only:
 <a id="nestedatt--results--external_secondaries"></a>
 ### Nested Schema for `results.external_secondaries`
 
-Required:
+Optional:
 
 - `address` (String) IP Address of nameserver.
 - `fqdn` (String) FQDN of nameserver.
-
-Optional:
-
 - `stealth` (Boolean) If enabled, the NS record and glue record will NOT be automatically generated according to secondaries nameserver assignment.  Default: _false_
 - `tsig_enabled` (Boolean) If enabled, secondaries will use the configured TSIG key when requesting a zone transfer.  Default: _false_
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--results--external_secondaries--tsig_key))
@@ -149,9 +146,69 @@ Read-Only:
 
 
 
+<a id="nestedatt--results--grid_primaries"></a>
+### Nested Schema for `results.grid_primaries`
+
+Required:
+
+- `host` (String) The resource identifier.
+
+
+<a id="nestedatt--results--grid_secondaries"></a>
+### Nested Schema for `results.grid_secondaries`
+
+Required:
+
+- `host` (String) The resource identifier.
+
+
 <a id="nestedatt--results--internal_secondaries"></a>
 ### Nested Schema for `results.internal_secondaries`
 
 Required:
 
 - `host` (String) The resource identifier.
+
+
+<a id="nestedatt--results--nameservers"></a>
+### Nested Schema for `results.nameservers`
+
+Required:
+
+- `role` (String) Role of the nameserver. Valid values are _primary_ and _secondary_.
+
+Optional:
+
+- `address` (String) Optional. Required only if _origin_ is _external_. IP Address of the nameserver.
+- `fqdn` (String) Optional. Required only if _origin_ is _external_. FQDN of the nameserver.
+- `host` (String) The resource identifier.
+- `stealth` (Boolean) If enabled, the NS record and glue record will NOT be automatically generated according to secondaries nameserver assignment.  Default: _false_
+- `tsig_enabled` (Boolean) Optional. If enabled, secondaries will use the configured TSIG key when requesting a zone transfer from a primary.
+- `tsig_key` (Attributes) Object representing TSIG key synced from Keys Service. (see [below for nested schema](#nestedatt--results--nameservers--tsig_key))
+
+Read-Only:
+
+- `origin` (String) Origin of the Name Server.
+- `protocol_fqdn` (String) FQDN of the nameserver in punycode.
+
+<a id="nestedatt--results--nameservers--tsig_key"></a>
+### Nested Schema for `results.nameservers.tsig_key`
+
+Optional:
+
+- `key` (String) The resource identifier.
+
+Read-Only:
+
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
+- `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.

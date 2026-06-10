@@ -50,21 +50,31 @@ data "bloxone_dns_auth_zones" "example_all" {}
 Required:
 
 - `fqdn` (String) Zone FQDN. The FQDN supplied at creation will be converted to canonical form.  Read-only after creation.
-- `primary_type` (String) Primary type for an authoritative zone. Read only after creation. Allowed values:  * _external_: zone data owned by an external nameserver,  * _cloud_: zone data is owned by a BloxOne DDI host.
 
 Optional:
 
 - `comment` (String) Optional. Comment for zone configuration.
+- `compartment_id` (String) The access view associated with the object. If no access view is associated with the object, the value defaults to empty.
 - `disabled` (Boolean) Optional. _true_ to disable object. A disabled object is effectively non-existent when generating configuration.
-- `external_primaries` (Attributes List) Optional. DNS primaries external to BloxOne DDI. Order is not significant. (see [below for nested schema](#nestedatt--results--external_primaries))
-- `external_secondaries` (Attributes List) DNS secondaries external to BloxOne DDI. Order is not significant. (see [below for nested schema](#nestedatt--results--external_secondaries))
+- `dnssec_signing_policy` (Attributes) DNSSEC signing policy of the zone. (see [below for nested schema](#nestedatt--results--dnssec_signing_policy))
+- `external_primaries` (Attributes List) Optional. DNS primaries external to BloxOne DDI. Order is not significant. Can be configured only when Unified Nameservers is disabled. (see [below for nested schema](#nestedatt--results--external_primaries))
+- `external_secondaries` (Attributes List) DNS secondaries external to BloxOne DDI. Order is not significant. Can be configured only when Unified Nameservers is disabled. (see [below for nested schema](#nestedatt--results--external_secondaries))
+- `grid_primaries` (Attributes List) Optional. The list of the NIOS Grid Primaries assigned to an AuthZone, only applicable for the NIOS Zones. Can be configured only when Unified Nameservers is disabled. (see [below for nested schema](#nestedatt--results--grid_primaries))
+- `grid_secondaries` (Attributes List) Optional. The list of the NIOS Grid Secondaries assigned to an AuthZone, only applicable for the NIOS Zones. Can be configured only when Unified Nameservers is disabled. (see [below for nested schema](#nestedatt--results--grid_secondaries))
 - `gss_tsig_enabled` (Boolean) _gss_tsig_enabled_ enables/disables GSS-TSIG signed dynamic updates.  Defaults to _false_.
 - `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources))
 - `initial_soa_serial` (Number) On-create-only. SOA serial is allowed to be set when the authoritative zone is created.
-- `internal_secondaries` (Attributes List) Optional. BloxOne DDI hosts acting as internal secondaries. Order is not significant. (see [below for nested schema](#nestedatt--results--internal_secondaries))
+- `internal_secondaries` (Attributes List) Optional. BloxOne DDI hosts acting as internal secondaries. Order is not significant. Can be configured only when Unified Nameservers is disabled. (see [below for nested schema](#nestedatt--results--internal_secondaries))
+- `max_records_per_type` (Number) The maximum number of records that can be stored in an RRset (records of same name and type), to prevent a slowdown in query processing due to an excessive number of those RRsets. The limit is enforced when serving the zone on-prem, not at the time of record creation or update. Exceeding the limit will result in the zone failing to load or to be updated. If 0, it means there is no limit. Defauts to _2000_.
+- `max_types_per_name` (Number) The maximum number of record types that can be stored for an owner name, to prevent a slowdown in query processing due to an excessive number of those records. The limit is enforced when serving the zone on-prem, not at the time of record creation or update. Exceeding the limit will result in the zone failing to load or to be updated. If 0, it means there is no limit. Defauts to _100_.
+- `nameservers` (Attributes List) Optional. A list of DNS Nameservers of various roles. Cannot be configured if _nsg_ is configured. Can be configured only when Unified Nameservers is enabled. (see [below for nested schema](#nestedatt--results--nameservers))
+- `nios_grids_metadata` (Map of String) NIOS Grids Metadata holds multiple NIOS grids data.
 - `notify` (Boolean) Also notify all external secondary DNS servers if enabled.  Defaults to _false_.
-- `nsgs` (List of String) The resource identifier.
+- `nsg` (String) The resource identifier of the nameserver group. Can be configured only when Unified Nameservers is enabled.
+- `nsgs` (List of String) List of nameserver group identifiers. Can be configured only when Unified Nameservers is disabled.
+- `primary_type` (String) Primary type for an authoritative zone. Required when Unified Nameservers is disabled. Read-only when Unified Nameservers is enabled. Allowed values:  * _external_: zone data owned by an external nameserver,  * _cloud_: zone data is owned by a BloxOne DDI host.
 - `query_acl` (Attributes List) Optional. Clients must match this ACL to make authoritative queries. Also used for recursive queries if that ACL is unset.  Defaults to empty. (see [below for nested schema](#nestedatt--results--query_acl))
+- `secondary_zone_records_sync` (Boolean) Optional. Defines if secondary zone records should be synchronized.  Defaults to _false_. Only allowed to update when primary_type is "external".
 - `tags` (Map of String) Tagging specifics.
 - `transfer_acl` (Attributes List) Optional. Clients must match this ACL to receive zone transfers. (see [below for nested schema](#nestedatt--results--transfer_acl))
 - `update_acl` (Attributes List) Optional. Specifies which hosts are allowed to submit Dynamic DNS updates for authoritative zones of _primary_type_ _cloud_.  Defaults to empty. (see [below for nested schema](#nestedatt--results--update_acl))
@@ -74,10 +84,13 @@ Optional:
 Read-Only:
 
 - `created_at` (String) Time when the object has been created.
+- `dnssec_keys` (Attributes List) The list of DNSSEC keys used by the _AuthZone_ for zone signing. (see [below for nested schema](#nestedatt--results--dnssec_keys))
+- `dnssec_status` (String) Read Only.  DNSSEC status indicates the current DNSSEC signing status of the zone.  Possible values: - _UNSIGNED_: The zone is not signed with DNSSEC - _SIGNED_: The zone is fully signed with DNSSEC - _ROLLOVER_IN_PROGRESS_: DNSSEC key rollover is currently in progress - _SIGN_IN_PROGRESS_: The zone is currently being signed with DNSSEC - _UNSIGN_IN_PROGRESS_: The zone is currently being unsigned (DNSSEC removal in progress)
 - `external_providers` (Attributes List) list of external providers for the auth zone. (see [below for nested schema](#nestedatt--results--external_providers))
+- `external_providers_metadata` (Map of String) External DNS providers metadata.
 - `id` (String) The resource identifier.
 - `inheritance_assigned_hosts` (Attributes List) The list of the inheritance assigned hosts of the object. (see [below for nested schema](#nestedatt--results--inheritance_assigned_hosts))
-- `mapped_subnet` (String) Reverse zone network address in the following format: \"ip-address/cidr\". Defaults to empty.
+- `mapped_subnet` (String) Reverse zone network address in the following format: "ip-address/cidr". Defaults to empty.
 - `mapping` (String) Zone mapping type. Allowed values:  * _forward_,  * _ipv4_reverse_.  * _ipv6_reverse_.  Defaults to forward.
 - `parent` (String) The resource identifier.
 - `protocol_fqdn` (String) Zone FQDN in punycode.
@@ -86,12 +99,34 @@ Read-Only:
 - `warnings` (Attributes List) The list of an auth zone warnings. (see [below for nested schema](#nestedatt--results--warnings))
 - `zone_authority` (Attributes) (see [below for nested schema](#nestedatt--results--zone_authority))
 
+<a id="nestedatt--results--dnssec_signing_policy"></a>
+### Nested Schema for `results.dnssec_signing_policy`
+
+Optional:
+
+- `keys` (Attributes List) Key settings. This defines configuration for DNSSEC keys. combination of both Key-Signing Keys (KSK) and Zone-Signing Keys (ZSK).  Defaults to empty. (see [below for nested schema](#nestedatt--results--dnssec_signing_policy--keys))
+- `ksk_automatic_rollover_enabled` (Boolean) Flag indicating if KSK rollover should be automatic.  Defaults to _false_.
+- `ksk_notification_event_trigger` (String) Option controls when notifications are sent for KSK rollover events.  Valid values are: * _NO_EVENTS_ - no notifications are sent * _ALL_EVENTS_ - any time KSK is rolled over, a notification is sent * _MANUAL_DS_UPDATE_EVENTS_ - a notification is sent only when DS record needs to be updated manually  Defaults to _NO_EVENTS_
+- `ksk_rollover_interval` (Number) KSK rollover interval in seconds.  Used to determine how often the Key-Signing Keys should be rotated. Examples: 31536000 (1 year), 7776000 (90 days), 2592000 (30 days)  Unsigned integer, min 0.  Defaults to 31536000 (1 year).
+- `nsec3_iterations` (Number) Optional. Number of additional hash iterations to perform. Increasing this value slows down both authoritative server when signing and recursive servers when verifying, but also slows down attacker's dictionary attacks.  IMPORTANT: Changing the settings for the NSEC3 number of iterations is not recommended.  Unsigned integer, min 0 max 65535.  Defaults to _0_.
+- `nsec3_salt_length` (Number) Optional. Minimum length for NSEC3 salt in octets. Used to add entropy to the hash function to defend against pre-calculated attacks.  Unsigned integer, min 0 max 65535.  Defaults to _0_.
+- `nsec_type` (String) DNSSEC resource record type for nonexistent proof. This controls which type will be used to provide proof of nonexistence.  Allowed values: * _NSEC_ * _NSEC3_  Defaults to _NSEC_
+- `zsk_rollover_interval` (Number) ZSK rollover interval in seconds.  Used to determine how often the Zone-Signing Keys should be rotated. Examples: 2592000 (30 days), 1209600 (14 days)  Unsigned integer, min 0.  Defaults to 2592000 (30 days).
+- `zsk_signature_validity` (Number) ZSK signature validity period in seconds.  Determines how long DNSSEC signatures remain valid. Examples: 1209600 (14 days), 604800 (7 days)  Unsigned integer, min 0.  Defaults to 1209600 (14 days).
+
+<a id="nestedatt--results--dnssec_signing_policy--keys"></a>
+### Nested Schema for `results.dnssec_signing_policy.keys`
+
+Optional:
+
+- `algorithm` (Number) Algorithm used for the key.  Allowed values: * _5_ - RSASHA1 * _7_ - NSEC3RSASHA1 (RSASHA1-NSEC3-SHA1) * _8_ - RSASHA256 * _10_ - RSASHA512 * _13_ - ECDSAP256SHA256 * _14_ - ECDSAP384SHA384 * _15_ - ED25519 * _16_ - ED448  Defaults to _8_ (RSASHA256).
+- `size` (Number) Key size in bits.  Value should be within allowed range for _algorithm_: * _RSASHA1_: 1024..4096 * _NSEC3RSASHA1_: 1024..4096 * _RSASHA256_: 1024..4096 * _RSASHA512_: 1024..4096 * _ECDSAP256SHA256_: 256 * _ECDSAP384SHA384_: 384 * _ED25519_: 256 * _ED448_: 456  Defaults are based on the _algorithm_ and _type_: For KSK:  * _RSASHA1_: 2048 * _NSEC3RSASHA1_: 2048 * _RSASHA256_: 2048 * _RSASHA512_: 2048 * _ECDSAP256SHA256_: 256 * _ECDSAP384SHA384_: 384 * _ED25519_: 256 * _ED448_: 456  For ZSK:  * _RSASHA1_: 1024 * _NSEC3RSASHA1_: 1024 * _RSASHA256_: 1024 * _RSASHA512_: 1024 * _ECDSAP256SHA256_: 256 * _ECDSAP384SHA384_: 384 * _ED25519_: 256 * _ED448_: 456
+- `type` (String) Key type.  Allowed values: * _KSK_: Key-Signing Key, used to sign DNSKEY records. * _ZSK_: Zone-Signing Key, used to sign all other records in the zone.
+
+
+
 <a id="nestedatt--results--external_primaries"></a>
 ### Nested Schema for `results.external_primaries`
-
-Required:
-
-- `type` (String) Allowed values: * _nsg_, * _primary_.
 
 Optional:
 
@@ -99,7 +134,8 @@ Optional:
 - `fqdn` (String) Optional. Required only if _type_ is _server_. FQDN of nameserver.
 - `nsg` (String) The resource identifier.
 - `tsig_enabled` (Boolean) Optional. If enabled, secondaries will use the configured TSIG key when requesting a zone transfer from this primary.
-- `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--results--external_primaries--tsig_key))
+- `tsig_key` (Attributes) Optional. Required if _tsig_enabled_ is true. The TSIG key to use when requesting a zone transfer from this primary. (see [below for nested schema](#nestedatt--results--external_primaries--tsig_key))
+- `type` (String) Allowed values: * _nsg_, * _primary_. Required when External Primaries are configured.
 
 Read-Only:
 
@@ -132,13 +168,10 @@ Read-Only:
 <a id="nestedatt--results--external_secondaries"></a>
 ### Nested Schema for `results.external_secondaries`
 
-Required:
+Optional:
 
 - `address` (String) IP Address of nameserver.
 - `fqdn` (String) FQDN of nameserver.
-
-Optional:
-
 - `stealth` (Boolean) If enabled, the NS record and glue record will NOT be automatically generated according to secondaries nameserver assignment.  Default: _false_
 - `tsig_enabled` (Boolean) If enabled, secondaries will use the configured TSIG key when requesting a zone transfer.  Default: _false_
 - `tsig_key` (Attributes) (see [below for nested schema](#nestedatt--results--external_secondaries--tsig_key))
@@ -169,6 +202,22 @@ Read-Only:
 - `protocol_name` (String) TSIG key name in punycode.
 - `secret` (String, Sensitive) TSIG key secret, base64 string.
 
+
+
+<a id="nestedatt--results--grid_primaries"></a>
+### Nested Schema for `results.grid_primaries`
+
+Required:
+
+- `host` (String) The resource identifier.
+
+
+<a id="nestedatt--results--grid_secondaries"></a>
+### Nested Schema for `results.grid_secondaries`
+
+Required:
+
+- `host` (String) The resource identifier.
 
 
 <a id="nestedatt--results--inheritance_sources"></a>
@@ -593,6 +642,51 @@ Required:
 - `host` (String) The resource identifier.
 
 
+<a id="nestedatt--results--nameservers"></a>
+### Nested Schema for `results.nameservers`
+
+Required:
+
+- `role` (String) Role of the nameserver. Valid values are _primary_ and _secondary_.
+
+Optional:
+
+- `address` (String) Optional. Required only if _origin_ is _external_. IP Address of the nameserver.
+- `fqdn` (String) Optional. Required only if _origin_ is _external_. FQDN of the nameserver.
+- `host` (String) The resource identifier.
+- `stealth` (Boolean) If enabled, the NS record and glue record will NOT be automatically generated according to secondaries nameserver assignment.  Default: _false_
+- `tsig_enabled` (Boolean) Optional. If enabled, secondaries will use the configured TSIG key when requesting a zone transfer from a primary.
+- `tsig_key` (Attributes) Object representing TSIG key synced from Keys Service. (see [below for nested schema](#nestedatt--results--nameservers--tsig_key))
+
+Read-Only:
+
+- `origin` (String) Origin of the Name Server.
+- `protocol_fqdn` (String) FQDN of the nameserver in punycode.
+
+<a id="nestedatt--results--nameservers--tsig_key"></a>
+### Nested Schema for `results.nameservers.tsig_key`
+
+Optional:
+
+- `key` (String) The resource identifier.
+
+Read-Only:
+
+- `algorithm` (String) TSIG key algorithm.
+
+  Possible values:
+  * _hmac_sha256_
+  * _hmac_sha1_
+  * _hmac_sha224_
+  * _hmac_sha384_
+  * _hmac_sha512_
+- `comment` (String) Comment for TSIG key.
+- `name` (String) TSIG key name, FQDN.
+- `protocol_name` (String) TSIG key name in punycode.
+- `secret` (String, Sensitive) TSIG key secret, base64 string.
+
+
+
 <a id="nestedatt--results--query_acl"></a>
 ### Nested Schema for `results.query_acl`
 
@@ -732,6 +826,19 @@ Read-Only:
 - `protocol_name` (String) TSIG key name in punycode.
 - `secret` (String, Sensitive) TSIG key secret, base64 string.
 
+
+
+<a id="nestedatt--results--dnssec_keys"></a>
+### Nested Schema for `results.dnssec_keys`
+
+Read-Only:
+
+- `algorithm` (Number) Algorithm used for the key.
+- `key_id` (Number) Key ID (also known as Key Tag).
+- `next_rollover_event` (String) Next Rollover Event Time.
+- `public_key` (String) Public key in Base64 format.
+- `size` (Number) Key size in bits.
+- `type` (String) Key type.  Allowed values: * _KSK_: Key-Signing Key, used to sign DNSKEY records. * _ZSK_: Zone-Signing Key, used to sign all other records in the zone.
 
 
 <a id="nestedatt--results--external_providers"></a>
