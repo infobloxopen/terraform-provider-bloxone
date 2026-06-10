@@ -2,10 +2,13 @@ package dns_config
 
 import (
 	"context"
+	"regexp"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -41,14 +44,20 @@ var ConfigNameserverAttrTypes = map[string]attr.Type{
 var ConfigNameserverResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Optional. Required only if _origin_ is _external_. IP Address of the nameserver.",
 	},
 	"fqdn": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Optional. Required only if _origin_ is _external_. FQDN of the nameserver.",
+		Validators: []validator.String{
+			stringvalidator.RegexMatches(regexp.MustCompile(`\.$`), "must end with a dot ('.')"),
+		},
 	},
 	"host": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 	"origin": schema.StringAttribute{
@@ -65,15 +74,18 @@ var ConfigNameserverResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"stealth": schema.BoolAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "If enabled, the NS record and glue record will NOT be automatically generated according to secondaries nameserver assignment.  Default: _false_",
 	},
 	"tsig_enabled": schema.BoolAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Optional. If enabled, secondaries will use the configured TSIG key when requesting a zone transfer from a primary.",
 	},
 	"tsig_key": schema.SingleNestedAttribute{
 		Attributes:          ConfigTSIGKeyResourceSchemaAttributes,
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Object representing TSIG key synced from Keys Service.",
 	},
 }

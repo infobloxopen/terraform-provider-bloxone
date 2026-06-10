@@ -4,8 +4,11 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
@@ -15,6 +18,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
@@ -145,9 +149,10 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The list of DNSSEC keys used by the _AuthZone_ for zone signing.",
 	},
 	"dnssec_signing_policy": schema.SingleNestedAttribute{
-		Attributes: ConfigDNSSECSigningPolicyResourceSchemaAttributes,
-		Optional:   true,
-		Computed:   true,
+		Attributes:          ConfigDNSSECSigningPolicyResourceSchemaAttributes,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "DNSSEC signing policy of the zone.",
 	},
 	"dnssec_status": schema.StringAttribute{
 		Computed:            true,
@@ -158,7 +163,8 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: ConfigExternalPrimaryResourceSchemaAttributes,
 		},
 		Optional:            true,
-		MarkdownDescription: "Optional. DNS primaries external to BloxOne DDI. Order is not significant.",
+		Computed:            true,
+		MarkdownDescription: "Optional. DNS primaries external to BloxOne DDI. Order is not significant. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"external_providers": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
@@ -169,7 +175,6 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"external_providers_metadata": schema.MapAttribute{
 		ElementType:         types.StringType,
-		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "External DNS providers metadata.",
 	},
@@ -178,7 +183,8 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: ConfigExternalSecondaryResourceSchemaAttributes,
 		},
 		Optional:            true,
-		MarkdownDescription: "DNS secondaries external to BloxOne DDI. Order is not significant.",
+		Computed:            true,
+		MarkdownDescription: "DNS secondaries external to BloxOne DDI. Order is not significant. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"fqdn": schema.StringAttribute{
 		Required: true,
@@ -193,7 +199,7 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Optional. The list of the NIOS Grid Primaries assigned to an AuthZone, only applicable for the NIOS Zones.",
+		MarkdownDescription: "Optional. The list of the NIOS Grid Primaries assigned to an AuthZone, only applicable for the NIOS Zones. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"grid_secondaries": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
@@ -201,7 +207,7 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Optional. The list of the NIOS Grid Secondaries assigned to an AuthZone, only applicable for the NIOS Zones.",
+		MarkdownDescription: "Optional. The list of the NIOS Grid Secondaries assigned to an AuthZone, only applicable for the NIOS Zones. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"gss_tsig_enabled": schema.BoolAttribute{
 		Optional:            true,
@@ -245,7 +251,8 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: ConfigInternalSecondaryResourceSchemaAttributes,
 		},
 		Optional:            true,
-		MarkdownDescription: "Optional. BloxOne DDI hosts acting as internal secondaries. Order is not significant.",
+		Computed:            true,
+		MarkdownDescription: "Optional. BloxOne DDI hosts acting as internal secondaries. Order is not significant. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"mapped_subnet": schema.StringAttribute{
 		Computed:            true,
@@ -271,8 +278,19 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigNameserverResourceSchemaAttributes,
 		},
-		Optional:            true,
-		MarkdownDescription: "Optional. A list of DNS Nameservers of various roles. Cannot be configured if _nsg_ is configured.",
+		Optional: true,
+		Computed: true,
+		Validators: []validator.List{
+			listvalidator.ConflictsWith(
+				path.MatchRoot("external_primaries"),
+				path.MatchRoot("external_secondaries"),
+				path.MatchRoot("internal_secondaries"),
+				path.MatchRoot("grid_primaries"),
+				path.MatchRoot("grid_secondaries"),
+				path.MatchRoot("nsgs"),
+			),
+		},
+		MarkdownDescription: "Optional. A list of DNS Nameservers of various roles. Cannot be configured if _nsg_ is configured. Can be configured only when Unified Nameservers is enabled.",
 	},
 	"nios_grids_metadata": schema.MapAttribute{
 		ElementType:         types.StringType,
@@ -287,24 +305,37 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `Also notify all external secondary DNS servers if enabled.  Defaults to _false_.`,
 	},
 	"nsg": schema.StringAttribute{
-		Optional:            true,
-		MarkdownDescription: "The resource identifier.",
+		Optional: true,
+		Computed: true,
+		Validators: []validator.String{
+			stringvalidator.ConflictsWith(
+				path.MatchRoot("external_primaries"),
+				path.MatchRoot("external_secondaries"),
+				path.MatchRoot("internal_secondaries"),
+				path.MatchRoot("grid_primaries"),
+				path.MatchRoot("grid_secondaries"),
+				path.MatchRoot("nsgs"),
+			),
+		},
+		MarkdownDescription: "The resource identifier of the nameserver group. Can be configured only when Unified Nameservers is enabled.",
 	},
 	"nsgs": schema.ListAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
-		MarkdownDescription: "The resource identifier.",
+		Computed:            true,
+		MarkdownDescription: "List of nameserver group identifiers. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"parent": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"primary_type": schema.StringAttribute{
-		Required: true,
+		Optional: true,
+		Computed: true,
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 		},
-		MarkdownDescription: `Primary type for an authoritative zone. Read only after creation. Allowed values:  * _external_: zone data owned by an external nameserver,  * _cloud_: zone data is owned by a BloxOne DDI host.`,
+		MarkdownDescription: `Primary type for an authoritative zone. Required when Unified Nameservers is disabled. Read-only when Unified Nameservers is enabled. Allowed values:  * _external_: zone data owned by an external nameserver,  * _cloud_: zone data is owned by a BloxOne DDI host.`,
 	},
 	"protocol_fqdn": schema.StringAttribute{
 		Computed:            true,

@@ -767,40 +767,6 @@ func TestAccAuthZoneResource_DnssecSigningPolicy(t *testing.T) {
 	})
 }
 
-func TestAccAuthZoneResource_ExternalProvidersMetadata(t *testing.T) {
-	var resourceName = "bloxone_dns_auth_zone.test_external_providers_metadata"
-	var v dnsconfig.AuthZone
-	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
-
-	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// Create and Read
-			{
-				Config: testAccAuthZoneExternalProvidersMetadata(fqdn, "cloud", map[string]string{
-					"provider_key": "provider_value",
-				}),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "external_providers_metadata.provider_key", "provider_value"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccAuthZoneExternalProvidersMetadata(fqdn, "cloud", map[string]string{
-					"provider_key": "provider_value_updated",
-				}),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "external_providers_metadata.provider_key", "provider_value_updated"),
-				),
-			},
-			// Delete testing automatically occurs in TestCase
-		},
-	})
-}
-
 func TestAccAuthZoneResource_GridPrimaries(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_grid_primaries"
 	var v dnsconfig.AuthZone
@@ -816,7 +782,7 @@ func TestAccAuthZoneResource_GridPrimaries(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "grid_primaries.#", "1"),
-					resource.TestCheckResourceAttrPair(resourceName, "grid_primaries.0.host", "data.bloxone_dns_hosts.one", "results.0.id"),
+					resource.TestCheckResourceAttrPair(resourceName, "grid_primaries.0.host", "data.bloxone_dns_hosts.three", "results.0.id"),
 				),
 			},
 			// Update and Read
@@ -825,7 +791,7 @@ func TestAccAuthZoneResource_GridPrimaries(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "grid_primaries.#", "1"),
-					resource.TestCheckResourceAttrPair(resourceName, "grid_primaries.0.host", "data.bloxone_dns_hosts.two", "results.0.id"),
+					resource.TestCheckResourceAttrPair(resourceName, "grid_primaries.0.host", "data.bloxone_dns_hosts.three", "results.0.id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -937,7 +903,7 @@ func TestAccAuthZoneResource_Nameservers(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneNameservers(fqdn, "cloud", "1.1.1.1", "a.com."),
+				Config: testAccAuthZoneNameservers(fqdn, "1.1.1.1", "a.com."),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "nameservers.#", "1"),
@@ -949,7 +915,7 @@ func TestAccAuthZoneResource_Nameservers(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneNameservers(fqdn, "cloud", "2.2.2.2", "b.com."),
+				Config: testAccAuthZoneNameservers(fqdn, "2.2.2.2", "b.com."),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "nameservers.#", "1"),
@@ -978,7 +944,7 @@ func TestAccAuthZoneResource_Nsg(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneNsg(fqdn, "cloud", nsg1Name, nsg2Name, "bloxone_dns_auth_nsg.nsg_one"),
+				Config: testAccAuthZoneNsg(fqdn, nsg1Name, nsg2Name, "bloxone_dns_auth_nsg.nsg_one"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "nsg", "bloxone_dns_auth_nsg.nsg_one", "id"),
@@ -986,7 +952,7 @@ func TestAccAuthZoneResource_Nsg(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneNsg(fqdn, "cloud", nsg1Name, nsg2Name, "bloxone_dns_auth_nsg.nsg_two"),
+				Config: testAccAuthZoneNsg(fqdn, nsg1Name, nsg2Name, "bloxone_dns_auth_nsg.nsg_two"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "nsg", "bloxone_dns_auth_nsg.nsg_two", "id"),
@@ -1371,34 +1337,31 @@ resource "bloxone_dns_auth_zone" "test_dnssec_signing_policy" {
 `, fqdn, primaryType, nsecType)
 }
 
-func testAccAuthZoneExternalProvidersMetadata(fqdn, primaryType string, metadata map[string]string) string {
-	metadataStr := "{\n"
-	for k, v := range metadata {
-		metadataStr += fmt.Sprintf(`        %s = %q
-`, k, v)
-	}
-	metadataStr += "    }"
-	return fmt.Sprintf(`
-resource "bloxone_dns_auth_zone" "test_external_providers_metadata" {
-    fqdn                       = %q
-    primary_type               = %q
-    external_providers_metadata = %s
-}
-`, fqdn, primaryType, metadataStr)
-}
-
 func testAccAuthZoneGridPrimaries(fqdn, host string) string {
 	config := fmt.Sprintf(`
+data "bloxone_dns_views" "test_grid_secondaries" {
+  tag_filters = {
+	"nios/imported" = "true"
+  }
+}
+
+data "bloxone_dns_hosts" "three" {
+    tag_filters = {
+        "host/deployment_type" = "CNIOS"
+    }
+}
+
 resource "bloxone_dns_auth_zone" "test_grid_primaries" {
     fqdn         = %q
     primary_type = "cloud"
     grid_primaries = [
         {
-            host = data.bloxone_dns_hosts.%s.results.0.id
+            host = data.bloxone_dns_hosts.three.results.0.id
         }
     ]
+	view = data.bloxone_dns_views.test_grid_secondaries.results.0.id
 }
-`, fqdn, host)
+`, fqdn)
 	return strings.Join([]string{testAccBaseWithHost(), config}, "")
 }
 
@@ -1410,22 +1373,28 @@ data "bloxone_dns_views" "test_grid_secondaries" {
   }
 }
 
+data "bloxone_dns_hosts" "three" {
+    tag_filters = {
+        "host/deployment_type" = "CNIOS"
+    }
+}
+
 resource "bloxone_dns_auth_zone" "test_grid_secondaries" {
     fqdn         = %q
     primary_type = "cloud"
     grid_secondaries = [
         {
-            host = data.bloxone_dns_hosts.%s.results.0.id
+            host = data.bloxone_dns_hosts.three.results.0.id
         }
     ]
 	grid_primaries = [
         {
-            host = data.bloxone_dns_hosts.%s.results.0.id
+            host = data.bloxone_dns_hosts.three.results.0.id
         }
     ]
 	view = data.bloxone_dns_views.test_grid_secondaries.results.0.id
 }
-`, fqdn, host, hostPrimary)
+`, fqdn)
 	return strings.Join([]string{testAccBaseWithHost(), config}, "")
 }
 
@@ -1449,11 +1418,10 @@ resource "bloxone_dns_auth_zone" "test_max_types_per_name" {
 `, fqdn, primaryType, maxTypes)
 }
 
-func testAccAuthZoneNameservers(fqdn, primaryType, address, nsqdn string) string {
+func testAccAuthZoneNameservers(fqdn, address, nsqdn string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_auth_zone" "test_nameservers" {
     fqdn         = %q
-    primary_type = %q
     nameservers = [
         {
             address = %q
@@ -1462,25 +1430,38 @@ resource "bloxone_dns_auth_zone" "test_nameservers" {
         }
     ]
 }
-`, fqdn, primaryType, address, nsqdn)
+`, fqdn, address, nsqdn)
 }
 
-func testAccAuthZoneNsg(fqdn, primaryType, nsg1Name, nsg2Name, nsgRef string) string {
+func testAccAuthZoneNsg(fqdn, nsg1Name, nsg2Name, nsgRef string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_auth_nsg" "nsg_one" {
     name = %q
+	nameservers = [
+        {
+            address = "1.4.3.22"
+            fqdn    = "aa.com."
+            role    = "primary"
+        }
+    ]
 }
 
 resource "bloxone_dns_auth_nsg" "nsg_two" {
     name = %q
+	nameservers = [
+        {
+            address = "1.4.3.22"
+            fqdn    = "bb.com."
+            role    = "primary"
+        }
+    ]
 }
 
 resource "bloxone_dns_auth_zone" "test_nsg" {
     fqdn         = %q
-    primary_type = %q
     nsg          = %s.id
 }
-`, nsg1Name, nsg2Name, fqdn, primaryType, nsgRef)
+`, nsg1Name, nsg2Name, fqdn, nsgRef)
 }
 
 func testAccAuthZoneSecondaryZoneRecordsSync(fqdn, primaryType, secondaryZoneRecordsSync string) string {

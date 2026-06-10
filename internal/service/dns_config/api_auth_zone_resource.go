@@ -23,6 +23,7 @@ const (
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &AuthZoneResource{}
 var _ resource.ResourceWithImportState = &AuthZoneResource{}
+var _ resource.ResourceWithValidateConfig = &AuthZoneResource{}
 
 var inheritanceType = "full"
 
@@ -186,4 +187,63 @@ func (r *AuthZoneResource) Delete(ctx context.Context, req resource.DeleteReques
 
 func (r *AuthZoneResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+}
+
+func (r *AuthZoneResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var data ConfigAuthZoneModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	nameserversConfigured := !data.Nameservers.IsNull()
+	nsgConfigured := !data.Nsg.IsNull()
+	primaryTypeConfigured := !data.PrimaryType.IsNull()
+
+	if (nameserversConfigured || nsgConfigured) && primaryTypeConfigured {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("primary_type"),
+			"Invalid attribute combination",
+			"Primary Type cannot be provided unified nameservers is enabled",
+		)
+	}
+
+	if !data.ExternalSecondaries.IsNull() && !data.ExternalSecondaries.IsUnknown() {
+		var externalSecondaries []ConfigExternalSecondaryModel
+		resp.Diagnostics.Append(data.ExternalSecondaries.ElementsAs(ctx, &externalSecondaries, false)...)
+		if !resp.Diagnostics.HasError() {
+			for i, es := range externalSecondaries {
+				if es.Address.IsNull() || es.Address.IsUnknown() || es.Address.ValueString() == "" {
+					resp.Diagnostics.AddAttributeError(
+						path.Root("external_secondaries").AtListIndex(i).AtName("address"),
+						"Missing required attribute",
+						"When external_secondaries is configured, \"address\" must be provided for each entry.",
+					)
+				}
+				if es.Fqdn.IsNull() || es.Fqdn.IsUnknown() || es.Fqdn.ValueString() == "" {
+					resp.Diagnostics.AddAttributeError(
+						path.Root("external_secondaries").AtListIndex(i).AtName("fqdn"),
+						"Missing required attribute",
+						"When external_secondaries is configured, \"fqdn\" must be provided for each entry.",
+					)
+				}
+			}
+		}
+	}
+
+	if !data.ExternalPrimaries.IsNull() && !data.ExternalPrimaries.IsUnknown() {
+		var externalPrimaries []ConfigExternalPrimaryModel
+		resp.Diagnostics.Append(data.ExternalPrimaries.ElementsAs(ctx, &externalPrimaries, false)...)
+		if !resp.Diagnostics.HasError() {
+			for i, ep := range externalPrimaries {
+				if ep.Type.IsNull() || ep.Type.IsUnknown() || ep.Type.ValueString() == "" {
+					resp.Diagnostics.AddAttributeError(
+						path.Root("external_primaries").AtListIndex(i).AtName("type"),
+						"Missing required attribute",
+						"When external_primaries is configured, \"type\" must be provided for each entry.",
+					)
+				}
+			}
+		}
+	}
 }
