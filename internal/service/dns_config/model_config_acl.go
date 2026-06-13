@@ -48,7 +48,6 @@ var ConfigACLResourceSchemaAttributes = map[string]schema.Attribute{
 	"compartment_id": schema.StringAttribute{
 		Optional:            true,
 		Computed:            true,
-		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.",
 	},
 	"id": schema.StringAttribute{

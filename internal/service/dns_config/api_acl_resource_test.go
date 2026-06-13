@@ -15,6 +15,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
+//TODO: Add valid compartment id
 func TestAccAclResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_acl.test"
 	var v dnsconfig.ACL
