@@ -408,6 +408,8 @@ func TestAccAuthZoneResource_Nsgs(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_nsgs"
 	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
+	var nsg1 = acctest.RandomNameWithPrefix("auth-nsg")
+	var nsg2 = acctest.RandomNameWithPrefix("auth-nsg")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -415,7 +417,7 @@ func TestAccAuthZoneResource_Nsgs(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneNsgs(fqdn, "cloud", "bloxone_dns_auth_nsg.one"),
+				Config: testAccAuthZoneNsgs(fqdn, "cloud", nsg1, nsg2, "bloxone_dns_auth_nsg.one"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "nsgs.0", "bloxone_dns_auth_nsg.one", "id"),
@@ -423,7 +425,7 @@ func TestAccAuthZoneResource_Nsgs(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccAuthZoneNsgs(fqdn, "cloud", "bloxone_dns_auth_nsg.two"),
+				Config: testAccAuthZoneNsgs(fqdn, "cloud", nsg1, nsg2, "bloxone_dns_auth_nsg.two"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "nsgs.0", "bloxone_dns_auth_nsg.two", "id"),
@@ -985,14 +987,14 @@ resource "bloxone_dns_auth_zone" "test_notify" {
 `, fqdn, primaryType, notify)
 }
 
-func testAccAuthZoneNsgs(fqdn, primaryType, nsgs string) string {
+func testAccAuthZoneNsgs(fqdn, primaryType, nsg1Name, nsg2Name, nsgs string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_auth_nsg" "one"{
-	name = "one"
+	name = %q
 }
 
 resource "bloxone_dns_auth_nsg" "two"{
-	name = "two"
+	name = %q
 }
 
 resource "bloxone_dns_auth_zone" "test_nsgs" {
@@ -1000,7 +1002,7 @@ resource "bloxone_dns_auth_zone" "test_nsgs" {
     primary_type = %q
     nsgs = [%s.id]
 }
-`, fqdn, primaryType, nsgs)
+`, nsg1Name, nsg2Name, fqdn, primaryType, nsgs)
 }
 
 func testAccAuthZoneTags(fqdn string, primaryType string, tags map[string]string) string {
