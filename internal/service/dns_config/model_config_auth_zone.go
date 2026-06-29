@@ -440,7 +440,7 @@ func (m *ConfigAuthZoneModel) Expand(ctx context.Context, diags *diag.Diagnostic
 		CompartmentId:             flex.ExpandStringPointer(m.CompartmentId),
 		Disabled:                  flex.ExpandBoolPointer(m.Disabled),
 		DnssecSigningPolicy:       ExpandConfigDNSSECSigningPolicy(ctx, m.DnssecSigningPolicy, diags),
-		ExternalPrimaries:         flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalPrimaries, diags, ExpandConfigExternalPrimary),
+		ExternalPrimaries:         flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.ExternalPrimaries, diags, ExpandConfigExternalPrimary),
 		ExternalProvidersMetadata: flex.ExpandFrameworkMapString(ctx, m.ExternalProvidersMetadata, diags),
 		ExternalSecondaries:       flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalSecondaries, diags, ExpandConfigExternalSecondary),
 		GridPrimaries:             flex.ExpandFrameworkListNestedBlock(ctx, m.GridPrimaries, diags, ExpandConfigMemberServer),

@@ -62,6 +62,7 @@ var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: ConfigExternalPrimaryResourceSchemaAttributes,
 		},
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Optional. DNS primaries external to Universal DDI. Order is not significant.",
 	},
 	"external_secondaries": schema.ListNestedAttribute{
@@ -69,6 +70,7 @@ var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: ConfigExternalSecondaryResourceSchemaAttributes,
 		},
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "DNS secondaries external to Universal DDI. Order is not significant.",
 	},
 	"grid_primaries": schema.ListNestedAttribute{
@@ -76,6 +78,7 @@ var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: ConfigMemberServerResourceSchemaAttributes,
 		},
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Optional. The list of the NIOS Grid Primaries assigned to an AuthNSG, only applicable for the NIOS.",
 	},
 	"grid_secondaries": schema.ListNestedAttribute{
@@ -83,6 +86,7 @@ var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: ConfigMemberServerResourceSchemaAttributes,
 		},
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Optional. The list of the NIOS Grid Secondaries assigned to an AuthNSG, only applicable for the NIOS.",
 	},
 	"id": schema.StringAttribute{
@@ -97,6 +101,7 @@ var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: ConfigInternalSecondaryResourceSchemaAttributes,
 		},
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Optional. Universal DDI hosts acting as internal secondaries. Order is not significant.",
 	},
 	"name": schema.StringAttribute{

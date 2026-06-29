@@ -60,6 +60,9 @@ resource "bloxone_dns_auth_nsg" "example" {
 
 - `id` (String) The resource identifier.
 - `tags_all` (Map of String) Tagging specifics includes default tags.
+- `version` (String) Read Only. Version indicates the version of the Authoritative DNS Server Group in context of DNS NSGs and nameservers that are used. Possible values:
+- _v1_: The Authoritative DNS Server Group uses original NSG model
+- _v2_: The Authoritative DNS Server Group uses new "Unified Nameservers" model
 
 <a id="nestedatt--external_primaries"></a>
 ### Nested Schema for `external_primaries`

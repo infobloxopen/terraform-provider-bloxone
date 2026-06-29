@@ -208,6 +208,14 @@ func (r *AuthZoneResource) ValidateConfig(ctx context.Context, req resource.Vali
 		)
 	}
 
+	if nameserversConfigured && nsgConfigured {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("nameservers"),
+			"Invalid attribute combination",
+			"\"nameservers\" and \"nsg\" cannot both be provided. Use one or the other to configure nameservers.",
+		)
+	}
+
 	if !data.ExternalSecondaries.IsNull() && !data.ExternalSecondaries.IsUnknown() {
 		var externalSecondaries []ConfigExternalSecondaryModel
 		resp.Diagnostics.Append(data.ExternalSecondaries.ElementsAs(ctx, &externalSecondaries, false)...)

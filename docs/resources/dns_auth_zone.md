@@ -126,6 +126,9 @@ resource "bloxone_dns_auth_zone" "example" {
 - `protocol_fqdn` (String) Zone FQDN in punycode.
 - `tags_all` (Map of String) Tagging specifics includes default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
+- `version` (String) Read Only. Version indicates the version of the Authoritative DNS Server Group in context of DNS NSGs and nameservers that are used. Possible values:
+- _v1_: The Authoritative DNS Server Group uses original NSG model
+- _v2_: The Authoritative DNS Server Group uses new "Unified Nameservers" model
 - `warnings` (Attributes List) The list of an auth zone warnings. (see [below for nested schema](#nestedatt--warnings))
 - `zone_authority` (Attributes) (see [below for nested schema](#nestedatt--zone_authority))
 

@@ -88,4 +88,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/infobloxopen/bloxone-go-client v0.3.1-0.20251017222358-0f3a37e3cc41 => ../bloxone-go-client
+replace github.com/infobloxopen/bloxone-go-client v0.3.1-0.20260401071415-2e47d3e9ff7d => ../bloxone-go-client
