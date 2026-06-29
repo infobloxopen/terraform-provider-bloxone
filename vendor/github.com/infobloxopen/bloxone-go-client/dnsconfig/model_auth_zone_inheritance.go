@@ -21,21 +21,21 @@ var _ MappedNullable = &AuthZoneInheritance{}
 type AuthZoneInheritance struct {
 	// Optional. Field configuration for _dnssec_signing_policy_ field from _AuthZone_ object.
 	DnssecSigningPolicy *InheritedDNSSECSigningPolicy `json:"dnssec_signing_policy,omitempty"`
-	// Optional. Field config for _gss_tsig_enabled_ field from _AuthZone_ object.
+	// Optional. Field configuration for _gss_tsig_enabled_ field from _AuthZone_ object.
 	GssTsigEnabled *Inheritance2InheritedBool `json:"gss_tsig_enabled,omitempty"`
-	// Field config for _notify_ field from _AuthZone_ object.
+	// Field configuration for _notify_ field from _AuthZone_ object.
 	Notify *Inheritance2InheritedBool `json:"notify,omitempty"`
-	// Optional. Field config for _query_acl_ field from _AuthZone_ object.
+	// Optional. Field configuration for _query_acl_ field from _AuthZone_ object.
 	QueryAcl *InheritedACLItems `json:"query_acl,omitempty"`
 	// Optional. Field configuration for _secondary_zone_records_sync_ field from _AuthZone_ object.
 	SecondaryZoneRecordsSync *Inheritance2InheritedBool `json:"secondary_zone_records_sync,omitempty"`
-	// Optional. Field config for _transfer_acl_ field from _AuthZone_ object.
+	// Optional. Field configuration for _transfer_acl_ field from _AuthZone_ object.
 	TransferAcl *InheritedACLItems `json:"transfer_acl,omitempty"`
-	// Optional. Field config for _update_acl_ field from _AuthZone_ object.
+	// Optional. Field configuration for _update_acl_ field from _AuthZone_ object.
 	UpdateAcl *InheritedACLItems `json:"update_acl,omitempty"`
-	// Optional. Field config for _use_forwarders_for_subzones_ field from _AuthZone_ object.
+	// Optional. Field configuration for _use_forwarders_for_subzones_ field from _AuthZone_ object.
 	UseForwardersForSubzones *Inheritance2InheritedBool `json:"use_forwarders_for_subzones,omitempty"`
-	// Optional. Field config for _zone_authority_ field from _AuthZone_ object.
+	// Optional. Field configuration for _zone_authority_ field from _AuthZone_ object.
 	ZoneAuthority        *InheritedZoneAuthority `json:"zone_authority,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

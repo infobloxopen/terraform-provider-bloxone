@@ -31,6 +31,7 @@ type ConfigAuthNSGModel struct {
 	Nsgs                types.List   `tfsdk:"nsgs"`
 	Tags                types.Map    `tfsdk:"tags"`
 	TagsAll             types.Map    `tfsdk:"tags_all"`
+	Version             types.String `tfsdk:"version"`
 }
 
 var ConfigAuthNSGAttrTypes = map[string]attr.Type{
@@ -46,6 +47,7 @@ var ConfigAuthNSGAttrTypes = map[string]attr.Type{
 	"nsgs":                 types.ListType{ElemType: types.StringType},
 	"tags":                 types.MapType{ElemType: types.StringType},
 	"tags_all":             types.MapType{ElemType: types.StringType},
+	"version":              types.StringType,
 }
 
 var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
@@ -129,6 +131,10 @@ var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "Tagging specifics includes default tags.",
 	},
+	"version": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "Read Only. Version indicates the version of the Authoritative DNS Server Group in context of DNS NSGs and nameservers that are used. Possible values:\n- _v1_: The Authoritative DNS Server Group uses original NSG model\n- _v2_: The Authoritative DNS Server Group uses new \"Unified Nameservers\" model",
+	},
 }
 
 func ExpandConfigAuthNSG(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.AuthNSG {
@@ -192,4 +198,5 @@ func (m *ConfigAuthNSGModel) Flatten(ctx context.Context, from *dnsconfig.AuthNS
 	m.Nameservers = flex.FlattenFrameworkListNestedBlock(ctx, from.Nameservers, ConfigNameserverAttrTypes, diags, FlattenConfigNameserver)
 	m.Nsgs = flex.FlattenFrameworkListString(ctx, from.Nsgs, diags)
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.Version = flex.FlattenStringPointer(from.Version)
 }

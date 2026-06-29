@@ -98,6 +98,8 @@ type AuthZone struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	// Optional. Use default forwarders to resolve queries for subzones.  Defaults to _true_.
 	UseForwardersForSubzones *bool `json:"use_forwarders_for_subzones,omitempty"`
+	// Read Only.  Version indicates the version of the zone in context of assigned DNS NSGs and nameservers.  Possible values: - _v1_: The zone uses original NSG model - _v2_: The zone uses new \"Unified Nameservers\" model
+	Version *string `json:"version,omitempty"`
 	// The resource identifier.
 	View *string `json:"view,omitempty"`
 	// The list of an auth zone warnings.
@@ -1374,6 +1376,38 @@ func (o *AuthZone) SetUseForwardersForSubzones(v bool) {
 	o.UseForwardersForSubzones = &v
 }
 
+// GetVersion returns the Version field value if set, zero value otherwise.
+func (o *AuthZone) GetVersion() string {
+	if o == nil || IsNil(o.Version) {
+		var ret string
+		return ret
+	}
+	return *o.Version
+}
+
+// GetVersionOk returns a tuple with the Version field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuthZone) GetVersionOk() (*string, bool) {
+	if o == nil || IsNil(o.Version) {
+		return nil, false
+	}
+	return o.Version, true
+}
+
+// HasVersion returns a boolean if a field has been set.
+func (o *AuthZone) HasVersion() bool {
+	if o != nil && !IsNil(o.Version) {
+		return true
+	}
+
+	return false
+}
+
+// SetVersion gets a reference to the given string and assigns it to the Version field.
+func (o *AuthZone) SetVersion(v string) {
+	o.Version = &v
+}
+
 // GetView returns the View field value if set, zero value otherwise.
 func (o *AuthZone) GetView() string {
 	if o == nil || IsNil(o.View) {
@@ -1597,6 +1631,9 @@ func (o AuthZone) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UseForwardersForSubzones) {
 		toSerialize["use_forwarders_for_subzones"] = o.UseForwardersForSubzones
 	}
+	if !IsNil(o.Version) {
+		toSerialize["version"] = o.Version
+	}
 	if !IsNil(o.View) {
 		toSerialize["view"] = o.View
 	}
@@ -1667,6 +1704,7 @@ func (o *AuthZone) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "update_acl")
 		delete(additionalProperties, "updated_at")
 		delete(additionalProperties, "use_forwarders_for_subzones")
+		delete(additionalProperties, "version")
 		delete(additionalProperties, "view")
 		delete(additionalProperties, "warnings")
 		delete(additionalProperties, "zone_authority")

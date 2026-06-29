@@ -41,7 +41,9 @@ type AuthNSG struct {
 	// The resource identifier.
 	Nsgs []string `json:"nsgs,omitempty"`
 	// Tagging specifics.
-	Tags                 map[string]interface{} `json:"tags,omitempty"`
+	Tags map[string]interface{} `json:"tags,omitempty"`
+	// Read Only.  Version indicates the version of the Authoritative DNS Server Group in context of DNS NSGs and nameservers that are used.  Possible values: - _v1_: The Authoritative DNS Server Group uses original NSG model - _v2_: The Authoritative DNS Server Group uses new \"Unified Nameservers\" model
+	Version              *string `json:"version,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -409,6 +411,38 @@ func (o *AuthNSG) SetTags(v map[string]interface{}) {
 	o.Tags = v
 }
 
+// GetVersion returns the Version field value if set, zero value otherwise.
+func (o *AuthNSG) GetVersion() string {
+	if o == nil || IsNil(o.Version) {
+		var ret string
+		return ret
+	}
+	return *o.Version
+}
+
+// GetVersionOk returns a tuple with the Version field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuthNSG) GetVersionOk() (*string, bool) {
+	if o == nil || IsNil(o.Version) {
+		return nil, false
+	}
+	return o.Version, true
+}
+
+// HasVersion returns a boolean if a field has been set.
+func (o *AuthNSG) HasVersion() bool {
+	if o != nil && !IsNil(o.Version) {
+		return true
+	}
+
+	return false
+}
+
+// SetVersion gets a reference to the given string and assigns it to the Version field.
+func (o *AuthNSG) SetVersion(v string) {
+	o.Version = &v
+}
+
 func (o AuthNSG) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -449,6 +483,9 @@ func (o AuthNSG) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
+	}
+	if !IsNil(o.Version) {
+		toSerialize["version"] = o.Version
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -504,6 +541,7 @@ func (o *AuthNSG) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "nameservers")
 		delete(additionalProperties, "nsgs")
 		delete(additionalProperties, "tags")
+		delete(additionalProperties, "version")
 		o.AdditionalProperties = additionalProperties
 	}
 

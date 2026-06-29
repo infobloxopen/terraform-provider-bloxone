@@ -69,6 +69,7 @@ type ConfigAuthZoneModel struct {
 	UseForwardersForSubzones  types.Bool        `tfsdk:"use_forwarders_for_subzones"`
 	View                      types.String      `tfsdk:"view"`
 	Warnings                  types.List        `tfsdk:"warnings"`
+	Version                   types.String      `tfsdk:"version"`
 	ZoneAuthority             types.Object      `tfsdk:"zone_authority"`
 }
 
@@ -115,6 +116,7 @@ var ConfigAuthZoneAttrTypes = map[string]attr.Type{
 	"use_forwarders_for_subzones": types.BoolType,
 	"view":                        types.StringType,
 	"warnings":                    types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigWarningAttrTypes}},
+	"version":                     types.StringType,
 	"zone_authority":              types.ObjectType{AttrTypes: ConfigZoneAuthorityAttrTypes},
 }
 
@@ -406,6 +408,10 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "The list of an auth zone warnings.",
 	},
+	"version": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "Read Only. Version indicates the version of the Authoritative DNS Server Group in context of DNS NSGs and nameservers that are used. Possible values:\n- _v1_: The Authoritative DNS Server Group uses original NSG model\n- _v2_: The Authoritative DNS Server Group uses new \"Unified Nameservers\" model",
+	},
 	"zone_authority": schema.SingleNestedAttribute{
 		Attributes: ConfigZoneAuthorityResourceSchemaAttributes,
 		Computed:   true,
@@ -528,4 +534,5 @@ func (m *ConfigAuthZoneModel) Flatten(ctx context.Context, from *dnsconfig.AuthZ
 	m.View = flex.FlattenStringPointer(from.View)
 	m.Warnings = flex.FlattenFrameworkListNestedBlock(ctx, from.Warnings, ConfigWarningAttrTypes, diags, FlattenConfigWarning)
 	m.ZoneAuthority = FlattenConfigZoneAuthority(ctx, from.ZoneAuthority, diags)
+	m.Version = flex.FlattenStringPointer(from.Version)
 }
