@@ -84,7 +84,7 @@ resource "bloxone_dns_auth_zone" "example" {
 ### Optional
 
 - `comment` (String) Optional. Comment for zone configuration.
-- `compartment_id` (String) The access view associated with the object. If no access view is associated with the object, the value defaults to empty.
+- `compartment_id` (String) The compartment associated with the object. To unassign the compartment ID, set this field to an empty string. If no compartment is associated, the value is returned as empty.
 - `disabled` (Boolean) Optional. _true_ to disable object. A disabled object is effectively non-existent when generating configuration.
 - `dnssec_signing_policy` (Attributes) DNSSEC signing policy of the zone. (see [below for nested schema](#nestedatt--dnssec_signing_policy))
 - `external_primaries` (Attributes List) Optional. DNS primaries external to BloxOne DDI. Order is not significant. Can be configured only when Unified Nameservers is disabled. (see [below for nested schema](#nestedatt--external_primaries))

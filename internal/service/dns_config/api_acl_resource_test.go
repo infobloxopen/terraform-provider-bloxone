@@ -15,6 +15,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
+//TODO: Add valid compartment id
 func TestAccAclResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_acl.test"
 	var v dnsconfig.ACL
@@ -57,6 +58,36 @@ func TestAccAclResource_disappears(t *testing.T) {
 				),
 				ExpectNonEmptyPlan: true,
 			},
+		},
+	})
+}
+
+func TestAccAclResource_CompartmentId(t *testing.T) {
+	var resourceName = "bloxone_dns_acl.test_compartment_id"
+	var v dnsconfig.ACL
+	var name = acctest.RandomNameWithPrefix("acl")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAclCompartmentId(name, "c4695."),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAclExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", "c4695."),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAclCompartmentId(name, ""),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAclExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", ""),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
 		},
 	})
 }
@@ -270,6 +301,15 @@ resource "bloxone_dns_acl" "test" {
     name = %q
 }
 `, name)
+}
+
+func testAccAclCompartmentId(name string, compartmentId string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_acl" "test_compartment_id" {
+    name = %q
+    compartment_id = %q
+}
+`, name, compartmentId)
 }
 
 func testAccAclComment(name string, comment string) string {

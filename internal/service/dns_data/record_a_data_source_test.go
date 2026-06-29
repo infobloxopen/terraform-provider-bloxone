@@ -64,6 +64,7 @@ func testAccCheckRecordResourceAttrPair(resourceName, dataSourceName string) []r
 		resource.TestCheckResourceAttrPair(resourceName, "absolute_name_spec", dataSourceName, "results.0.absolute_name_spec"),
 		resource.TestCheckResourceAttrPair(resourceName, "absolute_zone_name", dataSourceName, "results.0.absolute_zone_name"),
 		resource.TestCheckResourceAttrPair(resourceName, "comment", dataSourceName, "results.0.comment"),
+		resource.TestCheckResourceAttrPair(resourceName, "compartment_id", dataSourceName, "results.0.compartment_id"),
 		resource.TestCheckResourceAttrPair(resourceName, "created_at", dataSourceName, "results.0.created_at"),
 		resource.TestCheckResourceAttrPair(resourceName, "delegation", dataSourceName, "results.0.delegation"),
 		resource.TestCheckResourceAttrPair(resourceName, "disabled", dataSourceName, "results.0.disabled"),
