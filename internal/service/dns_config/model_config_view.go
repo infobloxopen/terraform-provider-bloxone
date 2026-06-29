@@ -147,7 +147,7 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 	"compartment_id": schema.StringAttribute{
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.",
+		MarkdownDescription: "The compartment associated with the object. To unassign the compartment ID, set this field to an empty string. If no compartment is associated, the value is returned as empty.",
 	},
 	"created_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},

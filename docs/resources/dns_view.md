@@ -92,7 +92,7 @@ resource "bloxone_dns_view" "example" {
 
 - `add_edns_option_in_outgoing_query` (Boolean) _add_edns_option_in_outgoing_query_ adds client IP, MAC address and view name into outgoing recursive query. Defaults to _false_.
 - `comment` (String) Optional. Comment for view.
-- `compartment_id` (String) The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.
+- `compartment_id` (String) The compartment associated with the object. To unassign the compartment ID, set this field to an empty string. If no compartment is associated, the value is returned as empty.
 - `custom_root_ns` (Attributes List) Optional. List of custom root nameservers. The order does not matter.  Error if empty while _custom_root_ns_enabled_ is _true_. Error if there are duplicate items in the list.  Defaults to empty. (see [below for nested schema](#nestedatt--custom_root_ns))
 - `custom_root_ns_enabled` (Boolean) Optional. _true_ to use custom root nameservers instead of the default ones.  The _custom_root_ns_ is validated when enabled.  Defaults to _false_.
 - `disabled` (Boolean) Optional. _true_ to disable object. A disabled object is effectively non-existent when generating configuration.
