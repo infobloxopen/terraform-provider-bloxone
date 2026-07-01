@@ -15,10 +15,6 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-//TODO: add tests
-// The following require additional resource/data source objects to be supported.
-// - TSIG keys
-
 func TestAccAuthNsgResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_nsg.test"
 	var v dnsconfig.AuthNSG

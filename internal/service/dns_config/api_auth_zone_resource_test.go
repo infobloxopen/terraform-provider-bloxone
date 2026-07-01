@@ -18,8 +18,6 @@ import (
 
 //TODO: add tests
 // The following require additional resource/data source objects to be supported.
-// - internal_secondaries
-// - nsgs
 // - zone_authority : Mname and rname provide inconsistent results after apply
 
 func TestAccAuthZoneResource_basic(t *testing.T) {
