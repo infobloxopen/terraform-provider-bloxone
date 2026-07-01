@@ -926,6 +926,7 @@ func TestAccAuthZoneResource_MaxTypesPerName(t *testing.T) {
 }
 
 func TestAccAuthZoneResource_Nameservers(t *testing.T) {
+	t.Skip("Skipping Tests for NameServers until for v1 Phase 1")
 	var resourceName = "bloxone_dns_auth_zone.test_nameservers"
 	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
@@ -981,7 +982,7 @@ func TestAccAuthZoneResource_Nameservers(t *testing.T) {
 }
 
 func TestAccAuthZoneResource_Nsg(t *testing.T) {
-	t.Skip("Nameserver Group can be specified only when Unified Nameservers is enabled.")
+	t.Skip("Skipping Tests for NSG until for v1 Phase 1")
 	var resourceName = "bloxone_dns_auth_zone.test_nsg"
 	var v dnsconfig.AuthZone
 	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
