@@ -863,6 +863,29 @@ func TestAccAuthZoneResource_GridSecondaries(t *testing.T) {
 	})
 }
 
+func TestAccAuthZoneResource_InternalSecondaries(t *testing.T) {
+	var resourceName = "bloxone_dns_auth_zone.test_internal_secondaries"
+	var v dnsconfig.AuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAuthZoneInternalSecondaries(fqdn),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "internal_secondaries.#", "1"),
+					resource.TestCheckResourceAttrSet(resourceName, "internal_secondaries.0.host"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccAuthZoneResource_MaxRecordsPerType(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test_max_records_per_type"
 	var v dnsconfig.AuthZone
@@ -1455,6 +1478,23 @@ resource "bloxone_dns_auth_zone" "test_grid_secondaries" {
 }
 `, fqdn)
 	return strings.Join([]string{testAccBaseWithHost(), config}, "")
+}
+
+func testAccAuthZoneInternalSecondaries(fqdn string) string {
+	config := fmt.Sprintf(`
+data "bloxone_infra_hosts" "test_internal_secondaries" {}
+
+resource "bloxone_dns_auth_zone" "test_internal_secondaries" {
+    fqdn         = %q
+    primary_type = "cloud"
+    internal_secondaries = [
+        {
+            host = data.bloxone_infra_hosts.test_internal_secondaries.results.0.id
+        }
+    ]
+}
+`, fqdn)
+	return config
 }
 
 func testAccAuthZoneMaxRecordsPerType(fqdn, primaryType string, maxRecords int64) string {

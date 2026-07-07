@@ -24,7 +24,8 @@ var ConfigMemberServerAttrTypes = map[string]attr.Type{
 
 var ConfigMemberServerResourceSchemaAttributes = map[string]schema.Attribute{
 	"host": schema.StringAttribute{
-		Required:            true,
+		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 }

@@ -239,6 +239,54 @@ func (r *AuthZoneResource) ValidateConfig(ctx context.Context, req resource.Vali
 		}
 	}
 
+	if !data.GridPrimaries.IsNull() && !data.GridPrimaries.IsUnknown() {
+		var gridPrimaries []ConfigMemberServerModel
+		resp.Diagnostics.Append(data.GridPrimaries.ElementsAs(ctx, &gridPrimaries, false)...)
+		if !resp.Diagnostics.HasError() {
+			for i, gp := range gridPrimaries {
+				if gp.Host.IsNull() || gp.Host.IsUnknown() || gp.Host.ValueString() == "" {
+					resp.Diagnostics.AddAttributeError(
+						path.Root("grid_primaries").AtListIndex(i).AtName("host"),
+						"Missing required attribute",
+						"When grid_primaries is configured, \"host\" must be provided for each entry.",
+					)
+				}
+			}
+		}
+	}
+
+	if !data.GridSecondaries.IsNull() && !data.GridSecondaries.IsUnknown() {
+		var gridSecondaries []ConfigMemberServerModel
+		resp.Diagnostics.Append(data.GridSecondaries.ElementsAs(ctx, &gridSecondaries, false)...)
+		if !resp.Diagnostics.HasError() {
+			for i, gs := range gridSecondaries {
+				if gs.Host.IsNull() || gs.Host.IsUnknown() || gs.Host.ValueString() == "" {
+					resp.Diagnostics.AddAttributeError(
+						path.Root("grid_secondaries").AtListIndex(i).AtName("host"),
+						"Missing required attribute",
+						"When grid_secondaries is configured, \"host\" must be provided for each entry.",
+					)
+				}
+			}
+		}
+	}
+
+	if !data.InternalSecondaries.IsNull() && !data.InternalSecondaries.IsUnknown() {
+		var internalSecondaries []ConfigInternalSecondaryModel
+		resp.Diagnostics.Append(data.InternalSecondaries.ElementsAs(ctx, &internalSecondaries, false)...)
+		if !resp.Diagnostics.HasError() {
+			for i, is := range internalSecondaries {
+				if is.Host.IsNull() || is.Host.IsUnknown() || is.Host.ValueString() == "" {
+					resp.Diagnostics.AddAttributeError(
+						path.Root("internal_secondaries").AtListIndex(i).AtName("host"),
+						"Missing required attribute",
+						"When internal_secondaries is configured, \"host\" must be provided for each entry.",
+					)
+				}
+			}
+		}
+	}
+
 	if !data.ExternalPrimaries.IsNull() && !data.ExternalPrimaries.IsUnknown() {
 		var externalPrimaries []ConfigExternalPrimaryModel
 		resp.Diagnostics.Append(data.ExternalPrimaries.ElementsAs(ctx, &externalPrimaries, false)...)
