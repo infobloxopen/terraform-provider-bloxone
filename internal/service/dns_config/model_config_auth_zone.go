@@ -24,6 +24,7 @@ import (
 
 type ConfigAuthZoneModel struct {
 	Comment                  types.String      `tfsdk:"comment"`
+	CompartmentId            types.String      `tfsdk:"compartment_id"`
 	CreatedAt                timetypes.RFC3339 `tfsdk:"created_at"`
 	Disabled                 types.Bool        `tfsdk:"disabled"`
 	ExternalPrimaries        types.List        `tfsdk:"external_primaries"`
@@ -57,6 +58,7 @@ type ConfigAuthZoneModel struct {
 
 var ConfigAuthZoneAttrTypes = map[string]attr.Type{
 	"comment":                     types.StringType,
+	"compartment_id":              types.StringType,
 	"created_at":                  timetypes.RFC3339Type{},
 	"disabled":                    types.BoolType,
 	"external_primaries":          types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigExternalPrimaryAttrTypes}},
@@ -94,6 +96,11 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: `Optional. Comment for zone configuration.`,
+	},
+	"compartment_id": schema.StringAttribute{
+		Computed:            true,
+		Optional:            true,
+		MarkdownDescription: "The compartment associated with the object. To unassign the compartment ID, set this field to an empty string. If no compartment is associated, the value is returned as empty.",
 	},
 	"created_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -296,6 +303,7 @@ func (m *ConfigAuthZoneModel) Expand(ctx context.Context, diags *diag.Diagnostic
 	}
 	to := &dnsconfig.AuthZone{
 		Comment:                  m.Comment.ValueStringPointer(),
+		CompartmentId:            flex.ExpandStringPointer(m.CompartmentId),
 		Disabled:                 m.Disabled.ValueBoolPointer(),
 		ExternalPrimaries:        flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalPrimaries, diags, ExpandConfigExternalPrimary),
 		ExternalSecondaries:      flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalSecondaries, diags, ExpandConfigExternalSecondary),
@@ -341,6 +349,7 @@ func (m *ConfigAuthZoneModel) Flatten(ctx context.Context, from *dnsconfig.AuthZ
 		*m = ConfigAuthZoneModel{}
 	}
 	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.Disabled = types.BoolPointerValue(from.Disabled)
 	m.ExternalPrimaries = flex.FlattenFrameworkListNestedBlock(ctx, from.ExternalPrimaries, ConfigExternalPrimaryAttrTypes, diags, FlattenConfigExternalPrimary)

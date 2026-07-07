@@ -1,7 +1,7 @@
 /*
 DNS Configuration API
 
-The DNS application is a BloxOne DDI service that provides cloud-based DNS configuration with on-prem host serving DNS protocol. It is part of the full-featured BloxOne DDI solution that enables customers the ability to deploy large numbers of protocol servers in the delivery of DNS and DHCP throughout their enterprise network.
+The DNS application is a Universal DDI service that provides cloud-based DNS configuration with on-prem host serving DNS protocol. It is part of the full-featured Universal DDI solution that enables customers the ability to deploy large numbers of protocol servers in the delivery of DNS and DHCP throughout their enterprise network.
 
 API version: v1
 */
@@ -21,6 +21,8 @@ var _ MappedNullable = &Delegation{}
 type Delegation struct {
 	// Optional. Comment for zone delegation.
 	Comment *string `json:"comment,omitempty"`
+	// The access view associated with the object. If no access view is associated with the object, the value defaults to empty.
+	CompartmentId *string `json:"compartment_id,omitempty"`
 	// Required. DNS zone delegation servers. Order is not significant.
 	DelegationServers []DelegationServer `json:"delegation_servers,omitempty"`
 	// Optional. _true_ to disable object. A disabled object is effectively non-existent when generating resource records.
@@ -89,6 +91,38 @@ func (o *Delegation) HasComment() bool {
 // SetComment gets a reference to the given string and assigns it to the Comment field.
 func (o *Delegation) SetComment(v string) {
 	o.Comment = &v
+}
+
+// GetCompartmentId returns the CompartmentId field value if set, zero value otherwise.
+func (o *Delegation) GetCompartmentId() string {
+	if o == nil || IsNil(o.CompartmentId) {
+		var ret string
+		return ret
+	}
+	return *o.CompartmentId
+}
+
+// GetCompartmentIdOk returns a tuple with the CompartmentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Delegation) GetCompartmentIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CompartmentId) {
+		return nil, false
+	}
+	return o.CompartmentId, true
+}
+
+// HasCompartmentId returns a boolean if a field has been set.
+func (o *Delegation) HasCompartmentId() bool {
+	if o != nil && !IsNil(o.CompartmentId) {
+		return true
+	}
+
+	return false
+}
+
+// SetCompartmentId gets a reference to the given string and assigns it to the CompartmentId field.
+func (o *Delegation) SetCompartmentId(v string) {
+	o.CompartmentId = &v
 }
 
 // GetDelegationServers returns the DelegationServers field value if set, zero value otherwise.
@@ -360,6 +394,9 @@ func (o Delegation) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Comment) {
 		toSerialize["comment"] = o.Comment
 	}
+	if !IsNil(o.CompartmentId) {
+		toSerialize["compartment_id"] = o.CompartmentId
+	}
 	if !IsNil(o.DelegationServers) {
 		toSerialize["delegation_servers"] = o.DelegationServers
 	}
@@ -407,6 +444,7 @@ func (o *Delegation) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "comment")
+		delete(additionalProperties, "compartment_id")
 		delete(additionalProperties, "delegation_servers")
 		delete(additionalProperties, "disabled")
 		delete(additionalProperties, "fqdn")
