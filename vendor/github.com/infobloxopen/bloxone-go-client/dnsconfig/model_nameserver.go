@@ -25,11 +25,13 @@ type Nameserver struct {
 	// Optional. Required only if _origin_ is _external_. FQDN of the nameserver.
 	Fqdn *string `json:"fqdn,omitempty"`
 	// The resource identifier.
-	Host   *string `json:"host,omitempty"`
+	Host *string `json:"host,omitempty"`
+	// Allowed values: * _external_, * _nios-x_, * _nios_
 	Origin *string `json:"origin,omitempty"`
 	// FQDN of the nameserver in punycode.
 	ProtocolFqdn *string `json:"protocol_fqdn,omitempty"`
-	Role         string  `json:"role"`
+	// Allowed values: * _primary_, * _secondary_
+	Role string `json:"role"`
 	// If enabled, the NS record and glue record will NOT be automatically generated according to secondaries nameserver assignment.  Default: _false_
 	Stealth *bool `json:"stealth,omitempty"`
 	// Optional. If enabled, secondaries will use the configured TSIG key when requesting a zone transfer from a primary.

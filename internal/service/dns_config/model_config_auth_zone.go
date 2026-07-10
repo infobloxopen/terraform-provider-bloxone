@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/mapvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -14,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
@@ -164,8 +166,11 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigExternalPrimaryResourceSchemaAttributes,
 		},
-		Optional:            true,
-		Computed:            true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.List{
+			listvalidator.SizeAtLeast(1),
+		},
 		MarkdownDescription: "Optional. DNS primaries external to BloxOne DDI. Order is not significant. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"external_providers": schema.ListNestedAttribute{
@@ -176,16 +181,22 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "list of external providers for the auth zone.",
 	},
 	"external_providers_metadata": schema.MapAttribute{
-		ElementType:         types.StringType,
-		Computed:            true,
+		ElementType: types.StringType,
+		Computed:    true,
+		PlanModifiers: []planmodifier.Map{
+			mapplanmodifier.UseStateForUnknown(),
+		},
 		MarkdownDescription: "External DNS providers metadata.",
 	},
 	"external_secondaries": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigExternalSecondaryResourceSchemaAttributes,
 		},
-		Optional:            true,
-		Computed:            true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.List{
+			listvalidator.SizeAtLeast(1),
+		},
 		MarkdownDescription: "DNS secondaries external to BloxOne DDI. Order is not significant. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"fqdn": schema.StringAttribute{
@@ -199,16 +210,22 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigMemberServerResourceSchemaAttributes,
 		},
-		Optional:            true,
-		Computed:            true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.List{
+			listvalidator.SizeAtLeast(1),
+		},
 		MarkdownDescription: "Optional. The list of the NIOS Grid Primaries assigned to an AuthZone, only applicable for the NIOS Zones. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"grid_secondaries": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigMemberServerResourceSchemaAttributes,
 		},
-		Optional:            true,
-		Computed:            true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.List{
+			listvalidator.SizeAtLeast(1),
+		},
 		MarkdownDescription: "Optional. The list of the NIOS Grid Secondaries assigned to an AuthZone, only applicable for the NIOS Zones. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"gss_tsig_enabled": schema.BoolAttribute{
@@ -252,8 +269,11 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigInternalSecondaryResourceSchemaAttributes,
 		},
-		Optional:            true,
-		Computed:            true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.List{
+			listvalidator.SizeAtLeast(1),
+		},
 		MarkdownDescription: "Optional. BloxOne DDI hosts acting as internal secondaries. Order is not significant. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"mapped_subnet": schema.StringAttribute{
@@ -295,9 +315,12 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Optional. A list of DNS Nameservers of various roles. Cannot be configured if _nsg_ is configured. Can be configured only when Unified Nameservers is enabled.",
 	},
 	"nios_grids_metadata": schema.MapAttribute{
-		ElementType:         types.StringType,
-		Optional:            true,
-		Computed:            true,
+		ElementType: types.StringType,
+		Optional:    true,
+		Computed:    true,
+		Validators: []validator.Map{
+			mapvalidator.SizeAtLeast(1),
+		},
 		MarkdownDescription: "NIOS Grids Metadata holds multiple NIOS grids data.",
 	},
 	"notify": schema.BoolAttribute{
@@ -322,9 +345,12 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The resource identifier of the nameserver group. Can be configured only when Unified Nameservers is enabled.",
 	},
 	"nsgs": schema.ListAttribute{
-		ElementType:         types.StringType,
-		Optional:            true,
-		Computed:            true,
+		ElementType: types.StringType,
+		Optional:    true,
+		Computed:    true,
+		Validators: []validator.List{
+			listvalidator.SizeAtLeast(1),
+		},
 		MarkdownDescription: "List of nameserver group identifiers. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"parent": schema.StringAttribute{
@@ -501,7 +527,7 @@ func (m *ConfigAuthZoneModel) Flatten(ctx context.Context, from *dnsconfig.AuthZ
 	m.DnssecStatus = flex.FlattenStringPointer(from.DnssecStatus)
 	m.ExternalPrimaries = flex.FlattenFrameworkListNestedBlock(ctx, from.ExternalPrimaries, ConfigExternalPrimaryAttrTypes, diags, FlattenConfigExternalPrimary)
 	m.ExternalProviders = flex.FlattenFrameworkListNestedBlock(ctx, from.ExternalProviders, AuthZoneExternalProviderAttrTypes, diags, FlattenAuthZoneExternalProvider)
-	m.ExternalProvidersMetadata = flex.FlattenFrameworkMapString(ctx, from.ExternalProvidersMetadata, diags)
+	m.ExternalProvidersMetadata = flex.FlattenFrameworkMapStringAny(ctx, from.ExternalProvidersMetadata, diags)
 	m.ExternalSecondaries = flex.FlattenFrameworkListNestedBlock(ctx, from.ExternalSecondaries, ConfigExternalSecondaryAttrTypes, diags, FlattenConfigExternalSecondary)
 	m.Fqdn = flex.FlattenStringPointer(from.Fqdn)
 	m.GridPrimaries = flex.FlattenFrameworkListNestedBlock(ctx, from.GridPrimaries, ConfigMemberServerAttrTypes, diags, FlattenConfigMemberServer)
@@ -517,7 +543,7 @@ func (m *ConfigAuthZoneModel) Flatten(ctx context.Context, from *dnsconfig.AuthZ
 	m.MaxRecordsPerType = flex.FlattenInt64Pointer(from.MaxRecordsPerType)
 	m.MaxTypesPerName = flex.FlattenInt64Pointer(from.MaxTypesPerName)
 	m.Nameservers = flex.FlattenFrameworkListNestedBlock(ctx, from.Nameservers, ConfigNameserverAttrTypes, diags, FlattenConfigNameserver)
-	m.NiosGridsMetadata = flex.FlattenFrameworkMapString(ctx, from.NiosGridsMetadata, diags)
+	m.NiosGridsMetadata = flex.FlattenFrameworkMapStringAny(ctx, from.NiosGridsMetadata, diags)
 	m.Notify = types.BoolPointerValue(from.Notify)
 	m.Nsg = flex.FlattenStringPointer(from.Nsg)
 	m.Nsgs = flex.FlattenFrameworkListString(ctx, from.Nsgs, diags)

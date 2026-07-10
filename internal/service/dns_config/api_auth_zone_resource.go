@@ -7,9 +7,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
@@ -75,6 +77,39 @@ func (r *AuthZoneResource) Create(ctx context.Context, req resource.CreateReques
 
 	if resp.Diagnostics.HasError() {
 		return
+	}
+
+	if !data.View.IsNull() && !data.View.IsUnknown() {
+		viewResp, _, err := r.client.DNSConfigurationAPI.
+			ViewAPI.
+			Read(ctx, data.View.ValueString()).
+			Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to Read View to Create Zone, got error: %s", err))
+			return
+		}
+		viewRes := viewResp.GetResult()
+
+		if viewRes.HasNiosMetadata() {
+			niosMeta := viewRes.GetNiosMetadata()
+			if gridIdVal, ok := niosMeta["gridId"]; ok {
+				// Merge ownership keys into ExternalProvidersMetadata
+				metadataMap := map[string]attr.Value{}
+				if !data.ExternalProvidersMetadata.IsNull() && !data.ExternalProvidersMetadata.IsUnknown() {
+					for k, v := range data.ExternalProvidersMetadata.Elements() {
+						metadataMap[k] = v
+					}
+				}
+				metadataMap["ownership_id"] = types.StringValue(fmt.Sprintf("%v", gridIdVal))
+				metadataMap["ownership_type"] = types.StringValue("nios_ddi")
+				newMap, d := types.MapValue(types.StringType, metadataMap)
+				resp.Diagnostics.Append(d...)
+				if resp.Diagnostics.HasError() {
+					return
+				}
+				data.ExternalProvidersMetadata = newMap
+			}
+		}
 	}
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
@@ -244,7 +279,7 @@ func (r *AuthZoneResource) ValidateConfig(ctx context.Context, req resource.Vali
 		resp.Diagnostics.Append(data.GridPrimaries.ElementsAs(ctx, &gridPrimaries, false)...)
 		if !resp.Diagnostics.HasError() {
 			for i, gp := range gridPrimaries {
-				if gp.Host.IsNull() || gp.Host.IsUnknown() || gp.Host.ValueString() == "" {
+				if !gp.Host.IsUnknown() && (gp.Host.IsNull() || gp.Host.ValueString() == "") {
 					resp.Diagnostics.AddAttributeError(
 						path.Root("grid_primaries").AtListIndex(i).AtName("host"),
 						"Missing required attribute",
@@ -260,7 +295,7 @@ func (r *AuthZoneResource) ValidateConfig(ctx context.Context, req resource.Vali
 		resp.Diagnostics.Append(data.GridSecondaries.ElementsAs(ctx, &gridSecondaries, false)...)
 		if !resp.Diagnostics.HasError() {
 			for i, gs := range gridSecondaries {
-				if gs.Host.IsNull() || gs.Host.IsUnknown() || gs.Host.ValueString() == "" {
+				if !gs.Host.IsUnknown() && (gs.Host.IsNull() || gs.Host.ValueString() == "") {
 					resp.Diagnostics.AddAttributeError(
 						path.Root("grid_secondaries").AtListIndex(i).AtName("host"),
 						"Missing required attribute",
@@ -276,7 +311,7 @@ func (r *AuthZoneResource) ValidateConfig(ctx context.Context, req resource.Vali
 		resp.Diagnostics.Append(data.InternalSecondaries.ElementsAs(ctx, &internalSecondaries, false)...)
 		if !resp.Diagnostics.HasError() {
 			for i, is := range internalSecondaries {
-				if is.Host.IsNull() || is.Host.IsUnknown() || is.Host.ValueString() == "" {
+				if !is.Host.IsUnknown() && (is.Host.IsNull() || is.Host.ValueString() == "") {
 					resp.Diagnostics.AddAttributeError(
 						path.Root("internal_secondaries").AtListIndex(i).AtName("host"),
 						"Missing required attribute",

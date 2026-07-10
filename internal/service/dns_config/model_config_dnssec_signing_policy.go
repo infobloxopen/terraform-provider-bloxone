@@ -3,9 +3,11 @@ package dns_config
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -63,8 +65,11 @@ var ConfigDNSSECSigningPolicyResourceSchemaAttributes = map[string]schema.Attrib
 		MarkdownDescription: "KSK rollover interval in seconds.  Used to determine how often the Key-Signing Keys should be rotated. Examples: 31536000 (1 year), 7776000 (90 days), 2592000 (30 days)  Unsigned integer, min 0.  Defaults to 31536000 (1 year).",
 	},
 	"nsec3_iterations": schema.Int64Attribute{
-		Optional:            true,
-		Computed:            true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.Int64{
+			int64validator.Between(1, 65535),
+		},
 		MarkdownDescription: "Optional. Number of additional hash iterations to perform. Increasing this value slows down both authoritative server when signing and recursive servers when verifying, but also slows down attacker's dictionary attacks.  IMPORTANT: Changing the settings for the NSEC3 number of iterations is not recommended.  Unsigned integer, min 0 max 65535.  Defaults to _0_.",
 	},
 	"nsec3_salt_length": schema.Int64Attribute{

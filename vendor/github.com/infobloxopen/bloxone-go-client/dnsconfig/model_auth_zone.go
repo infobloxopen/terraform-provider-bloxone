@@ -64,9 +64,9 @@ type AuthZone struct {
 	MappedSubnet *string `json:"mapped_subnet,omitempty"`
 	// Zone mapping type. Allowed values:  * _forward_,  * _ipv4_reverse_.  * _ipv6_reverse_.  Defaults to forward.
 	Mapping *string `json:"mapping,omitempty"`
-	// The maximum number of records that can be stored in an RRset (records of same name and type), to prevent a slowdown in query processing due to an excessive number of those RRsets. The limit is enforced when serving the zone on-prem, not at the time of record creation or update. Exceeding the limit will result in the zone failing to load or to be updated. If 0, it means there is no limit. Defauts to _2000_.
+	// The maximum number of records that can be stored in an RRset (records of same name and type), to prevent a slowdown in query processing due to an excessive number of those RRsets. The limit is enforced when serving the zone on-prem, not at the time of record creation or update. Exceeding the limit will result in the zone failing to load or to be updated. If 0, it means there is no limit. Defaults to _2000_.
 	MaxRecordsPerType *int64 `json:"max_records_per_type,omitempty"`
-	// The maximum number of record types that can be stored for an owner name, to prevent a slowdown in query processing due to an excessive number of those records. The limit is enforced when serving the zone on-prem, not at the time of record creation or update. Exceeding the limit will result in the zone failing to load or to be updated. If 0, it means there is no limit. Defauts to _100_.
+	// The maximum number of record types that can be stored for an owner name, to prevent a slowdown in query processing due to an excessive number of those records. The limit is enforced when serving the zone on-prem, not at the time of record creation or update. Exceeding the limit will result in the zone failing to load or to be updated. If 0, it means there is no limit. Defaults to _100_.
 	MaxTypesPerName *int64 `json:"max_types_per_name,omitempty"`
 	// Optional. A list of DNS Nameservers of various roles. Cannot be configured if _nsg_ is configured.
 	Nameservers []Nameserver `json:"nameservers,omitempty"`
