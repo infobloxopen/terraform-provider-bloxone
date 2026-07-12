@@ -1,7 +1,7 @@
 /*
 DNS Data API
 
-The DNS Data is a BloxOne DDI service providing primary authoritative zone support. DNS Data is authoritative for all DNS resource records and is acting as a primary DNS server. It is part of the full-featured, DDI cloud solution that enables customers to deploy large numbers of protocol servers to deliver DNS and DHCP throughout their enterprise network.
+The DNS Data is a Universal DDI service providing primary authoritative zone support. DNS Data is authoritative for all DNS resource records and is acting as a primary DNS server. It is part of the full-featured, DDI cloud solution that enables customers to deploy large numbers of protocol servers to deliver DNS and DHCP throughout their enterprise network.
 
 API version: v1
 */
@@ -27,6 +27,8 @@ type Record struct {
 	AbsoluteZoneName *string `json:"absolute_zone_name,omitempty"`
 	// The description for the DNS resource record. May contain 0 to 1024 characters. Can include UTF-8.
 	Comment *string `json:"comment,omitempty"`
+	// The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.
+	CompartmentId *string `json:"compartment_id,omitempty"`
 	// The timestamp when the object has been created.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// The resource identifier.
@@ -84,6 +86,8 @@ type _Record Record
 // will change when the set of required properties is changed
 func NewRecord(rdata map[string]interface{}) *Record {
 	this := Record{}
+	var nameInZone string = ""
+	this.NameInZone = &nameInZone
 	this.Rdata = rdata
 	return &this
 }
@@ -93,6 +97,8 @@ func NewRecord(rdata map[string]interface{}) *Record {
 // but it doesn't guarantee that properties required by API are set
 func NewRecordWithDefaults() *Record {
 	this := Record{}
+	var nameInZone string = ""
+	this.NameInZone = &nameInZone
 	return &this
 }
 
@@ -190,6 +196,38 @@ func (o *Record) HasComment() bool {
 // SetComment gets a reference to the given string and assigns it to the Comment field.
 func (o *Record) SetComment(v string) {
 	o.Comment = &v
+}
+
+// GetCompartmentId returns the CompartmentId field value if set, zero value otherwise.
+func (o *Record) GetCompartmentId() string {
+	if o == nil || IsNil(o.CompartmentId) {
+		var ret string
+		return ret
+	}
+	return *o.CompartmentId
+}
+
+// GetCompartmentIdOk returns a tuple with the CompartmentId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Record) GetCompartmentIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CompartmentId) {
+		return nil, false
+	}
+	return o.CompartmentId, true
+}
+
+// HasCompartmentId returns a boolean if a field has been set.
+func (o *Record) HasCompartmentId() bool {
+	if o != nil && !IsNil(o.CompartmentId) {
+		return true
+	}
+
+	return false
+}
+
+// SetCompartmentId gets a reference to the given string and assigns it to the CompartmentId field.
+func (o *Record) SetCompartmentId(v string) {
+	o.CompartmentId = &v
 }
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
@@ -939,6 +977,9 @@ func (o Record) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Comment) {
 		toSerialize["comment"] = o.Comment
 	}
+	if !IsNil(o.CompartmentId) {
+		toSerialize["compartment_id"] = o.CompartmentId
+	}
 	if !IsNil(o.CreatedAt) {
 		toSerialize["created_at"] = o.CreatedAt
 	}
@@ -1052,6 +1093,7 @@ func (o *Record) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "absolute_name_spec")
 		delete(additionalProperties, "absolute_zone_name")
 		delete(additionalProperties, "comment")
+		delete(additionalProperties, "compartment_id")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "delegation")
 		delete(additionalProperties, "disabled")
