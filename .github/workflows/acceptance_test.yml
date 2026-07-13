@@ -45,14 +45,14 @@ jobs:
           FLAKY_PACKAGES=$(go list ./... | grep -v 'vendor' | grep -E 'dns_config|dns_data|ipam|ipamfederation|clouddiscovery|anycast|/fw')
           OTHER_PACKAGES=$(go list ./... | grep -v 'vendor' | grep -vE 'dns_config|dns_data|ipam|ipamfederation|clouddiscovery|anycast|/fw')
 
-          go test -parallel=1 $FLAKY_PACKAGES -timeout 120m -v -cover -json \
-            | tee -a test_output.json \
-            | go tool test2json -p summary 2>/dev/null || true
+          if go test -parallel=1 $FLAKY_PACKAGES -timeout 120m -v -cover 2>&1 \
+            | tee -a test_output.log \
+            | go tool test2json -p summary >> test_output.json; then :; fi
           EXIT_CODE=$((EXIT_CODE || ${PIPESTATUS[0]}))
 
-          go test $OTHER_PACKAGES -timeout 120m -v -cover -json \
-            | tee -a test_output.json \
-            | go tool test2json -p summary 2>/dev/null || true
+          if go test $OTHER_PACKAGES -timeout 120m -v -cover 2>&1 \
+            | tee -a test_output.log \
+            | go tool test2json -p summary >> test_output.json; then :; fi
           EXIT_CODE=$((EXIT_CODE || ${PIPESTATUS[0]}))
 
           # Preserve exit code for later steps but don't fail here so summary always runs
