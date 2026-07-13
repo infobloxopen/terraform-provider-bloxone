@@ -35,11 +35,28 @@ jobs:
           DNS_HOST: ${{ secrets.DNS_HOST }}
         run: |
           set -o pipefail
-          go test $(go list ./... | grep -v 'vendor') -timeout 120m -v -cover -json \
-            | tee test_output.json \
+          : > test_output.json
+          EXIT_CODE=0
+
+          # These packages have shown transient connection resets / 500s from the
+          # live staging API when their acceptance tests run with default
+          # concurrency, so they're run serialized (see acceptance_test_ddi.yml
+          # for the precedent).
+          FLAKY_PACKAGES=$(go list ./... | grep -v 'vendor' | grep -E 'dns_config|dns_data|ipam|ipamfederation|clouddiscovery|anycast|/fw')
+          OTHER_PACKAGES=$(go list ./... | grep -v 'vendor' | grep -vE 'dns_config|dns_data|ipam|ipamfederation|clouddiscovery|anycast|/fw')
+
+          go test -parallel=1 $FLAKY_PACKAGES -timeout 120m -v -cover -json \
+            | tee -a test_output.json \
             | go tool test2json -p summary 2>/dev/null || true
+          EXIT_CODE=$((EXIT_CODE || ${PIPESTATUS[0]}))
+
+          go test $OTHER_PACKAGES -timeout 120m -v -cover -json \
+            | tee -a test_output.json \
+            | go tool test2json -p summary 2>/dev/null || true
+          EXIT_CODE=$((EXIT_CODE || ${PIPESTATUS[0]}))
+
           # Preserve exit code for later steps but don't fail here so summary always runs
-          echo "TEST_EXIT_CODE=${PIPESTATUS[0]}" >> "$GITHUB_ENV"
+          echo "TEST_EXIT_CODE=${EXIT_CODE}" >> "$GITHUB_ENV"
 
       - name: Generate test summary
         if: always()
