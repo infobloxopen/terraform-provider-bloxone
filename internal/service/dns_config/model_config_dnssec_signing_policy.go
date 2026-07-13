@@ -68,13 +68,16 @@ var ConfigDNSSECSigningPolicyResourceSchemaAttributes = map[string]schema.Attrib
 		Optional: true,
 		Computed: true,
 		Validators: []validator.Int64{
-			int64validator.Between(1, 65535),
+			int64validator.Between(0, 65535),
 		},
 		MarkdownDescription: "Optional. Number of additional hash iterations to perform. Increasing this value slows down both authoritative server when signing and recursive servers when verifying, but also slows down attacker's dictionary attacks.  IMPORTANT: Changing the settings for the NSEC3 number of iterations is not recommended.  Unsigned integer, min 0 max 65535.  Defaults to _0_.",
 	},
 	"nsec3_salt_length": schema.Int64Attribute{
-		Optional:            true,
-		Computed:            true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.Int64{
+			int64validator.Between(0, 65535),
+		},
 		MarkdownDescription: "Optional. Minimum length for NSEC3 salt in octets. Used to add entropy to the hash function to defend against pre-calculated attacks.  Unsigned integer, min 0 max 65535.  Defaults to _0_.",
 	},
 	"nsec_type": schema.StringAttribute{
@@ -146,8 +149,8 @@ func (m *ConfigDNSSECSigningPolicyModel) Flatten(ctx context.Context, from *dnsc
 	m.KskAutomaticRolloverEnabled = types.BoolPointerValue(from.KskAutomaticRolloverEnabled)
 	m.KskNotificationEventTrigger = flex.FlattenStringPointer(from.KskNotificationEventTrigger)
 	m.KskRolloverInterval = flex.FlattenInt64Pointer(from.KskRolloverInterval)
-	m.Nsec3Iterations = flex.FlattenInt64Pointer(from.Nsec3Iterations)
-	m.Nsec3SaltLength = flex.FlattenInt64Pointer(from.Nsec3SaltLength)
+	m.Nsec3Iterations = types.Int64PointerValue(from.Nsec3Iterations)
+	m.Nsec3SaltLength = types.Int64PointerValue(from.Nsec3SaltLength)
 	m.NsecType = flex.FlattenStringPointer(from.NsecType)
 	m.ZskRolloverInterval = flex.FlattenInt64Pointer(from.ZskRolloverInterval)
 	m.ZskSignatureValidity = flex.FlattenInt64Pointer(from.ZskSignatureValidity)
