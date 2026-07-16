@@ -124,6 +124,7 @@ Class | Method | HTTP request | Description
  - [SubAccountListResponseV2](docs/SubAccountListResponseV2.md)
  - [SubAccountProvCredConfig](docs/SubAccountProvCredConfig.md)
  - [SubAccountV2](docs/SubAccountV2.md)
+ - [ZoneFilter](docs/ZoneFilter.md)
 
 
 ## Documentation for Utility Methods

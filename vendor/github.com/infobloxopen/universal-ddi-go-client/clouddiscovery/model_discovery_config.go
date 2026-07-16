@@ -41,6 +41,10 @@ type DiscoveryConfig struct {
 	Destinations []Destination `json:"destinations,omitempty"`
 	// Auto-generated unique discovery config ID. Format BloxID.
 	Id *string `json:"id,omitempty"`
+	// is_disabled. Enables/Disables provider. Newer version of desired_state.
+	IsDisabled *bool `json:"is_disabled,omitempty"`
+	// labs_provider. Indicates if a provider is enabled through Infoblox Labs.
+	LabsProvider *bool `json:"labs_provider,omitempty"`
 	// Last sync timestamp.
 	LastSync *time.Time `json:"last_sync,omitempty"`
 	// Name of the discovery config.
@@ -395,6 +399,70 @@ func (o *DiscoveryConfig) SetId(v string) {
 	o.Id = &v
 }
 
+// GetIsDisabled returns the IsDisabled field value if set, zero value otherwise.
+func (o *DiscoveryConfig) GetIsDisabled() bool {
+	if o == nil || IsNil(o.IsDisabled) {
+		var ret bool
+		return ret
+	}
+	return *o.IsDisabled
+}
+
+// GetIsDisabledOk returns a tuple with the IsDisabled field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DiscoveryConfig) GetIsDisabledOk() (*bool, bool) {
+	if o == nil || IsNil(o.IsDisabled) {
+		return nil, false
+	}
+	return o.IsDisabled, true
+}
+
+// HasIsDisabled returns a boolean if a field has been set.
+func (o *DiscoveryConfig) HasIsDisabled() bool {
+	if o != nil && !IsNil(o.IsDisabled) {
+		return true
+	}
+
+	return false
+}
+
+// SetIsDisabled gets a reference to the given bool and assigns it to the IsDisabled field.
+func (o *DiscoveryConfig) SetIsDisabled(v bool) {
+	o.IsDisabled = &v
+}
+
+// GetLabsProvider returns the LabsProvider field value if set, zero value otherwise.
+func (o *DiscoveryConfig) GetLabsProvider() bool {
+	if o == nil || IsNil(o.LabsProvider) {
+		var ret bool
+		return ret
+	}
+	return *o.LabsProvider
+}
+
+// GetLabsProviderOk returns a tuple with the LabsProvider field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DiscoveryConfig) GetLabsProviderOk() (*bool, bool) {
+	if o == nil || IsNil(o.LabsProvider) {
+		return nil, false
+	}
+	return o.LabsProvider, true
+}
+
+// HasLabsProvider returns a boolean if a field has been set.
+func (o *DiscoveryConfig) HasLabsProvider() bool {
+	if o != nil && !IsNil(o.LabsProvider) {
+		return true
+	}
+
+	return false
+}
+
+// SetLabsProvider gets a reference to the given bool and assigns it to the LabsProvider field.
+func (o *DiscoveryConfig) SetLabsProvider(v bool) {
+	o.LabsProvider = &v
+}
+
 // GetLastSync returns the LastSync field value if set, zero value otherwise.
 func (o *DiscoveryConfig) GetLastSync() time.Time {
 	if o == nil || IsNil(o.LastSync) {
@@ -705,6 +773,12 @@ func (o DiscoveryConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
+	if !IsNil(o.IsDisabled) {
+		toSerialize["is_disabled"] = o.IsDisabled
+	}
+	if !IsNil(o.LabsProvider) {
+		toSerialize["labs_provider"] = o.LabsProvider
+	}
 	if !IsNil(o.LastSync) {
 		toSerialize["last_sync"] = o.LastSync
 	}
@@ -783,6 +857,8 @@ func (o *DiscoveryConfig) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "destination_types_enabled")
 		delete(additionalProperties, "destinations")
 		delete(additionalProperties, "id")
+		delete(additionalProperties, "is_disabled")
+		delete(additionalProperties, "labs_provider")
 		delete(additionalProperties, "last_sync")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "provider_type")
