@@ -59,6 +59,7 @@ func TestAccAclDataSource_TagFilters(t *testing.T) {
 func testAccCheckAclResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
 	return []resource.TestCheckFunc{
 		resource.TestCheckResourceAttrPair(resourceName, "comment", dataSourceName, "results.0.comment"),
+		resource.TestCheckResourceAttrPair(resourceName, "compartment_id", dataSourceName, "results.0.compartment_id"),
 		resource.TestCheckResourceAttrPair(resourceName, "id", dataSourceName, "results.0.id"),
 		resource.TestCheckResourceAttrPair(resourceName, "list", dataSourceName, "results.0.list"),
 		resource.TestCheckResourceAttrPair(resourceName, "name", dataSourceName, "results.0.name"),

@@ -54,6 +54,7 @@ Required:
 Optional:
 
 - `comment` (String) Optional. Comment for ACL.
+- `compartment_id` (String) The compartment associated with the object. To unassign the compartment ID, set this field to an empty string. If no compartment is associated, the value is returned as empty.
 - `list` (Attributes List) Optional. Ordered list of access control elements.  Elements are evaluated in order to determine access. If evaluation reaches the end of the list then access is denied. (see [below for nested schema](#nestedatt--results--list))
 - `tags` (Map of String) Tagging specifics.
 

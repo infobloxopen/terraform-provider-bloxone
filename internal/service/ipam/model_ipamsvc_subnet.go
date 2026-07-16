@@ -19,6 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/universal-ddi-go-client/ipam"
 
@@ -47,7 +48,7 @@ type IpamsvcSubnetModel struct {
 	Delegation                 types.String                     `tfsdk:"delegation"`
 	DhcpConfig                 types.Object                     `tfsdk:"dhcp_config"`
 	DhcpHost                   types.String                     `tfsdk:"dhcp_host"`
-	DhcpOptions                types.List                       `tfsdk:"dhcp_options"`
+	DhcpOptions                internaltypes.UnorderedListValue `tfsdk:"dhcp_options"`
 	DhcpUtilization            types.Object                     `tfsdk:"dhcp_utilization"`
 	DisableDhcp                types.Bool                       `tfsdk:"disable_dhcp"`
 	DiscoveryAttrs             types.Map                        `tfsdk:"discovery_attrs"`
@@ -101,7 +102,7 @@ var IpamsvcSubnetAttrTypes = map[string]attr.Type{
 	"delegation":                    types.StringType,
 	"dhcp_config":                   types.ObjectType{AttrTypes: IpamsvcDHCPConfigAttrTypes},
 	"dhcp_host":                     types.StringType,
-	"dhcp_options":                  types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
+	"dhcp_options":                  internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 	"dhcp_utilization":              types.ObjectType{AttrTypes: IpamsvcDHCPUtilizationAttrTypes},
 	"disable_dhcp":                  types.BoolType,
 	"discovery_attrs":               types.MapType{ElemType: types.StringType},
@@ -290,6 +291,7 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 			"Provide a resource ID to assign a specific DHCP host.",
 	},
 	"dhcp_options": schema.ListNestedAttribute{
+		CustomType: internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: IpamsvcOptionItemResourceSchemaAttributes,
 		},
@@ -569,7 +571,7 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.Subnet, dia
 	m.Delegation = flex.FlattenStringPointer(from.Delegation)
 	m.DhcpConfig = FlattenIpamsvcDHCPConfigForSubnetOrAddressBlock(ctx, from.DhcpConfig, diags)
 	m.DhcpHost = flex.FlattenStringPointerWithNilAsEmpty(from.DhcpHost)
-	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
+	m.DhcpOptions = flex.FlattenFrameworkUnorderedListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DhcpUtilization = FlattenIpamsvcDHCPUtilization(ctx, from.DhcpUtilization, diags)
 	m.DisableDhcp = types.BoolPointerValue(from.DisableDhcp)
 	m.DiscoveryAttrs = flex.FlattenFrameworkMapString(ctx, from.DiscoveryAttrs, diags)

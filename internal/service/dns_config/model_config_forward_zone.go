@@ -21,6 +21,7 @@ import (
 
 type ConfigForwardZoneModel struct {
 	Comment            types.String      `tfsdk:"comment"`
+	CompartmentId      types.String      `tfsdk:"compartment_id"`
 	CreatedAt          timetypes.RFC3339 `tfsdk:"created_at"`
 	Disabled           types.Bool        `tfsdk:"disabled"`
 	ExternalForwarders types.List        `tfsdk:"external_forwarders"`
@@ -43,6 +44,7 @@ type ConfigForwardZoneModel struct {
 
 var ConfigForwardZoneAttrTypes = map[string]attr.Type{
 	"comment":             types.StringType,
+	"compartment_id":      types.StringType,
 	"created_at":          timetypes.RFC3339Type{},
 	"disabled":            types.BoolType,
 	"external_forwarders": types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigForwarderAttrTypes}},
@@ -69,6 +71,11 @@ var ConfigForwardZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "Optional. Comment for zone configuration.",
+	},
+	"compartment_id": schema.StringAttribute{
+		Computed:            true,
+		Optional:            true,
+		MarkdownDescription: "The compartment associated with the object. To unassign the compartment ID, set this field to an empty string. If no compartment is associated, the value is returned as empty.",
 	},
 	"created_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -179,6 +186,7 @@ func (m *ConfigForwardZoneModel) Expand(ctx context.Context, diags *diag.Diagnos
 	}
 	to := &dnsconfig.ForwardZone{
 		Comment:            flex.ExpandStringPointer(m.Comment),
+		CompartmentId:      flex.ExpandStringPointer(m.CompartmentId),
 		Disabled:           flex.ExpandBoolPointer(m.Disabled),
 		ExternalForwarders: flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalForwarders, diags, ExpandConfigForwarder),
 		ForwardOnly:        flex.ExpandBoolPointer(m.ForwardOnly),
@@ -215,6 +223,7 @@ func (m *ConfigForwardZoneModel) Flatten(ctx context.Context, from *dnsconfig.Fo
 		*m = ConfigForwardZoneModel{}
 	}
 	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.Disabled = types.BoolPointerValue(from.Disabled)
 	m.ExternalForwarders = flex.FlattenFrameworkListNestedBlock(ctx, from.ExternalForwarders, ConfigForwarderAttrTypes, diags, FlattenConfigForwarder)

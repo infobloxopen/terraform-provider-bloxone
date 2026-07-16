@@ -86,6 +86,8 @@ type _Record Record
 // will change when the set of required properties is changed
 func NewRecord(rdata map[string]interface{}) *Record {
 	this := Record{}
+	var nameInZone string = ""
+	this.NameInZone = &nameInZone
 	this.Rdata = rdata
 	return &this
 }
@@ -95,6 +97,8 @@ func NewRecord(rdata map[string]interface{}) *Record {
 // but it doesn't guarantee that properties required by API are set
 func NewRecordWithDefaults() *Record {
 	this := Record{}
+	var nameInZone string = ""
+	this.NameInZone = &nameInZone
 	return &this
 }
 

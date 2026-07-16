@@ -19,21 +19,23 @@ import (
 )
 
 type ConfigACLModel struct {
-	Comment types.String `tfsdk:"comment"`
-	Id      types.String `tfsdk:"id"`
-	List    types.List   `tfsdk:"list"`
-	Name    types.String `tfsdk:"name"`
-	Tags    types.Map    `tfsdk:"tags"`
-	TagsAll types.Map    `tfsdk:"tags_all"`
+	Comment       types.String `tfsdk:"comment"`
+	CompartmentId types.String `tfsdk:"compartment_id"`
+	Id            types.String `tfsdk:"id"`
+	List          types.List   `tfsdk:"list"`
+	Name          types.String `tfsdk:"name"`
+	Tags          types.Map    `tfsdk:"tags"`
+	TagsAll       types.Map    `tfsdk:"tags_all"`
 }
 
 var ConfigACLAttrTypes = map[string]attr.Type{
-	"comment":  types.StringType,
-	"id":       types.StringType,
-	"list":     types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}},
-	"name":     types.StringType,
-	"tags":     types.MapType{ElemType: types.StringType},
-	"tags_all": types.MapType{ElemType: types.StringType},
+	"comment":        types.StringType,
+	"compartment_id": types.StringType,
+	"id":             types.StringType,
+	"list":           types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}},
+	"name":           types.StringType,
+	"tags":           types.MapType{ElemType: types.StringType},
+	"tags_all":       types.MapType{ElemType: types.StringType},
 }
 
 var ConfigACLResourceSchemaAttributes = map[string]schema.Attribute{
@@ -42,6 +44,11 @@ var ConfigACLResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: `Optional. Comment for ACL.`,
+	},
+	"compartment_id": schema.StringAttribute{
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "The compartment associated with the object. To unassign the compartment ID, set this field to an empty string. If no compartment is associated, the value is returned as empty.",
 	},
 	"id": schema.StringAttribute{
 		Computed:            true,
@@ -92,10 +99,11 @@ func (m *ConfigACLModel) Expand(ctx context.Context, diags *diag.Diagnostics) *d
 		return nil
 	}
 	to := &dnsconfig.ACL{
-		Comment: flex.ExpandStringPointer(m.Comment),
-		List:    flex.ExpandFrameworkListNestedBlock(ctx, m.List, diags, ExpandConfigACLItem),
-		Name:    flex.ExpandString(m.Name),
-		Tags:    flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
+		Comment:       flex.ExpandStringPointer(m.Comment),
+		CompartmentId: flex.ExpandStringPointer(m.CompartmentId),
+		List:          flex.ExpandFrameworkListNestedBlock(ctx, m.List, diags, ExpandConfigACLItem),
+		Name:          flex.ExpandString(m.Name),
+		Tags:          flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 	return to
 }
@@ -120,6 +128,7 @@ func (m *ConfigACLModel) Flatten(ctx context.Context, from *dnsconfig.ACL, diags
 		*m = ConfigACLModel{}
 	}
 	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.List = flex.FlattenFrameworkListNestedBlock(ctx, from.List, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
 	m.Name = flex.FlattenString(from.Name)
