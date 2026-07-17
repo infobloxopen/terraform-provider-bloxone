@@ -58,7 +58,7 @@ func RandomName() string {
 // lookupEnvAny returns the value of the first set environment variable among names.
 func lookupEnvAny(names ...string) string {
 	for _, name := range names {
-		if v := os.Getenv(name); v != "" {
+		if v, ok := os.LookupEnv(name); ok {
 			return v
 		}
 	}
@@ -66,6 +66,8 @@ func lookupEnvAny(names ...string) string {
 }
 
 func PreCheck(t *testing.T) {
+	t.Helper()
+
 	cspURL := lookupEnvAny("INFOBLOX_PORTAL_URL", "BLOXONE_CSP_URL")
 	if cspURL == "" {
 		t.Fatal("INFOBLOX_PORTAL_URL (or the deprecated BLOXONE_CSP_URL) must be set for acceptance tests")
