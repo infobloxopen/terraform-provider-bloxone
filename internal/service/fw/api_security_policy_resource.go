@@ -75,7 +75,7 @@ func (r *SecurityPolicyResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	err := retry.RetryContext(ctx, NetworkListOperationTimeout, func() *retry.RetryError {
+	err := retry.RetryContext(ctx, SecurityPolicyOperationTimeout, func() *retry.RetryError {
 		apiRes, _, err := r.client.FWAPI.
 			SecurityPoliciesAPI.
 			CreateSecurityPolicy(ctx).
