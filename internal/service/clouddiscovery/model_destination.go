@@ -13,11 +13,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 
 	"github.com/infobloxopen/universal-ddi-go-client/clouddiscovery"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
 type DestinationModel struct {
@@ -68,7 +68,10 @@ var DestinationResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Destination type: DNS or IPAM/DHCP.",
 	},
 	"id": schema.StringAttribute{
-		Computed:            true,
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+		},
 		MarkdownDescription: "Auto-generated unique destination ID. Format BloxID.",
 	},
 	"updated_at": schema.StringAttribute{
@@ -97,6 +100,7 @@ func (m *DestinationModel) Expand(ctx context.Context, diags *diag.Diagnostics) 
 	to := &clouddiscovery.Destination{
 		Config:          ExpandDestinationConfig(ctx, m.Config, diags),
 		DestinationType: flex.ExpandString(m.DestinationType),
+		Id:              flex.ExpandStringPointer(m.Id),
 	}
 	return to
 }
