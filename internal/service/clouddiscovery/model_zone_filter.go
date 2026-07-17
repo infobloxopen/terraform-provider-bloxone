@@ -3,9 +3,11 @@ package clouddiscovery
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -27,12 +29,16 @@ var ZoneFilterAttrTypes = map[string]attr.Type{
 
 var ZoneFilterResourceSchemaAttributes = map[string]schema.Attribute{
 	"action": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.String{
+			stringvalidator.OneOf("include", "exclude"),
+		},
 		MarkdownDescription: "Action to take on matching zones. Allowed values: \"include\", \"exclude\".",
 	},
 	"wildcards": schema.ListAttribute{
 		CustomType:          internaltypes.UnorderedListOfStringType,
+		ElementType:         types.StringType,
 		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "List of zone wildcard patterns to include or exclude.",
