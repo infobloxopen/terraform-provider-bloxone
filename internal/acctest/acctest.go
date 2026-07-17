@@ -10,9 +10,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/option"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/provider"
+	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+	"github.com/infobloxopen/universal-ddi-go-client/option"
 )
 
 const (
@@ -23,7 +23,7 @@ const (
 
 var (
 	// BloxOneClient will be used to do verification tests
-	BloxOneClient *bloxoneclient.APIClient
+	BloxOneClient *universalddiclient.APIClient
 
 	// ProtoV6ProviderFactories are used to instantiate a provider during
 	// acceptance testing. The factory function will be invoked for every Terraform
@@ -75,7 +75,7 @@ func PreCheck(t *testing.T) {
 		t.Fatal("BLOXONE_API_KEY must be set for acceptance tests")
 	}
 
-	BloxOneClient = bloxoneclient.NewAPIClient(
+	BloxOneClient = universalddiclient.NewAPIClient(
 		option.WithClientName("terraform-acceptance-tests"),
 		option.WithCSPUrl(cspURL),
 		option.WithAPIKey(apiKey),
