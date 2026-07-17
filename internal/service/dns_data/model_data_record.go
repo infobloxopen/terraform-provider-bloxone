@@ -18,7 +18,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/infobloxopen/bloxone-go-client/dnsdata"
+	"github.com/infobloxopen/universal-ddi-go-client/dnsdata"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -28,6 +28,7 @@ type dataRecordModel struct {
 	AbsoluteZoneName    types.String      `tfsdk:"absolute_zone_name"`
 	Comment             types.String      `tfsdk:"comment"`
 	CreatedAt           timetypes.RFC3339 `tfsdk:"created_at"`
+	CompartmentId       types.String      `tfsdk:"compartment_id"`
 	Delegation          types.String      `tfsdk:"delegation"`
 	Disabled            types.Bool        `tfsdk:"disabled"`
 	DnsAbsoluteNameSpec types.String      `tfsdk:"dns_absolute_name_spec"`
@@ -58,6 +59,7 @@ func recordCommonAttrTypes() map[string]attr.Type {
 		"absolute_name_spec":     types.StringType,
 		"absolute_zone_name":     types.StringType,
 		"comment":                types.StringType,
+		"compartment_id":         types.StringType,
 		"created_at":             timetypes.RFC3339Type{},
 		"delegation":             types.StringType,
 		"disabled":               types.BoolType,
@@ -104,6 +106,10 @@ func recordCommonSchema() map[string]schema.Attribute {
 			Computed:            true,
 			Default:             stringdefault.StaticString(""),
 			MarkdownDescription: "The description for the DNS resource record. May contain 0 to 1024 characters. Can include UTF-8.",
+		},
+		"compartment_id": schema.StringAttribute{
+			Computed:            true,
+			MarkdownDescription: "The compartment identifier.",
 		},
 		"created_at": schema.StringAttribute{
 			CustomType:          timetypes.RFC3339Type{},
@@ -297,6 +303,7 @@ func (m *dataRecordModel) Flatten(ctx context.Context, from *dnsdata.Record, dia
 	m.AbsoluteNameSpec = flex.FlattenStringPointer(from.AbsoluteNameSpec)
 	m.AbsoluteZoneName = flex.FlattenStringPointer(from.AbsoluteZoneName)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.Delegation = flex.FlattenStringPointer(from.Delegation)
 	m.Disabled = types.BoolPointerValue(from.Disabled)

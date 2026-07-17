@@ -16,10 +16,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/clouddiscovery"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
+	"github.com/infobloxopen/universal-ddi-go-client/clouddiscovery"
 )
 
 type DiscoveryConfigModel struct {
