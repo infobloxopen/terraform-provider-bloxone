@@ -9,13 +9,13 @@ ENHANCEMENTS:
 * Introduced new expand function for `tag_filters` to support NIOS-related tags ([#266](https://github.com/infobloxopen/terraform-provider-bloxone/pull/266))
 * Updated NIOS-X VM version to 4.1.10 in GCP Marketplace Terraform module ([#272](https://github.com/infobloxopen/terraform-provider-bloxone/pull/272))
 
-NOTES:
-* Migrated provider from `bloxone-go-client` to `universal-ddi-go-client` ([#271](https://github.com/infobloxopen/terraform-provider-bloxone/pull/271))
-* Provider environment variables have been renamed to `INFOBLOX_PORTAL_URL` and `INFOBLOX_PORTAL_KEY` following the migration to the `universal-ddi-go-client` SDK. The previous `BLOXONE_CSP_URL` and `BLOXONE_API_KEY` variables are still supported as deprecated fallbacks but will be removed in a future release ([#271](https://github.com/infobloxopen/terraform-provider-bloxone/pull/271), [#277](https://github.com/infobloxopen/terraform-provider-bloxone/pull/277))
-
 FIXES:
 * DHCP/IPAM: Fixed inheritance update failure (400) and dhcp_options state drift in `bloxone_ipam_subnet` and `bloxone_ipam_range` ([#268](https://github.com/infobloxopen/terraform-provider-bloxone/pull/268), fixes issue [#263](https://github.com/infobloxopen/terraform-provider-bloxone/issues/263))
 * DHCP/IPAM: Removed defaults to inherit DHCP server instance from subnet to `bloxone_ipam_range` ([#250](https://github.com/infobloxopen/terraform-provider-bloxone/pull/250))
+
+NOTES:
+* Migrated provider from `bloxone-go-client` to `universal-ddi-go-client` ([#271](https://github.com/infobloxopen/terraform-provider-bloxone/pull/271))
+* Provider environment variables have been renamed to `INFOBLOX_PORTAL_URL` and `INFOBLOX_PORTAL_KEY` following the migration to the `universal-ddi-go-client` SDK. The previous `BLOXONE_CSP_URL` and `BLOXONE_API_KEY` variables are still supported as deprecated fallbacks but will be removed in a future release ([#271](https://github.com/infobloxopen/terraform-provider-bloxone/pull/271), [#277](https://github.com/infobloxopen/terraform-provider-bloxone/pull/277))
 
 ## v1.5.4 (December 3, 2025)
 
