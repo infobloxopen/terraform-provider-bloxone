@@ -30,7 +30,16 @@ resource "bloxone_cloud_discovery_provider" "example_aws" {
     },
     {
       config = {
-        view_id = bloxone_dns_view.example.id
+        dns = {
+          view_id = bloxone_dns_view.example.id
+          # Optional: filter which DNS zones are synced
+          zone_filters = [
+            {
+              action    = "include"
+              wildcards = ["*.example.com", "*.internal.example.com"]
+            }
+          ]
+        }
       }
       destination_type = "DNS"
     }
