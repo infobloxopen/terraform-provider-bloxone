@@ -13,8 +13,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/inframgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
+	"github.com/infobloxopen/universal-ddi-go-client/inframgmt"
 )
 
 func TestAccServicesResource_basic(t *testing.T) {
@@ -351,9 +351,9 @@ resource "bloxone_infra_service" "test_desired_version" {
 }
 
 func testAccServicesInterfaceLabels(hostName, serviceName, serviceType string, interfaceLabels []string) string {
-	interfaceLabelsBlock := strings.Builder{}
+	interfaceLabelsBlock := ""
 	for _, l := range interfaceLabels {
-		interfaceLabelsBlock.WriteString(fmt.Sprintf("%q,", l))
+		interfaceLabelsBlock += fmt.Sprintf("%q,", l)
 	}
 
 	return strings.Join([]string{
@@ -366,7 +366,7 @@ resource "bloxone_infra_service" "test_interface_labels" {
 	wait_for_state = false
     interface_labels = [%s]
 }
-`, serviceName, serviceType, interfaceLabelsBlock.String()),
+`, serviceName, serviceType, interfaceLabelsBlock),
 	}, "")
 }
 

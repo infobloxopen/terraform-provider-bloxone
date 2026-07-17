@@ -15,7 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 
-	"github.com/infobloxopen/bloxone-go-client/clouddiscovery"
+	"github.com/infobloxopen/universal-ddi-go-client/clouddiscovery"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -64,7 +64,7 @@ var DestinationResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
-		},		
+		},
 		MarkdownDescription: "Destination type: DNS or IPAM/DHCP.",
 	},
 	"id": schema.StringAttribute{

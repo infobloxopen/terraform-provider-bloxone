@@ -55,6 +55,7 @@ Required:
 Optional:
 
 - `comment` (String) Optional. Comment for zone configuration.
+- `compartment_id` (String) The compartment associated with the object. To unassign the compartment ID, set this field to an empty string. If no compartment is associated, the value is returned as empty.
 - `disabled` (Boolean) Optional. _true_ to disable object. A disabled object is effectively non-existent when generating configuration.
 - `external_primaries` (Attributes List) Optional. DNS primaries external to BloxOne DDI. Order is not significant. (see [below for nested schema](#nestedatt--results--external_primaries))
 - `external_secondaries` (Attributes List) DNS secondaries external to BloxOne DDI. Order is not significant. (see [below for nested schema](#nestedatt--results--external_secondaries))

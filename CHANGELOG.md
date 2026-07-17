@@ -1,5 +1,42 @@
 # Changelog
 
+## v1.5.4 (December 3, 2025)
+
+FIXES:
+* IPAM: Updated schema to remove default value for compartment_id in `bloxone_ipam_address_block`,`bloxone_ipam_subnet` and `bloxone_ipam_address`([#242](https://github.com/infobloxopen/terraform-provider-bloxone/pull/242))
+
+## v1.5.3 (October 20, 2025)
+
+ENHANCEMENTS:
+* Updated DHCP Config Profile Schema for Inheritance Sources to add support for `hold_reclaimed_time` and `authoritative_dhcp`([#237](https://github.com/infobloxopen/terraform-provider-bloxone/pull/237))
+
+FIXES:
+* FW: Fixed ordering issue of `items_described` attribute in `bloxone_td_named_list` ([#230](https://github.com/infobloxopen/terraform-provider-bloxone/pull/230))
+* DHCP: Improved DDNS zone configuration and list handling in `bloxone_dhcp_server` ([#231](https://github.com/infobloxopen/terraform-provider-bloxone/pull/231))
+* DHCP: Removed default value assignment for inherited DHCP Option Value ([#233](https://github.com/infobloxopen/terraform-provider-bloxone/pull/233))
+
+NOTES:
+* Upgraded Go version to 1.25.1 ([#234](https://github.com/infobloxopen/terraform-provider-bloxone/pull/234))
+
+## v1.5.2 (September 30, 2025)
+
+FIXES:
+* Extended support for DDNS Conflict Resolution mode, with the option `no_check_without_dhcid` in `bloxone_dhcp_server`, `bloxone_ipam_address_block`,`bloxone_ipam_subnet`,`bloxone_ipam_ip_space` 
+([#227](https://github.com/infobloxopen/terraform-provider-bloxone/pull/227))
+
+## v1.5.1 (September 18, 2025)
+
+ENHANCEMENTS:
+* Updated cloud modules (AWS, Azure, and GCP) along with their corresponding documentation ([#214](https://github.com/infobloxopen/terraform-provider-bloxone/pull/214))
+* Upgraded Terraform Plugin Framework to v1.15.1 ([#216](https://github.com/infobloxopen/terraform-provider-bloxone/pull/216))
+
+## v1.5.0 (June 30, 2025)
+
+ENHANCEMENTS:
+* Next available address block by tags ([#201](https://github.com/infobloxopen/terraform-provider-bloxone/pull/201))
+* Next available subnet by tags ([#202](https://github.com/infobloxopen/terraform-provider-bloxone/pull/202))
+* Next available IPs by tags ([#205](https://github.com/infobloxopen/terraform-provider-bloxone/pull/205))
+
 ## v1.4.1 (January 21, 2024)
 
 FIXES :
@@ -165,16 +202,3 @@ FEATURES:
 * **New Resource and Data Source:** `bloxone_keys_tsig`, `bloxone_keys_tsigs` ([#33](https://github.com/infobloxopen/terraform-provider-bloxone/pull/33))
 * **New Data Source:** `bloxone_keys_kerberos` ([#40](https://github.com/infobloxopen/terraform-provider-bloxone/pull/40))
 * `bloxone_infra_host_aws` module for provisioning BloxOne host in AWS ([#53](https://github.com/infobloxopen/terraform-provider-bloxone/pull/54))
-
-## v1.5.0 (June 30, 2025)
-
-ENHANCEMENTS:
-* Next available address block by tags ([#201](https://github.com/infobloxopen/terraform-provider-bloxone/pull/201))
-* Next available subnet by tags ([#202](https://github.com/infobloxopen/terraform-provider-bloxone/pull/202))
-* Next available IPs by tags ([#205](https://github.com/infobloxopen/terraform-provider-bloxone/pull/205))
-
-## v1.5.1 (September 18, 2025)
-
-ENHANCEMENTS:
-* Updated cloud modules (AWS, Azure, and GCP) along with their corresponding documentation ([#214](https://github.com/infobloxopen/terraform-provider-bloxone/pull/214))
-* Upgraded Terraform Plugin Framework to v1.15.1 ([#216](https://github.com/infobloxopen/terraform-provider-bloxone/pull/216))

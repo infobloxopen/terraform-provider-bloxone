@@ -55,6 +55,7 @@ Required:
 Optional:
 
 - `comment` (String) Optional. Comment for zone delegation.
+- `compartment_id` (String) The compartment associated with the object. To unassign the compartment ID, set this field to an empty string. If no compartment is associated, the value is returned as empty.
 - `disabled` (Boolean) Optional. _true_ to disable object. A disabled object is effectively non-existent when generating resource records.
 - `tags` (Map of String) Tagging specifics.
 - `view` (String) The resource identifier.

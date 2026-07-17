@@ -7,8 +7,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
+	"github.com/infobloxopen/universal-ddi-go-client/dnsconfig"
 )
 
 func TestAccDelegationDataSource_Filters(t *testing.T) {
@@ -66,6 +66,7 @@ func TestAccDelegationDataSource_TagFilters(t *testing.T) {
 func testAccCheckDelegationResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
 	return []resource.TestCheckFunc{
 		resource.TestCheckResourceAttrPair(resourceName, "comment", dataSourceName, "results.0.comment"),
+		resource.TestCheckResourceAttrPair(resourceName, "compartment_id", dataSourceName, "results.0.compartment_id"),
 		resource.TestCheckResourceAttrPair(resourceName, "delegation_servers", dataSourceName, "results.0.delegation_servers"),
 		resource.TestCheckResourceAttrPair(resourceName, "disabled", dataSourceName, "results.0.disabled"),
 		resource.TestCheckResourceAttrPair(resourceName, "fqdn", dataSourceName, "results.0.fqdn"),

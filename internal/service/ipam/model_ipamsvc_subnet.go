@@ -19,8 +19,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/ipam"
+	"github.com/infobloxopen/universal-ddi-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
@@ -47,7 +48,7 @@ type IpamsvcSubnetModel struct {
 	Delegation                 types.String                     `tfsdk:"delegation"`
 	DhcpConfig                 types.Object                     `tfsdk:"dhcp_config"`
 	DhcpHost                   types.String                     `tfsdk:"dhcp_host"`
-	DhcpOptions                types.List                       `tfsdk:"dhcp_options"`
+	DhcpOptions                internaltypes.UnorderedListValue `tfsdk:"dhcp_options"`
 	DhcpUtilization            types.Object                     `tfsdk:"dhcp_utilization"`
 	DisableDhcp                types.Bool                       `tfsdk:"disable_dhcp"`
 	DiscoveryAttrs             types.Map                        `tfsdk:"discovery_attrs"`
@@ -101,7 +102,7 @@ var IpamsvcSubnetAttrTypes = map[string]attr.Type{
 	"delegation":                    types.StringType,
 	"dhcp_config":                   types.ObjectType{AttrTypes: IpamsvcDHCPConfigAttrTypes},
 	"dhcp_host":                     types.StringType,
-	"dhcp_options":                  types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
+	"dhcp_options":                  internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 	"dhcp_utilization":              types.ObjectType{AttrTypes: IpamsvcDHCPUtilizationAttrTypes},
 	"disable_dhcp":                  types.BoolType,
 	"discovery_attrs":               types.MapType{ElemType: types.StringType},
@@ -144,6 +145,7 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
+			stringplanmodifier.UseStateForUnknown(),
 		},
 	},
 	"asm_config": schema.SingleNestedAttribute{
@@ -179,7 +181,6 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"compartment_id": schema.StringAttribute{
 		Computed:            true,
-		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.",
 	},
 	"config_profiles": schema.ListAttribute{
@@ -256,7 +257,7 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		Computed:            true,
 		Default:             booldefault.StaticBool(true),
-		MarkdownDescription: "When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.",
+		MarkdownDescription: "When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_. Can be set to true only when ddns_conflict_resolution_mode is check_with_dhcid.",
 	},
 	"delegation": schema.StringAttribute{
 		Computed:            true,
@@ -282,12 +283,15 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		})),
 	},
 	"dhcp_host": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
-		Default:             stringdefault.StaticString(""),
-		MarkdownDescription: "The resource identifier.",
+		Optional: true,
+		Computed: true,
+		MarkdownDescription: "The resource identifier for the DHCP Host associated with this subnet. " +
+			"Omit or set to `null` to inherit from the parent address block (if applicable). " +
+			"Set to empty string (`\"\"`) to explicitly unset the DHCP host. " +
+			"Provide a resource ID to assign a specific DHCP host.",
 	},
 	"dhcp_options": schema.ListNestedAttribute{
+		CustomType: internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: IpamsvcOptionItemResourceSchemaAttributes,
 		},
@@ -567,7 +571,7 @@ func (m *IpamsvcSubnetModel) Flatten(ctx context.Context, from *ipam.Subnet, dia
 	m.Delegation = flex.FlattenStringPointer(from.Delegation)
 	m.DhcpConfig = FlattenIpamsvcDHCPConfigForSubnetOrAddressBlock(ctx, from.DhcpConfig, diags)
 	m.DhcpHost = flex.FlattenStringPointerWithNilAsEmpty(from.DhcpHost)
-	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
+	m.DhcpOptions = flex.FlattenFrameworkUnorderedListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DhcpUtilization = FlattenIpamsvcDHCPUtilization(ctx, from.DhcpUtilization, diags)
 	m.DisableDhcp = types.BoolPointerValue(from.DisableDhcp)
 	m.DiscoveryAttrs = flex.FlattenFrameworkMapString(ctx, from.DiscoveryAttrs, diags)

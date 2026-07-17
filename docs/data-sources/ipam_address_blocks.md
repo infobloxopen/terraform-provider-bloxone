@@ -80,7 +80,7 @@ Optional:
 - `ddns_send_updates` (Boolean) Determines if DDNS updates are enabled at the address block level. Defaults to _true_.
 - `ddns_ttl_percent` (Number) DDNS TTL value - to be calculated as a simple percentage of the lease's lifetime, using the parameter's value as the percentage. It is specified as a percentage (e.g. 25, 75). Defaults to unspecified.
 - `ddns_update_on_renew` (Boolean) Instructs the DHCP server to always update the DNS information when a lease is renewed even if its DNS information has not changed.  Defaults to _false_.
-- `ddns_use_conflict_resolution` (Boolean) When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_.
+- `ddns_use_conflict_resolution` (Boolean) When true, DHCP server will apply conflict resolution, as described in RFC 4703, when attempting to fulfill the update request.  When false, DHCP server will simply attempt to update the DNS entries per the request, regardless of whether or not they conflict with existing entries owned by other DHCP4 clients.  Defaults to _true_. Can be set to true only when ddns_conflict_resolution_mode is check_with_dhcid.
 - `dhcp_config` (Attributes) (see [below for nested schema](#nestedatt--results--dhcp_config))
 - `dhcp_options` (Attributes List) The list of DHCP options for the address block. May be either a specific option or a group of options. (see [below for nested schema](#nestedatt--results--dhcp_options))
 - `dhcp_utilization` (Attributes) (see [below for nested schema](#nestedatt--results--dhcp_utilization))
@@ -547,9 +547,12 @@ Optional:
 - `abandoned_reclaim_time_v6` (Attributes) The inheritance configuration for _abandoned_reclaim_time_v6_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--abandoned_reclaim_time_v6))
 - `allow_unknown` (Attributes) The inheritance configuration for _allow_unknown_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--allow_unknown))
 - `allow_unknown_v6` (Attributes) The inheritance configuration for _allow_unknown_v6_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--allow_unknown_v6))
+- `authoritative_dhcp` (Attributes) The inheritance configuration for authoritative_dhcp field to set DHCP server as authoritative. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--authoritative_dhcp))
 - `echo_client_id` (Attributes) The inheritance configuration for _echo_client_id_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--echo_client_id))
 - `filters` (Attributes) The inheritance configuration for filters field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--filters))
 - `filters_v6` (Attributes) The inheritance configuration for _filters_v6_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--filters_v6))
+- `hold_reclaimed_time` (Attributes) The inheritance configuration for hold_reclaimed_time in seconds from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--hold_reclaimed_time))
+- `hold_reclaimed_time_v6` (Attributes) The inheritance configuration for hold_reclaimed_time_v6 in seconds from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--hold_reclaimed_time_v6))
 - `ignore_client_uid` (Attributes) The inheritance configuration for _ignore_client_uid_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--ignore_client_uid))
 - `ignore_list` (Attributes) The inheritance configuration for _ignore_list_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--ignore_list))
 - `lease_time` (Attributes) The inheritance configuration for _lease_time_ field from _DHCPConfig_ object. (see [below for nested schema](#nestedatt--results--inheritance_sources--dhcp_config--lease_time))
@@ -627,6 +630,24 @@ Read-Only:
 - `value` (Boolean) The inherited value.
 
 
+<a id="nestedatt--results--inheritance_sources--dhcp_config--authoritative_dhcp"></a>
+### Nested Schema for `results.inheritance_sources.dhcp_config.authoritative_dhcp`
+
+Optional:
+
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
+
+Read-Only:
+
+- `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Boolean) The inherited value.
+
+
 <a id="nestedatt--results--inheritance_sources--dhcp_config--echo_client_id"></a>
 ### Nested Schema for `results.inheritance_sources.dhcp_config.echo_client_id`
 
@@ -679,6 +700,42 @@ Read-Only:
 - `display_name` (String) The human-readable display name for the object referred to by _source_.
 - `source` (String) The resource identifier.
 - `value` (List of String) The resource identifier.
+
+
+<a id="nestedatt--results--inheritance_sources--dhcp_config--hold_reclaimed_time"></a>
+### Nested Schema for `results.inheritance_sources.dhcp_config.hold_reclaimed_time`
+
+Optional:
+
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
+
+Read-Only:
+
+- `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Number) The inherited value.
+
+
+<a id="nestedatt--results--inheritance_sources--dhcp_config--hold_reclaimed_time_v6"></a>
+### Nested Schema for `results.inheritance_sources.dhcp_config.hold_reclaimed_time_v6`
+
+Optional:
+
+- `action` (String) The inheritance setting for a field. Valid values are:
+  * _inherit_: Use the inherited value.
+  * _override_: Use the value set in the object.
+
+  Defaults to _inherit_.
+
+Read-Only:
+
+- `display_name` (String) The human-readable display name for the object referred to by _source_.
+- `source` (String) The resource identifier.
+- `value` (Number) The inherited value.
 
 
 <a id="nestedatt--results--inheritance_sources--dhcp_config--ignore_client_uid"></a>

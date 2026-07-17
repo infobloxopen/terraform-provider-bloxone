@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
+	"github.com/infobloxopen/universal-ddi-go-client/dnsconfig"
 )
 
 func TestAccDelegationResource_basic(t *testing.T) {
@@ -68,6 +68,36 @@ func TestAccDelegationResource_disappears(t *testing.T) {
 				),
 				ExpectNonEmptyPlan: true,
 			},
+		},
+	})
+}
+
+func TestAccDelegationResource_CompartmentId(t *testing.T) {
+	var resourceName = "bloxone_dns_delegation.test_compartment_id"
+	var v dnsconfig.Delegation
+	viewName := acctest.RandomNameWithPrefix("view")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccDelegationCompartmentId(viewName, "c4695."),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDelegationExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", "c4695."),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccDelegationCompartmentId(viewName, ""),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDelegationExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", ""),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
 		},
 	})
 }
@@ -358,6 +388,22 @@ resource "bloxone_dns_delegation" "test" {
     depends_on = [bloxone_dns_view.test, bloxone_dns_auth_zone.test]
 }
 `
+	return strings.Join([]string{testAccBaseWithViewAndAuthZone(viewName), config}, "")
+}
+
+func testAccDelegationCompartmentId(viewName, compartmentId string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dns_delegation" "test_compartment_id" {
+    fqdn = "test.123."
+    compartment_id = %q
+    delegation_servers = [{
+        address = "12.0.0.0"
+        fqdn = "ns1.com."
+      }]
+    view = bloxone_dns_view.test.id
+    depends_on = [bloxone_dns_view.test, bloxone_dns_auth_zone.test]
+}
+`, compartmentId)
 	return strings.Join([]string{testAccBaseWithViewAndAuthZone(viewName), config}, "")
 }
 

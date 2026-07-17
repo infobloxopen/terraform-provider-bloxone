@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/clouddiscovery"
+	"github.com/infobloxopen/universal-ddi-go-client/clouddiscovery"
 )
 
 type DestinationConfigModel struct {

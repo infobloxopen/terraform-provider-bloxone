@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/ipam"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
+	"github.com/infobloxopen/universal-ddi-go-client/ipam"
 )
 
 //TODO: add tests
@@ -867,6 +867,8 @@ func TestAccSubnetResource_InheritanceSources(t *testing.T) {
 }
 
 func TestAccSubnetResource_MultipleFederatedRealms(t *testing.T) {
+	t.Skip("Skipping this test as Multiple federated realms are not supported")
+
 	var resourceName = "bloxone_ipam_subnet.test_federated_realms"
 	var v ipam.Subnet
 	var ipSpaceName = acctest.RandomNameWithPrefix("ip-space")

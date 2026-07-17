@@ -17,7 +17,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/infobloxopen/bloxone-go-client/ipam"
+	"github.com/infobloxopen/universal-ddi-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -84,6 +84,9 @@ var IpamsvcAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		Validators: []validator.String{
 			stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
 		},
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+		},
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
@@ -93,7 +96,6 @@ var IpamsvcAddressResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"compartment_id": schema.StringAttribute{
 		Computed:            true,
-		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "The compartment associated with the object. If no compartment is associated with the object, the value defaults to empty.",
 	},
 	"created_at": schema.StringAttribute{

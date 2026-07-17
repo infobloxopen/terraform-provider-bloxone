@@ -16,13 +16,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
+	"github.com/infobloxopen/universal-ddi-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
 type ConfigDelegationModel struct {
 	Comment           types.String `tfsdk:"comment"`
+	CompartmentId     types.String `tfsdk:"compartment_id"`
 	DelegationServers types.List   `tfsdk:"delegation_servers"`
 	Disabled          types.Bool   `tfsdk:"disabled"`
 	Fqdn              types.String `tfsdk:"fqdn"`
@@ -36,6 +37,7 @@ type ConfigDelegationModel struct {
 
 var ConfigDelegationAttrTypes = map[string]attr.Type{
 	"comment":            types.StringType,
+	"compartment_id":     types.StringType,
 	"delegation_servers": types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigDelegationServerAttrTypes}},
 	"disabled":           types.BoolType,
 	"fqdn":               types.StringType,
@@ -53,6 +55,11 @@ var ConfigDelegationResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: "Optional. Comment for zone delegation.",
+	},
+	"compartment_id": schema.StringAttribute{
+		Computed:            true,
+		Optional:            true,
+		MarkdownDescription: "The compartment associated with the object. To unassign the compartment ID, set this field to an empty string. If no compartment is associated, the value is returned as empty.",
 	},
 	"delegation_servers": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
@@ -132,6 +139,7 @@ func (m *ConfigDelegationModel) Expand(ctx context.Context, diags *diag.Diagnost
 	}
 	to := &dnsconfig.Delegation{
 		Comment:           flex.ExpandStringPointer(m.Comment),
+		CompartmentId:     flex.ExpandStringPointer(m.CompartmentId),
 		DelegationServers: flex.ExpandFrameworkListNestedBlock(ctx, m.DelegationServers, diags, ExpandConfigDelegationServer),
 		Disabled:          flex.ExpandBoolPointer(m.Disabled),
 		Parent:            flex.ExpandStringPointer(m.Parent),
@@ -164,6 +172,7 @@ func (m *ConfigDelegationModel) Flatten(ctx context.Context, from *dnsconfig.Del
 		*m = ConfigDelegationModel{}
 	}
 	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
 	m.DelegationServers = flex.FlattenFrameworkListNestedBlock(ctx, from.DelegationServers, ConfigDelegationServerAttrTypes, diags, FlattenConfigDelegationServer)
 	m.Disabled = types.BoolPointerValue(from.Disabled)
 	m.Fqdn = flex.FlattenStringPointer(from.Fqdn)

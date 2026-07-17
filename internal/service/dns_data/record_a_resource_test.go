@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/dnsdata"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
+	"github.com/infobloxopen/universal-ddi-go-client/dnsdata"
 )
 
 func TestAccRecordAResource_basic(t *testing.T) {

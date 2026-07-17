@@ -9,8 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/option"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/anycast"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/clouddiscovery"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dfp"
@@ -23,6 +21,8 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/ipamfederation"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/keys"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/redirect"
+	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+	"github.com/infobloxopen/universal-ddi-go-client/option"
 )
 
 // Ensure BloxOneProvider satisfies various provider interfaces.
@@ -85,7 +85,7 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 		return
 	}
 
-	client := bloxoneclient.NewAPIClient(
+	client := universalddiclient.NewAPIClient(
 		option.WithClientName(fmt.Sprintf("terraform/%s#%s", p.version, p.commit)),
 		option.WithAPIKey(data.APIKey.ValueString()),
 		option.WithCSPUrl(data.CSPUrl.ValueString()),

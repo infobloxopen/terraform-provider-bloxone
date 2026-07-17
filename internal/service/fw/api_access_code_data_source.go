@@ -9,10 +9,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/fw"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
+	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+	"github.com/infobloxopen/universal-ddi-go-client/fw"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -24,7 +24,7 @@ func NewAccessCodesDataSource() datasource.DataSource {
 
 // AccessCodesDataSource defines the data source implementation.
 type AccessCodesDataSource struct {
-	client *bloxoneclient.APIClient
+	client *universalddiclient.APIClient
 }
 
 func (d *AccessCodesDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -74,12 +74,12 @@ func (d *AccessCodesDataSource) Configure(ctx context.Context, req datasource.Co
 		return
 	}
 
-	client, ok := req.ProviderData.(*bloxoneclient.APIClient)
+	client, ok := req.ProviderData.(*universalddiclient.APIClient)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected DataSource Configure Type",
-			fmt.Sprintf("Expected *bloxoneclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *universalddiclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return

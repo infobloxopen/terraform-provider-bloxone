@@ -12,8 +12,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
+	"github.com/infobloxopen/universal-ddi-go-client/dnsconfig"
 )
 
 //TODO: add tests
@@ -144,6 +144,40 @@ func TestAccAuthZoneResource_PrimaryType(t *testing.T) {
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v2),
 					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn),
 					resource.TestCheckResourceAttr(resourceName, "primary_type", "external"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccAuthZoneResource_CompartmentId(t *testing.T) {
+	var resourceName = "bloxone_dns_auth_zone.test_compartment_id"
+	var v dnsconfig.AuthZone
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccAuthZoneCompartmentId(fqdn, "cloud", "c4695."),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn),
+					resource.TestCheckResourceAttr(resourceName, "primary_type", "cloud"),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", "c4695."),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccAuthZoneCompartmentId(fqdn, "cloud", ""),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "fqdn", fqdn),
+					resource.TestCheckResourceAttr(resourceName, "primary_type", "cloud"),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", ""),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -865,6 +899,16 @@ resource "bloxone_dns_auth_zone" "test" {
     primary_type = %q
 }
 `, fqdn, primaryType)
+}
+
+func testAccAuthZoneCompartmentId(fqdn, primaryType, compartmentId string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_auth_zone" "test_compartment_id" {
+    fqdn = %q
+    primary_type = %q
+    compartment_id = %q
+}
+`, fqdn, primaryType, compartmentId)
 }
 
 func testAccAuthZoneComment(fqdn, primaryType, comment string) string {

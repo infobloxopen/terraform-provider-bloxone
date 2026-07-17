@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
-	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
+	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
 )
 
 const (
@@ -30,7 +30,7 @@ func NewIpSpaceResource() resource.Resource {
 
 // IpSpaceResource defines the resource implementation.
 type IpSpaceResource struct {
-	client *bloxoneclient.APIClient
+	client *universalddiclient.APIClient
 }
 
 func (r *IpSpaceResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -50,12 +50,12 @@ func (r *IpSpaceResource) Configure(ctx context.Context, req resource.ConfigureR
 		return
 	}
 
-	client, ok := req.ProviderData.(*bloxoneclient.APIClient)
+	client, ok := req.ProviderData.(*universalddiclient.APIClient)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Resource Configure Type",
-			fmt.Sprintf("Expected *bloxoneclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *universalddiclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return

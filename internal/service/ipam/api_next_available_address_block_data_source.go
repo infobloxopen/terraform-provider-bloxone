@@ -15,8 +15,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/ipam"
+	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+	"github.com/infobloxopen/universal-ddi-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
@@ -31,7 +31,7 @@ func NewNextAvailableAddressBlockDataSource() datasource.DataSource {
 
 // NextAvailableAddressBlockDataSource defines the data source implementation.
 type NextAvailableAddressBlockDataSource struct {
-	client *bloxoneclient.APIClient
+	client *universalddiclient.APIClient
 }
 
 type IpamsvcNextAvailableAddressBlockModel struct {
@@ -101,12 +101,12 @@ func (d *NextAvailableAddressBlockDataSource) Configure(_ context.Context, req d
 		return
 	}
 
-	client, ok := req.ProviderData.(*bloxoneclient.APIClient)
+	client, ok := req.ProviderData.(*universalddiclient.APIClient)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected DataSource Configure Type",
-			fmt.Sprintf("Expected *bloxoneclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *universalddiclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -216,7 +216,7 @@ func (d *NextAvailableAddressBlockDataSource) Read(ctx context.Context, req data
 }
 
 // FetchAddressBlocksByTagFilter is a helper function used to fetch address blocks by tags.
-func FetchAddressBlocksByTagFilter(ctx context.Context, client *bloxoneclient.APIClient, tagFilterStr string, diagnostics *diag.Diagnostics) ([]ipam.AddressBlock, error) {
+func FetchAddressBlocksByTagFilter(ctx context.Context, client *universalddiclient.APIClient, tagFilterStr string, diagnostics *diag.Diagnostics) ([]ipam.AddressBlock, error) {
 
 	addressBlocks, err := utils.ReadWithPages(func(offset, limit int32) ([]ipam.AddressBlock, error) {
 		apiRes, _, err := client.IPAddressManagementAPI.AddressBlockAPI.

@@ -9,7 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
-	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
+	"github.com/infobloxopen/universal-ddi-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
