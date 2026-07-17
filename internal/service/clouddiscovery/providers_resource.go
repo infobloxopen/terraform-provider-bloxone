@@ -154,12 +154,15 @@ func (r *ProviderResource) Delete(ctx context.Context, req resource.DeleteReques
 	// If the desired state is not "disabled", update it to "disabled" before deleting
 	if data.DesiredState.ValueString() != "disabled" {
 		data.DesiredState = types.StringValue("disabled")
-		_, _, err := r.client.DiscoveryConfigurationAPIV2.
+		_, updateHTTPRes, err := r.client.DiscoveryConfigurationAPIV2.
 			ProvidersAPI.
 			Update(ctx, data.Id.ValueString()).
 			Body(*data.Expand(ctx, &resp.Diagnostics, false)).
 			Execute()
 		if err != nil {
+			if updateHTTPRes != nil && updateHTTPRes.StatusCode == http.StatusNotFound {
+				return
+			}
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to disable Providers before deletion, got error: %s", err))
 			return
 		}
