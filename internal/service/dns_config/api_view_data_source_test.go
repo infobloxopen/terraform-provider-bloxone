@@ -7,8 +7,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
+	"github.com/infobloxopen/universal-ddi-go-client/dnsconfig"
 )
 
 func TestAccViewDataSource_Filters(t *testing.T) {
@@ -63,6 +63,7 @@ func testAccCheckViewResourceAttrPair(resourceName, dataSourceName string) []res
 	return []resource.TestCheckFunc{
 		resource.TestCheckResourceAttrPair(resourceName, "add_edns_option_in_outgoing_query", dataSourceName, "results.0.add_edns_option_in_outgoing_query"),
 		resource.TestCheckResourceAttrPair(resourceName, "comment", dataSourceName, "results.0.comment"),
+		resource.TestCheckResourceAttrPair(resourceName, "compartment_id", dataSourceName, "results.0.compartment_id"),
 		resource.TestCheckResourceAttrPair(resourceName, "created_at", dataSourceName, "results.0.created_at"),
 		resource.TestCheckResourceAttrPair(resourceName, "custom_root_ns", dataSourceName, "results.0.custom_root_ns"),
 		resource.TestCheckResourceAttrPair(resourceName, "custom_root_ns_enabled", dataSourceName, "results.0.custom_root_ns_enabled"),

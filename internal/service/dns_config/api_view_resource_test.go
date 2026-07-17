@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
+	"github.com/infobloxopen/universal-ddi-go-client/dnsconfig"
 )
 
 //TODO: add tests
@@ -129,6 +129,36 @@ func TestAccViewResource_AddEdnsOptionInOutgoingQuery(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "add_edns_option_in_outgoing_query", "true"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccViewResource_CompartmentId(t *testing.T) {
+	var resourceName = "bloxone_dns_view.test_compartment_id"
+	var v dnsconfig.View
+	var name = acctest.RandomNameWithPrefix("view")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccViewCompartmentId(name, "c4695."),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", "c4695."),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccViewCompartmentId(name, ""),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "compartment_id", ""),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1732,6 +1762,15 @@ resource "bloxone_dns_view" "test_add_edns_option_in_outgoing_query" {
     add_edns_option_in_outgoing_query = %q
 }
 `, name, addEdnsOptionInOutgoingQuery)
+}
+
+func testAccViewCompartmentId(name, compartmentId string) string {
+	return fmt.Sprintf(`
+resource "bloxone_dns_view" "test_compartment_id" {
+    name = %q
+    compartment_id = %q
+}
+`, name, compartmentId)
 }
 
 func testAccViewComment(name, comment string) string {
