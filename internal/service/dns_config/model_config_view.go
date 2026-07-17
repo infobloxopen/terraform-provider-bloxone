@@ -62,6 +62,7 @@ type ConfigViewModel struct {
 	MaxUdpSize                                  types.Int64       `tfsdk:"max_udp_size"`
 	MinimalResponses                            types.Bool        `tfsdk:"minimal_responses"`
 	Name                                        types.String      `tfsdk:"name"`
+	NiosMetadata                                types.Map         `tfsdk:"nios_metadata"`
 	Notify                                      types.Bool        `tfsdk:"notify"`
 	QueryAcl                                    types.List        `tfsdk:"query_acl"`
 	RecursionAcl                                types.List        `tfsdk:"recursion_acl"`
@@ -115,6 +116,7 @@ var ConfigViewAttrTypes = map[string]attr.Type{
 	"max_udp_size":                          types.Int64Type,
 	"minimal_responses":                     types.BoolType,
 	"name":                                  types.StringType,
+	"nios_metadata":                         types.MapType{ElemType: types.StringType},
 	"notify":                                types.BoolType,
 	"query_acl":                             types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}},
 	"recursion_acl":                         types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}},
@@ -372,6 +374,12 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 		Required:            true,
 		MarkdownDescription: `Name of view.`,
 	},
+	"nios_metadata": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "NIOS Grids Metadata holds multiple NIOS grids data.",
+	},
 	"notify": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
@@ -527,6 +535,7 @@ func (m *ConfigViewModel) Expand(ctx context.Context, diags *diag.Diagnostics) *
 		MaxUdpSize:                        flex.ExpandInt64Pointer(m.MaxUdpSize),
 		MinimalResponses:                  flex.ExpandBoolPointer(m.MinimalResponses),
 		Name:                              flex.ExpandString(m.Name),
+		NiosMetadata:                      flex.ExpandFrameworkMapString(ctx, m.NiosMetadata, diags),
 		Notify:                            flex.ExpandBoolPointer(m.Notify),
 		QueryAcl:                          flex.ExpandFrameworkListNestedBlock(ctx, m.QueryAcl, diags, ExpandConfigACLItem),
 		RecursionAcl:                      flex.ExpandFrameworkListNestedBlock(ctx, m.RecursionAcl, diags, ExpandConfigACLItem),
@@ -598,6 +607,7 @@ func (m *ConfigViewModel) Flatten(ctx context.Context, from *dnsconfig.View, dia
 	m.MaxUdpSize = flex.FlattenInt64(int64(*from.MaxUdpSize))
 	m.MinimalResponses = types.BoolPointerValue(from.MinimalResponses)
 	m.Name = flex.FlattenString(from.Name)
+	m.NiosMetadata = flex.FlattenFrameworkMapStringAny(ctx, from.NiosMetadata, diags)
 	m.Notify = types.BoolPointerValue(from.Notify)
 	m.QueryAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.QueryAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
 	m.RecursionAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.RecursionAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)

@@ -4,17 +4,23 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/mapvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
@@ -23,37 +29,50 @@ import (
 )
 
 type ConfigAuthZoneModel struct {
-	Comment                  types.String      `tfsdk:"comment"`
-	CompartmentId            types.String      `tfsdk:"compartment_id"`
-	CreatedAt                timetypes.RFC3339 `tfsdk:"created_at"`
-	Disabled                 types.Bool        `tfsdk:"disabled"`
-	ExternalPrimaries        types.List        `tfsdk:"external_primaries"`
-	ExternalProviders        types.List        `tfsdk:"external_providers"`
-	ExternalSecondaries      types.List        `tfsdk:"external_secondaries"`
-	Fqdn                     types.String      `tfsdk:"fqdn"`
-	GssTsigEnabled           types.Bool        `tfsdk:"gss_tsig_enabled"`
-	Id                       types.String      `tfsdk:"id"`
-	InheritanceAssignedHosts types.List        `tfsdk:"inheritance_assigned_hosts"`
-	InheritanceSources       types.Object      `tfsdk:"inheritance_sources"`
-	InitialSoaSerial         types.Int64       `tfsdk:"initial_soa_serial"`
-	InternalSecondaries      types.List        `tfsdk:"internal_secondaries"`
-	MappedSubnet             types.String      `tfsdk:"mapped_subnet"`
-	Mapping                  types.String      `tfsdk:"mapping"`
-	Notify                   types.Bool        `tfsdk:"notify"`
-	Nsgs                     types.List        `tfsdk:"nsgs"`
-	Parent                   types.String      `tfsdk:"parent"`
-	PrimaryType              types.String      `tfsdk:"primary_type"`
-	ProtocolFqdn             types.String      `tfsdk:"protocol_fqdn"`
-	QueryAcl                 types.List        `tfsdk:"query_acl"`
-	Tags                     types.Map         `tfsdk:"tags"`
-	TagsAll                  types.Map         `tfsdk:"tags_all"`
-	TransferAcl              types.List        `tfsdk:"transfer_acl"`
-	UpdateAcl                types.List        `tfsdk:"update_acl"`
-	UpdatedAt                timetypes.RFC3339 `tfsdk:"updated_at"`
-	UseForwardersForSubzones types.Bool        `tfsdk:"use_forwarders_for_subzones"`
-	View                     types.String      `tfsdk:"view"`
-	Warnings                 types.List        `tfsdk:"warnings"`
-	ZoneAuthority            types.Object      `tfsdk:"zone_authority"`
+	Comment                   types.String      `tfsdk:"comment"`
+	CompartmentId             types.String      `tfsdk:"compartment_id"`
+	CreatedAt                 timetypes.RFC3339 `tfsdk:"created_at"`
+	Disabled                  types.Bool        `tfsdk:"disabled"`
+	DnssecKeys                types.List        `tfsdk:"dnssec_keys"`
+	DnssecSigningPolicy       types.Object      `tfsdk:"dnssec_signing_policy"`
+	DnssecStatus              types.String      `tfsdk:"dnssec_status"`
+	ExternalPrimaries         types.List        `tfsdk:"external_primaries"`
+	ExternalProviders         types.List        `tfsdk:"external_providers"`
+	ExternalProvidersMetadata types.Map         `tfsdk:"external_providers_metadata"`
+	ExternalSecondaries       types.List        `tfsdk:"external_secondaries"`
+	Fqdn                      types.String      `tfsdk:"fqdn"`
+	GridPrimaries             types.List        `tfsdk:"grid_primaries"`
+	GridSecondaries           types.List        `tfsdk:"grid_secondaries"`
+	GssTsigEnabled            types.Bool        `tfsdk:"gss_tsig_enabled"`
+	Id                        types.String      `tfsdk:"id"`
+	InheritanceAssignedHosts  types.List        `tfsdk:"inheritance_assigned_hosts"`
+	InheritanceSources        types.Object      `tfsdk:"inheritance_sources"`
+	InitialSoaSerial          types.Int64       `tfsdk:"initial_soa_serial"`
+	InternalSecondaries       types.List        `tfsdk:"internal_secondaries"`
+	MappedSubnet              types.String      `tfsdk:"mapped_subnet"`
+	Mapping                   types.String      `tfsdk:"mapping"`
+	MaxRecordsPerType         types.Int64       `tfsdk:"max_records_per_type"`
+	MaxTypesPerName           types.Int64       `tfsdk:"max_types_per_name"`
+	Nameservers               types.List        `tfsdk:"nameservers"`
+	NiosGridsMetadata         types.Map         `tfsdk:"nios_grids_metadata"`
+	Notify                    types.Bool        `tfsdk:"notify"`
+	Nsg                       types.String      `tfsdk:"nsg"`
+	Nsgs                      types.List        `tfsdk:"nsgs"`
+	Parent                    types.String      `tfsdk:"parent"`
+	PrimaryType               types.String      `tfsdk:"primary_type"`
+	ProtocolFqdn              types.String      `tfsdk:"protocol_fqdn"`
+	QueryAcl                  types.List        `tfsdk:"query_acl"`
+	SecondaryZoneRecordsSync  types.Bool        `tfsdk:"secondary_zone_records_sync"`
+	Tags                      types.Map         `tfsdk:"tags"`
+	TagsAll                   types.Map         `tfsdk:"tags_all"`
+	TransferAcl               types.List        `tfsdk:"transfer_acl"`
+	UpdateAcl                 types.List        `tfsdk:"update_acl"`
+	UpdatedAt                 timetypes.RFC3339 `tfsdk:"updated_at"`
+	UseForwardersForSubzones  types.Bool        `tfsdk:"use_forwarders_for_subzones"`
+	View                      types.String      `tfsdk:"view"`
+	Warnings                  types.List        `tfsdk:"warnings"`
+	Version                   types.String      `tfsdk:"version"`
+	ZoneAuthority             types.Object      `tfsdk:"zone_authority"`
 }
 
 var ConfigAuthZoneAttrTypes = map[string]attr.Type{
@@ -61,10 +80,16 @@ var ConfigAuthZoneAttrTypes = map[string]attr.Type{
 	"compartment_id":              types.StringType,
 	"created_at":                  timetypes.RFC3339Type{},
 	"disabled":                    types.BoolType,
+	"dnssec_keys":                 types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigDNSSECKeyAttrTypes}},
+	"dnssec_signing_policy":       types.ObjectType{AttrTypes: ConfigDNSSECSigningPolicyAttrTypes},
+	"dnssec_status":               types.StringType,
 	"external_primaries":          types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigExternalPrimaryAttrTypes}},
 	"external_providers":          types.ListType{ElemType: types.ObjectType{AttrTypes: AuthZoneExternalProviderAttrTypes}},
+	"external_providers_metadata": types.MapType{ElemType: types.StringType},
 	"external_secondaries":        types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigExternalSecondaryAttrTypes}},
 	"fqdn":                        types.StringType,
+	"grid_primaries":              types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigMemberServerAttrTypes}},
+	"grid_secondaries":            types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigMemberServerAttrTypes}},
 	"gss_tsig_enabled":            types.BoolType,
 	"id":                          types.StringType,
 	"inheritance_assigned_hosts":  types.ListType{ElemType: types.ObjectType{AttrTypes: Inheritance2AssignedHostAttrTypes}},
@@ -73,12 +98,18 @@ var ConfigAuthZoneAttrTypes = map[string]attr.Type{
 	"internal_secondaries":        types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigInternalSecondaryAttrTypes}},
 	"mapped_subnet":               types.StringType,
 	"mapping":                     types.StringType,
+	"max_records_per_type":        types.Int64Type,
+	"max_types_per_name":          types.Int64Type,
+	"nameservers":                 types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigNameserverAttrTypes}},
+	"nios_grids_metadata":         types.MapType{ElemType: types.StringType},
 	"notify":                      types.BoolType,
+	"nsg":                         types.StringType,
 	"nsgs":                        types.ListType{ElemType: types.StringType},
 	"parent":                      types.StringType,
 	"primary_type":                types.StringType,
 	"protocol_fqdn":               types.StringType,
 	"query_acl":                   types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}},
+	"secondary_zone_records_sync": types.BoolType,
 	"tags":                        types.MapType{ElemType: types.StringType},
 	"tags_all":                    types.MapType{ElemType: types.StringType},
 	"transfer_acl":                types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigACLItemAttrTypes}},
@@ -87,6 +118,7 @@ var ConfigAuthZoneAttrTypes = map[string]attr.Type{
 	"use_forwarders_for_subzones": types.BoolType,
 	"view":                        types.StringType,
 	"warnings":                    types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigWarningAttrTypes}},
+	"version":                     types.StringType,
 	"zone_authority":              types.ObjectType{AttrTypes: ConfigZoneAuthorityAttrTypes},
 }
 
@@ -95,7 +127,7 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		Computed:            true,
 		Default:             stringdefault.StaticString(""),
-		MarkdownDescription: `Optional. Comment for zone configuration.`,
+		MarkdownDescription: "Optional. Comment for zone configuration.",
 	},
 	"compartment_id": schema.StringAttribute{
 		Computed:            true,
@@ -105,41 +137,96 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 	"created_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
-		MarkdownDescription: `Time when the object has been created.`,
+		MarkdownDescription: "Time when the object has been created.",
 	},
 	"disabled": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
 		Default:             booldefault.StaticBool(false),
-		MarkdownDescription: `Optional. _true_ to disable object. A disabled object is effectively non-existent when generating configuration.`,
+		MarkdownDescription: "Optional. _true_ to disable object. A disabled object is effectively non-existent when generating configuration.",
+	},
+	"dnssec_keys": schema.ListNestedAttribute{
+		NestedObject: schema.NestedAttributeObject{
+			Attributes: ConfigDNSSECKeyResourceSchemaAttributes,
+		},
+		Computed:            true,
+		MarkdownDescription: "The list of DNSSEC keys used by the _AuthZone_ for zone signing.",
+	},
+	"dnssec_signing_policy": schema.SingleNestedAttribute{
+		Attributes:          ConfigDNSSECSigningPolicyResourceSchemaAttributes,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "DNSSEC signing policy of the zone.",
+	},
+	"dnssec_status": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "Read Only.  DNSSEC status indicates the current DNSSEC signing status of the zone.  Possible values: - _UNSIGNED_: The zone is not signed with DNSSEC - _SIGNED_: The zone is fully signed with DNSSEC - _ROLLOVER_IN_PROGRESS_: DNSSEC key rollover is currently in progress - _SIGN_IN_PROGRESS_: The zone is currently being signed with DNSSEC - _UNSIGN_IN_PROGRESS_: The zone is currently being unsigned (DNSSEC removal in progress)",
 	},
 	"external_primaries": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigExternalPrimaryResourceSchemaAttributes,
 		},
-		Optional:            true,
-		MarkdownDescription: `Optional. DNS primaries external to BloxOne DDI. Order is not significant.`,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.List{
+			listvalidator.SizeAtLeast(1),
+		},
+		MarkdownDescription: "Optional. DNS primaries external to BloxOne DDI. Order is not significant. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"external_providers": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: AuthZoneExternalProviderResourceSchemaAttributes,
 		},
 		Computed:            true,
-		MarkdownDescription: `list of external providers for the auth zone.`,
+		MarkdownDescription: "list of external providers for the auth zone.",
+	},
+	"external_providers_metadata": schema.MapAttribute{
+		ElementType: types.StringType,
+		Computed:    true,
+		PlanModifiers: []planmodifier.Map{
+			mapplanmodifier.UseStateForUnknown(),
+		},
+		MarkdownDescription: "External DNS providers metadata.",
 	},
 	"external_secondaries": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigExternalSecondaryResourceSchemaAttributes,
 		},
-		Optional:            true,
-		MarkdownDescription: `DNS secondaries external to BloxOne DDI. Order is not significant.`,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.List{
+			listvalidator.SizeAtLeast(1),
+		},
+		MarkdownDescription: "DNS secondaries external to BloxOne DDI. Order is not significant. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"fqdn": schema.StringAttribute{
 		Required: true,
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 		},
-		MarkdownDescription: `Zone FQDN. The FQDN supplied at creation will be converted to canonical form.  Read-only after creation.`,
+		MarkdownDescription: "Zone FQDN. The FQDN supplied at creation will be converted to canonical form.  Read-only after creation.",
+	},
+	"grid_primaries": schema.ListNestedAttribute{
+		NestedObject: schema.NestedAttributeObject{
+			Attributes: ConfigMemberServerResourceSchemaAttributes,
+		},
+		Optional: true,
+		Computed: true,
+		Validators: []validator.List{
+			listvalidator.SizeAtLeast(1),
+		},
+		MarkdownDescription: "Optional. The list of the NIOS Grid Primaries assigned to an AuthZone, only applicable for the NIOS Zones. Can be configured only when Unified Nameservers is disabled.",
+	},
+	"grid_secondaries": schema.ListNestedAttribute{
+		NestedObject: schema.NestedAttributeObject{
+			Attributes: ConfigMemberServerResourceSchemaAttributes,
+		},
+		Optional: true,
+		Computed: true,
+		Validators: []validator.List{
+			listvalidator.SizeAtLeast(1),
+		},
+		MarkdownDescription: "Optional. The list of the NIOS Grid Secondaries assigned to an AuthZone, only applicable for the NIOS Zones. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"gss_tsig_enabled": schema.BoolAttribute{
 		Optional:            true,
@@ -159,7 +246,7 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: Inheritance2AssignedHostResourceSchemaAttributes,
 		},
 		Computed:            true,
-		MarkdownDescription: `The list of the inheritance assigned hosts of the object.`,
+		MarkdownDescription: "The list of the inheritance assigned hosts of the object.",
 	},
 	"inheritance_sources": schema.SingleNestedAttribute{
 		Attributes: ConfigAuthZoneInheritanceResourceSchemaAttributes,
@@ -182,16 +269,59 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigInternalSecondaryResourceSchemaAttributes,
 		},
-		Optional:            true,
-		MarkdownDescription: `Optional. BloxOne DDI hosts acting as internal secondaries. Order is not significant.`,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.List{
+			listvalidator.SizeAtLeast(1),
+		},
+		MarkdownDescription: "Optional. BloxOne DDI hosts acting as internal secondaries. Order is not significant. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"mapped_subnet": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `Reverse zone network address in the following format: \"ip-address/cidr\". Defaults to empty.`,
+		MarkdownDescription: "Reverse zone network address in the following format: \"ip-address/cidr\". Defaults to empty.",
 	},
 	"mapping": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `Zone mapping type. Allowed values:  * _forward_,  * _ipv4_reverse_.  * _ipv6_reverse_.  Defaults to forward.`,
+		MarkdownDescription: "Zone mapping type. Allowed values:  * _forward_,  * _ipv4_reverse_.  * _ipv6_reverse_.  Defaults to forward.",
+	},
+	"max_records_per_type": schema.Int64Attribute{
+		Optional:            true,
+		Computed:            true,
+		Default:             int64default.StaticInt64(2000),
+		MarkdownDescription: "The maximum number of records that can be stored in an RRset (records of same name and type), to prevent a slowdown in query processing due to an excessive number of those RRsets. The limit is enforced when serving the zone on-prem, not at the time of record creation or update. Exceeding the limit will result in the zone failing to load or to be updated. If 0, it means there is no limit. Defauts to _2000_.",
+	},
+	"max_types_per_name": schema.Int64Attribute{
+		Optional:            true,
+		Computed:            true,
+		Default:             int64default.StaticInt64(100),
+		MarkdownDescription: "The maximum number of record types that can be stored for an owner name, to prevent a slowdown in query processing due to an excessive number of those records. The limit is enforced when serving the zone on-prem, not at the time of record creation or update. Exceeding the limit will result in the zone failing to load or to be updated. If 0, it means there is no limit. Defauts to _100_.",
+	},
+	"nameservers": schema.ListNestedAttribute{
+		NestedObject: schema.NestedAttributeObject{
+			Attributes: ConfigNameserverResourceSchemaAttributes,
+		},
+		Optional: true,
+		Computed: true,
+		Validators: []validator.List{
+			listvalidator.ConflictsWith(
+				path.MatchRoot("external_primaries"),
+				path.MatchRoot("external_secondaries"),
+				path.MatchRoot("internal_secondaries"),
+				path.MatchRoot("grid_primaries"),
+				path.MatchRoot("grid_secondaries"),
+				path.MatchRoot("nsgs"),
+			),
+		},
+		MarkdownDescription: "Optional. A list of DNS Nameservers of various roles. Cannot be configured if _nsg_ is configured. Can be configured only when Unified Nameservers is enabled.",
+	},
+	"nios_grids_metadata": schema.MapAttribute{
+		ElementType: types.StringType,
+		Optional:    true,
+		Computed:    true,
+		Validators: []validator.Map{
+			mapvalidator.SizeAtLeast(1),
+		},
+		MarkdownDescription: "NIOS Grids Metadata holds multiple NIOS grids data.",
 	},
 	"notify": schema.BoolAttribute{
 		Optional:            true,
@@ -199,32 +329,58 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: `Also notify all external secondary DNS servers if enabled.  Defaults to _false_.`,
 	},
+	"nsg": schema.StringAttribute{
+		Optional: true,
+		Computed: true,
+		Validators: []validator.String{
+			stringvalidator.ConflictsWith(
+				path.MatchRoot("external_primaries"),
+				path.MatchRoot("external_secondaries"),
+				path.MatchRoot("internal_secondaries"),
+				path.MatchRoot("grid_primaries"),
+				path.MatchRoot("grid_secondaries"),
+				path.MatchRoot("nsgs"),
+			),
+		},
+		MarkdownDescription: "The resource identifier of the nameserver group. Can be configured only when Unified Nameservers is enabled.",
+	},
 	"nsgs": schema.ListAttribute{
-		ElementType:         types.StringType,
-		Optional:            true,
-		MarkdownDescription: `The resource identifier.`,
+		ElementType: types.StringType,
+		Optional:    true,
+		Computed:    true,
+		Validators: []validator.List{
+			listvalidator.SizeAtLeast(1),
+		},
+		MarkdownDescription: "List of nameserver group identifiers. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"parent": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"primary_type": schema.StringAttribute{
-		Required: true,
+		Optional: true,
+		Computed: true,
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 		},
-		MarkdownDescription: `Primary type for an authoritative zone. Read only after creation. Allowed values:  * _external_: zone data owned by an external nameserver,  * _cloud_: zone data is owned by a BloxOne DDI host.`,
+		MarkdownDescription: `Primary type for an authoritative zone. Required when Unified Nameservers is disabled. Read-only when Unified Nameservers is enabled. Allowed values:  * _external_: zone data owned by an external nameserver,  * _cloud_: zone data is owned by a BloxOne DDI host.`,
 	},
 	"protocol_fqdn": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: `Zone FQDN in punycode.`,
+		MarkdownDescription: "Zone FQDN in punycode.",
 	},
 	"query_acl": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigACLItemResourceSchemaAttributes,
 		},
 		Optional:            true,
-		MarkdownDescription: `Optional. Clients must match this ACL to make authoritative queries. Also used for recursive queries if that ACL is unset.  Defaults to empty.`,
+		MarkdownDescription: "Optional. Clients must match this ACL to make authoritative queries. Also used for recursive queries if that ACL is unset.  Defaults to empty.",
+	},
+	"secondary_zone_records_sync": schema.BoolAttribute{
+		Optional:            true,
+		Computed:            true,
+		Default:             booldefault.StaticBool(false),
+		MarkdownDescription: "Optional. Defines if secondary zone records should be synchronized.  Defaults to _false_. Only allowed to update when primary_type is \"external\".",
 	},
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
@@ -243,19 +399,19 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: ConfigACLItemResourceSchemaAttributes,
 		},
 		Optional:            true,
-		MarkdownDescription: `Optional. Clients must match this ACL to receive zone transfers.`,
+		MarkdownDescription: "Optional. Clients must match this ACL to receive zone transfers.",
 	},
 	"update_acl": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: ConfigACLItemResourceSchemaAttributes,
 		},
 		Optional:            true,
-		MarkdownDescription: `Optional. Specifies which hosts are allowed to submit Dynamic DNS updates for authoritative zones of _primary_type_ _cloud_.  Defaults to empty.`,
+		MarkdownDescription: "Optional. Specifies which hosts are allowed to submit Dynamic DNS updates for authoritative zones of _primary_type_ _cloud_.  Defaults to empty.",
 	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
-		MarkdownDescription: `Time when the object has been updated. Equals to _created_at_ if not updated after creation.`,
+		MarkdownDescription: "Time when the object has been updated. Equals to _created_at_ if not updated after creation.",
 	},
 	"use_forwarders_for_subzones": schema.BoolAttribute{
 		Optional:            true,
@@ -276,7 +432,11 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: ConfigWarningResourceSchemaAttributes,
 		},
 		Computed:            true,
-		MarkdownDescription: `The list of an auth zone warnings.`,
+		MarkdownDescription: "The list of an auth zone warnings.",
+	},
+	"version": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "Read Only. Version indicates the version of the Authoritative DNS Server Group in context of DNS NSGs and nameservers that are used. Possible values:\n- _v1_: The Authoritative DNS Server Group uses original NSG model\n- _v2_: The Authoritative DNS Server Group uses new \"Unified Nameservers\" model",
 	},
 	"zone_authority": schema.SingleNestedAttribute{
 		Attributes: ConfigZoneAuthorityResourceSchemaAttributes,
@@ -302,22 +462,32 @@ func (m *ConfigAuthZoneModel) Expand(ctx context.Context, diags *diag.Diagnostic
 		return nil
 	}
 	to := &dnsconfig.AuthZone{
-		Comment:                  m.Comment.ValueStringPointer(),
-		CompartmentId:            flex.ExpandStringPointer(m.CompartmentId),
-		Disabled:                 m.Disabled.ValueBoolPointer(),
-		ExternalPrimaries:        flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalPrimaries, diags, ExpandConfigExternalPrimary),
-		ExternalSecondaries:      flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalSecondaries, diags, ExpandConfigExternalSecondary),
-		GssTsigEnabled:           m.GssTsigEnabled.ValueBoolPointer(),
-		InheritanceSources:       ExpandConfigAuthZoneInheritance(ctx, m.InheritanceSources, diags),
-		InternalSecondaries:      flex.ExpandFrameworkListNestedBlock(ctx, m.InternalSecondaries, diags, ExpandConfigInternalSecondary),
-		Notify:                   m.Notify.ValueBoolPointer(),
-		Nsgs:                     flex.ExpandFrameworkListString(ctx, m.Nsgs, diags),
-		QueryAcl:                 flex.ExpandFrameworkListNestedBlock(ctx, m.QueryAcl, diags, ExpandConfigACLItem),
-		Tags:                     flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
-		TransferAcl:              flex.ExpandFrameworkListNestedBlock(ctx, m.TransferAcl, diags, ExpandConfigACLItem),
-		UpdateAcl:                flex.ExpandFrameworkListNestedBlock(ctx, m.UpdateAcl, diags, ExpandConfigACLItem),
-		UseForwardersForSubzones: m.UseForwardersForSubzones.ValueBoolPointer(),
-		ZoneAuthority:            ExpandConfigZoneAuthority(ctx, m.ZoneAuthority, diags),
+		Comment:                   flex.ExpandStringPointer(m.Comment),
+		CompartmentId:             flex.ExpandStringPointer(m.CompartmentId),
+		Disabled:                  flex.ExpandBoolPointer(m.Disabled),
+		DnssecSigningPolicy:       ExpandConfigDNSSECSigningPolicy(ctx, m.DnssecSigningPolicy, diags),
+		ExternalPrimaries:         flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.ExternalPrimaries, diags, ExpandConfigExternalPrimary),
+		ExternalProvidersMetadata: flex.ExpandFrameworkMapString(ctx, m.ExternalProvidersMetadata, diags),
+		ExternalSecondaries:       flex.ExpandFrameworkListNestedBlock(ctx, m.ExternalSecondaries, diags, ExpandConfigExternalSecondary),
+		GridPrimaries:             flex.ExpandFrameworkListNestedBlock(ctx, m.GridPrimaries, diags, ExpandConfigMemberServer),
+		GridSecondaries:           flex.ExpandFrameworkListNestedBlock(ctx, m.GridSecondaries, diags, ExpandConfigMemberServer),
+		GssTsigEnabled:            flex.ExpandBoolPointer(m.GssTsigEnabled),
+		InheritanceSources:        ExpandConfigAuthZoneInheritance(ctx, m.InheritanceSources, diags),
+		InternalSecondaries:       flex.ExpandFrameworkListNestedBlock(ctx, m.InternalSecondaries, diags, ExpandConfigInternalSecondary),
+		MaxRecordsPerType:         flex.ExpandInt64Pointer(m.MaxRecordsPerType),
+		MaxTypesPerName:           flex.ExpandInt64Pointer(m.MaxTypesPerName),
+		Nameservers:               flex.ExpandFrameworkListNestedBlock(ctx, m.Nameservers, diags, ExpandConfigNameserver),
+		NiosGridsMetadata:         flex.ExpandFrameworkMapString(ctx, m.NiosGridsMetadata, diags),
+		Notify:                    flex.ExpandBoolPointer(m.Notify),
+		Nsg:                       flex.ExpandStringPointer(m.Nsg),
+		Nsgs:                      flex.ExpandFrameworkListString(ctx, m.Nsgs, diags),
+		QueryAcl:                  flex.ExpandFrameworkListNestedBlock(ctx, m.QueryAcl, diags, ExpandConfigACLItem),
+		SecondaryZoneRecordsSync:  flex.ExpandBoolPointer(m.SecondaryZoneRecordsSync),
+		Tags:                      flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
+		TransferAcl:               flex.ExpandFrameworkListNestedBlock(ctx, m.TransferAcl, diags, ExpandConfigACLItem),
+		UpdateAcl:                 flex.ExpandFrameworkListNestedBlock(ctx, m.UpdateAcl, diags, ExpandConfigACLItem),
+		UseForwardersForSubzones:  flex.ExpandBoolPointer(m.UseForwardersForSubzones),
+		ZoneAuthority:             ExpandConfigZoneAuthority(ctx, m.ZoneAuthority, diags),
 	}
 	if isCreate {
 		to.Fqdn = flex.ExpandStringPointer(m.Fqdn)
@@ -352,10 +522,16 @@ func (m *ConfigAuthZoneModel) Flatten(ctx context.Context, from *dnsconfig.AuthZ
 	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.Disabled = types.BoolPointerValue(from.Disabled)
+	m.DnssecKeys = flex.FlattenFrameworkListNestedBlock(ctx, from.DnssecKeys, ConfigDNSSECKeyAttrTypes, diags, FlattenConfigDNSSECKey)
+	m.DnssecSigningPolicy = FlattenConfigDNSSECSigningPolicy(ctx, from.DnssecSigningPolicy, diags)
+	m.DnssecStatus = flex.FlattenStringPointer(from.DnssecStatus)
 	m.ExternalPrimaries = flex.FlattenFrameworkListNestedBlock(ctx, from.ExternalPrimaries, ConfigExternalPrimaryAttrTypes, diags, FlattenConfigExternalPrimary)
 	m.ExternalProviders = flex.FlattenFrameworkListNestedBlock(ctx, from.ExternalProviders, AuthZoneExternalProviderAttrTypes, diags, FlattenAuthZoneExternalProvider)
+	m.ExternalProvidersMetadata = flex.FlattenFrameworkMapStringAny(ctx, from.ExternalProvidersMetadata, diags)
 	m.ExternalSecondaries = flex.FlattenFrameworkListNestedBlock(ctx, from.ExternalSecondaries, ConfigExternalSecondaryAttrTypes, diags, FlattenConfigExternalSecondary)
 	m.Fqdn = flex.FlattenStringPointer(from.Fqdn)
+	m.GridPrimaries = flex.FlattenFrameworkListNestedBlock(ctx, from.GridPrimaries, ConfigMemberServerAttrTypes, diags, FlattenConfigMemberServer)
+	m.GridSecondaries = flex.FlattenFrameworkListNestedBlock(ctx, from.GridSecondaries, ConfigMemberServerAttrTypes, diags, FlattenConfigMemberServer)
 	m.GssTsigEnabled = types.BoolPointerValue(from.GssTsigEnabled)
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.InheritanceAssignedHosts = flex.FlattenFrameworkListNestedBlock(ctx, from.InheritanceAssignedHosts, Inheritance2AssignedHostAttrTypes, diags, FlattenInheritance2AssignedHost)
@@ -364,12 +540,18 @@ func (m *ConfigAuthZoneModel) Flatten(ctx context.Context, from *dnsconfig.AuthZ
 	m.InternalSecondaries = flex.FlattenFrameworkListNestedBlock(ctx, from.InternalSecondaries, ConfigInternalSecondaryAttrTypes, diags, FlattenConfigInternalSecondary)
 	m.MappedSubnet = flex.FlattenStringPointer(from.MappedSubnet)
 	m.Mapping = flex.FlattenStringPointer(from.Mapping)
+	m.MaxRecordsPerType = flex.FlattenInt64Pointer(from.MaxRecordsPerType)
+	m.MaxTypesPerName = flex.FlattenInt64Pointer(from.MaxTypesPerName)
+	m.Nameservers = flex.FlattenFrameworkListNestedBlock(ctx, from.Nameservers, ConfigNameserverAttrTypes, diags, FlattenConfigNameserver)
+	m.NiosGridsMetadata = flex.FlattenFrameworkMapStringAny(ctx, from.NiosGridsMetadata, diags)
 	m.Notify = types.BoolPointerValue(from.Notify)
+	m.Nsg = flex.FlattenStringPointer(from.Nsg)
 	m.Nsgs = flex.FlattenFrameworkListString(ctx, from.Nsgs, diags)
 	m.Parent = flex.FlattenStringPointer(from.Parent)
 	m.PrimaryType = flex.FlattenStringPointer(from.PrimaryType)
 	m.ProtocolFqdn = flex.FlattenStringPointer(from.ProtocolFqdn)
 	m.QueryAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.QueryAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
+	m.SecondaryZoneRecordsSync = types.BoolPointerValue(from.SecondaryZoneRecordsSync)
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.TransferAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.TransferAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
 	m.UpdateAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.UpdateAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
@@ -378,4 +560,5 @@ func (m *ConfigAuthZoneModel) Flatten(ctx context.Context, from *dnsconfig.AuthZ
 	m.View = flex.FlattenStringPointer(from.View)
 	m.Warnings = flex.FlattenFrameworkListNestedBlock(ctx, from.Warnings, ConfigWarningAttrTypes, diags, FlattenConfigWarning)
 	m.ZoneAuthority = FlattenConfigZoneAuthority(ctx, from.ZoneAuthority, diags)
+	m.Version = flex.FlattenStringPointer(from.Version)
 }

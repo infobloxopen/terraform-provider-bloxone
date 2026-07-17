@@ -2,6 +2,7 @@ package flex
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -115,6 +116,32 @@ func FlattenFrameworkMapString(ctx context.Context, m map[string]interface{}, di
 		return types.MapNull(types.StringType)
 	}
 	tfMap, d := types.MapValueFrom(ctx, types.StringType, m)
+	diags.Append(d...)
+	return tfMap
+}
+
+// FlattenFrameworkMapStringAny converts a map[string]interface{} to a types.Map with string elements,
+// serializing non-string values (booleans, numbers, arrays, objects) to their JSON representation.
+func FlattenFrameworkMapStringAny(ctx context.Context, m map[string]interface{}, diags *diag.Diagnostics) types.Map {
+	if len(m) == 0 {
+		return types.MapNull(types.StringType)
+	}
+	stringMap := make(map[string]attr.Value, len(m))
+	for k, v := range m {
+		switch val := v.(type) {
+		case string:
+			stringMap[k] = types.StringValue(val)
+		default:
+			b, err := json.Marshal(val)
+			if err != nil {
+				diags.AddError("Serialization Error",
+					fmt.Sprintf("Unable to serialize map value for key %q: %s", k, err))
+				return types.MapNull(types.StringType)
+			}
+			stringMap[k] = types.StringValue(string(b))
+		}
+	}
+	tfMap, d := types.MapValue(types.StringType, stringMap)
 	diags.Append(d...)
 	return tfMap
 }
@@ -346,6 +373,8 @@ func ExpandFrameworkMapFilterString(ctx context.Context, tfMap types.Map, diags 
 			filters = append(filters, fmt.Sprintf("%s==%s", k, v))
 		} else if _, err := strconv.ParseFloat(v, 64); err == nil {
 			filters = append(filters, fmt.Sprintf("%s==%s", k, v))
+		} else if strings.Contains(k, "/") || strings.Contains(k, " ") {
+			filters = append(filters, fmt.Sprintf("'%s'=='%s'", k, v))
 		} else {
 			filters = append(filters, fmt.Sprintf("%s=='%s'", k, v))
 		}

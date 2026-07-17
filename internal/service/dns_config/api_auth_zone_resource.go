@@ -7,9 +7,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
@@ -23,6 +25,7 @@ const (
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &AuthZoneResource{}
 var _ resource.ResourceWithImportState = &AuthZoneResource{}
+var _ resource.ResourceWithValidateConfig = &AuthZoneResource{}
 
 var inheritanceType = "full"
 
@@ -74,6 +77,39 @@ func (r *AuthZoneResource) Create(ctx context.Context, req resource.CreateReques
 
 	if resp.Diagnostics.HasError() {
 		return
+	}
+
+	if !data.View.IsNull() && !data.View.IsUnknown() {
+		viewResp, _, err := r.client.DNSConfigurationAPI.
+			ViewAPI.
+			Read(ctx, data.View.ValueString()).
+			Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to Read View to Create Zone, got error: %s", err))
+			return
+		}
+		viewRes := viewResp.GetResult()
+
+		if viewRes.HasNiosMetadata() {
+			niosMeta := viewRes.GetNiosMetadata()
+			if gridIdVal, ok := niosMeta["gridId"]; ok {
+				// Merge ownership keys into ExternalProvidersMetadata
+				metadataMap := map[string]attr.Value{}
+				if !data.ExternalProvidersMetadata.IsNull() && !data.ExternalProvidersMetadata.IsUnknown() {
+					for k, v := range data.ExternalProvidersMetadata.Elements() {
+						metadataMap[k] = v
+					}
+				}
+				metadataMap["ownership_id"] = types.StringValue(fmt.Sprintf("%v", gridIdVal))
+				metadataMap["ownership_type"] = types.StringValue("nios_ddi")
+				newMap, d := types.MapValue(types.StringType, metadataMap)
+				resp.Diagnostics.Append(d...)
+				if resp.Diagnostics.HasError() {
+					return
+				}
+				data.ExternalProvidersMetadata = newMap
+			}
+		}
 	}
 
 	apiRes, _, err := r.client.DNSConfigurationAPI.
@@ -186,4 +222,119 @@ func (r *AuthZoneResource) Delete(ctx context.Context, req resource.DeleteReques
 
 func (r *AuthZoneResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+}
+
+func (r *AuthZoneResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var data ConfigAuthZoneModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	nameserversConfigured := !data.Nameservers.IsNull()
+	nsgConfigured := !data.Nsg.IsNull()
+	primaryTypeConfigured := !data.PrimaryType.IsNull()
+
+	if (nameserversConfigured || nsgConfigured) && primaryTypeConfigured {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("primary_type"),
+			"Invalid attribute combination",
+			"Primary Type cannot be provided unified nameservers is enabled",
+		)
+	}
+
+	if nameserversConfigured && nsgConfigured {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("nameservers"),
+			"Invalid attribute combination",
+			"\"nameservers\" and \"nsg\" cannot both be provided. Use one or the other to configure nameservers.",
+		)
+	}
+
+	if !data.ExternalSecondaries.IsNull() && !data.ExternalSecondaries.IsUnknown() {
+		var externalSecondaries []ConfigExternalSecondaryModel
+		resp.Diagnostics.Append(data.ExternalSecondaries.ElementsAs(ctx, &externalSecondaries, false)...)
+		if !resp.Diagnostics.HasError() {
+			for i, es := range externalSecondaries {
+				if es.Address.IsNull() || es.Address.IsUnknown() || es.Address.ValueString() == "" {
+					resp.Diagnostics.AddAttributeError(
+						path.Root("external_secondaries").AtListIndex(i).AtName("address"),
+						"Missing required attribute",
+						"When external_secondaries is configured, \"address\" must be provided for each entry.",
+					)
+				}
+				if es.Fqdn.IsNull() || es.Fqdn.IsUnknown() || es.Fqdn.ValueString() == "" {
+					resp.Diagnostics.AddAttributeError(
+						path.Root("external_secondaries").AtListIndex(i).AtName("fqdn"),
+						"Missing required attribute",
+						"When external_secondaries is configured, \"fqdn\" must be provided for each entry.",
+					)
+				}
+			}
+		}
+	}
+
+	if !data.GridPrimaries.IsNull() && !data.GridPrimaries.IsUnknown() {
+		var gridPrimaries []ConfigMemberServerModel
+		resp.Diagnostics.Append(data.GridPrimaries.ElementsAs(ctx, &gridPrimaries, false)...)
+		if !resp.Diagnostics.HasError() {
+			for i, gp := range gridPrimaries {
+				if !gp.Host.IsUnknown() && (gp.Host.IsNull() || gp.Host.ValueString() == "") {
+					resp.Diagnostics.AddAttributeError(
+						path.Root("grid_primaries").AtListIndex(i).AtName("host"),
+						"Missing required attribute",
+						"When grid_primaries is configured, \"host\" must be provided for each entry.",
+					)
+				}
+			}
+		}
+	}
+
+	if !data.GridSecondaries.IsNull() && !data.GridSecondaries.IsUnknown() {
+		var gridSecondaries []ConfigMemberServerModel
+		resp.Diagnostics.Append(data.GridSecondaries.ElementsAs(ctx, &gridSecondaries, false)...)
+		if !resp.Diagnostics.HasError() {
+			for i, gs := range gridSecondaries {
+				if !gs.Host.IsUnknown() && (gs.Host.IsNull() || gs.Host.ValueString() == "") {
+					resp.Diagnostics.AddAttributeError(
+						path.Root("grid_secondaries").AtListIndex(i).AtName("host"),
+						"Missing required attribute",
+						"When grid_secondaries is configured, \"host\" must be provided for each entry.",
+					)
+				}
+			}
+		}
+	}
+
+	if !data.InternalSecondaries.IsNull() && !data.InternalSecondaries.IsUnknown() {
+		var internalSecondaries []ConfigInternalSecondaryModel
+		resp.Diagnostics.Append(data.InternalSecondaries.ElementsAs(ctx, &internalSecondaries, false)...)
+		if !resp.Diagnostics.HasError() {
+			for i, is := range internalSecondaries {
+				if !is.Host.IsUnknown() && (is.Host.IsNull() || is.Host.ValueString() == "") {
+					resp.Diagnostics.AddAttributeError(
+						path.Root("internal_secondaries").AtListIndex(i).AtName("host"),
+						"Missing required attribute",
+						"When internal_secondaries is configured, \"host\" must be provided for each entry.",
+					)
+				}
+			}
+		}
+	}
+
+	if !data.ExternalPrimaries.IsNull() && !data.ExternalPrimaries.IsUnknown() {
+		var externalPrimaries []ConfigExternalPrimaryModel
+		resp.Diagnostics.Append(data.ExternalPrimaries.ElementsAs(ctx, &externalPrimaries, false)...)
+		if !resp.Diagnostics.HasError() {
+			for i, ep := range externalPrimaries {
+				if ep.Type.IsNull() || ep.Type.IsUnknown() || ep.Type.ValueString() == "" {
+					resp.Diagnostics.AddAttributeError(
+						path.Root("external_primaries").AtListIndex(i).AtName("type"),
+						"Missing required attribute",
+						"When external_primaries is configured, \"type\" must be provided for each entry.",
+					)
+				}
+			}
+		}
+	}
 }

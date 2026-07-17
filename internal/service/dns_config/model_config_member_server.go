@@ -14,15 +14,15 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
-type ConfigInternalSecondaryModel struct {
+type ConfigMemberServerModel struct {
 	Host types.String `tfsdk:"host"`
 }
 
-var ConfigInternalSecondaryAttrTypes = map[string]attr.Type{
+var ConfigMemberServerAttrTypes = map[string]attr.Type{
 	"host": types.StringType,
 }
 
-var ConfigInternalSecondaryResourceSchemaAttributes = map[string]schema.Attribute{
+var ConfigMemberServerResourceSchemaAttributes = map[string]schema.Attribute{
 	"host": schema.StringAttribute{
 		Optional:            true,
 		Computed:            true,
@@ -30,11 +30,11 @@ var ConfigInternalSecondaryResourceSchemaAttributes = map[string]schema.Attribut
 	},
 }
 
-func ExpandConfigInternalSecondary(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.InternalSecondary {
+func ExpandConfigMemberServer(ctx context.Context, o types.Object, diags *diag.Diagnostics) *dnsconfig.MemberServer {
 	if o.IsNull() || o.IsUnknown() {
 		return nil
 	}
-	var m ConfigInternalSecondaryModel
+	var m ConfigMemberServerModel
 	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
 	if diags.HasError() {
 		return nil
@@ -42,33 +42,33 @@ func ExpandConfigInternalSecondary(ctx context.Context, o types.Object, diags *d
 	return m.Expand(ctx, diags)
 }
 
-func (m *ConfigInternalSecondaryModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.InternalSecondary {
+func (m *ConfigMemberServerModel) Expand(ctx context.Context, diags *diag.Diagnostics) *dnsconfig.MemberServer {
 	if m == nil {
 		return nil
 	}
-	to := &dnsconfig.InternalSecondary{
+	to := &dnsconfig.MemberServer{
 		Host: flex.ExpandString(m.Host),
 	}
 	return to
 }
 
-func FlattenConfigInternalSecondary(ctx context.Context, from *dnsconfig.InternalSecondary, diags *diag.Diagnostics) types.Object {
+func FlattenConfigMemberServer(ctx context.Context, from *dnsconfig.MemberServer, diags *diag.Diagnostics) types.Object {
 	if from == nil {
-		return types.ObjectNull(ConfigInternalSecondaryAttrTypes)
+		return types.ObjectNull(ConfigMemberServerAttrTypes)
 	}
-	m := ConfigInternalSecondaryModel{}
+	m := ConfigMemberServerModel{}
 	m.Flatten(ctx, from, diags)
-	t, d := types.ObjectValueFrom(ctx, ConfigInternalSecondaryAttrTypes, m)
+	t, d := types.ObjectValueFrom(ctx, ConfigMemberServerAttrTypes, m)
 	diags.Append(d...)
 	return t
 }
 
-func (m *ConfigInternalSecondaryModel) Flatten(ctx context.Context, from *dnsconfig.InternalSecondary, diags *diag.Diagnostics) {
+func (m *ConfigMemberServerModel) Flatten(ctx context.Context, from *dnsconfig.MemberServer, diags *diag.Diagnostics) {
 	if from == nil {
 		return
 	}
 	if m == nil {
-		*m = ConfigInternalSecondaryModel{}
+		*m = ConfigMemberServerModel{}
 	}
 	m.Host = flex.FlattenString(from.Host)
 }
