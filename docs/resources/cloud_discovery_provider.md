@@ -252,6 +252,16 @@ Optional:
 - `sync_type` (String) Type of sync.Sync_type values: "read_only", "read_write"
 - `view_id` (String) Unique identifier of the view.
 - `view_name` (String) Name of the view.
+- `zone_filters` (Attributes List) Zone filters to include or exclude zones from discovery. (see [below for nested schema](#nestedatt--destinations--config--dns--zone_filters))
+
+<a id="nestedatt--destinations--config--dns--zone_filters"></a>
+### Nested Schema for `destinations.config.dns.zone_filters`
+
+Optional:
+
+- `action` (String) Action to take on matching zones. Allowed values: "include", "exclude".
+- `wildcards` (List of String) List of zone wildcard patterns to include or exclude.
+
 
 
 <a id="nestedatt--destinations--config--ipam"></a>
