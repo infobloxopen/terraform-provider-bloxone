@@ -2,17 +2,18 @@
 
 ## v1.6.0 (July 17, 2026)
 
-NOTES:
-* Migrated provider from `bloxone-go-client` to `universal-ddi-go-client` ([#271](https://github.com/infobloxopen/terraform-provider-bloxone/pull/271))
-
 ENHANCEMENTS:
 * IPAM: Added `UseStateForUnknown` plan modifier for `address` field in `bloxone_ipam_address`, `bloxone_ipam_address_block`, `bloxone_ipam_subnet` and `bloxone_dhcp_fixed_address` ([#260](https://github.com/infobloxopen/terraform-provider-bloxone/pull/260), fixes issue [#259](https://github.com/infobloxopen/terraform-provider-bloxone/issues/259))
 * CLOUD DISCOVERY: Added zone filters to DNS Destination and updated delete operation for Cloud Discovery Providers ([#276](https://github.com/infobloxopen/terraform-provider-bloxone/pull/276), fixes issue [#267](https://github.com/infobloxopen/terraform-provider-bloxone/issues/267))
+* DNS: Extended support for compartment/access view on DNS Zones for `bloxone_dns_view`, `bloxone_dns_auth_zone`, `bloxone_dns_forward_zone` and `bloxone_dns_delegation` ([#258](https://github.com/infobloxopen/terraform-provider-bloxone/pull/258), fixes issue [#257](https://github.com/infobloxopen/terraform-provider-bloxone/issues/257))
 * Introduced new expand function for `tag_filters` to support NIOS-related tags ([#266](https://github.com/infobloxopen/terraform-provider-bloxone/pull/266))
 * Updated NIOS-X VM version to 4.1.10 in GCP Marketplace Terraform module ([#272](https://github.com/infobloxopen/terraform-provider-bloxone/pull/272))
 
+NOTES:
+* Migrated provider from `bloxone-go-client` to `universal-ddi-go-client` ([#271](https://github.com/infobloxopen/terraform-provider-bloxone/pull/271))
+* Provider environment variables have been renamed to `INFOBLOX_PORTAL_URL` and `INFOBLOX_PORTAL_KEY` following the migration to the `universal-ddi-go-client` SDK. The previous `BLOXONE_CSP_URL` and `BLOXONE_API_KEY` variables are still supported as deprecated fallbacks but will be removed in a future release ([#271](https://github.com/infobloxopen/terraform-provider-bloxone/pull/271), [#277](https://github.com/infobloxopen/terraform-provider-bloxone/pull/277))
+
 FIXES:
-* DNS: Extended support for compartment/access view on DNS Zones for `bloxone_dns_view`, `bloxone_dns_auth_zone`, `bloxone_dns_forward_zone` and `bloxone_dns_delegation` ([#258](https://github.com/infobloxopen/terraform-provider-bloxone/pull/258), fixes issue [#257](https://github.com/infobloxopen/terraform-provider-bloxone/issues/257))
 * DHCP/IPAM: Fixed inheritance update failure (400) and dhcp_options state drift in `bloxone_ipam_subnet` and `bloxone_ipam_range` ([#268](https://github.com/infobloxopen/terraform-provider-bloxone/pull/268), fixes issue [#263](https://github.com/infobloxopen/terraform-provider-bloxone/issues/263))
 * DHCP/IPAM: Removed defaults to inherit DHCP server instance from subnet to `bloxone_ipam_range` ([#250](https://github.com/infobloxopen/terraform-provider-bloxone/pull/250))
 
