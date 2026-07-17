@@ -3,12 +3,13 @@ package anycast
 import (
 	"context"
 	"fmt"
+	"net/http"
+
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"net/http"
+	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -21,7 +22,7 @@ func NewAnycastHostResource() resource.Resource {
 
 // OnPremAnycastManagerResource defines the resource implementation.
 type AnycastHostResource struct {
-	client *bloxoneclient.APIClient
+	client *universalddiclient.APIClient
 }
 
 func (r *AnycastHostResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -41,12 +42,12 @@ func (r *AnycastHostResource) Configure(ctx context.Context, req resource.Config
 		return
 	}
 
-	client, ok := req.ProviderData.(*bloxoneclient.APIClient)
+	client, ok := req.ProviderData.(*universalddiclient.APIClient)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Resource Configure Type",
-			fmt.Sprintf("Expected *bloxoneclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *universalddiclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return

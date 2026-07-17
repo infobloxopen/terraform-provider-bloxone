@@ -18,7 +18,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/infobloxopen/bloxone-go-client/dnsdata"
+	"github.com/infobloxopen/universal-ddi-go-client/dnsdata"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
