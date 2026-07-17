@@ -9,8 +9,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/ipam"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
+	"github.com/infobloxopen/universal-ddi-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -71,6 +71,7 @@ func (m *IpamsvcInheritedDHCPOptionModel) Expand(ctx context.Context, diags *dia
 	}
 	to := &ipam.InheritedDHCPOption{
 		Action: m.Action.ValueStringPointer(),
+		Value:  ExpandIpamsvcInheritedDHCPOptionItem(ctx, m.Value, diags),
 	}
 	return to
 }

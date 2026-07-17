@@ -20,7 +20,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
+	"github.com/infobloxopen/universal-ddi-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -28,6 +28,7 @@ import (
 type ConfigViewModel struct {
 	AddEdnsOptionInOutgoingQuery                types.Bool        `tfsdk:"add_edns_option_in_outgoing_query"`
 	Comment                                     types.String      `tfsdk:"comment"`
+	CompartmentId                               types.String      `tfsdk:"compartment_id"`
 	CreatedAt                                   timetypes.RFC3339 `tfsdk:"created_at"`
 	CustomRootNs                                types.List        `tfsdk:"custom_root_ns"`
 	CustomRootNsEnabled                         types.Bool        `tfsdk:"custom_root_ns_enabled"`
@@ -80,6 +81,7 @@ type ConfigViewModel struct {
 var ConfigViewAttrTypes = map[string]attr.Type{
 	"add_edns_option_in_outgoing_query":     types.BoolType,
 	"comment":                               types.StringType,
+	"compartment_id":                        types.StringType,
 	"created_at":                            timetypes.RFC3339Type{},
 	"custom_root_ns":                        types.ListType{ElemType: types.ObjectType{AttrTypes: ConfigRootNSAttrTypes}},
 	"custom_root_ns_enabled":                types.BoolType,
@@ -141,6 +143,11 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		Default:             stringdefault.StaticString(""),
 		MarkdownDescription: `Optional. Comment for view.`,
+	},
+	"compartment_id": schema.StringAttribute{
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "The compartment associated with the object. To unassign the compartment ID, set this field to an empty string. If no compartment is associated, the value is returned as empty.",
 	},
 	"created_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -489,6 +496,7 @@ func (m *ConfigViewModel) Expand(ctx context.Context, diags *diag.Diagnostics) *
 	to := &dnsconfig.View{
 		AddEdnsOptionInOutgoingQuery:      flex.ExpandBoolPointer(m.AddEdnsOptionInOutgoingQuery),
 		Comment:                           flex.ExpandStringPointer(m.Comment),
+		CompartmentId:                     flex.ExpandStringPointer(m.CompartmentId),
 		CustomRootNs:                      flex.ExpandFrameworkListNestedBlock(ctx, m.CustomRootNs, diags, ExpandConfigRootNS),
 		CustomRootNsEnabled:               flex.ExpandBoolPointer(m.CustomRootNsEnabled),
 		Disabled:                          flex.ExpandBoolPointer(m.Disabled),
@@ -556,6 +564,7 @@ func (m *ConfigViewModel) Flatten(ctx context.Context, from *dnsconfig.View, dia
 	}
 	m.AddEdnsOptionInOutgoingQuery = types.BoolPointerValue(from.AddEdnsOptionInOutgoingQuery)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
+	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.CustomRootNs = flex.FlattenFrameworkListNestedBlock(ctx, from.CustomRootNs, ConfigRootNSAttrTypes, diags, FlattenConfigRootNS)
 	m.CustomRootNsEnabled = types.BoolPointerValue(from.CustomRootNsEnabled)

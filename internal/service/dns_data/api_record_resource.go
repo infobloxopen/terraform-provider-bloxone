@@ -13,7 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
-	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
+	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
 )
 
 const (
@@ -29,7 +29,7 @@ var inheritanceType = "full"
 
 // RecordResource defines the resource implementation.
 type RecordResource struct {
-	client *bloxoneclient.APIClient
+	client *universalddiclient.APIClient
 	impl   recordResourceImplementor
 }
 
@@ -45,12 +45,12 @@ func (r *RecordResource) Configure(ctx context.Context, req resource.ConfigureRe
 		return
 	}
 
-	client, ok := req.ProviderData.(*bloxoneclient.APIClient)
+	client, ok := req.ProviderData.(*universalddiclient.APIClient)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Resource Configure Type",
-			fmt.Sprintf("Expected *bloxoneclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *universalddiclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return

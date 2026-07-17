@@ -18,9 +18,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/ipam"
+	"github.com/infobloxopen/universal-ddi-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 )
 
 type IpamsvcRangeModel struct {
@@ -28,7 +29,7 @@ type IpamsvcRangeModel struct {
 	CompartmentId            types.String      `tfsdk:"compartment_id"`
 	CreatedAt                timetypes.RFC3339 `tfsdk:"created_at"`
 	DhcpHost                 types.String      `tfsdk:"dhcp_host"`
-	DhcpOptions              types.List        `tfsdk:"dhcp_options"`
+	DhcpOptions              internaltypes.UnorderedListValue `tfsdk:"dhcp_options"`
 	DisableDhcp              types.Bool        `tfsdk:"disable_dhcp"`
 	End                      types.String      `tfsdk:"end"`
 	ExclusionRanges          types.List        `tfsdk:"exclusion_ranges"`
@@ -56,7 +57,7 @@ var IpamsvcRangeAttrTypes = map[string]attr.Type{
 	"compartment_id":             types.StringType,
 	"created_at":                 timetypes.RFC3339Type{},
 	"dhcp_host":                  types.StringType,
-	"dhcp_options":               types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
+	"dhcp_options":               internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 	"disable_dhcp":               types.BoolType,
 	"end":                        types.StringType,
 	"exclusion_ranges":           types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcExclusionRangeAttrTypes}},
@@ -107,6 +108,7 @@ var IpamsvcRangeResourceSchemaAttributes = map[string]schema.Attribute{
 			"Provide a resource ID to assign a specific DHCP host.",
 	},
 	"dhcp_options": schema.ListNestedAttribute{
+		CustomType: internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: IpamsvcOptionItemResourceSchemaAttributes,
 		},
@@ -292,7 +294,7 @@ func (m *IpamsvcRangeModel) Flatten(ctx context.Context, from *ipam.Range, diags
 	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.DhcpHost = flex.FlattenStringPointerWithNilAsEmpty(from.DhcpHost)
-	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
+	m.DhcpOptions = flex.FlattenFrameworkUnorderedListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DisableDhcp = types.BoolPointerValue(from.DisableDhcp)
 	m.End = flex.FlattenString(from.End)
 	m.ExclusionRanges = flex.FlattenFrameworkListNestedBlock(ctx, from.ExclusionRanges, IpamsvcExclusionRangeAttrTypes, diags, FlattenIpamsvcExclusionRange)

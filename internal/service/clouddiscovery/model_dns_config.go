@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/clouddiscovery"
+	"github.com/infobloxopen/universal-ddi-go-client/clouddiscovery"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
@@ -38,14 +38,14 @@ var DNSConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional: true,
 		PlanModifiers: []planmodifier.Bool{
 			boolplanmodifier.RequiresReplaceIfConfigured(),
-		},	
+		},
 		MarkdownDescription: "consolidated_zone_data_enabled consolidates private zones into a single view, which is separate from the public zone view.",
 	},
 	"split_view_enabled": schema.BoolAttribute{
 		Optional: true,
 		PlanModifiers: []planmodifier.Bool{
 			boolplanmodifier.RequiresReplaceIfConfigured(),
-		},	
+		},
 		MarkdownDescription: "split_view_enabled consolidates private zones into a single view, which is separate from the public zone view.",
 	},
 	"sync_type": schema.StringAttribute{
@@ -56,14 +56,14 @@ var DNSConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional: true,
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
-		},	
+		},
 		MarkdownDescription: "Unique identifier of the view.",
 	},
 	"view_name": schema.StringAttribute{
 		Optional: true,
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
-		},	
+		},
 		MarkdownDescription: "Name of the view.",
 	},
 }
