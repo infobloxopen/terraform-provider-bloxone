@@ -21,7 +21,7 @@ spec:
       - type: SG_OS
         software:
           - title: Ubuntu
-            version: "20.04"
+            version: "24.04"
   content: {}
   interfaces:
     variables:
