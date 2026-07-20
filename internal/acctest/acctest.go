@@ -10,9 +10,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/option"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/provider"
+	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+	"github.com/infobloxopen/universal-ddi-go-client/option"
 )
 
 const (
@@ -23,7 +23,7 @@ const (
 
 var (
 	// BloxOneClient will be used to do verification tests
-	BloxOneClient *bloxoneclient.APIClient
+	BloxOneClient *universalddiclient.APIClient
 
 	// ProtoV6ProviderFactories are used to instantiate a provider during
 	// acceptance testing. The factory function will be invoked for every Terraform
@@ -55,18 +55,30 @@ func RandomName() string {
 	return string(b)
 }
 
+// lookupEnvAny returns the value of the first set environment variable among names.
+func lookupEnvAny(names ...string) string {
+	for _, name := range names {
+		if v, ok := os.LookupEnv(name); ok {
+			return v
+		}
+	}
+	return ""
+}
+
 func PreCheck(t *testing.T) {
-	cspURL := os.Getenv("BLOXONE_CSP_URL")
+	t.Helper()
+
+	cspURL := lookupEnvAny("INFOBLOX_PORTAL_URL", "BLOXONE_CSP_URL")
 	if cspURL == "" {
-		t.Fatal("BLOXONE_CSP_URL must be set for acceptance tests")
+		t.Fatal("INFOBLOX_PORTAL_URL (or the deprecated BLOXONE_CSP_URL) must be set for acceptance tests")
 	}
 
-	apiKey := os.Getenv("BLOXONE_API_KEY")
+	apiKey := lookupEnvAny("INFOBLOX_PORTAL_KEY", "BLOXONE_API_KEY")
 	if apiKey == "" {
-		t.Fatal("BLOXONE_API_KEY must be set for acceptance tests")
+		t.Fatal("INFOBLOX_PORTAL_KEY (or the deprecated BLOXONE_API_KEY) must be set for acceptance tests")
 	}
 
-	BloxOneClient = bloxoneclient.NewAPIClient(
+	BloxOneClient = universalddiclient.NewAPIClient(
 		option.WithClientName("terraform-acceptance-tests"),
 		option.WithCSPUrl(cspURL),
 		option.WithAPIKey(apiKey),

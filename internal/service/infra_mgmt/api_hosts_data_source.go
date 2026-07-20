@@ -13,10 +13,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
-	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/inframgmt"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
+	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+	"github.com/infobloxopen/universal-ddi-go-client/inframgmt"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -28,7 +28,7 @@ func NewHostsDataSource() datasource.DataSource {
 
 // HostsDataSource defines the data source implementation.
 type HostsDataSource struct {
-	client *bloxoneclient.APIClient
+	client *universalddiclient.APIClient
 }
 
 func (d *HostsDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -88,12 +88,12 @@ func (d *HostsDataSource) Configure(ctx context.Context, req datasource.Configur
 		return
 	}
 
-	client, ok := req.ProviderData.(*bloxoneclient.APIClient)
+	client, ok := req.ProviderData.(*universalddiclient.APIClient)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected DataSource Configure Type",
-			fmt.Sprintf("Expected *bloxoneclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *universalddiclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -122,7 +122,7 @@ func (d *HostsDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 				HostsAPI.
 				List(ctx).
 				Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-				Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+				Tfilter(flex.ExpandFrameworkMapTagFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 				Execute()
 			if err != nil {
 				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read InfraHost, got error: %s", err))

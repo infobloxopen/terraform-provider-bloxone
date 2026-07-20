@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/bloxone-go-client/clouddiscovery"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
+	"github.com/infobloxopen/universal-ddi-go-client/clouddiscovery"
 )
 
 func TestAccProvidersResource_basic(t *testing.T) {
@@ -37,8 +37,8 @@ func TestAccProvidersResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "destination_types_enabled.#"),
+					resource.TestCheckResourceAttr(resourceName, "desired_state", "disabled"),
 					// Test fields with default value
-					resource.TestCheckResourceAttr(resourceName, "desired_state", "enabled"),
 					resource.TestCheckResourceAttr(resourceName, "sync_interval", "Auto"),
 				),
 			},
@@ -308,6 +308,49 @@ func TestAccProvidersResource_Destinations(t *testing.T) {
 	})
 }
 
+func TestAccProvidersResource_DestinationsWithZoneFilters(t *testing.T) {
+	var resourceName = "bloxone_cloud_discovery_provider.test_destinations_zone_filters"
+	var v clouddiscovery.DiscoveryConfig
+	name := acctest.RandomName()
+	configAccessId := fmt.Sprintf("arn:aws:iam::%s:role/infoblox_discovery", randomNumber())
+	viewName := acctest.RandomNameWithPrefix("view")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read - IPAM/DHCP + DNS destination with a single zone filter (include)
+			{
+				Config: testAccProvidersDestinationsWithZoneFilters(viewName, name, "Amazon Web Services",
+					"single", "role_arn", "dynamic", configAccessId,
+					"include", []string{"*.example.com"}),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckProvidersExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "destinations.0.destination_type", "IPAM/DHCP"),
+					resource.TestCheckResourceAttr(resourceName, "destinations.1.destination_type", "DNS"),
+					resource.TestCheckResourceAttr(resourceName, "destinations.1.config.dns.zone_filters.0.action", "include"),
+					resource.TestCheckResourceAttr(resourceName, "destinations.1.config.dns.zone_filters.0.wildcards.0", "*.example.com"),
+				),
+			},
+			// Update and Read - change zone filter to exclude with multiple wildcards
+			{
+				Config: testAccProvidersDestinationsWithZoneFilters(viewName, name, "Amazon Web Services",
+					"single", "role_arn", "dynamic", configAccessId,
+					"exclude", []string{"private.*", "internal.*"}),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckProvidersExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "destinations.0.destination_type", "IPAM/DHCP"),
+					resource.TestCheckResourceAttr(resourceName, "destinations.1.destination_type", "DNS"),
+					resource.TestCheckResourceAttr(resourceName, "destinations.1.config.dns.zone_filters.0.action", "exclude"),
+					resource.TestCheckResourceAttr(resourceName, "destinations.1.config.dns.zone_filters.0.wildcards.0", "private.*"),
+					resource.TestCheckResourceAttr(resourceName, "destinations.1.config.dns.zone_filters.0.wildcards.1", "internal.*"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccProvidersResource_Name(t *testing.T) {
 	var resourceName = "bloxone_cloud_discovery_provider.test_name"
 	var v1, v2 clouddiscovery.DiscoveryConfig
@@ -568,6 +611,7 @@ resource "bloxone_cloud_discovery_provider" "test" {
     name = %q
 	provider_type = %q
 	account_preference = %q
+	desired_state = "disabled"
 	credential_preference = {
 		access_identifier_type = %q
 		credential_type = %q
@@ -727,6 +771,57 @@ resource "bloxone_cloud_discovery_provider" "test_destinations" {
 	]
 }
 `, viewName, name, providerType, accountPreference, accessIdType, credType, configAccessId, destinationTypeEnabledStr, destinationsStr)
+}
+
+func testAccProvidersDestinationsWithZoneFilters(viewName, name, providerType, accountPreference, accessIdType, credType, configAccessId, zoneFilterAction string, wildcards []string) string {
+	wildcardsStr := ""
+	for i, w := range wildcards {
+		if i > 0 {
+			wildcardsStr += ", "
+		}
+		wildcardsStr += fmt.Sprintf("%q", w)
+	}
+	return fmt.Sprintf(`
+resource "bloxone_dns_view" "test" {
+    name = %q
+}
+
+resource "bloxone_cloud_discovery_provider" "test_destinations_zone_filters" {
+    name               = %q
+    provider_type      = %q
+    account_preference = %q
+    credential_preference = {
+        access_identifier_type = %q
+        credential_type        = %q
+    }
+    source_configs = [{
+        credential_config = {
+            access_identifier = %q
+        }
+    }]
+    destination_types_enabled = ["IPAM/DHCP", "DNS"]
+    destinations = [
+        {
+            config           = {}
+            destination_type = "IPAM/DHCP"
+        },
+        {
+            destination_type = "DNS"
+            config = {
+                dns = {
+                    view_id = bloxone_dns_view.test.id
+                    zone_filters = [
+                        {
+                            action    = %q
+                            wildcards = [%s]
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
+`, viewName, name, providerType, accountPreference, accessIdType, credType, configAccessId, zoneFilterAction, wildcardsStr)
 }
 
 func testAccProvidersDestinationTypeEnabled(viewName, name, providerType, accountPreference, accessIdType, credType, configAccessId, destinationType string) string {

@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/bloxone-go-client/ipam"
+	"github.com/infobloxopen/universal-ddi-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )

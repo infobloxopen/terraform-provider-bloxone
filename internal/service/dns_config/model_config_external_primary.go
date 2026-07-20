@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
-	"github.com/infobloxopen/bloxone-go-client/dnsconfig"
 	internalplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
+	"github.com/infobloxopen/universal-ddi-go-client/dnsconfig"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
