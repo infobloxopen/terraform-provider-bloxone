@@ -34,6 +34,11 @@ const (
 	envUniversalDDIAPIKey = "INFOBLOX_PORTAL_KEY"
 	envIBLogLevel         = "IB_LOG_LEVEL"
 
+	envRateLimit      = "INFOBLOX_RATE_LIMIT"
+	envRateLimitBurst = "INFOBLOX_RATE_LIMIT_BURST"
+
+	defaultRateLimit = 25
+
 	version       = "0.1"
 	sdkIdentifier = "golang-sdk"
 )
@@ -279,6 +284,12 @@ func parameterToJson(obj interface{}) (string, error) {
 
 // CallAPI do the request.
 func (c *APIClient) CallAPI(request *http.Request) (*http.Response, error) {
+	if c.Cfg.RateLimiter != nil {
+		if err := c.Cfg.RateLimiter.Wait(request.Context()); err != nil {
+			return nil, err
+		}
+	}
+
 	if c.Cfg.Debug {
 		dump, err := httputil.DumpRequestOut(request, true)
 		if err != nil {
