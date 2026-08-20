@@ -9,8 +9,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/bloxone-go-client/fw"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
+	"github.com/infobloxopen/universal-ddi-go-client/fw"
 )
 
 func TestAccAccessCodeDataSource_Filters(t *testing.T) {

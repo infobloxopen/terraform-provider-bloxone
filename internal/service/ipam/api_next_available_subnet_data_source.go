@@ -15,8 +15,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/ipam"
+	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+	"github.com/infobloxopen/universal-ddi-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
@@ -31,7 +31,7 @@ func NewNextAvailableSubnetDataSource() datasource.DataSource {
 
 // NextAvailableSubnetDataSource defines the data source implementation.
 type NextAvailableSubnetDataSource struct {
-	client *bloxoneclient.APIClient
+	client *universalddiclient.APIClient
 }
 
 type IpamsvcNextAvailableSubnetModel struct {
@@ -101,12 +101,12 @@ func (d *NextAvailableSubnetDataSource) Configure(_ context.Context, req datasou
 		return
 	}
 
-	client, ok := req.ProviderData.(*bloxoneclient.APIClient)
+	client, ok := req.ProviderData.(*universalddiclient.APIClient)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected DataSource Configure Type",
-			fmt.Sprintf("Expected *bloxoneclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *universalddiclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -135,7 +135,7 @@ func (d *NextAvailableSubnetDataSource) Read(ctx context.Context, req datasource
 
 	if len(tagFilters.Elements()) > 0 {
 		// Find subnets by tags
-		tagFilterStr := flex.ExpandFrameworkMapFilterString(ctx, tagFilters, &resp.Diagnostics)
+		tagFilterStr := flex.ExpandFrameworkMapTagFilterString(ctx, tagFilters, &resp.Diagnostics)
 
 		var allAddressBlocks []ipam.AddressBlock
 

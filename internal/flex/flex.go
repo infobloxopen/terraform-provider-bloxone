@@ -354,6 +354,24 @@ func ExpandFrameworkMapFilterString(ctx context.Context, tfMap types.Map, diags 
 	return filterStr
 }
 
+// ExpandFrameworkMapTagFilterString expands a tag_filters map into a filter string.
+// Tag may contain arbitrary characters (e.g. '/', '@', '#', spaces, unicode),
+// so they are always wrapped in single quotes.
+func ExpandFrameworkMapTagFilterString(ctx context.Context, tfMap types.Map, diags *diag.Diagnostics) string {
+	if tfMap.IsNull() || tfMap.IsUnknown() {
+		return ""
+	}
+
+	elements := make(map[string]string, len(tfMap.Elements()))
+	diags.Append(tfMap.ElementsAs(ctx, &elements, false)...)
+
+	var filters []string
+	for k, v := range elements {
+		filters = append(filters, fmt.Sprintf("'%s'=='%s'", k, v))
+	}
+	return strings.Join(filters, " and ")
+}
+
 // ApplyToAll returns a new slice containing the results of applying the function `f` to each element of the original slice `s`.
 func ApplyToAll[T, U any](s []T, f func(T) U) []U {
 	v := make([]U, len(s))

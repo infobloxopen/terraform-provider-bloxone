@@ -1,3 +1,7 @@
+resource "bloxone_dns_view" "example_gcp" {
+  name = "example_dns_view_gcp"
+}
+
 resource "bloxone_cloud_discovery_provider" "example_gcp" {
   name               = "example_provider_gcp"
   provider_type      = "Google Cloud Platform"
@@ -11,6 +15,31 @@ resource "bloxone_cloud_discovery_provider" "example_gcp" {
       credential_config = {
         access_identifier = "my-bloxone-example-2024"
       }
+    }
+  ]
+  destination_types_enabled = [
+    "IPAM/DHCP",
+    "DNS"
+  ]
+  destinations = [
+    {
+      config           = {}
+      destination_type = "IPAM/DHCP"
+    },
+    {
+      config = {
+        dns = {
+          view_id = bloxone_dns_view.example_gcp.id
+          # Optional: filter which DNS zones are synced
+          zone_filters = [
+            {
+              action    = "include"
+              wildcards = ["*.gcp.example.com"]
+            }
+          ]
+        }
+      }
+      destination_type = "DNS"
     }
   ]
 

@@ -16,10 +16,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/ipam"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
+	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+	"github.com/infobloxopen/universal-ddi-go-client/ipam"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -32,7 +32,7 @@ func NewIpamNextAvailableIPDataSource() datasource.DataSource {
 // NextAvailableIPDataSource defines the data source implementation.
 
 type NextAvailableIPDataSource struct {
-	client *bloxoneclient.APIClient
+	client *universalddiclient.APIClient
 }
 
 type IpamsvcNextAvailableIPModel struct {
@@ -61,12 +61,12 @@ func (d *NextAvailableIPDataSource) Configure(_ context.Context, req datasource.
 		return
 	}
 
-	client, ok := req.ProviderData.(*bloxoneclient.APIClient)
+	client, ok := req.ProviderData.(*universalddiclient.APIClient)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected DataSource Configure Type",
-			fmt.Sprintf("Expected *bloxoneclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *universalddiclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -230,7 +230,7 @@ func (d *NextAvailableIPDataSource) getNextAvailableIPsByID(ctx context.Context,
 }
 
 func (d *NextAvailableIPDataSource) findNextAvailableIPsByTags(ctx context.Context, data IpamsvcNextAvailableIPModel) ([]ipam.Address, error) {
-	tagFilterStr := flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, nil)
+	tagFilterStr := flex.ExpandFrameworkMapTagFilterString(ctx, data.TagFilters, nil)
 
 	resourceType := data.ResourceType.ValueString()
 	var resources []string

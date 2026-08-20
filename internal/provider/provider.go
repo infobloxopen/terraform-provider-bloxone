@@ -9,8 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/option"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/anycast"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/clouddiscovery"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dfp"
@@ -23,6 +21,8 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/ipamfederation"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/keys"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/redirect"
+	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+	"github.com/infobloxopen/universal-ddi-go-client/option"
 )
 
 // Ensure BloxOneProvider satisfies various provider interfaces.
@@ -55,11 +55,11 @@ func (p *BloxOneProvider) Schema(_ context.Context, _ provider.SchemaRequest, re
 		Description: "The BloxOne provider is used to interact with the resources supported by Infoblox BloxOne API.",
 		Attributes: map[string]schema.Attribute{
 			"csp_url": schema.StringAttribute{
-				MarkdownDescription: "URL for BloxOne Cloud Services Portal. Can also be configured using the `BLOXONE_CSP_URL` environment variable.",
+				MarkdownDescription: "URL for BloxOne Cloud Services Portal. Can also be configured using the `INFOBLOX_PORTAL_URL` environment variable. The `BLOXONE_CSP_URL` environment variable is also supported as a deprecated fallback and will be removed in a future release.",
 				Optional:            true,
 			},
 			"api_key": schema.StringAttribute{
-				MarkdownDescription: "API key for accessing the BloxOne API. Can also be configured by using the `BLOXONE_API_KEY` environment variable. https://docs.infoblox.com/space/BloxOneCloud/35430405/Configuring+User+API+Keys",
+				MarkdownDescription: "API key for accessing the BloxOne API. Can also be configured by using the `INFOBLOX_PORTAL_KEY` environment variable. The `BLOXONE_API_KEY` environment variable is also supported as a deprecated fallback and will be removed in a future release. https://docs.infoblox.com/space/BloxOneCloud/35430405/Configuring+User+API+Keys",
 				Optional:            true,
 			},
 			"default_tags": schema.MapAttribute{
@@ -85,7 +85,7 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 		return
 	}
 
-	client := bloxoneclient.NewAPIClient(
+	client := universalddiclient.NewAPIClient(
 		option.WithClientName(fmt.Sprintf("terraform/%s#%s", p.version, p.commit)),
 		option.WithAPIKey(data.APIKey.ValueString()),
 		option.WithCSPUrl(data.CSPUrl.ValueString()),

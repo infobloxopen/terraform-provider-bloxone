@@ -11,8 +11,8 @@ import (
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 
-	"github.com/infobloxopen/bloxone-go-client/dfp"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
+	"github.com/infobloxopen/universal-ddi-go-client/dfp"
 )
 
 //TODO: add tests

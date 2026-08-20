@@ -10,10 +10,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 
-	bloxoneclient "github.com/infobloxopen/bloxone-go-client/client"
-	"github.com/infobloxopen/bloxone-go-client/fw"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
+	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+	"github.com/infobloxopen/universal-ddi-go-client/fw"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -25,7 +25,7 @@ func NewInternalDomainListsDataSource() datasource.DataSource {
 
 // InternalDomainListsDataSource defines the data source implementation.
 type InternalDomainListsDataSource struct {
-	client *bloxoneclient.APIClient
+	client *universalddiclient.APIClient
 }
 
 func (d *InternalDomainListsDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -75,12 +75,12 @@ func (d *InternalDomainListsDataSource) Configure(ctx context.Context, req datas
 		return
 	}
 
-	client, ok := req.ProviderData.(*bloxoneclient.APIClient)
+	client, ok := req.ProviderData.(*universalddiclient.APIClient)
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected DataSource Configure Type",
-			fmt.Sprintf("Expected *bloxoneclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *universalddiclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -104,7 +104,7 @@ func (d *InternalDomainListsDataSource) Read(ctx context.Context, req datasource
 			InternalDomainListsAPI.
 			ListInternalDomains(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+			Tfilter(flex.ExpandFrameworkMapTagFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).
 			Limit(limit).
 			Execute()

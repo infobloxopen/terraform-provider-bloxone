@@ -35,7 +35,7 @@ provider "bloxone" {
 !> Warning: Hard-coded credentials are not recommended in any configuration file. It is recommended to use environment variables.
 
 You can also use the following environment variables to configure the provider:
-`BLOXONE_CSP_URL` and `BLOXONE_API_KEY`.
+`INFOBLOX_PORTAL_URL` and `INFOBLOX_PORTAL_KEY`. The `BLOXONE_CSP_URL` and `BLOXONE_API_KEY` environment variables are also supported as a deprecated fallback and will be removed in a future release.
 
 Initialize the provider by running the following command. This will download the provider and initialize the working directory.
 
