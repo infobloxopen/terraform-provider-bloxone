@@ -72,6 +72,9 @@ func (m *UtilizationV6Model) Flatten(ctx context.Context, from *ipamfederation.U
 	if from == nil {
 		return
 	}
+	if m == nil {
+		*m = UtilizationV6Model{}
+	}
 	m.Total = FlattenInteger128(ctx, from.Total, diags)
 	m.Used = FlattenInteger128(ctx, from.Used, diags)
 }
