@@ -4,12 +4,21 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+)
+
+const (
+	// NetworkListOperationTimeout is the maximum amount of time to wait for eventual consistency
+	NetworkListOperationTimeout = 2 * time.Minute
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -66,18 +75,28 @@ func (r *NetworkListResource) Create(ctx context.Context, req resource.CreateReq
 		return
 	}
 
-	apiRes, _, err := r.client.FWAPI.
-		NetworkListsAPI.
-		CreateNetworkList(ctx).
-		Body(*data.Expand(ctx, &resp.Diagnostics)).
-		Execute()
+	err := retry.RetryContext(ctx, NetworkListOperationTimeout, func() *retry.RetryError {
+		apiRes, _, err := r.client.FWAPI.
+			NetworkListsAPI.
+			CreateNetworkList(ctx).
+			Body(*data.Expand(ctx, &resp.Diagnostics)).
+			Execute()
+		if err != nil {
+			if strings.Contains(err.Error(), "Internal Server Error") {
+				tflog.Debug(ctx, "Waiting for related objects to be present, will retry", map[string]interface{}{"error": err.Error()})
+				return retry.RetryableError(err)
+			}
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create NetworkList, got error: %s", err))
+			return retry.NonRetryableError(err)
+		}
+		res := apiRes.GetResults()
+		data.Flatten(ctx, &res, &resp.Diagnostics)
+
+		return nil
+	})
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create NetworkLists, got error: %s", err))
 		return
 	}
-
-	res := apiRes.GetResults()
-	data.Flatten(ctx, &res, &resp.Diagnostics)
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -150,15 +169,24 @@ func (r *NetworkListResource) Delete(ctx context.Context, req resource.DeleteReq
 		return
 	}
 
-	httpRes, err := r.client.FWAPI.
-		NetworkListsAPI.
-		DeleteSingleNetworkLists(ctx, data.Id.ValueInt32()).
-		Execute()
-	if err != nil {
-		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
-			return
+	err := retry.RetryContext(ctx, NetworkListOperationTimeout, func() *retry.RetryError {
+		httpRes, err := r.client.FWAPI.
+			NetworkListsAPI.
+			DeleteSingleNetworkLists(ctx, data.Id.ValueInt32()).
+			Execute()
+		if err != nil {
+			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
+				return nil
+			}
+			if strings.Contains(err.Error(), "Internal Server Error") || strings.Contains(err.Error(), "Operation timed out") {
+				return retry.RetryableError(err)
+			}
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete NetworkLists, got error: %s", err))
+			return retry.NonRetryableError(err)
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete NetworkLists, got error: %s", err))
+		return nil
+	})
+	if err != nil {
 		return
 	}
 }

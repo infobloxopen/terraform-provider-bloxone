@@ -46,7 +46,7 @@ func TestAccApplicationFiltersDataSource_TagFilters(t *testing.T) {
 		CheckDestroy:             testAccCheckApplicationFiltersDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccApplicationFiltersDataSourceConfigTagFilters(name, "Microsoft 365", "value1"),
+				Config: testAccApplicationFiltersDataSourceConfigTagFilters(name, "Microsoft 365", acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckApplicationFiltersExists(context.Background(), resourceName, &v),

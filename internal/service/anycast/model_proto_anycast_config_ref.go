@@ -27,7 +27,8 @@ var ProtoAnycastConfigRefAttrTypes = map[string]attr.Type{
 
 var ProtoAnycastConfigRefResourceSchemaAttributes = map[string]schema.Attribute{
 	"anycast_config_name": schema.StringAttribute{
-		Required: true,
+		Computed: true,
+		Optional: true,
 	},
 	"routing_protocols": schema.ListAttribute{
 		ElementType:         types.StringType,

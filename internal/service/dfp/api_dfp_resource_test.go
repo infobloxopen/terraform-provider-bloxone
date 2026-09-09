@@ -53,6 +53,8 @@ func TestAccDfpResource_InternalDomainLists(t *testing.T) {
 	resourceName := "bloxone_dfp_service.test_internal_domain_lists"
 	var v dfp.Dfp
 	hostName := acctest.RandomNameWithPrefix("host")
+	list1 := acctest.RandomNameWithPrefix("td-internal_domain_list")
+	list2 := acctest.RandomNameWithPrefix("td-internal_domain_list")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -60,7 +62,7 @@ func TestAccDfpResource_InternalDomainLists(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccDfpInternalDomainLists(hostName, "test1"),
+				Config: testAccDfpInternalDomainLists(hostName, "test1", list1, list2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDfpExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "internal_domain_lists.0", "data.bloxone_td_internal_domain_lists.default", "results.0.id"),
@@ -69,11 +71,19 @@ func TestAccDfpResource_InternalDomainLists(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccDfpInternalDomainLists(hostName, "test2"),
+				Config: testAccDfpInternalDomainLists(hostName, "test2", list1, list2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDfpExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "internal_domain_lists.0", "data.bloxone_td_internal_domain_lists.default", "results.0.id"),
 					resource.TestCheckResourceAttrPair(resourceName, "internal_domain_lists.1", "bloxone_td_internal_domain_list.test2", "id"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccDfpInternalDomainLists(hostName, "", list1, list2),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDfpExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrPair(resourceName, "internal_domain_lists.0", "data.bloxone_td_internal_domain_lists.default", "results.0.id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -198,9 +208,11 @@ resource "bloxone_dfp_service" "test" {
 	return strings.Join([]string{testAccBaseDfp(hostName), config}, "")
 }
 
-func testAccDfpInternalDomainLists(hostName, internalDomainList string) string {
-	list1 := acctest.RandomNameWithPrefix("td-internal_domain_list")
-	list2 := acctest.RandomNameWithPrefix("td-internal_domain_list")
+func testAccDfpInternalDomainLists(hostName, internalDomainList, list1Name, list2Name string) string {
+	idlVal := ""
+	if internalDomainList != "" {
+		idlVal = fmt.Sprintf(", bloxone_td_internal_domain_list.%s.id", internalDomainList)
+	}
 	config := fmt.Sprintf(`
 resource "bloxone_td_internal_domain_list" "test1" {
 	name = %q
@@ -213,9 +225,19 @@ resource "bloxone_td_internal_domain_list" "test2" {
 }
 resource "bloxone_dfp_service" "test_internal_domain_lists" {
 	service_id = bloxone_infra_service.example.id
-	internal_domain_lists = [one(data.bloxone_td_internal_domain_lists.default.results).id, bloxone_td_internal_domain_list.%s.id ]
+	internal_domain_lists = [one(data.bloxone_td_internal_domain_lists.default.results).id %s ]
 }
-`, list1, list2, internalDomainList)
+`, list1Name, list2Name, idlVal)
+	return strings.Join([]string{testAccBaseDfp(hostName), config}, "")
+}
+
+func testAccDfpInternalDomainListsUnset(hostName string) string {
+	config := `
+resource "bloxone_dfp_service" "test_internal_domain_lists" {
+	service_id = bloxone_infra_service.example.id
+	internal_domain_lists=[one(data.bloxone_td_internal_domain_lists.default.results).id]
+}
+`
 	return strings.Join([]string{testAccBaseDfp(hostName), config}, "")
 }
 

@@ -23,7 +23,9 @@ jobs:
       - uses: actions/setup-go@v5.2.0
         with:
           go-version: '1.25.1'
+
       - name: Run tests
+        id: run_tests
         timeout-minutes: 120
         env:
           TF_ACC: "1"
@@ -32,4 +34,143 @@ jobs:
           DHCP_HOST: ${{ secrets.DHCP_HOST }}
           DNS_HOST: ${{ secrets.DNS_HOST }}
         run: |
-          go test $(go list ./... | grep -v 'vendor') -timeout 120m -v -cover
+          set -o pipefail
+          : > test_output.json
+          EXIT_CODE=0
+
+          # These packages have shown transient connection resets / 500s from the
+          # live staging API when their acceptance tests run with default
+          # concurrency, so they're run serialized (see acceptance_test_ddi.yml
+          # for the precedent).
+          FLAKY_PACKAGES=$(go list ./... | grep -v 'vendor' | grep -E 'dns_config|dns_data|ipam|ipamfederation|clouddiscovery|anycast|/fw')
+          OTHER_PACKAGES=$(go list ./... | grep -v 'vendor' | grep -vE 'dns_config|dns_data|ipam|ipamfederation|clouddiscovery|anycast|/fw')
+
+          if go test -parallel=1 $FLAKY_PACKAGES -timeout 120m -v -cover 2>&1 \
+            | tee -a test_output.log \
+            | go tool test2json -p summary >> test_output.json; then :; fi
+          EXIT_CODE=$((EXIT_CODE || ${PIPESTATUS[0]}))
+
+          if go test $OTHER_PACKAGES -timeout 120m -v -cover 2>&1 \
+            | tee -a test_output.log \
+            | go tool test2json -p summary >> test_output.json; then :; fi
+          EXIT_CODE=$((EXIT_CODE || ${PIPESTATUS[0]}))
+
+          # Preserve exit code for later steps but don't fail here so summary always runs
+          echo "TEST_EXIT_CODE=${EXIT_CODE}" >> "$GITHUB_ENV"
+
+      - name: Generate test summary
+        if: always()
+        run: |
+          python3 - <<'EOF'
+          import json, re, os
+          from collections import defaultdict
+
+          results = defaultdict(lambda: {"pass": [], "fail": [], "skip": []})
+
+          try:
+              with open("test_output.json") as f:
+                  for line in f:
+                      line = line.strip()
+                      if not line:
+                          continue
+                      try:
+                          obj = json.loads(line)
+                      except json.JSONDecodeError:
+                          continue
+
+                      action = obj.get("Action")
+                      test   = obj.get("Test", "")
+
+                      # Only leaf test events (not package-level pass/fail)
+                      if not test or action not in ("pass", "fail", "skip"):
+                          continue
+
+                      # Extract group: TestAcc<Group>Resource_<Name> or TestAcc<Group>DataSource_<Name>
+                      m = re.match(r"TestAcc(\w+?)(?:Resource|DataSource)_(.+)", test)
+                      if m:
+                          group     = m.group(1)
+                          test_name = m.group(2)
+                      else:
+                          group     = "Other"
+                          test_name = test
+
+                      results[group][action].append(test_name)
+          except FileNotFoundError:
+              pass
+
+          total_pass = sum(len(v["pass"]) for v in results.values())
+          total_fail = sum(len(v["fail"]) for v in results.values())
+          total_skip = sum(len(v["skip"]) for v in results.values())
+
+          overall = "✅ All tests passed" if total_fail == 0 else f"❌ {total_fail} test(s) failed"
+
+          lines = []
+          lines.append("## Acceptance Test Results\n")
+          lines.append(f"### {overall}\n")
+          lines.append(
+              f"| ✅ Passed | ❌ Failed | ⏭️ Skipped | 🔢 Total |"
+          )
+          lines.append("|:---------:|:--------:|:---------:|:------:|")
+          lines.append(
+              f"| {total_pass} | {total_fail} | {total_skip} | {total_pass + total_fail + total_skip} |"
+          )
+          lines.append("")
+          lines.append("---")
+          lines.append("")
+          lines.append("### Results by Object Group\n")
+
+          for group in sorted(results.keys()):
+              r      = results[group]
+              passed  = len(r["pass"])
+              failed  = len(r["fail"])
+              skipped = len(r["skip"])
+              icon    = "✅" if failed == 0 else "❌"
+
+              lines.append(
+                  f"<details><summary>{icon} <strong>{group}</strong>"
+                  f" &nbsp;—&nbsp; {passed} passed &nbsp;|&nbsp; {failed} failed &nbsp;|&nbsp; {skipped} skipped"
+                  f"</summary>\n"
+              )
+
+              if r["fail"]:
+                  lines.append("**❌ Failed**")
+                  for t in sorted(r["fail"]):
+                      lines.append(f"- ❌ `{t}`")
+                  lines.append("")
+
+              if r["skip"]:
+                  lines.append("**⏭️ Skipped**")
+                  for t in sorted(r["skip"]):
+                      lines.append(f"- ⏭️ `{t}`")
+                  lines.append("")
+
+              if r["pass"]:
+                  lines.append("**✅ Passed**")
+                  for t in sorted(r["pass"]):
+                      lines.append(f"- ✅ `{t}`")
+                  lines.append("")
+
+              lines.append("</details>\n")
+
+          summary_path = os.environ.get("GITHUB_STEP_SUMMARY", "/dev/stdout")
+          with open(summary_path, "w") as f:
+              f.write("\n".join(lines))
+
+          print("Summary written.")
+          EOF
+
+      - name: Upload test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: acceptance-test-logs
+          path: |
+            test_output.log
+            test_output.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Propagate test exit code
+        if: always()
+        run: |
+          exit "${TEST_EXIT_CODE:-0}"
