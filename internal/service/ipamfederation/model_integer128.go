@@ -65,5 +65,8 @@ func (m *Integer128Model) Flatten(ctx context.Context, from *ipamfederation.Inte
 	if from == nil {
 		return
 	}
+	if m == nil {
+		*m = Integer128Model{}
+	}
 	m.RawValue = flex.FlattenStringPointer(from.RawValue)
 }
