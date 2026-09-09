@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
@@ -77,28 +76,19 @@ func (r *AuthZoneResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
-	err := retry.RetryContext(ctx, AuthZoneOperationTimeout, func() *retry.RetryError {
-		apiRes, _, err := r.client.DNSConfigurationAPI.
-			AuthZoneAPI.
-			Create(ctx).
-			Body(*data.Expand(ctx, &resp.Diagnostics, true)).
-			Inherit(inheritanceType).
-			Execute()
-		if err != nil {
-			if strings.Contains(err.Error(), "not found") || strings.Contains(err.Error(), "Internal Server Error") {
-				tflog.Debug(ctx, "Waiting for related objects to be present, will retry", map[string]interface{}{"error": err.Error()})
-				return retry.RetryableError(err)
-			}
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create AuthZone, got error: %s", err))
-			return retry.NonRetryableError(err)
-		}
-		res := apiRes.GetResult()
-		data.Flatten(ctx, &res, &resp.Diagnostics)
-		return nil
-	})
+	apiRes, _, err := r.client.DNSConfigurationAPI.
+		AuthZoneAPI.
+		Create(ctx).
+		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
+		Inherit(inheritanceType).
+		Execute()
 	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create AuthZone, got error: %s", err))
 		return
 	}
+
+	res := apiRes.GetResult()
+	data.Flatten(ctx, &res, &resp.Diagnostics)
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -145,28 +135,19 @@ func (r *AuthZoneResource) Update(ctx context.Context, req resource.UpdateReques
 		return
 	}
 
-	err := retry.RetryContext(ctx, AuthZoneOperationTimeout, func() *retry.RetryError {
-		apiRes, _, err := r.client.DNSConfigurationAPI.
-			AuthZoneAPI.
-			Update(ctx, data.Id.ValueString()).
-			Body(*data.Expand(ctx, &resp.Diagnostics, false)).
-			Inherit(inheritanceType).
-			Execute()
-		if err != nil {
-			if strings.Contains(err.Error(), "not found") || strings.Contains(err.Error(), "Internal Server Error") {
-				tflog.Debug(ctx, "Waiting for related objects to be present, will retry", map[string]interface{}{"error": err.Error()})
-				return retry.RetryableError(err)
-			}
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update AuthZone, got error: %s", err))
-			return retry.NonRetryableError(err)
-		}
-		res := apiRes.GetResult()
-		data.Flatten(ctx, &res, &resp.Diagnostics)
-		return nil
-	})
+	apiRes, _, err := r.client.DNSConfigurationAPI.
+		AuthZoneAPI.
+		Update(ctx, data.Id.ValueString()).
+		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
+		Inherit(inheritanceType).
+		Execute()
 	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update AuthZone, got error: %s", err))
 		return
 	}
+
+	res := apiRes.GetResult()
+	data.Flatten(ctx, &res, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
