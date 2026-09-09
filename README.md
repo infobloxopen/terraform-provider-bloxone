@@ -12,6 +12,7 @@ The Terraform Provider for Infoblox BloxOne allows you to manage your Infoblox B
 - [Usage Examples](#usage-examples)
 - [Available Resources and DataSources](#available-resources-and-datasources)
 - [Importing Existing Resources](#importing-existing-resources)
+- [Rate Limiting and Retry](#rate-limiting-and-retry)
 - [Unified Nameservers](#unified-nameservers)
 - [Documentation](#documentation)
 - [Debugging](#logging-and-debugging)
@@ -134,6 +135,22 @@ If you are upgrading from an earlier version or migrating from the B1DDI provide
 
 - Refer to the [Migration Guide](docs/guides/migration.md) for step-by-step upgrade instructions.
 - After upgrading to v1.6.0+, update environment variable names from `BLOXONE_CSP_URL`/`BLOXONE_API_KEY` to `INFOBLOX_PORTAL_URL`/`INFOBLOX_PORTAL_KEY`.
+
+## Rate Limiting and Retry
+
+The underlying [universal-ddi-go-client](https://github.com/infobloxopen/universal-ddi-go-client) includes built-in rate limiting and retry handling, which directly affects all API calls made by this provider.
+
+**Rate limiting** is enabled by default at 25 requests/second (mutating operations only). **Retry** is enabled by default with 3 attempts and exponential backoff. Both can be tuned via environment variables:
+
+| Variable | Default | Description |
+|---|---|---|
+| `INFOBLOX_RATE_LIMIT` | `25` | Requests per second. Set to `0` to disable. |
+| `INFOBLOX_RATE_LIMIT_BURST` | Same as rate limit | Max burst size before throttling. |
+| `INFOBLOX_MAX_RETRIES` | `3` | Max retry attempts. Set to `0` to disable. |
+| `INFOBLOX_RETRY_MIN_WAIT` | `1s` | Minimum backoff between retries. |
+| `INFOBLOX_RETRY_MAX_WAIT` | `30s` | Maximum backoff between retries. |
+
+For full details, see the [universal-ddi-go-client documentation](https://github.com/infobloxopen/universal-ddi-go-client#rate-limiting).
 
 ## Unified Nameservers
 
