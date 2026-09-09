@@ -327,6 +327,7 @@ github.com/infobloxopen/universal-ddi-go-client/clouddiscovery
 github.com/infobloxopen/universal-ddi-go-client/dfp
 github.com/infobloxopen/universal-ddi-go-client/dnsconfig
 github.com/infobloxopen/universal-ddi-go-client/dnsdata
+github.com/infobloxopen/universal-ddi-go-client/dtc
 github.com/infobloxopen/universal-ddi-go-client/fw
 github.com/infobloxopen/universal-ddi-go-client/inframgmt
 github.com/infobloxopen/universal-ddi-go-client/infraprovision

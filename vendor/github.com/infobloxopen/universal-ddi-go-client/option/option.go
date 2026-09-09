@@ -1,7 +1,9 @@
 package option
 
 import (
+	"context"
 	"net/http"
+	"time"
 
 	"github.com/infobloxopen/universal-ddi-go-client/internal"
 	"golang.org/x/time/rate"
@@ -9,6 +11,12 @@ import (
 
 // ClientOption is a function that applies configuration options to the API Client.
 type ClientOption func(configuration *internal.Configuration)
+
+// RateLimiter is the interface for custom rate limiter implementations.
+// Implementations must be safe for concurrent use.
+type RateLimiter interface {
+	Wait(ctx context.Context) error
+}
 
 // WithCSPUrl returns a ClientOption that sets the URL for Universal DDI Cloud Services Portal.
 // Can also be configured using the `INFOBLOX_PORTAL_URL` environment variable.
@@ -79,19 +87,59 @@ func WithDebug(debug bool) ClientOption {
 // Can also be configured using the INFOBLOX_RATE_LIMIT and
 // INFOBLOX_RATE_LIMIT_BURST environment variables.
 func WithRateLimit(requestsPerSecond float64, burst int) ClientOption {
+	if requestsPerSecond <= 0 {
+		return WithRateLimitDisabled()
+	}
+	if burst < 1 {
+		burst = 1
+	}
 	limiter := rate.NewLimiter(rate.Limit(requestsPerSecond), burst)
 	return func(configuration *internal.Configuration) {
 		configuration.RateLimiter = limiter
 	}
 }
 
+// WithRateLimitDisabled returns a ClientOption that disables the built-in rate limiter.
+func WithRateLimitDisabled() ClientOption {
+	return func(configuration *internal.Configuration) {
+		configuration.RateLimiter = nil
+	}
+}
+
 // WithRateLimiter returns a ClientOption that sets a custom rate limiter implementation.
 // Use this for advanced use cases like distributed rate limiting or
 // per-resource-type limiting at the provider level.
-func WithRateLimiter(limiter internal.RateLimiter) ClientOption {
+func WithRateLimiter(limiter RateLimiter) ClientOption {
 	return func(configuration *internal.Configuration) {
 		if limiter != nil {
 			configuration.RateLimiter = limiter
 		}
+	}
+}
+
+// WithRetry returns a ClientOption that configures automatic retry with exponential
+// backoff for transient HTTP errors (429, 500, 502, 503, 504).
+// maxRetries is the number of retries after the initial request.
+// minWait and maxWait control the exponential backoff range.
+// Can also be configured using the INFOBLOX_MAX_RETRIES,
+// INFOBLOX_RETRY_MIN_WAIT, and INFOBLOX_RETRY_MAX_WAIT environment variables.
+func WithRetry(maxRetries int, minWait, maxWait time.Duration) ClientOption {
+	return func(configuration *internal.Configuration) {
+		if maxRetries > 0 {
+			configuration.RetryConfig = &internal.RetryConfig{
+				MaxRetries: maxRetries,
+				MinWait:    minWait,
+				MaxWait:    maxWait,
+			}
+		} else {
+			configuration.RetryConfig = nil
+		}
+	}
+}
+
+// WithRetryDisabled returns a ClientOption that disables automatic retry.
+func WithRetryDisabled() ClientOption {
+	return func(configuration *internal.Configuration) {
+		configuration.RetryConfig = nil
 	}
 }
