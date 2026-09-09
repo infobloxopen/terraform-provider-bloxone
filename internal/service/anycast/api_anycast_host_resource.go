@@ -179,3 +179,39 @@ func (r *AnycastHostResource) Delete(ctx context.Context, req resource.DeleteReq
 func (r *AnycastHostResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
+
+func (r *AnycastHostResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var data ProtoOnpremHostModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	if !data.AnycastConfigRefs.IsNull() && !data.AnycastConfigRefs.IsUnknown() {
+		var configRefs []ProtoAnycastConfigRefModel
+		resp.Diagnostics.Append(data.AnycastConfigRefs.ElementsAs(ctx, &configRefs, false)...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+
+		if len(configRefs) == 0 {
+			resp.Diagnostics.AddAttributeError(
+				path.Root("anycast_config_refs"),
+				"Invalid Configuration",
+				"anycast_config_refs must contain at least one entry when specified.",
+			)
+			return
+		}
+
+		for i, ref := range configRefs {
+			if ref.AnycastConfigName.IsNull() || ref.AnycastConfigName.IsUnknown() || ref.AnycastConfigName.ValueString() == "" {
+				resp.Diagnostics.AddAttributeError(
+					path.Root("anycast_config_refs").AtListIndex(i).AtName("anycast_config_name"),
+					"Missing Required Attribute",
+					"anycast_config_name is required and must not be empty.",
+				)
+			}
+		}
+	}
+}
