@@ -67,13 +67,20 @@ func testAccCheckFederatedBlockResourceAttrPair(resourceName, dataSourceName str
 		resource.TestCheckResourceAttrPair(resourceName, "cidr", dataSourceName, "results.0.cidr"),
 		resource.TestCheckResourceAttrPair(resourceName, "comment", dataSourceName, "results.0.comment"),
 		resource.TestCheckResourceAttrPair(resourceName, "created_at", dataSourceName, "results.0.created_at"),
+		resource.TestCheckResourceAttrPair(resourceName, "federated_pool_id", dataSourceName, "results.0.federated_pool_id"),
 		resource.TestCheckResourceAttrPair(resourceName, "federated_realm", dataSourceName, "results.0.federated_realm"),
 		resource.TestCheckResourceAttrPair(resourceName, "id", dataSourceName, "results.0.id"),
 		resource.TestCheckResourceAttrPair(resourceName, "name", dataSourceName, "results.0.name"),
+		resource.TestCheckResourceAttrPair(resourceName, "network_compliance", dataSourceName, "results.0.network_compliance"),
+		resource.TestCheckResourceAttrPair(resourceName, "network_compliant", dataSourceName, "results.0.network_compliant"),
 		resource.TestCheckResourceAttrPair(resourceName, "parent", dataSourceName, "results.0.parent"),
 		resource.TestCheckResourceAttrPair(resourceName, "protocol", dataSourceName, "results.0.protocol"),
+		resource.TestCheckResourceAttrPair(resourceName, "region", dataSourceName, "results.0.region"),
+		resource.TestCheckResourceAttrPair(resourceName, "state", dataSourceName, "results.0.state"),
 		resource.TestCheckResourceAttrPair(resourceName, "tags", dataSourceName, "results.0.tags"),
 		resource.TestCheckResourceAttrPair(resourceName, "updated_at", dataSourceName, "results.0.updated_at"),
+		resource.TestCheckResourceAttrPair(resourceName, "utilization", dataSourceName, "results.0.utilization"),
+		resource.TestCheckResourceAttrPair(resourceName, "utilization_v6", dataSourceName, "results.0.utilization_v6"),
 	}
 }
 

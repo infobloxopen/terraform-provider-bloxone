@@ -15,17 +15,19 @@ import (
 )
 
 type AllocationModel struct {
-	Allocated   types.Int64 `tfsdk:"allocated"`
-	Delegated   types.Int64 `tfsdk:"delegated"`
-	Overlapping types.Int64 `tfsdk:"overlapping"`
-	Reserved    types.Int64 `tfsdk:"reserved"`
+	Allocated                types.Int64 `tfsdk:"allocated"`
+	Delegated                types.Int64 `tfsdk:"delegated"`
+	ForwardLookingDelegation types.Int64 `tfsdk:"forward_looking_delegation"`
+	Overlapping              types.Int64 `tfsdk:"overlapping"`
+	Reserved                 types.Int64 `tfsdk:"reserved"`
 }
 
 var AllocationAttrTypes = map[string]attr.Type{
-	"allocated":   types.Int64Type,
-	"delegated":   types.Int64Type,
-	"overlapping": types.Int64Type,
-	"reserved":    types.Int64Type,
+	"allocated":                  types.Int64Type,
+	"delegated":                  types.Int64Type,
+	"forward_looking_delegation": types.Int64Type,
+	"overlapping":                types.Int64Type,
+	"reserved":                   types.Int64Type,
 }
 
 var AllocationResourceSchemaAttributes = map[string]schema.Attribute{
@@ -36,6 +38,10 @@ var AllocationResourceSchemaAttributes = map[string]schema.Attribute{
 	"delegated": schema.Int64Attribute{
 		Computed:            true,
 		MarkdownDescription: "Percent of total space delegated.",
+	},
+	"forward_looking_delegation": schema.Int64Attribute{
+		Computed:            true,
+		MarkdownDescription: "Percent of total space in forward looking delegation blocks.",
 	},
 	"overlapping": schema.Int64Attribute{
 		Computed:            true,
@@ -87,6 +93,7 @@ func (m *AllocationModel) Flatten(ctx context.Context, from *ipamfederation.Allo
 	}
 	m.Allocated = flex.FlattenInt64Pointer(from.Allocated)
 	m.Delegated = flex.FlattenInt64Pointer(from.Delegated)
+	m.ForwardLookingDelegation = flex.FlattenInt64Pointer(from.ForwardLookingDelegation)
 	m.Overlapping = flex.FlattenInt64Pointer(from.Overlapping)
 	m.Reserved = flex.FlattenInt64Pointer(from.Reserved)
 }
