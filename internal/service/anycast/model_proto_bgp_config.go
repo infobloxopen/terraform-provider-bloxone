@@ -88,6 +88,7 @@ var ProtoBgpConfigResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: ProtoBgpNeighborResourceSchemaAttributes,
 		},
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `List of BgpNeighbor structs.`,
 	},
 	"preamble": schema.StringAttribute{

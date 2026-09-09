@@ -12,6 +12,7 @@ import (
 )
 
 func TestAccAnycastConfigDataSource_Services(t *testing.T) {
+	t.Skip("Extended Filter Support to be added to Anycast in future")
 	dataSourceName := "data.bloxone_anycast_configs.test"
 	resourceName := "bloxone_anycast_config.test"
 	var v anycast.AnycastConfig
@@ -36,6 +37,7 @@ func TestAccAnycastConfigDataSource_Services(t *testing.T) {
 }
 
 func TestAccAnycastConfigDataSource_IsConfigured(t *testing.T) {
+	t.Skip("Extended Filter Support to be added to Anycast in future")
 	dataSourceName := "data.bloxone_anycast_configs.test"
 	resourceName := "bloxone_anycast_config.test"
 	var v anycast.AnycastConfig

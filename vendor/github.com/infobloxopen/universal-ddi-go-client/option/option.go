@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/infobloxopen/universal-ddi-go-client/internal"
+	"golang.org/x/time/rate"
 )
 
 // ClientOption is a function that applies configuration options to the API Client.
@@ -67,5 +68,30 @@ func WithClientName(clientName string) ClientOption {
 func WithDebug(debug bool) ClientOption {
 	return func(configuration *internal.Configuration) {
 		configuration.Debug = debug
+	}
+}
+
+// WithRateLimit returns a ClientOption that configures a token-bucket rate limiter.
+// requestsPerSecond controls the sustained request rate. burst controls the maximum
+// number of requests that can be made instantly before rate limiting kicks in.
+// The limiter instance is created once and shared across all services when used
+// with the aggregated client.NewAPIClient.
+// Can also be configured using the INFOBLOX_RATE_LIMIT and
+// INFOBLOX_RATE_LIMIT_BURST environment variables.
+func WithRateLimit(requestsPerSecond float64, burst int) ClientOption {
+	limiter := rate.NewLimiter(rate.Limit(requestsPerSecond), burst)
+	return func(configuration *internal.Configuration) {
+		configuration.RateLimiter = limiter
+	}
+}
+
+// WithRateLimiter returns a ClientOption that sets a custom rate limiter implementation.
+// Use this for advanced use cases like distributed rate limiting or
+// per-resource-type limiting at the provider level.
+func WithRateLimiter(limiter internal.RateLimiter) ClientOption {
+	return func(configuration *internal.Configuration) {
+		if limiter != nil {
+			configuration.RateLimiter = limiter
+		}
 	}
 }
