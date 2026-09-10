@@ -24,7 +24,7 @@ import (
 func TestAccAuthZoneResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test"
 	var v dnsconfig.AuthZone
-	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com"
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
