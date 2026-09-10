@@ -2,6 +2,7 @@ package dns_config
 
 import (
 	"context"
+	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
@@ -204,6 +205,9 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 		},
+		Validators: []validator.String{
+			stringvalidator.RegexMatches(regexp.MustCompile(`\.$`), "must end with a dot ('.')"),
+		},
 		MarkdownDescription: "Zone FQDN. The FQDN supplied at creation will be converted to canonical form.  Read-only after creation.",
 	},
 	"grid_primaries": schema.ListNestedAttribute{
@@ -288,13 +292,13 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:            true,
 		Computed:            true,
 		Default:             int64default.StaticInt64(2000),
-		MarkdownDescription: "The maximum number of records that can be stored in an RRset (records of same name and type), to prevent a slowdown in query processing due to an excessive number of those RRsets. The limit is enforced when serving the zone on-prem, not at the time of record creation or update. Exceeding the limit will result in the zone failing to load or to be updated. If 0, it means there is no limit. Defauts to _2000_.",
+		MarkdownDescription: "The maximum number of records that can be stored in an RRset (records of same name and type), to prevent a slowdown in query processing due to an excessive number of those RRsets. The limit is enforced when serving the zone on-prem, not at the time of record creation or update. Exceeding the limit will result in the zone failing to load or to be updated. If 0, it means there is no limit. Defaults to _2000_.",
 	},
 	"max_types_per_name": schema.Int64Attribute{
 		Optional:            true,
 		Computed:            true,
 		Default:             int64default.StaticInt64(100),
-		MarkdownDescription: "The maximum number of record types that can be stored for an owner name, to prevent a slowdown in query processing due to an excessive number of those records. The limit is enforced when serving the zone on-prem, not at the time of record creation or update. Exceeding the limit will result in the zone failing to load or to be updated. If 0, it means there is no limit. Defauts to _100_.",
+		MarkdownDescription: "The maximum number of record types that can be stored for an owner name, to prevent a slowdown in query processing due to an excessive number of those records. The limit is enforced when serving the zone on-prem, not at the time of record creation or update. Exceeding the limit will result in the zone failing to load or to be updated. If 0, it means there is no limit. Defaults to _100_.",
 	},
 	"nameservers": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
@@ -540,8 +544,8 @@ func (m *ConfigAuthZoneModel) Flatten(ctx context.Context, from *dnsconfig.AuthZ
 	m.InternalSecondaries = flex.FlattenFrameworkListNestedBlock(ctx, from.InternalSecondaries, ConfigInternalSecondaryAttrTypes, diags, FlattenConfigInternalSecondary)
 	m.MappedSubnet = flex.FlattenStringPointer(from.MappedSubnet)
 	m.Mapping = flex.FlattenStringPointer(from.Mapping)
-	m.MaxRecordsPerType = flex.FlattenInt64Pointer(from.MaxRecordsPerType)
-	m.MaxTypesPerName = flex.FlattenInt64Pointer(from.MaxTypesPerName)
+	m.MaxRecordsPerType = types.Int64PointerValue(from.MaxRecordsPerType)
+	m.MaxTypesPerName = types.Int64PointerValue(from.MaxTypesPerName)
 	m.Nameservers = flex.FlattenFrameworkListNestedBlock(ctx, from.Nameservers, ConfigNameserverAttrTypes, diags, FlattenConfigNameserver)
 	m.NiosGridsMetadata = flex.FlattenFrameworkMapStringAny(ctx, from.NiosGridsMetadata, diags)
 	m.Notify = types.BoolPointerValue(from.Notify)

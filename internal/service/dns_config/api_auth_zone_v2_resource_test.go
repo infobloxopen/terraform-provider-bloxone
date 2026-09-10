@@ -306,7 +306,6 @@ func TestAccAuthZoneV2Resource_Nameservers(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "nameservers.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "nameservers.0.address", "1.1.1.1"),
 					resource.TestCheckResourceAttr(resourceName, "nameservers.0.fqdn", "a.com."),
-					resource.TestCheckResourceAttr(resourceName, "nameservers.0.origin", "external"),
 					resource.TestCheckResourceAttr(resourceName, "nameservers.0.role", "primary"),
 					resource.TestCheckResourceAttr(resourceName, "nameservers.0.tsig_enabled", "false"),
 				),

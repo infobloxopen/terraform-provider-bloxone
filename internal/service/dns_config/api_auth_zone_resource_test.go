@@ -24,7 +24,7 @@ import (
 func TestAccAuthZoneResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_auth_zone.test"
 	var v dnsconfig.AuthZone
-	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com."
+	var fqdn = acctest.RandomNameWithPrefix("auth-zone") + ".com"
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -1016,10 +1016,10 @@ func TestAccAuthZoneResource_MaxRecordsPerType(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccAuthZoneMaxRecordsPerType(fqdn, "cloud", 100),
+				Config: testAccAuthZoneMaxRecordsPerType(fqdn, "cloud", 0),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAuthZoneExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "max_records_per_type", "100"),
+					resource.TestCheckResourceAttr(resourceName, "max_records_per_type", "0"),
 				),
 			},
 			// Update and Read

@@ -208,7 +208,7 @@ func (r *AuthZoneResource) Delete(ctx context.Context, req resource.DeleteReques
 			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 				return nil
 			}
-			if strings.Contains(err.Error(), "not found") || strings.Contains(err.Error(), "object is referenced by a 'Zone' object") {
+			if strings.Contains(err.Error(), "object is referenced by a 'Zone' object") {
 				tflog.Debug(ctx, "Waiting for related objects to be present, will retry", map[string]interface{}{"error": err.Error()})
 				return retry.RetryableError(err)
 			}

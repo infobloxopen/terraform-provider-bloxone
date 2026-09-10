@@ -148,10 +148,10 @@ func (m *ConfigDNSSECSigningPolicyModel) Flatten(ctx context.Context, from *dnsc
 	m.Keys = flex.FlattenFrameworkListNestedBlock(ctx, from.Keys, ConfigDNSSECSigningKeyPolicyAttrTypes, diags, FlattenConfigDNSSECSigningKeyPolicy)
 	m.KskAutomaticRolloverEnabled = types.BoolPointerValue(from.KskAutomaticRolloverEnabled)
 	m.KskNotificationEventTrigger = flex.FlattenStringPointer(from.KskNotificationEventTrigger)
-	m.KskRolloverInterval = flex.FlattenInt64Pointer(from.KskRolloverInterval)
+	m.KskRolloverInterval = types.Int64PointerValue(from.KskRolloverInterval)
 	m.Nsec3Iterations = types.Int64PointerValue(from.Nsec3Iterations)
 	m.Nsec3SaltLength = types.Int64PointerValue(from.Nsec3SaltLength)
 	m.NsecType = flex.FlattenStringPointer(from.NsecType)
-	m.ZskRolloverInterval = flex.FlattenInt64Pointer(from.ZskRolloverInterval)
-	m.ZskSignatureValidity = flex.FlattenInt64Pointer(from.ZskSignatureValidity)
+	m.ZskRolloverInterval = types.Int64PointerValue(from.ZskRolloverInterval)
+	m.ZskSignatureValidity = types.Int64PointerValue(from.ZskSignatureValidity)
 }

@@ -2,11 +2,14 @@ package dns_config
 
 import (
 	"context"
+	"regexp"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -50,6 +53,9 @@ var ConfigExternalPrimaryResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed: true,
 		PlanModifiers: []planmodifier.String{
 			internalplanmodifier.UseEmptyStringForNull(),
+		},
+		Validators: []validator.String{
+			stringvalidator.RegexMatches(regexp.MustCompile(`\.$`), "must end with a dot ('.')"),
 		},
 		MarkdownDescription: `Optional. Required only if _type_ is _server_. FQDN of nameserver.`,
 	},
