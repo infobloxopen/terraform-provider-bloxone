@@ -127,6 +127,7 @@ resource "bloxone_dns_view" "example" {
 - `max_negative_ttl` (Number) Optional. Seconds to cache negative responses.  Unsigned integer, min 1 max 604800 (7d).  Defaults to 10800 (3h).
 - `max_udp_size` (Number) Optional. _max_udp_size_ represents maximum UDP payload size. The maximum number of bytes a responding DNS server will send to a UDP datagram.  Defaults to 1232 bytes.
 - `minimal_responses` (Boolean) Optional. When enabled, the DNS server will only add records to the authority and additional data sections when they are required.  Defaults to _false_.
+- `nios_metadata` (Map of String) NIOS Grids Metadata holds multiple NIOS grids data.
 - `notify` (Boolean) _notify_ all external secondary DNS servers.  Defaults to _false_.
 - `query_acl` (Attributes List) Optional. Clients must match this ACL to make authoritative queries. Also used for recursive queries if that ACL is unset.  Defaults to empty. (see [below for nested schema](#nestedatt--query_acl))
 - `recursion_acl` (Attributes List) Optional. Clients must match this ACL to make recursive queries. If this ACL is empty, then the _query_acl_ will be used instead.  Defaults to empty. (see [below for nested schema](#nestedatt--recursion_acl))

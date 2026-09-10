@@ -24,7 +24,8 @@ var ConfigInternalSecondaryAttrTypes = map[string]attr.Type{
 
 var ConfigInternalSecondaryResourceSchemaAttributes = map[string]schema.Attribute{
 	"host": schema.StringAttribute{
-		Required:            true,
+		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 }

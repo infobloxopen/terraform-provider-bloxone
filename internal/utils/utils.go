@@ -476,3 +476,87 @@ func ReorderAndFilterNestedListResponse(
 
 	return newList, &diags
 }
+
+// ConvertSliceOfMapsToHCL serializes a slice of []map[string]any into an HCL format.
+func ConvertSliceOfMapsToHCL(data []map[string]any) string {
+	var blocks []string
+
+	for _, item := range data {
+		var keyValues []string
+
+		for key, value := range item {
+			var formattedValue string
+
+			switch v := value.(type) {
+			case []map[string]any:
+				nestedHCL := ConvertSliceOfMapsToHCL(v)
+				formattedValue = nestedHCL
+			case map[string]any:
+				formattedValue = ConvertMapToHCL(v)
+			case []string:
+				formattedValue = ConvertStringSliceToHCL(v)
+			case string:
+				formattedValue = fmt.Sprintf("%q", v)
+			case int, int64, float64:
+				formattedValue = fmt.Sprintf("%v", v)
+			case bool:
+				formattedValue = fmt.Sprintf("%t", v)
+			default:
+				formattedValue = fmt.Sprintf("%q", fmt.Sprintf("%v", v))
+			}
+
+			keyValues = append(keyValues, fmt.Sprintf("        %s = %s", key, formattedValue))
+		}
+
+		block := fmt.Sprintf("      {\n%s\n      }", strings.Join(keyValues, "\n"))
+		blocks = append(blocks, block)
+	}
+
+	result := fmt.Sprintf(`[
+%s
+    ]`, strings.Join(blocks, ",\n"))
+
+	return result
+}
+
+// ConvertStringSliceToHCL converts a slice of strings to an HCL format.
+func ConvertStringSliceToHCL(input []string) string {
+	var quotedStrings []string
+	for _, s := range input {
+		quotedStrings = append(quotedStrings, fmt.Sprintf("%q", s))
+	}
+	return fmt.Sprintf("[%s]", strings.Join(quotedStrings, ", "))
+}
+
+// ConvertMapToHCL serializes a map[string]any into HCL format.
+func ConvertMapToHCL(data map[string]any) string {
+	var keyValues []string
+
+	for key, value := range data {
+		var formattedValue string
+
+		switch v := value.(type) {
+		case []map[string]any:
+			// Handle slice of maps
+			formattedValue = ConvertSliceOfMapsToHCL(v)
+		case map[string]any:
+			// Handle nested map
+			formattedValue = ConvertMapToHCL(v)
+		case []string:
+			// Handle string slice
+			formattedValue = ConvertStringSliceToHCL(v)
+		case string:
+			formattedValue = fmt.Sprintf("%q", v)
+		case int, int64, float64:
+			formattedValue = fmt.Sprintf("%v", v)
+		case bool:
+			formattedValue = fmt.Sprintf("%t", v)
+		default:
+			formattedValue = fmt.Sprintf("%q", fmt.Sprintf("%v", v))
+		}
+
+		keyValues = append(keyValues, fmt.Sprintf("  %s = %s", key, formattedValue))
+	}
+
+	return fmt.Sprintf("{\n%s\n}", strings.Join(keyValues, "\n"))
+}
