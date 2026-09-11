@@ -164,7 +164,7 @@ Optional:
   * _hmac_sha512_
 - `comment` (String) The description for the TSIG key. May contain 0 to 1024 characters. Can include UTF-8.
 - `name` (String) The TSIG key name, FQDN.
-- `secret` (String) The TSIG key secret, base64 string.
+- `secret` (String, Sensitive) The TSIG key secret, base64 string.
 
 Read-Only:
 
@@ -332,7 +332,7 @@ Read-Only:
 - `key` (String) The resource identifier.
 - `name` (String) The TSIG key name, FQDN.
 - `protocol_name` (String) The TSIG key name in punycode.
-- `secret` (String) The TSIG key secret, base64 string.
+- `secret` (String, Sensitive) The TSIG key secret, base64 string.
 
 
 
