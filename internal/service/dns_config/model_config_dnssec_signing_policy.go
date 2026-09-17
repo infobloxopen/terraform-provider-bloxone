@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -55,8 +56,11 @@ var ConfigDNSSECSigningPolicyResourceSchemaAttributes = map[string]schema.Attrib
 		MarkdownDescription: "Flag indicating if KSK rollover should be automatic.  Defaults to _false_.",
 	},
 	"ksk_notification_event_trigger": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.String{
+			stringvalidator.OneOf("NO_EVENTS", "ALL_EVENTS", "MANUAL_DS_UPDATE_EVENTS"),
+		},
 		MarkdownDescription: "Option controls when notifications are sent for KSK rollover events.  Valid values are: * _NO_EVENTS_ - no notifications are sent * _ALL_EVENTS_ - any time KSK is rolled over, a notification is sent * _MANUAL_DS_UPDATE_EVENTS_ - a notification is sent only when DS record needs to be updated manually  Defaults to _NO_EVENTS_",
 	},
 	"ksk_rollover_interval": schema.Int64Attribute{

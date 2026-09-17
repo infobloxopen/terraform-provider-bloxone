@@ -325,7 +325,7 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		Validators: []validator.Map{
 			mapvalidator.SizeAtLeast(1),
 		},
-		MarkdownDescription: "NIOS Grids Metadata holds multiple NIOS grids data.",
+		MarkdownDescription: "NIOS Metadata holds NIOS grid's data.",
 	},
 	"notify": schema.BoolAttribute{
 		Optional:            true,

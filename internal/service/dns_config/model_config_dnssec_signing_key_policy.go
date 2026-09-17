@@ -3,9 +3,12 @@ package dns_config
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -28,18 +31,27 @@ var ConfigDNSSECSigningKeyPolicyAttrTypes = map[string]attr.Type{
 
 var ConfigDNSSECSigningKeyPolicyResourceSchemaAttributes = map[string]schema.Attribute{
 	"algorithm": schema.Int64Attribute{
-		Optional:            true,
-		Computed:            true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.Int64{
+			int64validator.OneOf(5, 7, 8, 10, 13, 14, 15, 16),
+		},
 		MarkdownDescription: "Algorithm used for the key.  Allowed values: * _5_ - RSASHA1 * _7_ - NSEC3RSASHA1 (RSASHA1-NSEC3-SHA1) * _8_ - RSASHA256 * _10_ - RSASHA512 * _13_ - ECDSAP256SHA256 * _14_ - ECDSAP384SHA384 * _15_ - ED25519 * _16_ - ED448  Defaults to _8_ (RSASHA256).",
 	},
 	"size": schema.Int64Attribute{
-		Optional:            true,
-		Computed:            true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.Int64{
+			int64validator.Between(256, 4096),
+		},
 		MarkdownDescription: "Key size in bits.  Value should be within allowed range for _algorithm_: * _RSASHA1_: 1024..4096 * _NSEC3RSASHA1_: 1024..4096 * _RSASHA256_: 1024..4096 * _RSASHA512_: 1024..4096 * _ECDSAP256SHA256_: 256 * _ECDSAP384SHA384_: 384 * _ED25519_: 256 * _ED448_: 456  Defaults are based on the _algorithm_ and _type_: For KSK:  * _RSASHA1_: 2048 * _NSEC3RSASHA1_: 2048 * _RSASHA256_: 2048 * _RSASHA512_: 2048 * _ECDSAP256SHA256_: 256 * _ECDSAP384SHA384_: 384 * _ED25519_: 256 * _ED448_: 456  For ZSK:  * _RSASHA1_: 1024 * _NSEC3RSASHA1_: 1024 * _RSASHA256_: 1024 * _RSASHA512_: 1024 * _ECDSAP256SHA256_: 256 * _ECDSAP384SHA384_: 384 * _ED25519_: 256 * _ED448_: 456",
 	},
 	"type": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
+		Optional: true,
+		Computed: true,
+		Validators: []validator.String{
+			stringvalidator.OneOf("KSK", "ZSK"),
+		},
 		MarkdownDescription: "Key type.  Allowed values: * _KSK_: Key-Signing Key, used to sign DNSKEY records. * _ZSK_: Zone-Signing Key, used to sign all other records in the zone.",
 	},
 }

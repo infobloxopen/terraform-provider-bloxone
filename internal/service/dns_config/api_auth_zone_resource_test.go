@@ -1458,7 +1458,7 @@ data "bloxone_dns_hosts" "three" {
     }
 }
 
-// Acquiring grid name tag found in the view using a a combination of grid_name + license_uid
+// Acquiring grid name tag found in the view using a combination of grid_name + license_uid
 data "bloxone_dns_views" "test_grid_secondaries" {
   tag_filters = {
 	"nios/grid_name" = "${data.bloxone_dns_hosts.three.results[%[1]d].tags["host/grid_name"]}-${substr(data.bloxone_dns_hosts.three.results[%[1]d].tags["host/license_uid"], -4, -1)}"
@@ -1484,7 +1484,7 @@ data "bloxone_dns_hosts" "three" {
     }
 }
 
-// Acquiring grid name tag found in the view using a a combination of grid_name + license_uid
+// Acquiring grid name tag found in the view using a combination of grid_name + license_uid
 data "bloxone_dns_views" "test_grid_secondaries" {
   tag_filters = {
 	"nios/grid_name" = "${data.bloxone_dns_hosts.three.results[%[1]d].tags["host/grid_name"]}-${substr(data.bloxone_dns_hosts.three.results[%[1]d].tags["host/license_uid"], -4, -1)}"

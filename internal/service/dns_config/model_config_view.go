@@ -378,7 +378,7 @@ var ConfigViewResourceSchemaAttributes = map[string]schema.Attribute{
 		ElementType:         types.StringType,
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "NIOS Grids Metadata holds multiple NIOS grids data.",
+		MarkdownDescription: "NIOS Metadata holds NIOS grid's data.",
 	},
 	"notify": schema.BoolAttribute{
 		Optional:            true,
