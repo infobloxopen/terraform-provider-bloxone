@@ -29,14 +29,17 @@ var NetworkComplianceAttrTypes = map[string]attr.Type{
 var NetworkComplianceResourceSchemaAttributes = map[string]schema.Attribute{
 	"default_netmask_length": schema.Int64Attribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The default netmask length used when allocating child blocks or pools.",
 	},
 	"maximum_netmask_length": schema.Int64Attribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The maximum netmask length for allocating child blocks or pools.",
 	},
 	"minimum_netmask_length": schema.Int64Attribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The minimum netmask length for allocating child blocks or pools.",
 	},
 }

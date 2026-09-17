@@ -96,6 +96,7 @@ var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"federated_pool_id": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 	"federated_realm": schema.StringAttribute{
@@ -123,6 +124,7 @@ var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"network_compliance": schema.SingleNestedAttribute{
 		Attributes:          NetworkComplianceResourceSchemaAttributes,
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The network compliance policy for child objects. This defines the minimum, default, and maximum netmask lengths that can be used when creating child blocks.",
 	},
 	"network_compliant": schema.BoolAttribute{
