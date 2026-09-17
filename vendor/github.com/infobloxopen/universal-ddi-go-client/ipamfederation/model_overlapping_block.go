@@ -22,7 +22,7 @@ var _ MappedNullable = &OverlappingBlock{}
 // OverlappingBlock An __OverlappingBlock__ object (_federation/overlapping_block_) is a set of contiguous IP addresses with no gap, expressed as a CIDR block. It is explicitly associated with a Federated Realm, and implicitly with a Federated Block Parent. An __OverlappingBlock__ in a given realm is said to be the child of the closest enclosing parent. An __OverlappingBlock__ indicates an address range that may be managed independently by all participating IPAM services.
 type OverlappingBlock struct {
 	// The address field in form “a.b.c.d/n” where the “/n” may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form “a.b.c.d”.
-	Address string `json:"address"`
+	Address *string `json:"address,omitempty"`
 	// The CIDR of the overlapping block. This is required, if _address_ does not specify it in its input.
 	Cidr *int64 `json:"cidr,omitempty"`
 	// The description for the overlapping block. May contain 0 to 1024 characters. Can include UTF-8.
@@ -30,11 +30,15 @@ type OverlappingBlock struct {
 	// Time when the object has been created.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// The resource identifier.
+	FederatedPoolId *string `json:"federated_pool_id,omitempty"`
+	// The resource identifier.
 	FederatedRealm string `json:"federated_realm"`
 	// The resource identifier.
 	Id *string `json:"id,omitempty"`
 	// The name of the overlapping block. May contain 1 to 256 characters. Can include UTF-8.
 	Name *string `json:"name,omitempty"`
+	// The compliance status of the overlapping block, as determined by the federation service.
+	NetworkCompliant *bool `json:"network_compliant,omitempty"`
 	// The resource identifier.
 	Parent *string `json:"parent,omitempty"`
 	// The type of protocol of overlapping block (_ip4_ or _ip6_).
@@ -52,9 +56,8 @@ type _OverlappingBlock OverlappingBlock
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewOverlappingBlock(address string, federatedRealm string) *OverlappingBlock {
+func NewOverlappingBlock(federatedRealm string) *OverlappingBlock {
 	this := OverlappingBlock{}
-	this.Address = address
 	this.FederatedRealm = federatedRealm
 	return &this
 }
@@ -67,28 +70,36 @@ func NewOverlappingBlockWithDefaults() *OverlappingBlock {
 	return &this
 }
 
-// GetAddress returns the Address field value
+// GetAddress returns the Address field value if set, zero value otherwise.
 func (o *OverlappingBlock) GetAddress() string {
-	if o == nil {
+	if o == nil || IsNil(o.Address) {
 		var ret string
 		return ret
 	}
-
-	return o.Address
+	return *o.Address
 }
 
-// GetAddressOk returns a tuple with the Address field value
+// GetAddressOk returns a tuple with the Address field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *OverlappingBlock) GetAddressOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Address) {
 		return nil, false
 	}
-	return &o.Address, true
+	return o.Address, true
 }
 
-// SetAddress sets field value
+// HasAddress returns a boolean if a field has been set.
+func (o *OverlappingBlock) HasAddress() bool {
+	if o != nil && !IsNil(o.Address) {
+		return true
+	}
+
+	return false
+}
+
+// SetAddress gets a reference to the given string and assigns it to the Address field.
 func (o *OverlappingBlock) SetAddress(v string) {
-	o.Address = v
+	o.Address = &v
 }
 
 // GetCidr returns the Cidr field value if set, zero value otherwise.
@@ -187,6 +198,38 @@ func (o *OverlappingBlock) SetCreatedAt(v time.Time) {
 	o.CreatedAt = &v
 }
 
+// GetFederatedPoolId returns the FederatedPoolId field value if set, zero value otherwise.
+func (o *OverlappingBlock) GetFederatedPoolId() string {
+	if o == nil || IsNil(o.FederatedPoolId) {
+		var ret string
+		return ret
+	}
+	return *o.FederatedPoolId
+}
+
+// GetFederatedPoolIdOk returns a tuple with the FederatedPoolId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OverlappingBlock) GetFederatedPoolIdOk() (*string, bool) {
+	if o == nil || IsNil(o.FederatedPoolId) {
+		return nil, false
+	}
+	return o.FederatedPoolId, true
+}
+
+// HasFederatedPoolId returns a boolean if a field has been set.
+func (o *OverlappingBlock) HasFederatedPoolId() bool {
+	if o != nil && !IsNil(o.FederatedPoolId) {
+		return true
+	}
+
+	return false
+}
+
+// SetFederatedPoolId gets a reference to the given string and assigns it to the FederatedPoolId field.
+func (o *OverlappingBlock) SetFederatedPoolId(v string) {
+	o.FederatedPoolId = &v
+}
+
 // GetFederatedRealm returns the FederatedRealm field value
 func (o *OverlappingBlock) GetFederatedRealm() string {
 	if o == nil {
@@ -273,6 +316,38 @@ func (o *OverlappingBlock) HasName() bool {
 // SetName gets a reference to the given string and assigns it to the Name field.
 func (o *OverlappingBlock) SetName(v string) {
 	o.Name = &v
+}
+
+// GetNetworkCompliant returns the NetworkCompliant field value if set, zero value otherwise.
+func (o *OverlappingBlock) GetNetworkCompliant() bool {
+	if o == nil || IsNil(o.NetworkCompliant) {
+		var ret bool
+		return ret
+	}
+	return *o.NetworkCompliant
+}
+
+// GetNetworkCompliantOk returns a tuple with the NetworkCompliant field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OverlappingBlock) GetNetworkCompliantOk() (*bool, bool) {
+	if o == nil || IsNil(o.NetworkCompliant) {
+		return nil, false
+	}
+	return o.NetworkCompliant, true
+}
+
+// HasNetworkCompliant returns a boolean if a field has been set.
+func (o *OverlappingBlock) HasNetworkCompliant() bool {
+	if o != nil && !IsNil(o.NetworkCompliant) {
+		return true
+	}
+
+	return false
+}
+
+// SetNetworkCompliant gets a reference to the given bool and assigns it to the NetworkCompliant field.
+func (o *OverlappingBlock) SetNetworkCompliant(v bool) {
+	o.NetworkCompliant = &v
 }
 
 // GetParent returns the Parent field value if set, zero value otherwise.
@@ -413,7 +488,9 @@ func (o OverlappingBlock) MarshalJSON() ([]byte, error) {
 
 func (o OverlappingBlock) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["address"] = o.Address
+	if !IsNil(o.Address) {
+		toSerialize["address"] = o.Address
+	}
 	if !IsNil(o.Cidr) {
 		toSerialize["cidr"] = o.Cidr
 	}
@@ -423,12 +500,18 @@ func (o OverlappingBlock) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.CreatedAt) {
 		toSerialize["created_at"] = o.CreatedAt
 	}
+	if !IsNil(o.FederatedPoolId) {
+		toSerialize["federated_pool_id"] = o.FederatedPoolId
+	}
 	toSerialize["federated_realm"] = o.FederatedRealm
 	if !IsNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
 	if !IsNil(o.Name) {
 		toSerialize["name"] = o.Name
+	}
+	if !IsNil(o.NetworkCompliant) {
+		toSerialize["network_compliant"] = o.NetworkCompliant
 	}
 	if !IsNil(o.Parent) {
 		toSerialize["parent"] = o.Parent
@@ -455,7 +538,6 @@ func (o *OverlappingBlock) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"address",
 		"federated_realm",
 	}
 
@@ -490,9 +572,11 @@ func (o *OverlappingBlock) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "cidr")
 		delete(additionalProperties, "comment")
 		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "federated_pool_id")
 		delete(additionalProperties, "federated_realm")
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "name")
+		delete(additionalProperties, "network_compliant")
 		delete(additionalProperties, "parent")
 		delete(additionalProperties, "protocol")
 		delete(additionalProperties, "tags")
