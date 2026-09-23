@@ -25,6 +25,8 @@ _testmain.go
 
 # IDE
 /.idea
+/.vscode
+.env.acctest
 
 testacc-cover.out
 
