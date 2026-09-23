@@ -103,7 +103,7 @@ func (d *ServerDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 			ServerAPI.
 			List(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+			Tfilter(flex.ExpandFrameworkMapTagFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).
 			Limit(limit).
 			Execute()

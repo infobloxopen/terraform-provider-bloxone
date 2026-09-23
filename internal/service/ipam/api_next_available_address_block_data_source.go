@@ -132,7 +132,7 @@ func (d *NextAvailableAddressBlockDataSource) Read(ctx context.Context, req data
 	tagFilters := data.TagFilters // Check if tag filters are specified
 	if len(tagFilters.Elements()) > 0 {
 		// Find address blocks by tags
-		tagFilterStr := flex.ExpandFrameworkMapFilterString(ctx, tagFilters, &resp.Diagnostics)
+		tagFilterStr := flex.ExpandFrameworkMapTagFilterString(ctx, tagFilters, &resp.Diagnostics)
 
 		var allAddressBlocks []ipam.AddressBlock
 

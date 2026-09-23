@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
 )
@@ -148,6 +149,23 @@ func (r *ProviderResource) Delete(ctx context.Context, req resource.DeleteReques
 
 	if resp.Diagnostics.HasError() {
 		return
+	}
+
+	// If the desired state is not "disabled", update it to "disabled" before deleting
+	if data.DesiredState.ValueString() != "disabled" {
+		data.DesiredState = types.StringValue("disabled")
+		_, updateHTTPRes, err := r.client.DiscoveryConfigurationAPIV2.
+			ProvidersAPI.
+			Update(ctx, data.Id.ValueString()).
+			Body(*data.Expand(ctx, &resp.Diagnostics, false)).
+			Execute()
+		if err != nil {
+			if updateHTTPRes != nil && updateHTTPRes.StatusCode == http.StatusNotFound {
+				return
+			}
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to disable Providers before deletion, got error: %s", err))
+			return
+		}
 	}
 
 	httpRes, err := r.client.DiscoveryConfigurationAPIV2.

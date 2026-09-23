@@ -29,15 +29,20 @@ func TestAccFederatedBlockResource_basic(t *testing.T) {
 				Config: testAccFederatedBlockBasicConfig("10.10.0.0", 16, realmName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
-					// TODO: check and validate these
 					resource.TestCheckResourceAttr(resourceName, "address", "10.10.0.0"),
+					resource.TestCheckResourceAttr(resourceName, "cidr", "16"),
 					resource.TestCheckResourceAttrPair(resourceName, "federated_realm", "bloxone_federation_federated_realm.test", "id"),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
+					resource.TestCheckResourceAttrSet(resourceName, "network_compliant"),
 					resource.TestCheckResourceAttrSet(resourceName, "protocol"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
 					// Test fields with default value
+					resource.TestCheckResourceAttr(resourceName, "comment", ""),
+					resource.TestCheckResourceAttr(resourceName, "name", ""),
+					resource.TestCheckResourceAttr(resourceName, "region", ""),
+					resource.TestCheckResourceAttr(resourceName, "state", ""),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -152,15 +157,19 @@ func TestAccFederatedBlockResource_Comment(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFederatedBlockComment("10.10.0.0", 16, realmName, "COMMENT_TEST"),
+				Config: testAccFederatedBlockComment("10.10.0.0", 16, realmName, "COMMENT_TEST_UPDATED"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_TEST"),
+					resource.TestCheckResourceAttr(resourceName, "comment", "COMMENT_TEST_UPDATED"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
+}
+
+func TestAccFederatedBlockResource_FederatedPoolId(t *testing.T) {
+	t.Skip("FederatedPoolId requires a valid federated pool resource ID; to be added when a pool fixture is available")
 }
 
 func TestAccFederatedBlockResource_FederatedRealm(t *testing.T) {
@@ -217,6 +226,40 @@ func TestAccFederatedBlockResource_Name(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", "NAME_TEST_UPDATED"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccFederatedBlockResource_NetworkCompliance(t *testing.T) {
+	var resourceName = "bloxone_federation_federated_block.test_network_compliance"
+	var v ipamfederation.FederatedBlock
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccFederatedBlockNetworkCompliance("10.0.0.0", 16, realmName, 20, 17, 28),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "network_compliance.default_netmask_length", "20"),
+					resource.TestCheckResourceAttr(resourceName, "network_compliance.minimum_netmask_length", "17"),
+					resource.TestCheckResourceAttr(resourceName, "network_compliance.maximum_netmask_length", "28"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccFederatedBlockNetworkCompliance("10.0.0.0", 16, realmName, 22, 18, 30),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "network_compliance.default_netmask_length", "22"),
+					resource.TestCheckResourceAttr(resourceName, "network_compliance.minimum_netmask_length", "18"),
+					resource.TestCheckResourceAttr(resourceName, "network_compliance.maximum_netmask_length", "30"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -331,7 +374,6 @@ resource "bloxone_federation_federated_realm" "test" {
 }
 
 func testAccFederatedBlockBasicConfig(address string, cidr int, federatedRealm string) string {
-	// TODO: create basic resource with required fields
 	config := fmt.Sprintf(`
 resource "bloxone_federation_federated_block" "test" {
     address = %q
@@ -357,9 +399,9 @@ resource "bloxone_federation_federated_block" "test_comment" {
 func testAccFederatedBlockFederatedRealm(federatedRealm1, federatedRealm2, realm string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_federation_federated_block" "test_federated_realm" {
-   address = "10.0.0.0"
-   cidr = 16
-   federated_realm =%s.id
+	address = "10.0.0.0"
+	cidr = 16
+	federated_realm = %s.id
 }
 `, realm)
 	return strings.Join([]string{testAccBaseWithTwoFederatedRealm(federatedRealm1, federatedRealm2), config}, "")
@@ -384,6 +426,22 @@ resource "bloxone_federation_federated_block" "test_name" {
     name = %q
 }
 `, address, cidr, name)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
+}
+
+func testAccFederatedBlockNetworkCompliance(address string, cidr int, federatedRealm string, defaultMask, minMask, maxMask int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_federation_federated_block" "test_network_compliance" {
+	address = %q
+	cidr = %d
+	federated_realm = bloxone_federation_federated_realm.test.id
+	network_compliance = {
+		default_netmask_length = %d
+		minimum_netmask_length = %d
+		maximum_netmask_length = %d
+	}
+}
+`, address, cidr, defaultMask, minMask, maxMask)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
 }
 

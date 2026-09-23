@@ -61,6 +61,7 @@ var IpamsvcTSIGKeyResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"secret": schema.StringAttribute{
 		Optional:            true,
+		Sensitive:           true,
 		MarkdownDescription: `The TSIG key secret, base64 string.`,
 	},
 }

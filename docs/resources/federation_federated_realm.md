@@ -52,5 +52,6 @@ Read-Only:
 
 - `allocated` (Number) Percent of total space allocated.
 - `delegated` (Number) Percent of total space delegated.
+- `forward_looking_delegation` (Number) Percent of total space in forward looking delegation blocks.
 - `overlapping` (Number) Percent of total space in overlapping blocks.
 - `reserved` (Number) Percent of total space reserved.

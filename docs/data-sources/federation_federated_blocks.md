@@ -58,7 +58,9 @@ Optional:
 
 - `address` (String) The address of the subnet in the form “a.b.c.d”
 - `comment` (String) The description for the federated block. May contain 0 to 1024 characters. Can include UTF-8.
+- `federated_pool_id` (String) The resource identifier.
 - `name` (String) The name of the federated block. May contain 1 to 256 characters. Can include UTF-8.
+- `network_compliance` (Attributes) The network compliance policy for child objects. This defines the minimum, default, and maximum netmask lengths that can be used when creating child blocks. (see [below for nested schema](#nestedatt--results--network_compliance))
 - `tags` (Map of String) The tags for the federated block in JSON format.
 
 Read-Only:
@@ -66,10 +68,26 @@ Read-Only:
 - `allocation_v4` (Attributes) The percentage of the Federated Block’s total address space that is consumed by Leaf Terminals. (see [below for nested schema](#nestedatt--results--allocation_v4))
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
+- `metadata` (Map of String) The metadata for the federated block in JSON format.
+- `network_compliant` (Boolean) Indicates if this block is compliant with its parent's network compliance policy. When false, a trouble dot should be displayed in the UI to indicate non-compliance.
 - `parent` (String) The resource identifier.
 - `protocol` (String) The type of protocol of federated block (_ip4_ or _ip6_).
+- `region` (String) The region where the federated block is located.
+- `state` (String) The state of the federated block.
 - `tags_all` (Map of String) The tags of the federation block in JSON format including default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
+- `utilization` (Number) The percentage of Federated Block utilization.
+- `utilization_v6` (Attributes) The IPv6 utilization metrics for the federated block. (see [below for nested schema](#nestedatt--results--utilization_v6))
+
+<a id="nestedatt--results--network_compliance"></a>
+### Nested Schema for `results.network_compliance`
+
+Optional:
+
+- `default_netmask_length` (Number) The default netmask length used when allocating child blocks or pools.
+- `maximum_netmask_length` (Number) The maximum netmask length for allocating child blocks or pools.
+- `minimum_netmask_length` (Number) The minimum netmask length for allocating child blocks or pools.
+
 
 <a id="nestedatt--results--allocation_v4"></a>
 ### Nested Schema for `results.allocation_v4`
@@ -78,5 +96,30 @@ Read-Only:
 
 - `allocated` (Number) Percent of total space allocated.
 - `delegated` (Number) Percent of total space delegated.
+- `forward_looking_delegation` (Number) Percent of total space in forward looking delegation blocks.
 - `overlapping` (Number) Percent of total space in overlapping blocks.
 - `reserved` (Number) Percent of total space reserved.
+
+
+<a id="nestedatt--results--utilization_v6"></a>
+### Nested Schema for `results.utilization_v6`
+
+Read-Only:
+
+- `total` (Attributes) Total IPv6 addresses. (see [below for nested schema](#nestedatt--results--utilization_v6--total))
+- `used` (Attributes) Used IPv6 addresses. (see [below for nested schema](#nestedatt--results--utilization_v6--used))
+
+<a id="nestedatt--results--utilization_v6--total"></a>
+### Nested Schema for `results.utilization_v6.total`
+
+Read-Only:
+
+- `raw_value` (String)
+
+
+<a id="nestedatt--results--utilization_v6--used"></a>
+### Nested Schema for `results.utilization_v6.used`
+
+Read-Only:
+
+- `raw_value` (String)

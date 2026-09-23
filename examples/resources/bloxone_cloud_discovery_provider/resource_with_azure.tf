@@ -1,3 +1,7 @@
+resource "bloxone_dns_view" "example_azure" {
+  name = "example_dns_view_azure"
+}
+
 resource "bloxone_cloud_discovery_provider" "example_azure" {
   name               = "example_provider_azure"
   provider_type      = "Microsoft Azure"
@@ -16,18 +20,32 @@ resource "bloxone_cloud_discovery_provider" "example_azure" {
   ]
   destination_types_enabled = [
     "IPAM/DHCP",
-    "ACCOUNTS"
+    "ACCOUNTS",
+    "DNS"
   ]
   destinations = [
+    {
+      config           = {}
+      destination_type = "IPAM/DHCP"
+    },
     {
       config           = {}
       destination_type = "ACCOUNTS"
     },
     {
       config = {
-        view_id = bloxone_dns_view.example.id
+        dns = {
+          view_id = bloxone_dns_view.example_azure.id
+          # Optional: filter which DNS zones are synced
+          zone_filters = [
+            {
+              action    = "exclude"
+              wildcards = ["*.test.azure.com", "*.staging.azure.com"]
+            }
+          ]
+        }
       }
-      destination_type = "IPAM/DHCP"
+      destination_type = "DNS"
     }
   ]
 

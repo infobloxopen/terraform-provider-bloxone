@@ -230,7 +230,7 @@ func (d *NextAvailableIPDataSource) getNextAvailableIPsByID(ctx context.Context,
 }
 
 func (d *NextAvailableIPDataSource) findNextAvailableIPsByTags(ctx context.Context, data IpamsvcNextAvailableIPModel) ([]ipam.Address, error) {
-	tagFilterStr := flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, nil)
+	tagFilterStr := flex.ExpandFrameworkMapTagFilterString(ctx, data.TagFilters, nil)
 
 	resourceType := data.ResourceType.ValueString()
 	var resources []string

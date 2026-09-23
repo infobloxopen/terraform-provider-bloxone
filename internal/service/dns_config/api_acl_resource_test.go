@@ -15,7 +15,7 @@ import (
 	"github.com/infobloxopen/universal-ddi-go-client/dnsconfig"
 )
 
-//TODO: Add valid compartment id
+// TODO: Add valid compartment id
 func TestAccAclResource_basic(t *testing.T) {
 	var resourceName = "bloxone_dns_acl.test"
 	var v dnsconfig.ACL

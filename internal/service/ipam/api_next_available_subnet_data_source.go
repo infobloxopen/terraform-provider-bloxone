@@ -135,7 +135,7 @@ func (d *NextAvailableSubnetDataSource) Read(ctx context.Context, req datasource
 
 	if len(tagFilters.Elements()) > 0 {
 		// Find subnets by tags
-		tagFilterStr := flex.ExpandFrameworkMapFilterString(ctx, tagFilters, &resp.Diagnostics)
+		tagFilterStr := flex.ExpandFrameworkMapTagFilterString(ctx, tagFilters, &resp.Diagnostics)
 
 		var allAddressBlocks []ipam.AddressBlock
 

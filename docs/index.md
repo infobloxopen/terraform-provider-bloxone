@@ -30,6 +30,6 @@ provider "bloxone" {
 
 ### Optional
 
-- `api_key` (String) API key for accessing the BloxOne API. Can also be configured by using the `BLOXONE_API_KEY` environment variable. https://docs.infoblox.com/space/BloxOneCloud/35430405/Configuring+User+API+Keys
-- `csp_url` (String) URL for BloxOne Cloud Services Portal. Can also be configured using the `BLOXONE_CSP_URL` environment variable.
+- `api_key` (String) API key for accessing the BloxOne API. Can also be configured by using the `INFOBLOX_PORTAL_KEY` environment variable. The `BLOXONE_API_KEY` environment variable is also supported as a deprecated fallback and will be removed in a future release. https://docs.infoblox.com/space/BloxOneCloud/35430405/Configuring+User+API+Keys
+- `csp_url` (String) URL for BloxOne Cloud Services Portal. Can also be configured using the `INFOBLOX_PORTAL_URL` environment variable. The `BLOXONE_CSP_URL` environment variable is also supported as a deprecated fallback and will be removed in a future release.
 - `default_tags` (Map of String) Tags to default for all resources.

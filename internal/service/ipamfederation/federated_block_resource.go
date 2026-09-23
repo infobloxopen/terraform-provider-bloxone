@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
 )
@@ -165,4 +166,76 @@ func (r *FederatedBlockResource) Delete(ctx context.Context, req resource.Delete
 
 func (r *FederatedBlockResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+}
+func (r *FederatedBlockResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var data FederatedBlockModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	if data.NetworkCompliance.IsNull() || data.NetworkCompliance.IsUnknown() {
+		return
+	}
+
+	var nc NetworkComplianceModel
+	resp.Diagnostics.Append(data.NetworkCompliance.As(ctx, &nc, basetypes.ObjectAsOptions{})...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	if !nc.MinimumNetmaskLength.IsNull() && !nc.MinimumNetmaskLength.IsUnknown() &&
+		!data.Cidr.IsNull() && !data.Cidr.IsUnknown() {
+		min := nc.MinimumNetmaskLength.ValueInt64()
+		cidr := data.Cidr.ValueInt64()
+
+		if min <= cidr {
+			resp.Diagnostics.AddAttributeError(
+				path.Root("network_compliance").AtName("minimum_netmask_length"),
+				"Invalid Network Compliance",
+				fmt.Sprintf("\"minimum_netmask_length\" must be greater than the block's own \"cidr\" (/%d).", cidr),
+			)
+		}
+	}
+
+	if nc.MinimumNetmaskLength.IsNull() || nc.MinimumNetmaskLength.IsUnknown() ||
+		nc.MaximumNetmaskLength.IsNull() || nc.MaximumNetmaskLength.IsUnknown() {
+		return
+	}
+
+	min := nc.MinimumNetmaskLength.ValueInt64()
+	max := nc.MaximumNetmaskLength.ValueInt64()
+
+	if min >= max {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("network_compliance").AtName("minimum_netmask_length"),
+			"Invalid Network Compliance",
+			"\"minimum_netmask_length\" must be less than \"maximum_netmask_length\".",
+		)
+		resp.Diagnostics.AddAttributeError(
+			path.Root("network_compliance").AtName("maximum_netmask_length"),
+			"Invalid Network Compliance",
+			"\"maximum_netmask_length\" must be greater than \"minimum_netmask_length\".",
+		)
+	}
+
+	if nc.DefaultNetmaskLength.IsNull() || nc.DefaultNetmaskLength.IsUnknown() {
+		return
+	}
+	def := nc.DefaultNetmaskLength.ValueInt64()
+
+	if def > max {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("network_compliance").AtName("default_netmask_length"),
+			"Invalid Network Compliance",
+			"\"default_netmask_length\" must be less than or equal to \"maximum_netmask_length\".",
+		)
+	}
+	if def < min {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("network_compliance").AtName("default_netmask_length"),
+			"Invalid Network Compliance",
+			"\"default_netmask_length\" must be greater than or equal to \"minimum_netmask_length\".",
+		)
+	}
 }

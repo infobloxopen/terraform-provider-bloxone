@@ -119,7 +119,7 @@ func (d *AnycastConfigDataSource) Read(ctx context.Context, req datasource.ReadR
 		Service(flex.ExpandString(data.Service)).
 		HostId(flex.ExpandInt64(data.HostID)).
 		IsConfigured(flex.ExpandBool(data.IsConfigured)).
-		Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+		Tfilter(flex.ExpandFrameworkMapTagFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read OnPremAnycastManager, got error: %s", err))

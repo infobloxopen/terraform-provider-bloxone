@@ -23,6 +23,7 @@ type DNSConfigModel struct {
 	SyncType                    types.String `tfsdk:"sync_type"`
 	ViewId                      types.String `tfsdk:"view_id"`
 	ViewName                    types.String `tfsdk:"view_name"`
+	ZoneFilters                 types.List   `tfsdk:"zone_filters"`
 }
 
 var DNSConfigAttrTypes = map[string]attr.Type{
@@ -31,6 +32,7 @@ var DNSConfigAttrTypes = map[string]attr.Type{
 	"sync_type":                      types.StringType,
 	"view_id":                        types.StringType,
 	"view_name":                      types.StringType,
+	"zone_filters":                   types.ListType{ElemType: types.ObjectType{AttrTypes: ZoneFilterAttrTypes}},
 }
 
 var DNSConfigResourceSchemaAttributes = map[string]schema.Attribute{
@@ -66,6 +68,14 @@ var DNSConfigResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		MarkdownDescription: "Name of the view.",
 	},
+	"zone_filters": schema.ListNestedAttribute{
+		NestedObject: schema.NestedAttributeObject{
+			Attributes: ZoneFilterResourceSchemaAttributes,
+		},
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "Zone filters to include or exclude zones from discovery.",
+	},
 }
 
 func ExpandDNSConfig(ctx context.Context, o types.Object, diags *diag.Diagnostics) *clouddiscovery.DNSConfig {
@@ -90,6 +100,7 @@ func (m *DNSConfigModel) Expand(ctx context.Context, diags *diag.Diagnostics) *c
 		SyncType:                    flex.ExpandStringPointer(m.SyncType),
 		ViewId:                      flex.ExpandStringPointer(m.ViewId),
 		ViewName:                    flex.ExpandStringPointer(m.ViewName),
+		ZoneFilters:                 flex.ExpandFrameworkListNestedBlock(ctx, m.ZoneFilters, diags, ExpandZoneFilter),
 	}
 	return to
 }
@@ -117,4 +128,5 @@ func (m *DNSConfigModel) Flatten(ctx context.Context, from *clouddiscovery.DNSCo
 	m.SyncType = flex.FlattenStringPointer(from.SyncType)
 	m.ViewId = flex.FlattenStringPointer(from.ViewId)
 	m.ViewName = flex.FlattenStringPointer(from.ViewName)
+	m.ZoneFilters = flex.FlattenFrameworkListNestedBlock(ctx, from.ZoneFilters, ZoneFilterAttrTypes, diags, FlattenZoneFilter)
 }

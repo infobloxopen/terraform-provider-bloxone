@@ -55,15 +55,27 @@ func RandomName() string {
 	return string(b)
 }
 
+// lookupEnvAny returns the value of the first set environment variable among names.
+func lookupEnvAny(names ...string) string {
+	for _, name := range names {
+		if v, ok := os.LookupEnv(name); ok {
+			return v
+		}
+	}
+	return ""
+}
+
 func PreCheck(t *testing.T) {
-	cspURL := os.Getenv("BLOXONE_CSP_URL")
+	t.Helper()
+
+	cspURL := lookupEnvAny("INFOBLOX_PORTAL_URL", "BLOXONE_CSP_URL")
 	if cspURL == "" {
-		t.Fatal("BLOXONE_CSP_URL must be set for acceptance tests")
+		t.Fatal("INFOBLOX_PORTAL_URL (or the deprecated BLOXONE_CSP_URL) must be set for acceptance tests")
 	}
 
-	apiKey := os.Getenv("BLOXONE_API_KEY")
+	apiKey := lookupEnvAny("INFOBLOX_PORTAL_KEY", "BLOXONE_API_KEY")
 	if apiKey == "" {
-		t.Fatal("BLOXONE_API_KEY must be set for acceptance tests")
+		t.Fatal("INFOBLOX_PORTAL_KEY (or the deprecated BLOXONE_API_KEY) must be set for acceptance tests")
 	}
 
 	BloxOneClient = universalddiclient.NewAPIClient(

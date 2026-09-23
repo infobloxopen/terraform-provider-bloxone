@@ -12,5 +12,12 @@ data "bloxone_dns_views" "example_by_tag" {
   }
 }
 
+# Get DNS Views filtered by a NIOS tag
+data "bloxone_dns_views" "example_by_nios_tag" {
+  tag_filters = {
+    "nios/imported" = "true"
+  }
+}
+
 # Get all DNS Views
 data "bloxone_dns_views" "example_all" {}
