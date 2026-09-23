@@ -31,7 +31,7 @@ func (r *ForwardLookingDelegationResource) Metadata(ctx context.Context, req res
 
 func (r *ForwardLookingDelegationResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages a Forward Looking Delegation.\n\nA __ForwardLookingDelegation__ object (_federation/forward_looking_delegation_) is a set of contiguous IP addresses with no gap, expressed as a CIDR block. It may be used to allocate unique space for future resources which will ultimately hold a Delegation for the same CIDR block.",
 		Attributes:          ForwardLookingDelegationResourceSchemaAttributes,
 	}
 }
