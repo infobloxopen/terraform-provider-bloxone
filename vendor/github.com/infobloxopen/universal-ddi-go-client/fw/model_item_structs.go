@@ -12,24 +12,17 @@ package fw
 
 import (
 	"encoding/json"
-	"time"
 )
 
 // checks if the ItemStructs type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ItemStructs{}
 
-// ItemStructs The Items structure that contains the item and its description.
+// ItemStructs The Items Structure which contains the item and its description
 type ItemStructs struct {
-	// The description of the item.
+	// The description of the item
 	Description *string `json:"description,omitempty"`
-	// The time at which this list item expires, as an RFC 3339 timestamp string. May be specified in any timezone. Unset (null) means no expiry.  Write semantics: - Insert/replace (POST /named_lists/{id}/items): set when present;   NULL when absent in payload. - Patch update (PATCH /named_lists/{id}/items, updated_items_described):   set when present; unchanged when absent in payload. Clearing an existing expiry_time via request field mask is not supported.
-	ExpiryTime *time.Time `json:"expiry_time,omitempty"`
-	// The data of the item.
-	Item *string `json:"item,omitempty"`
-	// The status of the item. Applicable to TI domains only
-	Status *ItemStructsItemStatus `json:"status,omitempty"`
-	// The status details of the item. Applicable to TI domains only
-	StatusDetails        *string `json:"status_details,omitempty"`
+	// The data of the Item
+	Item                 *string `json:"item,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -41,8 +34,6 @@ type _ItemStructs ItemStructs
 // will change when the set of required properties is changed
 func NewItemStructs() *ItemStructs {
 	this := ItemStructs{}
-	var status ItemStructsItemStatus = ITEMSTRUCTSITEMSTATUS_ACTIVE
-	this.Status = &status
 	return &this
 }
 
@@ -51,8 +42,6 @@ func NewItemStructs() *ItemStructs {
 // but it doesn't guarantee that properties required by API are set
 func NewItemStructsWithDefaults() *ItemStructs {
 	this := ItemStructs{}
-	var status ItemStructsItemStatus = ITEMSTRUCTSITEMSTATUS_ACTIVE
-	this.Status = &status
 	return &this
 }
 
@@ -88,38 +77,6 @@ func (o *ItemStructs) SetDescription(v string) {
 	o.Description = &v
 }
 
-// GetExpiryTime returns the ExpiryTime field value if set, zero value otherwise.
-func (o *ItemStructs) GetExpiryTime() time.Time {
-	if o == nil || IsNil(o.ExpiryTime) {
-		var ret time.Time
-		return ret
-	}
-	return *o.ExpiryTime
-}
-
-// GetExpiryTimeOk returns a tuple with the ExpiryTime field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *ItemStructs) GetExpiryTimeOk() (*time.Time, bool) {
-	if o == nil || IsNil(o.ExpiryTime) {
-		return nil, false
-	}
-	return o.ExpiryTime, true
-}
-
-// HasExpiryTime returns a boolean if a field has been set.
-func (o *ItemStructs) HasExpiryTime() bool {
-	if o != nil && !IsNil(o.ExpiryTime) {
-		return true
-	}
-
-	return false
-}
-
-// SetExpiryTime gets a reference to the given time.Time and assigns it to the ExpiryTime field.
-func (o *ItemStructs) SetExpiryTime(v time.Time) {
-	o.ExpiryTime = &v
-}
-
 // GetItem returns the Item field value if set, zero value otherwise.
 func (o *ItemStructs) GetItem() string {
 	if o == nil || IsNil(o.Item) {
@@ -152,70 +109,6 @@ func (o *ItemStructs) SetItem(v string) {
 	o.Item = &v
 }
 
-// GetStatus returns the Status field value if set, zero value otherwise.
-func (o *ItemStructs) GetStatus() ItemStructsItemStatus {
-	if o == nil || IsNil(o.Status) {
-		var ret ItemStructsItemStatus
-		return ret
-	}
-	return *o.Status
-}
-
-// GetStatusOk returns a tuple with the Status field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *ItemStructs) GetStatusOk() (*ItemStructsItemStatus, bool) {
-	if o == nil || IsNil(o.Status) {
-		return nil, false
-	}
-	return o.Status, true
-}
-
-// HasStatus returns a boolean if a field has been set.
-func (o *ItemStructs) HasStatus() bool {
-	if o != nil && !IsNil(o.Status) {
-		return true
-	}
-
-	return false
-}
-
-// SetStatus gets a reference to the given ItemStructsItemStatus and assigns it to the Status field.
-func (o *ItemStructs) SetStatus(v ItemStructsItemStatus) {
-	o.Status = &v
-}
-
-// GetStatusDetails returns the StatusDetails field value if set, zero value otherwise.
-func (o *ItemStructs) GetStatusDetails() string {
-	if o == nil || IsNil(o.StatusDetails) {
-		var ret string
-		return ret
-	}
-	return *o.StatusDetails
-}
-
-// GetStatusDetailsOk returns a tuple with the StatusDetails field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *ItemStructs) GetStatusDetailsOk() (*string, bool) {
-	if o == nil || IsNil(o.StatusDetails) {
-		return nil, false
-	}
-	return o.StatusDetails, true
-}
-
-// HasStatusDetails returns a boolean if a field has been set.
-func (o *ItemStructs) HasStatusDetails() bool {
-	if o != nil && !IsNil(o.StatusDetails) {
-		return true
-	}
-
-	return false
-}
-
-// SetStatusDetails gets a reference to the given string and assigns it to the StatusDetails field.
-func (o *ItemStructs) SetStatusDetails(v string) {
-	o.StatusDetails = &v
-}
-
 func (o ItemStructs) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -229,17 +122,8 @@ func (o ItemStructs) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
-	if !IsNil(o.ExpiryTime) {
-		toSerialize["expiry_time"] = o.ExpiryTime
-	}
 	if !IsNil(o.Item) {
 		toSerialize["item"] = o.Item
-	}
-	if !IsNil(o.Status) {
-		toSerialize["status"] = o.Status
-	}
-	if !IsNil(o.StatusDetails) {
-		toSerialize["status_details"] = o.StatusDetails
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -264,10 +148,7 @@ func (o *ItemStructs) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "description")
-		delete(additionalProperties, "expiry_time")
 		delete(additionalProperties, "item")
-		delete(additionalProperties, "status")
-		delete(additionalProperties, "status_details")
 		o.AdditionalProperties = additionalProperties
 	}
 
