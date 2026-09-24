@@ -17,7 +17,7 @@ import (
 // checks if the NamedListCreateResponse type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &NamedListCreateResponse{}
 
-// NamedListCreateResponse The Named List creation response.
+// NamedListCreateResponse The Named List create response.
 type NamedListCreateResponse struct {
 	// The Named List object.
 	Results              *NamedList `json:"results,omitempty"`
