@@ -30,7 +30,7 @@ type FederatedPoolModel struct {
 	NetworkCompliant  types.Bool        `tfsdk:"network_compliant"`
 	Parent            types.String      `tfsdk:"parent"`
 	Protocol          types.String      `tfsdk:"protocol"`
-	Provider          types.String      `tfsdk:"provider"`
+	ProviderType      types.String      `tfsdk:"provider_type"`
 	Region            types.String      `tfsdk:"region"`
 	State             types.String      `tfsdk:"state"`
 	Tags              types.Map         `tfsdk:"tags"`
@@ -52,7 +52,7 @@ var FederatedPoolAttrTypes = map[string]attr.Type{
 	"network_compliant":  types.BoolType,
 	"parent":             types.StringType,
 	"protocol":           types.StringType,
-	"provider":           types.StringType,
+	"provider_type":      types.StringType,
 	"region":             types.StringType,
 	"state":              types.StringType,
 	"tags":               types.MapType{ElemType: types.StringType},
@@ -111,16 +111,15 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Indicates if this pool is compliant with its parent's network compliance policy. When false, a trouble dot should be displayed in the UI to indicate non-compliance.",
 	},
 	"parent": schema.StringAttribute{
-		Required:            true,
 		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 	"protocol": schema.StringAttribute{
-		Required:            true,
+		Optional:            true,
 		Computed:            true,
 		MarkdownDescription: "The address family of the pool ('ip4', 'ip6', or 'ip4/ip6' for dual mode support on NIOS_X pools only).",
 	},
-	"provider": schema.StringAttribute{
+	"provider_type": schema.StringAttribute{
 		Optional: true,
 		Computed: true,
 		// Default: stringdefault.StaticString(PROVIDERTYPE_NIOS_X), //TODO: fix this
@@ -224,6 +223,7 @@ func (m *FederatedPoolModel) Flatten(ctx context.Context, from *ipamfederation.F
 	m.NetworkCompliant = types.BoolPointerValue(from.NetworkCompliant)
 	m.Parent = flex.FlattenStringPointer(from.Parent)
 	m.Protocol = flex.FlattenStringPointer(from.Protocol)
+	m.ProviderType = flex.FlattenStringPointer((*string)(from.Provider))
 	m.Region = flex.FlattenStringPointer(from.Region)
 	m.State = flex.FlattenStringPointer(from.State)
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
