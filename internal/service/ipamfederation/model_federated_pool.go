@@ -30,6 +30,7 @@ type FederatedPoolModel struct {
 	NetworkCompliant  types.Bool        `tfsdk:"network_compliant"`
 	Parent            types.String      `tfsdk:"parent"`
 	Protocol          types.String      `tfsdk:"protocol"`
+	Provider          types.String      `tfsdk:"provider"`
 	Region            types.String      `tfsdk:"region"`
 	State             types.String      `tfsdk:"state"`
 	Tags              types.Map         `tfsdk:"tags"`
@@ -51,6 +52,7 @@ var FederatedPoolAttrTypes = map[string]attr.Type{
 	"network_compliant":  types.BoolType,
 	"parent":             types.StringType,
 	"protocol":           types.StringType,
+	"provider":           types.StringType,
 	"region":             types.StringType,
 	"state":              types.StringType,
 	"tags":               types.MapType{ElemType: types.StringType},
@@ -78,11 +80,9 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The description for the federated pool. May contain 0 to 1024 characters. Can include UTF-8.",
 	},
 	"federated_realm": schema.StringAttribute{
-		Required:            true,
+		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplace(),
-		},
 	},
 	"id": schema.StringAttribute{
 		Computed:            true,
@@ -111,22 +111,24 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Indicates if this pool is compliant with its parent's network compliance policy. When false, a trouble dot should be displayed in the UI to indicate non-compliance.",
 	},
 	"parent": schema.StringAttribute{
-		Optional:            true,
+		Required:            true,
+		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 	"protocol": schema.StringAttribute{
 		Required:            true,
+		Computed:            true,
 		MarkdownDescription: "The address family of the pool ('ip4', 'ip6', or 'ip4/ip6' for dual mode support on NIOS_X pools only).",
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplace(),
-		},
+	},
+	"provider": schema.StringAttribute{
+		Optional: true,
+		Computed: true,
+		// Default: stringdefault.StaticString(PROVIDERTYPE_NIOS_X), //TODO: fix this
+		MarkdownDescription: "The cloud provider type this pool is associated with.",
 	},
 	"region": schema.StringAttribute{
-		Required:            true,
+		Optional:            true,
 		MarkdownDescription: "The region/locale this pool is associated with (e.g., 'us-west-1', 'eu-central-1').",
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplace(),
-		},
 	},
 	"state": schema.StringAttribute{
 		Computed:            true,
