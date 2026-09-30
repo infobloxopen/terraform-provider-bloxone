@@ -42,9 +42,6 @@ type NextAvailableForwardLookingDelegationModel struct {
 }
 
 func (m *NextAvailableForwardLookingDelegationModel) FlattenResults(ctx context.Context, from []ipamfederation.ForwardLookingDelegation, diags *diag.Diagnostics) {
-	if len(from) == 0 {
-		return
-	}
 	var addresses []string
 	for _, fld := range from {
 		if fld.Address != nil {
