@@ -1,7 +1,7 @@
 /*
 IPAM Federation API
 
-The DDI IPAM Federation application enables a SaaS administrator to manage multiple IPAM systems from one central control point CSP.    
+The DDI IPAM Federation application enables a SaaS administrator to manage multiple IPAM systems from one central control point CSP.
 
 API version: v1
 */
@@ -23,22 +23,22 @@ type APIClient struct {
 	*internal.APIClient
 
 	// API Services
-	AwsScopeManagementAPI AwsScopeManagementAPI
-	AwsScopeTokenAPI AwsScopeTokenAPI
-	DelegationAPI DelegationAPI
-	FederatedBlockAPI FederatedBlockAPI
-	FederatedPoolAPI FederatedPoolAPI
-	FederatedRealmAPI FederatedRealmAPI
-	ForwardLookingDelegationAPI ForwardLookingDelegationAPI
-	NextAppropriateDelegationAPI NextAppropriateDelegationAPI
-	NextAvailableFederatedBlockAPI NextAvailableFederatedBlockAPI
-	NextAvailableFldAPI NextAvailableFldAPI
-	NextAvailableFldBlockAPI NextAvailableFldBlockAPI
+	AwsScopeManagementAPI            AwsScopeManagementAPI
+	AwsScopeTokenAPI                 AwsScopeTokenAPI
+	DelegationAPI                    DelegationAPI
+	FederatedBlockAPI                FederatedBlockAPI
+	FederatedPoolAPI                 FederatedPoolAPI
+	FederatedRealmAPI                FederatedRealmAPI
+	ForwardLookingDelegationAPI      ForwardLookingDelegationAPI
+	NextAppropriateDelegationAPI     NextAppropriateDelegationAPI
+	NextAvailableFederatedBlockAPI   NextAvailableFederatedBlockAPI
+	NextAvailableFldAPI              NextAvailableFldAPI
+	NextAvailableFldBlockAPI         NextAvailableFldBlockAPI
 	NextAvailableOverlappingBlockAPI NextAvailableOverlappingBlockAPI
-	NextAvailablePoolBlockAPI NextAvailablePoolBlockAPI
-	NextAvailableReservedBlockAPI NextAvailableReservedBlockAPI
-	OverlappingBlockAPI OverlappingBlockAPI
-	ReservedBlockAPI ReservedBlockAPI
+	NextAvailablePoolBlockAPI        NextAvailablePoolBlockAPI
+	NextAvailableReservedBlockAPI    NextAvailableReservedBlockAPI
+	OverlappingBlockAPI              OverlappingBlockAPI
+	ReservedBlockAPI                 ReservedBlockAPI
 }
 
 // NewAPIClient creates a new API client.

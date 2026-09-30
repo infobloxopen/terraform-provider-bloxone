@@ -12,6 +12,7 @@ package ipamfederation
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -27,7 +28,7 @@ type FederatedPool struct {
 	// The description for the federated pool. May contain 0 to 1024 characters. Can include UTF-8.
 	Description *string `json:"description,omitempty"`
 	// The resource identifier.
-	FederatedRealm *string `json:"federated_realm,omitempty"`
+	FederatedRealm string `json:"federated_realm"`
 	// The resource identifier.
 	Id *string `json:"id,omitempty"`
 	// The metadata for the federated pool in JSON format.
@@ -41,11 +42,11 @@ type FederatedPool struct {
 	// The resource identifier.
 	Parent *string `json:"parent,omitempty"`
 	// The address family of the pool ('ip4', 'ip6', or 'ip4/ip6' for dual mode support on NIOS_X pools only).
-	Protocol *string `json:"protocol,omitempty"`
+	Protocol string `json:"protocol"`
 	// The cloud provider type this pool is associated with.
-	Provider *ProviderType `json:"provider,omitempty"`
+	Provider ProviderType `json:"provider"`
 	// The region/locale this pool is associated with (e.g., 'us-west-1', 'eu-central-1').
-	Region *string `json:"region,omitempty"`
+	Region string `json:"region"`
 	// The current state of the federated pool (e.g., 'create-complete', 'create-in-progress', 'delete-in-progress').
 	State *string `json:"state,omitempty"`
 	// The tags for the federated pool in JSON format.
@@ -65,10 +66,12 @@ type _FederatedPool FederatedPool
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewFederatedPool() *FederatedPool {
+func NewFederatedPool(federatedRealm string, protocol string, provider ProviderType, region string) *FederatedPool {
 	this := FederatedPool{}
-	var provider ProviderType = PROVIDERTYPE_NIOS_X
-	this.Provider = &provider
+	this.FederatedRealm = federatedRealm
+	this.Protocol = protocol
+	this.Provider = provider
+	this.Region = region
 	return &this
 }
 
@@ -78,7 +81,7 @@ func NewFederatedPool() *FederatedPool {
 func NewFederatedPoolWithDefaults() *FederatedPool {
 	this := FederatedPool{}
 	var provider ProviderType = PROVIDERTYPE_NIOS_X
-	this.Provider = &provider
+	this.Provider = provider
 	return &this
 }
 
@@ -178,36 +181,28 @@ func (o *FederatedPool) SetDescription(v string) {
 	o.Description = &v
 }
 
-// GetFederatedRealm returns the FederatedRealm field value if set, zero value otherwise.
+// GetFederatedRealm returns the FederatedRealm field value
 func (o *FederatedPool) GetFederatedRealm() string {
-	if o == nil || IsNil(o.FederatedRealm) {
+	if o == nil {
 		var ret string
 		return ret
 	}
-	return *o.FederatedRealm
+
+	return o.FederatedRealm
 }
 
-// GetFederatedRealmOk returns a tuple with the FederatedRealm field value if set, nil otherwise
+// GetFederatedRealmOk returns a tuple with the FederatedRealm field value
 // and a boolean to check if the value has been set.
 func (o *FederatedPool) GetFederatedRealmOk() (*string, bool) {
-	if o == nil || IsNil(o.FederatedRealm) {
+	if o == nil {
 		return nil, false
 	}
-	return o.FederatedRealm, true
+	return &o.FederatedRealm, true
 }
 
-// HasFederatedRealm returns a boolean if a field has been set.
-func (o *FederatedPool) HasFederatedRealm() bool {
-	if o != nil && !IsNil(o.FederatedRealm) {
-		return true
-	}
-
-	return false
-}
-
-// SetFederatedRealm gets a reference to the given string and assigns it to the FederatedRealm field.
+// SetFederatedRealm sets field value
 func (o *FederatedPool) SetFederatedRealm(v string) {
-	o.FederatedRealm = &v
+	o.FederatedRealm = v
 }
 
 // GetId returns the Id field value if set, zero value otherwise.
@@ -402,100 +397,76 @@ func (o *FederatedPool) SetParent(v string) {
 	o.Parent = &v
 }
 
-// GetProtocol returns the Protocol field value if set, zero value otherwise.
+// GetProtocol returns the Protocol field value
 func (o *FederatedPool) GetProtocol() string {
-	if o == nil || IsNil(o.Protocol) {
+	if o == nil {
 		var ret string
 		return ret
 	}
-	return *o.Protocol
+
+	return o.Protocol
 }
 
-// GetProtocolOk returns a tuple with the Protocol field value if set, nil otherwise
+// GetProtocolOk returns a tuple with the Protocol field value
 // and a boolean to check if the value has been set.
 func (o *FederatedPool) GetProtocolOk() (*string, bool) {
-	if o == nil || IsNil(o.Protocol) {
+	if o == nil {
 		return nil, false
 	}
-	return o.Protocol, true
+	return &o.Protocol, true
 }
 
-// HasProtocol returns a boolean if a field has been set.
-func (o *FederatedPool) HasProtocol() bool {
-	if o != nil && !IsNil(o.Protocol) {
-		return true
-	}
-
-	return false
-}
-
-// SetProtocol gets a reference to the given string and assigns it to the Protocol field.
+// SetProtocol sets field value
 func (o *FederatedPool) SetProtocol(v string) {
-	o.Protocol = &v
+	o.Protocol = v
 }
 
-// GetProvider returns the Provider field value if set, zero value otherwise.
+// GetProvider returns the Provider field value
 func (o *FederatedPool) GetProvider() ProviderType {
-	if o == nil || IsNil(o.Provider) {
+	if o == nil {
 		var ret ProviderType
 		return ret
 	}
-	return *o.Provider
+
+	return o.Provider
 }
 
-// GetProviderOk returns a tuple with the Provider field value if set, nil otherwise
+// GetProviderOk returns a tuple with the Provider field value
 // and a boolean to check if the value has been set.
 func (o *FederatedPool) GetProviderOk() (*ProviderType, bool) {
-	if o == nil || IsNil(o.Provider) {
+	if o == nil {
 		return nil, false
 	}
-	return o.Provider, true
+	return &o.Provider, true
 }
 
-// HasProvider returns a boolean if a field has been set.
-func (o *FederatedPool) HasProvider() bool {
-	if o != nil && !IsNil(o.Provider) {
-		return true
-	}
-
-	return false
-}
-
-// SetProvider gets a reference to the given ProviderType and assigns it to the Provider field.
+// SetProvider sets field value
 func (o *FederatedPool) SetProvider(v ProviderType) {
-	o.Provider = &v
+	o.Provider = v
 }
 
-// GetRegion returns the Region field value if set, zero value otherwise.
+// GetRegion returns the Region field value
 func (o *FederatedPool) GetRegion() string {
-	if o == nil || IsNil(o.Region) {
+	if o == nil {
 		var ret string
 		return ret
 	}
-	return *o.Region
+
+	return o.Region
 }
 
-// GetRegionOk returns a tuple with the Region field value if set, nil otherwise
+// GetRegionOk returns a tuple with the Region field value
 // and a boolean to check if the value has been set.
 func (o *FederatedPool) GetRegionOk() (*string, bool) {
-	if o == nil || IsNil(o.Region) {
+	if o == nil {
 		return nil, false
 	}
-	return o.Region, true
+	return &o.Region, true
 }
 
-// HasRegion returns a boolean if a field has been set.
-func (o *FederatedPool) HasRegion() bool {
-	if o != nil && !IsNil(o.Region) {
-		return true
-	}
-
-	return false
-}
-
-// SetRegion gets a reference to the given string and assigns it to the Region field.
+// SetRegion sets field value
 func (o *FederatedPool) SetRegion(v string) {
-	o.Region = &v
+	o.Region = v
 }
 
 // GetState returns the State field value if set, zero value otherwise.
@@ -677,9 +648,7 @@ func (o FederatedPool) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
-	if !IsNil(o.FederatedRealm) {
-		toSerialize["federated_realm"] = o.FederatedRealm
-	}
+	toSerialize["federated_realm"] = o.FederatedRealm
 	if !IsNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
@@ -698,15 +667,9 @@ func (o FederatedPool) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Parent) {
 		toSerialize["parent"] = o.Parent
 	}
-	if !IsNil(o.Protocol) {
-		toSerialize["protocol"] = o.Protocol
-	}
-	if !IsNil(o.Provider) {
-		toSerialize["provider"] = o.Provider
-	}
-	if !IsNil(o.Region) {
-		toSerialize["region"] = o.Region
-	}
+	toSerialize["protocol"] = o.Protocol
+	toSerialize["provider"] = o.Provider
+	toSerialize["region"] = o.Region
 	if !IsNil(o.State) {
 		toSerialize["state"] = o.State
 	}
@@ -731,6 +694,30 @@ func (o FederatedPool) ToMap() (map[string]interface{}, error) {
 }
 
 func (o *FederatedPool) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"federated_realm",
+		"protocol",
+		"provider",
+		"region",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err
+	}
+
+	for _, requiredProperty := range requiredProperties {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
 	varFederatedPool := _FederatedPool{}
 
 	err = json.Unmarshal(data, &varFederatedPool)
