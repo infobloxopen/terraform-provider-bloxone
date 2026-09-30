@@ -1,7 +1,7 @@
 /*
 IPAM Federation API
 
-The DDI IPAM Federation application enables a SaaS administrator to manage multiple IPAM systems from one central control point CSP.    
+The DDI IPAM Federation application enables a SaaS administrator to manage multiple IPAM systems from one central control point CSP.
 
 API version: v1
 */
