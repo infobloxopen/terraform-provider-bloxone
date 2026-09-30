@@ -80,7 +80,7 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The description for the federated pool. May contain 0 to 1024 characters. Can include UTF-8.",
 	},
 	"federated_realm": schema.StringAttribute{
-		Optional:            true,
+		Required:            true,
 		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
@@ -115,14 +115,14 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The resource identifier.",
 	},
 	"protocol": schema.StringAttribute{
-		Optional:            true,
+		Required:            true,
 		Computed:            true,
 		MarkdownDescription: "The address family of the pool ('ip4', 'ip6', or 'ip4/ip6' for dual mode support on NIOS_X pools only).",
 	},
 	"provider_type": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		// Default: stringdefault.StaticString(PROVIDERTYPE_NIOS_X), //TODO: fix this
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString("NIOS_X"), //TODO: fix this
 		MarkdownDescription: "The cloud provider type this pool is associated with.",
 	},
 	"region": schema.StringAttribute{
