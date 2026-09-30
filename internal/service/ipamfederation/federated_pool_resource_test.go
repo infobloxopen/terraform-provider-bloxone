@@ -255,7 +255,7 @@ resource "bloxone_federation_federated_pool" "test_tags" {
     protocol        = "ip4"
     region          = "us-east-1"
     name            = %q
-    tags = %s
+    tags 			= %s
 }
 `, poolName, tagsStr)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
