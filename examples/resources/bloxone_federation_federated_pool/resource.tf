@@ -10,7 +10,6 @@ resource "bloxone_federation_federated_pool" "example" {
   protocol        = "ip4"
   region          = "us-east-1"
 
-  # Other optional fields
   description = "Example Federated Pool"
 
   network_compliance = {
