@@ -81,7 +81,6 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"federated_realm": schema.StringAttribute{
 		Required:            true,
-		Computed:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 	"id": schema.StringAttribute{
@@ -116,7 +115,6 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"protocol": schema.StringAttribute{
 		Required:            true,
-		Computed:            true,
 		MarkdownDescription: "The address family of the pool ('ip4', 'ip6', or 'ip4/ip6' for dual mode support on NIOS_X pools only).",
 	},
 	"provider_type": schema.StringAttribute{
