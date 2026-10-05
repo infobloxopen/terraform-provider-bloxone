@@ -4,12 +4,14 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -92,7 +94,7 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"metadata": schema.MapAttribute{
 		ElementType:         types.StringType,
-		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "The metadata for the federated pool in JSON format.",
 	},
 	"name": schema.StringAttribute{
@@ -110,7 +112,7 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Indicates if this pool is compliant with its parent's network compliance policy. When false, a trouble dot should be displayed in the UI to indicate non-compliance.",
 	},
 	"parent": schema.StringAttribute{
-		Computed:            true,
+		Optional:            true,
 		MarkdownDescription: "The resource identifier.",
 	},
 	"protocol": schema.StringAttribute{
@@ -120,8 +122,11 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 	"provider_type": schema.StringAttribute{
 		Optional:            true,
 		Computed:            true,
-		Default:             stringdefault.StaticString("NIOS_X"), //TODO: fix this
+		Default:             stringdefault.StaticString("NIOS_X"),
 		MarkdownDescription: "The cloud provider type this pool is associated with.",
+		Validators: []validator.String{
+			stringvalidator.OneOf("NIOS_X", "NIOS", "AWS", "AZURE", "GCP", "MSAD"),
+		},
 	},
 	"region": schema.StringAttribute{
 		Optional:            true,
@@ -175,7 +180,6 @@ func (m *FederatedPoolModel) Expand(ctx context.Context, diags *diag.Diagnostics
 	}
 	to := &ipamfederation.FederatedPool{
 		Description:       flex.ExpandStringPointer(m.Description),
-		Metadata:          flex.ExpandFrameworkMapString(ctx, m.Metadata, diags),
 		Name:              flex.ExpandStringPointer(m.Name),
 		NetworkCompliance: ExpandNetworkCompliance(ctx, m.NetworkCompliance, diags),
 		Parent:            flex.ExpandStringPointer(m.Parent),
@@ -184,8 +188,8 @@ func (m *FederatedPoolModel) Expand(ctx context.Context, diags *diag.Diagnostics
 	if isCreate {
 		to.FederatedRealm = flex.ExpandStringPointer(m.FederatedRealm)
 		to.Protocol = flex.ExpandStringPointer(m.Protocol)
-		providerType := ipamfederation.PROVIDERTYPE_NIOS_X
-		to.Provider = &providerType
+		v := ipamfederation.ProviderType(m.ProviderType.ValueString())
+		to.Provider = &v
 		to.Region = flex.ExpandStringPointer(m.Region)
 	}
 	return to
@@ -221,7 +225,7 @@ func (m *FederatedPoolModel) Flatten(ctx context.Context, from *ipamfederation.F
 	m.NetworkCompliant = types.BoolPointerValue(from.NetworkCompliant)
 	m.Parent = flex.FlattenStringPointer(from.Parent)
 	m.Protocol = flex.FlattenStringPointer(from.Protocol)
-	m.ProviderType = flex.FlattenStringPointer((*string)(from.Provider))
+	m.ProviderType = types.StringValue(string(from.GetProvider()))
 	m.Region = flex.FlattenStringPointer(from.Region)
 	m.State = flex.FlattenStringPointer(from.State)
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
