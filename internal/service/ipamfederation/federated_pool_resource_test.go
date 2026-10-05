@@ -310,25 +310,6 @@ resource "bloxone_federation_federated_pool" "test_name" {
 	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
 }
 
-func testAccFederatedPoolMetadata(realmName, poolName, protocol, providerType, region string, metadata map[string]string) string {
-	metadataStr := "{\n"
-	for k, v := range metadata {
-		metadataStr += fmt.Sprintf("        %s = %q\n", k, v)
-	}
-	metadataStr += "    }"
-	config := fmt.Sprintf(`
-resource "bloxone_federation_federated_pool" "test_metadata" {
-    federated_realm = bloxone_federation_federated_realm.test.id
-    name            = %q
-    protocol        = %q
-    provider_type   = %q
-    region          = %q
-    metadata        = %s
-}
-`, poolName, protocol, providerType, region, metadataStr)
-	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
-}
-
 func testAccFederatedPoolNetworkCompliance(realmName, poolName, protocol, providerType, region string, defaultMask, minMask, maxMask int) string {
 	config := fmt.Sprintf(`
 resource "bloxone_federation_federated_pool" "test_network_compliance" {
