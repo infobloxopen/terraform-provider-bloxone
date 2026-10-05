@@ -4,116 +4,18 @@ import (
 	"context"
 	"fmt"
 	"regexp"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
-	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
 )
 
-// createTestFederatedRealm creates a FederatedRealm via API and registers cleanup.
-func createTestFederatedRealm(t *testing.T, ctx context.Context, name string) string {
-	t.Helper()
-	acctest.PreCheck(t)
-	body := ipamfederation.FederatedRealm{Name: name}
-	res, _, err := acctest.BloxOneClient.IPAMFederationAPI.FederatedRealmAPI.
-		Create(ctx).Body(body).Execute()
-	if err != nil {
-		t.Fatalf("create federated realm: %v", err)
-	}
-	result := res.GetResult()
-	id := result.GetId()
-	t.Cleanup(func() {
-		if _, err := acctest.BloxOneClient.IPAMFederationAPI.FederatedRealmAPI.
-			Delete(ctx, id).Execute(); err != nil {
-			t.Logf("cleanup federated realm %s: %v", id, err)
-		}
-	})
-	return id
-}
-
-// createTestFederatedBlock creates a FederatedBlock via API and registers cleanup.
-func createTestFederatedBlock(t *testing.T, ctx context.Context, realmId, name string) string {
-	t.Helper()
-	body := ipamfederation.NewFederatedBlock(realmId)
-	body.SetName(name)
-	body.SetAddress("10.10.0.0")
-	body.SetCidr(16)
-	res, _, err := acctest.BloxOneClient.IPAMFederationAPI.FederatedBlockAPI.
-		Create(ctx).Body(*body).Execute()
-	if err != nil {
-		t.Fatalf("create federated block: %v", err)
-	}
-	result := res.GetResult()
-	id := result.GetId()
-	t.Cleanup(func() {
-		// Delete all FLDs in this block first, then delete the block.
-		deleteFLDsByBlockPrefix(t, ctx, "10.10.0.0/16")
-		if _, err := acctest.BloxOneClient.IPAMFederationAPI.FederatedBlockAPI.
-			Delete(ctx, id).Execute(); err != nil {
-			t.Logf("cleanup federated block %s: %v", id, err)
-		}
-	})
-	return id
-}
-
-// createTestFederatedBlockWithTags creates a FederatedBlock with tags via API and registers cleanup.
-func createTestFederatedBlockWithTags(t *testing.T, ctx context.Context, realmId, name string, tags map[string]interface{}) string {
-	t.Helper()
-	body := ipamfederation.NewFederatedBlock(realmId)
-	body.SetName(name)
-	body.SetAddress("10.10.0.0")
-	body.SetCidr(16)
-	if len(tags) > 0 {
-		body.SetTags(tags)
-	}
-	res, _, err := acctest.BloxOneClient.IPAMFederationAPI.FederatedBlockAPI.
-		Create(ctx).Body(*body).Execute()
-	if err != nil {
-		t.Fatalf("create federated block with tags: %v", err)
-	}
-	result := res.GetResult()
-	id := result.GetId()
-	t.Cleanup(func() {
-		deleteFLDsByBlockPrefix(t, ctx, "10.10.0.0/16")
-		if _, err := acctest.BloxOneClient.IPAMFederationAPI.FederatedBlockAPI.
-			Delete(ctx, id).Execute(); err != nil {
-			t.Logf("cleanup federated block %s: %v", id, err)
-		}
-	})
-	return id
-}
-
-// createTestFederatedBlockIPv6WithTags creates an IPv6 FederatedBlock with tags via API and registers cleanup.
-func createTestFederatedBlockIPv6WithTags(t *testing.T, ctx context.Context, realmId, name string, tags map[string]interface{}) string {
-	t.Helper()
-	body := ipamfederation.NewFederatedBlock(realmId)
-	body.SetName(name)
-	body.SetAddress("2001:db8::")
-	body.SetCidr(32)
-	if len(tags) > 0 {
-		body.SetTags(tags)
-	}
-	res, _, err := acctest.BloxOneClient.IPAMFederationAPI.FederatedBlockAPI.
-		Create(ctx).Body(*body).Execute()
-	if err != nil {
-		t.Fatalf("create federated ipv6 block with tags: %v", err)
-	}
-	result := res.GetResult()
-	id := result.GetId()
-	t.Cleanup(func() {
-		deleteFLDsByBlockPrefix(t, ctx, "2001:db8::/32")
-		if _, err := acctest.BloxOneClient.IPAMFederationAPI.FederatedBlockAPI.
-			Delete(ctx, id).Execute(); err != nil {
-			t.Logf("cleanup federated ipv6 block %s: %v", id, err)
-		}
-	})
-	return id
-}
-
-// deleteFLDsByBlockPrefix deletes all ForwardLookingDelegations whose address starts within the given block.
-func deleteFLDsByBlockPrefix(t *testing.T, ctx context.Context, _ string) {
+// deleteFLDsByBlockPrefix deletes all ForwardLookingDelegations.
+// The next-available FLD data source allocates FLDs via POST; they must be cleaned up
+// explicitly because Terraform does not manage them as resources.
+func deleteFLDsByBlockPrefix(t *testing.T, ctx context.Context) {
 	t.Helper()
 	apiRes, _, err := acctest.BloxOneClient.IPAMFederationAPI.ForwardLookingDelegationAPI.
 		List(ctx).Execute()
@@ -135,9 +37,9 @@ func deleteFLDsByBlockPrefix(t *testing.T, ctx context.Context, _ string) {
 func TestAccNextAvailableForwardLookingDelegationDataSource_byBlock(t *testing.T) {
 	ctx := context.Background()
 	acctest.PreCheck(t)
+	t.Cleanup(func() { deleteFLDsByBlockPrefix(t, ctx) })
 
-	realmId := createTestFederatedRealm(t, ctx, acctest.RandomNameWithPrefix("federated-realm"))
-	blockId := createTestFederatedBlock(t, ctx, realmId, acctest.RandomNameWithPrefix("federated-block"))
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
 	dataSourceName := "data.bloxone_federation_next_available_forward_looking_delegations.test"
 
 	resource.Test(t, resource.TestCase{
@@ -145,9 +47,11 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_byBlock(t *testing.T
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNextAvailableFLDByBlockConfig(blockId, 26),
+				Config: testAccNextAvailableFLDByBlockConfig(realmName, "10.10.0.0", 16, 26),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(dataSourceName, "results.#"),
+					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.0.address"),
+					resource.TestCheckResourceAttr(dataSourceName, "results.0.cidr", "26"),
 					resource.TestCheckResourceAttr(dataSourceName, "cidr", "26"),
 				),
 			},
@@ -158,9 +62,9 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_byBlock(t *testing.T
 func TestAccNextAvailableForwardLookingDelegationDataSource_byBlockWithCount(t *testing.T) {
 	ctx := context.Background()
 	acctest.PreCheck(t)
+	t.Cleanup(func() { deleteFLDsByBlockPrefix(t, ctx) })
 
-	realmId := createTestFederatedRealm(t, ctx, acctest.RandomNameWithPrefix("federated-realm"))
-	blockId := createTestFederatedBlock(t, ctx, realmId, acctest.RandomNameWithPrefix("federated-block"))
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
 	dataSourceName := "data.bloxone_federation_next_available_forward_looking_delegations.test"
 
 	resource.Test(t, resource.TestCase{
@@ -168,9 +72,13 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_byBlockWithCount(t *
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNextAvailableFLDByBlockWithCount(blockId, 26, 2),
+				Config: testAccNextAvailableFLDByBlockWithCount(realmName, "10.11.0.0", 16, 26, 2),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "results.#", "2"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.0.address"),
+					resource.TestCheckResourceAttr(dataSourceName, "results.0.cidr", "26"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.1.address"),
+					resource.TestCheckResourceAttr(dataSourceName, "results.1.cidr", "26"),
 					resource.TestCheckResourceAttr(dataSourceName, "fld_count", "2"),
 				),
 			},
@@ -181,11 +89,9 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_byBlockWithCount(t *
 func TestAccNextAvailableForwardLookingDelegationDataSource_globalIp4(t *testing.T) {
 	ctx := context.Background()
 	acctest.PreCheck(t)
+	t.Cleanup(func() { deleteFLDsByBlockPrefix(t, ctx) })
 
-	tagKey := "test_global_fld"
-	tagVal := acctest.RandomNameWithPrefix("ip4")
-	realmId := createTestFederatedRealm(t, ctx, acctest.RandomNameWithPrefix("federated-realm"))
-	_ = createTestFederatedBlockWithTags(t, ctx, realmId, acctest.RandomNameWithPrefix("federated-block"), map[string]interface{}{tagKey: tagVal})
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
 	dataSourceName := "data.bloxone_federation_next_available_forward_looking_delegations.test"
 
 	resource.Test(t, resource.TestCase{
@@ -193,9 +99,11 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_globalIp4(t *testing
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNextAvailableFLDGlobalConfig(26, "ip4", tagKey, tagVal),
+				Config: testAccNextAvailableFLDGlobalIp4Config(realmName, "10.12.0.0", 16, 26),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(dataSourceName, "results.#"),
+					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.0.address"),
+					resource.TestCheckResourceAttr(dataSourceName, "results.0.cidr", "26"),
 					resource.TestCheckResourceAttr(dataSourceName, "protocol", "ip4"),
 				),
 			},
@@ -206,11 +114,9 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_globalIp4(t *testing
 func TestAccNextAvailableForwardLookingDelegationDataSource_globalIp6(t *testing.T) {
 	ctx := context.Background()
 	acctest.PreCheck(t)
+	t.Cleanup(func() { deleteFLDsByBlockPrefix(t, ctx) })
 
-	tagKey := "test_global_fld"
-	tagVal := acctest.RandomNameWithPrefix("ip6")
-	realmId := createTestFederatedRealm(t, ctx, acctest.RandomNameWithPrefix("federated-realm"))
-	_ = createTestFederatedBlockIPv6WithTags(t, ctx, realmId, acctest.RandomNameWithPrefix("federated-block-ipv6"), map[string]interface{}{tagKey: tagVal})
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
 	dataSourceName := "data.bloxone_federation_next_available_forward_looking_delegations.test"
 
 	resource.Test(t, resource.TestCase{
@@ -218,9 +124,11 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_globalIp6(t *testing
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNextAvailableFLDGlobalConfig(48, "ip6", tagKey, tagVal),
+				Config: testAccNextAvailableFLDGlobalIp6Config(realmName, "2001:db8::", 32, 48),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(dataSourceName, "results.#"),
+					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.0.address"),
+					resource.TestCheckResourceAttr(dataSourceName, "results.0.cidr", "48"),
 					resource.TestCheckResourceAttr(dataSourceName, "protocol", "ip6"),
 				),
 			},
@@ -233,14 +141,69 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_invalidProtocol(t *t
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config:      testAccNextAvailableFLDGlobalConfig(26, "ip5", "", ""),
+				Config:      testAccNextAvailableFLDDataSourceOnlyConfig(26, "ip5", "", ""),
 				ExpectError: regexp.MustCompile(`Attribute protocol value must be one of`),
 			},
 		},
 	})
 }
 
-func testAccNextAvailableFLDGlobalConfig(cidr int, protocol, tagKey, tagVal string) string {
+// testAccNextAvailableFLDBaseConfig creates a FederatedRealm and FederatedBlock as Terraform resources.
+func testAccNextAvailableFLDBaseConfig(realmName, address string, cidr int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_federation_federated_block" "test" {
+    federated_realm = bloxone_federation_federated_realm.test.id
+    address         = %q
+    cidr            = %d
+}
+`, address, cidr)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
+}
+
+func testAccNextAvailableFLDByBlockConfig(realmName, address string, blockCidr, fldCidr int) string {
+	config := fmt.Sprintf(`
+data "bloxone_federation_next_available_forward_looking_delegations" "test" {
+    federated_block_id = bloxone_federation_federated_block.test.id
+    cidr               = %d
+}
+`, fldCidr)
+	return strings.Join([]string{testAccNextAvailableFLDBaseConfig(realmName, address, blockCidr), config}, "")
+}
+
+func testAccNextAvailableFLDByBlockWithCount(realmName, address string, blockCidr, fldCidr, fldCount int) string {
+	config := fmt.Sprintf(`
+data "bloxone_federation_next_available_forward_looking_delegations" "test" {
+    federated_block_id = bloxone_federation_federated_block.test.id
+    cidr               = %d
+    fld_count          = %d
+}
+`, fldCidr, fldCount)
+	return strings.Join([]string{testAccNextAvailableFLDBaseConfig(realmName, address, blockCidr), config}, "")
+}
+
+func testAccNextAvailableFLDGlobalIp4Config(realmName, address string, blockCidr, fldCidr int) string {
+	config := fmt.Sprintf(`
+data "bloxone_federation_next_available_forward_looking_delegations" "test" {
+    cidr     = %d
+    protocol = "ip4"
+}
+`, fldCidr)
+	return strings.Join([]string{testAccNextAvailableFLDBaseConfig(realmName, address, blockCidr), config}, "")
+}
+
+func testAccNextAvailableFLDGlobalIp6Config(realmName, address string, blockCidr, fldCidr int) string {
+	config := fmt.Sprintf(`
+data "bloxone_federation_next_available_forward_looking_delegations" "test" {
+    cidr     = %d
+    protocol = "ip6"
+}
+`, fldCidr)
+	return strings.Join([]string{testAccNextAvailableFLDBaseConfig(realmName, address, blockCidr), config}, "")
+}
+
+// testAccNextAvailableFLDDataSourceOnlyConfig is used by unit tests that validate schema without
+// connecting to the API (no base infrastructure needed).
+func testAccNextAvailableFLDDataSourceOnlyConfig(cidr int, protocol, tagKey, tagVal string) string {
 	tagsBlock := ""
 	if tagKey != "" && tagVal != "" {
 		tagsBlock = fmt.Sprintf(`
@@ -254,23 +217,4 @@ data "bloxone_federation_next_available_forward_looking_delegations" "test" {
     protocol = %q%s
 }
 `, cidr, protocol, tagsBlock)
-}
-
-func testAccNextAvailableFLDByBlockConfig(blockId string, cidr int) string {
-	return fmt.Sprintf(`
-data "bloxone_federation_next_available_forward_looking_delegations" "test" {
-    federated_block_id = %q
-    cidr               = %d
-}
-`, blockId, cidr)
-}
-
-func testAccNextAvailableFLDByBlockWithCount(blockId string, cidr, fldCount int) string {
-	return fmt.Sprintf(`
-data "bloxone_federation_next_available_forward_looking_delegations" "test" {
-    federated_block_id = %q
-    cidr               = %d
-    fld_count          = %d
-}
-`, blockId, cidr, fldCount)
 }

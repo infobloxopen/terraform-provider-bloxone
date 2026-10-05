@@ -17,6 +17,7 @@ import (
 	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 var _ datasource.DataSource = &NextAvailableForwardLookingDelegationDataSource{}
@@ -42,13 +43,10 @@ type NextAvailableForwardLookingDelegationModel struct {
 }
 
 func (m *NextAvailableForwardLookingDelegationModel) FlattenResults(ctx context.Context, from []ipamfederation.ForwardLookingDelegation, diags *diag.Diagnostics) {
-	var addresses []string
-	for _, fld := range from {
-		if fld.Address != nil {
-			addresses = append(addresses, *fld.Address)
-		}
+	if len(from) == 0 {
+		return
 	}
-	m.Results = flex.FlattenFrameworkListString(ctx, addresses, diags)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ForwardLookingDelegationAttrTypes, diags, FlattenForwardLookingDelegation)
 }
 
 func (d *NextAvailableForwardLookingDelegationDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -104,10 +102,12 @@ func (d *NextAvailableForwardLookingDelegationDataSource) Schema(ctx context.Con
 				Optional:            true,
 				MarkdownDescription: "The tags for the Forward Looking Delegations in JSON format.",
 			},
-			"results": schema.ListAttribute{
-				ElementType:         types.StringType,
+			"results": schema.ListNestedAttribute{
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: utils.DataSourceAttributeMap(ForwardLookingDelegationResourceSchemaAttributes, &resp.Diagnostics),
+				},
 				Computed:            true,
-				MarkdownDescription: "List of addresses of the created Forward Looking Delegation objects.",
+				MarkdownDescription: "List of created Forward Looking Delegation objects.",
 			},
 		},
 	}
