@@ -55,8 +55,8 @@ Required:
 Optional:
 
 - `description` (String) The description for the federated pool. May contain 0 to 1024 characters. Can include UTF-8.
-- `metadata` (Map of String) The metadata for the federated pool in JSON format.
 - `network_compliance` (Attributes) The network compliance of the __FederatedPool__. (see [below for nested schema](#nestedatt--results--network_compliance))
+- `parent` (String) The resource identifier.
 - `provider_type` (String) The cloud provider type this pool is associated with.
 - `region` (String) The region/locale this pool is associated with (e.g., 'us-west-1', 'eu-central-1').
 - `tags` (Map of String) The tags for the federated pool in JSON format.
@@ -66,8 +66,8 @@ Read-Only:
 - `allocation` (Attributes) The allocation details for the __FederatedPool__. (see [below for nested schema](#nestedatt--results--allocation))
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
+- `metadata` (Map of String) The metadata for the federated pool in JSON format.
 - `network_compliant` (Boolean) Indicates if this pool is compliant with its parent's network compliance policy. When false, a trouble dot should be displayed in the UI to indicate non-compliance.
-- `parent` (String) The resource identifier.
 - `state` (String) The current state of the federated pool (e.g., 'create-complete', 'create-in-progress', 'delete-in-progress').
 - `tags_all` (Map of String) The tags of the federated pool in JSON format including default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
