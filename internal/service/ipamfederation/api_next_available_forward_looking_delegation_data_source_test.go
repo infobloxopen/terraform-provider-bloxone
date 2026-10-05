@@ -126,12 +126,6 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_globalIp4(t *testing
 }
 
 func TestAccNextAvailableForwardLookingDelegationDataSource_globalIp6(t *testing.T) {
-	// Creating an IPv6 FederatedBlock via the Terraform resource fails because
-	// universal-ddi-go-client Integer128.UnmarshalJSON cannot handle a plain JSON
-	// string value ("79228162514264337593543950336") returned in utilization_v6.total.
-	// Fix must go into the generator/client; skip here until then.
-	t.Skip("blocked by universal-ddi-go-client Integer128 unmarshal bug for IPv6 utilization fields")
-
 	ctx := context.Background()
 	acctest.PreCheck(t)
 	realmName := acctest.RandomNameWithPrefix("federated-realm")

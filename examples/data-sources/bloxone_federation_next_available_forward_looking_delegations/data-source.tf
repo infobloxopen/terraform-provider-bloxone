@@ -34,3 +34,28 @@ data "bloxone_federation_next_available_forward_looking_delegations" "example_gl
 
   depends_on = [bloxone_federation_federated_block.example]
 }
+
+# Create a Federated Block for IPv6
+resource "bloxone_federation_federated_block" "example_ip6" {
+  name            = "example_federation_federated_block_ip6"
+  federated_realm = bloxone_federation_federated_realm.example.id
+  address         = "2001:db8::"
+  cidr            = 32
+
+  tags = {
+    site = "Site A"
+  }
+}
+
+# Create next available Forward Looking Delegations globally for IPv6
+# depends_on ensures the block exists before the global allocation is attempted
+data "bloxone_federation_next_available_forward_looking_delegations" "example_global_ip6" {
+  cidr     = 48
+  protocol = "ip6"
+
+  tags = {
+    site = "Site A"
+  }
+
+  depends_on = [bloxone_federation_federated_block.example_ip6]
+}
