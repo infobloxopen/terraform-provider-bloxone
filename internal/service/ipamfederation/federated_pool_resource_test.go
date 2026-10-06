@@ -214,7 +214,64 @@ func TestAccFederatedPoolResource_NetworkCompliance(t *testing.T) {
 }
 
 func TestAccFederatedPoolResource_Parent(t *testing.T) {
-	t.Skip("Parent requires a valid parent federated pool resource ID; to be added when a pool fixture is available")
+	var resourceName = "bloxone_federation_federated_pool.child"
+	var v1, v2, v3, v4 ipamfederation.FederatedPool
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	parentName := acctest.RandomNameWithPrefix("federated-pool")
+	otherName := acctest.RandomNameWithPrefix("federated-pool")
+	childName := acctest.RandomNameWithPrefix("federated-pool")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create child pool under the first parent
+			{
+				Config: testAccFederatedPoolParent(realmName, parentName, otherName, childName, "parent"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_federation_federated_pool.parent", "id"),
+				),
+			},
+			// Changing the parent is not supported by the API, so the pool is replaced
+			{
+				Config: testAccFederatedPoolParent(realmName, parentName, otherName, childName, "other"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v2),
+					testAccCheckFederatedPoolRecreated(&v1, &v2),
+					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_federation_federated_pool.other", "id"),
+				),
+			},
+			// Removing the parent also replaces the pool
+			{
+				Config: testAccFederatedPoolParent(realmName, parentName, otherName, childName, ""),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v3),
+					testAccCheckFederatedPoolRecreated(&v2, &v3),
+					resource.TestCheckNoResourceAttr(resourceName, "parent"),
+				),
+			},
+			// Updating other fields of a pool that has a parent must not send the parent
+			{
+				Config: testAccFederatedPoolParentWithDescription(realmName, parentName, otherName, childName, "parent", "updated"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v4),
+					resource.TestCheckResourceAttr(resourceName, "description", "updated"),
+					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_federation_federated_pool.parent", "id"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func testAccCheckFederatedPoolRecreated(before, after *ipamfederation.FederatedPool) resource.TestCheckFunc {
+	return func(state *terraform.State) error {
+		if before.GetId() == after.GetId() {
+			return fmt.Errorf("expected federated pool to be recreated, but id is unchanged: %s", before.GetId())
+		}
+		return nil
+	}
 }
 
 func testAccCheckFederatedPoolExists(ctx context.Context, resourceName string, v *ipamfederation.FederatedPool) resource.TestCheckFunc {
@@ -346,5 +403,41 @@ resource "bloxone_federation_federated_pool" "test_tags" {
     tags            = %s
 }
 `, poolName, protocol, providerType, region, tagsStr)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
+}
+
+func testAccFederatedPoolParent(realmName, parentName, otherName, childName, parentRef string) string {
+	return testAccFederatedPoolParentWithDescription(realmName, parentName, otherName, childName, parentRef, "")
+}
+
+func testAccFederatedPoolParentWithDescription(realmName, parentName, otherName, childName, parentRef, description string) string {
+	parentAttr := ""
+	if parentRef != "" {
+		parentAttr = fmt.Sprintf("parent = bloxone_federation_federated_pool.%s.id", parentRef)
+	}
+	config := fmt.Sprintf(`
+resource "bloxone_federation_federated_pool" "parent" {
+    federated_realm = bloxone_federation_federated_realm.test.id
+    name            = %q
+    protocol        = "ip4"
+    region          = "us-east-1"
+}
+
+resource "bloxone_federation_federated_pool" "other" {
+    federated_realm = bloxone_federation_federated_realm.test.id
+    name            = %q
+    protocol        = "ip4"
+    region          = "us-east-1"
+}
+
+resource "bloxone_federation_federated_pool" "child" {
+    federated_realm = bloxone_federation_federated_realm.test.id
+    name            = %q
+    protocol        = "ip4"
+    region          = "us-east-1"
+    description     = %q
+    %s
+}
+`, parentName, otherName, childName, description, parentAttr)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
 }
