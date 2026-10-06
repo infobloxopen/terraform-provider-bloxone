@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"regexp"
+	"slices"
 	"strings"
 	"testing"
 
@@ -13,19 +14,25 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-// testAccDeleteAllFLDs returns a TestCheckFunc that deletes all ForwardLookingDelegations
-// via the API. Used as a cleanup step before Terraform's final destroy phase, because the
-// next-available FLD data source allocates FLDs via POST (side effect) and the parent
-// FederatedBlock cannot be deleted while FLDs reference it.
-func testAccDeleteAllFLDs(ctx context.Context) resource.TestCheckFunc {
-	return func(_ *terraform.State) error {
+// testAccDeleteRealmFLDs deletes the FLDs that belong to this test's FederatedRealm.
+// The next-available FLD data source allocates FLDs via POST on every read (including the
+// plan/refresh the test framework runs after apply), so the allocated IDs cannot be tracked
+// individually. Scoping by the test's own realm removes all of them without touching FLDs
+// owned by anyone else. The parent FederatedBlock cannot be deleted while FLDs reference it.
+func testAccDeleteRealmFLDs(ctx context.Context) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources["bloxone_federation_federated_realm.test"]
+		if !ok {
+			return fmt.Errorf("federated realm not found in state")
+		}
+		realmID := rs.Primary.ID
 		apiRes, _, err := acctest.BloxOneClient.IPAMFederationAPI.ForwardLookingDelegationAPI.
-			List(ctx).Execute()
+			List(ctx).Limit(1000).Execute()
 		if err != nil {
 			return fmt.Errorf("list FLDs for cleanup: %w", err)
 		}
 		for _, fld := range apiRes.GetResults() {
-			if fld.Id == nil {
+			if fld.Id == nil || !slices.Contains(fld.FederatedRealms, realmID) {
 				continue
 			}
 			if _, delErr := acctest.BloxOneClient.IPAMFederationAPI.ForwardLookingDelegationAPI.
@@ -61,7 +68,7 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_byBlock(t *testing.T
 				// The Check deletes existing FLDs via API so the FederatedBlock can be
 				// destroyed in the subsequent Terraform destroy phase.
 				Config: testAccNextAvailableFLDBaseConfig(realmName, "10.10.0.0", 16),
-				Check:  testAccDeleteAllFLDs(ctx),
+				Check:  testAccDeleteRealmFLDs(ctx),
 			},
 		},
 	})
@@ -90,7 +97,7 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_byBlockWithCount(t *
 			},
 			{
 				Config: testAccNextAvailableFLDBaseConfig(realmName, "10.11.0.0", 16),
-				Check:  testAccDeleteAllFLDs(ctx),
+				Check:  testAccDeleteRealmFLDs(ctx),
 			},
 		},
 	})
@@ -119,7 +126,7 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_globalIp4(t *testing
 			},
 			{
 				Config: testAccNextAvailableFLDBaseConfigWithTags(realmName, "10.12.0.0", 16, tagKey, tagVal),
-				Check:  testAccDeleteAllFLDs(ctx),
+				Check:  testAccDeleteRealmFLDs(ctx),
 			},
 		},
 	})
@@ -148,19 +155,37 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_globalIp6(t *testing
 			},
 			{
 				Config: testAccNextAvailableFLDBaseConfigWithTags(realmName, "2001:db8::", 32, tagKey, tagVal),
-				Check:  testAccDeleteAllFLDs(ctx),
+				Check:  testAccDeleteRealmFLDs(ctx),
 			},
 		},
 	})
 }
 
 func TestAccNextAvailableForwardLookingDelegationDataSource_invalidProtocol(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccNextAvailableFLDDataSourceOnlyConfig(26, "ip5", "", ""),
 				ExpectError: regexp.MustCompile(`Attribute protocol value must be one of`),
+			},
+		},
+	})
+}
+
+func TestAccNextAvailableForwardLookingDelegationDataSource_protocolWithBlockConflict(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: `data "bloxone_federation_next_available_forward_looking_delegations" "test" {
+  federated_block_id = "federation/federated_block/example"
+  cidr               = 26
+  protocol           = "ip6"
+}`,
+				ExpectError: regexp.MustCompile(`(?s)Invalid Attribute Combination.*federated_block_id`),
 			},
 		},
 	})

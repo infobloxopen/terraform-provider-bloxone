@@ -95,6 +95,7 @@ func (d *NextAvailableForwardLookingDelegationDataSource) Schema(ctx context.Con
 				MarkdownDescription: "The type of protocol of delegation (_ip4_ or _ip6_). Not applicable when using `federated_block_id`.",
 				Validators: []validator.String{
 					stringvalidator.OneOf("ip4", "ip6"),
+					stringvalidator.ConflictsWith(path.MatchRoot("federated_block_id")),
 				},
 			},
 			"tags": schema.MapAttribute{

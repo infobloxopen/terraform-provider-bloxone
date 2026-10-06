@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -60,7 +61,10 @@ var ForwardLookingDelegationResourceSchemaAttributes = map[string]schema.Attribu
 		MarkdownDescription: "The address field in form \"a.b.c.d/n\" where the \"/n\" may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form \"a.b.c.d\".",
 	},
 	"cidr": schema.Int64Attribute{
-		Required:            true,
+		Required: true,
+		PlanModifiers: []planmodifier.Int64{
+			int64planmodifier.RequiresReplace(),
+		},
 		MarkdownDescription: "The CIDR of the delegation. This is required, if _address_ does not specify it in its input.",
 	},
 	"comment": schema.StringAttribute{
@@ -102,7 +106,10 @@ var ForwardLookingDelegationResourceSchemaAttributes = map[string]schema.Attribu
 		MarkdownDescription: "The compliance status of the forward looking delegation, as determined by the federation service.",
 	},
 	"protocol": schema.StringAttribute{
-		Computed:            true,
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+		},
 		MarkdownDescription: "The type of protocol of delegation (_ip4_ or _ip6_).",
 	},
 	"tags": schema.MapAttribute{
