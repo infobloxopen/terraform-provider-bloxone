@@ -213,6 +213,38 @@ func TestAccFederatedPoolResource_NetworkCompliance(t *testing.T) {
 	})
 }
 
+func TestAccFederatedPoolResource_Protocol(t *testing.T) {
+	var resourceName = "bloxone_federation_federated_pool.test"
+	var v1, v2 ipamfederation.FederatedPool
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	poolName := acctest.RandomNameWithPrefix("federated-pool")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccFederatedPoolBasicConfig(realmName, poolName, "ip4", "NIOS_X", "us-east-1"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttr(resourceName, "protocol", "ip4"),
+				),
+			},
+			// Protocol cannot be updated on the API, so the pool is replaced
+			{
+				Config: testAccFederatedPoolBasicConfig(realmName, poolName, "ip6", "NIOS_X", "us-east-1"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v2),
+					testAccCheckFederatedPoolRecreated(&v1, &v2),
+					resource.TestCheckResourceAttr(resourceName, "protocol", "ip6"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccFederatedPoolResource_Parent(t *testing.T) {
 	var resourceName = "bloxone_federation_federated_pool.child"
 	var v1, v2, v3, v4 ipamfederation.FederatedPool
