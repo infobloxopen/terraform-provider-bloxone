@@ -122,7 +122,10 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The resource identifier.",
 	},
 	"protocol": schema.StringAttribute{
-		Required:            true,
+		Required: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "The address family of the pool ('ip4', 'ip6', or 'ip4/ip6' for dual mode support on NIOS_X pools only).",
 		Validators: []validator.String{
 			stringvalidator.OneOf("ip4", "ip6", "ip4/ip6"),
