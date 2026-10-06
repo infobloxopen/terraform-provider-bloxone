@@ -82,7 +82,10 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The description for the federated pool. May contain 0 to 1024 characters. Can include UTF-8.",
 	},
 	"federated_realm": schema.StringAttribute{
-		Required:            true,
+		Required: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "The resource identifier.",
 	},
 	"id": schema.StringAttribute{
@@ -112,12 +115,18 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Indicates if this pool is compliant with its parent's network compliance policy. When false, a trouble dot should be displayed in the UI to indicate non-compliance.",
 	},
 	"parent": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplace(),
+		},
 		MarkdownDescription: "The resource identifier.",
 	},
 	"protocol": schema.StringAttribute{
 		Required:            true,
 		MarkdownDescription: "The address family of the pool ('ip4', 'ip6', or 'ip4/ip6' for dual mode support on NIOS_X pools only).",
+		Validators: []validator.String{
+			stringvalidator.OneOf("ip4", "ip6", "ip4/ip6"),
+		},
 	},
 	"provider_type": schema.StringAttribute{
 		Optional:            true,
@@ -129,7 +138,12 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 	},
 	"region": schema.StringAttribute{
-		Optional:            true,
+		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString(""),
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
 		MarkdownDescription: "The region/locale this pool is associated with (e.g., 'us-west-1', 'eu-central-1').",
 	},
 	"state": schema.StringAttribute{
@@ -182,11 +196,11 @@ func (m *FederatedPoolModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		Description:       flex.ExpandStringPointer(m.Description),
 		Name:              flex.ExpandStringPointer(m.Name),
 		NetworkCompliance: ExpandNetworkCompliance(ctx, m.NetworkCompliance, diags),
-		Parent:            flex.ExpandStringPointer(m.Parent),
 		Tags:              flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 	if isCreate {
 		to.FederatedRealm = flex.ExpandStringPointer(m.FederatedRealm)
+		to.Parent = flex.ExpandStringPointer(m.Parent)
 		to.Protocol = flex.ExpandStringPointer(m.Protocol)
 		v := ipamfederation.ProviderType(m.ProviderType.ValueString())
 		to.Provider = &v
