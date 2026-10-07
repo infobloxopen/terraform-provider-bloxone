@@ -42,7 +42,6 @@ func TestAccOverlappingBlockResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceName, "network_compliant"),
 					resource.TestCheckResourceAttrSet(resourceName, "protocol"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
-					// Test fields with default value
 				),
 			},
 			// Delete testing automatically occurs in TestCase
