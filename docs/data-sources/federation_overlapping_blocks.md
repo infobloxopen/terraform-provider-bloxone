@@ -69,4 +69,5 @@ Read-Only:
 - `network_compliant` (Boolean) The compliance status of the overlapping block, as determined by the federation service.
 - `parent` (String) The resource identifier.
 - `protocol` (String) The type of protocol of overlapping block (_ip4_ or _ip6_).
+- `tags_all` (Map of String) The tags of the overlapping block in JSON format including default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.

@@ -34,6 +34,7 @@ type OverlappingBlockModel struct {
 	Parent           types.String      `tfsdk:"parent"`
 	Protocol         types.String      `tfsdk:"protocol"`
 	Tags             types.Map         `tfsdk:"tags"`
+	TagsAll          types.Map         `tfsdk:"tags_all"`
 	UpdatedAt        timetypes.RFC3339 `tfsdk:"updated_at"`
 }
 
@@ -50,6 +51,7 @@ var OverlappingBlockAttrTypes = map[string]attr.Type{
 	"parent":            types.StringType,
 	"protocol":          types.StringType,
 	"tags":              types.MapType{ElemType: types.StringType},
+	"tags_all":          types.MapType{ElemType: types.StringType},
 	"updated_at":        timetypes.RFC3339Type{},
 }
 
@@ -120,6 +122,11 @@ var OverlappingBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
 		MarkdownDescription: "The tags for the overlapping block in JSON format.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags of the overlapping block in JSON format including default tags.",
+	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
@@ -163,6 +170,7 @@ func FlattenOverlappingBlock(ctx context.Context, from *ipamfederation.Overlappi
 	}
 	m := OverlappingBlockModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, OverlappingBlockAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -186,6 +194,6 @@ func (m *OverlappingBlockModel) Flatten(ctx context.Context, from *ipamfederatio
 	m.NetworkCompliant = types.BoolPointerValue(from.NetworkCompliant)
 	m.Parent = flex.FlattenStringPointer(from.Parent)
 	m.Protocol = flex.FlattenStringPointer(from.Protocol)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }

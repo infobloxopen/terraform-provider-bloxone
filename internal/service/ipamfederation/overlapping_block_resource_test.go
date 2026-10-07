@@ -265,7 +265,7 @@ func TestAccOverlappingBlockResource_Tags(t *testing.T) {
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactoriesWithTags,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
@@ -277,6 +277,9 @@ func TestAccOverlappingBlockResource_Tags(t *testing.T) {
 					testAccCheckOverlappingBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag1", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Update and Read
@@ -289,6 +292,9 @@ func TestAccOverlappingBlockResource_Tags(t *testing.T) {
 					testAccCheckOverlappingBlockExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2changed"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag3", "value3"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2changed"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag3", "value3"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
