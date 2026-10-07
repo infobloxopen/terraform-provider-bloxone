@@ -11,7 +11,7 @@ import (
 )
 
 func TestAccNextAvailableReservedBlockDataSource_basic(t *testing.T) {
-	dataSourceName := "data.bloxone_next_available_reserved_blocks.test"
+	dataSourceName := "data.bloxone_federation_next_available_reserved_blocks.test"
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -31,7 +31,7 @@ func TestAccNextAvailableReservedBlockDataSource_basic(t *testing.T) {
 }
 
 func TestAccNextAvailableReservedBlockDataSource_count(t *testing.T) {
-	dataSourceName := "data.bloxone_next_available_reserved_blocks.test"
+	dataSourceName := "data.bloxone_federation_next_available_reserved_blocks.test"
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -64,7 +64,7 @@ resource "bloxone_federation_federated_block" "test" {
 
 func testAccNextAvailableReservedBlockBasic(federatedRealm string, parentAddress string, parentCidr int, cidr int) string {
 	config := fmt.Sprintf(`
-data "bloxone_next_available_reserved_blocks" "test" {
+data "bloxone_federation_next_available_reserved_blocks" "test" {
     id = bloxone_federation_federated_block.test.id
     cidr = %d
 }
@@ -74,7 +74,7 @@ data "bloxone_next_available_reserved_blocks" "test" {
 
 func testAccNextAvailableReservedBlockCount(federatedRealm string, parentAddress string, parentCidr int, cidr int, count int) string {
 	config := fmt.Sprintf(`
-data "bloxone_next_available_reserved_blocks" "test" {
+data "bloxone_federation_next_available_reserved_blocks" "test" {
     id = bloxone_federation_federated_block.test.id
     cidr = %d
     reserved_block_count = %d

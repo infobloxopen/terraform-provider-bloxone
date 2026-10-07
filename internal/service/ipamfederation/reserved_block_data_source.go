@@ -28,7 +28,7 @@ type ReservedBlockDataSource struct {
 }
 
 func (d *ReservedBlockDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "reserved_blocks"
+	resp.TypeName = req.ProviderTypeName + "_" + "federation_reserved_blocks"
 }
 
 type ReservedBlockModelWithFilter struct {
@@ -46,7 +46,7 @@ func (m *ReservedBlockModelWithFilter) FlattenResults(ctx context.Context, from 
 
 func (d *ReservedBlockDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Retrieves information about existing Reserved Blocks.\n\nThe Reserved Block object (_federation/reserved_block_) is a set of contiguous IP addresses with no gap, expressed as a CIDR block. It is explicitly associated with a Federated Realm. A Reserved Block indicates an address range for which authority is expressly forbidden. Cooperating IPAM services must not make allocations in this range.",
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",

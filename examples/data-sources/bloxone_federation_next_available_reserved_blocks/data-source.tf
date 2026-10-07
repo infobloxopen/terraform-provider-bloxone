@@ -10,7 +10,7 @@ resource "bloxone_federation_federated_block" "example" {
 }
 
 # Preview the next available reserved block(s) under the federated block above, without allocating them.
-data "bloxone_next_available_reserved_blocks" "example" {
+data "bloxone_federation_next_available_reserved_blocks" "example" {
   id   = bloxone_federation_federated_block.example.id
   cidr = 24
 

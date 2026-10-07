@@ -13,8 +13,8 @@ import (
 )
 
 func TestAccReservedBlockDataSource_Filters(t *testing.T) {
-	dataSourceName := "data.bloxone_reserved_blocks.test"
-	resourceName := "bloxone_reserved_block.test"
+	dataSourceName := "data.bloxone_federation_reserved_blocks.test"
+	resourceName := "bloxone_federation_reserved_block.test"
 	var v ipamfederation.ReservedBlock
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
 
@@ -36,8 +36,8 @@ func TestAccReservedBlockDataSource_Filters(t *testing.T) {
 }
 
 func TestAccReservedBlockDataSource_TagFilters(t *testing.T) {
-	dataSourceName := "data.bloxone_reserved_blocks.test"
-	resourceName := "bloxone_reserved_block.test"
+	dataSourceName := "data.bloxone_federation_reserved_blocks.test"
+	resourceName := "bloxone_federation_reserved_block.test"
 	var v ipamfederation.ReservedBlock
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
 
@@ -76,22 +76,23 @@ func testAccCheckReservedBlockResourceAttrPair(resourceName, dataSourceName stri
 		resource.TestCheckResourceAttrPair(resourceName, "protocol", dataSourceName, "results.0.protocol"),
 		resource.TestCheckResourceAttrPair(resourceName, "region", dataSourceName, "results.0.region"),
 		resource.TestCheckResourceAttrPair(resourceName, "tags", dataSourceName, "results.0.tags"),
+		resource.TestCheckResourceAttrPair(resourceName, "tags_all", dataSourceName, "results.0.tags_all"),
 		resource.TestCheckResourceAttrPair(resourceName, "updated_at", dataSourceName, "results.0.updated_at"),
 	}
 }
 
 func testAccReservedBlockDataSourceConfigFilters(federatedRealm string, address string, cidr int, name string) string {
 	config := fmt.Sprintf(`
-resource "bloxone_reserved_block" "test" {
+resource "bloxone_federation_reserved_block" "test" {
   federated_realm = bloxone_federation_federated_realm.test.id
   address = %q
   cidr = %d
   name = %q
 }
 
-data "bloxone_reserved_blocks" "test" {
+data "bloxone_federation_reserved_blocks" "test" {
   filters = {
-	name = bloxone_reserved_block.test.name
+	name = bloxone_federation_reserved_block.test.name
   }
 }
 `, address, cidr, name)
@@ -100,7 +101,7 @@ data "bloxone_reserved_blocks" "test" {
 
 func testAccReservedBlockDataSourceConfigTagFilters(federatedRealm string, address string, cidr int, tagValue string) string {
 	config := fmt.Sprintf(`
-resource "bloxone_reserved_block" "test" {
+resource "bloxone_federation_reserved_block" "test" {
   federated_realm = bloxone_federation_federated_realm.test.id
   address = %q
   cidr = %d
@@ -109,9 +110,9 @@ resource "bloxone_reserved_block" "test" {
   }
 }
 
-data "bloxone_reserved_blocks" "test" {
+data "bloxone_federation_reserved_blocks" "test" {
   tag_filters = {
-	tag1 = bloxone_reserved_block.test.tags.tag1
+	tag1 = bloxone_federation_reserved_block.test.tags.tag1
   }
 }
 `, address, cidr, tagValue)

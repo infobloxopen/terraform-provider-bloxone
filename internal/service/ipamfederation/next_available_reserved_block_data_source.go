@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -43,13 +44,14 @@ type NextAvailableReservedBlockModel struct {
 
 func (m *NextAvailableReservedBlockModel) FlattenResults(ctx context.Context, from []ipamfederation.ReservedBlock, diags *diag.Diagnostics) {
 	if len(from) == 0 {
+		m.Results = types.ListValueMust(types.ObjectType{AttrTypes: ReservedBlockAttrTypes}, []attr.Value{})
 		return
 	}
 	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ReservedBlockAttrTypes, diags, FlattenReservedBlock)
 }
 
 func (d *NextAvailableReservedBlockDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "next_available_reserved_blocks"
+	resp.TypeName = req.ProviderTypeName + "_" + "federation_next_available_reserved_blocks"
 }
 
 func (d *NextAvailableReservedBlockDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {

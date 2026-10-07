@@ -33,6 +33,7 @@ type ReservedBlockModel struct {
 	Protocol         types.String      `tfsdk:"protocol"`
 	Region           types.String      `tfsdk:"region"`
 	Tags             types.Map         `tfsdk:"tags"`
+	TagsAll          types.Map         `tfsdk:"tags_all"`
 	UpdatedAt        timetypes.RFC3339 `tfsdk:"updated_at"`
 }
 
@@ -51,6 +52,7 @@ var ReservedBlockAttrTypes = map[string]attr.Type{
 	"protocol":          types.StringType,
 	"region":            types.StringType,
 	"tags":              types.MapType{ElemType: types.StringType},
+	"tags_all":          types.MapType{ElemType: types.StringType},
 	"updated_at":        timetypes.RFC3339Type{},
 }
 
@@ -63,7 +65,7 @@ var ReservedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The address field in form “a.b.c.d/n” where the “/n” may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form “a.b.c.d”.",
 	},
 	"cidr": schema.Int64Attribute{
-		Optional:            true,
+		Required:            true,
 		MarkdownDescription: "The CIDR of the reserved block. This is required field, if _address_ does not specify it in its input.",
 	},
 	"comment": schema.StringAttribute{
@@ -129,6 +131,11 @@ var ReservedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "Time when the object has been updated. Equals to _created_at_ if not updated after creation.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags of the reserved block in JSON format including default tags.",
+	},
 }
 
 func ExpandReservedBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipamfederation.ReservedBlock {
@@ -167,6 +174,7 @@ func FlattenReservedBlock(ctx context.Context, from *ipamfederation.ReservedBloc
 	}
 	m := ReservedBlockModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, ReservedBlockAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -192,6 +200,6 @@ func (m *ReservedBlockModel) Flatten(ctx context.Context, from *ipamfederation.R
 	m.Parent = flex.FlattenStringPointer(from.Parent)
 	m.Protocol = flex.FlattenStringPointer(from.Protocol)
 	m.Region = flex.FlattenStringPointer(from.Region)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }

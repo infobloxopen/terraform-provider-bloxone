@@ -26,12 +26,12 @@ type ReservedBlockResource struct {
 }
 
 func (r *ReservedBlockResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "reserved_block"
+	resp.TypeName = req.ProviderTypeName + "_" + "federation_reserved_block"
 }
 
 func (r *ReservedBlockResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages a Reserved Block.\n\nThe Reserved Block object (_federation/reserved_block_) is a set of contiguous IP addresses with no gap, expressed as a CIDR block. It is explicitly associated with a Federated Realm. A Reserved Block indicates an address range for which authority is expressly forbidden. Cooperating IPAM services must not make allocations in this range.",
 		Attributes:          ReservedBlockResourceSchemaAttributes,
 	}
 }

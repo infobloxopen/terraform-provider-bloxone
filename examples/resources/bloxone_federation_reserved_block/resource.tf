@@ -2,7 +2,7 @@ resource "bloxone_federation_federated_realm" "example" {
   name = "example_federation_federated_realm"
 }
 
-resource "bloxone_reserved_block" "example" {
+resource "bloxone_federation_reserved_block" "example" {
   name            = "example_reserved_block"
   federated_realm = bloxone_federation_federated_realm.example.id
   address         = "10.20.0.0"
