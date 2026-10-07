@@ -2,12 +2,14 @@ package dns_config
 
 import (
 	"context"
+	"regexp"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -52,10 +54,14 @@ var ConfigExternalPrimaryResourceSchemaAttributes = map[string]schema.Attribute{
 		PlanModifiers: []planmodifier.String{
 			internalplanmodifier.UseEmptyStringForNull(),
 		},
+		Validators: []validator.String{
+			stringvalidator.RegexMatches(regexp.MustCompile(`\.$`), "must end with a dot ('.')"),
+		},
 		MarkdownDescription: `Optional. Required only if _type_ is _server_. FQDN of nameserver.`,
 	},
 	"nsg": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `The resource identifier.`,
 	},
 	"protocol_fqdn": schema.StringAttribute{
@@ -65,16 +71,18 @@ var ConfigExternalPrimaryResourceSchemaAttributes = map[string]schema.Attribute{
 	"tsig_enabled": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
-		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: "Optional. If enabled, secondaries will use the configured TSIG key when requesting a zone transfer from this primary.",
 	},
 	"tsig_key": schema.SingleNestedAttribute{
-		Attributes: ConfigTSIGKeyResourceSchemaAttributes,
-		Optional:   true,
+		Attributes:          ConfigTSIGKeyResourceSchemaAttributes,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "Optional. Required if _tsig_enabled_ is true. The TSIG key to use when requesting a zone transfer from this primary.",
 	},
 	"type": schema.StringAttribute{
-		Required:            true,
-		MarkdownDescription: "Allowed values: * _nsg_, * _primary_.",
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "Allowed values: * _nsg_, * _primary_. Required when External Primaries are configured.",
 	},
 }
 
