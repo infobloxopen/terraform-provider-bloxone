@@ -106,20 +106,5 @@ Read-Only:
 
 Read-Only:
 
-- `total` (Attributes) Total IPv6 addresses. (see [below for nested schema](#nestedatt--results--utilization_v6--total))
-- `used` (Attributes) Used IPv6 addresses. (see [below for nested schema](#nestedatt--results--utilization_v6--used))
-
-<a id="nestedatt--results--utilization_v6--total"></a>
-### Nested Schema for `results.utilization_v6.total`
-
-Read-Only:
-
-- `raw_value` (String)
-
-
-<a id="nestedatt--results--utilization_v6--used"></a>
-### Nested Schema for `results.utilization_v6.used`
-
-Read-Only:
-
-- `raw_value` (String)
+- `total` (String) Total IPv6 addresses.
+- `used` (String) Used IPv6 addresses.
