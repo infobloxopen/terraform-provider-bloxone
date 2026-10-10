@@ -7,7 +7,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -18,7 +17,6 @@ import (
 	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -44,10 +42,14 @@ type NextAvailableReservedBlockModel struct {
 
 func (m *NextAvailableReservedBlockModel) FlattenResults(ctx context.Context, from []ipamfederation.ReservedBlock, diags *diag.Diagnostics) {
 	if len(from) == 0 {
-		m.Results = types.ListValueMust(types.ObjectType{AttrTypes: ReservedBlockAttrTypes}, []attr.Value{})
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ReservedBlockAttrTypes, diags, FlattenReservedBlock)
+	var listOfAddress []string
+
+	for _, reservedBlock := range from {
+		listOfAddress = append(listOfAddress, *reservedBlock.Address)
+	}
+	m.Results = flex.FlattenFrameworkListString(ctx, listOfAddress, diags)
 }
 
 func (d *NextAvailableReservedBlockDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -84,12 +86,10 @@ func (d *NextAvailableReservedBlockDataSource) Schema(_ context.Context, _ datas
 				Optional:            true,
 				MarkdownDescription: "The description for the reserved block. May contain 0 to 1024 characters. Can include UTF-8.",
 			},
-			"results": schema.ListNestedAttribute{
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: utils.DataSourceAttributeMap(ReservedBlockResourceSchemaAttributes, &resp.Diagnostics),
-				},
+			"results": schema.ListAttribute{
+				ElementType:         types.StringType,
 				Computed:            true,
-				MarkdownDescription: "List of next available reserved blocks in the specified parent Federated Block.",
+				MarkdownDescription: "List of next available reserved block's addresses in the specified parent Federated Block.",
 			},
 		},
 	}

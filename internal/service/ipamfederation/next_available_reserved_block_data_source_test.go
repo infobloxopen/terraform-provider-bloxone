@@ -22,8 +22,7 @@ func TestAccNextAvailableReservedBlockDataSource_basic(t *testing.T) {
 				Config: testAccNextAvailableReservedBlockBasic(realmName, "10.120.0.0", 16, 24),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
-					resource.TestCheckResourceAttrSet(dataSourceName, "results.0.address"),
-					resource.TestCheckResourceAttr(dataSourceName, "results.0.cidr", "24"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.0"),
 				),
 			},
 		},
@@ -42,9 +41,9 @@ func TestAccNextAvailableReservedBlockDataSource_count(t *testing.T) {
 				Config: testAccNextAvailableReservedBlockCount(realmName, "10.121.0.0", 16, 25, 3),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(dataSourceName, "results.#", "3"),
-					resource.TestCheckResourceAttrSet(dataSourceName, "results.0.address"),
-					resource.TestCheckResourceAttrSet(dataSourceName, "results.1.address"),
-					resource.TestCheckResourceAttrSet(dataSourceName, "results.2.address"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.0"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.1"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.2"),
 				),
 			},
 		},

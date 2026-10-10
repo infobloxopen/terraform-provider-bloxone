@@ -50,32 +50,4 @@ data "bloxone_federation_next_available_reserved_blocks" "example" {
 
 ### Read-Only
 
-- `results` (Attributes List) List of next available reserved blocks in the specified parent Federated Block. (see [below for nested schema](#nestedatt--results))
-
-<a id="nestedatt--results"></a>
-### Nested Schema for `results`
-
-Required:
-
-- `address` (String) The address field in form “a.b.c.d/n” where the “/n” may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form “a.b.c.d”.
-- `cidr` (Number) The CIDR of the reserved block. This is required field, if _address_ does not specify it in its input.
-- `federated_realm` (String) The resource identifier.
-
-Optional:
-
-- `comment` (String) The description for the reserved block. May contain 0 to 1024 characters. Can include UTF-8.
-- `federated_pool_id` (String) The resource identifier.
-- `name` (String) The name of the reserved block. May contain 1 to 256 characters. Can include UTF-8.
-- `tags` (Map of String) The tags for the reserved block in JSON format.
-
-Read-Only:
-
-- `created_at` (String) Time when the object has been created.
-- `id` (String) The resource identifier.
-- `metadata` (Map of String) The metadata for the reserved block in JSON format.
-- `network_compliant` (Boolean) The compliance status of the reserved block, as determined by the federation service.
-- `parent` (String) The resource identifier.
-- `protocol` (String) The type of protocol of reserved block (_ip4_ or _ip6_).
-- `region` (String) The region where the reserved block is located.
-- `tags_all` (Map of String) The tags of the reserved block in JSON format including default tags.
-- `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
+- `results` (List of String) List of next available reserved block's addresses in the specified parent Federated Block.
