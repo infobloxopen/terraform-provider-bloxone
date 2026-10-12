@@ -64,6 +64,33 @@ func TestAccForwardLookingDelegationDataSource_TagFilters(t *testing.T) {
 	})
 }
 
+func TestAccForwardLookingDelegationDataSource_IPv6(t *testing.T) {
+	dataSourceName := "data.bloxone_federation_forward_looking_delegations.test"
+	resourceName := "bloxone_federation_forward_looking_delegation.test"
+	var v ipamfederation.ForwardLookingDelegation
+	realmName := acctest.RandomNameWithPrefix("fld-realm")
+	delegationName := acctest.RandomNameWithPrefix("fld")
+	address := "2001:db8:b2::"
+	cidr := 48
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		CheckDestroy:             testAccCheckForwardLookingDelegationDestroy(context.Background(), &v),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccForwardLookingDelegationDataSourceConfigFilters(realmName, delegationName, address, cidr),
+				Check: resource.ComposeTestCheckFunc(
+					append([]resource.TestCheckFunc{
+						testAccCheckForwardLookingDelegationExists(context.Background(), resourceName, &v),
+						resource.TestCheckResourceAttr(dataSourceName, "results.0.protocol", "ip6"),
+					}, testAccCheckForwardLookingDelegationResourceAttrPair(resourceName, dataSourceName)...)...,
+				),
+			},
+		},
+	})
+}
+
 // below all TestAcc functions
 
 func testAccCheckForwardLookingDelegationResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {

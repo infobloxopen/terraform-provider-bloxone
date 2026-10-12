@@ -11,17 +11,20 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internalplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
 	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
+	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
 type ForwardLookingDelegationModel struct {
-	Address          types.String                     `tfsdk:"address"`
+	Address          internaltypes.IPAddressValue     `tfsdk:"address"`
 	Cidr             types.Int64                      `tfsdk:"cidr"`
 	Comment          types.String                     `tfsdk:"comment"`
 	CreatedAt        timetypes.RFC3339                `tfsdk:"created_at"`
@@ -37,7 +40,7 @@ type ForwardLookingDelegationModel struct {
 }
 
 var ForwardLookingDelegationAttrTypes = map[string]attr.Type{
-	"address":           types.StringType,
+	"address":           internaltypes.IPAddressType{},
 	"cidr":              types.Int64Type,
 	"comment":           types.StringType,
 	"created_at":        timetypes.RFC3339Type{},
@@ -54,18 +57,22 @@ var ForwardLookingDelegationAttrTypes = map[string]attr.Type{
 
 var ForwardLookingDelegationResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
-		Required: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
+		CustomType: internaltypes.IPAddressType{},
+		Required:   true,
+		Validators: []validator.String{
+			internalvalidator.IsValidIPAddress(),
 		},
-		MarkdownDescription: "The address field in form \"a.b.c.d/n\" where the \"/n\" may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form \"a.b.c.d\".",
+		PlanModifiers: []planmodifier.String{
+			internalplanmodifier.RequiresReplaceIfIPAddressChanged(),
+		},
+		MarkdownDescription: "The address of the delegation, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead.",
 	},
 	"cidr": schema.Int64Attribute{
 		Required: true,
 		PlanModifiers: []planmodifier.Int64{
 			int64planmodifier.RequiresReplace(),
 		},
-		MarkdownDescription: "The CIDR of the delegation. This is required, if _address_ does not specify it in its input.",
+		MarkdownDescription: "The CIDR of the delegation.",
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
@@ -154,7 +161,7 @@ func (m *ForwardLookingDelegationModel) Expand(ctx context.Context, diags *diag.
 		Tags:            flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 	if isCreate {
-		to.Address = flex.ExpandStringPointer(m.Address)
+		to.Address = flex.ExpandIPAddr(m.Address)
 	}
 	return to
 }
@@ -178,7 +185,7 @@ func (m *ForwardLookingDelegationModel) Flatten(ctx context.Context, from *ipamf
 	if m == nil {
 		*m = ForwardLookingDelegationModel{}
 	}
-	m.Address = flex.FlattenStringPointer(from.Address)
+	m.Address = flex.FlattenIPAddr(from.Address)
 	m.Cidr = flex.FlattenInt64Pointer(from.Cidr)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)

@@ -51,8 +51,8 @@ data "bloxone_federation_forward_looking_delegations" "example_all" {}
 
 Required:
 
-- `address` (String) The address field in form "a.b.c.d/n" where the "/n" may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form "a.b.c.d".
-- `cidr` (Number) The CIDR of the delegation. This is required, if _address_ does not specify it in its input.
+- `address` (String) The address of the delegation, an IPv4 address in form "a.b.c.d" or an IPv6 address. Do not include a prefix length ("/n"); use the _cidr_ field instead.
+- `cidr` (Number) The CIDR of the delegation.
 - `federated_realms` (List of String) The resource identifier.
 
 Optional:

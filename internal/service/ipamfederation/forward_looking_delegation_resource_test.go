@@ -5,10 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"regexp"
 	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
@@ -46,6 +48,62 @@ func TestAccForwardLookingDelegationResource_basic(t *testing.T) {
 				),
 			},
 			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccForwardLookingDelegationResource_IPv6(t *testing.T) {
+	var resourceName = "bloxone_federation_forward_looking_delegation.test"
+	var v ipamfederation.ForwardLookingDelegation
+	realmName := acctest.RandomNameWithPrefix("fld-realm")
+	address := "2001:db8:a1::"
+	addressUpper := "2001:DB8:A1::"
+	cidr := 48
+	var idBefore string
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccForwardLookingDelegationBasicConfig(realmName, address, cidr),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckForwardLookingDelegationExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "address", address),
+					resource.TestCheckResourceAttr(resourceName, "cidr", fmt.Sprintf("%d", cidr)),
+					resource.TestCheckResourceAttr(resourceName, "protocol", "ip6"),
+					func(*terraform.State) error { idBefore = *v.Id; return nil },
+				),
+			},
+			// Same address in different letter case must update in place, not replace
+			{
+				Config: testAccForwardLookingDelegationBasicConfig(realmName, addressUpper, cidr),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction(resourceName, plancheck.ResourceActionUpdate),
+					},
+				},
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckForwardLookingDelegationExists(context.Background(), resourceName, &v),
+					testAccCheckForwardLookingDelegationIdUnchanged(&v, &idBefore),
+				),
+			},
+		},
+	})
+}
+
+func TestAccForwardLookingDelegationResource_AddressWithPrefixInvalid(t *testing.T) {
+	realmName := acctest.RandomNameWithPrefix("fld-realm")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccForwardLookingDelegationBasicConfig(realmName, "10.45.0.0/18", 18),
+				ExpectError: regexp.MustCompile(`Invalid IP Address Value`),
+			},
 		},
 	})
 }
@@ -289,6 +347,15 @@ func TestAccForwardLookingDelegationResource_Tags(t *testing.T) {
 			// Delete testing automatically occurs in TestCase
 		},
 	})
+}
+
+func testAccCheckForwardLookingDelegationIdUnchanged(v *ipamfederation.ForwardLookingDelegation, idBefore *string) resource.TestCheckFunc {
+	return func(*terraform.State) error {
+		if *v.Id != *idBefore {
+			return fmt.Errorf("expected resource to be updated in place, but id changed from %s to %s", *idBefore, *v.Id)
+		}
+		return nil
+	}
 }
 
 func testAccCheckForwardLookingDelegationExists(ctx context.Context, resourceName string, v *ipamfederation.ForwardLookingDelegation) resource.TestCheckFunc {
