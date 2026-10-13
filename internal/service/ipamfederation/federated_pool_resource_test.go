@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -297,6 +298,56 @@ func TestAccFederatedPoolResource_Parent(t *testing.T) {
 	})
 }
 
+func TestAccFederatedPoolResource_NetworkComplianceInvalidRange(t *testing.T) {
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	poolName := acctest.RandomNameWithPrefix("federated-pool")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				// default (16) is below minimum (17)
+				Config:      testAccFederatedPoolNetworkCompliance(realmName, poolName, "ip4", "NIOS_X", "us-east-1", 16, 17, 28),
+				ExpectError: regexp.MustCompile("Invalid value range"),
+			},
+			{
+				// default (30) is above maximum (28)
+				Config:      testAccFederatedPoolNetworkCompliance(realmName, poolName, "ip4", "NIOS_X", "us-east-1", 30, 17, 28),
+				ExpectError: regexp.MustCompile("Invalid value range"),
+			},
+		},
+	})
+}
+
+func TestAccFederatedPoolResource_ProviderType(t *testing.T) {
+	var resourceName = "bloxone_federation_federated_pool.test"
+	var v1 ipamfederation.FederatedPool
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	poolName := acctest.RandomNameWithPrefix("federated-pool")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// provider_type omitted: API default is used
+			{
+				Config: testAccFederatedPoolNoProviderType(realmName, poolName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttr(resourceName, "provider_type", "NIOS_X"),
+				),
+			},
+			// changing provider_type is rejected at plan time
+			{
+				Config:      testAccFederatedPoolBasicConfig(realmName, poolName, "ip4", "NIOS", "us-east-1"),
+				PlanOnly:    true,
+				ExpectError: regexp.MustCompile("provider_type cannot be changed"),
+			},
+		},
+	})
+}
+
 func testAccCheckFederatedPoolRecreated(before, after *ipamfederation.FederatedPool) resource.TestCheckFunc {
 	return func(state *terraform.State) error {
 		if before.GetId() == after.GetId() {
@@ -357,6 +408,18 @@ func testAccCheckFederatedPoolDisappears(ctx context.Context, v *ipamfederation.
 		}
 		return nil
 	}
+}
+
+func testAccFederatedPoolNoProviderType(realmName, poolName string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_federation_federated_pool" "test" {
+    federated_realm = bloxone_federation_federated_realm.test.id
+    name            = %q
+    protocol        = "ip4"
+    region          = "us-east-1"
+}
+`, poolName)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
 }
 
 func testAccFederatedPoolBasicConfig(realmName, poolName, protocol, providerType, region string) string {
