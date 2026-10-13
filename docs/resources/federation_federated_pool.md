@@ -53,7 +53,7 @@ resource "bloxone_federation_federated_pool" "example" {
 - `description` (String) The description for the federated pool. May contain 0 to 1024 characters. Can include UTF-8.
 - `network_compliance` (Attributes) The network compliance of the __FederatedPool__. (see [below for nested schema](#nestedatt--network_compliance))
 - `parent` (String) The resource identifier.
-- `provider_type` (String) The cloud provider type this pool is associated with.
+- `provider_type` (String) The cloud provider type this pool is associated with. If not set, the API default is used. This value cannot be changed after the pool is created.
 - `region` (String) The region/locale this pool is associated with (e.g., 'us-west-1', 'eu-central-1').
 - `tags` (Map of String) The tags for the federated pool in JSON format.
 

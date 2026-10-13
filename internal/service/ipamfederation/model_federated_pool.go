@@ -18,6 +18,8 @@ import (
 	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internalplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
+	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
 type FederatedPoolModel struct {
@@ -105,9 +107,12 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The name of the federated pool. May contain 1 to 256 characters. Can include UTF-8.",
 	},
 	"network_compliance": schema.SingleNestedAttribute{
-		Attributes:          NetworkComplianceResourceSchemaAttributes,
-		Optional:            true,
-		Computed:            true,
+		Attributes: NetworkComplianceResourceSchemaAttributes,
+		Optional:   true,
+		Computed:   true,
+		Validators: []validator.Object{
+			internalvalidator.ObjectInt64Order("minimum_netmask_length", "default_netmask_length", "maximum_netmask_length"),
+		},
 		MarkdownDescription: "The network compliance of the __FederatedPool__.",
 	},
 	"network_compliant": schema.BoolAttribute{
@@ -132,10 +137,13 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 	},
 	"provider_type": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
-		Default:             stringdefault.StaticString("NIOS_X"),
-		MarkdownDescription: "The cloud provider type this pool is associated with.",
+		Optional: true,
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+			internalplanmodifier.ImmutableString(),
+		},
+		MarkdownDescription: "The cloud provider type this pool is associated with. If not set, the API default is used. This value cannot be changed after the pool is created.",
 		Validators: []validator.String{
 			stringvalidator.OneOf("NIOS_X", "NIOS", "AWS", "AZURE", "GCP", "MSAD"),
 		},
@@ -205,8 +213,10 @@ func (m *FederatedPoolModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		to.FederatedRealm = flex.ExpandStringPointer(m.FederatedRealm)
 		to.Parent = flex.ExpandStringPointer(m.Parent)
 		to.Protocol = flex.ExpandStringPointer(m.Protocol)
-		v := ipamfederation.ProviderType(m.ProviderType.ValueString())
-		to.Provider = &v
+		if !m.ProviderType.IsNull() && !m.ProviderType.IsUnknown() {
+			v := ipamfederation.ProviderType(m.ProviderType.ValueString())
+			to.Provider = &v
+		}
 		to.Region = flex.ExpandStringPointer(m.Region)
 	}
 	return to
