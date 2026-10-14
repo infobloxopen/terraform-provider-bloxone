@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -68,10 +68,7 @@ var ForwardLookingDelegationResourceSchemaAttributes = map[string]schema.Attribu
 		MarkdownDescription: "The address of the delegation, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead.",
 	},
 	"cidr": schema.Int64Attribute{
-		Required: true,
-		PlanModifiers: []planmodifier.Int64{
-			int64planmodifier.RequiresReplace(),
-		},
+		Required:            true,
 		MarkdownDescription: "The CIDR of the delegation.",
 	},
 	"comment": schema.StringAttribute{
@@ -122,6 +119,8 @@ var ForwardLookingDelegationResourceSchemaAttributes = map[string]schema.Attribu
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
+		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
 		MarkdownDescription: "The tags for the delegation in JSON format.",
 	},
 	"tags_all": schema.MapAttribute{

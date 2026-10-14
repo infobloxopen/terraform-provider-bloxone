@@ -268,6 +268,18 @@ func TestAccForwardLookingDelegationResource_FederatedRealms(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckForwardLookingDelegationExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "federated_realms.#", "2"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.0", "bloxone_federation_federated_realm.one", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.1", "bloxone_federation_federated_realm.two", "id"),
+				),
+			},
+			// Update the order of the realms
+			{
+				Config: testAccForwardLookingDelegationFederatedRealms(realmName1, realmName2, address, cidr, "[bloxone_federation_federated_realm.two.id, bloxone_federation_federated_realm.one.id]"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckForwardLookingDelegationExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "federated_realms.#", "2"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.0", "bloxone_federation_federated_realm.two", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_realms.1", "bloxone_federation_federated_realm.one", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
