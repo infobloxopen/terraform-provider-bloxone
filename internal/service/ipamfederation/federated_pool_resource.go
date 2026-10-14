@@ -31,7 +31,7 @@ func (r *FederatedPoolResource) Metadata(ctx context.Context, req resource.Metad
 
 func (r *FederatedPoolResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages the Federated Pool.\n\nA Federated Pool is a pool of addresses allocated within a federated realm, optionally under a parent pool.",
 		Attributes:          FederatedPoolResourceSchemaAttributes,
 	}
 }

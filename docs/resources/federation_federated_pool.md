@@ -3,12 +3,15 @@
 page_title: "bloxone_federation_federated_pool Resource - terraform-provider-bloxone"
 subcategory: "IPAM Federation"
 description: |-
-  
+  Manages the Federated Pool.
+  A Federated Pool is a pool of addresses allocated within a federated realm, optionally under a parent pool.
 ---
 
 # bloxone_federation_federated_pool (Resource)
 
+Manages the Federated Pool.
 
+A Federated Pool is a pool of addresses allocated within a federated realm, optionally under a parent pool.
 
 ## Example Usage
 
