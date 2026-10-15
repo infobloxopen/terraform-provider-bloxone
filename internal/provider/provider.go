@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/anycast"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/cdc"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/clouddiscovery"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dfp"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
@@ -164,6 +165,9 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		redirect.NewCustomRedirectResource,
 
 		clouddiscovery.NewProviderResource,
+
+		cdc.NewFlowApiV2Resource,
+		cdc.NewDestinationApiResource,
 	}
 }
 
@@ -241,6 +245,9 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		redirect.NewCustomRedirectsDataSource,
 
 		clouddiscovery.NewProvidersDataSource,
+
+		cdc.NewDestinationApiDataSource,
+		cdc.NewFlowApiV2DataSource,
 	}
 }
 
