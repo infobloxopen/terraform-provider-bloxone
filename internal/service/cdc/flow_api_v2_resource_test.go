@@ -503,10 +503,10 @@ func testAccCheckFlowApiV2Disappears(ctx context.Context, v *cdc.FlowDataV2) res
 
 func testAccFlowApiV2BasicConfig(string) string {
 	// TODO: create basic resource with required fields
-	return fmt.Sprintf(`
+	return `
 resource "bloxone_cdc_flow" "test" {
 }
-`)
+`
 }
 
 func testAccFlowApiV2CdcServices(cdcServices string) string {

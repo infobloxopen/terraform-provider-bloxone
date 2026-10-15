@@ -415,10 +415,10 @@ func testAccCheckDestinationApiDisappears(ctx context.Context, v *cdc.Destinatio
 
 func testAccDestinationApiBasicConfig(string) string {
 	// TODO: create basic resource with required fields
-	return fmt.Sprintf(`
+	return `
 resource "bloxone_cdc_destination_syslog" "test" {
 }
-`)
+`
 }
 
 func testAccDestinationApiAddress(address string) string {

@@ -76,7 +76,7 @@ func testAccCheckDestinationApiResourceAttrPair(resourceName, dataSourceName str
 }
 
 func testAccDestinationApiDataSourceConfigFilters() string {
-	return fmt.Sprintf(`
+	return `
 resource "bloxone_cdc_destination_syslog" "test" {
 }
 
@@ -85,7 +85,7 @@ data "bloxone_cdc_destination_syslogs" "test" {
 	 = bloxone_cdc_destination_syslog.test.
   }
 }
-`)
+`
 }
 
 func testAccDestinationApiDataSourceConfigTagFilters(tagValue string) string {

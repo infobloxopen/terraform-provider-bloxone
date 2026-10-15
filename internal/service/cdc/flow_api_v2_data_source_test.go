@@ -80,7 +80,7 @@ func testAccCheckFlowApiV2ResourceAttrPair(resourceName, dataSourceName string) 
 }
 
 func testAccFlowApiV2DataSourceConfigFilters() string {
-	return fmt.Sprintf(`
+	return `
 resource "bloxone_cdc_flow" "test" {
 }
 
@@ -89,7 +89,7 @@ data "bloxone_cdc_flows" "test" {
 	 = bloxone_cdc_flow.test.
   }
 }
-`)
+`
 }
 
 func testAccFlowApiV2DataSourceConfigTagFilters(tagValue string) string {
