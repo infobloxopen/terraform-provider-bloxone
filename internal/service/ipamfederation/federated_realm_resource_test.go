@@ -125,6 +125,28 @@ func TestAccFederatedRealmResource_Name(t *testing.T) {
 	})
 }
 
+func TestAccFederatedRealmResource_ProviderType(t *testing.T) {
+	var resourceName = "bloxone_federation_federated_realm.test"
+	var v ipamfederation.FederatedRealm
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read — provider_type is computed/read-only, verify it is returned
+			{
+				Config: testAccFederatedRealmBasicConfig(realmName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFederatedRealmExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrSet(resourceName, "provider_type"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccFederatedRealmResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_federation_federated_realm.test_tags"
 	var v ipamfederation.FederatedRealm
