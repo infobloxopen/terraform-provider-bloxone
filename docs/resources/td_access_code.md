@@ -72,3 +72,13 @@ Optional:
 - `description` (String) The brief description of the rule.
 - `redirect_name` (String) The name of the redirect to be used in the rule.
 - `type` (String) The type of the rule.
+
+## Import
+
+Import is supported using the following syntax:
+
+```shell
+# bloxone_td_access_code is imported using the access_key attribute, not the id.
+# The access_key is the unique identifier for the access code visible in the BloxOne portal.
+terraform import bloxone_td_access_code.example <access_key>
+```
