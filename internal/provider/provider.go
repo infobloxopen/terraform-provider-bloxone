@@ -78,7 +78,7 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 	dfTags := p.defaultTags
 	if !data.DefaultTags.IsNull() && !data.DefaultTags.IsUnknown() {
-		dfTags := make(map[string]string, len(data.DefaultTags.Elements()))
+		dfTags = make(map[string]string, len(data.DefaultTags.Elements()))
 		resp.Diagnostics.Append(data.DefaultTags.ElementsAs(ctx, &dfTags, false)...)
 	}
 	if resp.Diagnostics.HasError() {
