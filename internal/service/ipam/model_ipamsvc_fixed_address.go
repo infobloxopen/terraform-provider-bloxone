@@ -12,13 +12,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	customplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
+	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 
 	"github.com/infobloxopen/universal-ddi-go-client/ipam"
 
@@ -26,29 +27,29 @@ import (
 )
 
 type IpamsvcFixedAddressModel struct {
-	Address                   types.String      `tfsdk:"address"`
-	Comment                   types.String      `tfsdk:"comment"`
-	CompartmentId             types.String      `tfsdk:"compartment_id"`
-	CreatedAt                 timetypes.RFC3339 `tfsdk:"created_at"`
-	DhcpOptions               types.List        `tfsdk:"dhcp_options"`
-	DisableDhcp               types.Bool        `tfsdk:"disable_dhcp"`
-	HeaderOptionFilename      types.String      `tfsdk:"header_option_filename"`
-	HeaderOptionServerAddress types.String      `tfsdk:"header_option_server_address"`
-	HeaderOptionServerName    types.String      `tfsdk:"header_option_server_name"`
-	Hostname                  types.String      `tfsdk:"hostname"`
-	Id                        types.String      `tfsdk:"id"`
-	InheritanceAssignedHosts  types.List        `tfsdk:"inheritance_assigned_hosts"`
-	InheritanceParent         types.String      `tfsdk:"inheritance_parent"`
-	InheritanceSources        types.Object      `tfsdk:"inheritance_sources"`
-	IpSpace                   types.String      `tfsdk:"ip_space"`
-	MatchType                 types.String      `tfsdk:"match_type"`
-	MatchValue                types.String      `tfsdk:"match_value"`
-	Name                      types.String      `tfsdk:"name"`
-	Parent                    types.String      `tfsdk:"parent"`
-	Tags                      types.Map         `tfsdk:"tags"`
-	TagsAll                   types.Map         `tfsdk:"tags_all"`
-	UpdatedAt                 timetypes.RFC3339 `tfsdk:"updated_at"`
-	NextAvailableId           types.String      `tfsdk:"next_available_id"`
+	Address                   types.String                     `tfsdk:"address"`
+	Comment                   types.String                     `tfsdk:"comment"`
+	CompartmentId             types.String                     `tfsdk:"compartment_id"`
+	CreatedAt                 timetypes.RFC3339                `tfsdk:"created_at"`
+	DhcpOptions               internaltypes.UnorderedListValue `tfsdk:"dhcp_options"`
+	DisableDhcp               types.Bool                       `tfsdk:"disable_dhcp"`
+	HeaderOptionFilename      types.String                     `tfsdk:"header_option_filename"`
+	HeaderOptionServerAddress types.String                     `tfsdk:"header_option_server_address"`
+	HeaderOptionServerName    types.String                     `tfsdk:"header_option_server_name"`
+	Hostname                  types.String                     `tfsdk:"hostname"`
+	Id                        types.String                     `tfsdk:"id"`
+	InheritanceAssignedHosts  types.List                       `tfsdk:"inheritance_assigned_hosts"`
+	InheritanceParent         types.String                     `tfsdk:"inheritance_parent"`
+	InheritanceSources        types.Object                     `tfsdk:"inheritance_sources"`
+	IpSpace                   types.String                     `tfsdk:"ip_space"`
+	MatchType                 types.String                     `tfsdk:"match_type"`
+	MatchValue                types.String                     `tfsdk:"match_value"`
+	Name                      types.String                     `tfsdk:"name"`
+	Parent                    types.String                     `tfsdk:"parent"`
+	Tags                      types.Map                        `tfsdk:"tags"`
+	TagsAll                   types.Map                        `tfsdk:"tags_all"`
+	UpdatedAt                 timetypes.RFC3339                `tfsdk:"updated_at"`
+	NextAvailableId           types.String                     `tfsdk:"next_available_id"`
 }
 
 var IpamsvcFixedAddressAttrTypes = map[string]attr.Type{
@@ -56,7 +57,7 @@ var IpamsvcFixedAddressAttrTypes = map[string]attr.Type{
 	"comment":                      types.StringType,
 	"compartment_id":               types.StringType,
 	"created_at":                   timetypes.RFC3339Type{},
-	"dhcp_options":                 types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
+	"dhcp_options":                 internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 	"disable_dhcp":                 types.BoolType,
 	"header_option_filename":       types.StringType,
 	"header_option_server_address": types.StringType,
@@ -106,6 +107,7 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Time when the object has been created.",
 	},
 	"dhcp_options": schema.ListNestedAttribute{
+		CustomType: internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: IpamsvcOptionItemResourceSchemaAttributes,
 		},
@@ -166,7 +168,7 @@ var IpamsvcFixedAddressResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:   true,
 		Computed:   true,
 		PlanModifiers: []planmodifier.Object{
-			objectplanmodifier.UseStateForUnknown(),
+			customplanmodifier.UseStateForUnknownUnlessDhcpOptionsChange(),
 		},
 	},
 	"ip_space": schema.StringAttribute{
@@ -293,7 +295,7 @@ func (m *IpamsvcFixedAddressModel) Flatten(ctx context.Context, from *ipam.Fixed
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
-	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
+	m.DhcpOptions = flex.FlattenFrameworkUnorderedListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DisableDhcp = types.BoolPointerValue(from.DisableDhcp)
 	m.HeaderOptionFilename = flex.FlattenStringPointer(from.HeaderOptionFilename)
 	m.HeaderOptionServerAddress = flex.FlattenStringPointer(from.HeaderOptionServerAddress)
