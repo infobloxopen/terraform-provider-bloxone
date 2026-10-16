@@ -64,6 +64,7 @@ func testAccCheckFederatedRealmResourceAttrPair(resourceName, dataSourceName str
 		resource.TestCheckResourceAttrPair(resourceName, "id", dataSourceName, "results.0.id"),
 		resource.TestCheckResourceAttrPair(resourceName, "name", dataSourceName, "results.0.name"),
 		resource.TestCheckResourceAttrPair(resourceName, "provider_type", dataSourceName, "results.0.provider_type"),
+		resource.TestCheckResourceAttrPair(resourceName, "region", dataSourceName, "results.0.region"),
 		resource.TestCheckResourceAttrPair(resourceName, "tags", dataSourceName, "results.0.tags"),
 		resource.TestCheckResourceAttrPair(resourceName, "updated_at", dataSourceName, "results.0.updated_at"),
 	}

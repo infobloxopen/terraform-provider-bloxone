@@ -43,6 +43,7 @@ resource "bloxone_federation_federated_realm" "example" {
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
 - `provider_type` (String) The provider type this realm is associated with. One of `NIOS_X`, `NIOS`, `AWS`, `AZURE`, `GCP`, `MSAD`.
+- `region` (String) The region where the realm is located.
 - `tags_all` (Map of String) The tags of the federation realm in JSON format including default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 
