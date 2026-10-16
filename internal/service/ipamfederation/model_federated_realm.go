@@ -129,9 +129,7 @@ func (m *FederatedRealmModel) Flatten(ctx context.Context, from *ipamfederation.
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.Name = flex.FlattenString(from.Name)
-	if from.Provider != nil {
-		m.ProviderType = types.StringValue(string(*from.Provider))
-	}
+	m.ProviderType = flex.FlattenStringPointer((*string)(from.Provider))
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }
