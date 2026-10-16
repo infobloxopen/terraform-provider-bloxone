@@ -505,23 +505,23 @@ func (m *ConfigViewModel) Expand(ctx context.Context, diags *diag.Diagnostics) *
 		AddEdnsOptionInOutgoingQuery:      flex.ExpandBoolPointer(m.AddEdnsOptionInOutgoingQuery),
 		Comment:                           flex.ExpandStringPointer(m.Comment),
 		CompartmentId:                     flex.ExpandStringPointer(m.CompartmentId),
-		CustomRootNs:                      flex.ExpandFrameworkListNestedBlock(ctx, m.CustomRootNs, diags, ExpandConfigRootNS),
+		CustomRootNs:                      flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.CustomRootNs, diags, ExpandConfigRootNS),
 		CustomRootNsEnabled:               flex.ExpandBoolPointer(m.CustomRootNsEnabled),
 		Disabled:                          flex.ExpandBoolPointer(m.Disabled),
 		DnssecEnableValidation:            flex.ExpandBoolPointer(m.DnssecEnableValidation),
 		DnssecEnabled:                     flex.ExpandBoolPointer(m.DnssecEnabled),
-		DnssecTrustAnchors:                flex.ExpandFrameworkListNestedBlock(ctx, m.DnssecTrustAnchors, diags, ExpandConfigTrustAnchor),
+		DnssecTrustAnchors:                flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.DnssecTrustAnchors, diags, ExpandConfigTrustAnchor),
 		DnssecValidateExpiry:              flex.ExpandBoolPointer(m.DnssecValidateExpiry),
 		DtcConfig:                         ExpandConfigDTCConfig(ctx, m.DtcConfig, diags),
 		EcsEnabled:                        flex.ExpandBoolPointer(m.EcsEnabled),
 		EcsForwarding:                     flex.ExpandBoolPointer(m.EcsForwarding),
 		EcsPrefixV4:                       flex.ExpandInt64Pointer(m.EcsPrefixV4),
 		EcsPrefixV6:                       flex.ExpandInt64Pointer(m.EcsPrefixV6),
-		EcsZones:                          flex.ExpandFrameworkListNestedBlock(ctx, m.EcsZones, diags, ExpandConfigECSZone),
+		EcsZones:                          flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.EcsZones, diags, ExpandConfigECSZone),
 		EdnsUdpSize:                       flex.ExpandInt64Pointer(m.EdnsUdpSize),
-		FilterAaaaAcl:                     flex.ExpandFrameworkListNestedBlock(ctx, m.FilterAaaaAcl, diags, ExpandConfigACLItem),
+		FilterAaaaAcl:                     flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.FilterAaaaAcl, diags, ExpandConfigACLItem),
 		FilterAaaaOnV4:                    flex.ExpandStringPointer(m.FilterAaaaOnV4),
-		Forwarders:                        flex.ExpandFrameworkListNestedBlock(ctx, m.Forwarders, diags, ExpandConfigForwarder),
+		Forwarders:                        flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.Forwarders, diags, ExpandConfigForwarder),
 		ForwardersOnly:                    flex.ExpandBoolPointer(m.ForwardersOnly),
 		GssTsigEnabled:                    flex.ExpandBoolPointer(m.GssTsigEnabled),
 		InheritanceSources:                ExpandConfigViewInheritance(ctx, m.InheritanceSources, diags),
@@ -537,14 +537,14 @@ func (m *ConfigViewModel) Expand(ctx context.Context, diags *diag.Diagnostics) *
 		Name:                              flex.ExpandString(m.Name),
 		NiosMetadata:                      flex.ExpandFrameworkMapString(ctx, m.NiosMetadata, diags),
 		Notify:                            flex.ExpandBoolPointer(m.Notify),
-		QueryAcl:                          flex.ExpandFrameworkListNestedBlock(ctx, m.QueryAcl, diags, ExpandConfigACLItem),
-		RecursionAcl:                      flex.ExpandFrameworkListNestedBlock(ctx, m.RecursionAcl, diags, ExpandConfigACLItem),
+		QueryAcl:                          flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.QueryAcl, diags, ExpandConfigACLItem),
+		RecursionAcl:                      flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.RecursionAcl, diags, ExpandConfigACLItem),
 		RecursionEnabled:                  flex.ExpandBoolPointer(m.RecursionEnabled),
-		SortList:                          flex.ExpandFrameworkListNestedBlock(ctx, m.SortList, diags, ExpandConfigSortListItem),
+		SortList:                          flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.SortList, diags, ExpandConfigSortListItem),
 		SynthesizeAddressRecordsFromHttps: flex.ExpandBoolPointer(m.SynthesizeAddressRecordsFromHttps),
 		Tags:                              flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
-		TransferAcl:                       flex.ExpandFrameworkListNestedBlock(ctx, m.TransferAcl, diags, ExpandConfigACLItem),
-		UpdateAcl:                         flex.ExpandFrameworkListNestedBlock(ctx, m.UpdateAcl, diags, ExpandConfigACLItem),
+		TransferAcl:                       flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.TransferAcl, diags, ExpandConfigACLItem),
+		UpdateAcl:                         flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.UpdateAcl, diags, ExpandConfigACLItem),
 		UseForwardersForSubzones:          flex.ExpandBoolPointer(m.UseForwardersForSubzones),
 		UseRootForwardersForLocalResolutionWithB1td: flex.ExpandBoolPointer(m.UseRootForwardersForLocalResolutionWithB1td),
 		ZoneAuthority: ExpandConfigZoneAuthority(ctx, m.ZoneAuthority, diags),
@@ -575,32 +575,32 @@ func (m *ConfigViewModel) Flatten(ctx context.Context, from *dnsconfig.View, dia
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CompartmentId = flex.FlattenStringPointer(from.CompartmentId)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
-	m.CustomRootNs = flex.FlattenFrameworkListNestedBlock(ctx, from.CustomRootNs, ConfigRootNSAttrTypes, diags, FlattenConfigRootNS)
+	m.CustomRootNs = flex.FlattenFrameworkListNestedBlockPreserveEmpty(ctx, from.CustomRootNs, m.CustomRootNs, ConfigRootNSAttrTypes, diags, FlattenConfigRootNS)
 	m.CustomRootNsEnabled = types.BoolPointerValue(from.CustomRootNsEnabled)
 	m.Disabled = types.BoolPointerValue(from.Disabled)
 	m.DnssecEnableValidation = types.BoolPointerValue(from.DnssecEnableValidation)
 	m.DnssecEnabled = types.BoolPointerValue(from.DnssecEnabled)
 	m.DnssecRootKeys = flex.FlattenFrameworkListNestedBlock(ctx, from.DnssecRootKeys, ConfigTrustAnchorAttrTypes, diags, FlattenConfigTrustAnchor)
-	m.DnssecTrustAnchors = flex.FlattenFrameworkListNestedBlock(ctx, from.DnssecTrustAnchors, ConfigTrustAnchorAttrTypes, diags, FlattenConfigTrustAnchor)
+	m.DnssecTrustAnchors = flex.FlattenFrameworkListNestedBlockPreserveEmpty(ctx, from.DnssecTrustAnchors, m.DnssecTrustAnchors, ConfigTrustAnchorAttrTypes, diags, FlattenConfigTrustAnchor)
 	m.DnssecValidateExpiry = types.BoolPointerValue(from.DnssecValidateExpiry)
 	m.DtcConfig = FlattenConfigDTCConfig(ctx, from.DtcConfig, diags)
 	m.EcsEnabled = types.BoolPointerValue(from.EcsEnabled)
 	m.EcsForwarding = types.BoolPointerValue(from.EcsForwarding)
 	m.EcsPrefixV4 = flex.FlattenInt64(int64(*from.EcsPrefixV4))
 	m.EcsPrefixV6 = flex.FlattenInt64(int64(*from.EcsPrefixV6))
-	m.EcsZones = flex.FlattenFrameworkListNestedBlock(ctx, from.EcsZones, ConfigECSZoneAttrTypes, diags, FlattenConfigECSZone)
+	m.EcsZones = flex.FlattenFrameworkListNestedBlockPreserveEmpty(ctx, from.EcsZones, m.EcsZones, ConfigECSZoneAttrTypes, diags, FlattenConfigECSZone)
 	m.EdnsUdpSize = flex.FlattenInt64(int64(*from.EdnsUdpSize))
-	m.FilterAaaaAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.FilterAaaaAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
+	m.FilterAaaaAcl = flex.FlattenFrameworkListNestedBlockPreserveEmpty(ctx, from.FilterAaaaAcl, m.FilterAaaaAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
 	m.FilterAaaaOnV4 = flex.FlattenStringPointer(from.FilterAaaaOnV4)
-	m.Forwarders = flex.FlattenFrameworkListNestedBlock(ctx, from.Forwarders, ConfigForwarderAttrTypes, diags, FlattenConfigForwarder)
+	m.Forwarders = flex.FlattenFrameworkListNestedBlockPreserveEmpty(ctx, from.Forwarders, m.Forwarders, ConfigForwarderAttrTypes, diags, FlattenConfigForwarder)
 	m.ForwardersOnly = types.BoolPointerValue(from.ForwardersOnly)
 	m.GssTsigEnabled = types.BoolPointerValue(from.GssTsigEnabled)
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.InheritanceSources = FlattenConfigViewInheritance(ctx, from.InheritanceSources, diags)
 	m.IpSpaces = flex.FlattenFrameworkListString(ctx, from.IpSpaces, diags)
 	m.LameTtl = flex.FlattenInt64(int64(*from.LameTtl))
-	m.MatchClientsAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.MatchClientsAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
-	m.MatchDestinationsAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.MatchDestinationsAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
+	m.MatchClientsAcl = flex.FlattenFrameworkListNestedBlockPreserveEmpty(ctx, from.MatchClientsAcl, m.MatchClientsAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
+	m.MatchDestinationsAcl = flex.FlattenFrameworkListNestedBlockPreserveEmpty(ctx, from.MatchDestinationsAcl, m.MatchDestinationsAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
 	m.MatchRecursiveOnly = types.BoolPointerValue(from.MatchRecursiveOnly)
 	m.MaxCacheTtl = flex.FlattenInt64(int64(*from.MaxCacheTtl))
 	m.MaxNegativeTtl = flex.FlattenInt64(int64(*from.MaxNegativeTtl))
@@ -609,14 +609,14 @@ func (m *ConfigViewModel) Flatten(ctx context.Context, from *dnsconfig.View, dia
 	m.Name = flex.FlattenString(from.Name)
 	m.NiosMetadata = flex.FlattenFrameworkMapStringAny(ctx, from.NiosMetadata, diags)
 	m.Notify = types.BoolPointerValue(from.Notify)
-	m.QueryAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.QueryAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
-	m.RecursionAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.RecursionAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
+	m.QueryAcl = flex.FlattenFrameworkListNestedBlockPreserveEmpty(ctx, from.QueryAcl, m.QueryAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
+	m.RecursionAcl = flex.FlattenFrameworkListNestedBlockPreserveEmpty(ctx, from.RecursionAcl, m.RecursionAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
 	m.RecursionEnabled = types.BoolPointerValue(from.RecursionEnabled)
-	m.SortList = flex.FlattenFrameworkListNestedBlock(ctx, from.SortList, ConfigSortListItemAttrTypes, diags, FlattenConfigSortListItem)
+	m.SortList = flex.FlattenFrameworkListNestedBlockPreserveEmpty(ctx, from.SortList, m.SortList, ConfigSortListItemAttrTypes, diags, FlattenConfigSortListItem)
 	m.SynthesizeAddressRecordsFromHttps = types.BoolPointerValue(from.SynthesizeAddressRecordsFromHttps)
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
-	m.TransferAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.TransferAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
-	m.UpdateAcl = flex.FlattenFrameworkListNestedBlock(ctx, from.UpdateAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
+	m.TransferAcl = flex.FlattenFrameworkListNestedBlockPreserveEmpty(ctx, from.TransferAcl, m.TransferAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
+	m.UpdateAcl = flex.FlattenFrameworkListNestedBlockPreserveEmpty(ctx, from.UpdateAcl, m.UpdateAcl, ConfigACLItemAttrTypes, diags, FlattenConfigACLItem)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.UseForwardersForSubzones = types.BoolPointerValue(from.UseForwardersForSubzones)
 	m.UseRootForwardersForLocalResolutionWithB1td = types.BoolPointerValue(from.UseRootForwardersForLocalResolutionWithB1td)
