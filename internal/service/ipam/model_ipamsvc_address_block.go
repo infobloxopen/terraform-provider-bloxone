@@ -23,8 +23,8 @@ import (
 	"github.com/infobloxopen/universal-ddi-go-client/ipam"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
-	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 	customplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
+	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 )
 
 type IpamsvcAddressBlockModel struct {

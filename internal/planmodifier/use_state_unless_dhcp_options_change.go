@@ -39,7 +39,7 @@ func (useStateForUnknownUnlessDhcpOptionsChange) PlanModifyObject(ctx context.Co
 	req.Plan.GetAttribute(ctx, path.Root("dhcp_options"), &plan)
 	req.State.GetAttribute(ctx, path.Root("dhcp_options"), &state)
 	req.Config.GetAttribute(ctx, path.Root("dhcp_options"), &config)
-	if plan == nil || plan.Equal(state) {
+	if plan == nil || config == nil || plan.Equal(state) {
 		resp.PlanValue = req.StateValue
 		return
 	}
