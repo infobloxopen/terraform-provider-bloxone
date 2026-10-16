@@ -181,7 +181,6 @@ func (r *AccessCodeResource) Delete(ctx context.Context, req resource.DeleteRequ
 }
 
 func (r *AccessCodeResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// Read looks the code up by access_key, and id is the same value.
+	// Every API call is keyed by access_key; Read fills in id from the same value.
 	resource.ImportStatePassthroughID(ctx, path.Root("access_key"), req, resp)
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
