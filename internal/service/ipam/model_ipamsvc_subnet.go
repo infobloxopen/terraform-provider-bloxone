@@ -519,10 +519,6 @@ func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		Tags:                       flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 
-	if to.InheritanceSources != nil {
-		dropInheritedOptionsSetExplicitly(to.InheritanceSources.DhcpOptions, to.DhcpOptions)
-	}
-
 	if isCreate {
 		if !m.NextAvailableId.IsNull() && !m.NextAvailableId.IsUnknown() {
 			nasId := flex.ExpandString(m.NextAvailableId) + "/nextavailablesubnet"

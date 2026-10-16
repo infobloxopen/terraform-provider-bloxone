@@ -6,52 +6,89 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
 // UseStateForUnknownUnlessDhcpOptionsChange behaves like
-// objectplanmodifier.UseStateForUnknown, except that the prior state value is
-// not reused when the resource's dhcp_options change in the plan.
-//
-// The API recomputes inheritance_sources.dhcp_options when dhcp_options change
-// (for example, an inherited option that is now set explicitly becomes an
-// override), so reusing the old value would make the planned value differ from
-// the one returned after apply.
+// objectplanmodifier.UseStateForUnknown, except when dhcp_options change. The
+// API then turns an inherited option that the user now sets into an
+// "override", so the planned inheritance_sources.dhcp_options entry for it is
+// changed from "inherit" to "override". If the result can't be worked out
+// (an option was removed, or a code isn't known yet) the value stays unknown.
 func UseStateForUnknownUnlessDhcpOptionsChange() planmodifier.Object {
 	return useStateForUnknownUnlessDhcpOptionsChange{}
 }
 
 type useStateForUnknownUnlessDhcpOptionsChange struct{}
 
-func (m useStateForUnknownUnlessDhcpOptionsChange) Description(_ context.Context) string {
-	return "Once set, the value of this attribute in state will not change unless dhcp_options change."
+func (useStateForUnknownUnlessDhcpOptionsChange) Description(_ context.Context) string {
+	return "Uses the state value, with inherited dhcp_options that are now set explicitly planned as overrides."
 }
 
 func (m useStateForUnknownUnlessDhcpOptionsChange) MarkdownDescription(ctx context.Context) string {
 	return m.Description(ctx)
 }
 
-func (m useStateForUnknownUnlessDhcpOptionsChange) PlanModifyObject(ctx context.Context, req planmodifier.ObjectRequest, resp *planmodifier.ObjectResponse) {
-	// Do nothing on create, on destroy, or if there is a known planned value.
-	if req.State.Raw.IsNull() || req.Plan.Raw.IsNull() || !req.PlanValue.IsUnknown() {
+func (useStateForUnknownUnlessDhcpOptionsChange) PlanModifyObject(ctx context.Context, req planmodifier.ObjectRequest, resp *planmodifier.ObjectResponse) {
+	if req.State.Raw.IsNull() || req.Plan.Raw.IsNull() || !req.PlanValue.IsUnknown() || req.ConfigValue.IsUnknown() {
 		return
 	}
 
-	// Do nothing if there is an unknown configuration value, otherwise
-	// interpolation gets messed up.
-	if req.ConfigValue.IsUnknown() {
+	var plan, state, config attr.Value
+	req.Plan.GetAttribute(ctx, path.Root("dhcp_options"), &plan)
+	req.State.GetAttribute(ctx, path.Root("dhcp_options"), &state)
+	req.Config.GetAttribute(ctx, path.Root("dhcp_options"), &config)
+	if plan == nil || plan.Equal(state) {
+		resp.PlanValue = req.StateValue
 		return
 	}
 
-	var planOptions, stateOptions attr.Value
-	if diags := req.Plan.GetAttribute(ctx, path.Root("dhcp_options"), &planOptions); diags.HasError() {
+	// option codes the user sets
+	codes := map[string]bool{}
+	cfg, _ := config.ToTerraformValue(ctx)
+	var opts []tftypes.Value
+	if !cfg.IsFullyKnown() || cfg.As(&opts) != nil {
 		return
 	}
-	if diags := req.State.GetAttribute(ctx, path.Root("dhcp_options"), &stateOptions); diags.HasError() {
-		return
-	}
-	if !planOptions.Equal(stateOptions) {
-		return
+	for _, o := range opts {
+		code, _, _ := tftypes.WalkAttributePath(o, tftypes.NewAttributePath().WithAttributeName("option_code"))
+		var s string
+		if c, ok := code.(tftypes.Value); ok && c.As(&s) == nil {
+			codes[s] = true
+		}
 	}
 
-	resp.PlanValue = req.StateValue
+	// entries of inheritance_sources.dhcp_options.value: inherit -> override
+	unknown := false
+	src, _ := req.StateValue.ToTerraformValue(ctx)
+	out, err := tftypes.Transform(src, func(p *tftypes.AttributePath, v tftypes.Value) (tftypes.Value, error) {
+		steps := p.Steps()
+		var entry map[string]tftypes.Value
+		if len(steps) != 3 || steps[0] != tftypes.AttributeName("dhcp_options") || steps[1] != tftypes.AttributeName("value") || v.As(&entry) != nil {
+			return v, nil
+		}
+		code, _, _ := tftypes.WalkAttributePath(v, tftypes.NewAttributePath().WithAttributeName("value").WithAttributeName("option").WithAttributeName("option_code"))
+		var action, c string
+		entry["action"].As(&action)
+		if cv, ok := code.(tftypes.Value); ok {
+			cv.As(&c)
+		}
+		switch {
+		case action == "inherit" && codes[c]:
+			entry["action"] = tftypes.NewValue(tftypes.String, "override")
+			return tftypes.NewValue(v.Type(), entry), nil
+		case action == "override" && !codes[c]: // option removed: API may switch it back
+			unknown = true
+		}
+		return v, nil
+	})
+	if err != nil || unknown {
+		return
+	}
+	if val, err := req.StateValue.Type(ctx).ValueFromTerraform(ctx, out); err == nil {
+		if obj, ok := val.(basetypes.ObjectValue); ok {
+			resp.PlanValue = obj
+		}
+	}
 }
