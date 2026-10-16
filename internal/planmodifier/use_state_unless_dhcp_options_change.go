@@ -70,9 +70,9 @@ func (useStateForUnknownUnlessDhcpOptionsChange) PlanModifyObject(ctx context.Co
 		}
 		code, _, _ := tftypes.WalkAttributePath(v, tftypes.NewAttributePath().WithAttributeName("value").WithAttributeName("option").WithAttributeName("option_code"))
 		var action, c string
-		entry["action"].As(&action)
+		_ = entry["action"].As(&action) // left empty if unreadable, so the entry is untouched
 		if cv, ok := code.(tftypes.Value); ok {
-			cv.As(&c)
+			_ = cv.As(&c)
 		}
 		switch {
 		case action == "inherit" && codes[c]:
