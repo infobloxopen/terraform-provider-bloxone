@@ -46,7 +46,7 @@ type IpamsvcAddressBlockModel struct {
 	DdnsUseConflictResolution  types.Bool                       `tfsdk:"ddns_use_conflict_resolution"`
 	Delegation                 types.String                     `tfsdk:"delegation"`
 	DhcpConfig                 types.Object                     `tfsdk:"dhcp_config"`
-	DhcpOptions                types.List                       `tfsdk:"dhcp_options"`
+	DhcpOptions                internaltypes.UnorderedListValue `tfsdk:"dhcp_options"`
 	DhcpUtilization            types.Object                     `tfsdk:"dhcp_utilization"`
 	DiscoveryAttrs             types.Map                        `tfsdk:"discovery_attrs"`
 	DiscoveryMetadata          types.Map                        `tfsdk:"discovery_metadata"`
@@ -94,7 +94,7 @@ var IpamsvcAddressBlockAttrTypes = map[string]attr.Type{
 	"ddns_use_conflict_resolution":  types.BoolType,
 	"delegation":                    types.StringType,
 	"dhcp_config":                   types.ObjectType{AttrTypes: IpamsvcDHCPConfigAttrTypes},
-	"dhcp_options":                  types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
+	"dhcp_options":                  internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 	"dhcp_utilization":              types.ObjectType{AttrTypes: IpamsvcDHCPUtilizationAttrTypes},
 	"discovery_attrs":               types.MapType{ElemType: types.StringType},
 	"discovery_metadata":            types.MapType{ElemType: types.StringType},
@@ -265,6 +265,7 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		})),
 	},
 	"dhcp_options": schema.ListNestedAttribute{
+		CustomType: internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: IpamsvcOptionItemResourceSchemaAttributes,
 		},
@@ -537,7 +538,7 @@ func (m *IpamsvcAddressBlockModel) Flatten(ctx context.Context, from *ipam.Addre
 	m.DdnsUseConflictResolution = types.BoolPointerValue(from.DdnsUseConflictResolution)
 	m.Delegation = flex.FlattenStringPointer(from.Delegation)
 	m.DhcpConfig = FlattenIpamsvcDHCPConfigForSubnetOrAddressBlock(ctx, from.DhcpConfig, diags)
-	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
+	m.DhcpOptions = flex.FlattenFrameworkUnorderedListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DhcpUtilization = FlattenIpamsvcDHCPUtilization(ctx, from.DhcpUtilization, diags)
 	m.DiscoveryAttrs = flex.FlattenFrameworkMapString(ctx, from.DiscoveryAttrs, diags)
 	m.DiscoveryMetadata = flex.FlattenFrameworkMapString(ctx, from.DiscoveryMetadata, diags)
