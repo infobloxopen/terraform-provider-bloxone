@@ -499,3 +499,19 @@ func ExpandList[U any](ctx context.Context, tfList types.List, u U, diags *diag.
 	diags.Append(lv.ElementsAs(ctx, &u, false)...)
 	return u
 }
+
+func ExpandIPAddr(ip internaltypes.IPAddressValue) *string {
+	if ip.IsNull() || ip.IsUnknown() {
+		return nil
+	}
+	return ExpandStringPointer(ip.StringValue)
+}
+
+func FlattenIPAddr(ip *string) internaltypes.IPAddressValue {
+	if ip == nil {
+		return internaltypes.NewIPAddressNull()
+	}
+	return internaltypes.IPAddressValue{
+		StringValue: FlattenStringPointer(ip),
+	}
+}
