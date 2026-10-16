@@ -43,4 +43,5 @@ resource "bloxone_td_category_filter" "example" {
 - `created_time` (String) The time when this Category Filter object was created.
 - `id` (Number) The Category Filter object identifier.
 - `policies` (List of String) The list of security policy names with which the category filter is associated.
+- `tags_all` (Map of String) All tags, including the default tags set on the provider.
 - `updated_time` (String) The time when this Category Filter object was last updated.
