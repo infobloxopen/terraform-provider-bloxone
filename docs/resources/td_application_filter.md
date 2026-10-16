@@ -47,6 +47,7 @@ resource "bloxone_td_application_filter" "example" {
 - `id` (Number) The Application Filter object identifier.
 - `policies` (List of String) The list of security policy names with which the application filter is associated.
 - `readonly` (Boolean) True if it is a predefined application filter
+- `tags_all` (Map of String) All tags, including the default tags set on the provider.
 - `updated_time` (String) The time when this Application Filter object was last updated.
 
 <a id="nestedatt--criteria"></a>

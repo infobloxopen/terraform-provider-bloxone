@@ -71,4 +71,5 @@ Read-Only:
 - `created_at` (String) Time when the object has been created.
 - `id` (String) The resource identifier.
 - `protocol_name` (String) The TSIG key name supplied during a create/update operation that is converted to canonical form in punycode.
+- `tags_all` (Map of String) All tags, including the default tags set on the provider.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
