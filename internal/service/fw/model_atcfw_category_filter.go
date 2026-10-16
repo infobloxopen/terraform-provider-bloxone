@@ -27,6 +27,7 @@ type AtcfwCategoryFilterModel struct {
 	Name        types.String      `tfsdk:"name"`
 	Policies    types.List        `tfsdk:"policies"`
 	Tags        types.Map         `tfsdk:"tags"`
+	TagsAll     types.Map         `tfsdk:"tags_all"`
 	UpdatedTime timetypes.RFC3339 `tfsdk:"updated_time"`
 }
 
@@ -38,6 +39,7 @@ var AtcfwCategoryFilterAttrTypes = map[string]attr.Type{
 	"name":         types.StringType,
 	"policies":     types.ListType{ElemType: types.StringType},
 	"tags":         types.MapType{ElemType: types.StringType},
+	"tags_all":     types.MapType{ElemType: types.StringType},
 	"updated_time": timetypes.RFC3339Type{},
 }
 
@@ -81,6 +83,11 @@ var AtcfwCategoryFilterResourceSchemaAttributes = map[string]schema.Attribute{
 		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
 		MarkdownDescription: "Enables tag support for resource where tags attribute contains user-defined key value pairs",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "All tags, including the default tags set on the provider.",
+	},
 	"updated_time": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
@@ -119,6 +126,7 @@ func FlattenAtcfwCategoryFilter(ctx context.Context, from *fw.CategoryFilter, di
 	}
 	m := AtcfwCategoryFilterModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, AtcfwCategoryFilterAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -137,6 +145,6 @@ func (m *AtcfwCategoryFilterModel) Flatten(ctx context.Context, from *fw.Categor
 	m.Id = flex.FlattenInt32Pointer(from.Id)
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Policies = flex.FlattenFrameworkListString(ctx, from.Policies, diags)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedTime = timetypes.NewRFC3339TimePointerValue(from.UpdatedTime)
 }
