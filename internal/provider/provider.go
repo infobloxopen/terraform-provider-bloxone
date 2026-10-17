@@ -168,6 +168,8 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 
 		cdc.NewFlowApiV2Resource,
 		cdc.NewDestinationApiResource,
+		cdc.NewSourceApiResource,
+		cdc.NewEtlFilterApiResource,
 	}
 }
 
@@ -248,6 +250,8 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 
 		cdc.NewDestinationApiDataSource,
 		cdc.NewFlowApiV2DataSource,
+		cdc.NewSourceApiDataSource,
+		cdc.NewEtlFilterApiDataSource,
 	}
 }
 

@@ -7,6 +7,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -52,7 +56,8 @@ var DestinationSyslogResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional: true,
 	},
 	"ca_certificate": schema.StringAttribute{
-		Optional: true,
+		Optional:  true,
+		Sensitive: true,
 	},
 	"created_at": schema.StringAttribute{
 		CustomType: timetypes.RFC3339Type{},
@@ -60,24 +65,47 @@ var DestinationSyslogResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"description": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+		},
 	},
 	"enabled": schema.BoolAttribute{
 		Optional: true,
+		Computed: true,
+		PlanModifiers: []planmodifier.Bool{
+			boolplanmodifier.UseStateForUnknown(),
+		},
 	},
 	"id": schema.Int64Attribute{
 		Computed: true,
+		PlanModifiers: []planmodifier.Int64{
+			int64planmodifier.UseStateForUnknown(),
+		},
 	},
 	"insecure_mode": schema.BoolAttribute{
 		Optional: true,
+		Computed: true,
+		PlanModifiers: []planmodifier.Bool{
+			boolplanmodifier.UseStateForUnknown(),
+		},
 	},
 	"name": schema.StringAttribute{
 		Optional: true,
 	},
 	"output_data_format": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+		},
 	},
 	"port": schema.Int64Attribute{
 		Optional: true,
+		Computed: true,
+		PlanModifiers: []planmodifier.Int64{
+			int64planmodifier.UseStateForUnknown(),
+		},
 	},
 	"tags": schema.MapAttribute{
 		ElementType: types.StringType,
@@ -85,6 +113,10 @@ var DestinationSyslogResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"transport_protocol": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.UseStateForUnknown(),
+		},
 	},
 	"updated_at": schema.StringAttribute{
 		CustomType: timetypes.RFC3339Type{},
@@ -142,7 +174,8 @@ func (m *DestinationSyslogModel) Flatten(ctx context.Context, from *cdc.Destinat
 		*m = DestinationSyslogModel{}
 	}
 	m.Address = flex.FlattenStringPointer(from.Address)
-	m.CaCertificate = flex.FlattenStringPointer(from.CaCertificate)
+	// ca_certificate is never read back from the API: the backend masks it
+	// the same way it masks nios_password/scp_password on SourceNios.
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.Description = flex.FlattenStringPointer(from.Description)
 	m.Enabled = types.BoolPointerValue(from.Enabled)
