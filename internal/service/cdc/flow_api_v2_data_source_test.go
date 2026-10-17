@@ -11,19 +11,13 @@ import (
 	"github.com/infobloxopen/universal-ddi-go-client/cdc"
 )
 
-// TODO: these tests require a configured CDC service (cdc_services) on the grid, since this
-// provider does not yet have a resource to create one (the /v2/services API only supports GET -
-// a CdcService only exists once an on-prem CDC host agent registers itself, which isn't something
-// Terraform can drive). testAccFlowApiV2ServiceID is hardcoded to an object on the test grid;
-// update it for your environment.
-const testAccFlowApiV2ServiceID = "rrfag7r4o5bysyncsnkkjy5a2tliw6mg"
-
 func TestAccFlowApiV2DataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_cdc_flows.test"
 	resourceName := "bloxone_cdc_flow.test"
 	flowName := acctest.RandomNameWithPrefix("flow")
 	acctest.PreCheck(t)
 	sourceID := testAccCreateCdcSourceNios(t, flowName)
+	serviceID := testAccFlowApiV2ServiceID(t)
 	var v cdc.FlowDataV2
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -32,7 +26,7 @@ func TestAccFlowApiV2DataSource_Filters(t *testing.T) {
 		CheckDestroy:             testAccCheckFlowApiV2Destroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFlowApiV2DataSourceConfigFilters(flowName, testAccFlowApiV2ServiceID, sourceID),
+				Config: testAccFlowApiV2DataSourceConfigFilters(flowName, serviceID, sourceID),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
@@ -49,6 +43,7 @@ func TestAccFlowApiV2DataSource_TagFilters(t *testing.T) {
 	flowName := acctest.RandomNameWithPrefix("flow")
 	acctest.PreCheck(t)
 	sourceID := testAccCreateCdcSourceNios(t, flowName)
+	serviceID := testAccFlowApiV2ServiceID(t)
 	var v cdc.FlowDataV2
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -56,7 +51,7 @@ func TestAccFlowApiV2DataSource_TagFilters(t *testing.T) {
 		CheckDestroy:             testAccCheckFlowApiV2Destroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFlowApiV2DataSourceConfigTagFilters(flowName, acctest.RandomName(), testAccFlowApiV2ServiceID, sourceID),
+				Config: testAccFlowApiV2DataSourceConfigTagFilters(flowName, acctest.RandomName(), serviceID, sourceID),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
@@ -67,6 +62,25 @@ func TestAccFlowApiV2DataSource_TagFilters(t *testing.T) {
 	})
 }
 
+// testAccFlowApiV2ServiceID looks up a CDC service (cdc_services) already present on the grid.
+// This provider does not have a resource to create one (the /v2/services API only supports GET -
+// a CdcService only exists once an on-prem CDC host agent registers itself, which isn't something
+// Terraform can drive), so these tests depend on at least one already existing on the test grid.
+func testAccFlowApiV2ServiceID(t *testing.T) string {
+	t.Helper()
+	apiRes, _, err := acctest.BloxOneClient.CDCAPI.ServiceApiAPI.
+		ListCdcService(context.Background()).
+		Execute()
+	if err != nil {
+		t.Fatalf("unable to list CDC services: %v", err)
+	}
+	results := apiRes.GetResults()
+	if len(results) == 0 {
+		t.Fatalf("no CDC service found on the grid; these tests require at least one on-prem CDC host agent to have registered")
+	}
+	return *results[0].Id
+}
+
 // testAccCreateCdcSourceNios creates a NIOS source directly via the SDK (rather than through the
 // bloxone_cdc_source_nios Terraform resource) and registers its cleanup. address/nios_username/
 // nios_password don't need to point at a real NIOS grid - the API only validates format, not
@@ -75,7 +89,7 @@ func testAccCreateCdcSourceNios(t *testing.T, name string) int64 {
 	t.Helper()
 	ctx := context.Background()
 
-	address := name + ".example.com"
+	address := acctest.RandomNameWithPrefix("source") + ".example.com"
 	niosUsername := "tf_auto"
 	niosPassword := "tf_auto_password1!"
 	scpUsername := "tf_auto_scp"

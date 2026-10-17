@@ -21,6 +21,7 @@ func TestAccFlowApiV2Resource_basic(t *testing.T) {
 	acctest.PreCheck(t)
 	name := acctest.RandomNameWithPrefix("flow")
 	sourceID := testAccCreateCdcSourceNios(t, name)
+	serviceID := testAccFlowApiV2ServiceID(t)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -28,7 +29,7 @@ func TestAccFlowApiV2Resource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFlowApiV2BasicConfig(name, sourceID),
+				Config: testAccFlowApiV2BasicConfig(name, serviceID, sourceID),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
@@ -50,6 +51,7 @@ func TestAccFlowApiV2Resource_disappears(t *testing.T) {
 	acctest.PreCheck(t)
 	name := acctest.RandomNameWithPrefix("flow")
 	sourceID := testAccCreateCdcSourceNios(t, name)
+	serviceID := testAccFlowApiV2ServiceID(t)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -57,7 +59,7 @@ func TestAccFlowApiV2Resource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckFlowApiV2Destroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFlowApiV2BasicConfig(name, sourceID),
+				Config: testAccFlowApiV2BasicConfig(name, serviceID, sourceID),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					testAccCheckFlowApiV2Disappears(context.Background(), &v),
@@ -74,6 +76,7 @@ func TestAccFlowApiV2Resource_Description(t *testing.T) {
 	acctest.PreCheck(t)
 	name := acctest.RandomNameWithPrefix("flow")
 	sourceID := testAccCreateCdcSourceNios(t, name)
+	serviceID := testAccFlowApiV2ServiceID(t)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -81,7 +84,7 @@ func TestAccFlowApiV2Resource_Description(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFlowApiV2Description(name, sourceID, "DESCRIPTION_REPLACE_ME"),
+				Config: testAccFlowApiV2Description(name, serviceID, sourceID, "DESCRIPTION_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "DESCRIPTION_REPLACE_ME"),
@@ -89,7 +92,7 @@ func TestAccFlowApiV2Resource_Description(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFlowApiV2Description(name, sourceID, "DESCRIPTION_UPDATE_REPLACE_ME"),
+				Config: testAccFlowApiV2Description(name, serviceID, sourceID, "DESCRIPTION_UPDATE_REPLACE_ME"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "DESCRIPTION_UPDATE_REPLACE_ME"),
@@ -106,6 +109,7 @@ func TestAccFlowApiV2Resource_Destinations(t *testing.T) {
 	acctest.PreCheck(t)
 	name := acctest.RandomNameWithPrefix("flow")
 	sourceID := testAccCreateCdcSourceNios(t, name)
+	serviceID := testAccFlowApiV2ServiceID(t)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -113,7 +117,7 @@ func TestAccFlowApiV2Resource_Destinations(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFlowApiV2Destinations(name, sourceID),
+				Config: testAccFlowApiV2Destinations(name, serviceID, sourceID),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "destinations.#", "1"),
@@ -131,6 +135,7 @@ func TestAccFlowApiV2Resource_Enabled(t *testing.T) {
 	acctest.PreCheck(t)
 	name := acctest.RandomNameWithPrefix("flow")
 	sourceID := testAccCreateCdcSourceNios(t, name)
+	serviceID := testAccFlowApiV2ServiceID(t)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -138,7 +143,7 @@ func TestAccFlowApiV2Resource_Enabled(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFlowApiV2Enabled(name, sourceID, "false"),
+				Config: testAccFlowApiV2Enabled(name, serviceID, sourceID, "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "enabled", "false"),
@@ -146,7 +151,7 @@ func TestAccFlowApiV2Resource_Enabled(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFlowApiV2Enabled(name, sourceID, "true"),
+				Config: testAccFlowApiV2Enabled(name, serviceID, sourceID, "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "enabled", "true"),
@@ -164,6 +169,7 @@ func TestAccFlowApiV2Resource_EtlFilters(t *testing.T) {
 	name := acctest.RandomNameWithPrefix("flow")
 	sourceID := testAccCreateCdcSourceNios(t, name)
 	etlFilterID := testAccCreateCdcEtlFilterFqdn(t, name)
+	serviceID := testAccFlowApiV2ServiceID(t)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -171,7 +177,7 @@ func TestAccFlowApiV2Resource_EtlFilters(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFlowApiV2EtlFilters(name, sourceID, etlFilterID),
+				Config: testAccFlowApiV2EtlFilters(name, serviceID, sourceID, etlFilterID),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "etl_filters.#", "1"),
@@ -200,6 +206,7 @@ func TestAccFlowApiV2Resource_FilterExpression(t *testing.T) {
 	acctest.PreCheck(t)
 	name := acctest.RandomNameWithPrefix("flow")
 	sourceID := testAccCreateCdcSourceNios(t, name)
+	serviceID := testAccFlowApiV2ServiceID(t)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -214,7 +221,7 @@ func TestAccFlowApiV2Resource_FilterExpression(t *testing.T) {
 			},
 			// Create and Read
 			{
-				Config: testAccFlowApiV2FilterExpression(name, sourceID, "record_type == \"A\""),
+				Config: testAccFlowApiV2FilterExpression(name, serviceID, sourceID, "record_type == \"A\""),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_expression", "record_type == \"A\""),
@@ -222,7 +229,7 @@ func TestAccFlowApiV2Resource_FilterExpression(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFlowApiV2FilterExpression(name, sourceID, "record_type == \"AAAA\""),
+				Config: testAccFlowApiV2FilterExpression(name, serviceID, sourceID, "record_type == \"AAAA\""),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_expression", "record_type == \"AAAA\""),
@@ -239,6 +246,7 @@ func TestAccFlowApiV2Resource_Name(t *testing.T) {
 	acctest.PreCheck(t)
 	name := acctest.RandomNameWithPrefix("flow")
 	sourceID := testAccCreateCdcSourceNios(t, name)
+	serviceID := testAccFlowApiV2ServiceID(t)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -246,7 +254,7 @@ func TestAccFlowApiV2Resource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFlowApiV2Name(name, sourceID, name),
+				Config: testAccFlowApiV2Name(name, serviceID, sourceID, name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
@@ -254,7 +262,7 @@ func TestAccFlowApiV2Resource_Name(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFlowApiV2Name(name, sourceID, name+"-updated"),
+				Config: testAccFlowApiV2Name(name, serviceID, sourceID, name+"-updated"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name+"-updated"),
@@ -272,6 +280,7 @@ func TestAccFlowApiV2Resource_Source(t *testing.T) {
 	name := acctest.RandomNameWithPrefix("flow")
 	sourceID1 := testAccCreateCdcSourceNios(t, name+"-1")
 	sourceID2 := testAccCreateCdcSourceNios(t, name+"-2")
+	serviceID := testAccFlowApiV2ServiceID(t)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -279,7 +288,7 @@ func TestAccFlowApiV2Resource_Source(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFlowApiV2Source(name, sourceID1),
+				Config: testAccFlowApiV2Source(name, serviceID, sourceID1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "source", strconv.FormatInt(sourceID1, 10)),
@@ -287,7 +296,7 @@ func TestAccFlowApiV2Resource_Source(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFlowApiV2Source(name, sourceID2),
+				Config: testAccFlowApiV2Source(name, serviceID, sourceID2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "source", strconv.FormatInt(sourceID2, 10)),
@@ -304,6 +313,7 @@ func TestAccFlowApiV2Resource_SourceDataTypes(t *testing.T) {
 	acctest.PreCheck(t)
 	name := acctest.RandomNameWithPrefix("flow")
 	sourceID := testAccCreateCdcSourceNios(t, name)
+	serviceID := testAccFlowApiV2ServiceID(t)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -311,7 +321,7 @@ func TestAccFlowApiV2Resource_SourceDataTypes(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFlowApiV2SourceDataTypes(name, sourceID, `["QUERY_RESP_LOG"]`),
+				Config: testAccFlowApiV2SourceDataTypes(name, serviceID, sourceID, `["QUERY_RESP_LOG"]`),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "source_data_types.#", "1"),
@@ -320,7 +330,7 @@ func TestAccFlowApiV2Resource_SourceDataTypes(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFlowApiV2SourceDataTypes(name, sourceID, `["RPZ_LOG"]`),
+				Config: testAccFlowApiV2SourceDataTypes(name, serviceID, sourceID, `["RPZ_LOG"]`),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "source_data_types.#", "1"),
@@ -338,6 +348,7 @@ func TestAccFlowApiV2Resource_Tags(t *testing.T) {
 	acctest.PreCheck(t)
 	name := acctest.RandomNameWithPrefix("flow")
 	sourceID := testAccCreateCdcSourceNios(t, name)
+	serviceID := testAccFlowApiV2ServiceID(t)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -345,7 +356,7 @@ func TestAccFlowApiV2Resource_Tags(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFlowApiV2Tags(name, sourceID, map[string]string{
+				Config: testAccFlowApiV2Tags(name, serviceID, sourceID, map[string]string{
 					"tag1": "value1",
 				}),
 				Check: resource.ComposeTestCheckFunc(
@@ -355,7 +366,7 @@ func TestAccFlowApiV2Resource_Tags(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFlowApiV2Tags(name, sourceID, map[string]string{
+				Config: testAccFlowApiV2Tags(name, serviceID, sourceID, map[string]string{
 					"tag1": "value1changed",
 					"tag2": "value2",
 				}),
@@ -458,7 +469,7 @@ func testAccCreateCdcEtlFilterFqdn(t *testing.T, name string) int64 {
 	return *result.Id
 }
 
-func testAccFlowApiV2BasicConfig(name string, sourceID int64) string {
+func testAccFlowApiV2BasicConfig(name string, serviceID string, sourceID int64) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_destination_syslog" "test" {
   name    = %q
@@ -472,10 +483,10 @@ resource "bloxone_cdc_flow" "test" {
   source_data_types = ["QUERY_RESP_LOG"]
   destinations      = [bloxone_cdc_destination_syslog.test.id]
 }
-`, name, name, name, testAccFlowApiV2ServiceID, sourceID)
+`, name, name, name, serviceID, sourceID)
 }
 
-func testAccFlowApiV2Description(name string, sourceID int64, description string) string {
+func testAccFlowApiV2Description(name string, serviceID string, sourceID int64, description string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_destination_syslog" "test_description" {
   name    = %q
@@ -490,10 +501,10 @@ resource "bloxone_cdc_flow" "test_description" {
   destinations      = [bloxone_cdc_destination_syslog.test_description.id]
   description       = %q
 }
-`, name, name, name, testAccFlowApiV2ServiceID, sourceID, description)
+`, name, name, name, serviceID, sourceID, description)
 }
 
-func testAccFlowApiV2Destinations(name string, sourceID int64) string {
+func testAccFlowApiV2Destinations(name string, serviceID string, sourceID int64) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_destination_syslog" "test_destinations" {
   name    = %q
@@ -507,10 +518,10 @@ resource "bloxone_cdc_flow" "test_destinations" {
   source_data_types = ["QUERY_RESP_LOG"]
   destinations      = [bloxone_cdc_destination_syslog.test_destinations.id]
 }
-`, name, name, name, testAccFlowApiV2ServiceID, sourceID)
+`, name, name, name, serviceID, sourceID)
 }
 
-func testAccFlowApiV2Enabled(name string, sourceID int64, enabled string) string {
+func testAccFlowApiV2Enabled(name string, serviceID string, sourceID int64, enabled string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_destination_syslog" "test_enabled" {
   name    = %q
@@ -525,10 +536,10 @@ resource "bloxone_cdc_flow" "test_enabled" {
   destinations      = [bloxone_cdc_destination_syslog.test_enabled.id]
   enabled           = %s
 }
-`, name, name, name, testAccFlowApiV2ServiceID, sourceID, enabled)
+`, name, name, name, serviceID, sourceID, enabled)
 }
 
-func testAccFlowApiV2EtlFilters(name string, sourceID int64, etlFilterID int64) string {
+func testAccFlowApiV2EtlFilters(name string, serviceID string, sourceID int64, etlFilterID int64) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_destination_syslog" "test_etl_filters" {
   name    = %q
@@ -543,7 +554,7 @@ resource "bloxone_cdc_flow" "test_etl_filters" {
   destinations      = [bloxone_cdc_destination_syslog.test_etl_filters.id]
   etl_filters       = [%d]
 }
-`, name, name, name, testAccFlowApiV2ServiceID, sourceID, etlFilterID)
+`, name, name, name, serviceID, sourceID, etlFilterID)
 }
 
 // testAccFlowApiV2FilterExpressionPrereqs creates just the destination and ETL filter that
@@ -564,7 +575,7 @@ resource "bloxone_cdc_etl_filter_record_type" "test_filter_expression" {
 `, name, name, name)
 }
 
-func testAccFlowApiV2FilterExpression(name string, sourceID int64, filterExpression string) string {
+func testAccFlowApiV2FilterExpression(name string, serviceID string, sourceID int64, filterExpression string) string {
 	return fmt.Sprintf(`
 %s
 
@@ -578,10 +589,10 @@ resource "bloxone_cdc_flow" "test_filter_expression" {
 
   depends_on = [bloxone_cdc_etl_filter_record_type.test_filter_expression]
 }
-`, testAccFlowApiV2FilterExpressionPrereqs(name), name, testAccFlowApiV2ServiceID, sourceID, filterExpression)
+`, testAccFlowApiV2FilterExpressionPrereqs(name), name, serviceID, sourceID, filterExpression)
 }
 
-func testAccFlowApiV2Name(resourceSuffix string, sourceID int64, name string) string {
+func testAccFlowApiV2Name(resourceSuffix string, serviceID string, sourceID int64, name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_destination_syslog" "test_name" {
   name    = %q
@@ -595,10 +606,10 @@ resource "bloxone_cdc_flow" "test_name" {
   source_data_types = ["QUERY_RESP_LOG"]
   destinations      = [bloxone_cdc_destination_syslog.test_name.id]
 }
-`, resourceSuffix, resourceSuffix, name, testAccFlowApiV2ServiceID, sourceID)
+`, resourceSuffix, resourceSuffix, name, serviceID, sourceID)
 }
 
-func testAccFlowApiV2Source(name string, sourceID int64) string {
+func testAccFlowApiV2Source(name string, serviceID string, sourceID int64) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_destination_syslog" "test_source" {
   name    = %q
@@ -612,10 +623,10 @@ resource "bloxone_cdc_flow" "test_source" {
   source_data_types = ["QUERY_RESP_LOG"]
   destinations      = [bloxone_cdc_destination_syslog.test_source.id]
 }
-`, name, name, name, testAccFlowApiV2ServiceID, sourceID)
+`, name, name, name, serviceID, sourceID)
 }
 
-func testAccFlowApiV2SourceDataTypes(name string, sourceID int64, sourceDataTypes string) string {
+func testAccFlowApiV2SourceDataTypes(name string, serviceID string, sourceID int64, sourceDataTypes string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_destination_syslog" "test_source_data_types" {
   name    = %q
@@ -629,10 +640,10 @@ resource "bloxone_cdc_flow" "test_source_data_types" {
   source_data_types = %s
   destinations      = [bloxone_cdc_destination_syslog.test_source_data_types.id]
 }
-`, name, name, name, testAccFlowApiV2ServiceID, sourceID, sourceDataTypes)
+`, name, name, name, serviceID, sourceID, sourceDataTypes)
 }
 
-func testAccFlowApiV2Tags(name string, sourceID int64, tags map[string]string) string {
+func testAccFlowApiV2Tags(name string, serviceID string, sourceID int64, tags map[string]string) string {
 	tagsStr := "{\n"
 	for k, v := range tags {
 		tagsStr += fmt.Sprintf("\t\t%s = %q\n", k, v)
@@ -653,5 +664,5 @@ resource "bloxone_cdc_flow" "test_tags" {
   destinations      = [bloxone_cdc_destination_syslog.test_tags.id]
   tags              = %s
 }
-`, name, name, name, testAccFlowApiV2ServiceID, sourceID, tagsStr)
+`, name, name, name, serviceID, sourceID, tagsStr)
 }
