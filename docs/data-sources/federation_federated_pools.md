@@ -51,15 +51,15 @@ data "bloxone_federation_federated_pools" "example_all" {}
 
 Required:
 
-- `federated_realm` (String) The resource identifier.
-- `name` (String) The name of the federated pool. May contain 1 to 256 characters. Can include UTF-8.
+- `federated_realm` (String) The ID of the federated realm the pool belongs to. A pool cannot be moved to another realm, so changing it replaces the pool.
+- `name` (String) The name of the federated pool. May contain 1 to 256 characters. Can include UTF-8. For `AWS` pools the API appends a suffix to the stored name; it is not part of this value (see `pool_name`).
 - `protocol` (String) The address family of the pool ('ip4', 'ip6', or 'ip4/ip6' for dual mode support on NIOS_X pools only).
 
 Optional:
 
 - `description` (String) The description for the federated pool. May contain 0 to 1024 characters. Can include UTF-8.
 - `network_compliance` (Attributes) The network compliance of the __FederatedPool__. (see [below for nested schema](#nestedatt--results--network_compliance))
-- `parent` (String) The resource identifier.
+- `parent` (String) The ID of the parent federated pool. Leave it unset for a top-level pool. A pool cannot be moved to another parent, so changing it replaces the pool.
 - `tags` (Map of String) The tags for the federated pool in JSON format.
 
 Read-Only:
@@ -69,7 +69,7 @@ Read-Only:
 - `id` (String) The resource identifier.
 - `metadata` (Map of String) The metadata for the federated pool in JSON format.
 - `network_compliant` (Boolean) Indicates if this pool is compliant with its parent's network compliance policy. When false, a trouble dot should be displayed in the UI to indicate non-compliance.
-- `pool_name` (String) The name of the federated pool exactly as stored by the API. For pools backed by a cloud provider the API may append a suffix such as `(ipam-pool-0123456789abcdef0)`; `name` is this value without that suffix.
+- `pool_name` (String) The name of the federated pool exactly as stored by the API. For `AWS` pools the API appends a suffix such as `(ipam-pool-0123456789abcdef0)`; `name` is this value without that suffix. Use this value to filter pools by name in the data source.
 - `provider_type` (String) The cloud provider type of the pool (`NIOS_X` or `AWS`). It is always the provider type of the federated realm and cannot be set.
 - `region` (String) The region/locale of the pool. It is always the region of the federated realm and cannot be set.
 - `state` (String) The current state of the federated pool (e.g., 'create-complete', 'create-in-progress', 'delete-in-progress').

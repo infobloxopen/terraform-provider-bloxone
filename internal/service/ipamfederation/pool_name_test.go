@@ -1,6 +1,10 @@
 package ipamfederation
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
+)
 
 func TestStripPoolNameSuffix(t *testing.T) {
 	tests := []struct{ name, in, want string }{
@@ -24,11 +28,24 @@ func TestStripPoolNameSuffix(t *testing.T) {
 }
 
 func TestFlattenPoolName(t *testing.T) {
-	if !flattenPoolName(nil).IsNull() {
+	if !flattenPoolName(nil, ipamfederation.PROVIDERTYPE_AWS).IsNull() {
 		t.Error("nil name should flatten to null")
 	}
-	n := "p(ipam-pool-1)"
-	if got := flattenPoolName(&n); got.ValueString() != "p" {
-		t.Errorf("got %q", got.ValueString())
+	tests := []struct {
+		name     string
+		in       string
+		provider ipamfederation.ProviderType
+		want     string
+	}{
+		{"AWS pool: suffix removed", "p(ipam-pool-1)", ipamfederation.PROVIDERTYPE_AWS, "p"},
+		{"AWS pool: no suffix", "p", ipamfederation.PROVIDERTYPE_AWS, "p"},
+		{"NIOS_X pool: name chosen by the user is never altered", "p(ipam-pool-1)", ipamfederation.PROVIDERTYPE_NIOS_X, "p(ipam-pool-1)"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := flattenPoolName(&tt.in, tt.provider); got.ValueString() != tt.want {
+				t.Errorf("got %q, want %q", got.ValueString(), tt.want)
+			}
+		})
 	}
 }

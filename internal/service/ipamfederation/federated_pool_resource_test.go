@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
@@ -45,6 +46,12 @@ func TestAccFederatedPoolResource_basic(t *testing.T) {
 					// Test fields with default value
 					resource.TestCheckResourceAttr(resourceName, "description", ""),
 				),
+			},
+			// Import and verify the imported state matches
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 			// Delete testing automatically occurs in TestCase
 		},
@@ -150,6 +157,7 @@ func TestAccFederatedPoolResource_Name(t *testing.T) {
 	var resourceName = "bloxone_federation_federated_pool.test_name"
 	var v ipamfederation.FederatedPool
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	poolName := acctest.RandomNameWithPrefix("federated-pool")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -157,18 +165,18 @@ func TestAccFederatedPoolResource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedPoolName(realmName, "ip4", "test-pool-name"),
+				Config: testAccFederatedPoolName(realmName, "ip4", poolName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "test-pool-name"),
+					resource.TestCheckResourceAttr(resourceName, "name", poolName),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccFederatedPoolName(realmName, "ip4", "test-pool-name-updated"),
+				Config: testAccFederatedPoolName(realmName, "ip4", poolName+"-updated"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "test-pool-name-updated"),
+					resource.TestCheckResourceAttr(resourceName, "name", poolName+"-updated"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -276,22 +284,25 @@ func TestAccFederatedPoolResource_Parent(t *testing.T) {
 					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_federation_federated_pool.other", "id"),
 				),
 			},
-			// Removing the parent also replaces the pool
+			// Updating other fields of a pool that has a parent is an in-place update that keeps the parent
 			{
-				Config: testAccFederatedPoolParent(realmName, parentName, otherName, childName, ""),
+				Config: testAccFederatedPoolParentWithDescription(realmName, parentName, otherName, childName, "other", "updated"),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{plancheck.ExpectResourceAction(resourceName, plancheck.ResourceActionUpdate)},
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v3),
-					testAccCheckFederatedPoolRecreated(&v2, &v3),
-					resource.TestCheckNoResourceAttr(resourceName, "parent"),
+					resource.TestCheckResourceAttr(resourceName, "description", "updated"),
+					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_federation_federated_pool.other", "id"),
 				),
 			},
-			// Updating other fields of a pool that has a parent must not send the parent
+			// Removing the parent also replaces the pool
 			{
-				Config: testAccFederatedPoolParentWithDescription(realmName, parentName, otherName, childName, "parent", "updated"),
+				Config: testAccFederatedPoolParentWithDescription(realmName, parentName, otherName, childName, "", "updated"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v4),
-					resource.TestCheckResourceAttr(resourceName, "description", "updated"),
-					resource.TestCheckResourceAttrPair(resourceName, "parent", "bloxone_federation_federated_pool.parent", "id"),
+					testAccCheckFederatedPoolRecreated(&v3, &v4),
+					resource.TestCheckNoResourceAttr(resourceName, "parent"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase

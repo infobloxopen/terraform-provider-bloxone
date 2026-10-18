@@ -22,7 +22,9 @@ func fakeFederationAPI(t *testing.T, providerType string) *universalddiclient.AP
 	t.Helper()
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, `{"result":{"id":"x","name":"x","federated_realm":"federation/federated_realm/x","protocol":"ip4","region":"","provider":%q}}`, providerType)
+		if _, err := fmt.Fprintf(w, `{"result":{"id":"x","name":"x","federated_realm":"federation/federated_realm/x","protocol":"ip4","region":"","provider":%q}}`, providerType); err != nil {
+			t.Errorf("fake API failed to write the response: %v", err)
+		}
 	}))
 	t.Cleanup(srv.Close)
 	return universalddiclient.NewAPIClient(option.WithCSPUrl(srv.URL), option.WithAPIKey("test"))

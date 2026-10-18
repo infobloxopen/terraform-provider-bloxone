@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -14,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -81,12 +83,12 @@ func (r *FederatedPoolResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 	realm := realmRes.GetResult()
-	providerType := string(realm.GetProvider())
-	if providerType != "NIOS_X" && providerType != "AWS" {
+	providerType := realm.GetProvider()
+	if providerType != ipamfederation.PROVIDERTYPE_NIOS_X && providerType != ipamfederation.PROVIDERTYPE_AWS {
 		resp.Diagnostics.AddError("Unsupported provider type", fmt.Sprintf("The federated realm has provider_type %q. Only NIOS_X and AWS are supported.", providerType))
 		return
 	}
-	data.ProviderType = types.StringValue(providerType)
+	data.ProviderType = types.StringValue(string(providerType))
 	data.Region = types.StringValue(realm.GetRegion())
 
 	body := data.Expand(ctx, &resp.Diagnostics, true)
@@ -105,35 +107,44 @@ func (r *FederatedPoolResource) Create(ctx context.Context, req resource.CreateR
 	}
 
 	res := apiRes.GetResult()
+	poolId := res.GetId()
 
 	// Pools backed by a cloud provider are created asynchronously: poll until the pool is ready so that
 	// blocks can be created in it. The pool already exists at this point, so on failure it is still saved
-	// to state (tainted) instead of being left unknown to Terraform.
+	// to state (tainted) instead of being left unknown to Terraform. RetryContext may return on timeout while
+	// the last poll is still running, so the latest pool is shared through a mutex.
+	var mu sync.Mutex
 	waitErr := retry.RetryContext(ctx, 10*time.Minute, func() *retry.RetryError {
 		readRes, _, err := r.client.IPAMFederationAPI.
 			FederatedPoolAPI.
-			Read(ctx, res.GetId()).
+			Read(ctx, poolId).
 			Execute()
 		if err != nil {
 			return retry.NonRetryableError(err)
 		}
-		res = readRes.GetResult()
-		state := res.GetState()
+		pool := readRes.GetResult()
+		mu.Lock()
+		res = pool
+		mu.Unlock()
+		state := pool.GetState()
 		switch {
 		case state == "create-in-progress":
-			return retry.RetryableError(fmt.Errorf("federated pool %s is still in state %q", res.GetId(), state))
+			return retry.RetryableError(fmt.Errorf("federated pool %s is still in state %q", poolId, state))
 		case strings.Contains(state, "fail") || strings.Contains(state, "error"):
-			return retry.NonRetryableError(fmt.Errorf("federated pool %s ended up in state %q", res.GetId(), state))
+			return retry.NonRetryableError(fmt.Errorf("federated pool %s ended up in state %q", poolId, state))
 		}
 		return nil
 	})
 
-	data.Flatten(ctx, &res, &resp.Diagnostics)
+	mu.Lock()
+	latest := res
+	mu.Unlock()
+	data.Flatten(ctx, &latest, &resp.Diagnostics)
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 	if waitErr != nil {
-		resp.Diagnostics.AddError("Federated Pool Not Ready", fmt.Sprintf("FederatedPool %s was created but did not become ready: %s", res.GetId(), waitErr))
+		resp.Diagnostics.AddError("Federated Pool Not Ready", fmt.Sprintf("FederatedPool %s was created but did not become ready: %s", poolId, waitErr))
 	}
 }
 
@@ -179,7 +190,7 @@ func (r *FederatedPoolResource) Update(ctx context.Context, req resource.UpdateR
 
 	// Only the name and description of an AWS pool can be updated; the request carries nothing else, so reject a
 	// change of the tags here instead of letting it be dropped, which would end in an "inconsistent result after apply".
-	if data.ProviderType.ValueString() == "AWS" {
+	if data.ProviderType.ValueString() == string(ipamfederation.PROVIDERTYPE_AWS) {
 		var state FederatedPoolModel
 		resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
 		if resp.Diagnostics.HasError() {
@@ -191,10 +202,15 @@ func (r *FederatedPoolResource) Update(ctx context.Context, req resource.UpdateR
 		}
 	}
 
+	body := data.Expand(ctx, &resp.Diagnostics, false)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	apiRes, _, err := r.client.IPAMFederationAPI.
 		FederatedPoolAPI.
 		Update(ctx, data.Id.ValueString()).
-		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
+		Body(*body).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update FederatedPool, got error: %s", err))
@@ -257,14 +273,14 @@ func (r *FederatedPoolResource) ModifyPlan(ctx context.Context, req resource.Mod
 		Read(ctx, config.FederatedRealm.ValueString()).
 		Execute()
 	if err != nil {
-		// Create reports a realm that cannot be read.
+		// Create reports a realm that cannot be read, so it is not checked here.
 		return
 	}
 	realm := realmRes.GetResult()
 
-	switch providerType := string(realm.GetProvider()); providerType {
-	case "NIOS_X":
-	case "AWS":
+	switch providerType := realm.GetProvider(); providerType {
+	case ipamfederation.PROVIDERTYPE_NIOS_X:
+	case ipamfederation.PROVIDERTYPE_AWS:
 		if !config.NetworkCompliance.IsNull() && !config.NetworkCompliance.IsUnknown() {
 			resp.Diagnostics.AddAttributeError(path.Root("network_compliance"), "Unsupported attribute for provider type",
 				"network_compliance is not supported for pools with provider_type \"AWS\".")

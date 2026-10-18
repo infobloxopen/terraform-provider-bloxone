@@ -295,7 +295,7 @@ func (r *FederatedBlockResource) ModifyPlan(ctx context.Context, req resource.Mo
 		Read(ctx, config.FederatedPoolId.ValueString()).
 		Execute()
 	if err != nil {
-		// Create reports a pool that cannot be read.
+		// If the pool cannot be read, the create request reports the problem, so it is not checked here.
 		return
 	}
 	pool := poolRes.GetResult()

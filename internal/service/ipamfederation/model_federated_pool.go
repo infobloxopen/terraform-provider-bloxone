@@ -91,7 +91,7 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 		},
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: "The ID of the federated realm the pool belongs to. A pool cannot be moved to another realm, so changing it replaces the pool.",
 	},
 	"id": schema.StringAttribute{
 		Computed:            true,
@@ -107,7 +107,7 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"name": schema.StringAttribute{
 		Required:            true,
-		MarkdownDescription: "The name of the federated pool. May contain 1 to 256 characters. Can include UTF-8.",
+		MarkdownDescription: "The name of the federated pool. May contain 1 to 256 characters. Can include UTF-8. For `AWS` pools the API appends a suffix to the stored name; it is not part of this value (see `pool_name`).",
 	},
 	"network_compliance": schema.SingleNestedAttribute{
 		Attributes: NetworkComplianceResourceSchemaAttributes,
@@ -127,11 +127,11 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.RequiresReplace(),
 		},
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: "The ID of the parent federated pool. Leave it unset for a top-level pool. A pool cannot be moved to another parent, so changing it replaces the pool.",
 	},
 	"pool_name": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The name of the federated pool exactly as stored by the API. For pools backed by a cloud provider the API may append a suffix such as `(ipam-pool-0123456789abcdef0)`; `name` is this value without that suffix.",
+		MarkdownDescription: "The name of the federated pool exactly as stored by the API. For `AWS` pools the API appends a suffix such as `(ipam-pool-0123456789abcdef0)`; `name` is this value without that suffix. Use this value to filter pools by name in the data source.",
 	},
 	"protocol": schema.StringAttribute{
 		Required: true,
@@ -210,7 +210,7 @@ func (m *FederatedPoolModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		Name:        flex.ExpandStringPointer(m.Name),
 		Tags:        flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
-	if m.ProviderType.ValueString() == "AWS" {
+	if m.ProviderType.ValueString() == string(ipamfederation.PROVIDERTYPE_AWS) {
 		// AWS pools do not support network_compliance (rejected instead of dropped silently, which would end in an
 		// "inconsistent result after apply"), and only their name and description can be updated.
 		if !isCreate {
@@ -262,7 +262,7 @@ func (m *FederatedPoolModel) Flatten(ctx context.Context, from *ipamfederation.F
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.Metadata = flex.FlattenFrameworkMapString(ctx, from.Metadata, diags)
 	m.PoolName = flex.FlattenStringPointer(from.Name)
-	m.Name = flattenPoolName(from.Name)
+	m.Name = flattenPoolName(from.Name, from.GetProvider())
 	m.NetworkCompliance = FlattenNetworkCompliance(ctx, from.NetworkCompliance, diags)
 	m.NetworkCompliant = types.BoolPointerValue(from.NetworkCompliant)
 	m.Parent = flex.FlattenStringPointer(from.Parent)

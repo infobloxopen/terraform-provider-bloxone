@@ -5,6 +5,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
+	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
+
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
@@ -17,10 +19,14 @@ func stripPoolNameSuffix(name string) string {
 	return poolNameSuffix.ReplaceAllString(name, "")
 }
 
-// flattenPoolName flattens the API pool name without the provider-added suffix.
-func flattenPoolName(name *string) types.String {
+// flattenPoolName flattens the API pool name. The suffix is only removed for AWS pools, the only ones that get it,
+// so a name chosen by the user for another pool is never altered.
+func flattenPoolName(name *string, provider ipamfederation.ProviderType) types.String {
 	if name == nil {
 		return types.StringNull()
+	}
+	if provider != ipamfederation.PROVIDERTYPE_AWS {
+		return types.StringValue(*name)
 	}
 	return flex.FlattenString(stripPoolNameSuffix(*name))
 }
