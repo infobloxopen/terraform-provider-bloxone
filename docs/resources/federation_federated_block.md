@@ -16,16 +16,27 @@ The Federated Block object allows a uniform representation of the address space 
 ## Example Usage
 
 ```terraform
+# Create a Federated Realm to associate the pool and the block with
 resource "bloxone_federation_federated_realm" "example" {
   name = "example_federation_federated_realm"
 }
 
-resource "bloxone_federation_federated_block" "example" {
-  name            = "example_federation_federated_block"
+# Create a Federated Pool to create the block in
+resource "bloxone_federation_federated_pool" "example" {
+  name            = "example_federation_federated_pool"
   federated_realm = bloxone_federation_federated_realm.example.id
-  cidr            = 24
-  address         = "10.10.0.0"
+  protocol        = "ip4"
+}
 
+# Create a Federated Block in the Federated Pool
+resource "bloxone_federation_federated_block" "example" {
+  name              = "example_federation_federated_block"
+  federated_realm   = bloxone_federation_federated_realm.example.id
+  federated_pool_id = bloxone_federation_federated_pool.example.id
+  cidr              = 24
+  address           = "10.10.0.0"
+
+  # network_compliance can be configured for NIOS_X provider only
   network_compliance = {
     default_netmask_length = 26
     minimum_netmask_length = 25
@@ -50,7 +61,7 @@ resource "bloxone_federation_federated_block" "example" {
 
 - `address` (String) The address of the federated block, an IPv4 address in form "a.b.c.d" or an IPv6 address. Do not include a prefix length ("/n"); use the _cidr_ field instead.
 - `comment` (String) The description for the federated block. May contain 0 to 1024 characters. Can include UTF-8.
-- `federated_pool_id` (String) The resource identifier.
+- `federated_pool_id` (String) The resource identifier of the federated pool the block is in. A block cannot be moved to another pool, so changing it replaces the block.
 - `name` (String) The name of the federated block. May contain 1 to 256 characters. Can include UTF-8.
 - `network_compliance` (Attributes) The network compliance policy for child objects. This defines the minimum, default, and maximum netmask lengths that can be used when creating child blocks. (see [below for nested schema](#nestedatt--network_compliance))
 - `tags` (Map of String) The tags for the federated block in JSON format.

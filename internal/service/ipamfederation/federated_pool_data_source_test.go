@@ -25,7 +25,7 @@ func TestAccFederatedPoolDataSource_Filters(t *testing.T) {
 		CheckDestroy:             testAccCheckFederatedPoolDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFederatedPoolDataSourceConfigFilters(realmName, "ip4", "NIOS_X", "us-east-1", poolName),
+				Config: testAccFederatedPoolDataSourceConfigFilters(realmName, "ip4", poolName),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckFederatedPoolExists(context.Background(), resourceName, &v),
@@ -49,7 +49,7 @@ func TestAccFederatedPoolDataSource_TagFilters(t *testing.T) {
 		CheckDestroy:             testAccCheckFederatedPoolDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFederatedPoolDataSourceConfigTagFilters(realmName, poolName, "ip4", "NIOS_X", "us-east-1", "value1"),
+				Config: testAccFederatedPoolDataSourceConfigTagFilters(realmName, poolName, "ip4", "value1"),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckFederatedPoolExists(context.Background(), resourceName, &v),
@@ -79,13 +79,11 @@ func testAccCheckFederatedPoolResourceAttrPair(resourceName, dataSourceName stri
 	}
 }
 
-func testAccFederatedPoolDataSourceConfigFilters(realmName, protocol, providerType, region, poolName string) string {
+func testAccFederatedPoolDataSourceConfigFilters(realmName, protocol, poolName string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_federation_federated_pool" "test" {
     federated_realm = bloxone_federation_federated_realm.test.id
     protocol        = %q
-    provider_type   = %q
-    region          = %q
     name            = %q
 }
 
@@ -94,18 +92,16 @@ data "bloxone_federation_federated_pools" "test" {
         name = bloxone_federation_federated_pool.test.name
     }
 }
-`, protocol, providerType, region, poolName)
+`, protocol, poolName)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
 }
 
-func testAccFederatedPoolDataSourceConfigTagFilters(realmName, poolName, protocol, providerType, region, tagValue string) string {
+func testAccFederatedPoolDataSourceConfigTagFilters(realmName, poolName, protocol, tagValue string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_federation_federated_pool" "test" {
     federated_realm = bloxone_federation_federated_realm.test.id
     name            = %q
     protocol        = %q
-    provider_type   = %q
-    region          = %q
     tags = {
         tag1 = %q
     }
@@ -116,6 +112,6 @@ data "bloxone_federation_federated_pools" "test" {
         tag1 = bloxone_federation_federated_pool.test.tags.tag1
     }
 }
-`, poolName, protocol, providerType, region, tagValue)
+`, poolName, protocol, tagValue)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
 }

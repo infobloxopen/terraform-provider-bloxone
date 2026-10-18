@@ -4,17 +4,22 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &FederatedBlockResource{}
+var _ resource.ResourceWithModifyPlan = &FederatedBlockResource{}
 var _ resource.ResourceWithImportState = &FederatedBlockResource{}
 
 func NewFederatedBlockResource() resource.Resource {
@@ -65,6 +70,23 @@ func (r *FederatedBlockResource) Create(ctx context.Context, req resource.Create
 
 	if resp.Diagnostics.HasError() {
 		return
+	}
+
+	// network_compliance is not supported for blocks in an AWS pool. A block takes its provider from its pool,
+	// so look the pool up and reject the attribute before the API does.
+	if !data.NetworkCompliance.IsNull() && !data.NetworkCompliance.IsUnknown() && !data.FederatedPoolId.IsNull() && !data.FederatedPoolId.IsUnknown() {
+		poolRes, _, err := r.client.IPAMFederationAPI.
+			FederatedPoolAPI.
+			Read(ctx, data.FederatedPoolId.ValueString()).
+			Execute()
+		if err == nil {
+			pool := poolRes.GetResult()
+			if pool.GetProvider() == ipamfederation.PROVIDERTYPE_AWS {
+				resp.Diagnostics.AddAttributeError(path.Root("network_compliance"), "Unsupported attribute for provider type",
+					"network_compliance is not supported for blocks in a pool with provider_type \"AWS\".")
+				return
+			}
+		}
 	}
 
 	apiRes, _, err := r.client.IPAMFederationAPI.
@@ -151,14 +173,25 @@ func (r *FederatedBlockResource) Delete(ctx context.Context, req resource.Delete
 		return
 	}
 
-	httpRes, err := r.client.IPAMFederationAPI.
-		FederatedBlockAPI.
-		Delete(ctx, data.Id.ValueString()).
-		Execute()
-	if err != nil {
-		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
-			return
+	// Blocks in cloud provider backed pools (e.g. AWS) can fail to deprovision while the provider is still
+	// working on the CIDR, so retry on that specific error.
+	err := retry.RetryContext(ctx, 5*time.Minute, func() *retry.RetryError {
+		httpRes, err := r.client.IPAMFederationAPI.
+			FederatedBlockAPI.
+			Delete(ctx, data.Id.ValueString()).
+			Execute()
+		if err != nil {
+			if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
+				return nil
+			}
+			if strings.Contains(err.Error(), "Failed to deprovision") {
+				return retry.RetryableError(err)
+			}
+			return retry.NonRetryableError(err)
 		}
+		return nil
+	})
+	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete FederatedBlock, got error: %s", err))
 		return
 	}
@@ -237,5 +270,38 @@ func (r *FederatedBlockResource) ValidateConfig(ctx context.Context, req resourc
 			"Invalid Network Compliance",
 			"\"default_netmask_length\" must be greater than or equal to \"minimum_netmask_length\".",
 		)
+	}
+}
+
+// ModifyPlan rejects network_compliance at plan time for a new block in an AWS pool. A block takes its provider type
+// from its pool, so the pool is read. If the pool is not known yet (it is created in the same run), the block is
+// checked during apply instead, in Create. Existing blocks are not checked here, so that a destroy is never
+// blocked by a pending change in the configuration; the API rejects any update of an AWS block at apply.
+func (r *FederatedBlockResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+	// Only new blocks: not on destroy, not for blocks that already exist, and not when the provider is not configured.
+	if req.Plan.Raw.IsNull() || !req.State.Raw.IsNull() || r.client == nil {
+		return
+	}
+
+	var config FederatedBlockModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
+	if resp.Diagnostics.HasError() || config.NetworkCompliance.IsNull() || config.NetworkCompliance.IsUnknown() ||
+		config.FederatedPoolId.IsNull() || config.FederatedPoolId.IsUnknown() {
+		return
+	}
+
+	poolRes, _, err := r.client.IPAMFederationAPI.
+		FederatedPoolAPI.
+		Read(ctx, config.FederatedPoolId.ValueString()).
+		Execute()
+	if err != nil {
+		// Create reports a pool that cannot be read.
+		return
+	}
+	pool := poolRes.GetResult()
+
+	if pool.GetProvider() == ipamfederation.PROVIDERTYPE_AWS {
+		resp.Diagnostics.AddAttributeError(path.Root("network_compliance"), "Unsupported attribute for provider type",
+			"network_compliance is not supported for blocks in a pool with provider_type \"AWS\".")
 	}
 }

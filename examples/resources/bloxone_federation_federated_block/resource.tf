@@ -1,13 +1,24 @@
+# Create a Federated Realm to associate the pool and the block with
 resource "bloxone_federation_federated_realm" "example" {
   name = "example_federation_federated_realm"
 }
 
-resource "bloxone_federation_federated_block" "example" {
-  name            = "example_federation_federated_block"
+# Create a Federated Pool to create the block in
+resource "bloxone_federation_federated_pool" "example" {
+  name            = "example_federation_federated_pool"
   federated_realm = bloxone_federation_federated_realm.example.id
-  cidr            = 24
-  address         = "10.10.0.0"
+  protocol        = "ip4"
+}
 
+# Create a Federated Block in the Federated Pool
+resource "bloxone_federation_federated_block" "example" {
+  name              = "example_federation_federated_block"
+  federated_realm   = bloxone_federation_federated_realm.example.id
+  federated_pool_id = bloxone_federation_federated_pool.example.id
+  cidr              = 24
+  address           = "10.10.0.0"
+
+  # network_compliance can be configured for NIOS_X provider only
   network_compliance = {
     default_netmask_length = 26
     minimum_netmask_length = 25

@@ -28,14 +28,15 @@ func TestAccFederatedPoolResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedPoolBasicConfig(realmName, poolName, "ip4", "NIOS_X", "us-east-1"),
+				Config: testAccFederatedPoolBasicConfig(realmName, poolName, "ip4"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttrPair(resourceName, "federated_realm", "bloxone_federation_federated_realm.test", "id"),
 					resource.TestCheckResourceAttr(resourceName, "name", poolName),
+					resource.TestCheckResourceAttrPair(resourceName, "pool_name", resourceName, "name"),
 					resource.TestCheckResourceAttr(resourceName, "protocol", "ip4"),
-					resource.TestCheckResourceAttr(resourceName, "provider_type", "NIOS_X"),
-					resource.TestCheckResourceAttr(resourceName, "region", "us-east-1"),
+					resource.TestCheckResourceAttrPair(resourceName, "provider_type", "bloxone_federation_federated_realm.test", "provider_type"),
+					resource.TestCheckResourceAttrPair(resourceName, "region", "bloxone_federation_federated_realm.test", "region"),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
@@ -62,7 +63,7 @@ func TestAccFederatedPoolResource_disappears(t *testing.T) {
 		CheckDestroy:             testAccCheckFederatedPoolDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFederatedPoolBasicConfig(realmName, poolName, "ip4", "NIOS_X", "us-east-1"),
+				Config: testAccFederatedPoolBasicConfig(realmName, poolName, "ip4"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v),
 					testAccCheckFederatedPoolDisappears(context.Background(), &v),
@@ -85,7 +86,7 @@ func TestAccFederatedPoolResource_Tags(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedPoolTags(realmName, poolName, "ip4", "NIOS_X", "us-east-1", map[string]string{
+				Config: testAccFederatedPoolTags(realmName, poolName, "ip4", map[string]string{
 					"tag1": "value1",
 					"tag2": "value2",
 				}),
@@ -98,7 +99,7 @@ func TestAccFederatedPoolResource_Tags(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFederatedPoolTags(realmName, poolName, "ip4", "NIOS_X", "us-east-1", map[string]string{
+				Config: testAccFederatedPoolTags(realmName, poolName, "ip4", map[string]string{
 					"tag2": "value2changed",
 					"tag3": "value3",
 				}),
@@ -126,7 +127,7 @@ func TestAccFederatedPoolResource_Description(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedPoolDescription(realmName, poolName, "ip4", "NIOS_X", "us-east-1", "Test description"),
+				Config: testAccFederatedPoolDescription(realmName, poolName, "ip4", "Test description"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "Test description"),
@@ -134,7 +135,7 @@ func TestAccFederatedPoolResource_Description(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFederatedPoolDescription(realmName, poolName, "ip4", "NIOS_X", "us-east-1", "Test description updated"),
+				Config: testAccFederatedPoolDescription(realmName, poolName, "ip4", "Test description updated"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "description", "Test description updated"),
@@ -156,7 +157,7 @@ func TestAccFederatedPoolResource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedPoolName(realmName, "ip4", "NIOS_X", "us-east-1", "test-pool-name"),
+				Config: testAccFederatedPoolName(realmName, "ip4", "test-pool-name"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", "test-pool-name"),
@@ -164,7 +165,7 @@ func TestAccFederatedPoolResource_Name(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFederatedPoolName(realmName, "ip4", "NIOS_X", "us-east-1", "test-pool-name-updated"),
+				Config: testAccFederatedPoolName(realmName, "ip4", "test-pool-name-updated"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", "test-pool-name-updated"),
@@ -191,7 +192,7 @@ func TestAccFederatedPoolResource_NetworkCompliance(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedPoolNetworkCompliance(realmName, poolName, "ip4", "NIOS_X", "us-east-1", 20, 17, 28),
+				Config: testAccFederatedPoolNetworkCompliance(realmName, poolName, "ip4", 20, 17, 28),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "network_compliance.default_netmask_length", "20"),
@@ -201,7 +202,7 @@ func TestAccFederatedPoolResource_NetworkCompliance(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccFederatedPoolNetworkCompliance(realmName, poolName, "ip4", "NIOS_X", "us-east-1", 22, 18, 30),
+				Config: testAccFederatedPoolNetworkCompliance(realmName, poolName, "ip4", 22, 18, 30),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "network_compliance.default_netmask_length", "22"),
@@ -226,7 +227,7 @@ func TestAccFederatedPoolResource_Protocol(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccFederatedPoolBasicConfig(realmName, poolName, "ip4", "NIOS_X", "us-east-1"),
+				Config: testAccFederatedPoolBasicConfig(realmName, poolName, "ip4"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "protocol", "ip4"),
@@ -234,7 +235,7 @@ func TestAccFederatedPoolResource_Protocol(t *testing.T) {
 			},
 			// Protocol cannot be updated on the API, so the pool is replaced
 			{
-				Config: testAccFederatedPoolBasicConfig(realmName, poolName, "ip6", "NIOS_X", "us-east-1"),
+				Config: testAccFederatedPoolBasicConfig(realmName, poolName, "ip6"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v2),
 					testAccCheckFederatedPoolRecreated(&v1, &v2),
@@ -308,41 +309,13 @@ func TestAccFederatedPoolResource_NetworkComplianceInvalidRange(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				// default (16) is below minimum (17)
-				Config:      testAccFederatedPoolNetworkCompliance(realmName, poolName, "ip4", "NIOS_X", "us-east-1", 16, 17, 28),
+				Config:      testAccFederatedPoolNetworkCompliance(realmName, poolName, "ip4", 16, 17, 28),
 				ExpectError: regexp.MustCompile("Invalid value range"),
 			},
 			{
 				// default (30) is above maximum (28)
-				Config:      testAccFederatedPoolNetworkCompliance(realmName, poolName, "ip4", "NIOS_X", "us-east-1", 30, 17, 28),
+				Config:      testAccFederatedPoolNetworkCompliance(realmName, poolName, "ip4", 30, 17, 28),
 				ExpectError: regexp.MustCompile("Invalid value range"),
-			},
-		},
-	})
-}
-
-func TestAccFederatedPoolResource_ProviderType(t *testing.T) {
-	var resourceName = "bloxone_federation_federated_pool.test"
-	var v1 ipamfederation.FederatedPool
-	realmName := acctest.RandomNameWithPrefix("federated-realm")
-	poolName := acctest.RandomNameWithPrefix("federated-pool")
-
-	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// provider_type omitted: API default is used
-			{
-				Config: testAccFederatedPoolNoProviderType(realmName, poolName),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v1),
-					resource.TestCheckResourceAttr(resourceName, "provider_type", "NIOS_X"),
-				),
-			},
-			// changing provider_type is rejected at plan time
-			{
-				Config:      testAccFederatedPoolBasicConfig(realmName, poolName, "ip4", "NIOS", "us-east-1"),
-				PlanOnly:    true,
-				ExpectError: regexp.MustCompile("provider_type cannot be changed"),
 			},
 		},
 	})
@@ -410,77 +383,57 @@ func testAccCheckFederatedPoolDisappears(ctx context.Context, v *ipamfederation.
 	}
 }
 
-func testAccFederatedPoolNoProviderType(realmName, poolName string) string {
-	config := fmt.Sprintf(`
-resource "bloxone_federation_federated_pool" "test" {
-    federated_realm = bloxone_federation_federated_realm.test.id
-    name            = %q
-    protocol        = "ip4"
-    region          = "us-east-1"
-}
-`, poolName)
-	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
-}
-
-func testAccFederatedPoolBasicConfig(realmName, poolName, protocol, providerType, region string) string {
+func testAccFederatedPoolBasicConfig(realmName, poolName, protocol string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_federation_federated_pool" "test" {
     federated_realm = bloxone_federation_federated_realm.test.id
     name            = %q
     protocol        = %q
-    provider_type   = %q
-    region          = %q
 }
-`, poolName, protocol, providerType, region)
+`, poolName, protocol)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
 }
 
-func testAccFederatedPoolDescription(realmName, poolName, protocol, providerType, region, description string) string {
+func testAccFederatedPoolDescription(realmName, poolName, protocol, description string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_federation_federated_pool" "test_description" {
     federated_realm = bloxone_federation_federated_realm.test.id
     name            = %q
     protocol        = %q
-    provider_type   = %q
-    region          = %q
     description     = %q
 }
-`, poolName, protocol, providerType, region, description)
+`, poolName, protocol, description)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
 }
 
-func testAccFederatedPoolName(realmName, protocol, providerType, region, name string) string {
+func testAccFederatedPoolName(realmName, protocol, name string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_federation_federated_pool" "test_name" {
     federated_realm = bloxone_federation_federated_realm.test.id
     protocol        = %q
-    provider_type   = %q
-    region          = %q
     name            = %q
 }
-`, protocol, providerType, region, name)
+`, protocol, name)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
 }
 
-func testAccFederatedPoolNetworkCompliance(realmName, poolName, protocol, providerType, region string, defaultMask, minMask, maxMask int) string {
+func testAccFederatedPoolNetworkCompliance(realmName, poolName, protocol string, defaultMask, minMask, maxMask int) string {
 	config := fmt.Sprintf(`
 resource "bloxone_federation_federated_pool" "test_network_compliance" {
     federated_realm = bloxone_federation_federated_realm.test.id
     name            = %q
     protocol        = %q
-    provider_type   = %q
-    region          = %q
     network_compliance = {
         default_netmask_length = %d
         minimum_netmask_length = %d
         maximum_netmask_length = %d
     }
 }
-`, poolName, protocol, providerType, region, defaultMask, minMask, maxMask)
+`, poolName, protocol, defaultMask, minMask, maxMask)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
 }
 
-func testAccFederatedPoolTags(realmName, poolName, protocol, providerType, region string, tags map[string]string) string {
+func testAccFederatedPoolTags(realmName, poolName, protocol string, tags map[string]string) string {
 	tagsStr := "{\n"
 	for k, v := range tags {
 		tagsStr += fmt.Sprintf(`
@@ -493,11 +446,9 @@ resource "bloxone_federation_federated_pool" "test_tags" {
     federated_realm = bloxone_federation_federated_realm.test.id
     name            = %q
     protocol        = %q
-    provider_type   = %q
-    region          = %q
     tags            = %s
 }
-`, poolName, protocol, providerType, region, tagsStr)
+`, poolName, protocol, tagsStr)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
 }
 
@@ -515,21 +466,18 @@ resource "bloxone_federation_federated_pool" "parent" {
     federated_realm = bloxone_federation_federated_realm.test.id
     name            = %q
     protocol        = "ip4"
-    region          = "us-east-1"
 }
 
 resource "bloxone_federation_federated_pool" "other" {
     federated_realm = bloxone_federation_federated_realm.test.id
     name            = %q
     protocol        = "ip4"
-    region          = "us-east-1"
 }
 
 resource "bloxone_federation_federated_pool" "child" {
     federated_realm = bloxone_federation_federated_realm.test.id
     name            = %q
     protocol        = "ip4"
-    region          = "us-east-1"
     description     = %q
     %s
 }

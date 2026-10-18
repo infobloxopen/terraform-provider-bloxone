@@ -60,8 +60,6 @@ Optional:
 - `description` (String) The description for the federated pool. May contain 0 to 1024 characters. Can include UTF-8.
 - `network_compliance` (Attributes) The network compliance of the __FederatedPool__. (see [below for nested schema](#nestedatt--results--network_compliance))
 - `parent` (String) The resource identifier.
-- `provider_type` (String) The cloud provider type this pool is associated with. If not set, the API default is used. This value cannot be changed after the pool is created.
-- `region` (String) The region/locale this pool is associated with (e.g., 'us-west-1', 'eu-central-1').
 - `tags` (Map of String) The tags for the federated pool in JSON format.
 
 Read-Only:
@@ -71,6 +69,9 @@ Read-Only:
 - `id` (String) The resource identifier.
 - `metadata` (Map of String) The metadata for the federated pool in JSON format.
 - `network_compliant` (Boolean) Indicates if this pool is compliant with its parent's network compliance policy. When false, a trouble dot should be displayed in the UI to indicate non-compliance.
+- `pool_name` (String) The name of the federated pool exactly as stored by the API. For pools backed by a cloud provider the API may append a suffix such as `(ipam-pool-0123456789abcdef0)`; `name` is this value without that suffix.
+- `provider_type` (String) The cloud provider type of the pool (`NIOS_X` or `AWS`). It is always the provider type of the federated realm and cannot be set.
+- `region` (String) The region/locale of the pool. It is always the region of the federated realm and cannot be set.
 - `state` (String) The current state of the federated pool (e.g., 'create-complete', 'create-in-progress', 'delete-in-progress').
 - `tags_all` (Map of String) The tags of the federated pool in JSON format including default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
@@ -104,20 +105,5 @@ Read-Only:
 
 Read-Only:
 
-- `total` (Attributes) Total IPv6 addresses. (see [below for nested schema](#nestedatt--results--utilization_v6--total))
-- `used` (Attributes) Used IPv6 addresses. (see [below for nested schema](#nestedatt--results--utilization_v6--used))
-
-<a id="nestedatt--results--utilization_v6--total"></a>
-### Nested Schema for `results.utilization_v6.total`
-
-Read-Only:
-
-- `raw_value` (String)
-
-
-<a id="nestedatt--results--utilization_v6--used"></a>
-### Nested Schema for `results.utilization_v6.used`
-
-Read-Only:
-
-- `raw_value` (String)
+- `total` (String) Total IPv6 addresses.
+- `used` (String) Used IPv6 addresses.

@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -19,7 +20,6 @@ import (
 	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
-	internalplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
 	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
@@ -34,6 +34,7 @@ type FederatedPoolModel struct {
 	NetworkCompliance types.Object      `tfsdk:"network_compliance"`
 	NetworkCompliant  types.Bool        `tfsdk:"network_compliant"`
 	Parent            types.String      `tfsdk:"parent"`
+	PoolName          types.String      `tfsdk:"pool_name"`
 	Protocol          types.String      `tfsdk:"protocol"`
 	ProviderType      types.String      `tfsdk:"provider_type"`
 	Region            types.String      `tfsdk:"region"`
@@ -56,6 +57,7 @@ var FederatedPoolAttrTypes = map[string]attr.Type{
 	"network_compliance": types.ObjectType{AttrTypes: NetworkComplianceAttrTypes},
 	"network_compliant":  types.BoolType,
 	"parent":             types.StringType,
+	"pool_name":          types.StringType,
 	"protocol":           types.StringType,
 	"provider_type":      types.StringType,
 	"region":             types.StringType,
@@ -127,6 +129,10 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		MarkdownDescription: "The resource identifier.",
 	},
+	"pool_name": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The name of the federated pool exactly as stored by the API. For pools backed by a cloud provider the API may append a suffix such as `(ipam-pool-0123456789abcdef0)`; `name` is this value without that suffix.",
+	},
 	"protocol": schema.StringAttribute{
 		Required: true,
 		PlanModifiers: []planmodifier.String{
@@ -138,25 +144,18 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 	},
 	"provider_type": schema.StringAttribute{
-		Optional: true,
 		Computed: true,
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.UseStateForUnknown(),
-			internalplanmodifier.ImmutableString(),
 		},
-		MarkdownDescription: "The cloud provider type this pool is associated with. If not set, the API default is used. This value cannot be changed after the pool is created.",
-		Validators: []validator.String{
-			stringvalidator.OneOf("NIOS_X", "NIOS", "AWS", "AZURE", "GCP", "MSAD"),
-		},
+		MarkdownDescription: "The cloud provider type of the pool (`NIOS_X` or `AWS`). It is always the provider type of the federated realm and cannot be set.",
 	},
 	"region": schema.StringAttribute{
-		Optional: true,
 		Computed: true,
-		Default:  stringdefault.StaticString(""),
 		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplaceIfConfigured(),
+			stringplanmodifier.UseStateForUnknown(),
 		},
-		MarkdownDescription: "The region/locale this pool is associated with (e.g., 'us-west-1', 'eu-central-1').",
+		MarkdownDescription: "The region/locale of the pool. It is always the region of the federated realm and cannot be set.",
 	},
 	"state": schema.StringAttribute{
 		Computed:            true,
@@ -207,10 +206,22 @@ func (m *FederatedPoolModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		return nil
 	}
 	to := &ipamfederation.FederatedPool{
-		Description:       flex.ExpandStringPointer(m.Description),
-		Name:              flex.ExpandStringPointer(m.Name),
-		NetworkCompliance: ExpandNetworkCompliance(ctx, m.NetworkCompliance, diags),
-		Tags:              flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
+		Description: flex.ExpandStringPointer(m.Description),
+		Name:        flex.ExpandStringPointer(m.Name),
+		Tags:        flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
+	}
+	if m.ProviderType.ValueString() == "AWS" {
+		// AWS pools do not support network_compliance (rejected instead of dropped silently, which would end in an
+		// "inconsistent result after apply"), and only their name and description can be updated.
+		if !isCreate {
+			return &ipamfederation.FederatedPool{Name: to.Name, Description: to.Description}
+		}
+		if !m.NetworkCompliance.IsNull() && !m.NetworkCompliance.IsUnknown() {
+			diags.AddAttributeError(path.Root("network_compliance"), "Unsupported attribute for provider type",
+				"network_compliance is not supported for pools with provider_type \"AWS\".")
+		}
+	} else {
+		to.NetworkCompliance = ExpandNetworkCompliance(ctx, m.NetworkCompliance, diags)
 	}
 	if isCreate {
 		to.FederatedRealm = flex.ExpandStringPointer(m.FederatedRealm)
@@ -250,7 +261,8 @@ func (m *FederatedPoolModel) Flatten(ctx context.Context, from *ipamfederation.F
 	m.FederatedRealm = flex.FlattenStringPointer(from.FederatedRealm)
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.Metadata = flex.FlattenFrameworkMapString(ctx, from.Metadata, diags)
-	m.Name = flex.FlattenStringPointer(from.Name)
+	m.PoolName = flex.FlattenStringPointer(from.Name)
+	m.Name = flattenPoolName(from.Name)
 	m.NetworkCompliance = FlattenNetworkCompliance(ctx, from.NetworkCompliance, diags)
 	m.NetworkCompliant = types.BoolPointerValue(from.NetworkCompliant)
 	m.Parent = flex.FlattenStringPointer(from.Parent)
