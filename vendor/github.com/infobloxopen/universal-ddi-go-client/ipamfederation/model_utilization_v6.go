@@ -19,9 +19,7 @@ var _ MappedNullable = &UtilizationV6{}
 
 // UtilizationV6 The __UtilizationV6__ represents IPv6 utilization metrics.
 type UtilizationV6 struct {
-	// Total IPv6 addresses.
-	Total *string `json:"total,omitempty"`
-	// Used IPv6 addresses.
+	Total                *string `json:"total,omitempty"`
 	Used                 *string `json:"used,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
