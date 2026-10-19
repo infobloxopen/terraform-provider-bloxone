@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
@@ -88,6 +90,29 @@ func PreCheck(t *testing.T) {
 
 func VerifyDefaultTag(resourceName string) resource.TestCheckFunc {
 	return resource.TestCheckResourceAttr(resourceName, fmt.Sprintf("tags_all.%s", defaultKey), defaultValue)
+}
+
+// ReadTestdata reads a fixture file from internal/acctest/testdata/<service>/,
+// shared across every service's tests. Used to keep large or sensitive-looking
+// content (e.g. test certificates) out of test source files.
+//
+// The path is resolved relative to this source file (via runtime.Caller)
+// rather than the working directory, since go test sets the working
+// directory to the *calling* package's directory, not acctest's own -
+// a plain "testdata/..." relative path would only work for tests that
+// happen to live in this same package.
+func ReadTestdata(t *testing.T, service, name string) string {
+	t.Helper()
+	_, thisFile, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatalf("unable to determine acctest package location")
+	}
+	path := filepath.Join(filepath.Dir(thisFile), "testdata", service, name)
+	content, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("unable to read %s: %v", path, err)
+	}
+	return string(content)
 }
 
 // TestAccBase_DhcpHosts creates a Terraform datasource config that allows you to filter by tags

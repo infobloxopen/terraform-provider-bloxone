@@ -2,6 +2,7 @@ package client
 
 import (
 	"github.com/infobloxopen/universal-ddi-go-client/anycast"
+	"github.com/infobloxopen/universal-ddi-go-client/cdc"
 	"github.com/infobloxopen/universal-ddi-go-client/clouddiscovery"
 	"github.com/infobloxopen/universal-ddi-go-client/dfp"
 	"github.com/infobloxopen/universal-ddi-go-client/dnsconfig"
@@ -34,6 +35,7 @@ type APIClient struct {
 	AnycastAPI                  *anycast.APIClient
 	RedirectAPI                 *redirect.APIClient
 	UpgradePolicyClientAPI      *upgradepolicy.APIClient
+	CDCAPI                      *cdc.APIClient
 }
 
 // NewAPIClient creates a new Universal DDI API Client.
@@ -52,6 +54,7 @@ type APIClient struct {
 // - FWAPI
 // - AnycastAPI
 // - UpgradePolicyClientAPI
+// - CDCAPI
 //
 // The client can be configured with a variadic option. The following options are available:
 // - WithClientName(string) sets the name of the client using the SDK.
@@ -76,5 +79,6 @@ func NewAPIClient(options ...option.ClientOption) *APIClient {
 		AnycastAPI:                  anycast.NewAPIClient(options...),
 		RedirectAPI:                 redirect.NewAPIClient(options...),
 		UpgradePolicyClientAPI:      upgradepolicy.NewAPIClient(options...),
+		CDCAPI:                      cdc.NewAPIClient(options...),
 	}
 }
