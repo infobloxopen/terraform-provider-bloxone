@@ -15,151 +15,6 @@ import (
 	"github.com/infobloxopen/universal-ddi-go-client/cdc"
 )
 
-// Self-signed, non-sensitive test certificates used only to satisfy the CDC
-// API's x509 PEM validation for ca_certificate/certificate fields.
-const testAccSourceApiCertPEM = `-----BEGIN CERTIFICATE-----
-MIIDDTCCAfWgAwIBAgIUD2dETKme6j/Jd8qywdTYLCxAKJgwDQYJKoZIhvcNAQEL
-BQAwFjEUMBIGA1UEAwwLdGYtYWNjLXRlc3QwHhcNMjYxMDE2MDc1MDUxWhcNMzYx
-MDEzMDc1MDUxWjAWMRQwEgYDVQQDDAt0Zi1hY2MtdGVzdDCCASIwDQYJKoZIhvcN
-AQEBBQADggEPADCCAQoCggEBAM3Cgl0P9Ey69fqcq4QV97/EjW/X0x/JUX01CjU8
-du8MdjOq2lfr5k1LXAn12BDOZjYc2f40MC1Y7Di0ZPWgJvky1UJJbuGC6tUlQ9TT
-JVtKw5ukJzCPqojDy0Hz3EhpfgM+hBjhR3aDCAHZSCplv1G1G6JM0eqVeb5hvdpU
-GOiPNAclkJenGOfFJzAifz9qZT07UyX037/48CuhvPCImM72hUHzYILOqYFXAxCS
-wx4NmzPvGtTu1VkKvbsBSVrxJfu9mircsQD3ge9yUSdqKzp7WEl4d5fCW9cr/k7X
-f2rX0MLZCpPPAX8EJVC1nkYdgpi6w4THrkMm3iz32ZOjUaECAwEAAaNTMFEwHQYD
-VR0OBBYEFOIoE67RqlWnW6Soyb7LTVNHChRyMB8GA1UdIwQYMBaAFOIoE67RqlWn
-W6Soyb7LTVNHChRyMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEB
-AAHbsr9N/95pmxyXlxp69YwiD8Vdgw4Hj4nLa2dxKSmHmEAz6WRtHI94nKnd1cHH
-d5tsHLKLOe2l6/7aCXYvsGenTh7HFCZlBg/bWYTVf+DZtCP8x59NkzOmdFfmwDo7
-Ley97lbNZEssA87H9PoDSSnNC9irxpvq9q2oI1qjNoxMCvL2iBbH5/IOvjZj/Ace
-2uohH4khyDR7kuRUCmxgnQW4po2D6BjUWfs0FrrCbKk5oFl33ilepLwOmDWbP5RH
-5pPEmH14Ug1X3lwBCmaM88/stzU5r/ulofVnBnQYkbvgBU54h5mZUPKHhvZsOqm/
-6qP1HFvy0k/V9Zc0fBIoS+k=
------END CERTIFICATE-----
-`
-
-const testAccSourceApiCertPEMUpdated = `-----BEGIN CERTIFICATE-----
-MIIDHTCCAgWgAwIBAgIUDL7FwIy1JzRvRy3FYesBG5SY0ZswDQYJKoZIhvcNAQEL
-BQAwHjEcMBoGA1UEAwwTdGYtYWNjLXRlc3QtdXBkYXRlZDAeFw0yNjEwMTYwNzUw
-NTZaFw0zNjEwMTMwNzUwNTZaMB4xHDAaBgNVBAMME3RmLWFjYy10ZXN0LXVwZGF0
-ZWQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCTrx1fI1V3Lk5jU7qo
-pPNTOUXpunmSElTQdGk6CpkowwT8oGYX9FtoE2+Cgr+IKCdJZqivtknyAracYuIN
-gynyT7OtAYCsq4pbZEPSut0TjobrQLC4RpwW4NTQxa8qhuTBNvAvrjkZSBTunmsp
-3mghBAOzX/9H+EePa4eECZsFxhb6UqRHkL1Vd3A+yFc/JkrKNUpGXrn9m+JcVwi1
-8UreNBwD3hqZwByRjkhOBppLhvmFTE+n9KLabHOTrkUxDt0zRtmvxv/iIknbzbF7
-WOWNAHCWKZ4w+m4WKTdTmlJPnlMopSL62A/WDLABQEaTcniTeKP/vMNeArp2Otj/
-LTHtAgMBAAGjUzBRMB0GA1UdDgQWBBS4sKpHZgcPAXMgB0kZzdb3WzS4XzAfBgNV
-HSMEGDAWgBS4sKpHZgcPAXMgB0kZzdb3WzS4XzAPBgNVHRMBAf8EBTADAQH/MA0G
-CSqGSIb3DQEBCwUAA4IBAQBs8J2v72qVT/V37WRvfCP2Fi9z50c+WIDTtIQY4AXw
-D6BJzdPQC6wkBQ7l8TduMtsK0m/GCiEK71FkPAdvmewYV1dPNZwvomt7+q0NjwaK
-ff8UXTLCvgo3+vSERqs/8IMgPpXkjudtnPvwRKBvBvBVWV1PcvkwhzZ/6uflzTy+
-+vNwIY9EueajIYeLsUEVy7etsNuaiB9O1vbPBA2ZZc9Pq5wPJEM9nBTgJi2+orcq
-iof6iugolWPASdVe4lI/tvM5HidCIdtf1RvtaJhoHZ8whIMn/z5rq0q3KXs6hDFg
-/N8aii5n3bPla9rVBy8kTbgCSyJTCsysEvXaH1gZXnAl
------END CERTIFICATE-----
-`
-
-// testAccSourceApiCertKeyPEM/Updated are PEM bundles (private key + cert) for
-// the "certificate" field, which the API validates as a client cert+key pair,
-// unlike "ca_certificate" which only requires a certificate.
-const testAccSourceApiCertKeyPEM = `-----BEGIN PRIVATE KEY-----
-MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDNwoJdD/RMuvX6
-nKuEFfe/xI1v19MfyVF9NQo1PHbvDHYzqtpX6+ZNS1wJ9dgQzmY2HNn+NDAtWOw4
-tGT1oCb5MtVCSW7hgurVJUPU0yVbSsObpCcwj6qIw8tB89xIaX4DPoQY4Ud2gwgB
-2UgqZb9RtRuiTNHqlXm+Yb3aVBjojzQHJZCXpxjnxScwIn8/amU9O1Ml9N+/+PAr
-obzwiJjO9oVB82CCzqmBVwMQksMeDZsz7xrU7tVZCr27AUla8SX7vZoq3LEA94Hv
-clEnais6e1hJeHeXwlvXK/5O139q19DC2QqTzwF/BCVQtZ5GHYKYusOEx65DJt4s
-99mTo1GhAgMBAAECggEAAKGvYcFp8rmuMJyTgDPLD2PMkAJ9wOlkHnoaXmshmFPq
-9vdNdUX27oIj4FnzVas0hXJVjvddCylB4bNYDf2gW6p2x3Mklnz0OJRFNDLeY1HZ
-mNw090FcTiV/tbjzElEp6bD4RH/zMV9vQluG4lkZRb3EaHKg6v3rd5Si5GKBXbwK
-uDyxWntByYfjo54KSiSWyxDswVw2z8sDsI9neJm7STwAt7rYrEpyeYDlTy0IrxmJ
-j369UDl9qznNL9sNRefanUViqaasWQ3YaHbTmKScXTHY5rQs+b7Au8kXR8SpwvD7
-RvK1NzpaOym3D8WI2w1gBEKWrxQEj4lUkVA3xZpb4QKBgQDqH+1UsV7L5j4KUSGZ
-viMEApa3p9W9HhMGXPMfXXU6yqZPQsPUHKn+NwYn0l+YyYcaVEeiyYFQvuGdau2Z
-C7ZIUUb7uzjY4YWemLY2+SQKykmPuBunejWao/mZpY2H0sJuR+lbzJjJD9fhjrAg
-KYpq1yTYvtricJavKMTZz7DlGQKBgQDg/B3RoTXuQcfMRChAr3VGGG4dJRSGGK5d
-uqAnOApkNgAZffALDtGdJIP/a5NsVYQtsNLEqDQs8V6vfV+q2Vrd7lWdwN6YoQB2
-/O6BFgsnr1egaqnJpCb5x+MykuDxGScihEmdd80SqVsQcpM5EeNjugc/ZjmcPnJb
-lfhaImAZyQKBgQCXAWyz+Yro/GH7iYSggvBWv8yyPAAx8FnY+s6c5kycVOSbrrZb
-8vj5zEeeG6QpCaKoKr/hkRJlIBiozbTdx54UWsfryT/LMvpZ5qlwH5VNmFeF6Pt9
-M+erDCQLI6p7dkaNlrg+y2GoHR3ij4Ot2t06N/W+Dqti7bdi1mrRCZJQ0QKBgErz
-kteIdlgGcBJbznEmQtJ0RxLMjJbT2Br/lmUaZVPXLZdQfkygxjIsvRC1fOqFXsB9
-/OlpA+DJFHswMFPRj1UKFlm0rDN6x5XcU3SLrHGvF2kov6GeXyGtdsIdbnTDpWb5
-XTDpfVcvNlg3Y1aK4A8UJV/4pU6o+x4Jyy/z7cIJAoGAYXApLX0f2Nr6hvEkC6Be
-5mYL96YvL7RgrdGm3FF/cVs+g1XnvLxt0aIQ09L1aOLPJjAMvLpyLlk/vzVU9qZw
-X5wKn+4hS99zfUEgTeoIf0dtVpvAUX2jllIyLNGai8RKzEIueiyMzEvVjqwc0Zmt
-Lwy14dFmBCRV2Yk2qD6SyDY=
------END PRIVATE KEY-----
------BEGIN CERTIFICATE-----
-MIIDDTCCAfWgAwIBAgIUD2dETKme6j/Jd8qywdTYLCxAKJgwDQYJKoZIhvcNAQEL
-BQAwFjEUMBIGA1UEAwwLdGYtYWNjLXRlc3QwHhcNMjYxMDE2MDc1MDUxWhcNMzYx
-MDEzMDc1MDUxWjAWMRQwEgYDVQQDDAt0Zi1hY2MtdGVzdDCCASIwDQYJKoZIhvcN
-AQEBBQADggEPADCCAQoCggEBAM3Cgl0P9Ey69fqcq4QV97/EjW/X0x/JUX01CjU8
-du8MdjOq2lfr5k1LXAn12BDOZjYc2f40MC1Y7Di0ZPWgJvky1UJJbuGC6tUlQ9TT
-JVtKw5ukJzCPqojDy0Hz3EhpfgM+hBjhR3aDCAHZSCplv1G1G6JM0eqVeb5hvdpU
-GOiPNAclkJenGOfFJzAifz9qZT07UyX037/48CuhvPCImM72hUHzYILOqYFXAxCS
-wx4NmzPvGtTu1VkKvbsBSVrxJfu9mircsQD3ge9yUSdqKzp7WEl4d5fCW9cr/k7X
-f2rX0MLZCpPPAX8EJVC1nkYdgpi6w4THrkMm3iz32ZOjUaECAwEAAaNTMFEwHQYD
-VR0OBBYEFOIoE67RqlWnW6Soyb7LTVNHChRyMB8GA1UdIwQYMBaAFOIoE67RqlWn
-W6Soyb7LTVNHChRyMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEB
-AAHbsr9N/95pmxyXlxp69YwiD8Vdgw4Hj4nLa2dxKSmHmEAz6WRtHI94nKnd1cHH
-d5tsHLKLOe2l6/7aCXYvsGenTh7HFCZlBg/bWYTVf+DZtCP8x59NkzOmdFfmwDo7
-Ley97lbNZEssA87H9PoDSSnNC9irxpvq9q2oI1qjNoxMCvL2iBbH5/IOvjZj/Ace
-2uohH4khyDR7kuRUCmxgnQW4po2D6BjUWfs0FrrCbKk5oFl33ilepLwOmDWbP5RH
-5pPEmH14Ug1X3lwBCmaM88/stzU5r/ulofVnBnQYkbvgBU54h5mZUPKHhvZsOqm/
-6qP1HFvy0k/V9Zc0fBIoS+k=
------END CERTIFICATE-----
-`
-
-const testAccSourceApiCertKeyPEMUpdated = `-----BEGIN PRIVATE KEY-----
-MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCTrx1fI1V3Lk5j
-U7qopPNTOUXpunmSElTQdGk6CpkowwT8oGYX9FtoE2+Cgr+IKCdJZqivtknyArac
-YuINgynyT7OtAYCsq4pbZEPSut0TjobrQLC4RpwW4NTQxa8qhuTBNvAvrjkZSBTu
-nmsp3mghBAOzX/9H+EePa4eECZsFxhb6UqRHkL1Vd3A+yFc/JkrKNUpGXrn9m+Jc
-Vwi18UreNBwD3hqZwByRjkhOBppLhvmFTE+n9KLabHOTrkUxDt0zRtmvxv/iIknb
-zbF7WOWNAHCWKZ4w+m4WKTdTmlJPnlMopSL62A/WDLABQEaTcniTeKP/vMNeArp2
-Otj/LTHtAgMBAAECggEAEhN1d18WR2OiEZM+fgTOiYmxjnWWCrR2sBsHhCSm8W/J
-TPh+9oCgrYDvfZxuQAaWJGxNyk/4Bgih/Es4GupKeI+b0Nmlu7y1TxFbIdBgXdPs
-nJ/K4Ys28K/tLG59zak8F5AXXuams3r4oOo/+Jxxx1S79TkTQGZZr+q76APa9x5D
-s8DmRxsNrcFsrmRgR0EKBWlLBKGLQXndLWJdRYVsmqsyA+8ppAwIfy+gL7oSjrAn
-JMA6Hh2BIu5QDtVtbkECQh6Ts/3Souk+3a34VZDY3svaLn0RQqyzKzayy7FoApaU
-R+nsBdbDBXJVd4Kaxzz/c7WmDW3P1LiJ9mkzmrZL4QKBgQDIhUIXafvYzqeZIhe9
-JDyDY2YJ6lVVaYlcfxvQDQ0WrrzVAOgDTr2LjL7Of5g2eyhtGgpOv7H+xKB9vtM5
-jDoPrS29Np7CrHONHrQOXo4hVHRgbnaBM30JsX+4FHJirHT/DWa6IPhr6PXvQ0SW
-RJo9N7/TtoAmKJmhuSupKSnufQKBgQC8i3ssuUjZE1OyKUc3Ow6A32tcs6e9K/LH
-gPtfNz0UuyEF91rTa7NanS5YTRcs2W0fa0MPl8TLjJVGjch6mpa2mvWUlI4CbqMk
-v+HFVt7DRlvfkhwWT/kxRPWk5JvfvoZpGzB/OwcC0QJMc57nouXef0mBHs+mjvdM
-86jKIMp8MQKBgQC8TN9Gq4EUFOQwGmLefDPTUjlVIFgoECYs1TRiCI98+HRdNi+q
-Q3wdmvrnYcynhLnu0mBRmRRmYXExBEzIotU3OXJVWAB4YYdVQzrkr4ia5fsvPyxL
-ofVOb/+29oSAAuEPTh9ktGd0tlyU5b93uU56JGsgPiZTLxcuVnwYq44z5QKBgQCK
-cLwzvaSwx5En+0kwU6u1ktcpTTz4GSH9vUZVxqCR7Uk1MUe+f5FFEq6p5YkDxG5s
-qHyoIV89um8NTCQNah8J28RAoceYH5ao8D+df8i3h50EDyuScoxd0e2wcq/FXQci
-e/VjJntiZQeUDT17hc/VTI8zQOVlvgn1td+U8vjasQKBgAMg1RM5vjrxVrD9WMB9
-R3RgE8pRyPbJ5622zFJza11Sct6BtD+vY3O4MGZhYUzil570HBePWUrn4nrplrM/
-6eVUeT/GFgmsl5FPp1cEAHg0Sz68NoAfApu7HkATnisUy0yQ9PQ01aWN6xvO9GSz
-7GMvomkZAQ2pxip/xdh/jTx1
------END PRIVATE KEY-----
------BEGIN CERTIFICATE-----
-MIIDHTCCAgWgAwIBAgIUDL7FwIy1JzRvRy3FYesBG5SY0ZswDQYJKoZIhvcNAQEL
-BQAwHjEcMBoGA1UEAwwTdGYtYWNjLXRlc3QtdXBkYXRlZDAeFw0yNjEwMTYwNzUw
-NTZaFw0zNjEwMTMwNzUwNTZaMB4xHDAaBgNVBAMME3RmLWFjYy10ZXN0LXVwZGF0
-ZWQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCTrx1fI1V3Lk5jU7qo
-pPNTOUXpunmSElTQdGk6CpkowwT8oGYX9FtoE2+Cgr+IKCdJZqivtknyAracYuIN
-gynyT7OtAYCsq4pbZEPSut0TjobrQLC4RpwW4NTQxa8qhuTBNvAvrjkZSBTunmsp
-3mghBAOzX/9H+EePa4eECZsFxhb6UqRHkL1Vd3A+yFc/JkrKNUpGXrn9m+JcVwi1
-8UreNBwD3hqZwByRjkhOBppLhvmFTE+n9KLabHOTrkUxDt0zRtmvxv/iIknbzbF7
-WOWNAHCWKZ4w+m4WKTdTmlJPnlMopSL62A/WDLABQEaTcniTeKP/vMNeArp2Otj/
-LTHtAgMBAAGjUzBRMB0GA1UdDgQWBBS4sKpHZgcPAXMgB0kZzdb3WzS4XzAfBgNV
-HSMEGDAWgBS4sKpHZgcPAXMgB0kZzdb3WzS4XzAPBgNVHRMBAf8EBTADAQH/MA0G
-CSqGSIb3DQEBCwUAA4IBAQBs8J2v72qVT/V37WRvfCP2Fi9z50c+WIDTtIQY4AXw
-D6BJzdPQC6wkBQ7l8TduMtsK0m/GCiEK71FkPAdvmewYV1dPNZwvomt7+q0NjwaK
-ff8UXTLCvgo3+vSERqs/8IMgPpXkjudtnPvwRKBvBvBVWV1PcvkwhzZ/6uflzTy+
-+vNwIY9EueajIYeLsUEVy7etsNuaiB9O1vbPBA2ZZc9Pq5wPJEM9nBTgJi2+orcq
-iof6iugolWPASdVe4lI/tvM5HidCIdtf1RvtaJhoHZ8whIMn/z5rq0q3KXs6hDFg
-/N8aii5n3bPla9rVBy8kTbgCSyJTCsysEvXaH1gZXnAl
------END CERTIFICATE-----
-`
-
 func TestAccSourceApiResource_basic(t *testing.T) {
 	var resourceName = "bloxone_cdc_source_nios.test"
 	var v cdc.SourceNios
@@ -242,6 +97,8 @@ func TestAccSourceApiResource_CaCertificate(t *testing.T) {
 	var resourceName = "bloxone_cdc_source_nios.test_ca_certificate"
 	var v cdc.SourceNios
 	name := acctest.RandomNameWithPrefix("source")
+	cert := acctest.ReadTestdata(t, "ca_cert.pem")
+	certUpdated := acctest.ReadTestdata(t, "ca_cert_updated.pem")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -249,18 +106,18 @@ func TestAccSourceApiResource_CaCertificate(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSourceApiCaCertificate(name, testAccSourceApiCertPEM),
+				Config: testAccSourceApiCaCertificate(name, cert),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ca_certificate", testAccSourceApiCertPEM),
+					resource.TestCheckResourceAttr(resourceName, "ca_certificate", cert),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccSourceApiCaCertificate(name, testAccSourceApiCertPEMUpdated),
+				Config: testAccSourceApiCaCertificate(name, certUpdated),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ca_certificate", testAccSourceApiCertPEMUpdated),
+					resource.TestCheckResourceAttr(resourceName, "ca_certificate", certUpdated),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -272,6 +129,8 @@ func TestAccSourceApiResource_Certificate(t *testing.T) {
 	var resourceName = "bloxone_cdc_source_nios.test_certificate"
 	var v cdc.SourceNios
 	name := acctest.RandomNameWithPrefix("source")
+	certKey := acctest.ReadTestdata(t, "certkey.pem")
+	certKeyUpdated := acctest.ReadTestdata(t, "certkey_updated.pem")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -279,18 +138,18 @@ func TestAccSourceApiResource_Certificate(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSourceApiCertificate(name, testAccSourceApiCertKeyPEM),
+				Config: testAccSourceApiCertificate(name, certKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "certificate", testAccSourceApiCertKeyPEM),
+					resource.TestCheckResourceAttr(resourceName, "certificate", certKey),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccSourceApiCertificate(name, testAccSourceApiCertKeyPEMUpdated),
+				Config: testAccSourceApiCertificate(name, certKeyUpdated),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "certificate", testAccSourceApiCertKeyPEMUpdated),
+					resource.TestCheckResourceAttr(resourceName, "certificate", certKeyUpdated),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -362,6 +221,7 @@ func TestAccSourceApiResource_InsecureMode(t *testing.T) {
 	var resourceName = "bloxone_cdc_source_nios.test_insecure_mode"
 	var v cdc.SourceNios
 	name := acctest.RandomNameWithPrefix("source")
+	cert := acctest.ReadTestdata(t, "ca_cert.pem")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -369,7 +229,7 @@ func TestAccSourceApiResource_InsecureMode(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSourceApiInsecureMode(name, "false"),
+				Config: testAccSourceApiInsecureMode(name, cert, "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "insecure_mode", "false"),
@@ -377,7 +237,7 @@ func TestAccSourceApiResource_InsecureMode(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccSourceApiInsecureMode(name, "true"),
+				Config: testAccSourceApiInsecureMode(name, cert, "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "insecure_mode", "true"),
@@ -610,7 +470,7 @@ resource "bloxone_cdc_source_nios" "test_enabled" {
 `, name, name, enabled)
 }
 
-func testAccSourceApiInsecureMode(name string, insecureMode string) string {
+func testAccSourceApiInsecureMode(name string, cert string, insecureMode string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_source_nios" "test_insecure_mode" {
     name           = %q
@@ -620,7 +480,7 @@ resource "bloxone_cdc_source_nios" "test_insecure_mode" {
     ca_certificate = %q
     insecure_mode  = %s
 }
-`, name, name, testAccSourceApiCertPEM, insecureMode)
+`, name, name, cert, insecureMode)
 }
 
 func testAccSourceApiName(name string) string {

@@ -482,6 +482,8 @@ resource "bloxone_cdc_flow" "test" {
   source            = %d
   source_data_types = ["QUERY_RESP_LOG"]
   destinations      = [bloxone_cdc_destination_syslog.test.id]
+
+  depends_on = [bloxone_cdc_destination_syslog.test]
 }
 `, name, name, name, serviceID, sourceID)
 }
@@ -500,6 +502,8 @@ resource "bloxone_cdc_flow" "test_description" {
   source_data_types = ["QUERY_RESP_LOG"]
   destinations      = [bloxone_cdc_destination_syslog.test_description.id]
   description       = %q
+
+  depends_on = [bloxone_cdc_destination_syslog.test_description]
 }
 `, name, name, name, serviceID, sourceID, description)
 }
@@ -517,6 +521,8 @@ resource "bloxone_cdc_flow" "test_destinations" {
   source            = %d
   source_data_types = ["QUERY_RESP_LOG"]
   destinations      = [bloxone_cdc_destination_syslog.test_destinations.id]
+
+  depends_on = [bloxone_cdc_destination_syslog.test_destinations]
 }
 `, name, name, name, serviceID, sourceID)
 }
@@ -535,6 +541,8 @@ resource "bloxone_cdc_flow" "test_enabled" {
   source_data_types = ["QUERY_RESP_LOG"]
   destinations      = [bloxone_cdc_destination_syslog.test_enabled.id]
   enabled           = %s
+
+  depends_on = [bloxone_cdc_destination_syslog.test_enabled]
 }
 `, name, name, name, serviceID, sourceID, enabled)
 }
@@ -553,6 +561,8 @@ resource "bloxone_cdc_flow" "test_etl_filters" {
   source_data_types = ["QUERY_RESP_LOG"]
   destinations      = [bloxone_cdc_destination_syslog.test_etl_filters.id]
   etl_filters       = [%d]
+
+  depends_on = [bloxone_cdc_destination_syslog.test_etl_filters]
 }
 `, name, name, name, serviceID, sourceID, etlFilterID)
 }
@@ -587,7 +597,7 @@ resource "bloxone_cdc_flow" "test_filter_expression" {
   destinations       = [bloxone_cdc_destination_syslog.test_filter_expression.id]
   filter_expression  = %q
 
-  depends_on = [bloxone_cdc_etl_filter_record_type.test_filter_expression]
+  depends_on = [bloxone_cdc_etl_filter_record_type.test_filter_expression, bloxone_cdc_destination_syslog.test_filter_expression]
 }
 `, testAccFlowApiV2FilterExpressionPrereqs(name), name, serviceID, sourceID, filterExpression)
 }
@@ -605,6 +615,8 @@ resource "bloxone_cdc_flow" "test_name" {
   source            = %d
   source_data_types = ["QUERY_RESP_LOG"]
   destinations      = [bloxone_cdc_destination_syslog.test_name.id]
+
+  depends_on = [bloxone_cdc_destination_syslog.test_name]
 }
 `, resourceSuffix, resourceSuffix, name, serviceID, sourceID)
 }
@@ -622,6 +634,8 @@ resource "bloxone_cdc_flow" "test_source" {
   source            = %d
   source_data_types = ["QUERY_RESP_LOG"]
   destinations      = [bloxone_cdc_destination_syslog.test_source.id]
+
+  depends_on = [bloxone_cdc_destination_syslog.test_source]
 }
 `, name, name, name, serviceID, sourceID)
 }
@@ -639,6 +653,8 @@ resource "bloxone_cdc_flow" "test_source_data_types" {
   source            = %d
   source_data_types = %s
   destinations      = [bloxone_cdc_destination_syslog.test_source_data_types.id]
+
+  depends_on = [bloxone_cdc_destination_syslog.test_source_data_types]
 }
 `, name, name, name, serviceID, sourceID, sourceDataTypes)
 }
@@ -663,6 +679,8 @@ resource "bloxone_cdc_flow" "test_tags" {
   source_data_types = ["QUERY_RESP_LOG"]
   destinations      = [bloxone_cdc_destination_syslog.test_tags.id]
   tags              = %s
+
+  depends_on = [bloxone_cdc_destination_syslog.test_tags]
 }
 `, name, name, name, serviceID, sourceID, tagsStr)
 }

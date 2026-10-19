@@ -38,7 +38,7 @@ func TestAccSourceApiDataSource_TagFilters(t *testing.T) {
 	// TODO: the CDC backend does not correctly honor tag_filters on
 	// /v1/sources/nios. Confirmed via direct curl against the API: a
 	// _tfilter query for a tag value that matches nothing returns the full,
-	// unfiltered list of every source on the grid instead of an empty
+	// unfiltered list of every source on the cluster instead of an empty
 	// result set, so this data source always surfaces an arbitrary
 	// pre-existing source rather than the one just created. This is a
 	// backend bug, not something fixable in the provider. Needs a CDC

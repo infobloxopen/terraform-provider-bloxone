@@ -123,10 +123,27 @@ func (r *FlowApiV2Resource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 
+	// source_log_types is derived server-side from source_data_types and is
+	// never set by the user (Create never sends it either). When
+	// source_data_types is actually changing, flowSourceLogTypesPlanModifier
+	// leaves this plan value unknown (rather than carrying forward the now
+	// stale prior value), which we treat here as the signal to omit it from
+	// the update body entirely so the backend derives it fresh - sending the
+	// stale value instead causes the backend to silently keep the old
+	// source_data_types rather than applying the change. When
+	// source_data_types isn't changing, the preserved, still-accurate value
+	// is sent through as before.
+	sourceLogTypesChanging := data.SourceLogTypes.IsUnknown()
+
+	body := data.Expand(ctx, &resp.Diagnostics)
+	if sourceLogTypesChanging {
+		body.SourceLogTypes = nil
+	}
+
 	apiRes, _, err := r.client.CDCAPI.
 		FlowApiV2API.
 		UpdateFlowDataV2(ctx, data.Id.ValueInt64()).
-		Body(*data.Expand(ctx, &resp.Diagnostics)).
+		Body(*body).
 		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update FlowApiV2, got error: %s", err))

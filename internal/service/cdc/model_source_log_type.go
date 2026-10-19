@@ -56,9 +56,26 @@ func (m *SourceLogTypeModel) Expand(ctx context.Context, diags *diag.Diagnostics
 	if m == nil {
 		return nil
 	}
+	// LogFields/LogSubtypes must never be sent as a missing/null JSON array:
+	// the CDC backend fails to persist a null value for these JSONB columns
+	// (confirmed via direct API testing: "pq: invalid input syntax for type
+	// json"), which surfaces as a 500 on update that can cascade into the
+	// backend returning 502/503 for other requests until it recovers. Since
+	// source_log_types is a Computed field that round-trips through state on
+	// every update regardless of whether the user configured it, a nil slice
+	// here (e.g. from an earlier Read) must be coalesced to empty rather than
+	// passed through as-is.
+	logFields := flex.ExpandFrameworkListString(ctx, m.LogFields, diags)
+	if logFields == nil {
+		logFields = []string{}
+	}
+	logSubtypes := flex.ExpandFrameworkListString(ctx, m.LogSubtypes, diags)
+	if logSubtypes == nil {
+		logSubtypes = []string{}
+	}
 	to := &cdc.SourceLogType{
-		LogFields:   flex.ExpandFrameworkListString(ctx, m.LogFields, diags),
-		LogSubtypes: flex.ExpandFrameworkListString(ctx, m.LogSubtypes, diags),
+		LogFields:   logFields,
+		LogSubtypes: logSubtypes,
 		LogType:     flex.ExpandStringPointer(m.LogType),
 	}
 	return to

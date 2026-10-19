@@ -148,7 +148,7 @@ var FlowDataV2ResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional: true,
 		Computed: true,
 		PlanModifiers: []planmodifier.List{
-			listplanmodifier.UseStateForUnknown(),
+			flowSourceLogTypesPlanModifier{},
 		},
 	},
 	"tags": schema.MapAttribute{
@@ -159,7 +159,7 @@ var FlowDataV2ResourceSchemaAttributes = map[string]schema.Attribute{
 		CustomType: timetypes.RFC3339Type{},
 		Computed:   true,
 		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
+			flowUpdatedAtPlanModifier{},
 		},
 	},
 }

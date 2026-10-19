@@ -62,10 +62,11 @@ func TestAccFlowApiV2DataSource_TagFilters(t *testing.T) {
 	})
 }
 
-// testAccFlowApiV2ServiceID looks up a CDC service (cdc_services) already present on the grid.
-// This provider does not have a resource to create one (the /v2/services API only supports GET -
-// a CdcService only exists once an on-prem CDC host agent registers itself, which isn't something
-// Terraform can drive), so these tests depend on at least one already existing on the test grid.
+// testAccFlowApiV2ServiceID looks up a CDC service (cdc_services) already present on the
+// cluster. This provider does not have a resource to create one (the /v2/services API only
+// supports GET - a CdcService only exists once an on-prem CDC host agent registers itself,
+// which isn't something Terraform can drive), so these tests depend on at least one already
+// existing on the test cluster.
 func testAccFlowApiV2ServiceID(t *testing.T) string {
 	t.Helper()
 	apiRes, _, err := acctest.BloxOneClient.CDCAPI.ServiceApiAPI.
@@ -76,7 +77,7 @@ func testAccFlowApiV2ServiceID(t *testing.T) string {
 	}
 	results := apiRes.GetResults()
 	if len(results) == 0 {
-		t.Fatalf("no CDC service found on the grid; these tests require at least one on-prem CDC host agent to have registered")
+		t.Fatalf("no CDC service found on the cluster; these tests require at least one on-prem CDC host agent to have registered")
 	}
 	return *results[0].Id
 }
@@ -94,6 +95,9 @@ func testAccCreateCdcSourceNios(t *testing.T, name string) int64 {
 	niosPassword := "tf_auto_password1!"
 	scpUsername := "tf_auto_scp"
 	scpPassword := "tf_auto_scp_password1!"
+	// RPZ_LOG (one of the source_data_types values exercised by these tests)
+	// requires the source to have a client certificate configured.
+	certificate := acctest.ReadTestdata(t, "certkey.pem")
 	apiRes, _, err := acctest.BloxOneClient.CDCAPI.SourceApiAPI.
 		CreateSourceNios(ctx).
 		Body(cdc.SourceNios{
@@ -103,6 +107,7 @@ func testAccCreateCdcSourceNios(t *testing.T, name string) int64 {
 			NiosPassword: &niosPassword,
 			ScpUsername:  &scpUsername,
 			ScpPassword:  &scpPassword,
+			Certificate:  &certificate,
 		}).
 		Execute()
 	if err != nil {

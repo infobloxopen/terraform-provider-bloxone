@@ -97,6 +97,8 @@ func TestAccDestinationApiResource_CaCertificate(t *testing.T) {
 	var resourceName = "bloxone_cdc_destination_syslog.test_ca_certificate"
 	var v cdc.DestinationSyslog
 	name := acctest.RandomNameWithPrefix("destination")
+	cert := acctest.ReadTestdata(t, "ca_cert.pem")
+	certUpdated := acctest.ReadTestdata(t, "ca_cert_updated.pem")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -104,18 +106,18 @@ func TestAccDestinationApiResource_CaCertificate(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccDestinationApiCaCertificate(name, testAccSourceApiCertPEM),
+				Config: testAccDestinationApiCaCertificate(name, cert),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDestinationApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ca_certificate", testAccSourceApiCertPEM),
+					resource.TestCheckResourceAttr(resourceName, "ca_certificate", cert),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccDestinationApiCaCertificate(name, testAccSourceApiCertPEMUpdated),
+				Config: testAccDestinationApiCaCertificate(name, certUpdated),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDestinationApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "ca_certificate", testAccSourceApiCertPEMUpdated),
+					resource.TestCheckResourceAttr(resourceName, "ca_certificate", certUpdated),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -187,6 +189,7 @@ func TestAccDestinationApiResource_InsecureMode(t *testing.T) {
 	var resourceName = "bloxone_cdc_destination_syslog.test_insecure_mode"
 	var v cdc.DestinationSyslog
 	name := acctest.RandomNameWithPrefix("destination")
+	cert := acctest.ReadTestdata(t, "ca_cert.pem")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -194,7 +197,7 @@ func TestAccDestinationApiResource_InsecureMode(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccDestinationApiInsecureMode(name, "false"),
+				Config: testAccDestinationApiInsecureMode(name, cert, "false"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDestinationApiExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "insecure_mode", "false"),
@@ -202,7 +205,7 @@ func TestAccDestinationApiResource_InsecureMode(t *testing.T) {
 			},
 			// Update and Read
 			{
-				Config: testAccDestinationApiInsecureMode(name, "true"),
+				Config: testAccDestinationApiInsecureMode(name, cert, "true"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDestinationApiExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "insecure_mode", "true"),
@@ -474,7 +477,7 @@ resource "bloxone_cdc_destination_syslog" "test_enabled" {
 `, name, name, enabled)
 }
 
-func testAccDestinationApiInsecureMode(name string, insecureMode string) string {
+func testAccDestinationApiInsecureMode(name string, cert string, insecureMode string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_destination_syslog" "test_insecure_mode" {
     name           = %q
@@ -482,7 +485,7 @@ resource "bloxone_cdc_destination_syslog" "test_insecure_mode" {
     ca_certificate = %q
     insecure_mode  = %s
 }
-`, name, name, testAccSourceApiCertPEM, insecureMode)
+`, name, name, cert, insecureMode)
 }
 
 func testAccDestinationApiName(name string) string {

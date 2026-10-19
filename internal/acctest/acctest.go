@@ -90,6 +90,18 @@ func VerifyDefaultTag(resourceName string) resource.TestCheckFunc {
 	return resource.TestCheckResourceAttr(resourceName, fmt.Sprintf("tags_all.%s", defaultKey), defaultValue)
 }
 
+// ReadTestdata reads a fixture file from the calling package's testdata/ directory.
+// Used to keep large or sensitive-looking content (e.g. test certificates) out of
+// test source files.
+func ReadTestdata(t *testing.T, name string) string {
+	t.Helper()
+	content, err := os.ReadFile("testdata/" + name)
+	if err != nil {
+		t.Fatalf("unable to read testdata/%s: %v", name, err)
+	}
+	return string(content)
+}
+
 // TestAccBase_DhcpHosts creates a Terraform datasource config that allows you to filter by tags
 func TestAccBase_DhcpHosts() string {
 	return `
