@@ -3,6 +3,7 @@ package ipamfederation
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework-nettypes/iptypes"
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -18,36 +19,35 @@ import (
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	internalplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
-	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
 type FederatedBlockModel struct {
-	Address           internaltypes.IPAddressValue `tfsdk:"address"`
-	AllocationV4      types.Object                 `tfsdk:"allocation_v4"`
-	Cidr              types.Int64                  `tfsdk:"cidr"`
-	Comment           types.String                 `tfsdk:"comment"`
-	CreatedAt         timetypes.RFC3339            `tfsdk:"created_at"`
-	FederatedPoolId   types.String                 `tfsdk:"federated_pool_id"`
-	FederatedRealm    types.String                 `tfsdk:"federated_realm"`
-	Id                types.String                 `tfsdk:"id"`
-	Metadata          types.Map                    `tfsdk:"metadata"`
-	Name              types.String                 `tfsdk:"name"`
-	NetworkCompliance types.Object                 `tfsdk:"network_compliance"`
-	NetworkCompliant  types.Bool                   `tfsdk:"network_compliant"`
-	Parent            types.String                 `tfsdk:"parent"`
-	Protocol          types.String                 `tfsdk:"protocol"`
-	Region            types.String                 `tfsdk:"region"`
-	State             types.String                 `tfsdk:"state"`
-	Tags              types.Map                    `tfsdk:"tags"`
-	TagsAll           types.Map                    `tfsdk:"tags_all"`
-	UpdatedAt         timetypes.RFC3339            `tfsdk:"updated_at"`
-	Utilization       types.Int64                  `tfsdk:"utilization"`
-	UtilizationV6     types.Object                 `tfsdk:"utilization_v6"`
+	Address           iptypes.IPAddress `tfsdk:"address"`
+	AllocationV4      types.Object      `tfsdk:"allocation_v4"`
+	Cidr              types.Int64       `tfsdk:"cidr"`
+	Comment           types.String      `tfsdk:"comment"`
+	CreatedAt         timetypes.RFC3339 `tfsdk:"created_at"`
+	FederatedPoolId   types.String      `tfsdk:"federated_pool_id"`
+	FederatedRealm    types.String      `tfsdk:"federated_realm"`
+	Id                types.String      `tfsdk:"id"`
+	Metadata          types.Map         `tfsdk:"metadata"`
+	Name              types.String      `tfsdk:"name"`
+	NetworkCompliance types.Object      `tfsdk:"network_compliance"`
+	NetworkCompliant  types.Bool        `tfsdk:"network_compliant"`
+	Parent            types.String      `tfsdk:"parent"`
+	Protocol          types.String      `tfsdk:"protocol"`
+	Region            types.String      `tfsdk:"region"`
+	State             types.String      `tfsdk:"state"`
+	Tags              types.Map         `tfsdk:"tags"`
+	TagsAll           types.Map         `tfsdk:"tags_all"`
+	UpdatedAt         timetypes.RFC3339 `tfsdk:"updated_at"`
+	Utilization       types.Int64       `tfsdk:"utilization"`
+	UtilizationV6     types.Object      `tfsdk:"utilization_v6"`
 }
 
 var FederatedBlockAttrTypes = map[string]attr.Type{
-	"address":            internaltypes.IPAddressType{},
+	"address":            iptypes.IPAddressType{},
 	"allocation_v4":      types.ObjectType{AttrTypes: AllocationAttrTypes},
 	"cidr":               types.Int64Type,
 	"comment":            types.StringType,
@@ -72,7 +72,7 @@ var FederatedBlockAttrTypes = map[string]attr.Type{
 
 var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
-		CustomType: internaltypes.IPAddressType{},
+		CustomType: iptypes.IPAddressType{},
 		Optional:   true,
 		Computed:   true,
 		Validators: []validator.String{
@@ -208,7 +208,7 @@ func (m *FederatedBlockModel) Expand(ctx context.Context, diags *diag.Diagnostic
 		Tags:              flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 	if isCreate {
-		to.Address = flex.ExpandIPAddr(m.Address)
+		to.Address = m.Address.ValueStringPointer()
 	}
 	return to
 }
@@ -232,7 +232,7 @@ func (m *FederatedBlockModel) Flatten(ctx context.Context, from *ipamfederation.
 	if m == nil {
 		*m = FederatedBlockModel{}
 	}
-	m.Address = flex.FlattenIPAddr(from.Address)
+	m.Address = iptypes.NewIPAddressPointerValue(from.Address)
 	m.AllocationV4 = FlattenAllocation(ctx, from.AllocationV4, diags)
 	m.Cidr = flex.FlattenInt64Pointer(from.Cidr)
 	m.Comment = flex.FlattenStringPointer(from.Comment)

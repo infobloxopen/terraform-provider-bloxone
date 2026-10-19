@@ -104,7 +104,7 @@ func TestAccFederatedBlockResource_AddressWithPrefixInvalid(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccFederatedBlockBasicConfig("10.12.0.0/16", 16, realmName),
-				ExpectError: regexp.MustCompile(`Invalid IP Address Value`),
+				ExpectError: regexp.MustCompile(`Invalid IP Address`),
 			},
 		},
 	})

@@ -1,4 +1,4 @@
-# Create a Federated Realm
+# Create a Federated Realm ( Required As Parent )
 resource "bloxone_federation_federated_realm" "example" {
   name = "example_federation_federated_realm"
 }

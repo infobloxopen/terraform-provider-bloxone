@@ -226,6 +226,9 @@ github.com/hashicorp/terraform-plugin-framework/schema/validator
 github.com/hashicorp/terraform-plugin-framework/tfsdk
 github.com/hashicorp/terraform-plugin-framework/types
 github.com/hashicorp/terraform-plugin-framework/types/basetypes
+# github.com/hashicorp/terraform-plugin-framework-nettypes v0.3.0
+## explicit; go 1.23.0
+github.com/hashicorp/terraform-plugin-framework-nettypes/iptypes
 # github.com/hashicorp/terraform-plugin-framework-timeouts v0.7.0
 ## explicit; go 1.24.0
 github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators

@@ -15,6 +15,7 @@ import (
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &ForwardLookingDelegationResource{}
 var _ resource.ResourceWithImportState = &ForwardLookingDelegationResource{}
+var _ resource.ResourceWithValidateConfig = &ForwardLookingDelegationResource{}
 
 func NewForwardLookingDelegationResource() resource.Resource {
 	return &ForwardLookingDelegationResource{}
@@ -165,4 +166,29 @@ func (r *ForwardLookingDelegationResource) Delete(ctx context.Context, req resou
 
 func (r *ForwardLookingDelegationResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+}
+
+func (r *ForwardLookingDelegationResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var data ForwardLookingDelegationModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	if data.Address.IsNull() || data.Address.IsUnknown() || data.Cidr.IsNull() || data.Cidr.IsUnknown() {
+		return
+	}
+
+	ip, diags := data.Address.ValueIPAddress()
+	if diags.HasError() {
+		return
+	}
+
+	if ip.Is4() && data.Cidr.ValueInt64() > 32 {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("cidr"),
+			"Invalid CIDR",
+			fmt.Sprintf("\"cidr\" must be between 1 and 32 for the IPv4 address %q, got %d.", data.Address.ValueString(), data.Cidr.ValueInt64()),
+		)
+	}
 }

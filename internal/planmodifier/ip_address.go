@@ -2,10 +2,9 @@ package planmodifier
 
 import (
 	"context"
+	"net/netip"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-
-	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 )
 
 func RequiresReplaceIfIPAddressChanged() planmodifier.String {
@@ -38,10 +37,9 @@ func (m requiresReplaceIfIPAddressChanged) PlanModifyString(ctx context.Context,
 	}
 
 	// Differences in IPv6 letter case or zero compression do not require replacement.
-	oldValue := internaltypes.NewIPAddressValue(req.StateValue.ValueString())
-	newValue := internaltypes.NewIPAddressValue(req.PlanValue.ValueString())
-	equal, _ := oldValue.StringSemanticEquals(ctx, newValue)
-	if !equal {
+	oldValue, oldErr := netip.ParseAddr(req.StateValue.ValueString())
+	newValue, newErr := netip.ParseAddr(req.PlanValue.ValueString())
+	if oldErr != nil || newErr != nil || oldValue != newValue {
 		resp.RequiresReplace = true
 	}
 }

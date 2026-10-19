@@ -102,7 +102,7 @@ func TestAccForwardLookingDelegationResource_AddressWithPrefixInvalid(t *testing
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccForwardLookingDelegationBasicConfig(realmName, "10.45.0.0/18", 18),
-				ExpectError: regexp.MustCompile(`Invalid IP Address Value`),
+				ExpectError: regexp.MustCompile(`Invalid IP Address`),
 			},
 		},
 	})
