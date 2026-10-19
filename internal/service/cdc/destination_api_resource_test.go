@@ -97,8 +97,8 @@ func TestAccDestinationApiResource_CaCertificate(t *testing.T) {
 	var resourceName = "bloxone_cdc_destination_syslog.test_ca_certificate"
 	var v cdc.DestinationSyslog
 	name := acctest.RandomNameWithPrefix("destination")
-	cert := acctest.ReadTestdata(t, "ca_cert.pem")
-	certUpdated := acctest.ReadTestdata(t, "ca_cert_updated.pem")
+	cert := acctest.ReadTestdata(t, "bloxone_cdc", "ca_cert.pem")
+	certUpdated := acctest.ReadTestdata(t, "bloxone_cdc", "ca_cert_updated.pem")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -189,7 +189,7 @@ func TestAccDestinationApiResource_InsecureMode(t *testing.T) {
 	var resourceName = "bloxone_cdc_destination_syslog.test_insecure_mode"
 	var v cdc.DestinationSyslog
 	name := acctest.RandomNameWithPrefix("destination")
-	cert := acctest.ReadTestdata(t, "ca_cert.pem")
+	cert := acctest.ReadTestdata(t, "bloxone_cdc", "ca_cert.pem")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },

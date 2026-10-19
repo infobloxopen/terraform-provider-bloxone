@@ -97,8 +97,8 @@ func TestAccSourceApiResource_CaCertificate(t *testing.T) {
 	var resourceName = "bloxone_cdc_source_nios.test_ca_certificate"
 	var v cdc.SourceNios
 	name := acctest.RandomNameWithPrefix("source")
-	cert := acctest.ReadTestdata(t, "ca_cert.pem")
-	certUpdated := acctest.ReadTestdata(t, "ca_cert_updated.pem")
+	cert := acctest.ReadTestdata(t, "bloxone_cdc", "ca_cert.pem")
+	certUpdated := acctest.ReadTestdata(t, "bloxone_cdc", "ca_cert_updated.pem")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -129,8 +129,8 @@ func TestAccSourceApiResource_Certificate(t *testing.T) {
 	var resourceName = "bloxone_cdc_source_nios.test_certificate"
 	var v cdc.SourceNios
 	name := acctest.RandomNameWithPrefix("source")
-	certKey := acctest.ReadTestdata(t, "certkey.pem")
-	certKeyUpdated := acctest.ReadTestdata(t, "certkey_updated.pem")
+	certKey := acctest.ReadTestdata(t, "bloxone_cdc", "certkey.pem")
+	certKeyUpdated := acctest.ReadTestdata(t, "bloxone_cdc", "certkey_updated.pem")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -221,7 +221,7 @@ func TestAccSourceApiResource_InsecureMode(t *testing.T) {
 	var resourceName = "bloxone_cdc_source_nios.test_insecure_mode"
 	var v cdc.SourceNios
 	name := acctest.RandomNameWithPrefix("source")
-	cert := acctest.ReadTestdata(t, "ca_cert.pem")
+	cert := acctest.ReadTestdata(t, "bloxone_cdc", "ca_cert.pem")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },

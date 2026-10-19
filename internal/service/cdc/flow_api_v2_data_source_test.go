@@ -97,7 +97,7 @@ func testAccCreateCdcSourceNios(t *testing.T, name string) int64 {
 	scpPassword := "tf_auto_scp_password1!"
 	// RPZ_LOG (one of the source_data_types values exercised by these tests)
 	// requires the source to have a client certificate configured.
-	certificate := acctest.ReadTestdata(t, "certkey.pem")
+	certificate := acctest.ReadTestdata(t, "bloxone_cdc", "certkey.pem")
 	apiRes, _, err := acctest.BloxOneClient.CDCAPI.SourceApiAPI.
 		CreateSourceNios(ctx).
 		Body(cdc.SourceNios{
