@@ -103,6 +103,19 @@ Read-Only:
 
 Import is supported using the following syntax:
 
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+# bloxone_dfp_service is imported using the service_id attribute, not the id.
+# The service_id is the on-prem host service identifier visible in the BloxOne portal.
+import {
+  to = bloxone_dfp_service.example
+  id = "<service_id>"
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
 ```shell
 # bloxone_dfp_service is imported using the service_id attribute, not the id.
 # The service_id is the on-prem host service identifier visible in the BloxOne portal.
