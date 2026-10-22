@@ -12,7 +12,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
 
@@ -139,18 +138,6 @@ var ReservedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "The tags of the reserved block in JSON format including default tags.",
 	},
-}
-
-func ExpandReservedBlock(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipamfederation.ReservedBlock {
-	if o.IsNull() || o.IsUnknown() {
-		return nil
-	}
-	var m ReservedBlockModel
-	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
-	if diags.HasError() {
-		return nil
-	}
-	return m.Expand(ctx, diags, false)
 }
 
 func (m *ReservedBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipamfederation.ReservedBlock {

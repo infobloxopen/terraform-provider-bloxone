@@ -41,13 +41,12 @@ type NextAvailableReservedBlockModel struct {
 }
 
 func (m *NextAvailableReservedBlockModel) FlattenResults(ctx context.Context, from []ipamfederation.ReservedBlock, diags *diag.Diagnostics) {
-	if len(from) == 0 {
-		return
-	}
 	var listOfAddress []string
 
 	for _, reservedBlock := range from {
-		listOfAddress = append(listOfAddress, *reservedBlock.Address)
+		if reservedBlock.Address != nil {
+			listOfAddress = append(listOfAddress, *reservedBlock.Address)
+		}
 	}
 	m.Results = flex.FlattenFrameworkListString(ctx, listOfAddress, diags)
 }

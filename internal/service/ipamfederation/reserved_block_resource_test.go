@@ -198,6 +198,8 @@ func TestAccReservedBlockResource_Name(t *testing.T) {
 	var resourceName = "bloxone_federation_reserved_block.test_name"
 	var v ipamfederation.ReservedBlock
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	name := acctest.RandomNameWithPrefix("reserved-block")
+	nameUpdated := acctest.RandomNameWithPrefix("reserved-block")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -205,18 +207,18 @@ func TestAccReservedBlockResource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccReservedBlockName(realmName, "10.98.0.0", 24, "NAME_TEST"),
+				Config: testAccReservedBlockName(realmName, "10.98.0.0", 24, name),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckReservedBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "NAME_TEST"),
+					resource.TestCheckResourceAttr(resourceName, "name", name),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccReservedBlockName(realmName, "10.98.0.0", 24, "NAME_TEST_UPDATED"),
+				Config: testAccReservedBlockName(realmName, "10.98.0.0", 24, nameUpdated),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckReservedBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "name", "NAME_TEST_UPDATED"),
+					resource.TestCheckResourceAttr(resourceName, "name", nameUpdated),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
