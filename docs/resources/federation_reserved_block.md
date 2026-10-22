@@ -16,10 +16,12 @@ The Reserved Block object (_federation/reserved_block_) is a set of contiguous I
 ## Example Usage
 
 ```terraform
+# Manage a Federated Realm (Required as Parent)
 resource "bloxone_federation_federated_realm" "example" {
   name = "example_federation_federated_realm"
 }
 
+# Manage a Federated Reserved Block
 resource "bloxone_federation_reserved_block" "example" {
   name            = "example_reserved_block"
   federated_realm = bloxone_federation_federated_realm.example.id
