@@ -66,7 +66,7 @@ resource "bloxone_federation_federated_pool" "example" {
 - `metadata` (Map of String) The metadata for the federated pool in JSON format.
 - `network_compliant` (Boolean) Indicates if this pool is compliant with its parent's network compliance policy. When false, a trouble dot should be displayed in the UI to indicate non-compliance.
 - `pool_name` (String) The name of the federated pool exactly as stored by the API. For `AWS` pools the API appends a suffix such as `(ipam-pool-0123456789abcdef0)`; `name` is this value without that suffix. Use this value to filter pools by name in the data source.
-- `provider_type` (String) The cloud provider type of the pool (`NIOS_X` or `AWS`). It is always the provider type of the federated realm and cannot be set.
+- `provider_type` (String) The cloud provider type of the pool (e.g. `NIOS_X`, `AWS`, `AZURE`). It is always the provider type of the federated realm and cannot be set.
 - `region` (String) The region/locale of the pool. It is always the region of the federated realm and cannot be set.
 - `state` (String) The current state of the federated pool (e.g., 'create-complete', 'create-in-progress', 'delete-in-progress').
 - `tags_all` (Map of String) The tags of the federated pool in JSON format including default tags.

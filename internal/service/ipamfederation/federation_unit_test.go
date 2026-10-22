@@ -67,8 +67,8 @@ func TestFederatedPoolModifyPlan(t *testing.T) {
 		wantErr      bool
 	}{
 		{"AWS realm with network_compliance", "AWS", true, false, true},
-		{"AZURE realm is not supported", "AZURE", false, false, true},
-		{"NIOS realm is not supported", "NIOS", false, false, true},
+		{"AZURE realm is not filtered out", "AZURE", false, false, false},
+		{"NIOS realm is not filtered out", "NIOS", true, false, false},
 		{"NIOS_X realm without network_compliance", "NIOS_X", false, false, false},
 		{"NIOS_X realm with network_compliance", "NIOS_X", true, false, false},
 		{"AWS realm without network_compliance", "AWS", false, false, false},

@@ -84,10 +84,6 @@ func (r *FederatedPoolResource) Create(ctx context.Context, req resource.CreateR
 	}
 	realm := realmRes.GetResult()
 	providerType := realm.GetProvider()
-	if providerType != ipamfederation.PROVIDERTYPE_NIOS_X && providerType != ipamfederation.PROVIDERTYPE_AWS {
-		resp.Diagnostics.AddError("Unsupported provider type", fmt.Sprintf("The federated realm has provider_type %q. Only NIOS_X and AWS are supported.", providerType))
-		return
-	}
 	data.ProviderType = types.StringValue(string(providerType))
 	data.Region = types.StringValue(realm.GetRegion())
 
@@ -251,8 +247,7 @@ func (r *FederatedPoolResource) ImportState(ctx context.Context, req resource.Im
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
 
-// ModifyPlan rejects, at plan time, what the API would reject for a new pool: a realm whose provider type is not
-// supported (only NIOS_X and AWS are) and network_compliance on an AWS pool. The provider type is not part of the
+// ModifyPlan rejects, at plan time, what the API would reject for a new pool: network_compliance on an AWS pool. The provider type is not part of the
 // configuration (a pool has the provider type of its realm), so it is taken from the realm. If the realm is not
 // known yet (it is created in the same run), the check happens during apply instead, in Create and Expand.
 // Existing pools are not checked here, so that a destroy is never blocked by a pending change in the configuration.
@@ -278,14 +273,8 @@ func (r *FederatedPoolResource) ModifyPlan(ctx context.Context, req resource.Mod
 	}
 	realm := realmRes.GetResult()
 
-	switch providerType := realm.GetProvider(); providerType {
-	case ipamfederation.PROVIDERTYPE_NIOS_X:
-	case ipamfederation.PROVIDERTYPE_AWS:
-		if !config.NetworkCompliance.IsNull() && !config.NetworkCompliance.IsUnknown() {
-			resp.Diagnostics.AddAttributeError(path.Root("network_compliance"), "Unsupported attribute for provider type",
-				"network_compliance is not supported for pools with provider_type \"AWS\".")
-		}
-	default:
-		resp.Diagnostics.AddError("Unsupported provider type", fmt.Sprintf("The federated realm has provider_type %q. Only NIOS_X and AWS are supported.", providerType))
+	if realm.GetProvider() == ipamfederation.PROVIDERTYPE_AWS && !config.NetworkCompliance.IsNull() && !config.NetworkCompliance.IsUnknown() {
+		resp.Diagnostics.AddAttributeError(path.Root("network_compliance"), "Unsupported attribute for provider type",
+			"network_compliance is not supported for pools with provider_type \"AWS\".")
 	}
 }

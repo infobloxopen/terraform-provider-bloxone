@@ -148,7 +148,7 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.UseStateForUnknown(),
 		},
-		MarkdownDescription: "The cloud provider type of the pool (`NIOS_X` or `AWS`). It is always the provider type of the federated realm and cannot be set.",
+		MarkdownDescription: "The cloud provider type of the pool (e.g. `NIOS_X`, `AWS`, `AZURE`). It is always the provider type of the federated realm and cannot be set.",
 	},
 	"region": schema.StringAttribute{
 		Computed: true,
