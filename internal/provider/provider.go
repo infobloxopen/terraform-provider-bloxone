@@ -159,6 +159,7 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 
 		ipamfederation.NewFederatedRealmResource,
 		ipamfederation.NewFederatedBlockResource,
+		ipamfederation.NewReservedBlockResource,
 		ipamfederation.NewOverlappingBlockResource,
 		ipamfederation.NewForwardLookingDelegationResource,
 		ipamfederation.NewFederatedPoolResource,
@@ -238,6 +239,8 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 
 		ipamfederation.NewFederatedRealmDataSource,
 		ipamfederation.NewFederatedBlockDataSource,
+		ipamfederation.NewReservedBlockDataSource,
+		ipamfederation.NewNextAvailableReservedBlockDataSource,
 		ipamfederation.NewOverlappingBlockDataSource,
 		ipamfederation.NewForwardLookingDelegationDataSource,
 		ipamfederation.NewFederatedPoolDataSource,
