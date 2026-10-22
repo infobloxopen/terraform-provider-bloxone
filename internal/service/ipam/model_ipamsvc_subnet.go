@@ -13,13 +13,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	customplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
 
 	"github.com/infobloxopen/universal-ddi-go-client/ipam"
 
@@ -390,7 +390,7 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:   true,
 		Computed:   true,
 		PlanModifiers: []planmodifier.Object{
-			objectplanmodifier.UseStateForUnknown(),
+			customplanmodifier.UseStateForUnknownUnlessDhcpOptionsChange(),
 		},
 	},
 	"name": schema.StringAttribute{

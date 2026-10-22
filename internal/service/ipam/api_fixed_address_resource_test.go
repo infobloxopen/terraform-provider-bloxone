@@ -885,3 +885,53 @@ resource "bloxone_dhcp_fixed_address" "test_next_available_id_count" {
 `, count)
 	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
+
+func TestAccFixedAddressResource_DhcpOptionsReorder(t *testing.T) {
+	var resourceName = "bloxone_dhcp_fixed_address.test_dhcp_options"
+	var v ipam.FixedAddress
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
+	fixedAddressName := acctest.RandomNameWithPrefix("fa")
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccFixedAddressDhcpOptionsReorder(spaceName, "10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", fixedAddressName, optionSpaceName, true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "2"),
+				),
+			},
+			// Reordering the options must apply cleanly (no inconsistent result after apply)
+			{
+				Config: testAccFixedAddressDhcpOptionsReorder(spaceName, "10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", fixedAddressName, optionSpaceName, false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "2"),
+				),
+			},
+			// ...and leave no residual diff
+			{
+				Config:   testAccFixedAddressDhcpOptionsReorder(spaceName, "10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", fixedAddressName, optionSpaceName, false),
+				PlanOnly: true,
+			},
+		},
+	})
+}
+
+func testAccFixedAddressDhcpOptionsReorder(spaceName, address, matchType, matchValue, name, optionSpace string, optionFirst bool) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_fixed_address" "test_dhcp_options" {
+    ip_space = bloxone_ipam_ip_space.test.id
+    address = %q
+    match_type = %q
+    match_value = %q
+    name = %q
+    depends_on = [bloxone_ipam_subnet.test]
+    dhcp_options = %s
+}
+`, address, matchType, matchValue, name, testAccDhcpOptionsOptionAndGroup(optionFirst))
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+optionSpace, optionSpace, "ip4"), config}, "")
+}

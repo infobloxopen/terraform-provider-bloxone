@@ -11,13 +11,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	customplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
+	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
 
 	"github.com/infobloxopen/universal-ddi-go-client/ipam"
 
@@ -26,40 +27,40 @@ import (
 )
 
 type IpamsvcIPSpaceModel struct {
-	AsmConfig                       types.Object      `tfsdk:"asm_config"`
-	AsmScopeFlag                    types.Int64       `tfsdk:"asm_scope_flag"`
-	Comment                         types.String      `tfsdk:"comment"`
-	CompartmentId                   types.String      `tfsdk:"compartment_id"`
-	CreatedAt                       timetypes.RFC3339 `tfsdk:"created_at"`
-	DdnsClientUpdate                types.String      `tfsdk:"ddns_client_update"`
-	DdnsConflictResolutionMode      types.String      `tfsdk:"ddns_conflict_resolution_mode"`
-	DdnsDomain                      types.String      `tfsdk:"ddns_domain"`
-	DdnsGenerateName                types.Bool        `tfsdk:"ddns_generate_name"`
-	DdnsGeneratedPrefix             types.String      `tfsdk:"ddns_generated_prefix"`
-	DdnsSendUpdates                 types.Bool        `tfsdk:"ddns_send_updates"`
-	DdnsTtlPercent                  types.Float64     `tfsdk:"ddns_ttl_percent"`
-	DdnsUpdateOnRenew               types.Bool        `tfsdk:"ddns_update_on_renew"`
-	DdnsUseConflictResolution       types.Bool        `tfsdk:"ddns_use_conflict_resolution"`
-	DefaultRealms                   types.List        `tfsdk:"default_realms"`
-	DhcpConfig                      types.Object      `tfsdk:"dhcp_config"`
-	DhcpOptions                     types.List        `tfsdk:"dhcp_options"`
-	DhcpOptionsV6                   types.List        `tfsdk:"dhcp_options_v6"`
-	HeaderOptionFilename            types.String      `tfsdk:"header_option_filename"`
-	HeaderOptionServerAddress       types.String      `tfsdk:"header_option_server_address"`
-	HeaderOptionServerName          types.String      `tfsdk:"header_option_server_name"`
-	HostnameRewriteChar             types.String      `tfsdk:"hostname_rewrite_char"`
-	HostnameRewriteEnabled          types.Bool        `tfsdk:"hostname_rewrite_enabled"`
-	HostnameRewriteRegex            types.String      `tfsdk:"hostname_rewrite_regex"`
-	Id                              types.String      `tfsdk:"id"`
-	InheritanceSources              types.Object      `tfsdk:"inheritance_sources"`
-	Name                            types.String      `tfsdk:"name"`
-	Tags                            types.Map         `tfsdk:"tags"`
-	TagsAll                         types.Map         `tfsdk:"tags_all"`
-	Threshold                       types.Object      `tfsdk:"threshold"`
-	UpdatedAt                       timetypes.RFC3339 `tfsdk:"updated_at"`
-	Utilization                     types.Object      `tfsdk:"utilization"`
-	UtilizationV6                   types.Object      `tfsdk:"utilization_v6"`
-	VendorSpecificOptionOptionSpace types.String      `tfsdk:"vendor_specific_option_option_space"`
+	AsmConfig                       types.Object                     `tfsdk:"asm_config"`
+	AsmScopeFlag                    types.Int64                      `tfsdk:"asm_scope_flag"`
+	Comment                         types.String                     `tfsdk:"comment"`
+	CompartmentId                   types.String                     `tfsdk:"compartment_id"`
+	CreatedAt                       timetypes.RFC3339                `tfsdk:"created_at"`
+	DdnsClientUpdate                types.String                     `tfsdk:"ddns_client_update"`
+	DdnsConflictResolutionMode      types.String                     `tfsdk:"ddns_conflict_resolution_mode"`
+	DdnsDomain                      types.String                     `tfsdk:"ddns_domain"`
+	DdnsGenerateName                types.Bool                       `tfsdk:"ddns_generate_name"`
+	DdnsGeneratedPrefix             types.String                     `tfsdk:"ddns_generated_prefix"`
+	DdnsSendUpdates                 types.Bool                       `tfsdk:"ddns_send_updates"`
+	DdnsTtlPercent                  types.Float64                    `tfsdk:"ddns_ttl_percent"`
+	DdnsUpdateOnRenew               types.Bool                       `tfsdk:"ddns_update_on_renew"`
+	DdnsUseConflictResolution       types.Bool                       `tfsdk:"ddns_use_conflict_resolution"`
+	DefaultRealms                   types.List                       `tfsdk:"default_realms"`
+	DhcpConfig                      types.Object                     `tfsdk:"dhcp_config"`
+	DhcpOptions                     internaltypes.UnorderedListValue `tfsdk:"dhcp_options"`
+	DhcpOptionsV6                   types.List                       `tfsdk:"dhcp_options_v6"`
+	HeaderOptionFilename            types.String                     `tfsdk:"header_option_filename"`
+	HeaderOptionServerAddress       types.String                     `tfsdk:"header_option_server_address"`
+	HeaderOptionServerName          types.String                     `tfsdk:"header_option_server_name"`
+	HostnameRewriteChar             types.String                     `tfsdk:"hostname_rewrite_char"`
+	HostnameRewriteEnabled          types.Bool                       `tfsdk:"hostname_rewrite_enabled"`
+	HostnameRewriteRegex            types.String                     `tfsdk:"hostname_rewrite_regex"`
+	Id                              types.String                     `tfsdk:"id"`
+	InheritanceSources              types.Object                     `tfsdk:"inheritance_sources"`
+	Name                            types.String                     `tfsdk:"name"`
+	Tags                            types.Map                        `tfsdk:"tags"`
+	TagsAll                         types.Map                        `tfsdk:"tags_all"`
+	Threshold                       types.Object                     `tfsdk:"threshold"`
+	UpdatedAt                       timetypes.RFC3339                `tfsdk:"updated_at"`
+	Utilization                     types.Object                     `tfsdk:"utilization"`
+	UtilizationV6                   types.Object                     `tfsdk:"utilization_v6"`
+	VendorSpecificOptionOptionSpace types.String                     `tfsdk:"vendor_specific_option_option_space"`
 }
 
 var IpamsvcIPSpaceAttrTypes = map[string]attr.Type{
@@ -79,7 +80,7 @@ var IpamsvcIPSpaceAttrTypes = map[string]attr.Type{
 	"ddns_use_conflict_resolution":        types.BoolType,
 	"default_realms":                      types.ListType{ElemType: types.StringType},
 	"dhcp_config":                         types.ObjectType{AttrTypes: IpamsvcDHCPConfigAttrTypes},
-	"dhcp_options":                        types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
+	"dhcp_options":                        internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 	"dhcp_options_v6":                     types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
 	"header_option_filename":              types.StringType,
 	"header_option_server_address":        types.StringType,
@@ -233,6 +234,7 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		})),
 	},
 	"dhcp_options": schema.ListNestedAttribute{
+		CustomType: internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: IpamsvcOptionItemResourceSchemaAttributes,
 		},
@@ -297,7 +299,7 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:   true,
 		Computed:   true,
 		PlanModifiers: []planmodifier.Object{
-			objectplanmodifier.UseStateForUnknown(),
+			customplanmodifier.UseStateForUnknownUnlessDhcpOptionsChange(),
 		},
 	},
 	"name": schema.StringAttribute{
@@ -423,7 +425,7 @@ func (m *IpamsvcIPSpaceModel) Flatten(ctx context.Context, from *ipam.IPSpace, d
 	m.DdnsUseConflictResolution = types.BoolPointerValue(from.DdnsUseConflictResolution)
 	m.DefaultRealms = flex.FlattenFrameworkListStringNotNull(ctx, from.DefaultRealms, diags)
 	m.DhcpConfig = FlattenIpamsvcDHCPConfig(ctx, from.DhcpConfig, diags)
-	m.DhcpOptions = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
+	m.DhcpOptions = flex.FlattenFrameworkUnorderedListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.DhcpOptionsV6 = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptionsV6, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.HeaderOptionFilename = flex.FlattenStringPointer(from.HeaderOptionFilename)
 	m.HeaderOptionServerAddress = flex.FlattenStringPointer(from.HeaderOptionServerAddress)
