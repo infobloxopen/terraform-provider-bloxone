@@ -8,7 +8,12 @@ resource "bloxone_federation_federated_block" "example" {
   cidr            = 24
   address         = "10.10.0.0"
 
-  //tags
+  network_compliance = {
+    default_netmask_length = 26
+    minimum_netmask_length = 25
+    maximum_netmask_length = 28
+  }
+
   tags = {
     site = "Site A"
   }

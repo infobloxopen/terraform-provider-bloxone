@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -35,11 +34,13 @@ var ConfigExternalSecondaryAttrTypes = map[string]attr.Type{
 
 var ConfigExternalSecondaryResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
-		Required:            true,
+		Computed:            true,
+		Optional:            true,
 		MarkdownDescription: "IP Address of nameserver.",
 	},
 	"fqdn": schema.StringAttribute{
-		Required:            true,
+		Computed:            true,
+		Optional:            true,
 		MarkdownDescription: "FQDN of nameserver.",
 	},
 	"protocol_fqdn": schema.StringAttribute{
@@ -49,13 +50,11 @@ var ConfigExternalSecondaryResourceSchemaAttributes = map[string]schema.Attribut
 	"stealth": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
-		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: "If enabled, the NS record and glue record will NOT be automatically generated according to secondaries nameserver assignment.  Default: _false_",
 	},
 	"tsig_enabled": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
-		Default:             booldefault.StaticBool(false),
 		MarkdownDescription: "If enabled, secondaries will use the configured TSIG key when requesting a zone transfer.  Default: _false_",
 	},
 	"tsig_key": schema.SingleNestedAttribute{
