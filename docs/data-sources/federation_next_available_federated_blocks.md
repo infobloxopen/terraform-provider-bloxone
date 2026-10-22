@@ -13,8 +13,8 @@ Retrieves the next available __FederatedBlock__ objects from the specified paren
 ## Example Usage
 
 ```terraform
-# A Federated Block is a required parent for next-available federated block lookups;
-# look up an existing one rather than creating it here.
+# The Next Available Federated Block Lookups are performed under the existing Federated Block
+# Here we retrieve an existing federated block
 data "bloxone_federation_federated_blocks" "example_by_attribute" {
   filters = {
     name = "example_federation_federated_block"
