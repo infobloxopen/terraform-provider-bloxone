@@ -104,9 +104,12 @@ var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "Time when the object has been created.",
 	},
 	"federated_pool_id": schema.StringAttribute{
-		Optional:            true,
-		Computed:            true,
-		MarkdownDescription: "The resource identifier.",
+		Optional: true,
+		Computed: true,
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+		},
+		MarkdownDescription: "The resource identifier of the federated pool the block is in. A block cannot be moved to another pool, so changing it replaces the block.",
 	},
 	"federated_realm": schema.StringAttribute{
 		Required:            true,
