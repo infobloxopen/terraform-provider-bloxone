@@ -46,12 +46,19 @@ data "bloxone_federation_next_available_forward_looking_delegations" "example_by
   depends_on = [bloxone_federation_forward_looking_delegation.example]
 }
 
-# Create the next available Forward Looking Delegation globally for IPv6.
-# Without a Federated Block or Pool, the tags select the Federated Blocks to allocate from,
-# so at least one IPv6 Federated Block must carry the same tags.
-data "bloxone_federation_next_available_forward_looking_delegations" "example_global_ip6" {
-  cidr     = 48
-  protocol = "ip6"
+# Look up an existing IPv6 Federated Block
+data "bloxone_federation_federated_blocks" "example_by_attribute_ip6" {
+  filters = {
+    name = "example_federation_federated_block_ipv6"
+  }
+}
+
+# Create the next available Forward Looking Delegations within the IPv6 Federated Block
+data "bloxone_federation_next_available_forward_looking_delegations" "example_by_block_ip6" {
+  federated_block_id = data.bloxone_federation_federated_blocks.example_by_attribute_ip6.results.0.id
+  cidr               = 48
+  fld_count          = 2
+
   tags = {
     site = "Site A"
   }
@@ -72,8 +79,8 @@ data "bloxone_federation_next_available_forward_looking_delegations" "example_gl
 - `federated_pool_id` (String) The resource identifier of the parent Federated Pool. Mutually exclusive with `federated_block_id`. When set, FLDs are created within this specific pool.
 - `fld_count` (Number) Number of Forward Looking Delegation objects to generate. Default 1 if not set.
 - `name` (String) The name of the Forward Looking Delegations. May contain 1 to 256 characters. Can include UTF-8.
-- `protocol` (String) The type of protocol of delegation (_ip4_ or _ip6_). Not applicable when using `federated_block_id`.
-- `tags` (Map of String) The tags for the Forward Looking Delegations in JSON format. When neither `federated_block_id` nor `federated_pool_id` is set, these tags also select the Federated Blocks that are considered for the allocation, so at least one Federated Block must carry the same tags.
+- `protocol` (String) The type of protocol of delegation (_ip4_ or _ip6_). Not applicable when using `federated_block_id`: the value is ignored in that case, because the protocol is taken from the block.
+- `tags` (Map of String) The tags for the Forward Looking Delegations in JSON format. When neither `federated_block_id` nor `federated_pool_id` is set, these tags also select the Federated Blocks that are considered for the allocation, so at least one Federated Block that belongs to a Federated Pool must carry the same tags.
 
 ### Read-Only
 

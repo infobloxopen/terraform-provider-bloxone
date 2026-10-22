@@ -31,12 +31,19 @@ data "bloxone_federation_next_available_forward_looking_delegations" "example_by
   depends_on = [bloxone_federation_forward_looking_delegation.example]
 }
 
-# Create the next available Forward Looking Delegation globally for IPv6.
-# Without a Federated Block or Pool, the tags select the Federated Blocks to allocate from,
-# so at least one IPv6 Federated Block must carry the same tags.
-data "bloxone_federation_next_available_forward_looking_delegations" "example_global_ip6" {
-  cidr     = 48
-  protocol = "ip6"
+# Look up an existing IPv6 Federated Block
+data "bloxone_federation_federated_blocks" "example_by_attribute_ip6" {
+  filters = {
+    name = "example_federation_federated_block_ipv6"
+  }
+}
+
+# Create the next available Forward Looking Delegations within the IPv6 Federated Block
+data "bloxone_federation_next_available_forward_looking_delegations" "example_by_block_ip6" {
+  federated_block_id = data.bloxone_federation_federated_blocks.example_by_attribute_ip6.results.0.id
+  cidr               = 48
+  fld_count          = 2
+
   tags = {
     site = "Site A"
   }

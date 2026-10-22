@@ -97,7 +97,7 @@ func (d *NextAvailableForwardLookingDelegationDataSource) Schema(ctx context.Con
 			},
 			"protocol": schema.StringAttribute{
 				Optional:            true,
-				MarkdownDescription: "The type of protocol of delegation (_ip4_ or _ip6_). Not applicable when using `federated_block_id`.",
+				MarkdownDescription: "The type of protocol of delegation (_ip4_ or _ip6_). Not applicable when using `federated_block_id`: the value is ignored in that case, because the protocol is taken from the block.",
 				Validators: []validator.String{
 					stringvalidator.OneOf("ip4", "ip6"),
 				},
@@ -105,7 +105,7 @@ func (d *NextAvailableForwardLookingDelegationDataSource) Schema(ctx context.Con
 			"tags": schema.MapAttribute{
 				ElementType:         types.StringType,
 				Optional:            true,
-				MarkdownDescription: "The tags for the Forward Looking Delegations in JSON format. When neither `federated_block_id` nor `federated_pool_id` is set, these tags also select the Federated Blocks that are considered for the allocation, so at least one Federated Block must carry the same tags.",
+				MarkdownDescription: "The tags for the Forward Looking Delegations in JSON format. When neither `federated_block_id` nor `federated_pool_id` is set, these tags also select the Federated Blocks that are considered for the allocation, so at least one Federated Block that belongs to a Federated Pool must carry the same tags.",
 			},
 			"results": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
