@@ -47,13 +47,33 @@ func TestAccFederatedPoolResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "description", ""),
 				),
 			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccFederatedPoolResource_Import(t *testing.T) {
+	var resourceName = "bloxone_federation_federated_pool.test"
+	var v ipamfederation.FederatedPool
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	poolName := acctest.RandomNameWithPrefix("federated-pool")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccFederatedPoolBasicConfig(realmName, poolName, "ip4"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFederatedPoolExists(context.Background(), resourceName, &v),
+				),
+			},
 			// Import and verify the imported state matches
 			{
 				ResourceName:      resourceName,
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
-			// Delete testing automatically occurs in TestCase
 		},
 	})
 }
@@ -182,10 +202,6 @@ func TestAccFederatedPoolResource_Name(t *testing.T) {
 			// Delete testing automatically occurs in TestCase
 		},
 	})
-}
-
-func TestAccFederatedPoolResource_Metadata(t *testing.T) {
-	t.Skip("metadata is a read-only field on the API — it cannot be set by the caller")
 }
 
 func TestAccFederatedPoolResource_NetworkCompliance(t *testing.T) {

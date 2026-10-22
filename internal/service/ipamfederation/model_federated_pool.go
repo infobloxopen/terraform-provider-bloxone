@@ -2,6 +2,7 @@ package ipamfederation
 
 import (
 	"context"
+	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -15,7 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
 
@@ -189,17 +189,9 @@ var FederatedPoolResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 }
 
-func ExpandFederatedPool(ctx context.Context, o types.Object, diags *diag.Diagnostics) *ipamfederation.FederatedPool {
-	if o.IsNull() || o.IsUnknown() {
-		return nil
-	}
-	var m FederatedPoolModel
-	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
-	if diags.HasError() {
-		return nil
-	}
-	return m.Expand(ctx, diags, true)
-}
+// poolNameSuffix matches the "(ipam-pool-<id>)" suffix the API appends to the name of pools that are
+// backed by a cloud provider, e.g. "my-pool(ipam-pool-0073c8bb836f02aec)".
+var poolNameSuffix = regexp.MustCompile(`\(ipam-pool-[A-Za-z0-9]+\)$`)
 
 func (m *FederatedPoolModel) Expand(ctx context.Context, diags *diag.Diagnostics, isCreate bool) *ipamfederation.FederatedPool {
 	if m == nil {
@@ -274,4 +266,21 @@ func (m *FederatedPoolModel) Flatten(ctx context.Context, from *ipamfederation.F
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.Utilization = flex.FlattenInt64Pointer(from.Utilization)
 	m.UtilizationV6 = FlattenUtilizationV6(ctx, from.UtilizationV6, diags)
+}
+
+// stripPoolNameSuffix removes the provider-added suffix from a pool name returned by the API.
+func stripPoolNameSuffix(name string) string {
+	return poolNameSuffix.ReplaceAllString(name, "")
+}
+
+// flattenPoolName flattens the API pool name. The suffix is only removed for AWS pools, the only ones that get it,
+// so a name chosen by the user for another pool is never altered.
+func flattenPoolName(name *string, provider ipamfederation.ProviderType) types.String {
+	if name == nil {
+		return types.StringNull()
+	}
+	if provider != ipamfederation.PROVIDERTYPE_AWS {
+		return types.StringValue(*name)
+	}
+	return flex.FlattenString(stripPoolNameSuffix(*name))
 }
