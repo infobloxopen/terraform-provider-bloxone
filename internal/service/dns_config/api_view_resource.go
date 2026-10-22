@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -16,7 +15,6 @@ import (
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &ViewResource{}
 var _ resource.ResourceWithImportState = &ViewResource{}
-var _ resource.ResourceWithModifyPlan = &ViewResource{}
 
 func NewViewResource() resource.Resource {
 	return &ViewResource{}
@@ -36,16 +34,6 @@ func (r *ViewResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 		MarkdownDescription: "Manages a DNS View.",
 		Attributes:          ConfigViewResourceSchemaAttributes,
 	}
-}
-
-// ModifyPlan marks updated_at as unknown whenever an update is planned. Attribute plan modifiers
-// such as UseDefaultAclForNull can introduce a change after the framework has decided not to mark
-// computed attributes as unknown, which would otherwise cause an inconsistent result after apply.
-func (r *ViewResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
-	if req.State.Raw.IsNull() || req.Plan.Raw.IsNull() || req.Plan.Raw.Equal(req.State.Raw) {
-		return
-	}
-	resp.Diagnostics.Append(resp.Plan.SetAttribute(ctx, path.Root("updated_at"), timetypes.NewRFC3339Unknown())...)
 }
 
 func (r *ViewResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {

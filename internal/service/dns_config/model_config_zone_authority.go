@@ -111,10 +111,6 @@ func (m *ConfigZoneAuthorityModel) Expand(ctx context.Context, diags *diag.Diagn
 		Rname:           flex.ExpandStringPointer(m.Rname),
 		UseDefaultMname: flex.ExpandBoolPointer(m.UseDefaultMname),
 	}
-	// The API rejects mname when use_default_mname is set; the server computes it in that case.
-	if m.UseDefaultMname.ValueBool() {
-		to.Mname = nil
-	}
 	return to
 }
 
