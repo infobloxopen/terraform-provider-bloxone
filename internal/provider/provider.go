@@ -78,7 +78,7 @@ func (p *BloxOneProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 	dfTags := p.defaultTags
 	if !data.DefaultTags.IsNull() && !data.DefaultTags.IsUnknown() {
-		dfTags := make(map[string]string, len(data.DefaultTags.Elements()))
+		dfTags = make(map[string]string, len(data.DefaultTags.Elements()))
 		resp.Diagnostics.Append(data.DefaultTags.ElementsAs(ctx, &dfTags, false)...)
 	}
 	if resp.Diagnostics.HasError() {
@@ -160,6 +160,7 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		ipamfederation.NewFederatedRealmResource,
 		ipamfederation.NewFederatedBlockResource,
 		ipamfederation.NewOverlappingBlockResource,
+		ipamfederation.NewForwardLookingDelegationResource,
 
 		redirect.NewCustomRedirectResource,
 
@@ -237,6 +238,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		ipamfederation.NewFederatedRealmDataSource,
 		ipamfederation.NewFederatedBlockDataSource,
 		ipamfederation.NewOverlappingBlockDataSource,
+		ipamfederation.NewForwardLookingDelegationDataSource,
 
 		redirect.NewCustomRedirectsDataSource,
 
