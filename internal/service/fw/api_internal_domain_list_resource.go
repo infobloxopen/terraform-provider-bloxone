@@ -7,11 +7,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
 )
 
@@ -181,5 +181,5 @@ func (r *InternalDomainListResource) Delete(ctx context.Context, req resource.De
 }
 
 func (r *InternalDomainListResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+	utils.ImportStatePassthroughInt32ID(ctx, req, resp)
 }
