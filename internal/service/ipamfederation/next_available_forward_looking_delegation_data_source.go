@@ -20,12 +20,14 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
+// Ensure provider defined types fully satisfy framework interfaces.
 var _ datasource.DataSource = &NextAvailableForwardLookingDelegationDataSource{}
 
 func NewNextAvailableForwardLookingDelegationDataSource() datasource.DataSource {
 	return &NextAvailableForwardLookingDelegationDataSource{}
 }
 
+// NextAvailableForwardLookingDelegationDataSource defines the data source implementation.
 type NextAvailableForwardLookingDelegationDataSource struct {
 	client *universalddiclient.APIClient
 }
@@ -156,6 +158,7 @@ func (d *NextAvailableForwardLookingDelegationDataSource) Read(ctx context.Conte
 		return
 	}
 
+	// Save the created Forward Looking Delegations into Terraform state
 	data.FlattenResults(ctx, results, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }

@@ -71,7 +71,6 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_byBlockWithCount(t *
 }
 
 func TestAccNextAvailableForwardLookingDelegationDataSource_globalIPv4(t *testing.T) {
-
 	ctx := context.Background()
 	acctest.PreCheck(t)
 
@@ -98,7 +97,6 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_globalIPv4(t *testin
 }
 
 func TestAccNextAvailableForwardLookingDelegationDataSource_globalIPv6(t *testing.T) {
-
 	ctx := context.Background()
 	acctest.PreCheck(t)
 
