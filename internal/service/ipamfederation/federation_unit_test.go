@@ -30,6 +30,8 @@ func fakeFederationAPI(t *testing.T, providerType string) *universalddiclient.AP
 	return universalddiclient.NewAPIClient(option.WithCSPUrl(srv.URL), option.WithAPIKey("test"))
 }
 
+// networkComplianceValue is a populated network_compliance object, used to trigger the
+// "network_compliance is not supported for this provider type" validation.
 var networkComplianceValue = tftypes.NewValue(
 	tftypes.Object{AttributeTypes: map[string]tftypes.Type{
 		"default_netmask_length": tftypes.Number, "maximum_netmask_length": tftypes.Number, "minimum_netmask_length": tftypes.Number,
@@ -57,6 +59,11 @@ func objectWith(ctx context.Context, t *testing.T, s interface {
 	return tftypes.NewValue(objType, vals)
 }
 
+// TestFederatedPoolModifyPlan verifies that creating a federated pool with network_compliance
+// is rejected at plan time only when the parent realm's provider is AWS (the API read is faked
+// to return the given provider type). Other provider types, a missing network_compliance, and a
+// realm that is not yet known (computed during apply) must all pass without error. When an error
+// is expected, it must name the offending provider type.
 func TestFederatedPoolModifyPlan(t *testing.T) {
 	ctx := context.Background()
 	tests := []struct {
@@ -109,6 +116,8 @@ func TestFederatedPoolModifyPlan(t *testing.T) {
 	}
 }
 
+// TestFederatedPoolModifyPlan_Destroy verifies that ModifyPlan is a no-op on destroy (null plan),
+// so a pool can always be removed even if its realm is an AWS realm.
 func TestFederatedPoolModifyPlan_Destroy(t *testing.T) {
 	ctx := context.Background()
 	r := &FederatedPoolResource{client: fakeFederationAPI(t, "AWS")}
@@ -126,6 +135,9 @@ func TestFederatedPoolModifyPlan_Destroy(t *testing.T) {
 	}
 }
 
+// TestFederatedBlockModifyPlan verifies that creating a federated block with network_compliance
+// is rejected at plan time only when the parent pool's provider is AWS. Non-AWS pools, blocks
+// without network_compliance, and a pool that is not yet known must pass without error.
 func TestFederatedBlockModifyPlan(t *testing.T) {
 	ctx := context.Background()
 	tests := []struct {
@@ -171,6 +183,10 @@ func TestFederatedBlockModifyPlan(t *testing.T) {
 	}
 }
 
+// TestFederatedModifyPlan_ExistingResourcesAreNotChecked verifies that the AWS network_compliance
+// validation only applies on create. For a pool and a block that already exist in state (so the
+// plan is an update or destroy), ModifyPlan must not raise an error, even though the plan carries
+// network_compliance and the parent is AWS.
 func TestFederatedModifyPlan_ExistingResourcesAreNotChecked(t *testing.T) {
 	ctx := context.Background()
 	nc := networkComplianceValue
@@ -212,6 +228,9 @@ func TestFederatedModifyPlan_ExistingResourcesAreNotChecked(t *testing.T) {
 	}
 }
 
+// TestFederatedPoolUpdate_AWSAllowsNameAndDescriptionButNotTags verifies that updating an AWS
+// federated pool succeeds when only name or description changes, but returns an error when tags
+// change (tags are not updatable on AWS pools).
 func TestFederatedPoolUpdate_AWSAllowsNameAndDescriptionButNotTags(t *testing.T) {
 	ctx := context.Background()
 	tagsType := tftypes.Map{ElementType: tftypes.String}
