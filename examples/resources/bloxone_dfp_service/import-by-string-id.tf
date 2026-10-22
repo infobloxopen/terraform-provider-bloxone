@@ -1,0 +1,6 @@
+# bloxone_dfp_service is imported using the service_id attribute, not the id.
+# The service_id is the on-prem host service identifier visible in the BloxOne portal.
+import {
+  to = bloxone_dfp_service.example
+  id = "<service_id>"
+}
