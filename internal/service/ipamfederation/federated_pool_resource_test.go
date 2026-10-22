@@ -52,7 +52,7 @@ func TestAccFederatedPoolResource_basic(t *testing.T) {
 	})
 }
 
-func TestAccFederatedPoolResource_Import(t *testing.T) {
+func TestAccFederatedPoolResource_StateVerify(t *testing.T) {
 	var resourceName = "bloxone_federation_federated_pool.test"
 	var v ipamfederation.FederatedPool
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
