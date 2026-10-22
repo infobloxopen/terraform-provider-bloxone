@@ -1564,3 +1564,49 @@ resource "bloxone_ipam_address_block" "test_next_available_id_count" {
 `, count, addressBlockResourceName, cidr)
 	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
+
+func TestAccAddressBlockResource_DhcpOptionsReorder(t *testing.T) {
+	var resourceName = "bloxone_ipam_address_block.test_dhcp_options"
+	var v ipam.AddressBlock
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccAddressBlockDhcpOptionsReorder(spaceName, "192.168.0.0", "16", optionSpaceName, true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "2"),
+				),
+			},
+			// Reordering the options must apply cleanly (no inconsistent result after apply)
+			{
+				Config: testAccAddressBlockDhcpOptionsReorder(spaceName, "192.168.0.0", "16", optionSpaceName, false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "2"),
+				),
+			},
+			// ...and leave no residual diff
+			{
+				Config:   testAccAddressBlockDhcpOptionsReorder(spaceName, "192.168.0.0", "16", optionSpaceName, false),
+				PlanOnly: true,
+			},
+		},
+	})
+}
+
+func testAccAddressBlockDhcpOptionsReorder(spaceName, address, cidr, optionSpaceName string, optionFirst bool) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test_dhcp_options" {
+    address = %q
+    cidr = %q
+    space = bloxone_ipam_ip_space.test.id
+    dhcp_options = %s
+}
+`, address, cidr, testAccDhcpOptionsOptionAndGroup(optionFirst))
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+optionSpaceName, optionSpaceName, "ip4"), config}, "")
+}

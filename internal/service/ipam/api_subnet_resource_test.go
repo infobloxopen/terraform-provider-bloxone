@@ -1642,3 +1642,68 @@ resource "bloxone_ipam_subnet" "test_next_available_id" {
 `, count, addressBlockResourceName, cidr)
 	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
+
+// testAccDhcpOptionsOptionAndGroup returns a dhcp_options list holding one option and one group.
+// dhcp_options is an UnorderedList, so flipping optionFirst must not produce a plan diff.
+func testAccDhcpOptionsOptionAndGroup(optionFirst bool) string {
+	option := `{
+       type = "option"
+       option_code = bloxone_dhcp_option_code.test.id
+       option_value = "true"
+      }`
+	group := `{
+       type = "group"
+       group = bloxone_dhcp_option_group.test.id
+      }`
+	if optionFirst {
+		return "[" + option + "," + group + "]"
+	}
+	return "[" + group + "," + option + "]"
+}
+
+func TestAccSubnetResource_DhcpOptionsReorder(t *testing.T) {
+	var resourceName = "bloxone_ipam_subnet.test_dhcp_options"
+	var v ipam.Subnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+	optionName := acctest.RandomNameWithPrefix("opt")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSubnetDhcpOptionsReorder(spaceName, "10.0.0.0", 24, optionName, true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSubnetExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "2"),
+				),
+			},
+			// Reordering the options must apply cleanly (no inconsistent result after apply)
+			{
+				Config: testAccSubnetDhcpOptionsReorder(spaceName, "10.0.0.0", 24, optionName, false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSubnetExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "2"),
+				),
+			},
+			// ...and leave no residual diff
+			{
+				Config:   testAccSubnetDhcpOptionsReorder(spaceName, "10.0.0.0", 24, optionName, false),
+				PlanOnly: true,
+			},
+		},
+	})
+}
+
+func testAccSubnetDhcpOptionsReorder(spaceName, address string, cidr int, name string, optionFirst bool) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_subnet" "test_dhcp_options" {
+    address = %q
+    cidr = %d
+    space = bloxone_ipam_ip_space.test.id
+    name = %q
+    dhcp_options = %s
+}
+`, address, cidr, name, testAccDhcpOptionsOptionAndGroup(optionFirst))
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip4"), config}, "")
+}
