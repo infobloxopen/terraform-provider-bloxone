@@ -98,3 +98,26 @@ Read-Only:
 - `name` (String) The name of the DNS Forwarding Proxy.
 - `ophid` (String) The On-Prem Host identifier.
 - `site_id` (String) The DNS Forwarding Proxy site identifier that is appended to DNS queries originating from this DNS Forwarding Proxy and subsequently used for policy lookup purposes.
+
+## Import
+
+Import is supported using the following syntax:
+
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+# bloxone_dfp_service is imported using the service_id attribute, not the id.
+# The service_id is the on-prem host service identifier visible in the BloxOne portal.
+import {
+  to = bloxone_dfp_service.example
+  id = "<service_id>"
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
+```shell
+# bloxone_dfp_service is imported using the service_id attribute, not the id.
+# The service_id is the on-prem host service identifier visible in the BloxOne portal.
+terraform import bloxone_dfp_service.example <service_id>
+```
