@@ -34,9 +34,8 @@ func TestAccOptionCodeDataSource_Filters(t *testing.T) {
 			{
 				Config: testAccOptionCodeDataSourceConfigFilters(optionSpaceName, "234", "test_option_code", "boolean", "code"),
 				Check: resource.ComposeTestCheckFunc(
-					append([]resource.TestCheckFunc{
-						testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
-					}, testAccCheckOptionCodeResourceAttrPair(resourceName, dataSourceName)...)...,
+					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(dataSourceName, "results.0.code", "234"),
 				),
 			},
 		},

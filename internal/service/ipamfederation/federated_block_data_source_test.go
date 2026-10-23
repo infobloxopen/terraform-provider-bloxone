@@ -17,6 +17,7 @@ func TestAccFederatedBlockDataSource_Filters(t *testing.T) {
 	resourceName := "bloxone_federation_federated_block.test"
 	var v ipamfederation.FederatedBlock
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	blockName := acctest.RandomNameWithPrefix("federated-block")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -24,7 +25,7 @@ func TestAccFederatedBlockDataSource_Filters(t *testing.T) {
 		CheckDestroy:             testAccCheckFederatedBlockDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFederatedBlockDataSourceConfigFilters("10.10.0.0", 16, "FEDERATED_REALM_TEST", realmName),
+				Config: testAccFederatedBlockDataSourceConfigFilters("10.10.0.0", 16, realmName, blockName),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
@@ -40,6 +41,7 @@ func TestAccFederatedBlockDataSource_TagFilters(t *testing.T) {
 	resourceName := "bloxone_federation_federated_block.test"
 	var v ipamfederation.FederatedBlock
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	blockName := acctest.RandomNameWithPrefix("federated-block")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -47,7 +49,7 @@ func TestAccFederatedBlockDataSource_TagFilters(t *testing.T) {
 		CheckDestroy:             testAccCheckFederatedBlockDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFederatedBlockDataSourceConfigTagFilters("10.10.0.0", 16, "FEDERATED_REALM_TEST", realmName, acctest.RandomName()),
+				Config: testAccFederatedBlockDataSourceConfigTagFilters("10.10.0.0", 16, realmName, blockName, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
 						testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
