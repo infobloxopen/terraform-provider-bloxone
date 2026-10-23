@@ -52,6 +52,47 @@ func TestAccNextAvailableFederatedBlockDataSource_count(t *testing.T) {
 	})
 }
 
+func TestAccNextAvailableFederatedBlockDataSource_Name(t *testing.T) {
+	dataSourceName := "data.bloxone_federation_next_available_federated_blocks.test"
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	name := acctest.RandomNameWithPrefix("federated-block")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNextAvailableFederatedBlockName(realmName, "10.136.0.0", 16, 24, name),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(dataSourceName, "name", name),
+					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
+					resource.TestMatchResourceAttr(dataSourceName, "results.0", regexp.MustCompile(`^10\.136\.`)),
+				),
+			},
+		},
+	})
+}
+
+func TestAccNextAvailableFederatedBlockDataSource_Comment(t *testing.T) {
+	dataSourceName := "data.bloxone_federation_next_available_federated_blocks.test"
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNextAvailableFederatedBlockComment(realmName, "10.137.0.0", 16, 24, "test comment"),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(dataSourceName, "comment", "test comment"),
+					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
+					resource.TestMatchResourceAttr(dataSourceName, "results.0", regexp.MustCompile(`^10\.137\.`)),
+				),
+			},
+		},
+	})
+}
+
 func TestAccNextAvailableFederatedBlockDataSource_InvalidId(t *testing.T) {
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -88,5 +129,27 @@ data "bloxone_federation_next_available_federated_blocks" "test" {
     federated_block_count = %d
 }
 `, cidr, count)
+	return strings.Join([]string{testAccFederatedBlockBasicConfig(parentAddress, parentCidr, federatedRealm), config}, "")
+}
+
+func testAccNextAvailableFederatedBlockName(federatedRealm string, parentAddress string, parentCidr int, cidr int, name string) string {
+	config := fmt.Sprintf(`
+data "bloxone_federation_next_available_federated_blocks" "test" {
+    id = bloxone_federation_federated_block.test.id
+    cidr = %d
+    name = %q
+}
+`, cidr, name)
+	return strings.Join([]string{testAccFederatedBlockBasicConfig(parentAddress, parentCidr, federatedRealm), config}, "")
+}
+
+func testAccNextAvailableFederatedBlockComment(federatedRealm string, parentAddress string, parentCidr int, cidr int, comment string) string {
+	config := fmt.Sprintf(`
+data "bloxone_federation_next_available_federated_blocks" "test" {
+    id = bloxone_federation_federated_block.test.id
+    cidr = %d
+    comment = %q
+}
+`, cidr, comment)
 	return strings.Join([]string{testAccFederatedBlockBasicConfig(parentAddress, parentCidr, federatedRealm), config}, "")
 }
