@@ -30,6 +30,19 @@ data "bloxone_federation_federated_blocks" "example_by_tag" {
   }
 }
 
+# Get the Federated Blocks in a Federated Pool
+data "bloxone_federation_federated_pools" "example_pool" {
+  filters = {
+    name = "example_federation_federated_pool"
+  }
+}
+
+data "bloxone_federation_federated_blocks" "example_by_pool" {
+  filters = {
+    federated_pool_id = data.bloxone_federation_federated_pools.example_pool.results[0].id
+  }
+}
+
 # Get all Federated Block
 data "bloxone_federation_federated_blocks" "example_all" {}
 ```
@@ -58,7 +71,7 @@ Optional:
 
 - `address` (String) The address of the federated block, an IPv4 address in form "a.b.c.d" or an IPv6 address. Do not include a prefix length ("/n"); use the _cidr_ field instead.
 - `comment` (String) The description for the federated block. May contain 0 to 1024 characters. Can include UTF-8.
-- `federated_pool_id` (String) The resource identifier.
+- `federated_pool_id` (String) The resource identifier of the federated pool the block is in. A block cannot be moved to another pool, so changing it replaces the block.
 - `name` (String) The name of the federated block. May contain 1 to 256 characters. Can include UTF-8.
 - `network_compliance` (Attributes) The network compliance policy for child objects. This defines the minimum, default, and maximum netmask lengths that can be used when creating child blocks. (see [below for nested schema](#nestedatt--results--network_compliance))
 - `tags` (Map of String) The tags for the federated block in JSON format.

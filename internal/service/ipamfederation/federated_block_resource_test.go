@@ -229,7 +229,36 @@ func TestAccFederatedBlockResource_Comment(t *testing.T) {
 }
 
 func TestAccFederatedBlockResource_FederatedPoolId(t *testing.T) {
-	t.Skip("FederatedPoolId requires a valid federated pool resource ID; to be added when a pool fixture is available")
+	var resourceName = "bloxone_federation_federated_block.test_federated_pool_id"
+	var v1, v2 ipamfederation.FederatedBlock
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	poolName1 := acctest.RandomNameWithPrefix("federated-pool")
+	poolName2 := acctest.RandomNameWithPrefix("federated-pool")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccFederatedBlockFederatedPoolId(realmName, poolName1, poolName2, "bloxone_federation_federated_pool.one"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFederatedBlockExists(context.Background(), resourceName, &v1),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_pool_id", "bloxone_federation_federated_pool.one", "id"),
+				),
+			},
+			// A block cannot be moved to another pool, so it is replaced
+			{
+				Config: testAccFederatedBlockFederatedPoolId(realmName, poolName1, poolName2, "bloxone_federation_federated_pool.two"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFederatedBlockDestroy(context.Background(), &v1),
+					testAccCheckFederatedBlockExists(context.Background(), resourceName, &v2),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_pool_id", "bloxone_federation_federated_pool.two", "id"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
 }
 
 func TestAccFederatedBlockResource_FederatedRealm(t *testing.T) {
@@ -465,6 +494,30 @@ resource "bloxone_federation_federated_block" "test_federated_realm" {
 }
 `, realm)
 	return strings.Join([]string{testAccBaseWithTwoFederatedRealm(federatedRealm1, federatedRealm2), config}, "")
+}
+
+func testAccFederatedBlockFederatedPoolId(realmName, poolName1, poolName2, pool string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_federation_federated_pool" "one" {
+	federated_realm = bloxone_federation_federated_realm.test.id
+	name            = %q
+	protocol        = "ip4"
+}
+
+resource "bloxone_federation_federated_pool" "two" {
+	federated_realm = bloxone_federation_federated_realm.test.id
+	name            = %q
+	protocol        = "ip4"
+}
+
+resource "bloxone_federation_federated_block" "test_federated_pool_id" {
+	address           = "10.0.0.0"
+	cidr              = 16
+	federated_realm   = bloxone_federation_federated_realm.test.id
+	federated_pool_id = %s.id
+}
+`, poolName1, poolName2, pool)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
 }
 
 func testAccBaseWithTwoFederatedRealm(name1, name2 string) string {
