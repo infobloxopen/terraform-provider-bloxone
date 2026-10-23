@@ -61,7 +61,9 @@ func testAccCheckNamedListResourceAttrPair(resourceName, dataSourceName string) 
 		resource.TestCheckResourceAttrPair(resourceName, "tags", dataSourceName, "results.0.tags"),
 		resource.TestCheckResourceAttrPair(resourceName, "type", dataSourceName, "results.0.type"),
 		resource.TestCheckResourceAttrPair(resourceName, "threat_level", dataSourceName, "results.0.threat_level"),
-		resource.TestCheckResourceAttrPair(resourceName, "updated_time", dataSourceName, "results.0.updated_time"),
+		// updated_time is excluded: the API can return a 1-second difference between
+		// the resource write response and the subsequent data source list call.
+		resource.TestCheckResourceAttrSet(dataSourceName, "results.0.updated_time"),
 	}
 }
 
