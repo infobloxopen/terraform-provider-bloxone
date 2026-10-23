@@ -231,16 +231,6 @@ resource "bloxone_dfp_service" "test_internal_domain_lists" {
 	return strings.Join([]string{testAccBaseDfp(hostName), config}, "")
 }
 
-func testAccDfpInternalDomainListsUnset(hostName string) string {
-	config := `
-resource "bloxone_dfp_service" "test_internal_domain_lists" {
-	service_id = bloxone_infra_service.example.id
-	internal_domain_lists=[one(data.bloxone_td_internal_domain_lists.default.results).id]
-}
-`
-	return strings.Join([]string{testAccBaseDfp(hostName), config}, "")
-}
-
 func testAccDfpResolverAll(hostName, resolverAddress, isFallback, isLocal, protocols string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_dfp_service" "test_resolvers_all" {
