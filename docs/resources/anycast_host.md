@@ -91,12 +91,9 @@ resource "bloxone_anycast_host" "example" {
 <a id="nestedatt--anycast_config_refs"></a>
 ### Nested Schema for `anycast_config_refs`
 
-Required:
-
-- `anycast_config_name` (String)
-
 Optional:
 
+- `anycast_config_name` (String)
 - `routing_protocols` (List of String) Routing protocols enabled for this anycast configuration, on a particular host. Valid protocol names are "BGP", "OSPF"/"OSPFv2", "OSPFv3".
 
 
