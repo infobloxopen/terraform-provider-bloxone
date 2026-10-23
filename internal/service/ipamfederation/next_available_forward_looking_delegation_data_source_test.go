@@ -163,17 +163,7 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_byBlockWithNameAndCo
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`
-data "bloxone_federation_next_available_forward_looking_delegations" "test" {
-    federated_block_id = %q
-    cidr               = 26
-    name               = %q
-    comment            = "next available FLD comment"
-    tags = {
-        tf_test = %q
-    }
-}
-`, blockId, fldName, runTag),
+				Config: testAccNextAvailableFLDByBlockNameAndCommentConfig(blockId, 26, fldName, "next available FLD comment", runTag),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(nextAvailableFLDDataSourceName, "results.#", "1"),
 					resource.TestCheckResourceAttr(nextAvailableFLDDataSourceName, "results.0.name", fldName),
@@ -422,16 +412,7 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_globalSpansBlocks(t 
 		Steps: []resource.TestStep{
 			{
 				// The /30 block holds two /31 delegations, so the other two come from the /24 block.
-				Config: fmt.Sprintf(`
-data "bloxone_federation_next_available_forward_looking_delegations" "test" {
-    cidr      = 31
-    fld_count = 4
-    protocol  = "ip4"
-    tags = {
-        tf_test = %q
-    }
-}
-`, runTag),
+				Config: testAccNextAvailableFLDGlobalCountConfig(31, 4, "ip4", runTag),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(nextAvailableFLDDataSourceName, "results.#", "4"),
 					resource.TestCheckResourceAttr(nextAvailableFLDDataSourceName, "results.0.cidr", "31"),
@@ -457,14 +438,7 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_globalWithoutProtoco
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`
-data "bloxone_federation_next_available_forward_looking_delegations" "test" {
-    cidr = 26
-    tags = {
-        tf_test = %q
-    }
-}
-`, runTag),
+				Config: testAccNextAvailableFLDGlobalWithoutProtocolConfig(26, runTag),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckNoResourceAttr(nextAvailableFLDDataSourceName, "protocol"),
 					resource.TestCheckResourceAttr(nextAvailableFLDDataSourceName, "results.#", "1"),
@@ -490,15 +464,7 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_byPoolWithoutProtoco
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`
-data "bloxone_federation_next_available_forward_looking_delegations" "test" {
-    federated_pool_id = %q
-    cidr              = 26
-    tags = {
-        tf_test = %q
-    }
-}
-`, poolId, runTag),
+				Config: testAccNextAvailableFLDByPoolWithoutProtocolConfig(poolId, 26, runTag),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(nextAvailableFLDDataSourceName, "results.#", "1"),
 					resource.TestCheckResourceAttr(nextAvailableFLDDataSourceName, "results.0.protocol", "ip4"),
@@ -508,34 +474,15 @@ data "bloxone_federation_next_available_forward_looking_delegations" "test" {
 	})
 }
 
-// protocol is documented as ignored when federated_block_id is set, because the block supplies it.
-func TestAccNextAvailableForwardLookingDelegationDataSource_byBlockIgnoresProtocol(t *testing.T) {
-	ctx := context.Background()
-	acctest.PreCheck(t)
-
-	runTag := acctest.RandomNameWithPrefix("next-fld")
-	realmId := createTestFederatedRealm(t, ctx, acctest.RandomNameWithPrefix("federated-realm"))
-	blockId := createTestFederatedBlock(t, ctx, realmId, acctest.RandomNameWithPrefix("federated-block"), "10.221.0.0", 24, "", runTag)
-
+// protocol cannot be combined with federated_block_id, because the block supplies the protocol.
+func TestAccNextAvailableForwardLookingDelegationDataSource_byBlockProtocolConflict(t *testing.T) {
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`
-data "bloxone_federation_next_available_forward_looking_delegations" "test" {
-    federated_block_id = %q
-    cidr               = 26
-    protocol           = "ip6"
-    tags = {
-        tf_test = %q
-    }
-}
-`, blockId, runTag),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(nextAvailableFLDDataSourceName, "results.#", "1"),
-					resource.TestCheckResourceAttr(nextAvailableFLDDataSourceName, "results.0.protocol", "ip4"),
-				),
+				Config:      testAccNextAvailableFLDByBlockProtocolConfig("federation/federated_block/does-not-matter", 26, "ip6"),
+				ExpectError: regexp.MustCompile(`(?s)protocol.*federated_block_id`),
 			},
 		},
 	})
@@ -599,13 +546,7 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_nameTooLong(t *testi
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`
-data "bloxone_federation_next_available_forward_looking_delegations" "test" {
-    federated_block_id = %q
-    cidr               = 26
-    name               = %q
-}
-`, blockId, strings.Repeat("a", 257)),
+				Config:      testAccNextAvailableFLDByBlockNameAndCommentConfig(blockId, 26, strings.Repeat("a", 257), "", runTag),
 				ExpectError: regexp.MustCompile(`(?s)Client Error.*400`),
 			},
 		},
@@ -730,11 +671,7 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_missingCidr(t *testi
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: `
-data "bloxone_federation_next_available_forward_looking_delegations" "test" {
-    federated_block_id = "block-id"
-}
-`,
+				Config:      testAccNextAvailableFLDMissingCidrConfig("block-id"),
 				ExpectError: regexp.MustCompile(`(?s)Missing required argument.*cidr|cidr.*required`),
 			},
 		},
@@ -747,13 +684,7 @@ func TestAccNextAvailableForwardLookingDelegationDataSource_blockAndPoolConflict
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: `
-data "bloxone_federation_next_available_forward_looking_delegations" "test" {
-    federated_block_id = "block-id"
-    federated_pool_id  = "pool-id"
-    cidr               = 26
-}
-`,
+				Config:      testAccNextAvailableFLDBlockAndPoolConfig("block-id", "pool-id", 26),
 				ExpectError: regexp.MustCompile(`cannot be specified when`),
 			},
 		},
@@ -889,4 +820,82 @@ data "bloxone_federation_next_available_forward_looking_delegations" "test" {
     }
 }
 `, blockId, cidr, fldCount, runTag)
+}
+
+func testAccNextAvailableFLDGlobalCountConfig(cidr, fldCount int, protocol, runTag string) string {
+	return fmt.Sprintf(`
+data "bloxone_federation_next_available_forward_looking_delegations" "test" {
+    cidr      = %d
+    fld_count = %d
+    protocol  = %q
+    tags = {
+        tf_test = %q
+    }
+}
+`, cidr, fldCount, protocol, runTag)
+}
+
+func testAccNextAvailableFLDGlobalWithoutProtocolConfig(cidr int, runTag string) string {
+	return fmt.Sprintf(`
+data "bloxone_federation_next_available_forward_looking_delegations" "test" {
+    cidr = %d
+    tags = {
+        tf_test = %q
+    }
+}
+`, cidr, runTag)
+}
+
+func testAccNextAvailableFLDByPoolWithoutProtocolConfig(poolId string, cidr int, runTag string) string {
+	return fmt.Sprintf(`
+data "bloxone_federation_next_available_forward_looking_delegations" "test" {
+    federated_pool_id = %q
+    cidr              = %d
+    tags = {
+        tf_test = %q
+    }
+}
+`, poolId, cidr, runTag)
+}
+
+func testAccNextAvailableFLDByBlockNameAndCommentConfig(blockId string, cidr int, name, comment, runTag string) string {
+	return fmt.Sprintf(`
+data "bloxone_federation_next_available_forward_looking_delegations" "test" {
+    federated_block_id = %q
+    cidr               = %d
+    name               = %q
+    comment            = %q
+    tags = {
+        tf_test = %q
+    }
+}
+`, blockId, cidr, name, comment, runTag)
+}
+
+func testAccNextAvailableFLDByBlockProtocolConfig(blockId string, cidr int, protocol string) string {
+	return fmt.Sprintf(`
+data "bloxone_federation_next_available_forward_looking_delegations" "test" {
+    federated_block_id = %q
+    cidr               = %d
+    protocol           = %q
+}
+`, blockId, cidr, protocol)
+}
+
+func testAccNextAvailableFLDMissingCidrConfig(blockId string) string {
+	return fmt.Sprintf(`
+data "bloxone_federation_next_available_forward_looking_delegations" "test" {
+    federated_block_id = %q
+}
+`, blockId)
+}
+
+func testAccNextAvailableFLDBlockAndPoolConfig(blockId, poolId string, cidr int) string {
+	return fmt.Sprintf(`
+data "bloxone_federation_next_available_forward_looking_delegations" "test" {
+    federated_block_id = %q
+    federated_pool_id  = %q
+    cidr               = %d
+}
+`, blockId, poolId, cidr)
 }

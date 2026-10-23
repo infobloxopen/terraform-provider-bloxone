@@ -25,6 +25,20 @@ data "bloxone_federation_next_available_forward_looking_delegations" "example_by
   }
 }
 
+# Look up an existing IPv6 Federated Block
+data "bloxone_federation_federated_blocks" "example_by_attribute_ipv6" {
+  filters = {
+    name = "example_federation_federated_block_with_pool_ipv6"
+  }
+}
+
+# Create the next available IPv6 Forward Looking Delegations within the IPv6 Federated Block.
+data "bloxone_federation_next_available_forward_looking_delegations" "example_by_block_ipv6" {
+  federated_block_id = data.bloxone_federation_federated_blocks.example_by_attribute_ipv6.results.0.id
+  cidr               = 56
+  fld_count          = 2
+}
+
 # Look up an existing Federated Pool
 data "bloxone_federation_federated_pools" "example_by_attribute" {
   filters = {
@@ -40,6 +54,20 @@ data "bloxone_federation_next_available_forward_looking_delegations" "example_by
   protocol          = "ip4"
 }
 
+# Look up an existing IPv6 Federated Pool
+data "bloxone_federation_federated_pools" "example_by_attribute_ipv6" {
+  filters = {
+    name = "example_federation_federated_block_pool_ipv6"
+  }
+}
+
+# Create the next available IPv6 Forward Looking Delegations within the IPv6 Federated Pool.
+data "bloxone_federation_next_available_forward_looking_delegations" "example_by_pool_ipv6" {
+  federated_pool_id = data.bloxone_federation_federated_pools.example_by_attribute_ipv6.results.0.id
+  cidr              = 56
+  protocol          = "ip6"
+}
+
 # Create the next available Forward Looking Delegations globally. Neither federated_block_id nor
 # federated_pool_id is set, so the tags select the candidate Federated Blocks: at least one Federated Block
 # that belongs to a Federated Pool must carry the same tags.
@@ -53,6 +81,16 @@ data "bloxone_federation_next_available_forward_looking_delegations" "example_by
 data "bloxone_federation_next_available_forward_looking_delegations" "example_global" {
   cidr     = 28
   protocol = "ip4"
+
+  tags = {
+    site = "Site A"
+  }
+}
+
+# The same tags can be carried by IPv4 and IPv6 Federated Blocks, so the protocol selects which of them is used.
+data "bloxone_federation_next_available_forward_looking_delegations" "example_global_ipv6" {
+  cidr     = 56
+  protocol = "ip6"
 
   tags = {
     site = "Site A"

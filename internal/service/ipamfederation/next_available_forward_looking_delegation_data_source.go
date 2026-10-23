@@ -97,9 +97,10 @@ func (d *NextAvailableForwardLookingDelegationDataSource) Schema(ctx context.Con
 			},
 			"protocol": schema.StringAttribute{
 				Optional:            true,
-				MarkdownDescription: "The type of protocol of delegation (_ip4_ or _ip6_). Not applicable when using `federated_block_id`: the value is ignored in that case, because the protocol is taken from the block. When neither `federated_block_id` nor `federated_pool_id` is set, it also filters the candidate Federated Blocks, so set it whenever the matching blocks can have different protocols; if it does not match the protocol of any matching block, the request fails.",
+				MarkdownDescription: "The type of protocol of delegation (_ip4_ or _ip6_). Cannot be used with `federated_block_id`, because the protocol is taken from the block. When neither `federated_block_id` nor `federated_pool_id` is set, it also filters the candidate Federated Blocks, so set it whenever the matching blocks can have different protocols; if it does not match the protocol of any matching block, the request fails.",
 				Validators: []validator.String{
 					stringvalidator.OneOf("ip4", "ip6"),
+					stringvalidator.ConflictsWith(path.MatchRoot("federated_block_id")),
 				},
 			},
 			"tags": schema.MapAttribute{
@@ -143,6 +144,15 @@ func (d *NextAvailableForwardLookingDelegationDataSource) Read(ctx context.Conte
 		return
 	}
 
+	// A global allocation is the widest scope, so never fall back to it when a scope ID is not known yet.
+	if data.FederatedBlockId.IsUnknown() || data.FederatedPoolId.IsUnknown() {
+		resp.Diagnostics.AddError(
+			"Unknown Federated Block or Federated Pool",
+			"federated_block_id and federated_pool_id must be known to create Forward Looking Delegations.",
+		)
+		return
+	}
+
 	var results []ipamfederation.ForwardLookingDelegation
 
 	switch {
@@ -155,6 +165,18 @@ func (d *NextAvailableForwardLookingDelegationDataSource) Read(ctx context.Conte
 	}
 
 	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	expected := int64(1)
+	if !data.FldCount.IsNull() {
+		expected = data.FldCount.ValueInt64()
+	}
+	if int64(len(results)) < expected {
+		resp.Diagnostics.AddError(
+			"Not Enough Forward Looking Delegations Created",
+			fmt.Sprintf("Requested %d Forward Looking Delegations with CIDR %d, but only %d were created.", expected, data.Cidr.ValueInt64(), len(results)),
+		)
 		return
 	}
 

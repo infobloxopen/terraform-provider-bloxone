@@ -40,6 +40,20 @@ data "bloxone_federation_next_available_forward_looking_delegations" "example_by
   }
 }
 
+# Look up an existing IPv6 Federated Block
+data "bloxone_federation_federated_blocks" "example_by_attribute_ipv6" {
+  filters = {
+    name = "example_federation_federated_block_with_pool_ipv6"
+  }
+}
+
+# Create the next available IPv6 Forward Looking Delegations within the IPv6 Federated Block.
+data "bloxone_federation_next_available_forward_looking_delegations" "example_by_block_ipv6" {
+  federated_block_id = data.bloxone_federation_federated_blocks.example_by_attribute_ipv6.results.0.id
+  cidr               = 56
+  fld_count          = 2
+}
+
 # Look up an existing Federated Pool
 data "bloxone_federation_federated_pools" "example_by_attribute" {
   filters = {
@@ -55,6 +69,20 @@ data "bloxone_federation_next_available_forward_looking_delegations" "example_by
   protocol          = "ip4"
 }
 
+# Look up an existing IPv6 Federated Pool
+data "bloxone_federation_federated_pools" "example_by_attribute_ipv6" {
+  filters = {
+    name = "example_federation_federated_block_pool_ipv6"
+  }
+}
+
+# Create the next available IPv6 Forward Looking Delegations within the IPv6 Federated Pool.
+data "bloxone_federation_next_available_forward_looking_delegations" "example_by_pool_ipv6" {
+  federated_pool_id = data.bloxone_federation_federated_pools.example_by_attribute_ipv6.results.0.id
+  cidr              = 56
+  protocol          = "ip6"
+}
+
 # Create the next available Forward Looking Delegations globally. Neither federated_block_id nor
 # federated_pool_id is set, so the tags select the candidate Federated Blocks: at least one Federated Block
 # that belongs to a Federated Pool must carry the same tags.
@@ -68,6 +96,16 @@ data "bloxone_federation_next_available_forward_looking_delegations" "example_by
 data "bloxone_federation_next_available_forward_looking_delegations" "example_global" {
   cidr     = 28
   protocol = "ip4"
+
+  tags = {
+    site = "Site A"
+  }
+}
+
+# The same tags can be carried by IPv4 and IPv6 Federated Blocks, so the protocol selects which of them is used.
+data "bloxone_federation_next_available_forward_looking_delegations" "example_global_ipv6" {
+  cidr     = 56
+  protocol = "ip6"
 
   tags = {
     site = "Site A"
@@ -89,7 +127,7 @@ data "bloxone_federation_next_available_forward_looking_delegations" "example_gl
 - `federated_pool_id` (String) The resource identifier of the parent Federated Pool. Mutually exclusive with `federated_block_id`. When set, FLDs are created within this specific pool.
 - `fld_count` (Number) Number of Forward Looking Delegation objects to generate. Default 1 if not set.
 - `name` (String) The name of the Forward Looking Delegations. May contain 1 to 256 characters. Can include UTF-8.
-- `protocol` (String) The type of protocol of delegation (_ip4_ or _ip6_). Not applicable when using `federated_block_id`: the value is ignored in that case, because the protocol is taken from the block. When neither `federated_block_id` nor `federated_pool_id` is set, it also filters the candidate Federated Blocks, so set it whenever the matching blocks can have different protocols; if it does not match the protocol of any matching block, the request fails.
+- `protocol` (String) The type of protocol of delegation (_ip4_ or _ip6_). Cannot be used with `federated_block_id`, because the protocol is taken from the block. When neither `federated_block_id` nor `federated_pool_id` is set, it also filters the candidate Federated Blocks, so set it whenever the matching blocks can have different protocols; if it does not match the protocol of any matching block, the request fails.
 - `tags` (Map of String) The tags for the Forward Looking Delegations in JSON format. When neither `federated_block_id` nor `federated_pool_id` is set, these tags also select the Federated Blocks that are considered for the allocation, so at least one Federated Block that belongs to a Federated Pool must carry the same tags. If several Federated Blocks carry the same tags, all of them are candidates: they are filled one after another and a single request can spread its delegations across them. Use `federated_block_id` or `federated_pool_id` to control where the delegations are created.
 
 ### Read-Only
