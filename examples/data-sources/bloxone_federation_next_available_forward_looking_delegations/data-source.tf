@@ -2,47 +2,57 @@
 # Terraform does not track or delete them: delete them through the API or the portal before destroying the
 # parent Federated Block, Federated Pool or Federated Realm.
 
-# A Federated Block is a required parent for the next available Forward Looking Delegations;
-# look up an existing one rather than creating it here.
+# Look up an existing Federated Block
 data "bloxone_federation_federated_blocks" "example_by_attribute" {
   filters = {
-    name = "example_federation_federated_block"
+    name = "example_federation_federated_block_with_pool"
   }
 }
 
-# Existing Forward Looking Delegation inside the Federated Block above
-resource "bloxone_federation_forward_looking_delegation" "example" {
-  address          = "10.10.0.0"
-  cidr             = 24
-  federated_realms = [data.bloxone_federation_federated_blocks.example_by_attribute.results.0.federated_realm]
-  name             = "example_forward_looking_delegation"
-  comment          = "Example forward looking delegation"
-}
-
-# Create the next available Forward Looking Delegations within the Federated Block
+# Create the next available Forward Looking Delegations within the Federated Block.
+# The protocol (ip4 or ip6) is taken from the block, so it is not set here.
 data "bloxone_federation_next_available_forward_looking_delegations" "example_by_block" {
   federated_block_id = data.bloxone_federation_federated_blocks.example_by_attribute.results.0.id
-  cidr               = 26
+  cidr               = 28
+  name               = "example_next_available_fld_by_block"
   comment            = "Example next available FLD under block"
 
   # Number of Forward Looking Delegations to create. Defaults to 1.
   fld_count = 2
 
-  depends_on = [bloxone_federation_forward_looking_delegation.example]
-}
-
-# Look up an existing IPv6 Federated Block
-data "bloxone_federation_federated_blocks" "example_by_attribute_ip6" {
-  filters = {
-    name = "example_federation_federated_block_ipv6"
+  tags = {
+    site = "Site A"
   }
 }
 
-# Create the next available Forward Looking Delegations within the IPv6 Federated Block
-data "bloxone_federation_next_available_forward_looking_delegations" "example_by_block_ip6" {
-  federated_block_id = data.bloxone_federation_federated_blocks.example_by_attribute_ip6.results.0.id
-  cidr               = 48
-  fld_count          = 2
+# Look up an existing Federated Pool
+data "bloxone_federation_federated_pools" "example_by_attribute" {
+  filters = {
+    name = "example_federation_federated_block_pool"
+  }
+}
+
+# Create the next available Forward Looking Delegations within the Federated Pool.
+# The protocol (ip4 or ip6) must match the protocol of the blocks in the pool.
+data "bloxone_federation_next_available_forward_looking_delegations" "example_by_pool" {
+  federated_pool_id = data.bloxone_federation_federated_pools.example_by_attribute.results.0.id
+  cidr              = 28
+  protocol          = "ip4"
+}
+
+# Create the next available Forward Looking Delegations globally. Neither federated_block_id nor
+# federated_pool_id is set, so the tags select the candidate Federated Blocks: at least one Federated Block
+# that belongs to a Federated Pool must carry the same tags.
+# If several Federated Blocks (in the same or different Federated Pools) carry the same tags, all of them are
+# candidates: the blocks are filled one after another, and the delegations of a single request with a count
+# greater than 1 can be spread across them. Use a distinctive tag, or set federated_block_id or
+# federated_pool_id, to control where the Forward Looking Delegations are created.
+# The protocol also filters the candidate Federated Blocks. Set it whenever the blocks matching the tags can have
+# different protocols (ip4 and ip6): blocks of the other protocol are skipped, and the request fails if no matching
+# block has this protocol.
+data "bloxone_federation_next_available_forward_looking_delegations" "example_global" {
+  cidr     = 28
+  protocol = "ip4"
 
   tags = {
     site = "Site A"
