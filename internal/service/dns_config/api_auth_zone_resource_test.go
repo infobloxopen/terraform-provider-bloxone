@@ -1457,6 +1457,7 @@ func testAccAuthZoneGridPrimaries(fqdn string, host int32, gridPrimaries []map[s
 data "bloxone_dns_hosts" "three" {
     tag_filters = {
         "host/deployment_type" = "CNIOS"
+        "host/nios_role"       = "Member"
     }
 }
 
@@ -1483,6 +1484,7 @@ func testAccAuthZoneGridSecondaries(fqdn string, host int32, gridSecondaries []m
 data "bloxone_dns_hosts" "three" {
     tag_filters = {
         "host/deployment_type" = "CNIOS"
+        "host/nios_role"       = "Member"
     }
 }
 
