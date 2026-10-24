@@ -38,11 +38,13 @@ var ProtoOnpremHostResourceSchemaAttributes = map[string]schema.Attribute{
 			Attributes: ProtoAnycastConfigRefResourceSchemaAttributes,
 		},
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `Array of AnycastConfigRef structures, identifying the anycast configurations that this host is a member of.`,
 	},
 	"config_bgp": schema.SingleNestedAttribute{
 		Attributes:          ProtoBgpConfigResourceSchemaAttributes,
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `Struct BGP configuration; defines BGP configuration for one anycast-enabled on-prem host.`,
 	},
 	"config_ospf": schema.SingleNestedAttribute{

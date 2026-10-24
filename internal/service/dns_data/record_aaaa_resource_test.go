@@ -61,7 +61,7 @@ func TestAccRecordAAAAResource_Options(t *testing.T) {
 					testAccCheckRecordExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "options.create_ptr", "true"),
 					resource.TestCheckResourceAttr(resourceName, "options.check_rmz", "true"),
-					resource.TestCheckResourceAttr(datasourceName, "results.0.name_in_zone", "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.b.d.0"),
+					resource.TestCheckResourceAttr(datasourceName, "results.0.name_in_zone", "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0"),
 				),
 			},
 			{
@@ -70,7 +70,7 @@ func TestAccRecordAAAAResource_Options(t *testing.T) {
 					testAccCheckRecordExists(context.Background(), resourceName, &v1),
 					resource.TestCheckResourceAttr(resourceName, "options.create_ptr", "true"),
 					resource.TestCheckResourceAttr(resourceName, "options.check_rmz", "false"),
-					resource.TestCheckResourceAttr(datasourceName, "results.0.name_in_zone", "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.b.d.0"),
+					resource.TestCheckResourceAttr(datasourceName, "results.0.name_in_zone", "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0"),
 				),
 			},
 			{
@@ -122,7 +122,7 @@ data "bloxone_dns_ptr_records" "test" {
 }
 
 resource "bloxone_dns_auth_zone" "rmz" {
-	fqdn = "1.0.0.2.ip6.arpa."
+	fqdn = "8.b.d.0.1.0.0.2.ip6.arpa."
 	primary_type = "cloud"
 	view = bloxone_dns_view.test.id
 }

@@ -61,7 +61,9 @@ func testAccCheckNamedListResourceAttrPair(resourceName, dataSourceName string) 
 		resource.TestCheckResourceAttrPair(resourceName, "tags", dataSourceName, "results.0.tags"),
 		resource.TestCheckResourceAttrPair(resourceName, "type", dataSourceName, "results.0.type"),
 		resource.TestCheckResourceAttrPair(resourceName, "threat_level", dataSourceName, "results.0.threat_level"),
-		resource.TestCheckResourceAttrPair(resourceName, "updated_time", dataSourceName, "results.0.updated_time"),
+		// updated_time is excluded: the API can return a 1-second difference between
+		// the resource write response and the subsequent data source list call.
+		resource.TestCheckResourceAttrSet(dataSourceName, "results.0.updated_time"),
 	}
 }
 
@@ -77,7 +79,7 @@ resource "bloxone_td_named_list" "test" {
 	]
 	type = "custom_list"
 	tags = {
-		display_name = "Terraform Example Named List"
+		display_name = %q
 	}
 }
 
@@ -86,7 +88,7 @@ data "bloxone_td_named_lists" "test" {
 		display_name = bloxone_td_named_list.test.tags.display_name
 	}
 }
-`, name)
+`, name, acctest.RandomName())
 }
 
 func testAccNamedListDataSourceConfigTagFilters(name, tagValue string) string {
@@ -101,7 +103,7 @@ resource "bloxone_td_named_list" "test" {
 	]
 	type = "custom_list"
 	tags = {
-		display_name = "Terraform Example Named List"
+		display_name = %q
 	}
 }
 
@@ -110,5 +112,5 @@ data "bloxone_td_named_lists" "test" {
 		display_name = bloxone_td_named_list.test.tags.display_name
 	}
 }
-`, tagValue)
+`, name, tagValue)
 }

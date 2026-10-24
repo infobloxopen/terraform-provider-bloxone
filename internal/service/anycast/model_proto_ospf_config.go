@@ -47,50 +47,62 @@ var ProtoOspfConfigAttrTypes = map[string]attr.Type{
 var ProtoOspfConfigResourceSchemaAttributes = map[string]schema.Attribute{
 	"area": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "OSPF area identifier; usually in the format of an IPv4 address (although not an address itself)",
 	},
 	"area_type": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `OSPF area type; one of: "STANDARD", "STUB", "NSSA".`,
 	},
 	"authentication_key": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `OSPF authentication key.`,
 	},
 	"authentication_key_id": schema.Int64Attribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `title: Numeric OSPF authentication key identifier.`,
 	},
 	"authentication_type": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `OSPF authentication type; one of "Clear", "MD5".`,
 	},
 	"cost": schema.Int64Attribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `Explicit link cost for the interface.`,
 	},
 	"dead_interval": schema.Int64Attribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `OSPF router dead interval timer in seconds; must be the same for all the routers on the same network; default: 40 secs.`,
 	},
 	"hello_interval": schema.Int64Attribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `Period (in seconds) of OSPF Hello packet, sent by the OSPF router; must be the same for all the routers on the same network; default: 10 secs.`,
 	},
 	"interface": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Name of the interface that is configured with external IP address of the host",
 	},
 	"preamble": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "Any predefined OSPF configuration, with embedded new lines; the preamble will be prepended to the generated BGP configuration.",
 	},
 	"retransmit_interval": schema.Int64Attribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `Period (in seconds) of retransmitting for OSPF Database Description and Link State Requests; default: 5 seconds.`,
 	},
 	"transmit_delay": schema.Int64Attribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: `Estimated time to transmit link state advertisements; default: 1 sec.`,
 	},
 }

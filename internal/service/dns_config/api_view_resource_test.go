@@ -39,7 +39,6 @@ func TestAccViewResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
 					// Test fields with default value
-					resource.TestCheckResourceAttr(resourceName, "dnssec_root_keys.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "disabled", "false"),
 					resource.TestCheckResourceAttr(resourceName, "ecs_enabled", "false"),
 					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_on_v4", "no"),

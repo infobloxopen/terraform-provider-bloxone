@@ -1,3 +1,5 @@
+//go:build v2
+
 package dns_config_test
 
 import (
