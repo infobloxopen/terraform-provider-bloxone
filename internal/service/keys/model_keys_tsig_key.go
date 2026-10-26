@@ -30,6 +30,7 @@ type KeysTSIGKeyModel struct {
 	ProtocolName types.String      `tfsdk:"protocol_name"`
 	Secret       types.String      `tfsdk:"secret"`
 	Tags         types.Map         `tfsdk:"tags"`
+	TagsAll      types.Map         `tfsdk:"tags_all"`
 	UpdatedAt    timetypes.RFC3339 `tfsdk:"updated_at"`
 }
 
@@ -42,6 +43,7 @@ var KeysTSIGKeyAttrTypes = map[string]attr.Type{
 	"protocol_name": types.StringType,
 	"secret":        types.StringType,
 	"tags":          types.MapType{ElemType: types.StringType},
+	"tags_all":      types.MapType{ElemType: types.StringType},
 	"updated_at":    timetypes.RFC3339Type{},
 }
 
@@ -101,6 +103,11 @@ var KeysTSIGKeyResourceSchemaAttributes = map[string]schema.Attribute{
 		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
 		MarkdownDescription: "The tags for the TSIG key in JSON format.",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "All tags, including the default tags set on the provider.",
+	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
@@ -140,6 +147,7 @@ func FlattenKeysTSIGKey(ctx context.Context, from *keys.TSIGKey, diags *diag.Dia
 	}
 	m := KeysTSIGKeyModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, KeysTSIGKeyAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -159,6 +167,6 @@ func (m *KeysTSIGKeyModel) Flatten(ctx context.Context, from *keys.TSIGKey, diag
 	m.Name = flex.FlattenString(from.Name)
 	m.ProtocolName = flex.FlattenStringPointer(from.ProtocolName)
 	m.Secret = flex.FlattenString(from.Secret)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }

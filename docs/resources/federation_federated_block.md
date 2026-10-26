@@ -16,16 +16,35 @@ The Federated Block object allows a uniform representation of the address space 
 ## Example Usage
 
 ```terraform
+# Create a Federated Realm to associate the pool and the blocks with
 resource "bloxone_federation_federated_realm" "example" {
-  name = "example_federation_federated_realm"
+  name = "example_federation_federated_block_realm"
 }
 
+# Create a basic Federated Block without a Federated Pool
 resource "bloxone_federation_federated_block" "example" {
   name            = "example_federation_federated_block"
   federated_realm = bloxone_federation_federated_realm.example.id
   cidr            = 24
-  address         = "10.10.0.0"
+  address         = "10.20.0.0"
+}
 
+# Create a Federated Pool to create a block in
+resource "bloxone_federation_federated_pool" "example" {
+  name            = "example_federation_federated_block_pool"
+  federated_realm = bloxone_federation_federated_realm.example.id
+  protocol        = "ip4"
+}
+
+# Create a Federated Block in the Federated Pool
+resource "bloxone_federation_federated_block" "example_with_pool" {
+  name              = "example_federation_federated_block_with_pool"
+  federated_realm   = bloxone_federation_federated_realm.example.id
+  federated_pool_id = bloxone_federation_federated_pool.example.id
+  cidr              = 24
+  address           = "10.10.0.0"
+
+  # network_compliance can be configured for NIOS_X provider only
   network_compliance = {
     default_netmask_length = 26
     minimum_netmask_length = 25
@@ -43,14 +62,14 @@ resource "bloxone_federation_federated_block" "example" {
 
 ### Required
 
-- `cidr` (Number) The CIDR of the federated block. This is required, if _address_ does not specify it in its input.
+- `cidr` (Number) The CIDR of the federated block.
 - `federated_realm` (String) The resource identifier.
 
 ### Optional
 
-- `address` (String) The address of the subnet in the form “a.b.c.d”
+- `address` (String) The address of the federated block, an IPv4 address in form "a.b.c.d" or an IPv6 address. Do not include a prefix length ("/n"); use the _cidr_ field instead.
 - `comment` (String) The description for the federated block. May contain 0 to 1024 characters. Can include UTF-8.
-- `federated_pool_id` (String) The resource identifier.
+- `federated_pool_id` (String) The resource identifier of the federated pool the block is in. A block cannot be moved to another pool, so changing it replaces the block.
 - `name` (String) The name of the federated block. May contain 1 to 256 characters. Can include UTF-8.
 - `network_compliance` (Attributes) The network compliance policy for child objects. This defines the minimum, default, and maximum netmask lengths that can be used when creating child blocks. (see [below for nested schema](#nestedatt--network_compliance))
 - `tags` (Map of String) The tags for the federated block in JSON format.
@@ -98,20 +117,5 @@ Read-Only:
 
 Read-Only:
 
-- `total` (Attributes) Total IPv6 addresses. (see [below for nested schema](#nestedatt--utilization_v6--total))
-- `used` (Attributes) Used IPv6 addresses. (see [below for nested schema](#nestedatt--utilization_v6--used))
-
-<a id="nestedatt--utilization_v6--total"></a>
-### Nested Schema for `utilization_v6.total`
-
-Read-Only:
-
-- `raw_value` (String)
-
-
-<a id="nestedatt--utilization_v6--used"></a>
-### Nested Schema for `utilization_v6.used`
-
-Read-Only:
-
-- `raw_value` (String)
+- `total` (String) Total IPv6 addresses.
+- `used` (String) Used IPv6 addresses.
