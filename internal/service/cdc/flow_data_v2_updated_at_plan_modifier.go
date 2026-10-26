@@ -56,27 +56,58 @@ func (m flowUpdatedAtPlanModifier) PlanModifyString(ctx context.Context, req pla
 }
 
 // flowConfigRequestsChange reports whether the user's config explicitly
-// sets any flow attribute to a value different from prior state. Attributes
-// the user left unconfigured (null in config) can't represent a
-// user-requested change, regardless of what their planned value resolves
-// to.
+// sets any flow attribute to a value different from prior state.
+//
+// Two different comparisons are needed depending on each attribute's
+// schema, because "config is null" means something different for each:
+//   - Optional+Computed attributes (description, enabled, etl_filters,
+//     filter_expression, schedule_option, script_schedule): a null config
+//     just means "let the provider/backend decide", not "clear this value" -
+//     the attribute's planned/state value can legitimately be non-null even
+//     though config never set it. For these, configDiffers correctly
+//     ignores a null config (it can't represent a user-requested change).
+//   - Plain Optional (not Computed) attributes (cdc_services, destinations,
+//     name, source, source_data_types, tags): the planned value always
+//     equals the literal config value, null or not - there's no separate
+//     "computed default" for Terraform to fall back on. So a transition
+//     from a previously-set value to a null config (the user deliberately
+//     removing/clearing the attribute) *is* a real, user-requested change,
+//     and must be detected the same as any other diff. Using configDiffers
+//     here would silently miss that case - the field change would still
+//     force a real Update() (since it's not Computed, Terraform plans the
+//     diff on its own either way), but flowConfigRequestsChange would
+//     wrongly report "no change", causing updated_at to stay pinned to the
+//     stale prior value while the backend genuinely bumps it - the exact
+//     "provider produced inconsistent result after apply" shape this
+//     modifier exists to prevent.
 func flowConfigRequestsChange(state, config FlowDataV2Model) bool {
-	return configDiffers(config.CdcServices, state.CdcServices) ||
+	return optionalDiffers(config.CdcServices, state.CdcServices) ||
 		configDiffers(config.Description, state.Description) ||
-		configDiffers(config.Destinations, state.Destinations) ||
+		optionalDiffers(config.Destinations, state.Destinations) ||
 		configDiffers(config.Enabled, state.Enabled) ||
 		configDiffers(config.EtlFilters, state.EtlFilters) ||
 		configDiffers(config.FilterExpression, state.FilterExpression) ||
-		configDiffers(config.Name, state.Name) ||
+		optionalDiffers(config.Name, state.Name) ||
 		configDiffers(config.ScheduleOption, state.ScheduleOption) ||
 		configDiffers(config.ScriptSchedule, state.ScriptSchedule) ||
-		configDiffers(config.Source, state.Source) ||
-		configDiffers(config.SourceDataTypes, state.SourceDataTypes) ||
-		configDiffers(config.Tags, state.Tags)
+		optionalDiffers(config.Source, state.Source) ||
+		optionalDiffers(config.SourceDataTypes, state.SourceDataTypes) ||
+		optionalDiffers(config.Tags, state.Tags)
 }
 
+// configDiffers reports a change for an Optional+Computed attribute: a null
+// config can never represent a user-requested change, since the provider
+// may legitimately plan a non-null value for it on its own.
 func configDiffers(configVal, stateVal attr.Value) bool {
 	return !configVal.IsNull() && !configVal.Equal(stateVal)
+}
+
+// optionalDiffers reports a change for a plain Optional (not Computed)
+// attribute: its planned value always equals the literal config value, so
+// even a transition to/from null (the user adding or clearing the
+// attribute) is a real, user-requested change.
+func optionalDiffers(configVal, stateVal attr.Value) bool {
+	return !configVal.Equal(stateVal)
 }
 
 // flowSourceLogTypesPlanModifier preserves source_log_types from prior
@@ -109,7 +140,7 @@ func (m flowSourceLogTypesPlanModifier) PlanModifyList(ctx context.Context, req 
 		return
 	}
 
-	if !configDiffers(configData.SourceDataTypes, stateData.SourceDataTypes) {
+	if !optionalDiffers(configData.SourceDataTypes, stateData.SourceDataTypes) {
 		resp.PlanValue = req.StateValue
 	}
 }
