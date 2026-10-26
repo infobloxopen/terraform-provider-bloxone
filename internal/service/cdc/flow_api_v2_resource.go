@@ -31,7 +31,7 @@ func (r *FlowApiV2Resource) Metadata(ctx context.Context, req resource.MetadataR
 
 func (r *FlowApiV2Resource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages a Data Flow.\n\nThe Data Flow object connects a source, one or more destinations, and optional ETL filters to define how data moves through Cloud Data Connector (CDC).",
 		Attributes:          FlowDataV2ResourceSchemaAttributes,
 	}
 }

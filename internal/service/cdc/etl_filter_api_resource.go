@@ -31,7 +31,7 @@ func (r *EtlFilterApiResource) Metadata(ctx context.Context, req resource.Metada
 
 func (r *EtlFilterApiResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages a Record Type ETL Filter.\n\nThe Record Type ETL Filter object filters Cloud Data Connector (CDC) flow data by DNS record type.",
 		Attributes:          EtlFilterRecordTypeResourceSchemaAttributes,
 	}
 }

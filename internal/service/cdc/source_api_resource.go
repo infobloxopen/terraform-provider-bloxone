@@ -31,7 +31,7 @@ func (r *SourceApiResource) Metadata(ctx context.Context, req resource.MetadataR
 
 func (r *SourceApiResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages a NIOS Source.\n\nThe NIOS Source object represents a NIOS instance configured as a data source for Cloud Data Connector (CDC).",
 		Attributes:          SourceNiosResourceSchemaAttributes,
 	}
 }

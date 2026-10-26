@@ -31,7 +31,7 @@ func (r *ApplicationApiResource) Metadata(ctx context.Context, req resource.Meta
 
 func (r *ApplicationApiResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages an Application.\n\nThe Application object represents a Cloud Data Connector (CDC) application, such as a Python script, that can process flow data.",
 		Attributes:          ApplicationDataResourceSchemaAttributes,
 	}
 }

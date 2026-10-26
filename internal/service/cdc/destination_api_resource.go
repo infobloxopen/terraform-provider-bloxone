@@ -31,7 +31,7 @@ func (r *DestinationApiResource) Metadata(ctx context.Context, req resource.Meta
 
 func (r *DestinationApiResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "",
+		MarkdownDescription: "Manages a Syslog Destination.\n\nThe Syslog Destination object represents a syslog server that Cloud Data Connector (CDC) can send data to.",
 		Attributes:          DestinationSyslogResourceSchemaAttributes,
 	}
 }
