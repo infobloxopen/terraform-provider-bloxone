@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
 )
 
@@ -163,5 +163,5 @@ func (r *OnPremAnycastManagerResource) Delete(ctx context.Context, req resource.
 }
 
 func (r *OnPremAnycastManagerResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+	utils.ImportStatePassthroughInt64ID(ctx, req, resp)
 }

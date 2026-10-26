@@ -28,6 +28,7 @@ type AtcfwApplicationFilterModel struct {
 	Policies    types.List        `tfsdk:"policies"`
 	Readonly    types.Bool        `tfsdk:"readonly"`
 	Tags        types.Map         `tfsdk:"tags"`
+	TagsAll     types.Map         `tfsdk:"tags_all"`
 	UpdatedTime timetypes.RFC3339 `tfsdk:"updated_time"`
 }
 
@@ -40,6 +41,7 @@ var AtcfwApplicationFilterAttrTypes = map[string]attr.Type{
 	"policies":     types.ListType{ElemType: types.StringType},
 	"readonly":     types.BoolType,
 	"tags":         types.MapType{ElemType: types.StringType},
+	"tags_all":     types.MapType{ElemType: types.StringType},
 	"updated_time": timetypes.RFC3339Type{},
 }
 
@@ -89,6 +91,11 @@ var AtcfwApplicationFilterResourceSchemaAttributes = map[string]schema.Attribute
 		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
 		MarkdownDescription: "Enables tag support for resource where tags attribute contains user-defined key value pairs",
 	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "All tags, including the default tags set on the provider.",
+	},
 	"updated_time": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
@@ -127,6 +134,7 @@ func FlattenAtcfwApplicationFilter(ctx context.Context, from *fw.ApplicationFilt
 	}
 	m := AtcfwApplicationFilterModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, AtcfwApplicationFilterAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -146,6 +154,6 @@ func (m *AtcfwApplicationFilterModel) Flatten(ctx context.Context, from *fw.Appl
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.Policies = flex.FlattenFrameworkListString(ctx, from.Policies, diags)
 	m.Readonly = types.BoolPointerValue(from.Readonly)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedTime = timetypes.NewRFC3339TimePointerValue(from.UpdatedTime)
 }

@@ -10,26 +10,26 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
 type UtilizationV6Model struct {
-	Total types.Object `tfsdk:"total"`
-	Used  types.Object `tfsdk:"used"`
+	Total types.String `tfsdk:"total"`
+	Used  types.String `tfsdk:"used"`
 }
 
 var UtilizationV6AttrTypes = map[string]attr.Type{
-	"total": types.ObjectType{AttrTypes: Integer128AttrTypes},
-	"used":  types.ObjectType{AttrTypes: Integer128AttrTypes},
+	"total": types.StringType,
+	"used":  types.StringType,
 }
 
 var UtilizationV6ResourceSchemaAttributes = map[string]schema.Attribute{
-	"total": schema.SingleNestedAttribute{
-		Attributes:          Integer128ResourceSchemaAttributes,
+	"total": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: "Total IPv6 addresses.",
 	},
-	"used": schema.SingleNestedAttribute{
-		Attributes:          Integer128ResourceSchemaAttributes,
+	"used": schema.StringAttribute{
 		Computed:            true,
 		MarkdownDescription: "Used IPv6 addresses.",
 	},
@@ -52,8 +52,8 @@ func (m *UtilizationV6Model) Expand(ctx context.Context, diags *diag.Diagnostics
 		return nil
 	}
 	return &ipamfederation.UtilizationV6{
-		Total: ExpandInteger128(ctx, m.Total, diags),
-		Used:  ExpandInteger128(ctx, m.Used, diags),
+		Total: flex.ExpandStringPointer(m.Total),
+		Used:  flex.ExpandStringPointer(m.Used),
 	}
 }
 
@@ -75,6 +75,6 @@ func (m *UtilizationV6Model) Flatten(ctx context.Context, from *ipamfederation.U
 	if m == nil {
 		*m = UtilizationV6Model{}
 	}
-	m.Total = FlattenInteger128(ctx, from.Total, diags)
-	m.Used = FlattenInteger128(ctx, from.Used, diags)
+	m.Total = flex.FlattenStringPointer(from.Total)
+	m.Used = flex.FlattenStringPointer(from.Used)
 }

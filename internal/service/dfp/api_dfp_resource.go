@@ -173,5 +173,7 @@ func (r *DfpResource) Delete(ctx context.Context, req resource.DeleteRequest, re
 }
 
 func (r *DfpResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+	// Every API call is keyed by service_id (id is only an output), so that is what is imported;
+	// Read then fills in id.
+	resource.ImportStatePassthroughID(ctx, path.Root("service_id"), req, resp)
 }

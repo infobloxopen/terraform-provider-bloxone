@@ -23,6 +23,8 @@ type FederatedRealmModel struct {
 	CreatedAt    timetypes.RFC3339 `tfsdk:"created_at"`
 	Id           types.String      `tfsdk:"id"`
 	Name         types.String      `tfsdk:"name"`
+	ProviderType types.String      `tfsdk:"provider_type"`
+	Region       types.String      `tfsdk:"region"`
 	Tags         types.Map         `tfsdk:"tags"`
 	TagsAll      types.Map         `tfsdk:"tags_all"`
 	UpdatedAt    timetypes.RFC3339 `tfsdk:"updated_at"`
@@ -34,6 +36,8 @@ var FederatedRealmAttrTypes = map[string]attr.Type{
 	"created_at":    timetypes.RFC3339Type{},
 	"id":            types.StringType,
 	"name":          types.StringType,
+	"provider_type": types.StringType,
+	"region":        types.StringType,
 	"tags":          types.MapType{ElemType: types.StringType},
 	"tags_all":      types.MapType{ElemType: types.StringType},
 	"updated_at":    timetypes.RFC3339Type{},
@@ -66,6 +70,14 @@ var FederatedRealmResourceSchemaAttributes = map[string]schema.Attribute{
 	"name": schema.StringAttribute{
 		Required:            true,
 		MarkdownDescription: "The name of the federated realm. May contain 1 to 256 characters; can include UTF-8.",
+	},
+	"provider_type": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The provider type this realm is associated with. One of `NIOS_X`, `NIOS`, `AWS`, `AZURE`, `GCP`, `MSAD`.",
+	},
+	"region": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The region where the realm is located.",
 	},
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
@@ -123,6 +135,8 @@ func (m *FederatedRealmModel) Flatten(ctx context.Context, from *ipamfederation.
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.Id = flex.FlattenStringPointer(from.Id)
 	m.Name = flex.FlattenString(from.Name)
+	m.ProviderType = flex.FlattenStringPointer((*string)(from.Provider))
+	m.Region = flex.FlattenStringPointer(from.Region)
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }
