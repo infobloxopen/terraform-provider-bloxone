@@ -12,5 +12,18 @@ data "bloxone_federation_federated_blocks" "example_by_tag" {
   }
 }
 
+# Get the Federated Blocks in a Federated Pool
+data "bloxone_federation_federated_pools" "example_pool" {
+  filters = {
+    name = "example_federation_federated_pool"
+  }
+}
+
+data "bloxone_federation_federated_blocks" "example_by_pool" {
+  filters = {
+    federated_pool_id = data.bloxone_federation_federated_pools.example_pool.results[0].id
+  }
+}
+
 # Get all Federated Block
 data "bloxone_federation_federated_blocks" "example_all" {}
