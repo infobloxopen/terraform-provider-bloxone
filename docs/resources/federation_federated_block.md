@@ -62,12 +62,12 @@ resource "bloxone_federation_federated_block" "example_with_pool" {
 
 ### Required
 
+- `address` (String) The address of the federated block, an IPv4 address in form "a.b.c.d" or an IPv6 address. Do not include a prefix length ("/n"); use the _cidr_ field instead.
 - `cidr` (Number) The CIDR of the federated block.
 - `federated_realm` (String) The resource identifier.
 
 ### Optional
 
-- `address` (String) The address of the federated block, an IPv4 address in form "a.b.c.d" or an IPv6 address. Do not include a prefix length ("/n"); use the _cidr_ field instead.
 - `comment` (String) The description for the federated block. May contain 0 to 1024 characters. Can include UTF-8.
 - `federated_pool_id` (String) The resource identifier of the federated pool the block is in. A block cannot be moved to another pool, so changing it replaces the block.
 - `name` (String) The name of the federated block. May contain 1 to 256 characters. Can include UTF-8.

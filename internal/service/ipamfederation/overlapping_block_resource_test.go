@@ -5,10 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"regexp"
 	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
@@ -45,6 +47,64 @@ func TestAccOverlappingBlockResource_basic(t *testing.T) {
 				),
 			},
 			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccOverlappingBlockResource_IPv6(t *testing.T) {
+	var resourceName = "bloxone_federation_overlapping_block.test"
+	var v ipamfederation.OverlappingBlock
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	var idBefore string
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccOverlappingBlockBasicConfig("2001:db8:d1::", 48, realmName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckOverlappingBlockExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "address", "2001:db8:d1::"),
+					resource.TestCheckResourceAttr(resourceName, "cidr", "48"),
+					resource.TestCheckResourceAttr(resourceName, "protocol", "ip6"),
+					func(*terraform.State) error { idBefore = *v.Id; return nil },
+				),
+			},
+			// Same address in different letter case must update in place, not replace
+			{
+				Config: testAccOverlappingBlockBasicConfig("2001:DB8:D1::", 48, realmName),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction(resourceName, plancheck.ResourceActionUpdate),
+					},
+				},
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckOverlappingBlockExists(context.Background(), resourceName, &v),
+					func(*terraform.State) error {
+						if *v.Id != idBefore {
+							return fmt.Errorf("expected resource to be updated in place, but id changed from %s to %s", idBefore, *v.Id)
+						}
+						return nil
+					},
+				),
+			},
+		},
+	})
+}
+
+func TestAccOverlappingBlockResource_AddressWithPrefixInvalid(t *testing.T) {
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccOverlappingBlockBasicConfig("10.24.0.0/16", 16, realmName),
+				ExpectError: regexp.MustCompile(`Invalid IP Address`),
+			},
 		},
 	})
 }

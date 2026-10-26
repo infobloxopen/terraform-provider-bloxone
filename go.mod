@@ -89,3 +89,5 @@ require (
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/infobloxopen/universal-ddi-go-client v0.5.1-0.20261019104600-c7e17798c16b => ../universal-ddi-go-client

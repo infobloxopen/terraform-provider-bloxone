@@ -3,6 +3,7 @@ package ipamfederation
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework-nettypes/iptypes"
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -19,10 +20,12 @@ import (
 	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internalplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
+	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
 type OverlappingBlockModel struct {
-	Address          types.String      `tfsdk:"address"`
+	Address          iptypes.IPAddress `tfsdk:"address"`
 	Cidr             types.Int64       `tfsdk:"cidr"`
 	Comment          types.String      `tfsdk:"comment"`
 	CreatedAt        timetypes.RFC3339 `tfsdk:"created_at"`
@@ -57,19 +60,22 @@ var OverlappingBlockAttrTypes = map[string]attr.Type{
 
 var OverlappingBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplace(),
+		CustomType: iptypes.IPAddressType{},
+		Required:   true,
+		Validators: []validator.String{
+			internalvalidator.IsValidIPAddress(),
 		},
-		MarkdownDescription: "The address field in form “a.b.c.d/n” where the “/n” may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form “a.b.c.d”. This field is immutable after creation.",
+		PlanModifiers: []planmodifier.String{
+			internalplanmodifier.RequiresReplaceIfIPAddressChanged(),
+		},
+		MarkdownDescription: "The address of the overlapping block, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead. This field is immutable after creation.",
 	},
 	"cidr": schema.Int64Attribute{
 		Required: true,
 		Validators: []validator.Int64{
 			int64validator.Between(1, 128),
 		},
-		MarkdownDescription: "The CIDR of the overlapping block. This is required, if _address_ does not specify it in its input.",
+		MarkdownDescription: "The CIDR of the overlapping block.",
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
@@ -159,7 +165,7 @@ func (m *OverlappingBlockModel) Expand(ctx context.Context, diags *diag.Diagnost
 		Tags:            flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 	if isCreate {
-		to.Address = flex.ExpandStringPointer(m.Address)
+		to.Address = m.Address.ValueStringPointer()
 	}
 	return to
 }
@@ -183,7 +189,7 @@ func (m *OverlappingBlockModel) Flatten(ctx context.Context, from *ipamfederatio
 	if m == nil {
 		*m = OverlappingBlockModel{}
 	}
-	m.Address = flex.FlattenStringPointer(from.Address)
+	m.Address = iptypes.NewIPAddressPointerValue(from.Address)
 	m.Cidr = flex.FlattenInt64Pointer(from.Cidr)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)

@@ -22,6 +22,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	internalplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
 	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
+	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
 type ForwardLookingDelegationModel struct {
@@ -60,6 +61,9 @@ var ForwardLookingDelegationResourceSchemaAttributes = map[string]schema.Attribu
 	"address": schema.StringAttribute{
 		CustomType: iptypes.IPAddressType{},
 		Required:   true,
+		Validators: []validator.String{
+			internalvalidator.IsValidIPAddress(),
+		},
 		PlanModifiers: []planmodifier.String{
 			internalplanmodifier.RequiresReplaceIfIPAddressChanged(),
 		},

@@ -73,8 +73,7 @@ var FederatedBlockAttrTypes = map[string]attr.Type{
 var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
 		CustomType: iptypes.IPAddressType{},
-		Optional:   true,
-		Computed:   true,
+		Required:   true,
 		Validators: []validator.String{
 			internalvalidator.IsValidIPAddress(),
 		},
