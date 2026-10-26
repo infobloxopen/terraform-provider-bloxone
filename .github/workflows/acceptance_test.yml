@@ -45,7 +45,7 @@ jobs:
           FLAKY_PACKAGES=$(go list ./... | grep -v 'vendor' | grep -E 'dns_config|dns_data|ipam|ipamfederation|clouddiscovery|anycast|/fw')
           OTHER_PACKAGES=$(go list ./... | grep -v 'vendor' | grep -vE 'dns_config|dns_data|ipam|ipamfederation|clouddiscovery|anycast|/fw')
 
-          if go test -parallel=1 $FLAKY_PACKAGES -timeout 120m -v -cover 2>&1 \
+          if go test -p 1 -parallel=1 $FLAKY_PACKAGES -timeout 120m -v -cover 2>&1 \
             | tee -a test_output.log \
             | go tool test2json -p summary >> test_output.json; then :; fi
           EXIT_CODE=$((EXIT_CODE || ${PIPESTATUS[0]}))

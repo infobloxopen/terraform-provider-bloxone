@@ -3,10 +3,12 @@ package anycast
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listdefault"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -29,6 +31,9 @@ var ProtoAnycastConfigRefResourceSchemaAttributes = map[string]schema.Attribute{
 	"anycast_config_name": schema.StringAttribute{
 		Computed: true,
 		Optional: true,
+		Validators: []validator.String{
+			stringvalidator.LengthAtLeast(1),
+		},
 	},
 	"routing_protocols": schema.ListAttribute{
 		ElementType:         types.StringType,

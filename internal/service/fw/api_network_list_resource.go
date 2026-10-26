@@ -95,6 +95,9 @@ func (r *NetworkListResource) Create(ctx context.Context, req resource.CreateReq
 		return nil
 	})
 	if err != nil {
+		if !resp.Diagnostics.HasError() {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create NetworkList, got error: %s", err))
+		}
 		return
 	}
 
@@ -187,6 +190,9 @@ func (r *NetworkListResource) Delete(ctx context.Context, req resource.DeleteReq
 		return nil
 	})
 	if err != nil {
+		if !resp.Diagnostics.HasError() {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete NetworkLists, got error: %s", err))
+		}
 		return
 	}
 }

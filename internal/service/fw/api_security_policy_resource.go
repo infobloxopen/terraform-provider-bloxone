@@ -75,15 +75,20 @@ func (r *SecurityPolicyResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
+	body := data.Expand(ctx, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	err := retry.RetryContext(ctx, SecurityPolicyOperationTimeout, func() *retry.RetryError {
 		apiRes, _, err := r.client.FWAPI.
 			SecurityPoliciesAPI.
 			CreateSecurityPolicy(ctx).
-			Body(*data.Expand(ctx, &resp.Diagnostics)).
+			Body(*body).
 			Execute()
 		if err != nil {
 			if strings.Contains(err.Error(), "Internal Server Error") {
-				tflog.Debug(ctx, "Waiting for related objects to be present, will retry", map[string]interface{}{"error": err.Error()})
+				tflog.Debug(ctx, "Waiting for NamedLists/NetworkLists to be available, will retry", map[string]interface{}{"error": err.Error()})
 				return retry.RetryableError(err)
 			}
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create SecurityPolicies, got error: %s", err))
@@ -95,6 +100,9 @@ func (r *SecurityPolicyResource) Create(ctx context.Context, req resource.Create
 		return nil
 	})
 	if err != nil {
+		if !resp.Diagnostics.HasError() {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create SecurityPolicies, got error: %s", err))
+		}
 		return
 	}
 
