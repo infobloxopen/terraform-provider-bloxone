@@ -2,18 +2,16 @@ package cdc
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -30,12 +28,13 @@ import (
 // against cdc.ApplicationData instead.
 type ApplicationDataModel struct {
 	CreatedAt   timetypes.RFC3339 `tfsdk:"created_at"`
-	Data        types.Map         `tfsdk:"data"`
+	Data        types.Object      `tfsdk:"data"`
 	Description types.String      `tfsdk:"description"`
 	Enabled     types.Bool        `tfsdk:"enabled"`
 	Id          types.Int64       `tfsdk:"id"`
 	Name        types.String      `tfsdk:"name"`
 	Tags        types.Map         `tfsdk:"tags"`
+	TagsAll     types.Map         `tfsdk:"tags_all"`
 	Type        types.String      `tfsdk:"type"`
 	UpdatedAt   timetypes.RFC3339 `tfsdk:"updated_at"`
 	Variables   types.Map         `tfsdk:"variables"`
@@ -43,12 +42,13 @@ type ApplicationDataModel struct {
 
 var ApplicationDataAttrTypes = map[string]attr.Type{
 	"created_at":  timetypes.RFC3339Type{},
-	"data":        types.MapType{ElemType: types.StringType},
+	"data":        types.ObjectType{AttrTypes: ApplicationDataContentAttrTypes},
 	"description": types.StringType,
 	"enabled":     types.BoolType,
 	"id":          types.Int64Type,
 	"name":        types.StringType,
 	"tags":        types.MapType{ElemType: types.StringType},
+	"tags_all":    types.MapType{ElemType: types.StringType},
 	"type":        types.StringType,
 	"updated_at":  timetypes.RFC3339Type{},
 	"variables":   types.MapType{ElemType: types.StringType},
@@ -56,70 +56,65 @@ var ApplicationDataAttrTypes = map[string]attr.Type{
 
 var ApplicationDataResourceSchemaAttributes = map[string]schema.Attribute{
 	"created_at": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Computed:   true,
-	},
-	// data/variables are arbitrary, per-key nested JSON objects
-	// (map[string]map[string]interface{} in the SDK) - there's no existing
-	// precedent anywhere in this provider for representing that shape
-	// directly, so each value here is a JSON-encoded string instead (e.g.
-	// data = { key1 = jsonencode({nested = "value"}) }), decoded/encoded on
-	// the way in and out.
-	"data": schema.MapAttribute{
-		ElementType:         types.StringType,
-		Optional:            true,
+		CustomType:          timetypes.RFC3339Type{},
 		Computed:            true,
-		MarkdownDescription: "Arbitrary application configuration data. Each value must be a JSON-encoded string, e.g. `jsonencode({...})`.",
-		PlanModifiers: []planmodifier.Map{
-			mapplanmodifier.UseStateForUnknown(),
-		},
+		MarkdownDescription: "Time when the object has been created.",
+	},
+	"data": schema.SingleNestedAttribute{
+		Attributes:          ApplicationDataContentResourceSchemaAttributes,
+		Required:            true,
+		MarkdownDescription: "The application data containing the scripts.",
 	},
 	"description": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
+		MarkdownDescription: "The description of the application.",
 	},
 	"enabled": schema.BoolAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.Bool{
-			boolplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		Default:             booldefault.StaticBool(true),
+		MarkdownDescription: "Indicates whether the application is enabled.",
 	},
 	"id": schema.Int64Attribute{
 		Computed: true,
 		PlanModifiers: []planmodifier.Int64{
 			int64planmodifier.UseStateForUnknown(),
 		},
+		MarkdownDescription: "The resource identifier.",
 	},
 	"name": schema.StringAttribute{
-		Optional: true,
+		Required:            true,
+		MarkdownDescription: "The name of the application.",
 	},
 	"tags": schema.MapAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
+		ElementType:         types.StringType,
+		Optional:            true,
+		Computed:            true,
+		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
+		MarkdownDescription: "The tags for the application.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the application, including default tags.",
 	},
 	"type": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
-		},
+		Computed:            true, // Backend always returns "type": "PYTHON_SCRIPT"
+		MarkdownDescription: "The type of the application.",
 	},
 	"updated_at": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Computed:   true,
+		CustomType:          timetypes.RFC3339Type{},
+		Computed:            true,
+		MarkdownDescription: "Time when the object has been updated. Equals to _created_at_ if not updated after creation.",
 	},
 	"variables": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Arbitrary application variables. Each value must be a JSON-encoded string, e.g. `jsonencode({...})`.",
-		PlanModifiers: []planmodifier.Map{
-			mapplanmodifier.UseStateForUnknown(),
-		},
+		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
+		MarkdownDescription: "The variables for the application.",
 	},
 }
 
@@ -140,23 +135,23 @@ func (m *ApplicationDataModel) Expand(ctx context.Context, diags *diag.Diagnosti
 		return nil
 	}
 	to := &cdc.ApplicationData{
-		Data:        expandNestedJSONMap(ctx, m.Data, diags),
+		Data:        ExpandApplicationDataContent(ctx, m.Data, diags),
 		Description: flex.ExpandStringPointer(m.Description),
 		Enabled:     flex.ExpandBoolPointer(m.Enabled),
 		Name:        flex.ExpandStringPointer(m.Name),
 		Tags:        flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
-		Type:        flex.ExpandStringPointer(m.Type),
-		Variables:   expandNestedJSONMap(ctx, m.Variables, diags),
+		Variables:   expandMapStringPointer(ctx, m.Variables, diags),
 	}
 	return to
 }
 
-func FlattenApplicationData(ctx context.Context, from *cdc.ApplicationData, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenApplicationData(ctx context.Context, from *cdc.ApplicationData, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(ApplicationDataAttrTypes)
 	}
 	m := ApplicationDataModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, ApplicationDataAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -170,56 +165,38 @@ func (m *ApplicationDataModel) Flatten(ctx context.Context, from *cdc.Applicatio
 		*m = ApplicationDataModel{}
 	}
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
-	m.Data = flattenNestedJSONMap(ctx, from.Data, diags)
+	m.Data = FlattenApplicationDataContent(ctx, from.Data, diags)
 	m.Description = flex.FlattenStringPointer(from.Description)
 	m.Enabled = types.BoolPointerValue(from.Enabled)
 	m.Id = flex.FlattenInt64Pointer(from.Id)
 	m.Name = flex.FlattenStringPointer(from.Name)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Type = flex.FlattenStringPointer(from.Type)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
-	m.Variables = flattenNestedJSONMap(ctx, from.Variables, diags)
+	m.Variables = flattenMapStringPointer(ctx, from.Variables, diags)
 }
 
-// expandNestedJSONMap converts a map of JSON-encoded strings into the
-// map[string]map[string]interface{} shape the API expects for data/variables.
-func expandNestedJSONMap(ctx context.Context, m types.Map, diags *diag.Diagnostics) map[string]map[string]interface{} {
+// expandMapStringPointer converts a types.Map of strings into the
+// *map[string]string shape the SDK uses for variables.
+func expandMapStringPointer(ctx context.Context, m types.Map, diags *diag.Diagnostics) *map[string]string {
 	if m.IsNull() || m.IsUnknown() {
 		return nil
 	}
-	var raw map[string]string
-	diags.Append(m.ElementsAs(ctx, &raw, false)...)
+	var result map[string]string
+	diags.Append(m.ElementsAs(ctx, &result, false)...)
 	if diags.HasError() {
 		return nil
 	}
-	result := make(map[string]map[string]interface{}, len(raw))
-	for k, v := range raw {
-		var inner map[string]interface{}
-		if err := json.Unmarshal([]byte(v), &inner); err != nil {
-			diags.AddError("Invalid JSON value", fmt.Sprintf("value for key %q is not a valid JSON object: %s", k, err))
-			continue
-		}
-		result[k] = inner
-	}
-	return result
+	return &result
 }
 
-// flattenNestedJSONMap converts the API's map[string]map[string]interface{}
-// shape for data/variables back into a map of JSON-encoded strings.
-func flattenNestedJSONMap(ctx context.Context, from map[string]map[string]interface{}, diags *diag.Diagnostics) types.Map {
-	if from == nil {
+// flattenMapStringPointer converts the SDK's *map[string]string into a
+// types.Map, treating an empty map as null like flex.FlattenFrameworkMapString.
+func flattenMapStringPointer(ctx context.Context, from *map[string]string, diags *diag.Diagnostics) types.Map {
+	if from == nil || len(*from) == 0 {
 		return types.MapNull(types.StringType)
 	}
-	raw := make(map[string]string, len(from))
-	for k, v := range from {
-		b, err := json.Marshal(v)
-		if err != nil {
-			diags.AddError("Invalid JSON value", fmt.Sprintf("unable to encode value for key %q: %s", k, err))
-			continue
-		}
-		raw[k] = string(b)
-	}
-	result, d := types.MapValueFrom(ctx, types.StringType, raw)
+	result, d := types.MapValueFrom(ctx, types.StringType, *from)
 	diags.Append(d...)
 	return result
 }

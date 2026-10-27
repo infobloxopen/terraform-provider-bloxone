@@ -61,7 +61,8 @@ func TestAccApplicationApiDataSource_TagFilters(t *testing.T) {
 func testAccCheckApplicationApiResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
 	return []resource.TestCheckFunc{
 		resource.TestCheckResourceAttrPair(resourceName, "created_at", dataSourceName, "results.0.created_at"),
-		resource.TestCheckResourceAttrPair(resourceName, "data.config1", dataSourceName, "results.0.data.config1"),
+		resource.TestCheckResourceAttrPair(resourceName, "data.scripts.0.filename", dataSourceName, "results.0.data.scripts.0.filename"),
+		resource.TestCheckResourceAttrPair(resourceName, "data.scripts.0.content", dataSourceName, "results.0.data.scripts.0.content"),
 		resource.TestCheckResourceAttrPair(resourceName, "description", dataSourceName, "results.0.description"),
 		resource.TestCheckResourceAttrPair(resourceName, "enabled", dataSourceName, "results.0.enabled"),
 		resource.TestCheckResourceAttrPair(resourceName, "id", dataSourceName, "results.0.id"),
@@ -69,6 +70,7 @@ func testAccCheckApplicationApiResourceAttrPair(resourceName, dataSourceName str
 		resource.TestCheckResourceAttrPair(resourceName, "tags", dataSourceName, "results.0.tags"),
 		resource.TestCheckResourceAttrPair(resourceName, "type", dataSourceName, "results.0.type"),
 		resource.TestCheckResourceAttrPair(resourceName, "updated_at", dataSourceName, "results.0.updated_at"),
+		resource.TestCheckResourceAttrPair(resourceName, "variables.var1", dataSourceName, "results.0.variables.var1"),
 	}
 }
 
@@ -77,7 +79,13 @@ func testAccApplicationApiDataSourceConfigFilters(name string) string {
 resource "bloxone_cdc_application" "test" {
   name = %q
   data = {
-	config1 = jsonencode({ foo = "bar" })
+      scripts = [{
+          filename = "script_1.py"
+          content  = "print(\"hello\")"
+      }]
+  }
+  variables = {
+      var1 = "value1"
   }
 }
 
@@ -94,7 +102,10 @@ func testAccApplicationApiDataSourceConfigTagFilters(name string, tagValue strin
 resource "bloxone_cdc_application" "test" {
   name = %q
   data = {
-	config1 = jsonencode({ foo = "bar" })
+      scripts = [{
+          filename = "script_1.py"
+          content  = "print(\"hello\")"
+      }]
   }
   tags = {
 	tag1 = %q

@@ -41,7 +41,7 @@ func (m *ApplicationDataModelWithFilter) FlattenResults(ctx context.Context, fro
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ApplicationDataAttrTypes, diags, FlattenApplicationData)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, ApplicationDataAttrTypes, diags, DataSourceFlattenApplicationData)
 }
 
 func (d *ApplicationApiDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -164,5 +165,5 @@ func (r *ApplicationApiResource) Delete(ctx context.Context, req resource.Delete
 }
 
 func (r *ApplicationApiResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+	utils.ImportStatePassthroughInt64ID(ctx, req, resp)
 }

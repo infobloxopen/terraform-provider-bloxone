@@ -33,6 +33,7 @@ func TestAccApplicationApiResource_basic(t *testing.T) {
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
+					resource.TestCheckResourceAttrSet(resourceName, "type"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
 				),
 			},
@@ -74,18 +75,46 @@ func TestAccApplicationApiResource_Data(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccApplicationApiData(name, `jsonencode({ foo = "bar" })`),
+				Config: testAccApplicationApiData(name, `print("hello")`),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckApplicationApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "data.config1", `{"foo":"bar"}`),
+					resource.TestCheckResourceAttr(resourceName, "data.scripts.0.filename", "script_1.py"),
+					resource.TestCheckResourceAttr(resourceName, "data.scripts.0.content", `print("hello")`),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccApplicationApiData(name, `jsonencode({ foo = "baz", n = 2 })`),
+				Config: testAccApplicationApiData(name, `print("hello world")`),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckApplicationApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "data.config1", `{"foo":"baz","n":2}`),
+					resource.TestCheckResourceAttr(resourceName, "data.scripts.0.filename", "script_1.py"),
+					resource.TestCheckResourceAttr(resourceName, "data.scripts.0.content", `print("hello world")`),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccApplicationApiResource_DataFromFile(t *testing.T) {
+	var resourceName = "bloxone_cdc_application.test_data_file"
+	var v cdc.ApplicationData
+	name := acctest.RandomNameWithPrefix("application")
+	scriptPath := acctest.TestdataPath(t, "bloxone_cdc", "cdc_application_handler_sample.py")
+	scriptContent := acctest.ReadTestdata(t, "bloxone_cdc", "cdc_application_handler_sample.py")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccApplicationApiDataFromFile(name, scriptPath),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckApplicationApiExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "data.scripts.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "data.scripts.0.filename", "cdc_application_handler_sample.py"),
+					resource.TestCheckResourceAttr(resourceName, "data.scripts.0.content", scriptContent),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -190,7 +219,7 @@ func TestAccApplicationApiResource_Tags(t *testing.T) {
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactoriesWithTags,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
@@ -198,6 +227,7 @@ func TestAccApplicationApiResource_Tags(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckApplicationApiExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Update and Read
@@ -207,39 +237,7 @@ func TestAccApplicationApiResource_Tags(t *testing.T) {
 					testAccCheckApplicationApiExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1changed"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
-				),
-			},
-			// Delete testing automatically occurs in TestCase
-		},
-	})
-}
-
-func TestAccApplicationApiResource_Type(t *testing.T) {
-	// TODO: the CDC backend never actually applies a client-supplied value
-	// for "type" - confirmed via direct curl against the API: creating or
-	// updating an application with type set to any value (including a
-	// deliberately invalid one) always returns type="PYTHON_SCRIPT"
-	// regardless. This looks like a fixed/discriminator field the backend
-	// controls, not something this resource can actually set. Needs product
-	// documentation or CDC domain expertise to determine if there's a
-	// legitimate way to create a non-Python-script application before this
-	// can be un-skipped.
-	t.Skip("CDC backend does not apply a client-supplied value for application type; see TODO above")
-
-	var resourceName = "bloxone_cdc_application.test_type"
-	var v cdc.ApplicationData
-	name := acctest.RandomNameWithPrefix("application")
-
-	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// Create and Read
-			{
-				Config: testAccApplicationApiType(name, "PYTHON_SCRIPT"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckApplicationApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "type", "PYTHON_SCRIPT"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -258,18 +256,18 @@ func TestAccApplicationApiResource_Variables(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccApplicationApiVariables(name, `jsonencode({ x = 1 })`),
+				Config: testAccApplicationApiVariables(name, "value1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckApplicationApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "variables.var1", `{"x":1}`),
+					resource.TestCheckResourceAttr(resourceName, "variables.var1", "value1"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccApplicationApiVariables(name, `jsonencode({ y = 2 })`),
+				Config: testAccApplicationApiVariables(name, "value2"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckApplicationApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "variables.var1", `{"y":2}`),
+					resource.TestCheckResourceAttr(resourceName, "variables.var1", "value2"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -343,21 +341,41 @@ func testAccApplicationApiBasicConfig(name string) string {
 resource "bloxone_cdc_application" "test" {
     name = %q
     data = {
-        config1 = jsonencode({ foo = "bar" })
+        scripts = [{
+            filename = "script_1.py"
+            content  = "print(\"hello\")"
+        }]
     }
 }
 `, name)
 }
 
-func testAccApplicationApiData(name string, dataValue string) string {
+func testAccApplicationApiData(name string, content string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_application" "test_data" {
     name = %q
     data = {
-        config1 = %s
+        scripts = [{
+            filename = "script_1.py"
+            content  = %q
+        }]
     }
 }
-`, name, dataValue)
+`, name, content)
+}
+
+func testAccApplicationApiDataFromFile(name string, scriptPath string) string {
+	return fmt.Sprintf(`
+resource "bloxone_cdc_application" "test_data_file" {
+    name = %q
+    data = {
+        scripts = [{
+            filename = basename(%[2]q)
+            content  = file(%[2]q)
+        }]
+    }
+}
+`, name, scriptPath)
 }
 
 func testAccApplicationApiDescription(name string, description string) string {
@@ -365,7 +383,10 @@ func testAccApplicationApiDescription(name string, description string) string {
 resource "bloxone_cdc_application" "test_description" {
     name        = %q
     data = {
-        config1 = jsonencode({ foo = "bar" })
+        scripts = [{
+            filename = "script_1.py"
+            content  = "print(\"hello\")"
+        }]
     }
     description = %q
 }
@@ -377,7 +398,10 @@ func testAccApplicationApiEnabled(name string, enabled string) string {
 resource "bloxone_cdc_application" "test_enabled" {
     name    = %q
     data = {
-        config1 = jsonencode({ foo = "bar" })
+        scripts = [{
+            filename = "script_1.py"
+            content  = "print(\"hello\")"
+        }]
     }
     enabled = %s
 }
@@ -389,7 +413,10 @@ func testAccApplicationApiName(name string) string {
 resource "bloxone_cdc_application" "test_name" {
     name = %q
     data = {
-        config1 = jsonencode({ foo = "bar" })
+        scripts = [{
+            filename = "script_1.py"
+            content  = "print(\"hello\")"
+        }]
     }
 }
 `, name)
@@ -406,23 +433,14 @@ func testAccApplicationApiTags(name string, tags map[string]string) string {
 resource "bloxone_cdc_application" "test_tags" {
     name = %q
     data = {
-        config1 = jsonencode({ foo = "bar" })
+        scripts = [{
+            filename = "script_1.py"
+            content  = "print(\"hello\")"
+        }]
     }
     tags = %s
 }
 `, name, tagsStr)
-}
-
-func testAccApplicationApiType(name string, typeValue string) string {
-	return fmt.Sprintf(`
-resource "bloxone_cdc_application" "test_type" {
-    name = %q
-    data = {
-        config1 = jsonencode({ foo = "bar" })
-    }
-    type = %q
-}
-`, name, typeValue)
 }
 
 func testAccApplicationApiVariables(name string, variablesValue string) string {
@@ -430,10 +448,13 @@ func testAccApplicationApiVariables(name string, variablesValue string) string {
 resource "bloxone_cdc_application" "test_variables" {
     name = %q
     data = {
-        config1 = jsonencode({ foo = "bar" })
+        scripts = [{
+            filename = "script_1.py"
+            content  = "print(\"hello\")"
+        }]
     }
     variables = {
-        var1 = %s
+        var1 = %q
     }
 }
 `, name, variablesValue)
