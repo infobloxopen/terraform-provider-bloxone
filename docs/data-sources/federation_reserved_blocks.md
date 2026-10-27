@@ -51,7 +51,7 @@ data "bloxone_federation_reserved_blocks" "example_all" {}
 
 Required:
 
-- `address` (String) The address field in form “a.b.c.d/n” where the “/n” may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form “a.b.c.d”.
+- `address` (String) The address of the reserved block, an IPv4 address in form "a.b.c.d" or an IPv6 address. Do not include a prefix length ("/n"); use the _cidr_ field instead. This field is immutable after creation.
 - `cidr` (Number) The CIDR of the reserved block. This is required field, if _address_ does not specify it in its input.
 - `federated_realm` (String) The resource identifier.
 

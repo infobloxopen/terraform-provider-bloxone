@@ -3,6 +3,7 @@ package ipamfederation
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework-nettypes/iptypes"
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -11,15 +12,18 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internalplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
+	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
 type ReservedBlockModel struct {
-	Address          types.String      `tfsdk:"address"`
+	Address          iptypes.IPAddress `tfsdk:"address"`
 	Cidr             types.Int64       `tfsdk:"cidr"`
 	Comment          types.String      `tfsdk:"comment"`
 	CreatedAt        timetypes.RFC3339 `tfsdk:"created_at"`
@@ -38,7 +42,7 @@ type ReservedBlockModel struct {
 }
 
 var ReservedBlockAttrTypes = map[string]attr.Type{
-	"address":           types.StringType,
+	"address":           iptypes.IPAddressType{},
 	"cidr":              types.Int64Type,
 	"comment":           types.StringType,
 	"created_at":        timetypes.RFC3339Type{},
@@ -58,11 +62,15 @@ var ReservedBlockAttrTypes = map[string]attr.Type{
 
 var ReservedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
-		Required: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplace(),
+		CustomType: iptypes.IPAddressType{},
+		Required:   true,
+		Validators: []validator.String{
+			internalvalidator.IsValidIPAddress(),
 		},
-		MarkdownDescription: "The address field in form “a.b.c.d/n” where the “/n” may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form “a.b.c.d”.",
+		PlanModifiers: []planmodifier.String{
+			internalplanmodifier.RequiresReplaceIfIPAddressChanged(),
+		},
+		MarkdownDescription: "The address of the reserved block, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead. This field is immutable after creation.",
 	},
 	"cidr": schema.Int64Attribute{
 		Required:            true,
@@ -153,7 +161,7 @@ func (m *ReservedBlockModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		Tags:            flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 	if isCreate {
-		to.Address = flex.ExpandStringPointer(m.Address)
+		to.Address = m.Address.ValueStringPointer()
 	}
 	return to
 }
@@ -177,7 +185,7 @@ func (m *ReservedBlockModel) Flatten(ctx context.Context, from *ipamfederation.R
 	if m == nil {
 		*m = ReservedBlockModel{}
 	}
-	m.Address = flex.FlattenStringPointer(from.Address)
+	m.Address = iptypes.NewIPAddressPointerValue(from.Address)
 	m.Cidr = flex.FlattenInt64Pointer(from.Cidr)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
