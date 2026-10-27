@@ -160,7 +160,26 @@ func TestAccReservedBlockResource_Comment(t *testing.T) {
 }
 
 func TestAccReservedBlockResource_FederatedPoolId(t *testing.T) {
-	t.Skip("FederatedPoolId requires a valid federated pool resource ID; to be added when a pool fixture is available")
+	var resourceName = "bloxone_federation_reserved_block.test_federated_pool_id"
+	var v ipamfederation.ReservedBlock
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	poolName := acctest.RandomNameWithPrefix("federated-pool")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccReservedBlockFederatedPoolId(realmName, poolName, "10.99.0.0", 24),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckReservedBlockExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_pool_id", "bloxone_federation_federated_pool.test", "id"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
 }
 
 func TestAccReservedBlockResource_FederatedRealm(t *testing.T) {
@@ -366,6 +385,24 @@ resource "bloxone_federation_reserved_block" "test_comment" {
     comment = %q
 }
 `, address, cidr, comment)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
+}
+
+func testAccReservedBlockFederatedPoolId(federatedRealm, poolName string, address string, cidr int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_federation_federated_pool" "test" {
+    federated_realm = bloxone_federation_federated_realm.test.id
+    name            = %q
+    protocol        = "ip4"
+}
+
+resource "bloxone_federation_reserved_block" "test_federated_pool_id" {
+    federated_realm   = bloxone_federation_federated_realm.test.id
+    federated_pool_id = bloxone_federation_federated_pool.test.id
+    address = %q
+    cidr = %d
+}
+`, poolName, address, cidr)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
 }
 
