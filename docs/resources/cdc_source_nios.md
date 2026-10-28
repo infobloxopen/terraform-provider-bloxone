@@ -23,24 +23,26 @@ resource "bloxone_cdc_source_nios" "example" {
 
 # NIOS source with all fields set.
 # ca_cert.pem and certkey.pem in this folder are self-signed samples; replace
-# them with your own CA certificate and client certificate + private key.
+# them with your own Grid Master CA certificate and RPZ logs certificate.
 resource "bloxone_cdc_source_nios" "example_with_all_fields" {
-  name          = "example_cdc_source_nios_all_fields"
-  address       = "10.1.0.1"
-  description   = "Example CDC NIOS source with all fields"
-  enabled       = true
-  nios_username = "admin"
-  nios_password = "example_password"
+  name        = "example_cdc_source_nios_all_fields"
+  description = "Example CDC NIOS source with all fields"
+  enabled     = true
 
-  # Verify the Grid Master's TLS certificate instead of skipping verification
-  insecure_mode         = false
-  rpz_log_insecure_mode = false
-  ca_certificate        = file("${path.module}/ca_cert.pem")
-  certificate           = file("${path.module}/certkey.pem")
+  # Credentials for Grid Master configuration
+  address        = "10.1.0.1"
+  nios_username  = "admin"
+  nios_password  = "example_password"
+  insecure_mode  = false
+  ca_certificate = file("${path.module}/ca_cert.pem")
 
-  # SCP credentials used to transfer files from NIOS
+  # SCP credentials for DNS query logs transfer
   scp_username = "scp_user"
   scp_password = "example_scp_password"
+
+  # Certificate for RPZ logs
+  certificate           = file("${path.module}/certkey.pem")
+  rpz_log_insecure_mode = false
 
   tags = {
     site = "Site A"
@@ -58,16 +60,16 @@ resource "bloxone_cdc_source_nios" "example_with_all_fields" {
 
 ### Optional
 
-- `ca_certificate` (String, Sensitive) The PEM-encoded CA certificate used to verify the NIOS Grid Master. This value is not returned by the API.
-- `certificate` (String, Sensitive) The PEM-encoded client certificate and private key used to connect to the NIOS Grid Master. This value is not returned by the API.
+- `ca_certificate` (String, Sensitive) The PEM-encoded CA certificate used to verify the NIOS Grid Master ("CA Certificate" in the UI). This value is not returned by the API.
+- `certificate` (String, Sensitive) The PEM-encoded certificate for RPZ logs ("Certificate for RPZ Logs" in the UI). This value is not returned by the API.
 - `description` (String) The description of the NIOS source.
-- `enabled` (Boolean) Indicates whether the NIOS source is enabled. Defaults to `true`.
-- `insecure_mode` (Boolean) Indicates whether to skip TLS certificate verification when connecting to the NIOS Grid Master. Defaults to `true`.
+- `enabled` (Boolean) Indicates whether the NIOS source is enabled. Defaults to `false`.
+- `insecure_mode` (Boolean) Indicates whether to skip TLS certificate verification when connecting to the NIOS Grid Master.
 - `nios_password` (String, Sensitive) The password of the NIOS user. This value is not returned by the API.
 - `nios_username` (String) The username used to connect to the NIOS Grid Master.
 - `rpz_log_insecure_mode` (Boolean) Indicates whether to skip TLS certificate verification when collecting RPZ logs. Defaults to `false`.
 - `scp_password` (String, Sensitive) The password of the SCP user. This value is not returned by the API.
-- `scp_username` (String) The username used for SCP file transfer from NIOS.
+- `scp_username` (String) The username used for SCP transfer of DNS query logs from NIOS.
 - `tags` (Map of String) The tags for the NIOS source.
 
 ### Read-Only

@@ -5,24 +5,26 @@ resource "bloxone_cdc_source_nios" "example" {
 
 # NIOS source with all fields set.
 # ca_cert.pem and certkey.pem in this folder are self-signed samples; replace
-# them with your own CA certificate and client certificate + private key.
+# them with your own Grid Master CA certificate and RPZ logs certificate.
 resource "bloxone_cdc_source_nios" "example_with_all_fields" {
-  name          = "example_cdc_source_nios_all_fields"
-  address       = "10.1.0.1"
-  description   = "Example CDC NIOS source with all fields"
-  enabled       = true
-  nios_username = "admin"
-  nios_password = "example_password"
+  name        = "example_cdc_source_nios_all_fields"
+  description = "Example CDC NIOS source with all fields"
+  enabled     = true
 
-  # Verify the Grid Master's TLS certificate instead of skipping verification
-  insecure_mode         = false
-  rpz_log_insecure_mode = false
-  ca_certificate        = file("${path.module}/ca_cert.pem")
-  certificate           = file("${path.module}/certkey.pem")
+  # Credentials for Grid Master configuration
+  address        = "10.1.0.1"
+  nios_username  = "admin"
+  nios_password  = "example_password"
+  insecure_mode  = false
+  ca_certificate = file("${path.module}/ca_cert.pem")
 
-  # SCP credentials used to transfer files from NIOS
+  # SCP credentials for DNS query logs transfer
   scp_username = "scp_user"
   scp_password = "example_scp_password"
+
+  # Certificate for RPZ logs
+  certificate           = file("${path.module}/certkey.pem")
+  rpz_log_insecure_mode = false
 
   tags = {
     site = "Site A"

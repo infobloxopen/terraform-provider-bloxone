@@ -105,7 +105,7 @@ var SourceNiosResourceSchemaAttributes = map[string]schema.Attribute{
 	"insecure_mode": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Indicates whether to skip TLS certificate verification when connecting to the NIOS Grid Master. Defaults to `true`.",
+		MarkdownDescription: "Indicates whether to skip TLS certificate verification when connecting to the NIOS Grid Master.",
 	},
 	"name": schema.StringAttribute{
 		Required:            true,

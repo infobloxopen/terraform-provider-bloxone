@@ -64,16 +64,16 @@ Required:
 
 Optional:
 
-- `ca_certificate` (String, Sensitive) The PEM-encoded CA certificate used to verify the NIOS Grid Master. This value is not returned by the API.
-- `certificate` (String, Sensitive) The PEM-encoded client certificate and private key used to connect to the NIOS Grid Master. This value is not returned by the API.
+- `ca_certificate` (String, Sensitive) The PEM-encoded CA certificate used to verify the NIOS Grid Master ("CA Certificate" in the UI). This value is not returned by the API.
+- `certificate` (String, Sensitive) The PEM-encoded certificate for RPZ logs ("Certificate for RPZ Logs" in the UI). This value is not returned by the API.
 - `description` (String) The description of the NIOS source.
-- `enabled` (Boolean) Indicates whether the NIOS source is enabled. Defaults to `true`.
-- `insecure_mode` (Boolean) Indicates whether to skip TLS certificate verification when connecting to the NIOS Grid Master. Defaults to `true`.
+- `enabled` (Boolean) Indicates whether the NIOS source is enabled. Defaults to `false`.
+- `insecure_mode` (Boolean) Indicates whether to skip TLS certificate verification when connecting to the NIOS Grid Master.
 - `nios_password` (String, Sensitive) The password of the NIOS user. This value is not returned by the API.
 - `nios_username` (String) The username used to connect to the NIOS Grid Master.
 - `rpz_log_insecure_mode` (Boolean) Indicates whether to skip TLS certificate verification when collecting RPZ logs. Defaults to `false`.
 - `scp_password` (String, Sensitive) The password of the SCP user. This value is not returned by the API.
-- `scp_username` (String) The username used for SCP file transfer from NIOS.
+- `scp_username` (String) The username used for SCP transfer of DNS query logs from NIOS.
 - `tags` (Map of String) The tags for the NIOS source.
 
 Read-Only:

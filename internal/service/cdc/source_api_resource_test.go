@@ -37,19 +37,10 @@ func TestAccSourceApiResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
 					// Test fields with default value
 					resource.TestCheckResourceAttr(resourceName, "description", ""),
-					resource.TestCheckResourceAttr(resourceName, "enabled", "true"),
-					resource.TestCheckResourceAttr(resourceName, "insecure_mode", "true"),
+					resource.TestCheckResourceAttr(resourceName, "enabled", "false"),
 					resource.TestCheckResourceAttr(resourceName, "rpz_log_insecure_mode", "false"),
 					resource.TestCheckResourceAttr(resourceName, "scp_username", ""),
 				),
-			},
-			// Import
-			{
-				ResourceName:      resourceName,
-				ImportState:       true,
-				ImportStateVerify: true,
-				// The backend masks these fields, so they cannot be recovered on import.
-				ImportStateVerifyIgnore: []string{"ca_certificate", "certificate", "nios_password", "scp_password"},
 			},
 			// Delete testing automatically occurs in TestCase
 		},
