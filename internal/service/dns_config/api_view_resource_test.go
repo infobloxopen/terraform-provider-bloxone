@@ -2,6 +2,7 @@ package dns_config_test
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -226,6 +227,28 @@ func TestAccViewResource_CustomRootNs(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "custom_root_ns.1.fqdn", "tf-infoblox-acc.com."),
 				),
 			},
+			// Unset with an explicit empty list
+			{
+				Config: testAccViewListUnset(name, "custom_root_ns", true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "custom_root_ns.#", "0"),
+					testAccCheckViewListEmpty(&v, "custom_root_ns"),
+				),
+			},
+			// Set again
+			{
+				Config: testAccViewCustomRootNs(name, "192.168.10.10", "tf-example.com."),
+			},
+			// Unset by removing it from the config
+			{
+				Config: testAccViewListUnset(name, "custom_root_ns", false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckNoResourceAttr(resourceName, "custom_root_ns.#"),
+					testAccCheckViewListEmpty(&v, "custom_root_ns"),
+				),
+			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
@@ -383,6 +406,28 @@ func TestAccViewResource_DnssecTrustAnchors(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "dnssec_trust_anchors.0.algorithm", "7"),
 					resource.TestCheckResourceAttr(resourceName, "dnssec_trust_anchors.0.zone", "tf-infoblox.com."),
 					resource.TestCheckResourceAttr(resourceName, "dnssec_trust_anchors.0.sep", "true"),
+				),
+			},
+			// Unset with an explicit empty list
+			{
+				Config: testAccViewListUnset(name, "dnssec_trust_anchors", true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dnssec_trust_anchors.#", "0"),
+					testAccCheckViewListEmpty(&v, "dnssec_trust_anchors"),
+				),
+			},
+			// Set again
+			{
+				Config: testAccViewDnssecTrustAnchors(name, "8", "tf-infoblox.com.", "false"),
+			},
+			// Unset by removing it from the config
+			{
+				Config: testAccViewListUnset(name, "dnssec_trust_anchors", false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckNoResourceAttr(resourceName, "dnssec_trust_anchors.#"),
+					testAccCheckViewListEmpty(&v, "dnssec_trust_anchors"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -602,6 +647,28 @@ func TestAccViewResource_EcsZones(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "ecs_zones.0.fqdn", "tf-test-infoblox.com."),
 				),
 			},
+			// Unset with an explicit empty list
+			{
+				Config: testAccViewListUnset(name, "ecs_zones", true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "ecs_zones.#", "0"),
+					testAccCheckViewListEmpty(&v, "ecs_zones"),
+				),
+			},
+			// Set again
+			{
+				Config: testAccViewEcsZones(name, "allow", "tf-infoblox.com."),
+			},
+			// Unset by removing it from the config
+			{
+				Config: testAccViewListUnset(name, "ecs_zones", false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckNoResourceAttr(resourceName, "ecs_zones.#"),
+					testAccCheckViewListEmpty(&v, "ecs_zones"),
+				),
+			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
@@ -684,6 +751,28 @@ func TestAccViewResource_FilterAaaaAcl(t *testing.T) {
 					resource.TestCheckResourceAttrPair(resourceName, "filter_aaaa_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
+			// Unset with an explicit empty list
+			{
+				Config: testAccBaseWithTsigAndAcl("tsig-"+name, "acl-"+name) + testAccViewListUnset(name, "filter_aaaa_acl", true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "filter_aaaa_acl.#", "0"),
+					testAccCheckViewListEmpty(&v, "filter_aaaa_acl"),
+				),
+			},
+			// Set again
+			{
+				Config: testAccAclIP("view", "filter_aaaa_acl", name, "allow", "192.168.10.10"),
+			},
+			// Unset by removing it from the config
+			{
+				Config: testAccBaseWithTsigAndAcl("tsig-"+name, "acl-"+name) + testAccViewListUnset(name, "filter_aaaa_acl", false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckNoResourceAttr(resourceName, "filter_aaaa_acl.#"),
+					testAccCheckViewListEmpty(&v, "filter_aaaa_acl"),
+				),
+			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
@@ -744,6 +833,28 @@ func TestAccViewResource_Forwarders(t *testing.T) {
 					testAccCheckViewExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "forwarders.0.address", "192.168.11.11"),
 					resource.TestCheckResourceAttr(resourceName, "forwarders.0.fqdn", "tf-infoblox.com."),
+				),
+			},
+			// Unset with an explicit empty list
+			{
+				Config: testAccViewListUnset(name, "forwarders", true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "forwarders.#", "0"),
+					testAccCheckViewListEmpty(&v, "forwarders"),
+				),
+			},
+			// Set again
+			{
+				Config: testAccViewForwarders(name, "192.168.10.10", "tf-example.com."),
+			},
+			// Unset by removing it from the config
+			{
+				Config: testAccViewListUnset(name, "forwarders", false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckNoResourceAttr(resourceName, "forwarders.#"),
+					testAccCheckViewListEmpty(&v, "forwarders"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1291,6 +1402,28 @@ func TestAccViewResource_QueryAcl(t *testing.T) {
 					resource.TestCheckResourceAttrPair(resourceName, "query_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
+			// Unset with an explicit empty list
+			{
+				Config: testAccBaseWithTsigAndAcl("tsig-"+name, "acl-"+name) + testAccViewListUnset(name, "query_acl", true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "query_acl.#", "0"),
+					testAccCheckViewListEmpty(&v, "query_acl"),
+				),
+			},
+			// Set again
+			{
+				Config: testAccAclIP("view", "query_acl", name, "allow", "192.168.11.11"),
+			},
+			// Unset by removing it from the config
+			{
+				Config: testAccBaseWithTsigAndAcl("tsig-"+name, "acl-"+name) + testAccViewListUnset(name, "query_acl", false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckNoResourceAttr(resourceName, "query_acl.#"),
+					testAccCheckViewListEmpty(&v, "query_acl"),
+				),
+			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
@@ -1341,6 +1474,28 @@ func TestAccViewResource_RecursionAcl(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "recursion_acl.0.element", "tsig_key"),
 					resource.TestCheckResourceAttrPair(resourceName, "recursion_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
+				),
+			},
+			// Unset with an explicit empty list
+			{
+				Config: testAccBaseWithTsigAndAcl("tsig-"+name, "acl-"+name) + testAccViewListUnset(name, "recursion_acl", true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "recursion_acl.#", "0"),
+					testAccCheckViewListEmpty(&v, "recursion_acl"),
+				),
+			},
+			// Set again
+			{
+				Config: testAccAclIP("view", "recursion_acl", name, "allow", "192.168.11.11"),
+			},
+			// Unset by removing it from the config
+			{
+				Config: testAccBaseWithTsigAndAcl("tsig-"+name, "acl-"+name) + testAccViewListUnset(name, "recursion_acl", false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckNoResourceAttr(resourceName, "recursion_acl.#"),
+					testAccCheckViewListEmpty(&v, "recursion_acl"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1403,6 +1558,28 @@ func TestAccViewResource_SortList(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "sort_list.0.element", "any"),
 					resource.TestCheckResourceAttr(resourceName, "sort_list.0.prioritized_networks.0", "192.168.13.13"),
+				),
+			},
+			// Unset with an explicit empty list
+			{
+				Config: testAccViewListUnset(name, "sort_list", true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "sort_list.#", "0"),
+					testAccCheckViewListEmpty(&v, "sort_list"),
+				),
+			},
+			// Set again
+			{
+				Config: testAccViewSortList(name, "ip", "192.168.12.12"),
+			},
+			// Unset by removing it from the config
+			{
+				Config: testAccViewListUnset(name, "sort_list", false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckNoResourceAttr(resourceName, "sort_list.#"),
+					testAccCheckViewListEmpty(&v, "sort_list"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1525,6 +1702,28 @@ func TestAccViewResource_TransferAcl(t *testing.T) {
 					resource.TestCheckResourceAttrPair(resourceName, "transfer_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
 				),
 			},
+			// Unset with an explicit empty list
+			{
+				Config: testAccBaseWithTsigAndAcl("tsig-"+name, "acl-"+name) + testAccViewListUnset(name, "transfer_acl", true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "transfer_acl.#", "0"),
+					testAccCheckViewListEmpty(&v, "transfer_acl"),
+				),
+			},
+			// Set again
+			{
+				Config: testAccAclIP("view", "transfer_acl", name, "allow", "192.168.11.11"),
+			},
+			// Unset by removing it from the config
+			{
+				Config: testAccBaseWithTsigAndAcl("tsig-"+name, "acl-"+name) + testAccViewListUnset(name, "transfer_acl", false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckNoResourceAttr(resourceName, "transfer_acl.#"),
+					testAccCheckViewListEmpty(&v, "transfer_acl"),
+				),
+			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
@@ -1575,6 +1774,28 @@ func TestAccViewResource_UpdateAcl(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.access", "deny"),
 					resource.TestCheckResourceAttr(resourceName, "update_acl.0.element", "tsig_key"),
 					resource.TestCheckResourceAttrPair(resourceName, "update_acl.0.tsig_key.key", "bloxone_keys_tsig.test", "id"),
+				),
+			},
+			// Unset with an explicit empty list
+			{
+				Config: testAccBaseWithTsigAndAcl("tsig-"+name, "acl-"+name) + testAccViewListUnset(name, "update_acl", true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "update_acl.#", "0"),
+					testAccCheckViewListEmpty(&v, "update_acl"),
+				),
+			},
+			// Set again
+			{
+				Config: testAccAclIP("view", "update_acl", name, "allow", "192.168.11.11"),
+			},
+			// Unset by removing it from the config
+			{
+				Config: testAccBaseWithTsigAndAcl("tsig-"+name, "acl-"+name) + testAccViewListUnset(name, "update_acl", false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckViewExists(context.Background(), resourceName, &v),
+					resource.TestCheckNoResourceAttr(resourceName, "update_acl.#"),
+					testAccCheckViewListEmpty(&v, "update_acl"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -1747,12 +1968,43 @@ func testAccCheckViewDisappears(ctx context.Context, v *dnsconfig.View) resource
 	}
 }
 
+func testAccCheckViewListEmpty(v *dnsconfig.View, field string) resource.TestCheckFunc {
+	// Verify the list is empty on the server, not only in the state
+	return func(state *terraform.State) error {
+		b, err := json.Marshal(v)
+		if err != nil {
+			return err
+		}
+		var m map[string]any
+		if err := json.Unmarshal(b, &m); err != nil {
+			return err
+		}
+		if l, ok := m[field].([]any); ok && len(l) > 0 {
+			return fmt.Errorf("expected %s to be empty on the server, got %v", field, l)
+		}
+		return nil
+	}
+}
+
 func testAccViewBasicConfig(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_dns_view" "test" {
     name = %q
 }
 `, name)
+}
+
+func testAccViewListUnset(name, field string, explicitEmpty bool) string {
+	list := ""
+	if explicitEmpty {
+		list = field + " = []"
+	}
+	return fmt.Sprintf(`
+resource "bloxone_dns_view" "test_%s" {
+    name = %q
+    %s
+}
+`, field, name, list)
 }
 
 func testAccViewAddEdnsOptionInOutgoingQuery(name, addEdnsOptionInOutgoingQuery string) string {
