@@ -10,6 +10,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -63,6 +67,66 @@ func (r *ReservedBlockResource) Create(ctx context.Context, req resource.CreateR
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	if !data.NextAvailableId.IsUnknown() && !data.NextAvailableId.IsNull() {
+		// Lock the mutex to serialize operations with the same key.
+		// This is necessary to prevent the same block being returned.
+		utils.GlobalMutexStore.Lock(data.NextAvailableId.ValueString())
+		defer utils.GlobalMutexStore.Unlock(data.NextAvailableId.ValueString())
+
+		// The create-next-available endpoint does not persist federated_pool_id, so it
+		// needs to be patched in with a follow-up Update call if the user configured it.
+		configuredFederatedPoolId := data.FederatedPoolId
+
+		body := ipamfederation.NextAvailableBlockRequest{
+			Cidr:  flex.ExpandInt64Pointer(data.Cidr),
+			Count: utils.Ptr(int64(1)),
+			Tags:  flex.ExpandFrameworkMapString(ctx, data.Tags, &resp.Diagnostics),
+		}
+		if !data.Name.IsNull() {
+			body.Name = data.Name.ValueStringPointer()
+		}
+		if !data.Comment.IsNull() {
+			body.Comment = data.Comment.ValueStringPointer()
+		}
+
+		apiRes, _, err := r.client.IPAMFederationAPI.
+			NextAvailableReservedBlockAPI.
+			CreateNextAvailableReservedBlocks(ctx, data.NextAvailableId.ValueString()).
+			Body(body).
+			Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create next available ReservedBlock, got error: %s", err))
+			return
+		}
+
+		results := apiRes.GetResults()
+		if len(results) == 0 {
+			resp.Diagnostics.AddError("Client Error", "Unable to create next available ReservedBlock, no results were returned")
+			return
+		}
+
+		data.Flatten(ctx, &results[0], &resp.Diagnostics)
+
+		if !configuredFederatedPoolId.IsNull() {
+			data.FederatedPoolId = configuredFederatedPoolId
+			updateRes, _, err := r.client.IPAMFederationAPI.
+				ReservedBlockAPI.
+				Update(ctx, data.Id.ValueString()).
+				Body(*data.Expand(ctx, &resp.Diagnostics, false)).
+				Execute()
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to set federated_pool_id on next available ReservedBlock, got error: %s", err))
+				return
+			}
+			res := updateRes.GetResult()
+			data.Flatten(ctx, &res, &resp.Diagnostics)
+		}
+
+		// Save data into Terraform state
+		resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 		return
 	}
 

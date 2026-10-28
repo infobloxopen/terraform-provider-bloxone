@@ -2,11 +2,14 @@ package ipamfederation
 
 import (
 	"context"
+	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-framework-nettypes/iptypes"
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -33,6 +36,7 @@ type ReservedBlockModel struct {
 	Metadata         types.Map         `tfsdk:"metadata"`
 	Name             types.String      `tfsdk:"name"`
 	NetworkCompliant types.Bool        `tfsdk:"network_compliant"`
+	NextAvailableId  types.String      `tfsdk:"next_available_id"`
 	Parent           types.String      `tfsdk:"parent"`
 	Protocol         types.String      `tfsdk:"protocol"`
 	Region           types.String      `tfsdk:"region"`
@@ -52,6 +56,7 @@ var ReservedBlockAttrTypes = map[string]attr.Type{
 	"metadata":          types.MapType{ElemType: types.StringType},
 	"name":              types.StringType,
 	"network_compliant": types.BoolType,
+	"next_available_id": types.StringType,
 	"parent":            types.StringType,
 	"protocol":          types.StringType,
 	"region":            types.StringType,
@@ -63,14 +68,18 @@ var ReservedBlockAttrTypes = map[string]attr.Type{
 var ReservedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
 		CustomType: iptypes.IPAddressType{},
-		Required:   true,
+		Optional:   true,
+		Computed:   true,
 		Validators: []validator.String{
 			internalvalidator.IsValidIPAddress(),
+			stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
 		},
 		PlanModifiers: []planmodifier.String{
 			internalplanmodifier.RequiresReplaceIfIPAddressChanged(),
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+			stringplanmodifier.UseStateForUnknown(),
 		},
-		MarkdownDescription: "The address of the reserved block, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead. This field is immutable after creation.",
+		MarkdownDescription: "The address of the reserved block, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead. This field is immutable after creation. Exactly one of _address_ or _next_available_id_ must be specified.",
 	},
 	"cidr": schema.Int64Attribute{
 		Required:            true,
@@ -116,6 +125,18 @@ var ReservedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"network_compliant": schema.BoolAttribute{
 		Computed:            true,
 		MarkdownDescription: "The compliance status of the reserved block, as determined by the federation service.",
+	},
+	"next_available_id": schema.StringAttribute{
+		Optional: true,
+		Validators: []validator.String{
+			stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
+			stringvalidator.RegexMatches(regexp.MustCompile(`^federation/federated_block/[0-9a-f-].*$`), "Should be the resource identifier of a Federated Block."),
+		},
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+			stringplanmodifier.UseStateForUnknown(),
+		},
+		MarkdownDescription: "The resource identifier of the parent Federated Block under which the next available reserved block should be allocated. Exactly one of _address_ or _next_available_id_ must be specified.",
 	},
 	"parent": schema.StringAttribute{
 		Computed:            true,

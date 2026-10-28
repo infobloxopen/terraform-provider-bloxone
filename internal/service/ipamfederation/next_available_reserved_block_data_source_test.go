@@ -50,6 +50,52 @@ func TestAccNextAvailableReservedBlockDataSource_count(t *testing.T) {
 	})
 }
 
+func TestAccNextAvailableReservedBlockDataSource_TagFilters(t *testing.T) {
+	dataSourceName := "data.bloxone_federation_next_available_reserved_blocks.test"
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	tagValue := acctest.RandomNameWithPrefix("next-available-reserved-block")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNextAvailableReservedBlockTagFilters(realmName, "10.122.0.0", 16, 24, tagValue),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "results.0"),
+				),
+			},
+		},
+	})
+}
+
+func testAccNextAvailableReservedBlockTagFilters(federatedRealm string, parentAddress string, parentCidr int, cidr int, tagValue string) string {
+	base := fmt.Sprintf(`
+resource "bloxone_federation_federated_block" "test" {
+    federated_realm = bloxone_federation_federated_realm.test.id
+    address = %q
+    cidr = %d
+    tags = {
+        env = %q
+    }
+}
+`, parentAddress, parentCidr, tagValue)
+
+	config := fmt.Sprintf(`
+data "bloxone_federation_next_available_reserved_blocks" "test" {
+    tag_filters = {
+        env = %q
+    }
+    cidr = %d
+
+    depends_on = [bloxone_federation_federated_block.test]
+}
+`, tagValue, cidr)
+
+	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), base, config}, "")
+}
+
 func testAccNextAvailableReservedBlockBaseConfig(federatedRealm string, parentAddress string, parentCidr int) string {
 	config := fmt.Sprintf(`
 resource "bloxone_federation_federated_block" "test" {

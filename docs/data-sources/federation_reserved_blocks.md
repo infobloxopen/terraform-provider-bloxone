@@ -51,15 +51,16 @@ data "bloxone_federation_reserved_blocks" "example_all" {}
 
 Required:
 
-- `address` (String) The address of the reserved block, an IPv4 address in form "a.b.c.d" or an IPv6 address. Do not include a prefix length ("/n"); use the _cidr_ field instead. This field is immutable after creation.
 - `cidr` (Number) The CIDR of the reserved block. This is required field, if _address_ does not specify it in its input.
 - `federated_realm` (String) The resource identifier.
 
 Optional:
 
+- `address` (String) The address of the reserved block, an IPv4 address in form "a.b.c.d" or an IPv6 address. Do not include a prefix length ("/n"); use the _cidr_ field instead. This field is immutable after creation. Exactly one of _address_ or _next_available_id_ must be specified.
 - `comment` (String) The description for the reserved block. May contain 0 to 1024 characters. Can include UTF-8.
 - `federated_pool_id` (String) The resource identifier.
 - `name` (String) The name of the reserved block. May contain 1 to 256 characters. Can include UTF-8.
+- `next_available_id` (String) The resource identifier of the parent Federated Block under which the next available reserved block should be allocated. Exactly one of _address_ or _next_available_id_ must be specified.
 - `tags` (Map of String) The tags for the reserved block in JSON format.
 
 Read-Only:

@@ -182,6 +182,56 @@ func TestAccReservedBlockResource_FederatedPoolId(t *testing.T) {
 	})
 }
 
+func TestAccReservedBlockResource_NextAvailableId(t *testing.T) {
+	var resourceName = "bloxone_federation_reserved_block.test_next_available_id"
+	var v ipamfederation.ReservedBlock
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccReservedBlockNextAvailableId(realmName, "10.102.0.0", 16, 24),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckReservedBlockExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrPair(resourceName, "next_available_id", "bloxone_federation_federated_block.test", "id"),
+					resource.TestCheckResourceAttrSet(resourceName, "address"),
+					resource.TestCheckResourceAttr(resourceName, "cidr", "24"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccReservedBlockResource_NextAvailableIdWithFederatedPoolId(t *testing.T) {
+	var resourceName = "bloxone_federation_reserved_block.test_next_available_id_with_pool"
+	var v ipamfederation.ReservedBlock
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	poolName := acctest.RandomNameWithPrefix("federated-pool")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccReservedBlockNextAvailableIdWithFederatedPoolId(realmName, poolName, "10.103.0.0", 16, 24),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckReservedBlockExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrPair(resourceName, "next_available_id", "bloxone_federation_federated_block.test", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_pool_id", "bloxone_federation_federated_pool.test", "id"),
+					resource.TestCheckResourceAttrSet(resourceName, "address"),
+					resource.TestCheckResourceAttr(resourceName, "cidr", "24"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccReservedBlockResource_FederatedRealm(t *testing.T) {
 	var resourceName = "bloxone_federation_reserved_block.test_federated_realm"
 	var v ipamfederation.ReservedBlock
@@ -404,6 +454,35 @@ resource "bloxone_federation_reserved_block" "test_federated_pool_id" {
 }
 `, poolName, address, cidr)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
+}
+
+func testAccReservedBlockNextAvailableId(federatedRealm string, parentAddress string, parentCidr int, cidr int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_federation_reserved_block" "test_next_available_id" {
+    federated_realm   = bloxone_federation_federated_realm.test.id
+    next_available_id = bloxone_federation_federated_block.test.id
+    cidr = %d
+}
+`, cidr)
+	return strings.Join([]string{testAccFederatedBlockBasicConfig(parentAddress, parentCidr, federatedRealm), config}, "")
+}
+
+func testAccReservedBlockNextAvailableIdWithFederatedPoolId(federatedRealm, poolName string, parentAddress string, parentCidr int, cidr int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_federation_federated_pool" "test" {
+    federated_realm = bloxone_federation_federated_realm.test.id
+    name            = %q
+    protocol        = "ip4"
+}
+
+resource "bloxone_federation_reserved_block" "test_next_available_id_with_pool" {
+    federated_realm   = bloxone_federation_federated_realm.test.id
+    next_available_id = bloxone_federation_federated_block.test.id
+    federated_pool_id = bloxone_federation_federated_pool.test.id
+    cidr = %d
+}
+`, poolName, cidr)
+	return strings.Join([]string{testAccFederatedBlockBasicConfig(parentAddress, parentCidr, federatedRealm), config}, "")
 }
 
 func testAccReservedBlockFederatedRealm(federatedRealm1, federatedRealm2, realm string, address string, cidr int) string {
