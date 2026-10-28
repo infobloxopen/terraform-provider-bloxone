@@ -1766,10 +1766,19 @@ func testAccDhcpOptionList(value string) string {
 // testAccDhcpOptionsAttribute returns a dhcp_options attribute with the test option, or nothing
 // when value is empty so the attribute is omitted from the config.
 func testAccDhcpOptionsAttribute(value string) string {
+	return testAccDhcpOptionsAttributeFor("dhcp_options", value)
+}
+
+// testAccDhcpOptionsV6Attribute is testAccDhcpOptionsAttribute for dhcp_options_v6.
+func testAccDhcpOptionsV6Attribute(value string) string {
+	return testAccDhcpOptionsAttributeFor("dhcp_options_v6", value)
+}
+
+func testAccDhcpOptionsAttributeFor(attribute, value string) string {
 	if value == "" {
 		return ""
 	}
-	return "dhcp_options = " + testAccDhcpOptionList(value)
+	return attribute + " = " + testAccDhcpOptionList(value)
 }
 
 // testAccDhcpOptionsInheritedFromParentSteps returns the steps shared by the objects that inherit
@@ -1824,6 +1833,12 @@ func testAccDhcpOptionsInheritedFromParentSteps(resourceName string, exists reso
 // DHCP properties: add an option on update, then remove it. config receives the option value to
 // set (empty = no dhcp_options) and must return the full config.
 func testAccDhcpOptionsAddRemoveSteps(resourceName string, exists resource.TestCheckFunc, config func(optionValue string) string) []resource.TestStep {
+	return testAccDhcpOptionsAddRemoveStepsFor("dhcp_options", resourceName, exists, config)
+}
+
+// testAccDhcpOptionsAddRemoveStepsFor is testAccDhcpOptionsAddRemoveSteps for any option list
+// attribute, such as dhcp_options_v6.
+func testAccDhcpOptionsAddRemoveStepsFor(attribute, resourceName string, exists resource.TestCheckFunc, config func(optionValue string) string) []resource.TestStep {
 	return []resource.TestStep{
 		{
 			Config: config(""),
@@ -1834,8 +1849,8 @@ func testAccDhcpOptionsAddRemoveSteps(resourceName string, exists resource.TestC
 			Config: config("true"),
 			Check: resource.ComposeTestCheckFunc(
 				exists,
-				resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
-				resource.TestCheckResourceAttr(resourceName, "dhcp_options.0.option_value", "true"),
+				resource.TestCheckResourceAttr(resourceName, attribute+".#", "1"),
+				resource.TestCheckResourceAttr(resourceName, attribute+".0.option_value", "true"),
 			),
 		},
 		// Removing it must also apply cleanly
