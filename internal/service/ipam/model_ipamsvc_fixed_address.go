@@ -249,7 +249,7 @@ func (m *IpamsvcFixedAddressModel) Expand(ctx context.Context, diags *diag.Diagn
 	}
 	to := &ipam.FixedAddress{
 		Comment:                   flex.ExpandStringPointer(m.Comment),
-		DhcpOptions:               flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
+		DhcpOptions:               flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
 		DisableDhcp:               flex.ExpandBoolPointer(m.DisableDhcp),
 		HeaderOptionFilename:      flex.ExpandStringPointer(m.HeaderOptionFilename),
 		HeaderOptionServerAddress: flex.ExpandStringPointer(m.HeaderOptionServerAddress),

@@ -54,7 +54,8 @@ func (useStateForUnknownUnlessDhcpOptionsChange) PlanModifyObject(ctx context.Co
 	for _, o := range opts {
 		code, _, _ := tftypes.WalkAttributePath(o, tftypes.NewAttributePath().WithAttributeName("option_code"))
 		var s string
-		if c, ok := code.(tftypes.Value); ok && c.As(&s) == nil {
+		// skip null/empty option codes so they can't match anything below
+		if c, ok := code.(tftypes.Value); ok && c.As(&s) == nil && s != "" {
 			codes[s] = true
 		}
 	}
@@ -73,6 +74,9 @@ func (useStateForUnknownUnlessDhcpOptionsChange) PlanModifyObject(ctx context.Co
 		_ = entry["action"].As(&action) // left empty if unreadable, so the entry is untouched
 		if cv, ok := code.(tftypes.Value); ok {
 			_ = cv.As(&c)
+		}
+		if c == "" { // no usable option code in state, leave the entry untouched
+			return v, nil
 		}
 		switch {
 		case action == "inherit" && codes[c]:

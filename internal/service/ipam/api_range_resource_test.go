@@ -759,3 +759,45 @@ resource "bloxone_ipam_range" "test_dhcp_options" {
 `, start, end, options)
 	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+optionSpace, optionSpace, "ip4"), config}, "")
 }
+
+func TestAccRangeResource_DhcpOptionsInheritedFromParent(t *testing.T) {
+	var resourceName = "bloxone_ipam_range.test_child"
+	var v ipam.Range
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+	optionName := acctest.RandomNameWithPrefix("opt")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: testAccDhcpOptionsInheritedFromParentSteps(
+			resourceName,
+			testAccCheckRangeExists(context.Background(), resourceName, &v),
+			func(childOptionValue string) string {
+				return testAccRangeDhcpOptionsInheritedFromParent(spaceName, optionName, childOptionValue)
+			},
+		),
+	})
+}
+
+// testAccRangeDhcpOptionsInheritedFromParent returns a parent subnet that sets an option and a range
+// in it that sets the same option with childOptionValue (no option when empty).
+func testAccRangeDhcpOptionsInheritedFromParent(spaceName, name, childOptionValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_subnet" "test_parent" {
+    address = "10.0.0.0"
+    cidr = 24
+    space = bloxone_ipam_ip_space.test.id
+    dhcp_options = %s
+}
+
+resource "bloxone_ipam_range" "test_child" {
+    space = bloxone_ipam_ip_space.test.id
+    start = "10.0.0.10"
+    end = "10.0.0.20"
+    name = %q
+    %s
+    depends_on = [bloxone_ipam_subnet.test_parent]
+}
+`, testAccDhcpOptionList(testAccParentOptionValue), name, testAccDhcpOptionsAttribute(childOptionValue))
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip4"), config}, "")
+}

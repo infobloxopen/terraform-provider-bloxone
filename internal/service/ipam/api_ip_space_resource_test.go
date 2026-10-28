@@ -1462,3 +1462,31 @@ resource "bloxone_ipam_ip_space" "test_dhcp_options" {
 `, name, testAccDhcpOptionsOptionAndGroup(optionFirst))
 	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip4"), config}, "")
 }
+
+func TestAccIpSpaceResource_DhcpOptionsAddRemove(t *testing.T) {
+	var resourceName = "bloxone_ipam_ip_space.test_add_remove"
+	var v ipam.IPSpace
+	name := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: testAccDhcpOptionsAddRemoveSteps(
+			resourceName,
+			testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+			func(optionValue string) string {
+				return testAccIpSpaceDhcpOptionsAddRemove(name, optionValue)
+			},
+		),
+	})
+}
+
+func testAccIpSpaceDhcpOptionsAddRemove(name, optionValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_ip_space" "test_add_remove" {
+    name = %q
+    %s
+}
+`, name, testAccDhcpOptionsAttribute(optionValue))
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip4"), config}, "")
+}

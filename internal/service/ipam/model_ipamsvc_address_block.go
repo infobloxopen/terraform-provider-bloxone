@@ -465,7 +465,7 @@ func (m *IpamsvcAddressBlockModel) Expand(ctx context.Context, diags *diag.Diagn
 		DdnsUpdateOnRenew:          flex.ExpandBoolPointer(m.DdnsUpdateOnRenew),
 		DdnsUseConflictResolution:  flex.ExpandBoolPointer(m.DdnsUseConflictResolution),
 		DhcpConfig:                 ExpandIpamsvcDHCPConfig(ctx, m.DhcpConfig, diags),
-		DhcpOptions:                flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
+		DhcpOptions:                flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
 		DhcpUtilization:            ExpandIpamsvcDHCPUtilization(ctx, m.DhcpUtilization, diags),
 		DiscoveryAttrs:             flex.ExpandFrameworkMapString(ctx, m.DiscoveryAttrs, diags),
 		DiscoveryMetadata:          flex.ExpandFrameworkMapString(ctx, m.DiscoveryMetadata, diags),

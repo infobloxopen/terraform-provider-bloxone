@@ -1610,3 +1610,45 @@ resource "bloxone_ipam_address_block" "test_dhcp_options" {
 `, address, cidr, testAccDhcpOptionsOptionAndGroup(optionFirst))
 	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+optionSpaceName, optionSpaceName, "ip4"), config}, "")
 }
+
+func TestAccAddressBlockResource_DhcpOptionsInheritedFromParent(t *testing.T) {
+	var resourceName = "bloxone_ipam_address_block.test_child"
+	var v ipam.AddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+	optionName := acctest.RandomNameWithPrefix("opt")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: testAccDhcpOptionsInheritedFromParentSteps(
+			resourceName,
+			testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
+			func(childOptionValue string) string {
+				return testAccAddressBlockDhcpOptionsInheritedFromParent(spaceName, optionName, childOptionValue)
+			},
+		),
+	})
+}
+
+// testAccAddressBlockDhcpOptionsInheritedFromParent returns a parent address block that sets an option
+// and a child address block that sets the same option with childOptionValue (no option when empty).
+func testAccAddressBlockDhcpOptionsInheritedFromParent(spaceName, name, childOptionValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test_parent" {
+    address = "10.0.0.0"
+    cidr = 16
+    space = bloxone_ipam_ip_space.test.id
+    dhcp_options = %s
+}
+
+resource "bloxone_ipam_address_block" "test_child" {
+    address = "10.0.1.0"
+    cidr = 24
+    space = bloxone_ipam_ip_space.test.id
+    name = %q
+    %s
+    depends_on = [bloxone_ipam_address_block.test_parent]
+}
+`, testAccDhcpOptionList(testAccParentOptionValue), name, testAccDhcpOptionsAttribute(childOptionValue))
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip4"), config}, "")
+}

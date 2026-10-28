@@ -1450,3 +1450,32 @@ resource "bloxone_dhcp_server" "test_dhcp_options" {
 `, name, testAccDhcpOptionsOptionAndGroup(optionFirst))
 	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+optionSpaceName, optionSpaceName, "ip4"), config}, "")
 }
+
+func TestAccServerResource_DhcpOptionsAddRemove(t *testing.T) {
+	var resourceName = "bloxone_dhcp_server.test_add_remove"
+	var v ipam.Server
+	serverName := acctest.RandomNameWithPrefix("dhcp-server")
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: testAccDhcpOptionsAddRemoveSteps(
+			resourceName,
+			testAccCheckServerExists(context.Background(), resourceName, &v),
+			func(optionValue string) string {
+				return testAccServerDhcpOptionsAddRemove(serverName, optionSpaceName, optionValue)
+			},
+		),
+	})
+}
+
+func testAccServerDhcpOptionsAddRemove(name, optionSpaceName, optionValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_server" "test_add_remove" {
+    name = %q
+    %s
+}
+`, name, testAccDhcpOptionsAttribute(optionValue))
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+optionSpaceName, optionSpaceName, "ip4"), config}, "")
+}

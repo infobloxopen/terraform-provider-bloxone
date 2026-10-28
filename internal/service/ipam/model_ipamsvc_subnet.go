@@ -499,7 +499,7 @@ func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		DdnsUseConflictResolution:  flex.ExpandBoolPointer(m.DdnsUseConflictResolution),
 		DhcpConfig:                 ExpandIpamsvcDHCPConfig(ctx, m.DhcpConfig, diags),
 		DhcpHost:                   flex.ExpandStringPointer(m.DhcpHost),
-		DhcpOptions:                flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
+		DhcpOptions:                flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
 		DhcpUtilization:            ExpandIpamsvcDHCPUtilization(ctx, m.DhcpUtilization, diags),
 		DisableDhcp:                flex.ExpandBoolPointer(m.DisableDhcp),
 		ExternalKeys:               flex.ExpandFrameworkMapString(ctx, m.ExternalKeys, diags),
