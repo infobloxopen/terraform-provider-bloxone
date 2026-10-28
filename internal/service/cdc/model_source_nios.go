@@ -92,8 +92,8 @@ var SourceNiosResourceSchemaAttributes = map[string]schema.Attribute{
 	"enabled": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
-		Default:             booldefault.StaticBool(true),
-		MarkdownDescription: "Indicates whether the NIOS source is enabled. Defaults to `true`.",
+		Default:             booldefault.StaticBool(false),
+		MarkdownDescription: "Indicates whether the NIOS source is enabled. Defaults to `false`.",
 	},
 	"id": schema.Int64Attribute{
 		Computed: true,
@@ -105,7 +105,6 @@ var SourceNiosResourceSchemaAttributes = map[string]schema.Attribute{
 	"insecure_mode": schema.BoolAttribute{
 		Optional:            true,
 		Computed:            true,
-		Default:             booldefault.StaticBool(true),
 		MarkdownDescription: "Indicates whether to skip TLS certificate verification when connecting to the NIOS Grid Master. Defaults to `true`.",
 	},
 	"name": schema.StringAttribute{
