@@ -81,7 +81,8 @@ func testAccCheckSourceApiResourceAttrPair(resourceName, dataSourceName string) 
 		resource.TestCheckResourceAttrPair(resourceName, "name", dataSourceName, "results.0.name"),
 		// nios_password/scp_password are excluded: the CDC API always returns
 		// a masked placeholder for these fields, so they never match the
-		// resource's real config value.
+		// resource's real config value. ca_certificate/certificate are unset
+		// here, so both sides are null.
 		resource.TestCheckResourceAttrPair(resourceName, "nios_username", dataSourceName, "results.0.nios_username"),
 		resource.TestCheckResourceAttrPair(resourceName, "rpz_log_insecure_mode", dataSourceName, "results.0.rpz_log_insecure_mode"),
 		resource.TestCheckResourceAttrPair(resourceName, "scp_username", dataSourceName, "results.0.scp_username"),

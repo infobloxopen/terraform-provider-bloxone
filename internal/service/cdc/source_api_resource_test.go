@@ -30,11 +30,26 @@ func TestAccSourceApiResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
+					resource.TestCheckResourceAttr(resourceName, "address", name+".example.com"),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
+					// Test fields with default value
+					resource.TestCheckResourceAttr(resourceName, "description", ""),
+					resource.TestCheckResourceAttr(resourceName, "enabled", "true"),
+					resource.TestCheckResourceAttr(resourceName, "insecure_mode", "true"),
+					resource.TestCheckResourceAttr(resourceName, "rpz_log_insecure_mode", "false"),
+					resource.TestCheckResourceAttr(resourceName, "scp_username", ""),
 				),
+			},
+			// Import
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				// The backend masks these fields, so they cannot be recovered on import.
+				ImportStateVerifyIgnore: []string{"ca_certificate", "certificate", "nios_password", "scp_password"},
 			},
 			// Delete testing automatically occurs in TestCase
 		},
@@ -168,18 +183,26 @@ func TestAccSourceApiResource_Description(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccSourceApiDescription(name, "DESCRIPTION_REPLACE_ME"),
+				Config: testAccSourceApiDescription(name, "Test description"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "description", "DESCRIPTION_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "description", "Test description"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccSourceApiDescription(name, "DESCRIPTION_UPDATE_REPLACE_ME"),
+				Config: testAccSourceApiDescription(name, "Test description updated"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "description", "DESCRIPTION_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "description", "Test description updated"),
+				),
+			},
+			// Removing description from config resets it to the default
+			{
+				Config: testAccSourceApiDescriptionRemoved(name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "description", ""),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -278,6 +301,36 @@ func TestAccSourceApiResource_Name(t *testing.T) {
 	})
 }
 
+func TestAccSourceApiResource_NiosUsername(t *testing.T) {
+	var resourceName = "bloxone_cdc_source_nios.test_nios_username"
+	var v cdc.SourceNios
+	name := acctest.RandomNameWithPrefix("source")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccSourceApiNiosUsername(name, "tf_auto"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "nios_username", "tf_auto"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccSourceApiNiosUsername(name, "tf_auto_updated"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "nios_username", "tf_auto_updated"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccSourceApiResource_RpzLogInsecureMode(t *testing.T) {
 	var resourceName = "bloxone_cdc_source_nios.test_rpz_log_insecure_mode"
 	var v cdc.SourceNios
@@ -308,6 +361,36 @@ func TestAccSourceApiResource_RpzLogInsecureMode(t *testing.T) {
 	})
 }
 
+func TestAccSourceApiResource_ScpUsername(t *testing.T) {
+	var resourceName = "bloxone_cdc_source_nios.test_scp_username"
+	var v cdc.SourceNios
+	name := acctest.RandomNameWithPrefix("source")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccSourceApiScpUsername(name, "tf_scp"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "scp_username", "tf_scp"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccSourceApiScpUsername(name, "tf_scp_updated"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "scp_username", "tf_scp_updated"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccSourceApiResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_cdc_source_nios.test_tags"
 	var v cdc.SourceNios
@@ -323,6 +406,7 @@ func TestAccSourceApiResource_Tags(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag1", "value1"),
 				),
 			},
 			// Update and Read
@@ -332,6 +416,8 @@ func TestAccSourceApiResource_Tags(t *testing.T) {
 					testAccCheckSourceApiExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1changed"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag1", "value1changed"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -458,6 +544,17 @@ resource "bloxone_cdc_source_nios" "test_description" {
 `, name, name, description)
 }
 
+func testAccSourceApiDescriptionRemoved(name string) string {
+	return fmt.Sprintf(`
+resource "bloxone_cdc_source_nios" "test_description" {
+    name          = %q
+    address       = "%s.example.com"
+    nios_username = "tf_auto"
+    nios_password = "tf_auto_password1!"
+}
+`, name, name)
+}
+
 func testAccSourceApiEnabled(name string, enabled string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_source_nios" "test_enabled" {
@@ -492,6 +589,30 @@ resource "bloxone_cdc_source_nios" "test_name" {
     nios_password = "tf_auto_password1!"
 }
 `, name, name)
+}
+
+func testAccSourceApiNiosUsername(name string, niosUsername string) string {
+	return fmt.Sprintf(`
+resource "bloxone_cdc_source_nios" "test_nios_username" {
+    name          = %q
+    address       = "%s.example.com"
+    nios_username = %q
+    nios_password = "tf_auto_password1!"
+}
+`, name, name, niosUsername)
+}
+
+func testAccSourceApiScpUsername(name string, scpUsername string) string {
+	return fmt.Sprintf(`
+resource "bloxone_cdc_source_nios" "test_scp_username" {
+    name          = %q
+    address       = "%s.example.com"
+    nios_username = "tf_auto"
+    nios_password = "tf_auto_password1!"
+    scp_username  = %q
+    scp_password  = "tf_scp_password1!"
+}
+`, name, name, scpUsername)
 }
 
 func testAccSourceApiRpzLogInsecureMode(name string, rpzLogInsecureMode string) string {

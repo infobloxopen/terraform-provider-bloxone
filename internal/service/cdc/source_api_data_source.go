@@ -41,7 +41,7 @@ func (m *SourceNiosModelWithFilter) FlattenResults(ctx context.Context, from []c
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, SourceNiosAttrTypes, diags, FlattenSourceNios)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, SourceNiosAttrTypes, diags, DataSourceFlattenSourceNios)
 }
 
 func (d *SourceApiDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -62,7 +62,8 @@ func (d *SourceApiDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: utils.DataSourceAttributeMap(SourceNiosResourceSchemaAttributes, &resp.Diagnostics),
 				},
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "The list of NIOS Sources matching the specified filters.",
 			},
 		},
 	}
@@ -103,7 +104,7 @@ func (d *SourceApiDataSource) Read(ctx context.Context, req datasource.ReadReque
 			SourceApiAPI.
 			ListSourceNios(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+			Tfilter(flex.ExpandFrameworkMapTagFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).
 			Limit(limit).
 			Execute()
