@@ -16,11 +16,6 @@ The Threat Class Property ETL Filter object filters Cloud Data Connector (CDC) f
 ## Example Usage
 
 ```terraform
-# Each entry in 'data' must be a valid threat class (e.g. "Malicious", "DDoS") or
-# threat property name from Infoblox Threat Intelligence (TIDE).
-# The full lists are available from the TIDE API:
-#   GET /tide/api/data/threat_classes
-#   GET /tide/api/data/properties
 resource "bloxone_cdc_etl_filter_threat_class_property" "example" {
   name = "example_cdc_etl_filter_threat_class_property"
   data = ["Malicious"]
@@ -44,7 +39,7 @@ resource "bloxone_cdc_etl_filter_threat_class_property" "example_with_optional" 
 
 ### Required
 
-- `data` (List of String) The list of threat classes or threat properties to filter on.
+- `data` (List of String) The list of threat classes or threat properties to filter on. Available threat classes: `APT`, `Bot`, `CompromisedDomain`, `CompromisedHost`, `Cryptocurrency`, `DNSTunnel`, `ExploitKit`, `ICS`, `IllegalContent`, `InternetInfrastructure`, `IntrusionAttempt`, `LimitedDistro`, `MaliciousNameserver`, `MalwareC2`, `MalwareC2DGA`, `MalwareDownload`, `Parked`, `Phishing`, `Policy`, `Proxy`, `Scam`, `Scanner`, `Sinkhole`, `Spambot`, `Suspicious`, `UncategorizedThreat`, `UnwantedContent`, `WebAppAttack`. Threat properties belong to a threat class (for example `MalwareC2_Generic`).
 - `name` (String) The name of the Threat Class Property ETL filter.
 
 ### Optional

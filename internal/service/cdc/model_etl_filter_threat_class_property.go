@@ -64,7 +64,7 @@ var EtlFilterThreatClassPropertyResourceSchemaAttributes = map[string]schema.Att
 		Validators: []validator.List{
 			listvalidator.SizeAtLeast(1),
 		},
-		MarkdownDescription: "The list of threat classes or threat properties to filter on.",
+		MarkdownDescription: "The list of threat classes or threat properties to filter on. Available threat classes: `APT`, `Bot`, `CompromisedDomain`, `CompromisedHost`, `Cryptocurrency`, `DNSTunnel`, `ExploitKit`, `ICS`, `IllegalContent`, `InternetInfrastructure`, `IntrusionAttempt`, `LimitedDistro`, `MaliciousNameserver`, `MalwareC2`, `MalwareC2DGA`, `MalwareDownload`, `Parked`, `Phishing`, `Policy`, `Proxy`, `Scam`, `Scanner`, `Sinkhole`, `Spambot`, `Suspicious`, `UncategorizedThreat`, `UnwantedContent`, `WebAppAttack`. Threat properties belong to a threat class (for example `MalwareC2_Generic`).",
 	},
 	"description": schema.StringAttribute{
 		Optional:            true,
