@@ -7,10 +7,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -35,6 +36,7 @@ type SourceNiosModel struct {
 	ScpPassword        types.String      `tfsdk:"scp_password"`
 	ScpUsername        types.String      `tfsdk:"scp_username"`
 	Tags               types.Map         `tfsdk:"tags"`
+	TagsAll            types.Map         `tfsdk:"tags_all"`
 	UpdatedAt          timetypes.RFC3339 `tfsdk:"updated_at"`
 }
 
@@ -54,87 +56,106 @@ var SourceNiosAttrTypes = map[string]attr.Type{
 	"scp_password":          types.StringType,
 	"scp_username":          types.StringType,
 	"tags":                  types.MapType{ElemType: types.StringType},
+	"tags_all":              types.MapType{ElemType: types.StringType},
 	"updated_at":            timetypes.RFC3339Type{},
 }
 
+// ca_certificate, certificate, nios_password and scp_password are write-only on
+// the CDC backend: it returns "********" when set and "" when unset, so they are
+// never read back (see Flatten) and cannot be recovered on import.
 var SourceNiosResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
-		Optional: true,
+		Required:            true,
+		MarkdownDescription: "The IP address or FQDN of the NIOS Grid Master. Must be unique across NIOS sources.",
 	},
 	"ca_certificate": schema.StringAttribute{
-		Optional:  true,
-		Sensitive: true,
+		Optional:            true,
+		Sensitive:           true,
+		MarkdownDescription: "The PEM-encoded CA certificate used to verify the NIOS Grid Master (\"CA Certificate\" in the UI). This value is not returned by the API.",
 	},
 	"certificate": schema.StringAttribute{
-		Optional:  true,
-		Sensitive: true,
+		Optional:            true,
+		Sensitive:           true,
+		MarkdownDescription: "The PEM-encoded certificate for RPZ logs (\"Certificate for RPZ Logs\" in the UI). This value is not returned by the API.",
 	},
 	"created_at": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Computed:   true,
+		CustomType:          timetypes.RFC3339Type{},
+		Computed:            true,
+		MarkdownDescription: "Time when the object has been created.",
 	},
 	"description": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
+		MarkdownDescription: "The description of the NIOS source.",
 	},
 	"enabled": schema.BoolAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.Bool{
-			boolplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		Default:             booldefault.StaticBool(true),
+		MarkdownDescription: "Indicates whether the NIOS source is enabled. Defaults to `true`.",
 	},
 	"id": schema.Int64Attribute{
 		Computed: true,
 		PlanModifiers: []planmodifier.Int64{
 			int64planmodifier.UseStateForUnknown(),
 		},
+		MarkdownDescription: "The resource identifier.",
 	},
 	"insecure_mode": schema.BoolAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.Bool{
-			boolplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		Default:             booldefault.StaticBool(true),
+		MarkdownDescription: "Indicates whether to skip TLS certificate verification when connecting to the NIOS Grid Master. Defaults to `true`.",
 	},
 	"name": schema.StringAttribute{
-		Optional: true,
+		Required:            true,
+		MarkdownDescription: "The name of the NIOS source. Must be unique across NIOS sources.",
 	},
 	"nios_password": schema.StringAttribute{
-		Optional:  true,
-		Sensitive: true,
+		Optional:            true,
+		Sensitive:           true,
+		MarkdownDescription: "The password of the NIOS user. This value is not returned by the API.",
 	},
 	"nios_username": schema.StringAttribute{
-		Optional: true,
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
+		MarkdownDescription: "The username used to connect to the NIOS Grid Master.",
 	},
 	"rpz_log_insecure_mode": schema.BoolAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.Bool{
-			boolplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		Default:             booldefault.StaticBool(false),
+		MarkdownDescription: "Indicates whether to skip TLS certificate verification when collecting RPZ logs. Defaults to `false`.",
 	},
 	"scp_password": schema.StringAttribute{
-		Optional:  true,
-		Sensitive: true,
+		Optional:            true,
+		Sensitive:           true,
+		MarkdownDescription: "The password of the SCP user. This value is not returned by the API.",
 	},
 	"scp_username": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
+		MarkdownDescription: "The username used for SCP transfer of DNS query logs from NIOS.",
 	},
 	"tags": schema.MapAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
+		ElementType:         types.StringType,
+		Optional:            true,
+		Computed:            true,
+		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
+		MarkdownDescription: "The tags for the NIOS source.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the NIOS source, including default tags.",
 	},
 	"updated_at": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Computed:   true,
+		CustomType:          timetypes.RFC3339Type{},
+		Computed:            true,
+		MarkdownDescription: "Time when the object has been updated. Equals to _created_at_ if not updated after creation.",
 	},
 }
 
@@ -172,12 +193,13 @@ func (m *SourceNiosModel) Expand(ctx context.Context, diags *diag.Diagnostics) *
 	return to
 }
 
-func FlattenSourceNios(ctx context.Context, from *cdc.SourceNios, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenSourceNios(ctx context.Context, from *cdc.SourceNios, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(SourceNiosAttrTypes)
 	}
 	m := SourceNiosModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, SourceNiosAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -191,20 +213,15 @@ func (m *SourceNiosModel) Flatten(ctx context.Context, from *cdc.SourceNios, dia
 		*m = SourceNiosModel{}
 	}
 	m.Address = flex.FlattenStringPointer(from.Address)
-	// ca_certificate and certificate are never read back from the API either:
-	// the backend masks them the same way it masks nios_password/scp_password.
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.Description = flex.FlattenStringPointer(from.Description)
 	m.Enabled = types.BoolPointerValue(from.Enabled)
 	m.Id = flex.FlattenInt64Pointer(from.Id)
 	m.InsecureMode = types.BoolPointerValue(from.InsecureMode)
 	m.Name = flex.FlattenStringPointer(from.Name)
-	// nios_password and scp_password are never read back from the API: the
-	// CDC backend always returns a masked placeholder for these fields, so
-	// the previously planned/stored value is kept as-is instead.
 	m.NiosUsername = flex.FlattenStringPointer(from.NiosUsername)
 	m.RpzLogInsecureMode = types.BoolPointerValue(from.RpzLogInsecureMode)
 	m.ScpUsername = flex.FlattenStringPointer(from.ScpUsername)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }
