@@ -171,7 +171,13 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		cdc.NewFlowApiV2Resource,
 		cdc.NewDestinationApiResource,
 		cdc.NewSourceApiResource,
-		cdc.NewEtlFilterApiResource,
+		cdc.NewEtlFilterFqdnResource,
+		cdc.NewEtlFilterHostnameResource,
+		cdc.NewEtlFilterIpNetworkResource,
+		cdc.NewEtlFilterOphidResource,
+		cdc.NewEtlFilterRecordTypeResource,
+		cdc.NewEtlFilterRegexResource,
+		cdc.NewEtlFilterThreatClassPropertyResource,
 		cdc.NewApplicationApiResource,
 	}
 }
@@ -256,7 +262,13 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		cdc.NewDestinationApiDataSource,
 		cdc.NewFlowApiV2DataSource,
 		cdc.NewSourceApiDataSource,
-		cdc.NewEtlFilterApiDataSource,
+		cdc.NewEtlFilterFqdnDataSource,
+		cdc.NewEtlFilterHostnameDataSource,
+		cdc.NewEtlFilterIpNetworkDataSource,
+		cdc.NewEtlFilterOphidDataSource,
+		cdc.NewEtlFilterRecordTypeDataSource,
+		cdc.NewEtlFilterRegexDataSource,
+		cdc.NewEtlFilterThreatClassPropertyDataSource,
 		cdc.NewApplicationApiDataSource,
 	}
 }

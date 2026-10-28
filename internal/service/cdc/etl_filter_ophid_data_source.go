@@ -9,44 +9,45 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 	"github.com/infobloxopen/universal-ddi-go-client/cdc"
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ datasource.DataSource = &EtlFilterApiDataSource{}
+var _ datasource.DataSource = &EtlFilterOphidDataSource{}
 
-func NewEtlFilterApiDataSource() datasource.DataSource {
-	return &EtlFilterApiDataSource{}
+func NewEtlFilterOphidDataSource() datasource.DataSource {
+	return &EtlFilterOphidDataSource{}
 }
 
-// EtlFilterApiDataSource defines the data source implementation.
-type EtlFilterApiDataSource struct {
+// EtlFilterOphidDataSource defines the data source implementation.
+type EtlFilterOphidDataSource struct {
 	client *universalddiclient.APIClient
 }
 
-func (d *EtlFilterApiDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "cdc_etl_filter_record_types"
+func (d *EtlFilterOphidDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "cdc_etl_filter_ophids"
 }
 
-type EtlFilterRecordTypeModelWithFilter struct {
+type EtlFilterOphidModelWithFilter struct {
 	Filters    types.Map  `tfsdk:"filters"`
 	TagFilters types.Map  `tfsdk:"tag_filters"`
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *EtlFilterRecordTypeModelWithFilter) FlattenResults(ctx context.Context, from []cdc.EtlFilterRecordType, diags *diag.Diagnostics) {
+func (m *EtlFilterOphidModelWithFilter) FlattenResults(ctx context.Context, from []cdc.EtlFilterOphid, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, EtlFilterRecordTypeAttrTypes, diags, FlattenEtlFilterRecordType)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, EtlFilterOphidAttrTypes, diags, DataSourceFlattenEtlFilterOphid)
 }
 
-func (d *EtlFilterApiDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *EtlFilterOphidDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Retrieves information about existing Record Type ETL Filters.\n\nThe Record Type ETL Filter object filters Cloud Data Connector (CDC) flow data by DNS record type.",
+		MarkdownDescription: "Retrieves information about existing OPHID ETL Filters.\n\nThe OPHID ETL Filter object filters Cloud Data Connector (CDC) flow data by on-prem host ID (OPHID).",
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
@@ -60,15 +61,16 @@ func (d *EtlFilterApiDataSource) Schema(ctx context.Context, req datasource.Sche
 			},
 			"results": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
-					Attributes: utils.DataSourceAttributeMap(EtlFilterRecordTypeResourceSchemaAttributes, &resp.Diagnostics),
+					Attributes: utils.DataSourceAttributeMap(EtlFilterOphidResourceSchemaAttributes, &resp.Diagnostics),
 				},
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "The list of OPHID ETL Filters matching the specified filters.",
 			},
 		},
 	}
 }
 
-func (d *EtlFilterApiDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (d *EtlFilterOphidDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -88,8 +90,8 @@ func (d *EtlFilterApiDataSource) Configure(ctx context.Context, req datasource.C
 	d.client = client
 }
 
-func (d *EtlFilterApiDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data EtlFilterRecordTypeModelWithFilter
+func (d *EtlFilterOphidDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data EtlFilterOphidModelWithFilter
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -98,17 +100,17 @@ func (d *EtlFilterApiDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]cdc.EtlFilterRecordType, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]cdc.EtlFilterOphid, error) {
 		apiRes, _, err := d.client.CDCAPI.
 			EtlFilterApiAPI.
-			ListEtlFilterRecordType(ctx).
+			ListEtlFilterOphid(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+			Tfilter(flex.ExpandFrameworkMapTagFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).
 			Limit(limit).
 			Execute()
 		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read EtlFilterApi, got error: %s", err))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read EtlFilterOphid, got error: %s", err))
 			return nil, err
 		}
 		return apiRes.GetResults(), nil

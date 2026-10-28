@@ -11,14 +11,15 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 	"github.com/infobloxopen/universal-ddi-go-client/cdc"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-func TestAccEtlFilterApiResource_basic(t *testing.T) {
+func TestAccEtlFilterRecordTypeResource_basic(t *testing.T) {
 	var resourceName = "bloxone_cdc_etl_filter_record_type.test"
 	var v cdc.EtlFilterRecordType
-	name := acctest.RandomNameWithPrefix("etl-filter")
+	name := acctest.RandomNameWithPrefix("etl-filter-record-type")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -26,15 +27,19 @@ func TestAccEtlFilterApiResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccEtlFilterApiBasicConfig(name),
+				Config: testAccEtlFilterRecordTypeBasicConfig(name),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
+					testAccCheckEtlFilterRecordTypeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
+					resource.TestCheckResourceAttr(resourceName, "data.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "data.0", "A"),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
 					// Test fields with default value
+					resource.TestCheckResourceAttr(resourceName, "description", ""),
+					resource.TestCheckResourceAttr(resourceName, "enabled", "false"),
 					resource.TestCheckResourceAttr(resourceName, "filter_source", "SOURCE_DEFAULT"),
 				),
 			},
@@ -43,21 +48,21 @@ func TestAccEtlFilterApiResource_basic(t *testing.T) {
 	})
 }
 
-func TestAccEtlFilterApiResource_disappears(t *testing.T) {
+func TestAccEtlFilterRecordTypeResource_disappears(t *testing.T) {
 	resourceName := "bloxone_cdc_etl_filter_record_type.test"
 	var v cdc.EtlFilterRecordType
-	name := acctest.RandomNameWithPrefix("etl-filter")
+	name := acctest.RandomNameWithPrefix("etl-filter-record-type")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckEtlFilterApiDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckEtlFilterRecordTypeDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccEtlFilterApiBasicConfig(name),
+				Config: testAccEtlFilterRecordTypeBasicConfig(name),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
-					testAccCheckEtlFilterApiDisappears(context.Background(), &v),
+					testAccCheckEtlFilterRecordTypeExists(context.Background(), resourceName, &v),
+					testAccCheckEtlFilterRecordTypeDisappears(context.Background(), &v),
 				),
 				ExpectNonEmptyPlan: true,
 			},
@@ -65,10 +70,10 @@ func TestAccEtlFilterApiResource_disappears(t *testing.T) {
 	})
 }
 
-func TestAccEtlFilterApiResource_Data(t *testing.T) {
+func TestAccEtlFilterRecordTypeResource_Data(t *testing.T) {
 	var resourceName = "bloxone_cdc_etl_filter_record_type.test_data"
 	var v cdc.EtlFilterRecordType
-	name := acctest.RandomNameWithPrefix("etl-filter")
+	name := acctest.RandomNameWithPrefix("etl-filter-record-type")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -76,19 +81,21 @@ func TestAccEtlFilterApiResource_Data(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccEtlFilterApiData(name, `["A"]`),
+				Config: testAccEtlFilterRecordTypeData(name, `["A"]`),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
+					testAccCheckEtlFilterRecordTypeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "data.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "data.0", "A"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccEtlFilterApiData(name, `["A", "AAAA"]`),
+				Config: testAccEtlFilterRecordTypeData(name, `["A", "AAAA"]`),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
+					testAccCheckEtlFilterRecordTypeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "data.#", "2"),
+					resource.TestCheckResourceAttr(resourceName, "data.0", "A"),
+					resource.TestCheckResourceAttr(resourceName, "data.1", "AAAA"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -96,10 +103,10 @@ func TestAccEtlFilterApiResource_Data(t *testing.T) {
 	})
 }
 
-func TestAccEtlFilterApiResource_Description(t *testing.T) {
+func TestAccEtlFilterRecordTypeResource_Description(t *testing.T) {
 	var resourceName = "bloxone_cdc_etl_filter_record_type.test_description"
 	var v cdc.EtlFilterRecordType
-	name := acctest.RandomNameWithPrefix("etl-filter")
+	name := acctest.RandomNameWithPrefix("etl-filter-record-type")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -107,18 +114,26 @@ func TestAccEtlFilterApiResource_Description(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccEtlFilterApiDescription(name, "DESCRIPTION_REPLACE_ME"),
+				Config: testAccEtlFilterRecordTypeDescription(name, "Test description"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "description", "DESCRIPTION_REPLACE_ME"),
+					testAccCheckEtlFilterRecordTypeExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "description", "Test description"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccEtlFilterApiDescription(name, "DESCRIPTION_UPDATE_REPLACE_ME"),
+				Config: testAccEtlFilterRecordTypeDescription(name, "Test description updated"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "description", "DESCRIPTION_UPDATE_REPLACE_ME"),
+					testAccCheckEtlFilterRecordTypeExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "description", "Test description updated"),
+				),
+			},
+			// Removing description from config resets it to the default
+			{
+				Config: testAccEtlFilterRecordTypeDescriptionRemoved(name),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckEtlFilterRecordTypeExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "description", ""),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -126,10 +141,10 @@ func TestAccEtlFilterApiResource_Description(t *testing.T) {
 	})
 }
 
-func TestAccEtlFilterApiResource_Enabled(t *testing.T) {
+func TestAccEtlFilterRecordTypeResource_Enabled(t *testing.T) {
 	var resourceName = "bloxone_cdc_etl_filter_record_type.test_enabled"
 	var v cdc.EtlFilterRecordType
-	name := acctest.RandomNameWithPrefix("etl-filter")
+	name := acctest.RandomNameWithPrefix("etl-filter-record-type")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -137,40 +152,36 @@ func TestAccEtlFilterApiResource_Enabled(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccEtlFilterApiEnabled(name, "false"),
+				Config: testAccEtlFilterRecordTypeEnabled(name, "true"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "enabled", "false"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccEtlFilterApiEnabled(name, "true"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
+					testAccCheckEtlFilterRecordTypeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "enabled", "true"),
 				),
 			},
+			// Update and Read
+			{
+				Config: testAccEtlFilterRecordTypeEnabled(name, "false"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckEtlFilterRecordTypeExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "enabled", "false"),
+				),
+			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
 }
 
-func TestAccEtlFilterApiResource_FilterSource(t *testing.T) {
+func TestAccEtlFilterRecordTypeResource_FilterSource(t *testing.T) {
 	// TODO: setting filter_source to SOURCE_INGRESS does not persist on the
-	// CDC backend. Confirmed via direct curl against the API, with no
-	// provider/Terraform involved: a PUT with filter_source=SOURCE_INGRESS
-	// returns 200 and echoes back filter_source="SOURCE_INGRESS" in the same
-	// response, but an immediately following GET on the same object shows it
-	// reverted to filter_source="SOURCE_DEFAULT". This causes Terraform's
-	// post-apply refresh to see a stale diff on every apply. This is a
-	// backend persistence bug, not something fixable in the provider. Needs
-	// a CDC backend fix before this can be un-skipped.
+	// CDC backend: a PUT with filter_source=SOURCE_INGRESS returns 200 and
+	// echoes back SOURCE_INGRESS, but the next GET shows SOURCE_DEFAULT again
+	// (confirmed with curl for record_type, no Terraform involved). Needs a
+	// CDC backend fix before this can be un-skipped.
 	t.Skip("CDC backend does not persist filter_source=SOURCE_INGRESS; see TODO above")
 
 	var resourceName = "bloxone_cdc_etl_filter_record_type.test_filter_source"
 	var v cdc.EtlFilterRecordType
-	name := acctest.RandomNameWithPrefix("etl-filter")
+	name := acctest.RandomNameWithPrefix("etl-filter-record-type")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -178,17 +189,17 @@ func TestAccEtlFilterApiResource_FilterSource(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccEtlFilterApiFilterSource(name, "SOURCE_DEFAULT"),
+				Config: testAccEtlFilterRecordTypeFilterSource(name, "SOURCE_DEFAULT"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
+					testAccCheckEtlFilterRecordTypeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_source", "SOURCE_DEFAULT"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccEtlFilterApiFilterSource(name, "SOURCE_INGRESS"),
+				Config: testAccEtlFilterRecordTypeFilterSource(name, "SOURCE_INGRESS"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
+					testAccCheckEtlFilterRecordTypeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "filter_source", "SOURCE_INGRESS"),
 				),
 			},
@@ -197,10 +208,10 @@ func TestAccEtlFilterApiResource_FilterSource(t *testing.T) {
 	})
 }
 
-func TestAccEtlFilterApiResource_Name(t *testing.T) {
+func TestAccEtlFilterRecordTypeResource_Name(t *testing.T) {
 	var resourceName = "bloxone_cdc_etl_filter_record_type.test_name"
 	var v cdc.EtlFilterRecordType
-	name := acctest.RandomNameWithPrefix("etl-filter")
+	name := acctest.RandomNameWithPrefix("etl-filter-record-type")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -208,17 +219,17 @@ func TestAccEtlFilterApiResource_Name(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccEtlFilterApiName(name),
+				Config: testAccEtlFilterRecordTypeName(name),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
+					testAccCheckEtlFilterRecordTypeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccEtlFilterApiName(name + "-updated"),
+				Config: testAccEtlFilterRecordTypeName(name + "-updated"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
+					testAccCheckEtlFilterRecordTypeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "name", name+"-updated"),
 				),
 			},
@@ -227,10 +238,10 @@ func TestAccEtlFilterApiResource_Name(t *testing.T) {
 	})
 }
 
-func TestAccEtlFilterApiResource_Tags(t *testing.T) {
+func TestAccEtlFilterRecordTypeResource_Tags(t *testing.T) {
 	var resourceName = "bloxone_cdc_etl_filter_record_type.test_tags"
 	var v cdc.EtlFilterRecordType
-	name := acctest.RandomNameWithPrefix("etl-filter")
+	name := acctest.RandomNameWithPrefix("etl-filter-record-type")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -238,19 +249,22 @@ func TestAccEtlFilterApiResource_Tags(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccEtlFilterApiTags(name, map[string]string{"tag1": "value1"}),
+				Config: testAccEtlFilterRecordTypeTags(name, map[string]string{"tag1": "value1"}),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
+					testAccCheckEtlFilterRecordTypeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag1", "value1"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccEtlFilterApiTags(name, map[string]string{"tag1": "value1changed", "tag2": "value2"}),
+				Config: testAccEtlFilterRecordTypeTags(name, map[string]string{"tag1": "value1changed", "tag2": "value2"}),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
+					testAccCheckEtlFilterRecordTypeExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1changed"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag1", "value1changed"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -258,7 +272,7 @@ func TestAccEtlFilterApiResource_Tags(t *testing.T) {
 	})
 }
 
-func testAccCheckEtlFilterApiExists(ctx context.Context, resourceName string, v *cdc.EtlFilterRecordType) resource.TestCheckFunc {
+func testAccCheckEtlFilterRecordTypeExists(ctx context.Context, resourceName string, v *cdc.EtlFilterRecordType) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resourceName]
@@ -284,7 +298,7 @@ func testAccCheckEtlFilterApiExists(ctx context.Context, resourceName string, v 
 	}
 }
 
-func testAccCheckEtlFilterApiDestroy(ctx context.Context, v *cdc.EtlFilterRecordType) resource.TestCheckFunc {
+func testAccCheckEtlFilterRecordTypeDestroy(ctx context.Context, v *cdc.EtlFilterRecordType) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
 		if v.Id == nil {
@@ -305,7 +319,7 @@ func testAccCheckEtlFilterApiDestroy(ctx context.Context, v *cdc.EtlFilterRecord
 	}
 }
 
-func testAccCheckEtlFilterApiDisappears(ctx context.Context, v *cdc.EtlFilterRecordType) resource.TestCheckFunc {
+func testAccCheckEtlFilterRecordTypeDisappears(ctx context.Context, v *cdc.EtlFilterRecordType) resource.TestCheckFunc {
 	// Delete the resource externally to verify disappears test
 	return func(state *terraform.State) error {
 		_, err := acctest.BloxOneClient.CDCAPI.
@@ -319,75 +333,84 @@ func testAccCheckEtlFilterApiDisappears(ctx context.Context, v *cdc.EtlFilterRec
 	}
 }
 
-func testAccEtlFilterApiBasicConfig(name string) string {
+func testAccEtlFilterRecordTypeBasicConfig(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_etl_filter_record_type" "test" {
-    name = %q
-    data = ["A"]
+  name = %q
+  data = ["A"]
 }
 `, name)
 }
 
-func testAccEtlFilterApiData(name string, data string) string {
+func testAccEtlFilterRecordTypeData(name string, data string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_etl_filter_record_type" "test_data" {
-    name = %q
-    data = %s
+  name = %q
+  data = %s
 }
 `, name, data)
 }
 
-func testAccEtlFilterApiDescription(name string, description string) string {
+func testAccEtlFilterRecordTypeDescription(name string, description string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_etl_filter_record_type" "test_description" {
-    name        = %q
-    data        = ["A"]
-    description = %q
+  name        = %q
+  data        = ["A"]
+  description = %q
 }
 `, name, description)
 }
 
-func testAccEtlFilterApiEnabled(name string, enabled string) string {
+func testAccEtlFilterRecordTypeDescriptionRemoved(name string) string {
 	return fmt.Sprintf(`
-resource "bloxone_cdc_etl_filter_record_type" "test_enabled" {
-    name    = %q
-    data    = ["A"]
-    enabled = %s
-}
-`, name, enabled)
-}
-
-func testAccEtlFilterApiFilterSource(name string, filterSource string) string {
-	return fmt.Sprintf(`
-resource "bloxone_cdc_etl_filter_record_type" "test_filter_source" {
-    name          = %q
-    data          = ["A"]
-    filter_source = %q
-}
-`, name, filterSource)
-}
-
-func testAccEtlFilterApiName(name string) string {
-	return fmt.Sprintf(`
-resource "bloxone_cdc_etl_filter_record_type" "test_name" {
-    name = %q
-    data = ["A"]
+resource "bloxone_cdc_etl_filter_record_type" "test_description" {
+  name = %q
+  data = ["A"]
 }
 `, name)
 }
 
-func testAccEtlFilterApiTags(name string, tags map[string]string) string {
+func testAccEtlFilterRecordTypeEnabled(name string, enabled string) string {
+	return fmt.Sprintf(`
+resource "bloxone_cdc_etl_filter_record_type" "test_enabled" {
+  name    = %q
+  data    = ["A"]
+  enabled = %s
+}
+`, name, enabled)
+}
+
+func testAccEtlFilterRecordTypeFilterSource(name string, filterSource string) string {
+	return fmt.Sprintf(`
+resource "bloxone_cdc_etl_filter_record_type" "test_filter_source" {
+  name          = %q
+  data          = ["A"]
+  filter_source = %q
+}
+`, name, filterSource)
+}
+
+func testAccEtlFilterRecordTypeName(name string) string {
+	return fmt.Sprintf(`
+resource "bloxone_cdc_etl_filter_record_type" "test_name" {
+  name = %q
+  data = ["A"]
+}
+`, name)
+}
+
+func testAccEtlFilterRecordTypeTags(name string, tags map[string]string) string {
 	tagsStr := "{\n"
 	for k, v := range tags {
-		tagsStr += fmt.Sprintf("\t\t%s = %q\n", k, v)
+		tagsStr += fmt.Sprintf("    %s = %q\n", k, v)
 	}
-	tagsStr += "\t}"
+	tagsStr += "  }"
 
 	return fmt.Sprintf(`
 resource "bloxone_cdc_etl_filter_record_type" "test_tags" {
-    name = %q
-    data = ["A"]
-    tags = %s
+  name = %q
+  data = ["A"]
+  tags = %s
 }
 `, name, tagsStr)
 }

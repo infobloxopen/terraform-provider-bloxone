@@ -7,49 +7,51 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 	"github.com/infobloxopen/universal-ddi-go-client/cdc"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-func TestAccEtlFilterApiDataSource_Filters(t *testing.T) {
-	dataSourceName := "data.bloxone_cdc_etl_filter_record_types.test"
-	resourceName := "bloxone_cdc_etl_filter_record_type.test"
-	name := acctest.RandomNameWithPrefix("etl-filter")
-	var v cdc.EtlFilterRecordType
+func TestAccEtlFilterFqdnDataSource_Filters(t *testing.T) {
+	dataSourceName := "data.bloxone_cdc_etl_filter_fqdns.test"
+	resourceName := "bloxone_cdc_etl_filter_fqdn.test"
+	name := acctest.RandomNameWithPrefix("etl-filter-fqdn")
+	var v cdc.EtlFilterFqdn
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckEtlFilterApiDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckEtlFilterFqdnDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccEtlFilterApiDataSourceConfigFilters(name),
+				Config: testAccEtlFilterFqdnDataSourceConfigFilters(name),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
-						testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
-					}, testAccCheckEtlFilterApiResourceAttrPair(resourceName, dataSourceName)...)...,
+						testAccCheckEtlFilterFqdnExists(context.Background(), resourceName, &v),
+					}, testAccCheckEtlFilterFqdnResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
 	})
 }
 
-func TestAccEtlFilterApiDataSource_TagFilters(t *testing.T) {
-	dataSourceName := "data.bloxone_cdc_etl_filter_record_types.test"
-	resourceName := "bloxone_cdc_etl_filter_record_type.test"
-	name := acctest.RandomNameWithPrefix("etl-filter")
-	var v cdc.EtlFilterRecordType
+func TestAccEtlFilterFqdnDataSource_TagFilters(t *testing.T) {
+	dataSourceName := "data.bloxone_cdc_etl_filter_fqdns.test"
+	resourceName := "bloxone_cdc_etl_filter_fqdn.test"
+	name := acctest.RandomNameWithPrefix("etl-filter-fqdn")
+	var v cdc.EtlFilterFqdn
+
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckEtlFilterApiDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckEtlFilterFqdnDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccEtlFilterApiDataSourceConfigTagFilters(name, acctest.RandomName()),
+				Config: testAccEtlFilterFqdnDataSourceConfigTagFilters(name, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
-						testAccCheckEtlFilterApiExists(context.Background(), resourceName, &v),
-					}, testAccCheckEtlFilterApiResourceAttrPair(resourceName, dataSourceName)...)...,
+						testAccCheckEtlFilterFqdnExists(context.Background(), resourceName, &v),
+					}, testAccCheckEtlFilterFqdnResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
@@ -58,7 +60,7 @@ func TestAccEtlFilterApiDataSource_TagFilters(t *testing.T) {
 
 // below all TestAcc functions
 
-func testAccCheckEtlFilterApiResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
+func testAccCheckEtlFilterFqdnResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
 	return []resource.TestCheckFunc{
 		resource.TestCheckResourceAttrPair(resourceName, "created_at", dataSourceName, "results.0.created_at"),
 		resource.TestCheckResourceAttrPair(resourceName, "data", dataSourceName, "results.0.data"),
@@ -73,34 +75,34 @@ func testAccCheckEtlFilterApiResourceAttrPair(resourceName, dataSourceName strin
 	}
 }
 
-func testAccEtlFilterApiDataSourceConfigFilters(name string) string {
+func testAccEtlFilterFqdnDataSourceConfigFilters(name string) string {
 	return fmt.Sprintf(`
-resource "bloxone_cdc_etl_filter_record_type" "test" {
+resource "bloxone_cdc_etl_filter_fqdn" "test" {
   name = %q
-  data = ["A"]
+  data = ["example.com"]
 }
 
-data "bloxone_cdc_etl_filter_record_types" "test" {
+data "bloxone_cdc_etl_filter_fqdns" "test" {
   filters = {
-	name = bloxone_cdc_etl_filter_record_type.test.name
+    name = bloxone_cdc_etl_filter_fqdn.test.name
   }
 }
 `, name)
 }
 
-func testAccEtlFilterApiDataSourceConfigTagFilters(name string, tagValue string) string {
+func testAccEtlFilterFqdnDataSourceConfigTagFilters(name string, tagValue string) string {
 	return fmt.Sprintf(`
-resource "bloxone_cdc_etl_filter_record_type" "test" {
+resource "bloxone_cdc_etl_filter_fqdn" "test" {
   name = %q
-  data = ["A"]
+  data = ["example.com"]
   tags = {
-	tag1 = %q
+    tag1 = %q
   }
 }
 
-data "bloxone_cdc_etl_filter_record_types" "test" {
+data "bloxone_cdc_etl_filter_fqdns" "test" {
   tag_filters = {
-	tag1 = bloxone_cdc_etl_filter_record_type.test.tags.tag1
+    tag1 = bloxone_cdc_etl_filter_fqdn.test.tags.tag1
   }
 }
 `, name, tagValue)

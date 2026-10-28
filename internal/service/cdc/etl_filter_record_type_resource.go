@@ -5,38 +5,39 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &EtlFilterApiResource{}
-var _ resource.ResourceWithImportState = &EtlFilterApiResource{}
+var _ resource.Resource = &EtlFilterRecordTypeResource{}
+var _ resource.ResourceWithImportState = &EtlFilterRecordTypeResource{}
 
-func NewEtlFilterApiResource() resource.Resource {
-	return &EtlFilterApiResource{}
+func NewEtlFilterRecordTypeResource() resource.Resource {
+	return &EtlFilterRecordTypeResource{}
 }
 
-// EtlFilterApiResource defines the resource implementation.
-type EtlFilterApiResource struct {
+// EtlFilterRecordTypeResource defines the resource implementation.
+type EtlFilterRecordTypeResource struct {
 	client *universalddiclient.APIClient
 }
 
-func (r *EtlFilterApiResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *EtlFilterRecordTypeResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + "cdc_etl_filter_record_type"
 }
 
-func (r *EtlFilterApiResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *EtlFilterRecordTypeResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manages a Record Type ETL Filter.\n\nThe Record Type ETL Filter object filters Cloud Data Connector (CDC) flow data by DNS record type.",
 		Attributes:          EtlFilterRecordTypeResourceSchemaAttributes,
 	}
 }
 
-func (r *EtlFilterApiResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *EtlFilterRecordTypeResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -56,7 +57,7 @@ func (r *EtlFilterApiResource) Configure(ctx context.Context, req resource.Confi
 	r.client = client
 }
 
-func (r *EtlFilterApiResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *EtlFilterRecordTypeResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data EtlFilterRecordTypeModel
 
 	// Read Terraform plan data into the model
@@ -72,7 +73,7 @@ func (r *EtlFilterApiResource) Create(ctx context.Context, req resource.CreateRe
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create EtlFilterApi, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create EtlFilterRecordType, got error: %s", err))
 		return
 	}
 
@@ -83,7 +84,7 @@ func (r *EtlFilterApiResource) Create(ctx context.Context, req resource.CreateRe
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *EtlFilterApiResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *EtlFilterRecordTypeResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var data EtlFilterRecordTypeModel
 
 	// Read Terraform prior state data into the model
@@ -102,7 +103,7 @@ func (r *EtlFilterApiResource) Read(ctx context.Context, req resource.ReadReques
 			resp.State.RemoveResource(ctx)
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read EtlFilterApi, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read EtlFilterRecordType, got error: %s", err))
 		return
 	}
 
@@ -113,7 +114,7 @@ func (r *EtlFilterApiResource) Read(ctx context.Context, req resource.ReadReques
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *EtlFilterApiResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *EtlFilterRecordTypeResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data EtlFilterRecordTypeModel
 
 	// Read Terraform plan data into the model
@@ -129,7 +130,7 @@ func (r *EtlFilterApiResource) Update(ctx context.Context, req resource.UpdateRe
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update EtlFilterApi, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update EtlFilterRecordType, got error: %s", err))
 		return
 	}
 
@@ -140,7 +141,7 @@ func (r *EtlFilterApiResource) Update(ctx context.Context, req resource.UpdateRe
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *EtlFilterApiResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+func (r *EtlFilterRecordTypeResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var data EtlFilterRecordTypeModel
 
 	// Read Terraform prior state data into the model
@@ -158,11 +159,11 @@ func (r *EtlFilterApiResource) Delete(ctx context.Context, req resource.DeleteRe
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete EtlFilterApi, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete EtlFilterRecordType, got error: %s", err))
 		return
 	}
 }
 
-func (r *EtlFilterApiResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+func (r *EtlFilterRecordTypeResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	utils.ImportStatePassthroughInt64ID(ctx, req, resp)
 }

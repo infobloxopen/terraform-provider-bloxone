@@ -4,13 +4,18 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -29,6 +34,7 @@ type EtlFilterRecordTypeModel struct {
 	IngressPolicyAction types.String      `tfsdk:"ingress_policy_action"`
 	Name                types.String      `tfsdk:"name"`
 	Tags                types.Map         `tfsdk:"tags"`
+	TagsAll             types.Map         `tfsdk:"tags_all"`
 	UpdatedAt           timetypes.RFC3339 `tfsdk:"updated_at"`
 }
 
@@ -42,62 +48,84 @@ var EtlFilterRecordTypeAttrTypes = map[string]attr.Type{
 	"ingress_policy_action": types.StringType,
 	"name":                  types.StringType,
 	"tags":                  types.MapType{ElemType: types.StringType},
+	"tags_all":              types.MapType{ElemType: types.StringType},
 	"updated_at":            timetypes.RFC3339Type{},
 }
 
 var EtlFilterRecordTypeResourceSchemaAttributes = map[string]schema.Attribute{
 	"created_at": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Computed:   true,
+		CustomType:          timetypes.RFC3339Type{},
+		Computed:            true,
+		MarkdownDescription: "Time when the object has been created.",
 	},
 	"data": schema.ListAttribute{
 		ElementType: types.StringType,
-		Optional:    true,
+		Required:    true,
+		Validators: []validator.List{
+			listvalidator.SizeAtLeast(1),
+		},
+		MarkdownDescription: "The list of DNS record types to filter on, e.g. `A`, `AAAA`.",
 	},
 	"description": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		Default:             stringdefault.StaticString(""),
+		MarkdownDescription: "The description of the Record Type ETL filter.",
 	},
 	"enabled": schema.BoolAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.Bool{
-			boolplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		Default:             booldefault.StaticBool(false),
+		MarkdownDescription: "Indicates whether the Record Type ETL filter is enabled. Defaults to `false`.",
 	},
 	"filter_source": schema.StringAttribute{
 		Optional: true,
 		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
+		Default:  stringdefault.StaticString(string(cdc.FILTERSOURCE_DEFAULT)),
+		Validators: []validator.String{
+			stringvalidator.OneOf(string(cdc.FILTERSOURCE_DEFAULT), string(cdc.FILTERSOURCE_INGRESS)),
 		},
+		MarkdownDescription: "The source the Record Type ETL filter applies to. Allowed values:\n" +
+			"  * _SOURCE_DEFAULT_\n" +
+			"  * _SOURCE_INGRESS_\n\n" +
+			"Defaults to _SOURCE_DEFAULT_.",
 	},
 	"id": schema.Int64Attribute{
 		Computed: true,
 		PlanModifiers: []planmodifier.Int64{
 			int64planmodifier.UseStateForUnknown(),
 		},
+		MarkdownDescription: "The resource identifier.",
 	},
+	// TODO: allowed values and server default for ingress_policy_action are not yet known.
 	"ingress_policy_action": schema.StringAttribute{
 		Optional: true,
 		Computed: true,
 		PlanModifiers: []planmodifier.String{
 			stringplanmodifier.UseStateForUnknown(),
 		},
+		MarkdownDescription: "The ingress policy action of the Record Type ETL filter.",
 	},
 	"name": schema.StringAttribute{
-		Optional: true,
+		Required:            true,
+		MarkdownDescription: "The name of the Record Type ETL filter.",
 	},
 	"tags": schema.MapAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
+		ElementType:         types.StringType,
+		Optional:            true,
+		Computed:            true,
+		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
+		MarkdownDescription: "The tags for the Record Type ETL filter.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the Record Type ETL filter, including default tags.",
 	},
 	"updated_at": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Computed:   true,
+		CustomType:          timetypes.RFC3339Type{},
+		Computed:            true,
+		MarkdownDescription: "Time when the object has been updated. Equals to _created_at_ if not updated after creation.",
 	},
 }
 
@@ -121,20 +149,21 @@ func (m *EtlFilterRecordTypeModel) Expand(ctx context.Context, diags *diag.Diagn
 		Data:                flex.ExpandFrameworkListString(ctx, m.Data, diags),
 		Description:         flex.ExpandStringPointer(m.Description),
 		Enabled:             flex.ExpandBoolPointer(m.Enabled),
+		FilterSource:        (*cdc.FilterSource)(flex.ExpandStringPointer(m.FilterSource)),
 		IngressPolicyAction: flex.ExpandStringPointer(m.IngressPolicyAction),
 		Name:                flex.ExpandStringPointer(m.Name),
 		Tags:                flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
-		FilterSource:        (*cdc.FilterSource)(flex.ExpandStringPointer(m.FilterSource)),
 	}
 	return to
 }
 
-func FlattenEtlFilterRecordType(ctx context.Context, from *cdc.EtlFilterRecordType, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenEtlFilterRecordType(ctx context.Context, from *cdc.EtlFilterRecordType, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(EtlFilterRecordTypeAttrTypes)
 	}
 	m := EtlFilterRecordTypeModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, EtlFilterRecordTypeAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -151,10 +180,10 @@ func (m *EtlFilterRecordTypeModel) Flatten(ctx context.Context, from *cdc.EtlFil
 	m.Data = flex.FlattenFrameworkListString(ctx, from.Data, diags)
 	m.Description = flex.FlattenStringPointer(from.Description)
 	m.Enabled = types.BoolPointerValue(from.Enabled)
+	m.FilterSource = flex.FlattenStringPointer((*string)(from.FilterSource))
 	m.Id = flex.FlattenInt64Pointer(from.Id)
 	m.IngressPolicyAction = flex.FlattenStringPointer(from.IngressPolicyAction)
 	m.Name = flex.FlattenStringPointer(from.Name)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
-	m.FilterSource = flex.FlattenStringPointer((*string)(from.FilterSource))
 }
