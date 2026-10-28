@@ -271,8 +271,8 @@ func TestAccSecurityPolicyResource_NetworkLists(t *testing.T) {
 	name := acctest.RandomNameWithPrefix("sec-policy")
 	networkListName1 := acctest.RandomNameWithPrefix("network-list")
 	networkListName2 := acctest.RandomNameWithPrefix("network-list")
-	ip1 := acctest.RandomIP() + "/32"
-	ip2 := acctest.RandomIP() + "/32"
+	ip1 := acctest.RandomPublicIP() + "/32"
+	ip2 := acctest.RandomPublicIP() + "/32"
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
