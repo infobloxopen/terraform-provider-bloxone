@@ -111,6 +111,10 @@ func (r *ReservedBlockResource) Create(ctx context.Context, req resource.CreateR
 		data.Flatten(ctx, &results[0], &resp.Diagnostics)
 
 		if !configuredFederatedPoolId.IsNull() {
+			// Remember what the backend actually persisted from the create call, so that if the
+			// follow-up Update below fails, state reflects reality rather than the desired config.
+			createdFederatedPoolId := data.FederatedPoolId
+
 			data.FederatedPoolId = configuredFederatedPoolId
 			updateRes, _, err := r.client.IPAMFederationAPI.
 				ReservedBlockAPI.
@@ -118,7 +122,12 @@ func (r *ReservedBlockResource) Create(ctx context.Context, req resource.CreateR
 				Body(*data.Expand(ctx, &resp.Diagnostics, false)).
 				Execute()
 			if err != nil {
+				// The ReservedBlock was already created successfully above. Save it to state now,
+				// using the backend's actual federated_pool_id, so it isn't orphaned outside of
+				// Terraform; a subsequent apply will retry setting federated_pool_id via Update.
+				data.FederatedPoolId = createdFederatedPoolId
 				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to set federated_pool_id on next available ReservedBlock, got error: %s", err))
+				resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 				return
 			}
 			res := updateRes.GetResult()
