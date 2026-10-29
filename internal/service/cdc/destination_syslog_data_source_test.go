@@ -11,7 +11,7 @@ import (
 	"github.com/infobloxopen/universal-ddi-go-client/cdc"
 )
 
-func TestAccDestinationApiDataSource_Filters(t *testing.T) {
+func TestAccDestinationSyslogDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_cdc_destination_syslogs.test"
 	resourceName := "bloxone_cdc_destination_syslog.test"
 	name := acctest.RandomNameWithPrefix("destination")
@@ -20,21 +20,21 @@ func TestAccDestinationApiDataSource_Filters(t *testing.T) {
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckDestinationApiDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckDestinationSyslogDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDestinationApiDataSourceConfigFilters(name),
+				Config: testAccDestinationSyslogDataSourceConfigFilters(name),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
-						testAccCheckDestinationApiExists(context.Background(), resourceName, &v),
-					}, testAccCheckDestinationApiResourceAttrPair(resourceName, dataSourceName)...)...,
+						testAccCheckDestinationSyslogExists(context.Background(), resourceName, &v),
+					}, testAccCheckDestinationSyslogResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
 	})
 }
 
-func TestAccDestinationApiDataSource_TagFilters(t *testing.T) {
+func TestAccDestinationSyslogDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_cdc_destination_syslogs.test"
 	resourceName := "bloxone_cdc_destination_syslog.test"
 	name := acctest.RandomNameWithPrefix("destination")
@@ -42,14 +42,14 @@ func TestAccDestinationApiDataSource_TagFilters(t *testing.T) {
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-		CheckDestroy:             testAccCheckDestinationApiDestroy(context.Background(), &v),
+		CheckDestroy:             testAccCheckDestinationSyslogDestroy(context.Background(), &v),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDestinationApiDataSourceConfigTagFilters(name, acctest.RandomName()),
+				Config: testAccDestinationSyslogDataSourceConfigTagFilters(name, acctest.RandomName()),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{
-						testAccCheckDestinationApiExists(context.Background(), resourceName, &v),
-					}, testAccCheckDestinationApiResourceAttrPair(resourceName, dataSourceName)...)...,
+						testAccCheckDestinationSyslogExists(context.Background(), resourceName, &v),
+					}, testAccCheckDestinationSyslogResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
@@ -58,7 +58,7 @@ func TestAccDestinationApiDataSource_TagFilters(t *testing.T) {
 
 // below all TestAcc functions
 
-func testAccCheckDestinationApiResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
+func testAccCheckDestinationSyslogResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
 	return []resource.TestCheckFunc{
 		resource.TestCheckResourceAttrPair(resourceName, "address", dataSourceName, "results.0.address"),
 		// ca_certificate is excluded: the CDC API always returns a masked
@@ -78,7 +78,7 @@ func testAccCheckDestinationApiResourceAttrPair(resourceName, dataSourceName str
 	}
 }
 
-func testAccDestinationApiDataSourceConfigFilters(name string) string {
+func testAccDestinationSyslogDataSourceConfigFilters(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_destination_syslog" "test" {
   name    = %q
@@ -93,7 +93,7 @@ data "bloxone_cdc_destination_syslogs" "test" {
 `, name, name)
 }
 
-func testAccDestinationApiDataSourceConfigTagFilters(name string, tagValue string) string {
+func testAccDestinationSyslogDataSourceConfigTagFilters(name string, tagValue string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_destination_syslog" "test" {
   name    = %q

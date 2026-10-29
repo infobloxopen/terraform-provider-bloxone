@@ -4,19 +4,24 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/universal-ddi-go-client/cdc"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
 type DestinationSyslogModel struct {
@@ -53,74 +58,93 @@ var DestinationSyslogAttrTypes = map[string]attr.Type{
 
 var DestinationSyslogResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
-		Optional: true,
+		Required: true,
+		Validators: []validator.String{
+			internalvalidator.IsValidFQDNOrIPAddress(),
+		},
+		MarkdownDescription: "The FQDN or IP address of the syslog server.",
 	},
 	"ca_certificate": schema.StringAttribute{
-		Optional:  true,
-		Sensitive: true,
+		Optional:            true,
+		Sensitive:           true,
+		MarkdownDescription: "The CA certificate used to verify the syslog server certificate, in PEM format. Used for TLS, together with _transport_protocol_ _TCP_ and _insecure_mode_ _false_.",
 	},
 	"created_at": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Computed:   true,
+		CustomType:          timetypes.RFC3339Type{},
+		Computed:            true,
+		MarkdownDescription: "Time when the object has been created.",
 	},
 	"description": schema.StringAttribute{
 		Optional: true,
 		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
+		Default:  stringdefault.StaticString(""),
+		Validators: []validator.String{
+			stringvalidator.LengthAtMost(256),
 		},
+		MarkdownDescription: "The description of the syslog destination. May contain 0 to 256 characters.",
 	},
 	"enabled": schema.BoolAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.Bool{
-			boolplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		Default:             booldefault.StaticBool(true),
+		MarkdownDescription: "Indicates whether the syslog destination is enabled. Defaults to _true_.",
 	},
 	"id": schema.Int64Attribute{
 		Computed: true,
 		PlanModifiers: []planmodifier.Int64{
 			int64planmodifier.UseStateForUnknown(),
 		},
+		MarkdownDescription: "The resource identifier.",
 	},
 	"insecure_mode": schema.BoolAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.Bool{
-			boolplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		Default:             booldefault.StaticBool(true),
+		MarkdownDescription: "Indicates whether the syslog server certificate is not verified. Defaults to _true_.",
 	},
 	"name": schema.StringAttribute{
-		Optional: true,
+		Required: true,
+		Validators: []validator.String{
+			stringvalidator.LengthAtLeast(1),
+		},
+		MarkdownDescription: "The name of the syslog destination.",
 	},
 	"output_data_format": schema.StringAttribute{
 		Optional: true,
 		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
+		Default:  stringdefault.StaticString("CEF"),
+		Validators: []validator.String{
+			stringvalidator.OneOf("CEF", "LEEF"),
 		},
+		MarkdownDescription: "The format of the data sent to the syslog server. Allowed values:\n\n  * _CEF_\n  * _LEEF_\n\nDefaults to _CEF_.",
 	},
 	"port": schema.Int64Attribute{
 		Optional: true,
 		Computed: true,
-		PlanModifiers: []planmodifier.Int64{
-			int64planmodifier.UseStateForUnknown(),
+		Default:  int64default.StaticInt64(514),
+		Validators: []validator.Int64{
+			int64validator.Between(1, 65535),
 		},
+		MarkdownDescription: "The port of the syslog server. Defaults to _514_.",
 	},
 	"tags": schema.MapAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
+		ElementType:         types.StringType,
+		Optional:            true,
+		MarkdownDescription: "The tags for the syslog destination.",
 	},
 	"transport_protocol": schema.StringAttribute{
 		Optional: true,
 		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
+		Default:  stringdefault.StaticString("TCP"),
+		Validators: []validator.String{
+			stringvalidator.OneOf("TCP", "UDP"),
 		},
+		MarkdownDescription: "The transport protocol used to connect to the syslog server. Allowed values:\n\n  * _TCP_\n  * _UDP_\n\nDefaults to _TCP_. For TLS, use _TCP_ with _insecure_mode_ set to _false_ and a _ca_certificate_.",
 	},
 	"updated_at": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Computed:   true,
+		CustomType:          timetypes.RFC3339Type{},
+		Computed:            true,
+		MarkdownDescription: "Time when the object has been updated. Equals to _created_at_ if not updated after creation.",
 	},
 }
 

@@ -4,15 +4,22 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/universal-ddi-go-client/cdc"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
 type DestinationReportingModel struct {
@@ -45,40 +52,77 @@ var DestinationReportingAttrTypes = map[string]attr.Type{
 
 var DestinationReportingResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
-		Optional: true,
+		Required: true,
+		Validators: []validator.String{
+			internalvalidator.IsValidFQDNOrIPAddress(),
+		},
+		MarkdownDescription: "The FQDN or IP address of the NIOS Grid Master.",
 	},
 	"created_at": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Computed:   true,
+		CustomType:          timetypes.RFC3339Type{},
+		Computed:            true,
+		MarkdownDescription: "Time when the object has been created.",
 	},
 	"description": schema.StringAttribute{
 		Optional: true,
+		Computed: true,
+		Default:  stringdefault.StaticString(""),
+		Validators: []validator.String{
+			stringvalidator.LengthAtMost(256),
+		},
+		MarkdownDescription: "The description of the NIOS reporting destination. May contain 0 to 256 characters.",
 	},
 	"enabled": schema.BoolAttribute{
-		Optional: true,
+		Optional:            true,
+		Computed:            true,
+		Default:             booldefault.StaticBool(true),
+		MarkdownDescription: "Indicates whether the NIOS reporting destination is enabled. Defaults to _true_.",
 	},
 	"id": schema.Int64Attribute{
 		Computed: true,
+		PlanModifiers: []planmodifier.Int64{
+			int64planmodifier.UseStateForUnknown(),
+		},
+		MarkdownDescription: "The resource identifier.",
 	},
 	"name": schema.StringAttribute{
-		Optional: true,
+		Required: true,
+		Validators: []validator.String{
+			stringvalidator.LengthAtLeast(1),
+		},
+		MarkdownDescription: "The name of the NIOS reporting destination.",
 	},
 	"password": schema.StringAttribute{
-		Optional: true,
+		Required:  true,
+		Sensitive: true,
+		Validators: []validator.String{
+			stringvalidator.LengthAtLeast(1),
+		},
+		MarkdownDescription: "The password used to connect to the NIOS Grid Master.",
 	},
 	"reporting_appliance_address": schema.StringAttribute{
-		Optional: true,
+		Required: true,
+		Validators: []validator.String{
+			internalvalidator.IsValidFQDNOrIPAddress(),
+		},
+		MarkdownDescription: "The FQDN or IP address of the NIOS reporting appliance.",
 	},
 	"tags": schema.MapAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
+		ElementType:         types.StringType,
+		Optional:            true,
+		MarkdownDescription: "The tags for the NIOS reporting destination.",
 	},
 	"updated_at": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Computed:   true,
+		CustomType:          timetypes.RFC3339Type{},
+		Computed:            true,
+		MarkdownDescription: "Time when the object has been updated. Equals to _created_at_ if not updated after creation.",
 	},
 	"username": schema.StringAttribute{
-		Optional: true,
+		Required: true,
+		Validators: []validator.String{
+			stringvalidator.LengthAtLeast(1),
+		},
+		MarkdownDescription: "The username used to connect to the NIOS Grid Master.",
 	},
 }
 
@@ -129,13 +173,14 @@ func (m *DestinationReportingModel) Flatten(ctx context.Context, from *cdc.Desti
 	if m == nil {
 		*m = DestinationReportingModel{}
 	}
+	// password is never read back from the API: the backend masks secrets the
+	// same way it does for ca_certificate on the syslog destination.
 	m.Address = flex.FlattenStringPointer(from.Address)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
 	m.Description = flex.FlattenStringPointer(from.Description)
 	m.Enabled = types.BoolPointerValue(from.Enabled)
 	m.Id = flex.FlattenInt64Pointer(from.Id)
 	m.Name = flex.FlattenStringPointer(from.Name)
-	m.Password = flex.FlattenStringPointer(from.Password)
 	m.ReportingApplianceAddress = flex.FlattenStringPointer(from.ReportingApplianceAddress)
 	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)

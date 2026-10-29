@@ -169,7 +169,12 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		clouddiscovery.NewProviderResource,
 
 		cdc.NewFlowApiV2Resource,
-		cdc.NewDestinationApiResource,
+		cdc.NewDestinationSyslogResource,
+		cdc.NewDestinationApplicationResource,
+		cdc.NewDestinationHttpResource,
+		cdc.NewDestinationReportingResource,
+		cdc.NewDestinationSplunkResource,
+		cdc.NewDestinationSplunkCloudResource,
 		cdc.NewSourceApiResource,
 		cdc.NewEtlFilterFqdnResource,
 		cdc.NewEtlFilterHostnameResource,
@@ -259,7 +264,12 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 
 		clouddiscovery.NewProvidersDataSource,
 
-		cdc.NewDestinationApiDataSource,
+		cdc.NewDestinationSyslogDataSource,
+		cdc.NewDestinationApplicationDataSource,
+		cdc.NewDestinationHttpDataSource,
+		cdc.NewDestinationReportingDataSource,
+		cdc.NewDestinationSplunkDataSource,
+		cdc.NewDestinationSplunkCloudDataSource,
 		cdc.NewFlowApiV2DataSource,
 		cdc.NewSourceApiDataSource,
 		cdc.NewEtlFilterFqdnDataSource,

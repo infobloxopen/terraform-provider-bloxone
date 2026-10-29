@@ -5,38 +5,39 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &DestinationApiResource{}
-var _ resource.ResourceWithImportState = &DestinationApiResource{}
+var _ resource.Resource = &DestinationSplunkResource{}
+var _ resource.ResourceWithImportState = &DestinationSplunkResource{}
 
-func NewDestinationApiResource() resource.Resource {
-	return &DestinationApiResource{}
+func NewDestinationSplunkResource() resource.Resource {
+	return &DestinationSplunkResource{}
 }
 
-// DestinationApiResource defines the resource implementation.
-type DestinationApiResource struct {
+// DestinationSplunkResource defines the resource implementation.
+type DestinationSplunkResource struct {
 	client *universalddiclient.APIClient
 }
 
-func (r *DestinationApiResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "cdc_destination_syslog"
+func (r *DestinationSplunkResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "cdc_destination_splunk"
 }
 
-func (r *DestinationApiResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *DestinationSplunkResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Manages a Syslog Destination.\n\nThe Syslog Destination object represents a syslog server that Cloud Data Connector (CDC) can send data to.",
-		Attributes:          DestinationSyslogResourceSchemaAttributes,
+		MarkdownDescription: "Manages a Splunk Destination.\n\nThe Splunk Destination object sends Cloud Data Connector (CDC) flow data to a Splunk indexer.",
+		Attributes:          DestinationSplunkResourceSchemaAttributes,
 	}
 }
 
-func (r *DestinationApiResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *DestinationSplunkResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -56,8 +57,8 @@ func (r *DestinationApiResource) Configure(ctx context.Context, req resource.Con
 	r.client = client
 }
 
-func (r *DestinationApiResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data DestinationSyslogModel
+func (r *DestinationSplunkResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data DestinationSplunkModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -68,11 +69,11 @@ func (r *DestinationApiResource) Create(ctx context.Context, req resource.Create
 
 	apiRes, _, err := r.client.CDCAPI.
 		DestinationApiAPI.
-		CreateDestinationSyslog(ctx).
+		CreateDestinationSplunk(ctx).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create DestinationApi, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create DestinationSplunk, got error: %s", err))
 		return
 	}
 
@@ -83,8 +84,8 @@ func (r *DestinationApiResource) Create(ctx context.Context, req resource.Create
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *DestinationApiResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data DestinationSyslogModel
+func (r *DestinationSplunkResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data DestinationSplunkModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -95,14 +96,14 @@ func (r *DestinationApiResource) Read(ctx context.Context, req resource.ReadRequ
 
 	apiRes, httpRes, err := r.client.CDCAPI.
 		DestinationApiAPI.
-		ReadDestinationSyslog(ctx, data.Id.ValueInt64()).
+		ReadDestinationSplunk(ctx, data.Id.ValueInt64()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			resp.State.RemoveResource(ctx)
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read DestinationApi, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read DestinationSplunk, got error: %s", err))
 		return
 	}
 
@@ -113,8 +114,8 @@ func (r *DestinationApiResource) Read(ctx context.Context, req resource.ReadRequ
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *DestinationApiResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data DestinationSyslogModel
+func (r *DestinationSplunkResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var data DestinationSplunkModel
 
 	// Read Terraform plan data into the model
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
@@ -125,11 +126,11 @@ func (r *DestinationApiResource) Update(ctx context.Context, req resource.Update
 
 	apiRes, _, err := r.client.CDCAPI.
 		DestinationApiAPI.
-		UpdateDestinationSyslog(ctx, data.Id.ValueInt64()).
+		UpdateDestinationSplunk(ctx, data.Id.ValueInt64()).
 		Body(*data.Expand(ctx, &resp.Diagnostics)).
 		Execute()
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update DestinationApi, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update DestinationSplunk, got error: %s", err))
 		return
 	}
 
@@ -140,8 +141,8 @@ func (r *DestinationApiResource) Update(ctx context.Context, req resource.Update
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *DestinationApiResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data DestinationSyslogModel
+func (r *DestinationSplunkResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data DestinationSplunkModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -152,17 +153,17 @@ func (r *DestinationApiResource) Delete(ctx context.Context, req resource.Delete
 
 	httpRes, err := r.client.CDCAPI.
 		DestinationApiAPI.
-		DeleteDestinationSyslog(ctx, data.Id.ValueInt64()).
+		DeleteDestinationSplunk(ctx, data.Id.ValueInt64()).
 		Execute()
 	if err != nil {
 		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete DestinationApi, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete DestinationSplunk, got error: %s", err))
 		return
 	}
 }
 
-func (r *DestinationApiResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+func (r *DestinationSplunkResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	utils.ImportStatePassthroughInt64ID(ctx, req, resp)
 }

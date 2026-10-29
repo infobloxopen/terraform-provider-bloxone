@@ -9,44 +9,45 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
-	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 	"github.com/infobloxopen/universal-ddi-go-client/cdc"
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ datasource.DataSource = &DestinationApiDataSource{}
+var _ datasource.DataSource = &DestinationSplunkCloudDataSource{}
 
-func NewDestinationApiDataSource() datasource.DataSource {
-	return &DestinationApiDataSource{}
+func NewDestinationSplunkCloudDataSource() datasource.DataSource {
+	return &DestinationSplunkCloudDataSource{}
 }
 
-// DestinationApiDataSource defines the data source implementation.
-type DestinationApiDataSource struct {
+// DestinationSplunkCloudDataSource defines the data source implementation.
+type DestinationSplunkCloudDataSource struct {
 	client *universalddiclient.APIClient
 }
 
-func (d *DestinationApiDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + "cdc_destination_syslogs"
+func (d *DestinationSplunkCloudDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "cdc_destination_splunk_clouds"
 }
 
-type DestinationSyslogModelWithFilter struct {
+type DestinationSplunkCloudModelWithFilter struct {
 	Filters    types.Map  `tfsdk:"filters"`
 	TagFilters types.Map  `tfsdk:"tag_filters"`
 	Results    types.List `tfsdk:"results"`
 }
 
-func (m *DestinationSyslogModelWithFilter) FlattenResults(ctx context.Context, from []cdc.DestinationSyslog, diags *diag.Diagnostics) {
+func (m *DestinationSplunkCloudModelWithFilter) FlattenResults(ctx context.Context, from []cdc.DestinationSplunkCloud, diags *diag.Diagnostics) {
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, DestinationSyslogAttrTypes, diags, FlattenDestinationSyslog)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, DestinationSplunkCloudAttrTypes, diags, FlattenDestinationSplunkCloud)
 }
 
-func (d *DestinationApiDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *DestinationSplunkCloudDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Retrieves information about existing Syslog Destinations.\n\nThe Syslog Destination object represents a syslog server that Cloud Data Connector (CDC) can send data to.",
+		MarkdownDescription: "Retrieves information about existing Splunk Cloud Destinations.\n\nThe Splunk Cloud Destination object sends Cloud Data Connector (CDC) flow data to Splunk Cloud.",
 		Attributes: map[string]schema.Attribute{
 			"filters": schema.MapAttribute{
 				Description: "Filter are used to return a more specific list of results. Filters can be used to match resources by specific attributes, e.g. name. If you specify multiple filters, the results returned will have only resources that match all the specified filters.",
@@ -60,15 +61,16 @@ func (d *DestinationApiDataSource) Schema(ctx context.Context, req datasource.Sc
 			},
 			"results": schema.ListNestedAttribute{
 				NestedObject: schema.NestedAttributeObject{
-					Attributes: utils.DataSourceAttributeMap(DestinationSyslogResourceSchemaAttributes, &resp.Diagnostics),
+					Attributes: utils.DataSourceAttributeMap(DestinationSplunkCloudResourceSchemaAttributes, &resp.Diagnostics),
 				},
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "The list of Splunk Cloud Destinations matching the specified filters.",
 			},
 		},
 	}
 }
 
-func (d *DestinationApiDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (d *DestinationSplunkCloudDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -88,8 +90,8 @@ func (d *DestinationApiDataSource) Configure(ctx context.Context, req datasource
 	d.client = client
 }
 
-func (d *DestinationApiDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data DestinationSyslogModelWithFilter
+func (d *DestinationSplunkCloudDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data DestinationSplunkCloudModelWithFilter
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -98,17 +100,17 @@ func (d *DestinationApiDataSource) Read(ctx context.Context, req datasource.Read
 		return
 	}
 
-	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]cdc.DestinationSyslog, error) {
+	allResults, err := utils.ReadWithPages(func(offset, limit int32) ([]cdc.DestinationSplunkCloud, error) {
 		apiRes, _, err := d.client.CDCAPI.
 			DestinationApiAPI.
-			ListDestinationSyslog(ctx).
+			ListDestinationSplunkCloud(ctx).
 			Filter(flex.ExpandFrameworkMapFilterString(ctx, data.Filters, &resp.Diagnostics)).
-			Tfilter(flex.ExpandFrameworkMapFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
+			Tfilter(flex.ExpandFrameworkMapTagFilterString(ctx, data.TagFilters, &resp.Diagnostics)).
 			Offset(offset).
 			Limit(limit).
 			Execute()
 		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read DestinationApi, got error: %s", err))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read DestinationSplunkCloud, got error: %s", err))
 			return nil, err
 		}
 		return apiRes.GetResults(), nil
