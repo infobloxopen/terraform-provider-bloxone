@@ -5,11 +5,14 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 
+	"github.com/infobloxopen/universal-ddi-go-client/cdc"
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -77,6 +80,7 @@ func (r *FlowApiV2Resource) Create(ctx context.Context, req resource.CreateReque
 	}
 
 	res := apiRes.GetResults()
+	r.readBack(ctx, &res, &resp.Diagnostics)
 	data.Flatten(ctx, &res, &resp.Diagnostics)
 
 	// Save data into Terraform state
@@ -107,6 +111,7 @@ func (r *FlowApiV2Resource) Read(ctx context.Context, req resource.ReadRequest, 
 	}
 
 	res := apiRes.GetResults()
+	r.readSchedule(ctx, &res, &resp.Diagnostics)
 	data.Flatten(ctx, &res, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
@@ -123,22 +128,7 @@ func (r *FlowApiV2Resource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 
-	// source_log_types is derived server-side from source_data_types and is
-	// never set by the user (Create never sends it either). When
-	// source_data_types is actually changing, flowSourceLogTypesPlanModifier
-	// leaves this plan value unknown (rather than carrying forward the now
-	// stale prior value), which we treat here as the signal to omit it from
-	// the update body entirely so the backend derives it fresh - sending the
-	// stale value instead causes the backend to silently keep the old
-	// source_data_types rather than applying the change. When
-	// source_data_types isn't changing, the preserved, still-accurate value
-	// is sent through as before.
-	sourceLogTypesChanging := data.SourceLogTypes.IsUnknown()
-
 	body := data.Expand(ctx, &resp.Diagnostics)
-	if sourceLogTypesChanging {
-		body.SourceLogTypes = nil
-	}
 
 	apiRes, _, err := r.client.CDCAPI.
 		FlowApiV2API.
@@ -151,6 +141,7 @@ func (r *FlowApiV2Resource) Update(ctx context.Context, req resource.UpdateReque
 	}
 
 	res := apiRes.GetResults()
+	r.readBack(ctx, &res, &resp.Diagnostics)
 	data.Flatten(ctx, &res, &resp.Diagnostics)
 
 	// Save updated data into Terraform state
@@ -181,5 +172,44 @@ func (r *FlowApiV2Resource) Delete(ctx context.Context, req resource.DeleteReque
 }
 
 func (r *FlowApiV2Resource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+	utils.ImportStatePassthroughInt64ID(ctx, req, resp)
+}
+
+// readBack replaces res with the flow as read from the backend. The create and
+// update responses do not fully populate source_log_types (log_type comes back
+// empty), so the state would otherwise differ from what a later read or import
+// returns.
+func (r *FlowApiV2Resource) readBack(ctx context.Context, res *cdc.FlowDataV2, diags *diag.Diagnostics) {
+	if res.Id == nil {
+		return
+	}
+	apiRes, _, err := r.client.CDCAPI.
+		FlowApiV2API.
+		ReadFlowDataV2(ctx, *res.Id).
+		Execute()
+	if err != nil {
+		diags.AddError("Client Error", fmt.Sprintf("Unable to read FlowApiV2, got error: %s", err))
+		return
+	}
+	*res = apiRes.GetResults()
+	r.readSchedule(ctx, res, diags)
+}
+
+// readSchedule fills schedule_option and script_schedule from the display
+// endpoint: /v2/flows/data always returns them empty, even when they are set.
+func (r *FlowApiV2Resource) readSchedule(ctx context.Context, res *cdc.FlowDataV2, diags *diag.Diagnostics) {
+	if res.Id == nil {
+		return
+	}
+	apiRes, _, err := r.client.CDCAPI.
+		FlowApiV2API.
+		ReadFlowV2(ctx, *res.Id).
+		Execute()
+	if err != nil {
+		diags.AddError("Client Error", fmt.Sprintf("Unable to read FlowApiV2, got error: %s", err))
+		return
+	}
+	display := apiRes.GetResults()
+	res.ScheduleOption = display.ScheduleOption
+	res.ScriptSchedule = display.ScriptSchedule
 }

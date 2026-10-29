@@ -7,11 +7,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -62,105 +59,91 @@ var FlowDataV2AttrTypes = map[string]attr.Type{
 
 var FlowDataV2ResourceSchemaAttributes = map[string]schema.Attribute{
 	"cdc_services": schema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
+		ElementType:         types.StringType,
+		Required:            true,
+		MarkdownDescription: "The identifiers of the Data Connector services that run the flow, without the `infra/service/` prefix.",
 	},
 	"created_at": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Computed:   true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
-		},
+		CustomType:          timetypes.RFC3339Type{},
+		Computed:            true,
+		MarkdownDescription: "Time when the object has been created.",
 	},
 	"description": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "The description of the flow.",
 	},
 	"destination_ha": schema.BoolAttribute{
-		Computed: true,
-		PlanModifiers: []planmodifier.Bool{
-			boolplanmodifier.UseStateForUnknown(),
-		},
+		Computed:            true,
+		MarkdownDescription: "Indicates whether the flow sends data to its destinations in high availability mode.",
 	},
 	"destinations": schema.ListAttribute{
-		ElementType: types.Int64Type,
-		Optional:    true,
+		ElementType:         types.Int64Type,
+		Required:            true,
+		MarkdownDescription: "The identifiers of the destinations the flow sends data to.",
 	},
 	"enabled": schema.BoolAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.Bool{
-			boolplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "Indicates whether the flow is enabled.",
 	},
 	"etl_filters": schema.ListAttribute{
-		ElementType: types.Int64Type,
-		Optional:    true,
-		Computed:    true,
-		PlanModifiers: []planmodifier.List{
-			listplanmodifier.UseStateForUnknown(),
-		},
+		ElementType:         types.Int64Type,
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "The identifiers of the ETL filters applied to the flow.",
 	},
 	"filter_expression": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "The expression that combines the ETL filters of the flow, referring to them by name.",
 	},
 	"id": schema.Int64Attribute{
 		Computed: true,
 		PlanModifiers: []planmodifier.Int64{
 			int64planmodifier.UseStateForUnknown(),
 		},
+		MarkdownDescription: "The resource identifier.",
 	},
 	"name": schema.StringAttribute{
-		Optional: true,
+		Required:            true,
+		MarkdownDescription: "The name of the flow.",
 	},
 	"schedule_option": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "The schedule option of the flow. Used with the Schedule source.",
 	},
 	"script_schedule": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.UseStateForUnknown(),
-		},
+		Optional:            true,
+		Computed:            true,
+		MarkdownDescription: "The cron schedule of the flow, e.g. `0 0 0 */2 * * *`. Used with the Schedule source.",
 	},
 	"source": schema.Int64Attribute{
-		Optional: true,
+		Required:            true,
+		MarkdownDescription: "The identifier of the source the flow collects data from.",
 	},
 	"source_data_types": schema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
+		ElementType:         types.StringType,
+		Required:            true,
+		MarkdownDescription: "The data types collected from the source, e.g. `RPZ_LOG` or `QUERY_RESP_LOG`.",
 	},
 	"source_log_types": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: SourceLogTypeResourceSchemaAttributes,
 		},
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.List{
-			flowSourceLogTypesPlanModifier{},
-		},
+		Computed:            true,
+		MarkdownDescription: "The log types and log fields collected from the source, derived by the backend from _source_data_types_.",
 	},
 	"tags": schema.MapAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
+		ElementType:         types.StringType,
+		Optional:            true,
+		MarkdownDescription: "The tags for the flow.",
 	},
 	"updated_at": schema.StringAttribute{
-		CustomType: timetypes.RFC3339Type{},
-		Computed:   true,
-		PlanModifiers: []planmodifier.String{
-			flowUpdatedAtPlanModifier{},
-		},
+		CustomType:          timetypes.RFC3339Type{},
+		Computed:            true,
+		MarkdownDescription: "Time when the object has been updated. Equals to _created_at_ if not updated after creation.",
 	},
 }
 
@@ -190,7 +173,6 @@ func (m *FlowDataV2Model) Expand(ctx context.Context, diags *diag.Diagnostics) *
 		ScriptSchedule:   flex.ExpandStringPointer(m.ScriptSchedule),
 		Source:           flex.ExpandInt64Pointer(m.Source),
 		SourceDataTypes:  flex.ExpandFrameworkListString(ctx, m.SourceDataTypes, diags),
-		SourceLogTypes:   flex.ExpandFrameworkListNestedBlock(ctx, m.SourceLogTypes, diags, ExpandSourceLogType),
 		Tags:             flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 		Destinations:     flex.ExpandFrameworkListInt64(ctx, m.Destinations, diags),
 		EtlFilters:       flex.ExpandFrameworkListInt64(ctx, m.EtlFilters, diags),
@@ -227,7 +209,13 @@ func (m *FlowDataV2Model) Flatten(ctx context.Context, from *cdc.FlowDataV2, dia
 	m.ScheduleOption = flex.FlattenStringPointer(from.ScheduleOption)
 	m.ScriptSchedule = flex.FlattenStringPointer(from.ScriptSchedule)
 	m.Source = flex.FlattenInt64Pointer(from.Source)
-	m.SourceDataTypes = flex.FlattenFrameworkListString(ctx, from.SourceDataTypes, diags)
+	// source_data_types is required and is [] for the Schedule source; keep an
+	// empty list as [] instead of flattening it to null.
+	if from.SourceDataTypes != nil && len(from.SourceDataTypes) == 0 {
+		m.SourceDataTypes = types.ListValueMust(types.StringType, []attr.Value{})
+	} else {
+		m.SourceDataTypes = flex.FlattenFrameworkListString(ctx, from.SourceDataTypes, diags)
+	}
 	m.SourceLogTypes = flex.FlattenFrameworkListNestedBlock(ctx, from.SourceLogTypes, SourceLogTypeAttrTypes, diags, FlattenSourceLogType)
 	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)

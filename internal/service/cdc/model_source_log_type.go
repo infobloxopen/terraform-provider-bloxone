@@ -7,13 +7,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	"github.com/infobloxopen/universal-ddi-go-client/cdc"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 )
 
+// SourceLogTypeModel is read-only: source_log_types is derived by the backend
+// from the flow's source_data_types.
 type SourceLogTypeModel struct {
 	LogFields   types.List   `tfsdk:"log_fields"`
 	LogSubtypes types.List   `tfsdk:"log_subtypes"`
@@ -21,64 +22,41 @@ type SourceLogTypeModel struct {
 }
 
 var SourceLogTypeAttrTypes = map[string]attr.Type{
-	"log_fields":   types.ListType{ElemType: types.StringType},
+	"log_fields":   types.ListType{ElemType: types.ObjectType{AttrTypes: SourceFieldAttrTypes}},
 	"log_subtypes": types.ListType{ElemType: types.StringType},
 	"log_type":     types.StringType,
 }
 
 var SourceLogTypeResourceSchemaAttributes = map[string]schema.Attribute{
-	"log_fields": schema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
+	"log_fields": schema.ListNestedAttribute{
+		NestedObject: schema.NestedAttributeObject{
+			Attributes: map[string]schema.Attribute{
+				"id": schema.StringAttribute{
+					Computed:            true,
+					MarkdownDescription: "The identifier of the log field.",
+				},
+				"name": schema.StringAttribute{
+					Computed:            true,
+					MarkdownDescription: "The name of the log field.",
+				},
+				"required": schema.BoolAttribute{
+					Computed:            true,
+					MarkdownDescription: "Indicates whether the log field is always collected.",
+				},
+			},
+		},
+		Computed:            true,
+		MarkdownDescription: "The log fields collected for the log type.",
 	},
 	"log_subtypes": schema.ListAttribute{
-		ElementType: types.StringType,
-		Optional:    true,
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The log subtypes of the log type.",
 	},
 	"log_type": schema.StringAttribute{
-		Optional: true,
+		Computed:            true,
+		MarkdownDescription: "The log type, e.g. `RPZ_LOG`.",
 	},
-}
-
-func ExpandSourceLogType(ctx context.Context, o types.Object, diags *diag.Diagnostics) *cdc.SourceLogType {
-	if o.IsNull() || o.IsUnknown() {
-		return nil
-	}
-	var m SourceLogTypeModel
-	diags.Append(o.As(ctx, &m, basetypes.ObjectAsOptions{})...)
-	if diags.HasError() {
-		return nil
-	}
-	return m.Expand(ctx, diags)
-}
-
-func (m *SourceLogTypeModel) Expand(ctx context.Context, diags *diag.Diagnostics) *cdc.SourceLogType {
-	if m == nil {
-		return nil
-	}
-	// LogFields/LogSubtypes must never be sent as a missing/null JSON array:
-	// the CDC backend fails to persist a null value for these JSONB columns
-	// (confirmed via direct API testing: "pq: invalid input syntax for type
-	// json"), which surfaces as a 500 on update that can cascade into the
-	// backend returning 502/503 for other requests until it recovers. Since
-	// source_log_types is a Computed field that round-trips through state on
-	// every update regardless of whether the user configured it, a nil slice
-	// here (e.g. from an earlier Read) must be coalesced to empty rather than
-	// passed through as-is.
-	logFields := flex.ExpandFrameworkListString(ctx, m.LogFields, diags)
-	if logFields == nil {
-		logFields = []string{}
-	}
-	logSubtypes := flex.ExpandFrameworkListString(ctx, m.LogSubtypes, diags)
-	if logSubtypes == nil {
-		logSubtypes = []string{}
-	}
-	to := &cdc.SourceLogType{
-		LogFields:   logFields,
-		LogSubtypes: logSubtypes,
-		LogType:     flex.ExpandStringPointer(m.LogType),
-	}
-	return to
 }
 
 func FlattenSourceLogType(ctx context.Context, from *cdc.SourceLogType, diags *diag.Diagnostics) types.Object {
@@ -96,10 +74,7 @@ func (m *SourceLogTypeModel) Flatten(ctx context.Context, from *cdc.SourceLogTyp
 	if from == nil {
 		return
 	}
-	if m == nil {
-		*m = SourceLogTypeModel{}
-	}
-	m.LogFields = flex.FlattenFrameworkListString(ctx, from.LogFields, diags)
+	m.LogFields = flex.FlattenFrameworkListNestedBlock(ctx, from.LogFields, SourceFieldAttrTypes, diags, FlattenSourceField)
 	m.LogSubtypes = flex.FlattenFrameworkListString(ctx, from.LogSubtypes, diags)
 	m.LogType = flex.FlattenStringPointer(from.LogType)
 }

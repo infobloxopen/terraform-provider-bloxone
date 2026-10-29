@@ -272,6 +272,7 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		cdc.NewDestinationSplunkCloudDataSource,
 		cdc.NewFlowApiV2DataSource,
 		cdc.NewSourceApiDataSource,
+		cdc.NewSourceDataSource,
 		cdc.NewEtlFilterFqdnDataSource,
 		cdc.NewEtlFilterHostnameDataSource,
 		cdc.NewEtlFilterIpNetworkDataSource,

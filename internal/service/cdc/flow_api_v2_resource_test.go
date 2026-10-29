@@ -40,6 +40,12 @@ func TestAccFlowApiV2Resource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
 				),
 			},
+			// Import and Read
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
@@ -190,17 +196,6 @@ func TestAccFlowApiV2Resource_EtlFilters(t *testing.T) {
 }
 
 func TestAccFlowApiV2Resource_FilterExpression(t *testing.T) {
-	// TODO: filter_expression's exact cross-reference semantics with ETL filters are undocumented
-	// and not yet understood. Confirmed via live testing: a plain "record_type == \"A\"" expression
-	// is rejected with "record with record_type ETL doesn't exists" even when a matching
-	// serviceEtlFilterRecordType (filter_source=SOURCE_DEFAULT) already exists and is applied in
-	// its own prior TestStep (ruling out eventual-consistency lag). Setting filter_source to
-	// SOURCE_INGRESS instead requires ingress_policy_action, which then fails with "no \"ALLOW\"
-	// flow configured" - implying an ingress-type ETL filter requires a pre-existing flow with a
-	// matching ingress policy, a circular dependency for this test. Needs product documentation or
-	// CDC domain expertise to determine the correct setup before this can be un-skipped.
-	t.Skip("filter_expression / ETL filter cross-reference semantics are undocumented; see TODO above")
-
 	var resourceName = "bloxone_cdc_flow.test_filter_expression"
 	var v cdc.FlowDataV2
 	acctest.PreCheck(t)
@@ -212,27 +207,22 @@ func TestAccFlowApiV2Resource_FilterExpression(t *testing.T) {
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
-			// The flow's filter_expression references the ETL filter by type/value match (not by
-			// ID), and the backend's lookup index for that match lags slightly behind creation.
-			// Applying the ETL filter on its own step first (instead of in the same apply as the
-			// flow) gives that index time to catch up before the flow is created.
+			// Create and Read: filter_expression refers to the applied ETL filter by name
 			{
-				Config: testAccFlowApiV2FilterExpressionPrereqs(name),
-			},
-			// Create and Read
-			{
-				Config: testAccFlowApiV2FilterExpression(name, serviceID, sourceID, "record_type == \"A\""),
+				Config: testAccFlowApiV2FilterExpression(name, serviceID, sourceID, "a"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "filter_expression", "record_type == \"A\""),
+					resource.TestCheckResourceAttrPair(resourceName, "etl_filters.0", "bloxone_cdc_etl_filter_record_type.test_filter_expression_a", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "filter_expression", "bloxone_cdc_etl_filter_record_type.test_filter_expression_a", "name"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccFlowApiV2FilterExpression(name, serviceID, sourceID, "record_type == \"AAAA\""),
+				Config: testAccFlowApiV2FilterExpression(name, serviceID, sourceID, "b"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "filter_expression", "record_type == \"AAAA\""),
+					resource.TestCheckResourceAttrPair(resourceName, "etl_filters.0", "bloxone_cdc_etl_filter_record_type.test_filter_expression_b", "id"),
+					resource.TestCheckResourceAttrPair(resourceName, "filter_expression", "bloxone_cdc_etl_filter_record_type.test_filter_expression_b", "name"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -569,37 +559,33 @@ resource "bloxone_cdc_flow" "test_etl_filters" {
 
 // testAccFlowApiV2FilterExpressionPrereqs creates just the destination and ETL filter that
 // testAccFlowApiV2FilterExpression's flow depends on, applied as their own TestStep first.
-func testAccFlowApiV2FilterExpressionPrereqs(name string) string {
+func testAccFlowApiV2FilterExpression(name string, serviceID string, sourceID int64, filter string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_destination_syslog" "test_filter_expression" {
-  name    = %q
-  address = "%s.example.com"
+  name    = %[1]q
+  address = "%[1]s.example.com"
 }
 
-// filter_expression references an existing ETL filter by type and value (e.g. record_type ==
-// "A"), so a matching record_type ETL filter must exist first.
-resource "bloxone_cdc_etl_filter_record_type" "test_filter_expression" {
-  name = %q
-  data = ["A", "AAAA"]
-}
-`, name, name, name)
+resource "bloxone_cdc_etl_filter_record_type" "test_filter_expression_a" {
+  name = "%[1]s-a"
+  data = ["A"]
 }
 
-func testAccFlowApiV2FilterExpression(name string, serviceID string, sourceID int64, filterExpression string) string {
-	return fmt.Sprintf(`
-%s
+resource "bloxone_cdc_etl_filter_record_type" "test_filter_expression_b" {
+  name = "%[1]s-b"
+  data = ["AAAA"]
+}
 
 resource "bloxone_cdc_flow" "test_filter_expression" {
-  name               = %q
-  cdc_services       = [%q]
-  source             = %d
-  source_data_types  = ["QUERY_RESP_LOG"]
-  destinations       = [bloxone_cdc_destination_syslog.test_filter_expression.id]
-  filter_expression  = %q
-
-  depends_on = [bloxone_cdc_etl_filter_record_type.test_filter_expression, bloxone_cdc_destination_syslog.test_filter_expression]
+  name              = %[1]q
+  cdc_services      = [%[2]q]
+  source            = %[3]d
+  source_data_types = ["QUERY_RESP_LOG"]
+  destinations      = [bloxone_cdc_destination_syslog.test_filter_expression.id]
+  etl_filters       = [bloxone_cdc_etl_filter_record_type.test_filter_expression_%[4]s.id]
+  filter_expression = bloxone_cdc_etl_filter_record_type.test_filter_expression_%[4]s.name
 }
-`, testAccFlowApiV2FilterExpressionPrereqs(name), name, serviceID, sourceID, filterExpression)
+`, name, serviceID, sourceID, filter)
 }
 
 func testAccFlowApiV2Name(resourceSuffix string, serviceID string, sourceID int64, name string) string {
@@ -683,4 +669,79 @@ resource "bloxone_cdc_flow" "test_tags" {
   depends_on = [bloxone_cdc_destination_syslog.test_tags]
 }
 `, name, name, name, serviceID, sourceID, tagsStr)
+}
+
+func TestAccFlowApiV2Resource_Schedule(t *testing.T) {
+	var resourceName = "bloxone_cdc_flow.test_schedule"
+	var v cdc.FlowDataV2
+	acctest.PreCheck(t)
+	name := acctest.RandomNameWithPrefix("flow")
+	serviceID := testAccFlowApiV2ServiceID(t)
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccFlowApiV2Schedule(name, serviceID, "0 0 0 */2 * * *"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "schedule_option", "custom"),
+					resource.TestCheckResourceAttr(resourceName, "script_schedule", "0 0 0 */2 * * *"),
+					resource.TestCheckResourceAttr(resourceName, "source_data_types.#", "0"),
+				),
+			},
+			// Update and Read
+			{
+				Config: testAccFlowApiV2Schedule(name, serviceID, "0 0 0 */4 * * *"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFlowApiV2Exists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "script_schedule", "0 0 0 */4 * * *"),
+				),
+			},
+			// Import and Read
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func testAccFlowApiV2Schedule(name string, serviceID string, scriptSchedule string) string {
+	return fmt.Sprintf(`
+data "bloxone_cdc_sources" "schedule" {
+  filters = {
+    type = "SOURCE_SCHEDULE"
+  }
+}
+
+resource "bloxone_cdc_application" "test_schedule" {
+  name = "%[1]s-app"
+  data = jsonencode({
+    scripts = [{
+      filename = "script_1.py"
+      content  = "print(\"automation\")"
+    }]
+  })
+}
+
+resource "bloxone_cdc_destination_application" "test_schedule" {
+  name        = %[1]q
+  application = bloxone_cdc_application.test_schedule.id
+}
+
+resource "bloxone_cdc_flow" "test_schedule" {
+  name              = %[1]q
+  cdc_services      = [%[2]q]
+  source            = data.bloxone_cdc_sources.schedule.results.0.id
+  source_data_types = []
+  destinations      = [bloxone_cdc_destination_application.test_schedule.id]
+  schedule_option   = "custom"
+  script_schedule   = %[3]q
+}
+`, name, serviceID, scriptSchedule)
 }
