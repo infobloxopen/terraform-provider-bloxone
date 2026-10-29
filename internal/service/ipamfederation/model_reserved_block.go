@@ -76,7 +76,6 @@ var ReservedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		PlanModifiers: []planmodifier.String{
 			internalplanmodifier.RequiresReplaceIfIPAddressChanged(),
-			stringplanmodifier.RequiresReplaceIfConfigured(),
 			stringplanmodifier.UseStateForUnknown(),
 		},
 		MarkdownDescription: "The address of the reserved block, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead. This field is immutable after creation. Exactly one of _address_ or _next_available_id_ must be specified.",
