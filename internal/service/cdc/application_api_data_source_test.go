@@ -61,8 +61,9 @@ func TestAccApplicationApiDataSource_TagFilters(t *testing.T) {
 func testAccCheckApplicationApiResourceAttrPair(resourceName, dataSourceName string) []resource.TestCheckFunc {
 	return []resource.TestCheckFunc{
 		resource.TestCheckResourceAttrPair(resourceName, "created_at", dataSourceName, "results.0.created_at"),
-		resource.TestCheckResourceAttrPair(resourceName, "data.scripts.0.filename", dataSourceName, "results.0.data.scripts.0.filename"),
-		resource.TestCheckResourceAttrPair(resourceName, "data.scripts.0.content", dataSourceName, "results.0.data.scripts.0.content"),
+		// The data source has no configured value, so its data is the backend response
+		resource.TestCheckResourceAttrPair(resourceName, "file_data", dataSourceName, "results.0.data"),
+		resource.TestCheckResourceAttrPair(resourceName, "file_data", dataSourceName, "results.0.file_data"),
 		resource.TestCheckResourceAttrPair(resourceName, "description", dataSourceName, "results.0.description"),
 		resource.TestCheckResourceAttrPair(resourceName, "enabled", dataSourceName, "results.0.enabled"),
 		resource.TestCheckResourceAttrPair(resourceName, "id", dataSourceName, "results.0.id"),
@@ -78,12 +79,12 @@ func testAccApplicationApiDataSourceConfigFilters(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_application" "test" {
   name = %q
-  data = {
+  data = jsonencode({
       scripts = [{
           filename = "script_1.py"
-          content  = "print(\"hello\")"
+          content  = "print(\"automation\")"
       }]
-  }
+  })
   variables = {
       var1 = "value1"
   }
@@ -101,12 +102,12 @@ func testAccApplicationApiDataSourceConfigTagFilters(name string, tagValue strin
 	return fmt.Sprintf(`
 resource "bloxone_cdc_application" "test" {
   name = %q
-  data = {
+  data = jsonencode({
       scripts = [{
           filename = "script_1.py"
-          content  = "print(\"hello\")"
+          content  = "print(\"automation\")"
       }]
-  }
+  })
   tags = {
 	tag1 = %q
   }

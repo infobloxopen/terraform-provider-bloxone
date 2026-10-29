@@ -2,6 +2,8 @@ package cdc
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -28,9 +30,10 @@ import (
 // against cdc.ApplicationData instead.
 type ApplicationDataModel struct {
 	CreatedAt   timetypes.RFC3339 `tfsdk:"created_at"`
-	Data        types.Object      `tfsdk:"data"`
+	Data        types.String      `tfsdk:"data"`
 	Description types.String      `tfsdk:"description"`
 	Enabled     types.Bool        `tfsdk:"enabled"`
+	FileData    types.String      `tfsdk:"file_data"`
 	Id          types.Int64       `tfsdk:"id"`
 	Name        types.String      `tfsdk:"name"`
 	Tags        types.Map         `tfsdk:"tags"`
@@ -42,9 +45,10 @@ type ApplicationDataModel struct {
 
 var ApplicationDataAttrTypes = map[string]attr.Type{
 	"created_at":  timetypes.RFC3339Type{},
-	"data":        types.ObjectType{AttrTypes: ApplicationDataContentAttrTypes},
+	"data":        types.StringType,
 	"description": types.StringType,
 	"enabled":     types.BoolType,
+	"file_data":   types.StringType,
 	"id":          types.Int64Type,
 	"name":        types.StringType,
 	"tags":        types.MapType{ElemType: types.StringType},
@@ -60,10 +64,9 @@ var ApplicationDataResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		MarkdownDescription: "Time when the object has been created.",
 	},
-	"data": schema.SingleNestedAttribute{
-		Attributes:          ApplicationDataContentResourceSchemaAttributes,
+	"data": schema.StringAttribute{
 		Required:            true,
-		MarkdownDescription: "The application data containing the scripts.",
+		MarkdownDescription: "The application data containing the scripts, JSON-encoded, e.g. `jsonencode({ scripts = [{ filename = \"script_1.py\", content = file(\"script_1.py\") }] })`. The value is stored exactly as configured; the data returned by the backend is available in _file_data_.",
 	},
 	"description": schema.StringAttribute{
 		Optional:            true,
@@ -76,6 +79,10 @@ var ApplicationDataResourceSchemaAttributes = map[string]schema.Attribute{
 		Computed:            true,
 		Default:             booldefault.StaticBool(true),
 		MarkdownDescription: "Indicates whether the application is enabled.",
+	},
+	"file_data": schema.StringAttribute{
+		Computed:            true,
+		MarkdownDescription: "The application data as returned by the backend, JSON-encoded.",
 	},
 	"id": schema.Int64Attribute{
 		Computed: true,
@@ -135,12 +142,12 @@ func (m *ApplicationDataModel) Expand(ctx context.Context, diags *diag.Diagnosti
 		return nil
 	}
 	to := &cdc.ApplicationData{
-		Data:        ExpandApplicationDataContent(ctx, m.Data, diags),
+		Data:        expandApplicationDataJSON(m.Data, diags),
 		Description: flex.ExpandStringPointer(m.Description),
 		Enabled:     flex.ExpandBoolPointer(m.Enabled),
 		Name:        flex.ExpandStringPointer(m.Name),
 		Tags:        flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
-		Variables:   expandMapStringPointer(ctx, m.Variables, diags),
+		Variables:   flex.ExpandFrameworkMapString(ctx, m.Variables, diags),
 	}
 	return to
 }
@@ -165,7 +172,15 @@ func (m *ApplicationDataModel) Flatten(ctx context.Context, from *cdc.Applicatio
 		*m = ApplicationDataModel{}
 	}
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
-	m.Data = FlattenApplicationDataContent(ctx, from.Data, diags)
+	// data has no fixed schema and the backend may return it in a different
+	// shape than it was sent, so the configured value is kept as is and the
+	// response is exposed through file_data instead. data is only populated
+	// from the response when there is no configured value, e.g. on import or
+	// in the data source.
+	m.FileData = flattenApplicationDataJSON(from.Data, diags)
+	if m.Data.IsNull() || m.Data.IsUnknown() {
+		m.Data = m.FileData
+	}
 	m.Description = flex.FlattenStringPointer(from.Description)
 	m.Enabled = types.BoolPointerValue(from.Enabled)
 	m.Id = flex.FlattenInt64Pointer(from.Id)
@@ -173,30 +188,34 @@ func (m *ApplicationDataModel) Flatten(ctx context.Context, from *cdc.Applicatio
 	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.Type = flex.FlattenStringPointer(from.Type)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
-	m.Variables = flattenMapStringPointer(ctx, from.Variables, diags)
+	m.Variables = flex.FlattenFrameworkMapString(ctx, from.Variables, diags)
 }
 
-// expandMapStringPointer converts a types.Map of strings into the
-// *map[string]string shape the SDK uses for variables.
-func expandMapStringPointer(ctx context.Context, m types.Map, diags *diag.Diagnostics) *map[string]string {
-	if m.IsNull() || m.IsUnknown() {
+// expandApplicationDataJSON decodes the JSON-encoded data attribute into the
+// free-form value the SDK sends to the backend. The backend accepts any JSON
+// value for data (object, string, number, ...), not only objects.
+func expandApplicationDataJSON(v types.String, diags *diag.Diagnostics) interface{} {
+	if v.IsNull() || v.IsUnknown() {
 		return nil
 	}
-	var result map[string]string
-	diags.Append(m.ElementsAs(ctx, &result, false)...)
-	if diags.HasError() {
+	var result interface{}
+	if err := json.Unmarshal([]byte(v.ValueString()), &result); err != nil {
+		diags.AddError("Invalid data", fmt.Sprintf("data must be JSON-encoded, e.g. with jsonencode(): %s", err))
 		return nil
 	}
-	return &result
-}
-
-// flattenMapStringPointer converts the SDK's *map[string]string into a
-// types.Map, treating an empty map as null like flex.FlattenFrameworkMapString.
-func flattenMapStringPointer(ctx context.Context, from *map[string]string, diags *diag.Diagnostics) types.Map {
-	if from == nil || len(*from) == 0 {
-		return types.MapNull(types.StringType)
-	}
-	result, d := types.MapValueFrom(ctx, types.StringType, *from)
-	diags.Append(d...)
 	return result
+}
+
+// flattenApplicationDataJSON encodes the data returned by the backend as a
+// JSON string.
+func flattenApplicationDataJSON(from interface{}, diags *diag.Diagnostics) types.String {
+	if from == nil {
+		return types.StringNull()
+	}
+	b, err := json.Marshal(from)
+	if err != nil {
+		diags.AddError("Serialization Error", fmt.Sprintf("Unable to serialize application data: %s", err))
+		return types.StringNull()
+	}
+	return types.StringValue(string(b))
 }

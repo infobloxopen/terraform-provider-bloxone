@@ -103,16 +103,25 @@ func VerifyDefaultTag(resourceName string) resource.TestCheckFunc {
 // happen to live in this same package.
 func ReadTestdata(t *testing.T, service, name string) string {
 	t.Helper()
-	_, thisFile, _, ok := runtime.Caller(0)
-	if !ok {
-		t.Fatalf("unable to determine acctest package location")
-	}
-	path := filepath.Join(filepath.Dir(thisFile), "testdata", service, name)
+	path := TestdataPath(t, service, name)
 	content, err := os.ReadFile(path)
 	if err != nil {
 		t.Fatalf("unable to read %s: %v", path, err)
 	}
 	return string(content)
+}
+
+// TestdataPath returns the absolute path of a fixture file in
+// internal/acctest/testdata/<service>/, for configs that load it themselves
+// (e.g. via Terraform's file() function), since Terraform runs acceptance
+// test configs from a temporary working directory.
+func TestdataPath(t *testing.T, service, name string) string {
+	t.Helper()
+	_, thisFile, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatalf("unable to determine acctest package location")
+	}
+	return filepath.Join(filepath.Dir(thisFile), "testdata", service, name)
 }
 
 // TestAccBase_DhcpHosts creates a Terraform datasource config that allows you to filter by tags

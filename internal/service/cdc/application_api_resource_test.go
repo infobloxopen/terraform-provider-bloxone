@@ -2,6 +2,7 @@ package cdc_test
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -32,6 +33,7 @@ func TestAccApplicationApiResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					// Test Read Only fields
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
+					resource.TestCheckResourceAttrSet(resourceName, "file_data"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "type"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
@@ -75,20 +77,20 @@ func TestAccApplicationApiResource_Data(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccApplicationApiData(name, `print("hello")`),
+				Config: testAccApplicationApiData(name, `print("automation")`),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckApplicationApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "data.scripts.0.filename", "script_1.py"),
-					resource.TestCheckResourceAttr(resourceName, "data.scripts.0.content", `print("hello")`),
+					resource.TestCheckResourceAttr(resourceName, "data", testAccApplicationApiDataJSON("script_1.py", `print("automation")`)),
+					testAccCheckApplicationApiFileData(resourceName, "script_1.py", `print("automation")`),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccApplicationApiData(name, `print("hello world")`),
+				Config: testAccApplicationApiData(name, `print("automation updated")`),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckApplicationApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "data.scripts.0.filename", "script_1.py"),
-					resource.TestCheckResourceAttr(resourceName, "data.scripts.0.content", `print("hello world")`),
+					resource.TestCheckResourceAttr(resourceName, "data", testAccApplicationApiDataJSON("script_1.py", `print("automation updated")`)),
+					testAccCheckApplicationApiFileData(resourceName, "script_1.py", `print("automation updated")`),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -112,9 +114,8 @@ func TestAccApplicationApiResource_DataFromFile(t *testing.T) {
 				Config: testAccApplicationApiDataFromFile(name, scriptPath),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckApplicationApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "data.scripts.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "data.scripts.0.filename", "cdc_application_handler_sample.py"),
-					resource.TestCheckResourceAttr(resourceName, "data.scripts.0.content", scriptContent),
+					resource.TestCheckResourceAttr(resourceName, "data", testAccApplicationApiDataJSON("cdc_application_handler_sample.py", scriptContent)),
+					testAccCheckApplicationApiFileData(resourceName, "cdc_application_handler_sample.py", scriptContent),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -301,6 +302,39 @@ func testAccCheckApplicationApiExists(ctx context.Context, resourceName string, 
 	}
 }
 
+// testAccApplicationApiDataJSON returns the value jsonencode() produces for a
+// single-script data object; Terraform's jsonencode sorts keys the same way
+// encoding/json does.
+func testAccApplicationApiDataJSON(filename, content string) string {
+	b, _ := json.Marshal(map[string]interface{}{
+		"scripts": []map[string]string{{"content": content, "filename": filename}},
+	})
+	return string(b)
+}
+
+// testAccCheckApplicationApiFileData verifies that the backend response stored
+// in file_data contains the given script.
+func testAccCheckApplicationApiFileData(resourceName, filename, content string) resource.TestCheckFunc {
+	return resource.TestCheckResourceAttrWith(resourceName, "file_data", func(value string) error {
+		var data struct {
+			Scripts []struct {
+				Content  string `json:"content"`
+				Filename string `json:"filename"`
+			} `json:"scripts"`
+		}
+		if err := json.Unmarshal([]byte(value), &data); err != nil {
+			return fmt.Errorf("file_data is not valid JSON: %w", err)
+		}
+		if len(data.Scripts) != 1 {
+			return fmt.Errorf("expected 1 script in file_data, got %d", len(data.Scripts))
+		}
+		if data.Scripts[0].Filename != filename || data.Scripts[0].Content != content {
+			return fmt.Errorf("unexpected script in file_data: %+v", data.Scripts[0])
+		}
+		return nil
+	})
+}
+
 func testAccCheckApplicationApiDestroy(ctx context.Context, v *cdc.ApplicationData) resource.TestCheckFunc {
 	// Verify the resource was destroyed
 	return func(state *terraform.State) error {
@@ -340,12 +374,12 @@ func testAccApplicationApiBasicConfig(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_application" "test" {
     name = %q
-    data = {
+    data = jsonencode({
         scripts = [{
             filename = "script_1.py"
-            content  = "print(\"hello\")"
+            content  = "print(\"automation\")"
         }]
-    }
+    })
 }
 `, name)
 }
@@ -354,12 +388,12 @@ func testAccApplicationApiData(name string, content string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_application" "test_data" {
     name = %q
-    data = {
+    data = jsonencode({
         scripts = [{
             filename = "script_1.py"
             content  = %q
         }]
-    }
+    })
 }
 `, name, content)
 }
@@ -368,12 +402,12 @@ func testAccApplicationApiDataFromFile(name string, scriptPath string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_application" "test_data_file" {
     name = %q
-    data = {
+    data = jsonencode({
         scripts = [{
             filename = basename(%[2]q)
             content  = file(%[2]q)
         }]
-    }
+    })
 }
 `, name, scriptPath)
 }
@@ -382,12 +416,12 @@ func testAccApplicationApiDescription(name string, description string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_application" "test_description" {
     name        = %q
-    data = {
+    data = jsonencode({
         scripts = [{
             filename = "script_1.py"
-            content  = "print(\"hello\")"
+            content  = "print(\"automation\")"
         }]
-    }
+    })
     description = %q
 }
 `, name, description)
@@ -397,12 +431,12 @@ func testAccApplicationApiEnabled(name string, enabled string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_application" "test_enabled" {
     name    = %q
-    data = {
+    data = jsonencode({
         scripts = [{
             filename = "script_1.py"
-            content  = "print(\"hello\")"
+            content  = "print(\"automation\")"
         }]
-    }
+    })
     enabled = %s
 }
 `, name, enabled)
@@ -412,12 +446,12 @@ func testAccApplicationApiName(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_application" "test_name" {
     name = %q
-    data = {
+    data = jsonencode({
         scripts = [{
             filename = "script_1.py"
-            content  = "print(\"hello\")"
+            content  = "print(\"automation\")"
         }]
-    }
+    })
 }
 `, name)
 }
@@ -432,12 +466,12 @@ func testAccApplicationApiTags(name string, tags map[string]string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_application" "test_tags" {
     name = %q
-    data = {
+    data = jsonencode({
         scripts = [{
             filename = "script_1.py"
-            content  = "print(\"hello\")"
+            content  = "print(\"automation\")"
         }]
-    }
+    })
     tags = %s
 }
 `, name, tagsStr)
@@ -447,12 +481,12 @@ func testAccApplicationApiVariables(name string, variablesValue string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_application" "test_variables" {
     name = %q
-    data = {
+    data = jsonencode({
         scripts = [{
             filename = "script_1.py"
-            content  = "print(\"hello\")"
+            content  = "print(\"automation\")"
         }]
-    }
+    })
     variables = {
         var1 = %q
     }
