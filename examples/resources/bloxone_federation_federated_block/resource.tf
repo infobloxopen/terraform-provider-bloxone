@@ -37,3 +37,22 @@ resource "bloxone_federation_federated_block" "example_with_pool" {
     site = "Site A"
   }
 }
+
+# Allocate a Federated Block from the next available address under the parent block above,
+# without previewing it via a separate data source first.
+resource "bloxone_federation_federated_block" "example_next_available" {
+  name              = "example_federation_federated_block_next_available"
+  federated_realm   = bloxone_federation_federated_realm.example.id
+  next_available_id = bloxone_federation_federated_block.example.id
+  cidr              = 25
+}
+
+# Allocate a Federated Block directly from a Federated Pool's remaining space. This is only
+# supported for AWS-backed pools, and has no preview possible since there is no corresponding
+# data source for this case.
+resource "bloxone_federation_federated_block" "example_next_available_from_pool" {
+  name              = "example_federation_federated_block_next_available_from_pool"
+  federated_realm   = bloxone_federation_federated_realm.example.id
+  next_available_id = bloxone_federation_federated_pool.example.id
+  cidr              = 24
+}

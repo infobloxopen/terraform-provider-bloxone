@@ -3,6 +3,7 @@ package ipamfederation
 import (
 	"context"
 	"fmt"
+	"io"
 	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
@@ -10,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
@@ -17,6 +19,7 @@ import (
 	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -38,6 +41,7 @@ type NextAvailableFederatedBlockModel struct {
 	Name                types.String `tfsdk:"name"`
 	Comment             types.String `tfsdk:"comment"`
 	Results             types.List   `tfsdk:"results"`
+	TagFilters          types.Map    `tfsdk:"tag_filters"`
 }
 
 func (m *NextAvailableFederatedBlockModel) FlattenResults(ctx context.Context, from []ipamfederation.FederatedBlock, diags *diag.Diagnostics) {
@@ -59,10 +63,12 @@ func (d *NextAvailableFederatedBlockDataSource) Schema(_ context.Context, _ data
 		MarkdownDescription: "Retrieves the next available __FederatedBlock__ objects from the specified parent __FederatedBlock__, without allocating them.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 				MarkdownDescription: "The resource identifier of the parent Federated Block.",
 				Validators: []validator.String{
 					stringvalidator.RegexMatches(regexp.MustCompile(`^federation/federated_block/[0-9a-f-].*$`), "invalid resource ID specified"),
+					stringvalidator.ConflictsWith(path.MatchRoot("tag_filters")),
 				},
 			},
 			"cidr": schema.Int64Attribute{
@@ -88,6 +94,11 @@ func (d *NextAvailableFederatedBlockDataSource) Schema(_ context.Context, _ data
 				ElementType:         types.StringType,
 				Computed:            true,
 				MarkdownDescription: "List of next available federated block's addresses in the specified parent Federated Block.",
+			},
+			"tag_filters": schema.MapAttribute{
+				ElementType:         types.StringType,
+				Optional:            true,
+				MarkdownDescription: "Key-value pairs to filter the candidate parent Federated Blocks by tags.",
 			},
 		},
 	}
@@ -123,27 +134,145 @@ func (d *NextAvailableFederatedBlockDataSource) Read(ctx context.Context, req da
 		data.FederatedBlockCount = types.Int64Value(1)
 	}
 
-	// Uses the GET (preview) endpoint only, so reading this data source never allocates blocks.
-	apiReq := d.client.IPAMFederationAPI.
-		NextAvailableFederatedBlockAPI.
-		ListNextAvailableFederatedBlocks(ctx, data.Id.ValueString()).
-		Cidr(data.Cidr.ValueInt64()).
-		Count(data.FederatedBlockCount.ValueInt64())
-	if !data.Name.IsNull() && !data.Name.IsUnknown() {
-		apiReq = apiReq.Name(data.Name.ValueString())
-	}
-	if !data.Comment.IsNull() && !data.Comment.IsUnknown() {
-		apiReq = apiReq.Comment(data.Comment.ValueString())
-	}
+	cidrData := data.Cidr.ValueInt64()
+	count := data.FederatedBlockCount.ValueInt64()
+	tagFilters := data.TagFilters
 
-	apiRes, _, err := apiReq.Execute()
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read NextAvailableFederatedBlock, got error: %s", err))
-		return
-	}
+	if len(tagFilters.Elements()) > 0 {
+		// Find candidate parent Federated Blocks by tags
+		tagFilterStr := flex.ExpandFrameworkMapTagFilterString(ctx, tagFilters, &resp.Diagnostics)
 
-	data.FlattenResults(ctx, apiRes.GetResults(), &resp.Diagnostics)
+		allFederatedBlocks, err := FetchFederatedBlocksByTagFilter(ctx, d.client, tagFilterStr, &resp.Diagnostics)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Federated Blocks with tags, got error: %s", err))
+			return
+		}
+
+		if len(allFederatedBlocks) == 0 {
+			resp.Diagnostics.AddError("No Federated Blocks Found", "No federated blocks found with the given tags.")
+			return
+		}
+
+		var findResults []ipamfederation.FederatedBlock
+
+		for _, fb := range allFederatedBlocks {
+			if fb.Cidr != nil && *fb.Cidr >= cidrData {
+				continue
+			}
+			findResultsLen := int64(len(findResults))
+			if findResultsLen >= count {
+				break
+			}
+
+			remainingCount := count - findResultsLen
+			findResult, findErr := d.findFederatedBlocks(ctx, *fb.Id, cidrData, remainingCount, data.Name, data.Comment)
+			if findErr != nil {
+				errorBody := []byte(findErr.Error())
+				availableCount := int64(utils.ExtractAvailableCountFromError(errorBody))
+
+				if availableCount > 0 {
+					partialResult, retryErr := d.findFederatedBlocks(ctx, *fb.Id, cidrData, availableCount, data.Name, data.Comment)
+					if retryErr != nil {
+						resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Error finding Federated Block after retry: %s", retryErr))
+						return
+					}
+					findResults = append(findResults, partialResult...)
+				} else {
+					resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read NextAvailableFederatedBlock, got error: %s", findErr))
+					return
+				}
+				continue
+			}
+
+			if len(findResult) > 0 {
+				findResults = append(findResults, findResult...)
+			}
+		}
+
+		finalResultsCount := int64(len(findResults))
+		if finalResultsCount < count {
+			resp.Diagnostics.AddError(
+				"Insufficient Available Federated Blocks",
+				fmt.Sprintf("Requested %d Federated Blocks with CIDR %d, but only %d were found. Not enough space available across all checked Federated Blocks.", count, cidrData, finalResultsCount),
+			)
+			return
+		}
+		data.FlattenResults(ctx, findResults, &resp.Diagnostics)
+	} else {
+		findResult, err := d.findFederatedBlocks(ctx, data.Id.ValueString(), cidrData, count, data.Name, data.Comment)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read NextAvailableFederatedBlock, got error: %s", err))
+			return
+		}
+		data.FlattenResults(ctx, findResult, &resp.Diagnostics)
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+}
+
+// findFederatedBlocks is a helper function to find next available federated blocks under a given parent Federated Block.
+func (d *NextAvailableFederatedBlockDataSource) findFederatedBlocks(ctx context.Context, id string, cidr int64, count int64, name, comment types.String) ([]ipamfederation.FederatedBlock, error) {
+	req := func(c int64) ipamfederation.NextAvailableFederatedBlockAPIListNextAvailableFederatedBlocksRequest {
+		apiReq := d.client.IPAMFederationAPI.
+			NextAvailableFederatedBlockAPI.
+			ListNextAvailableFederatedBlocks(ctx, id).
+			Cidr(cidr).
+			Count(c)
+
+		if !name.IsNull() {
+			apiReq = apiReq.Name(name.ValueString())
+		}
+		if !comment.IsNull() {
+			apiReq = apiReq.Comment(comment.ValueString())
+		}
+		return apiReq
+	}
+
+	apiRes, httpRes, err := req(count).Execute()
+	if err != nil {
+		// Check for 400 status code without relying on specific error type
+		if httpRes != nil && httpRes.StatusCode == 400 {
+			bodyBytes, _ := io.ReadAll(httpRes.Body)
+			closeErr := httpRes.Body.Close()
+			if closeErr != nil {
+				return nil, closeErr
+			}
+			// Try to extract available count and retry with it
+			availableCount := int64(utils.ExtractAvailableCountFromError(bodyBytes))
+			if availableCount > 0 {
+				retryRes, _, retryErr := req(availableCount).Execute()
+				if retryErr == nil {
+					return retryRes.GetResults(), nil
+				}
+			}
+		}
+		return nil, err
+	}
+
+	return apiRes.GetResults(), nil
+}
+
+// FetchFederatedBlocksByTagFilter is a helper function used to fetch federated blocks by tags.
+//
+// NOTE: this is also defined by the ReservedBlock next_available_id PR (#316); once that PR
+// merges, this duplicate definition should be removed in favor of the shared one.
+func FetchFederatedBlocksByTagFilter(ctx context.Context, client *universalddiclient.APIClient, tagFilterStr string, diagnostics *diag.Diagnostics) ([]ipamfederation.FederatedBlock, error) {
+	federatedBlocks, err := utils.ReadWithPages(func(offset, limit int32) ([]ipamfederation.FederatedBlock, error) {
+		apiRes, _, err := client.IPAMFederationAPI.FederatedBlockAPI.
+			List(ctx).
+			Tfilter(tagFilterStr).
+			Offset(offset).
+			Limit(limit).
+			Execute()
+		if err != nil {
+			if diagnostics != nil {
+				diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Federated Blocks, got error: %s", err))
+			}
+			return nil, err
+		}
+		return apiRes.GetResults(), nil
+	})
+
+	return federatedBlocks, err
 }
