@@ -2,11 +2,14 @@ package ipamfederation
 
 import (
 	"context"
+	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-framework-nettypes/iptypes"
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
@@ -35,6 +38,7 @@ type FederatedBlockModel struct {
 	Name              types.String      `tfsdk:"name"`
 	NetworkCompliance types.Object      `tfsdk:"network_compliance"`
 	NetworkCompliant  types.Bool        `tfsdk:"network_compliant"`
+	NextAvailableId   types.String      `tfsdk:"next_available_id"`
 	Parent            types.String      `tfsdk:"parent"`
 	Protocol          types.String      `tfsdk:"protocol"`
 	Region            types.String      `tfsdk:"region"`
@@ -59,6 +63,7 @@ var FederatedBlockAttrTypes = map[string]attr.Type{
 	"name":               types.StringType,
 	"network_compliance": types.ObjectType{AttrTypes: NetworkComplianceAttrTypes},
 	"network_compliant":  types.BoolType,
+	"next_available_id":  types.StringType,
 	"parent":             types.StringType,
 	"protocol":           types.StringType,
 	"region":             types.StringType,
@@ -73,14 +78,17 @@ var FederatedBlockAttrTypes = map[string]attr.Type{
 var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
 		CustomType: iptypes.IPAddressType{},
-		Required:   true,
+		Optional:   true,
+		Computed:   true,
 		Validators: []validator.String{
 			internalvalidator.IsValidIPAddress(),
+			stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
 		},
 		PlanModifiers: []planmodifier.String{
 			internalplanmodifier.RequiresReplaceIfIPAddressChanged(),
+			stringplanmodifier.UseStateForUnknown(),
 		},
-		MarkdownDescription: "The address of the federated block, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead. This field is immutable after creation.",
+		MarkdownDescription: "The address of the federated block, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead. This field is immutable after creation. Exactly one of _address_ or _next_available_id_ must be specified.",
 	},
 	"allocation_v4": schema.SingleNestedAttribute{
 		Attributes:          AllocationResourceSchemaAttributes,
@@ -141,6 +149,18 @@ var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"network_compliant": schema.BoolAttribute{
 		Computed:            true,
 		MarkdownDescription: "Indicates if this block is compliant with its parent's network compliance policy. When false, a trouble dot should be displayed in the UI to indicate non-compliance.",
+	},
+	"next_available_id": schema.StringAttribute{
+		Optional: true,
+		Validators: []validator.String{
+			stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
+			stringvalidator.RegexMatches(regexp.MustCompile(`^federation/federated_(block|pool)/[0-9a-f-].*$`), "Should be the resource identifier of a Federated Block or a Federated Pool."),
+		},
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+			stringplanmodifier.UseStateForUnknown(),
+		},
+		MarkdownDescription: "The resource identifier of the parent Federated Block or Federated Pool under which the next available federated block should be allocated. Allocating directly from a Federated Pool is only supported for AWS-backed pools, and has no preview (there is no corresponding data source for that case). Exactly one of _address_ or _next_available_id_ must be specified.",
 	},
 	"parent": schema.StringAttribute{
 		Computed:            true,

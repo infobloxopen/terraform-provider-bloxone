@@ -64,16 +64,17 @@ data "bloxone_federation_federated_blocks" "example_all" {}
 
 Required:
 
-- `address` (String) The address of the federated block, an IPv4 address in form "a.b.c.d" or an IPv6 address. Do not include a prefix length ("/n"); use the _cidr_ field instead. This field is immutable after creation.
 - `cidr` (Number) The CIDR of the federated block.
 - `federated_realm` (String) The resource identifier.
 
 Optional:
 
+- `address` (String) The address of the federated block, an IPv4 address in form "a.b.c.d" or an IPv6 address. Do not include a prefix length ("/n"); use the _cidr_ field instead. This field is immutable after creation. Exactly one of _address_ or _next_available_id_ must be specified.
 - `comment` (String) The description for the federated block. May contain 0 to 1024 characters. Can include UTF-8.
 - `federated_pool_id` (String) The resource identifier of the federated pool the block is in. A block cannot be moved to another pool, so changing it replaces the block.
 - `name` (String) The name of the federated block. May contain 1 to 256 characters. Can include UTF-8.
 - `network_compliance` (Attributes) The network compliance policy for child objects. This defines the minimum, default, and maximum netmask lengths that can be used when creating child blocks. (see [below for nested schema](#nestedatt--results--network_compliance))
+- `next_available_id` (String) The resource identifier of the parent Federated Block or Federated Pool under which the next available federated block should be allocated. Allocating directly from a Federated Pool is only supported for AWS-backed pools, and has no preview (there is no corresponding data source for that case). Exactly one of _address_ or _next_available_id_ must be specified.
 - `tags` (Map of String) The tags for the federated block in JSON format.
 
 Read-Only:
