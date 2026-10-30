@@ -74,7 +74,7 @@ var ReservedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"cidr": schema.Int64Attribute{
 		Required:            true,
-		MarkdownDescription: "The CIDR of the reserved block. This is required field, if _address_ does not specify it in its input.",
+		MarkdownDescription: "The CIDR of the reserved block.",
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
@@ -185,7 +185,7 @@ func (m *ReservedBlockModel) Flatten(ctx context.Context, from *ipamfederation.R
 	if m == nil {
 		*m = ReservedBlockModel{}
 	}
-	m.Address = iptypes.NewIPAddressPointerValue(from.Address)
+	m.Address = flex.FlattenIPAddress(from.Address)
 	m.Cidr = flex.FlattenInt64Pointer(from.Cidr)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)

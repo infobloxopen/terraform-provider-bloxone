@@ -244,6 +244,8 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 		ipamfederation.NewOverlappingBlockDataSource,
 		ipamfederation.NewForwardLookingDelegationDataSource,
 		ipamfederation.NewFederatedPoolDataSource,
+		ipamfederation.NewNextAvailableFederatedBlockDataSource,
+		ipamfederation.NewNextAvailableOverlappingBlockDataSource,
 
 		redirect.NewCustomRedirectsDataSource,
 

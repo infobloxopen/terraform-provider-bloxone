@@ -73,15 +73,14 @@ var FederatedBlockAttrTypes = map[string]attr.Type{
 var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
 		CustomType: iptypes.IPAddressType{},
-		Optional:   true,
-		Computed:   true,
+		Required:   true,
 		Validators: []validator.String{
 			internalvalidator.IsValidIPAddress(),
 		},
 		PlanModifiers: []planmodifier.String{
 			internalplanmodifier.RequiresReplaceIfIPAddressChanged(),
 		},
-		MarkdownDescription: "The address of the federated block, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead.",
+		MarkdownDescription: "The address of the federated block, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead. This field is immutable after creation.",
 	},
 	"allocation_v4": schema.SingleNestedAttribute{
 		Attributes:          AllocationResourceSchemaAttributes,
@@ -235,7 +234,7 @@ func (m *FederatedBlockModel) Flatten(ctx context.Context, from *ipamfederation.
 	if m == nil {
 		*m = FederatedBlockModel{}
 	}
-	m.Address = iptypes.NewIPAddressPointerValue(from.Address)
+	m.Address = flex.FlattenIPAddress(from.Address)
 	m.AllocationV4 = FlattenAllocation(ctx, from.AllocationV4, diags)
 	m.Cidr = flex.FlattenInt64Pointer(from.Cidr)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
