@@ -13,13 +13,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	customplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
 
 	"github.com/infobloxopen/universal-ddi-go-client/ipam"
 
@@ -390,7 +390,7 @@ var IpamsvcSubnetResourceSchemaAttributes = map[string]schema.Attribute{
 		Optional:   true,
 		Computed:   true,
 		PlanModifiers: []planmodifier.Object{
-			objectplanmodifier.UseStateForUnknown(),
+			customplanmodifier.UseStateForUnknownUnlessDhcpOptionsChange(),
 		},
 	},
 	"name": schema.StringAttribute{
@@ -499,7 +499,7 @@ func (m *IpamsvcSubnetModel) Expand(ctx context.Context, diags *diag.Diagnostics
 		DdnsUseConflictResolution:  flex.ExpandBoolPointer(m.DdnsUseConflictResolution),
 		DhcpConfig:                 ExpandIpamsvcDHCPConfig(ctx, m.DhcpConfig, diags),
 		DhcpHost:                   flex.ExpandStringPointer(m.DhcpHost),
-		DhcpOptions:                flex.ExpandFrameworkListNestedBlock(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
+		DhcpOptions:                flex.ExpandFrameworkListNestedBlockNilAsEmpty(ctx, m.DhcpOptions, diags, ExpandIpamsvcOptionItem),
 		DhcpUtilization:            ExpandIpamsvcDHCPUtilization(ctx, m.DhcpUtilization, diags),
 		DisableDhcp:                flex.ExpandBoolPointer(m.DisableDhcp),
 		ExternalKeys:               flex.ExpandFrameworkMapString(ctx, m.ExternalKeys, diags),
