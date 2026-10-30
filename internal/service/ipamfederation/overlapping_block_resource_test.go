@@ -315,6 +315,25 @@ func TestAccOverlappingBlockResource_NextAvailableIdWithFederatedPoolId(t *testi
 	})
 }
 
+// TestAccOverlappingBlockResource_NextAvailableIdWithInvalidFederatedPoolId exercises the rollback
+// path when the follow-up Update that patches federated_pool_id into a next-available-allocated
+// block fails: the block created by the initial next-available call must be deleted rather than
+// left dangling in state as a tainted resource.
+func TestAccOverlappingBlockResource_NextAvailableIdWithInvalidFederatedPoolId(t *testing.T) {
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccOverlappingBlockNextAvailableIdWithInvalidFederatedPoolId(realmName, "10.151.0.0", 16, 24),
+				ExpectError: regexp.MustCompile(`Unable to set federated_pool_id on next available OverlappingBlock`),
+			},
+		},
+	})
+}
+
 func TestAccOverlappingBlockResource_FederatedRealm(t *testing.T) {
 	var resourceName = "bloxone_federation_overlapping_block.test_federated_realm"
 	var v ipamfederation.OverlappingBlock
@@ -556,6 +575,18 @@ resource "bloxone_federation_overlapping_block" "test_next_available_id_with_poo
     cidr = %d
 }
 `, poolName, cidr)
+	return strings.Join([]string{testAccFederatedBlockBasicConfig(parentAddress, parentCidr, federatedRealm), config}, "")
+}
+
+func testAccOverlappingBlockNextAvailableIdWithInvalidFederatedPoolId(federatedRealm string, parentAddress string, parentCidr int, cidr int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_federation_overlapping_block" "test_next_available_id_with_invalid_pool" {
+    federated_realm   = bloxone_federation_federated_realm.test.id
+    next_available_id = bloxone_federation_federated_block.test.id
+    federated_pool_id = "federation/federated_pool/00000000-0000-0000-0000-000000000000"
+    cidr = %d
+}
+`, cidr)
 	return strings.Join([]string{testAccFederatedBlockBasicConfig(parentAddress, parentCidr, federatedRealm), config}, "")
 }
 
