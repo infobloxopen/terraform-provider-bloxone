@@ -35,7 +35,7 @@ FEATURES:
     * Added `tag_filters` support on the next available data sources to enable searchability by tags, along with `next_available_id` on `bloxone_federation_reserved_block`, `bloxone_federation_overlapping_block` and `bloxone_federation_federated_block` ([#316](https://github.com/infobloxopen/terraform-provider-bloxone/pull/316), [#318](https://github.com/infobloxopen/terraform-provider-bloxone/pull/318), [#319](https://github.com/infobloxopen/terraform-provider-bloxone/pull/319))
 
 ENHANCEMENTS:
-* DNS: Added Unified Nameservers (v2) support alongside existing v1 support, for `bloxone_dns_auth_zone` and `bloxone_dns_auth_nsg` with DNSSEC signing policy support ([#287](https://github.com/infobloxopen/terraform-provider-bloxone/pull/287))
+* DNS: Added Unified Nameservers (v2) support alongside existing v1 support, for `bloxone_dns_auth_zone` and `bloxone_dns_auth_nsg` with DNSSEC signing policy support ([#287](https://github.com/infobloxopen/terraform-provider-bloxone/pull/287)). See [Unified Nameservers](https://github.com/infobloxopen/terraform-provider-bloxone#unified-nameservers) for further details.
 * IPAM FEDERATION: Added `federated_pool_id`, `metadata`, `network_compliance`, `network_compliant`, `region`, `state`, `utilization`, `utilization_v6` and `tags_all` to `bloxone_federation_federated_block` ([#288](https://github.com/infobloxopen/terraform-provider-bloxone/pull/288))
 * IPAM FEDERATION: Exposed `provider_type` and `region` as read-only attributes in `bloxone_federation_federated_realm` ([#308](https://github.com/infobloxopen/terraform-provider-bloxone/pull/308))
 * Extended `tags_all` support to `bloxone_keys_tsig`, `bloxone_td_category_filter` and `bloxone_td_application_filter` ([#304](https://github.com/infobloxopen/terraform-provider-bloxone/pull/304), fixes issue [#300](https://github.com/infobloxopen/terraform-provider-bloxone/issues/300))
@@ -50,7 +50,6 @@ FIXES:
 
 NOTES:
 * Added configurable client-side rate limiting and automatic retry on certain HTTP responses via the underlying `universal-ddi-go-client`. See [Rate Limiting and Retry](https://github.com/infobloxopen/terraform-provider-bloxone#rate-limiting-and-retry) for further details.
-* Added Unified Nameservers (v2) support for DNS. See [Unified Nameservers](https://github.com/infobloxopen/terraform-provider-bloxone#unified-nameservers) for further details.
 
 MAINTENANCE:
 * Updated Go version to 1.26
