@@ -165,6 +165,15 @@ As part of the Unified Nameservers initiative, the following DNS Server Group co
 
 Review your Terraform configurations for any of the above patterns and update them before they are enforced.
 
+### Schema Reference
+
+Unified Nameservers also changes which attributes may be configured on an authoritative zone and on an authoritative DNS Server Group. The read-only `version` attribute reports which model an object uses: `v1` when Unified Nameservers is disabled, `v2` when it is enabled. An account can hold both.
+
+The per-attribute specification is maintained on the resource pages. Refer to them for the attributes available under each model, the behavior of `primary_type`, and example configurations for both models:
+
+- `bloxone_dns_auth_zone` — [docs/resources/dns_auth_zone.md](docs/resources/dns_auth_zone.md#unified-nameservers) ([Terraform Registry](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/dns_auth_zone#unified-nameservers))
+- `bloxone_dns_auth_nsg` — [docs/resources/dns_auth_nsg.md](docs/resources/dns_auth_nsg.md#unified-nameservers) ([Terraform Registry](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs/resources/dns_auth_nsg#unified-nameservers))
+
 ## Documentation
 
 Full provider documentation, including schema references for all resources and data sources, is available on the [Terraform Registry](https://registry.terraform.io/providers/infobloxopen/bloxone/latest/docs).

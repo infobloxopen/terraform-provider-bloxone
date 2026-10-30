@@ -10,7 +10,54 @@ description: |-
 
 Manages an authoritative zone.
 
+## Unified Nameservers
+
+An authoritative zone assigns its nameservers using one of two models. Which model a zone uses depends on whether the **Unified Nameservers** feature is enabled for the account, and is reported by the read-only `version` attribute:
+
+| `version` | Unified Nameservers | Nameserver assignment model |
+| --------- | ------------------- | --------------------------- |
+| `v1`      | Disabled            | Original DNS Server Group (NSG) model |
+| `v2`      | Enabled             | Unified Nameservers model |
+
+An account can contain both `v1` and `v2` zones, so the applicable model is a per-zone question rather than an account-wide one. Read a zone's `version` attribute — for example through the `bloxone_dns_auth_zones` data source — before changing how it assigns nameservers.
+
+### Attribute availability
+
+The two models accept mutually exclusive sets of attributes:
+
+| Attribute | `v1` — Unified Nameservers disabled | `v2` — Unified Nameservers enabled |
+| --------- | ----------------------------------- | ---------------------------------- |
+| `primary_type`         | Must be set    | Read-only — do not set it |
+| `external_primaries`   | Configurable   | Not configurable |
+| `external_secondaries` | Configurable   | Not configurable |
+| `internal_secondaries` | Configurable   | Not configurable |
+| `grid_primaries`       | Configurable   | Not configurable |
+| `grid_secondaries`     | Configurable   | Not configurable |
+| `nsgs`                 | Configurable   | Not configurable |
+| `nameservers`          | Not configurable | Configurable |
+| `nsg`                  | Not configurable | Configurable |
+
+Notes on the table above:
+
+- `primary_type` appears under **Optional** in the schema below because it is computed for `v2` zones. For a `v1` zone it is effectively required, and a zone created without it is rejected.
+- Setting `primary_type` together with `nameservers` or `nsg` fails during `terraform plan`.
+- `nameservers` and `nsg` are mutually exclusive. Use one or the other to assign nameservers to a `v2` zone, never both.
+- `nameservers` and `nsg` also conflict with every `v1` attribute in the table, so a plan that mixes the two models is rejected before any API call is made.
+
+### Restrictions on DNS Server Group assignment
+
+Under Unified Nameservers the following DNS Server Group configurations are deprecated and are rejected:
+
+- **Nested DNS Server Groups** — a DNS Server Group cannot be nested inside an authoritative DNS Server Group (`bloxone_dns_auth_nsg`).
+- **Dual-role DNS Server Groups** — the same DNS Server Group cannot be assigned to both a primary zone and a secondary zone.
+- **Multiple DNS Server Groups on an authoritative zone** — only one DNS Server Group may be assigned to an authoritative zone. This is why a `v2` zone uses the single-valued `nsg` attribute in place of the `nsgs` list.
+- **DNS Server Groups combined with internal secondaries** — `nsg` and `internal_secondaries` cannot coexist on an authoritative zone.
+
+Review existing configurations for these patterns and update any that still use them.
+
 ## Example Usage
+
+The following example configures a zone under the original model, where Unified Nameservers is disabled (`version` is `v1`):
 
 ```terraform
 resource "bloxone_keys_tsig" "example_tsig" {
@@ -71,6 +118,56 @@ resource "bloxone_dns_auth_zone" "example" {
       element = "any"
     },
   ]
+}
+```
+
+## Example Usage With Unified Nameservers
+
+The following example configures a zone under the Unified Nameservers model (`version` is `v2`). Nameservers are assigned through `nameservers` or `nsg`, and `primary_type` is left out:
+
+```terraform
+# Zones that use the Unified Nameservers model (version = "v2") assign their
+# nameservers inline and must not set primary_type.
+resource "bloxone_dns_auth_zone" "example_unified" {
+  fqdn = "unified.domain.com."
+
+  nameservers = [
+    {
+      role    = "primary"
+      address = "192.168.10.10"
+      fqdn    = "ns1.domain.com."
+    },
+    {
+      role    = "secondary"
+      address = "192.168.10.11"
+      fqdn    = "ns2.domain.com."
+      stealth = false
+    },
+  ]
+
+  # Other optional fields
+  comment = "Example of an Authoritative Zone using Unified Nameservers"
+  tags = {
+    site = "Site A"
+  }
+}
+
+# A zone may instead reference a single DNS Server Group. "nsg" and
+# "nameservers" are mutually exclusive.
+resource "bloxone_dns_auth_nsg" "example_unified_nsg" {
+  name = "example_unified_nsg"
+  nameservers = [
+    {
+      role    = "primary"
+      address = "192.168.10.10"
+      fqdn    = "ns1.domain.com."
+    },
+  ]
+}
+
+resource "bloxone_dns_auth_zone" "example_unified_with_nsg" {
+  fqdn = "unified-nsg.domain.com."
+  nsg  = bloxone_dns_auth_nsg.example_unified_nsg.id
 }
 ```
 
