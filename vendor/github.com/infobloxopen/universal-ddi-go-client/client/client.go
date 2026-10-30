@@ -8,6 +8,7 @@ import (
 	"github.com/infobloxopen/universal-ddi-go-client/dnsdata"
 	"github.com/infobloxopen/universal-ddi-go-client/dtc"
 	"github.com/infobloxopen/universal-ddi-go-client/fw"
+	"github.com/infobloxopen/universal-ddi-go-client/identity"
 	"github.com/infobloxopen/universal-ddi-go-client/inframgmt"
 	"github.com/infobloxopen/universal-ddi-go-client/infraprovision"
 	"github.com/infobloxopen/universal-ddi-go-client/ipam"
@@ -28,6 +29,7 @@ type APIClient struct {
 	DNSTrafficControlAPI        *dtc.APIClient
 	HostActivationAPI           *infraprovision.APIClient
 	InfraManagementAPI          *inframgmt.APIClient
+	IdentityAPI                 *identity.APIClient
 	KeysAPI                     *keys.APIClient
 	DNSForwardingProxyAPI       *dfp.APIClient
 	FWAPI                       *fw.APIClient
@@ -70,6 +72,7 @@ func NewAPIClient(options ...option.ClientOption) *APIClient {
 		DNSTrafficControlAPI:        dtc.NewAPIClient(options...),
 		HostActivationAPI:           infraprovision.NewAPIClient(options...),
 		InfraManagementAPI:          inframgmt.NewAPIClient(options...),
+		IdentityAPI:                 identity.NewAPIClient(options...),
 		KeysAPI:                     keys.NewAPIClient(options...),
 		DNSForwardingProxyAPI:       dfp.NewAPIClient(options...),
 		FWAPI:                       fw.NewAPIClient(options...),
