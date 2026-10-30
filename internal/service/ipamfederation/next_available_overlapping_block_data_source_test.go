@@ -93,6 +93,43 @@ func TestAccNextAvailableOverlappingBlockDataSource_Comment(t *testing.T) {
 	})
 }
 
+func TestAccNextAvailableOverlappingBlockDataSource_TagFilters(t *testing.T) {
+	dataSourceName := "data.bloxone_federation_next_available_overlapping_blocks.test"
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	tagValue := acctest.RandomNameWithPrefix("next-available-overlapping-block")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNextAvailableOverlappingBlockTagFilters(realmName, "10.139.0.0", 16, 24, tagValue),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
+					resource.TestMatchResourceAttr(dataSourceName, "results.0", regexp.MustCompile(`^10\.139\.`)),
+				),
+			},
+		},
+	})
+}
+
+func TestAccNextAvailableOverlappingBlockDataSource_NeitherIdNorTagFilters(t *testing.T) {
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: `
+data "bloxone_federation_next_available_overlapping_blocks" "test" {
+    cidr = 24
+}
+`,
+				ExpectError: regexp.MustCompile(`At least one attribute out of \[id,tag_filters\] must be specified`),
+			},
+		},
+	})
+}
+
 func TestAccNextAvailableOverlappingBlockDataSource_InvalidId(t *testing.T) {
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -141,6 +178,32 @@ data "bloxone_federation_next_available_overlapping_blocks" "test" {
 }
 `, cidr, name)
 	return strings.Join([]string{testAccFederatedBlockBasicConfig(parentAddress, parentCidr, federatedRealm), config}, "")
+}
+
+func testAccNextAvailableOverlappingBlockTagFilters(federatedRealm string, parentAddress string, parentCidr int, cidr int, tagValue string) string {
+	base := fmt.Sprintf(`
+resource "bloxone_federation_federated_block" "test" {
+    federated_realm = bloxone_federation_federated_realm.test.id
+    address = %q
+    cidr = %d
+    tags = {
+        env = %q
+    }
+}
+`, parentAddress, parentCidr, tagValue)
+
+	config := fmt.Sprintf(`
+data "bloxone_federation_next_available_overlapping_blocks" "test" {
+    tag_filters = {
+        env = %q
+    }
+    cidr = %d
+
+    depends_on = [bloxone_federation_federated_block.test]
+}
+`, tagValue, cidr)
+
+	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), base, config}, "")
 }
 
 func testAccNextAvailableOverlappingBlockComment(federatedRealm string, parentAddress string, parentCidr int, cidr int, comment string) string {
