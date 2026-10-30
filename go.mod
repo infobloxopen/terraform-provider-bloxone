@@ -13,7 +13,7 @@ require (
 	github.com/hashicorp/terraform-plugin-log v0.10.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.38.1
 	github.com/hashicorp/terraform-plugin-testing v1.13.3
-	github.com/infobloxopen/universal-ddi-go-client v0.5.1-0.20261028070951-8401ed699b5a
+	github.com/infobloxopen/universal-ddi-go-client v0.5.1-0.20261030142151-df35a609f01f
 	golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8
 )
 
@@ -89,5 +89,3 @@ require (
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/infobloxopen/universal-ddi-go-client => ../universal-ddi-go-client
