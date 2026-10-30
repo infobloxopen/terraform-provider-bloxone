@@ -51,12 +51,12 @@ data "bloxone_federation_overlapping_blocks" "example_all" {}
 
 Required:
 
-- `cidr` (Number) The CIDR of the overlapping block. This is required, if _address_ does not specify it in its input.
+- `address` (String) The address of the overlapping block, an IPv4 address in form "a.b.c.d" or an IPv6 address. Do not include a prefix length ("/n"); use the _cidr_ field instead. This field is immutable after creation.
+- `cidr` (Number) The CIDR of the overlapping block.
 - `federated_realm` (String) The resource identifier.
 
 Optional:
 
-- `address` (String) The address field in form “a.b.c.d/n” where the “/n” may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form “a.b.c.d”. This field is immutable after creation.
 - `comment` (String) The description for the overlapping block. May contain 0 to 1024 characters. Can include UTF-8.
 - `federated_pool_id` (String) The resource identifier.
 - `name` (String) The name of the overlapping block. May contain 1 to 256 characters. Can include UTF-8.
