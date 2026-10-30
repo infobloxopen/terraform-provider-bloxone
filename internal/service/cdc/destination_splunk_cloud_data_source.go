@@ -42,7 +42,7 @@ func (m *DestinationSplunkCloudModelWithFilter) FlattenResults(ctx context.Conte
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, DestinationSplunkCloudAttrTypes, diags, FlattenDestinationSplunkCloud)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, DestinationSplunkCloudAttrTypes, diags, DataSourceFlattenDestinationSplunkCloud)
 }
 
 func (d *DestinationSplunkCloudDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

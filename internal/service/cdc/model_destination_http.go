@@ -11,6 +11,7 @@ import (
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -34,6 +35,7 @@ type DestinationHttpModel struct {
 	Name              types.String      `tfsdk:"name"`
 	OutputDataFormat  types.String      `tfsdk:"output_data_format"`
 	Tags              types.Map         `tfsdk:"tags"`
+	TagsAll           types.Map         `tfsdk:"tags_all"`
 	TransportProtocol types.String      `tfsdk:"transport_protocol"`
 	UpdatedAt         timetypes.RFC3339 `tfsdk:"updated_at"`
 }
@@ -50,6 +52,7 @@ var DestinationHttpAttrTypes = map[string]attr.Type{
 	"name":               types.StringType,
 	"output_data_format": types.StringType,
 	"tags":               types.MapType{ElemType: types.StringType},
+	"tags_all":           types.MapType{ElemType: types.StringType},
 	"transport_protocol": types.StringType,
 	"updated_at":         timetypes.RFC3339Type{},
 }
@@ -124,7 +127,14 @@ var DestinationHttpResourceSchemaAttributes = map[string]schema.Attribute{
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
+		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
 		MarkdownDescription: "The tags for the HTTP destination.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the HTTP destination, including default tags.",
 	},
 	"transport_protocol": schema.StringAttribute{
 		Optional: true,
@@ -173,12 +183,13 @@ func (m *DestinationHttpModel) Expand(ctx context.Context, diags *diag.Diagnosti
 	return to
 }
 
-func FlattenDestinationHttp(ctx context.Context, from *cdc.DestinationHttp, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenDestinationHttp(ctx context.Context, from *cdc.DestinationHttp, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(DestinationHttpAttrTypes)
 	}
 	m := DestinationHttpModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, DestinationHttpAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -201,7 +212,7 @@ func (m *DestinationHttpModel) Flatten(ctx context.Context, from *cdc.Destinatio
 	m.InsecureMode = types.BoolPointerValue(from.InsecureMode)
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.OutputDataFormat = flex.FlattenStringPointer(from.OutputDataFormat)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.TransportProtocol = flex.FlattenStringPointer(from.TransportProtocol)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }

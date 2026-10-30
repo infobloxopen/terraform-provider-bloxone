@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -34,6 +35,7 @@ type FlowDataV2Model struct {
 	SourceDataTypes  types.List        `tfsdk:"source_data_types"`
 	SourceLogTypes   types.List        `tfsdk:"source_log_types"`
 	Tags             types.Map         `tfsdk:"tags"`
+	TagsAll          types.Map         `tfsdk:"tags_all"`
 	UpdatedAt        timetypes.RFC3339 `tfsdk:"updated_at"`
 }
 
@@ -54,6 +56,7 @@ var FlowDataV2AttrTypes = map[string]attr.Type{
 	"source_data_types": types.ListType{ElemType: types.StringType},
 	"source_log_types":  types.ListType{ElemType: types.ObjectType{AttrTypes: SourceLogTypeAttrTypes}},
 	"tags":              types.MapType{ElemType: types.StringType},
+	"tags_all":          types.MapType{ElemType: types.StringType},
 	"updated_at":        timetypes.RFC3339Type{},
 }
 
@@ -138,7 +141,14 @@ var FlowDataV2ResourceSchemaAttributes = map[string]schema.Attribute{
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
+		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
 		MarkdownDescription: "The tags for the flow.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the flow, including default tags.",
 	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -180,12 +190,13 @@ func (m *FlowDataV2Model) Expand(ctx context.Context, diags *diag.Diagnostics) *
 	return to
 }
 
-func FlattenFlowDataV2(ctx context.Context, from *cdc.FlowDataV2, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenFlowDataV2(ctx context.Context, from *cdc.FlowDataV2, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(FlowDataV2AttrTypes)
 	}
 	m := FlowDataV2Model{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, FlowDataV2AttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -217,7 +228,7 @@ func (m *FlowDataV2Model) Flatten(ctx context.Context, from *cdc.FlowDataV2, dia
 		m.SourceDataTypes = flex.FlattenFrameworkListString(ctx, from.SourceDataTypes, diags)
 	}
 	m.SourceLogTypes = flex.FlattenFrameworkListNestedBlock(ctx, from.SourceLogTypes, SourceLogTypeAttrTypes, diags, FlattenSourceLogType)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.Destinations = flex.FlattenFrameworkListInt64(ctx, from.Destinations, diags)
 	m.EtlFilters = flex.FlattenFrameworkListInt64(ctx, from.EtlFilters, diags)

@@ -20,16 +20,16 @@ var _ MappedNullable = &DestinationApplication{}
 
 // DestinationApplication struct for DestinationApplication
 type DestinationApplication struct {
-	Application          *int64                            `json:"application,omitempty"`
-	Context              map[string]map[string]interface{} `json:"context,omitempty"`
-	CreatedAt            *time.Time                        `json:"created_at,omitempty"`
-	Description          *string                           `json:"description,omitempty"`
-	Enabled              *bool                             `json:"enabled,omitempty"`
-	Id                   *int64                            `json:"id,omitempty"`
-	Name                 *string                           `json:"name,omitempty"`
-	OutputDataFormat     *string                           `json:"output_data_format,omitempty"`
-	Tags                 map[string]interface{}            `json:"tags,omitempty"`
-	UpdatedAt            *time.Time                        `json:"updated_at,omitempty"`
+	Application          *int64                 `json:"application,omitempty"`
+	Context              map[string]interface{} `json:"context,omitempty"`
+	CreatedAt            *time.Time             `json:"created_at,omitempty"`
+	Description          *string                `json:"description,omitempty"`
+	Enabled              *bool                  `json:"enabled,omitempty"`
+	Id                   *int64                 `json:"id,omitempty"`
+	Name                 *string                `json:"name,omitempty"`
+	OutputDataFormat     *string                `json:"output_data_format,omitempty"`
+	Tags                 map[string]interface{} `json:"tags,omitempty"`
+	UpdatedAt            *time.Time             `json:"updated_at,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -85,9 +85,9 @@ func (o *DestinationApplication) SetApplication(v int64) {
 }
 
 // GetContext returns the Context field value if set, zero value otherwise.
-func (o *DestinationApplication) GetContext() map[string]map[string]interface{} {
+func (o *DestinationApplication) GetContext() map[string]interface{} {
 	if o == nil || IsNil(o.Context) {
-		var ret map[string]map[string]interface{}
+		var ret map[string]interface{}
 		return ret
 	}
 	return o.Context
@@ -95,9 +95,9 @@ func (o *DestinationApplication) GetContext() map[string]map[string]interface{} 
 
 // GetContextOk returns a tuple with the Context field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *DestinationApplication) GetContextOk() (map[string]map[string]interface{}, bool) {
+func (o *DestinationApplication) GetContextOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Context) {
-		return map[string]map[string]interface{}{}, false
+		return map[string]interface{}{}, false
 	}
 	return o.Context, true
 }
@@ -111,8 +111,8 @@ func (o *DestinationApplication) HasContext() bool {
 	return false
 }
 
-// SetContext gets a reference to the given map[string]map[string]interface{} and assigns it to the Context field.
-func (o *DestinationApplication) SetContext(v map[string]map[string]interface{}) {
+// SetContext gets a reference to the given map[string]interface{} and assigns it to the Context field.
+func (o *DestinationApplication) SetContext(v map[string]interface{}) {
 	o.Context = v
 }
 

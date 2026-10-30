@@ -41,7 +41,7 @@ func (m *DestinationSyslogModelWithFilter) FlattenResults(ctx context.Context, f
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, DestinationSyslogAttrTypes, diags, FlattenDestinationSyslog)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, DestinationSyslogAttrTypes, diags, DataSourceFlattenDestinationSyslog)
 }
 
 func (d *DestinationSyslogDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

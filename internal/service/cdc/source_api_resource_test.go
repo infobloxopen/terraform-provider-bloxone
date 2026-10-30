@@ -38,6 +38,7 @@ func TestAccSourceApiResource_basic(t *testing.T) {
 					// Test fields with default value
 					resource.TestCheckResourceAttr(resourceName, "description", ""),
 					resource.TestCheckResourceAttr(resourceName, "enabled", "false"),
+					resource.TestCheckResourceAttr(resourceName, "nios_username", ""),
 					resource.TestCheckResourceAttr(resourceName, "rpz_log_insecure_mode", "false"),
 					resource.TestCheckResourceAttr(resourceName, "scp_username", ""),
 				),
@@ -480,10 +481,8 @@ func testAccCheckSourceApiDisappears(ctx context.Context, v *cdc.SourceNios) res
 func testAccSourceApiBasicConfig(name string) string {
 	return fmt.Sprintf(`
 resource "bloxone_cdc_source_nios" "test" {
-    name          = %q
-    address       = "%s.example.com"
-    nios_username = "tf_auto"
-    nios_password = "tf_auto_password1!"
+    name    = %q
+    address = "%s.example.com"
 }
 `, name, name)
 }

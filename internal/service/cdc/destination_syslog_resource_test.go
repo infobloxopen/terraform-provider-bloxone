@@ -43,6 +43,12 @@ func TestAccDestinationSyslogResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "transport_protocol", "TCP"),
 				),
 			},
+			// Import and Read
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
@@ -143,18 +149,18 @@ func TestAccDestinationSyslogResource_Description(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccDestinationSyslogDescription(name, "DESCRIPTION_REPLACE_ME"),
+				Config: testAccDestinationSyslogDescription(name, "Test syslog destination description"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDestinationSyslogExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "description", "DESCRIPTION_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "description", "Test syslog destination description"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccDestinationSyslogDescription(name, "DESCRIPTION_UPDATE_REPLACE_ME"),
+				Config: testAccDestinationSyslogDescription(name, "Updated test syslog destination description"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDestinationSyslogExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "description", "DESCRIPTION_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "description", "Updated test syslog destination description"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -320,7 +326,7 @@ func TestAccDestinationSyslogResource_Tags(t *testing.T) {
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
-		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactoriesWithTags,
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
@@ -328,6 +334,8 @@ func TestAccDestinationSyslogResource_Tags(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDestinationSyslogExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag1", "value1"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Update and Read
@@ -337,6 +345,9 @@ func TestAccDestinationSyslogResource_Tags(t *testing.T) {
 					testAccCheckDestinationSyslogExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag1", "value1changed"),
 					resource.TestCheckResourceAttr(resourceName, "tags.tag2", "value2"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag1", "value1changed"),
+					resource.TestCheckResourceAttr(resourceName, "tags_all.tag2", "value2"),
+					acctest.VerifyDefaultTag(resourceName),
 				),
 			},
 			// Delete testing automatically occurs in TestCase

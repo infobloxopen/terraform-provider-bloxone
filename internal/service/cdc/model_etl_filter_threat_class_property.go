@@ -97,7 +97,6 @@ var EtlFilterThreatClassPropertyResourceSchemaAttributes = map[string]schema.Att
 		},
 		MarkdownDescription: "The resource identifier.",
 	},
-	// TODO: allowed values and server default for ingress_policy_action are not yet known.
 	"ingress_policy_action": schema.StringAttribute{
 		Optional: true,
 		Computed: true,

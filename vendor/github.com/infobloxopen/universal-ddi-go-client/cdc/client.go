@@ -23,17 +23,17 @@ type APIClient struct {
 	*internal.APIClient
 
 	// API Services
-	ApplicationApiAPI ApplicationApiAPI
+	ApplicationApiAPI   ApplicationApiAPI
 	ConfigCheckerApiAPI ConfigCheckerApiAPI
-	DataSourceApiAPI DataSourceApiAPI
-	DestinationApiAPI DestinationApiAPI
-	EtlFilterApiAPI EtlFilterApiAPI
-	FlowApiV2API FlowApiV2API
-	HostApiAPI HostApiAPI
-	ScriptApiAPI ScriptApiAPI
-	ServiceApiAPI ServiceApiAPI
-	SourceApiAPI SourceApiAPI
-	SubscriptionApiAPI SubscriptionApiAPI
+	DataSourceApiAPI    DataSourceApiAPI
+	DestinationApiAPI   DestinationApiAPI
+	EtlFilterApiAPI     EtlFilterApiAPI
+	FlowApiV2API        FlowApiV2API
+	HostApiAPI          HostApiAPI
+	ScriptApiAPI        ScriptApiAPI
+	ServiceApiAPI       ServiceApiAPI
+	SourceApiAPI        SourceApiAPI
+	SubscriptionApiAPI  SubscriptionApiAPI
 }
 
 // NewAPIClient creates a new API client.

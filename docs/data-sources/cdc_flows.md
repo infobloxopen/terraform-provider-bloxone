@@ -73,6 +73,7 @@ Read-Only:
 - `destination_ha` (Boolean) Indicates whether the flow sends data to its destinations in high availability mode.
 - `id` (Number) The resource identifier.
 - `source_log_types` (Attributes List) The log types and log fields collected from the source, derived by the backend from _source_data_types_. (see [below for nested schema](#nestedatt--results--source_log_types))
+- `tags_all` (Map of String) The tags for the flow, including default tags.
 - `updated_at` (String) Time when the object has been updated. Equals to _created_at_ if not updated after creation.
 
 <a id="nestedatt--results--source_log_types"></a>

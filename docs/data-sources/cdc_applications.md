@@ -51,7 +51,7 @@ data "bloxone_cdc_applications" "example_all" {}
 
 Required:
 
-- `data` (String) The application data containing the scripts, JSON-encoded, e.g. `jsonencode({ scripts = [{ filename = "script_1.py", content = file("script_1.py") }] })`. The value is stored exactly as configured; the data returned by the backend is available in _file_data_.
+- `data` (String) The application data containing the scripts, as a JSON-encoded object, e.g. `jsonencode({ scripts = [{ filename = "script_1.py", content = file("script_1.py") }] })`. The value is stored exactly as configured; the data returned by the backend is available in _file_data_.
 - `name` (String) The name of the application.
 
 Optional:
@@ -64,7 +64,7 @@ Optional:
 Read-Only:
 
 - `created_at` (String) Time when the object has been created.
-- `file_data` (String) The application data as returned by the backend, JSON-encoded.
+- `file_data` (String) The application data as returned by the backend, as a JSON-encoded object.
 - `id` (Number) The resource identifier.
 - `tags_all` (Map of String) The tags for the application, including default tags.
 - `type` (String) The type of the application.

@@ -10,6 +10,7 @@ import (
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -32,6 +33,7 @@ type DestinationReportingModel struct {
 	Password                  types.String      `tfsdk:"password"`
 	ReportingApplianceAddress types.String      `tfsdk:"reporting_appliance_address"`
 	Tags                      types.Map         `tfsdk:"tags"`
+	TagsAll                   types.Map         `tfsdk:"tags_all"`
 	UpdatedAt                 timetypes.RFC3339 `tfsdk:"updated_at"`
 	Username                  types.String      `tfsdk:"username"`
 }
@@ -46,6 +48,7 @@ var DestinationReportingAttrTypes = map[string]attr.Type{
 	"password":                    types.StringType,
 	"reporting_appliance_address": types.StringType,
 	"tags":                        types.MapType{ElemType: types.StringType},
+	"tags_all":                    types.MapType{ElemType: types.StringType},
 	"updated_at":                  timetypes.RFC3339Type{},
 	"username":                    types.StringType,
 }
@@ -110,7 +113,14 @@ var DestinationReportingResourceSchemaAttributes = map[string]schema.Attribute{
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
+		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
 		MarkdownDescription: "The tags for the NIOS reporting destination.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the NIOS reporting destination, including default tags.",
 	},
 	"updated_at": schema.StringAttribute{
 		CustomType:          timetypes.RFC3339Type{},
@@ -155,12 +165,13 @@ func (m *DestinationReportingModel) Expand(ctx context.Context, diags *diag.Diag
 	return to
 }
 
-func FlattenDestinationReporting(ctx context.Context, from *cdc.DestinationReporting, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenDestinationReporting(ctx context.Context, from *cdc.DestinationReporting, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(DestinationReportingAttrTypes)
 	}
 	m := DestinationReportingModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, DestinationReportingAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -182,7 +193,7 @@ func (m *DestinationReportingModel) Flatten(ctx context.Context, from *cdc.Desti
 	m.Id = flex.FlattenInt64Pointer(from.Id)
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.ReportingApplianceAddress = flex.FlattenStringPointer(from.ReportingApplianceAddress)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 	m.Username = flex.FlattenStringPointer(from.Username)
 }

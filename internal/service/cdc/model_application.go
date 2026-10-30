@@ -66,7 +66,7 @@ var ApplicationDataResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"data": schema.StringAttribute{
 		Required:            true,
-		MarkdownDescription: "The application data containing the scripts, JSON-encoded, e.g. `jsonencode({ scripts = [{ filename = \"script_1.py\", content = file(\"script_1.py\") }] })`. The value is stored exactly as configured; the data returned by the backend is available in _file_data_.",
+		MarkdownDescription: "The application data containing the scripts, as a JSON-encoded object, e.g. `jsonencode({ scripts = [{ filename = \"script_1.py\", content = file(\"script_1.py\") }] })`. The value is stored exactly as configured; the data returned by the backend is available in _file_data_.",
 	},
 	"description": schema.StringAttribute{
 		Optional:            true,
@@ -82,7 +82,7 @@ var ApplicationDataResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"file_data": schema.StringAttribute{
 		Computed:            true,
-		MarkdownDescription: "The application data as returned by the backend, JSON-encoded.",
+		MarkdownDescription: "The application data as returned by the backend, as a JSON-encoded object.",
 	},
 	"id": schema.Int64Attribute{
 		Computed: true,
@@ -108,7 +108,7 @@ var ApplicationDataResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The tags for the application, including default tags.",
 	},
 	"type": schema.StringAttribute{
-		Computed:            true, // Backend always returns "type": "PYTHON_SCRIPT"
+		Computed:            true,
 		MarkdownDescription: "The type of the application.",
 	},
 	"updated_at": schema.StringAttribute{
@@ -192,15 +192,14 @@ func (m *ApplicationDataModel) Flatten(ctx context.Context, from *cdc.Applicatio
 }
 
 // expandApplicationDataJSON decodes the JSON-encoded data attribute into the
-// free-form value the SDK sends to the backend. The backend accepts any JSON
-// value for data (object, string, number, ...), not only objects.
-func expandApplicationDataJSON(v types.String, diags *diag.Diagnostics) interface{} {
+// object the SDK sends to the backend.
+func expandApplicationDataJSON(v types.String, diags *diag.Diagnostics) map[string]interface{} {
 	if v.IsNull() || v.IsUnknown() {
 		return nil
 	}
-	var result interface{}
+	var result map[string]interface{}
 	if err := json.Unmarshal([]byte(v.ValueString()), &result); err != nil {
-		diags.AddError("Invalid data", fmt.Sprintf("data must be JSON-encoded, e.g. with jsonencode(): %s", err))
+		diags.AddError("Invalid data", fmt.Sprintf("data must be a JSON-encoded object, e.g. with jsonencode(): %s", err))
 		return nil
 	}
 	return result
@@ -208,7 +207,7 @@ func expandApplicationDataJSON(v types.String, diags *diag.Diagnostics) interfac
 
 // flattenApplicationDataJSON encodes the data returned by the backend as a
 // JSON string.
-func flattenApplicationDataJSON(from interface{}, diags *diag.Diagnostics) types.String {
+func flattenApplicationDataJSON(from map[string]interface{}, diags *diag.Diagnostics) types.String {
 	if from == nil {
 		return types.StringNull()
 	}

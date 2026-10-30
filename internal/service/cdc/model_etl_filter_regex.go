@@ -97,7 +97,6 @@ var EtlFilterRegexResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		MarkdownDescription: "The resource identifier.",
 	},
-	// TODO: allowed values and server default for ingress_policy_action are not yet known.
 	"ingress_policy_action": schema.StringAttribute{
 		Optional: true,
 		Computed: true,

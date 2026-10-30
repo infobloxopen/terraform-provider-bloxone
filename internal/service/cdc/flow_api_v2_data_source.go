@@ -41,7 +41,7 @@ func (m *FlowDataV2ModelWithFilter) FlattenResults(ctx context.Context, from []c
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, FlowDataV2AttrTypes, diags, FlattenFlowDataV2)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, FlowDataV2AttrTypes, diags, DataSourceFlattenFlowDataV2)
 }
 
 func (d *FlowApiV2DataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

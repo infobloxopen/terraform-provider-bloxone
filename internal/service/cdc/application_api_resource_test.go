@@ -37,6 +37,9 @@ func TestAccApplicationApiResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "type"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
+					// Test fields with default value
+					resource.TestCheckResourceAttr(resourceName, "description", ""),
+					resource.TestCheckResourceAttr(resourceName, "enabled", "true"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -134,18 +137,18 @@ func TestAccApplicationApiResource_Description(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccApplicationApiDescription(name, "DESCRIPTION_REPLACE_ME"),
+				Config: testAccApplicationApiDescription(name, "Test application description"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckApplicationApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "description", "DESCRIPTION_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "description", "Test application description"),
 				),
 			},
 			// Update and Read
 			{
-				Config: testAccApplicationApiDescription(name, "DESCRIPTION_UPDATE_REPLACE_ME"),
+				Config: testAccApplicationApiDescription(name, "Updated test application description"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckApplicationApiExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "description", "DESCRIPTION_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttr(resourceName, "description", "Updated test application description"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase

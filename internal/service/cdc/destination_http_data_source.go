@@ -42,7 +42,7 @@ func (m *DestinationHttpModelWithFilter) FlattenResults(ctx context.Context, fro
 	if len(from) == 0 {
 		return
 	}
-	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, DestinationHttpAttrTypes, diags, FlattenDestinationHttp)
+	m.Results = flex.FlattenFrameworkListNestedBlock(ctx, from, DestinationHttpAttrTypes, diags, DataSourceFlattenDestinationHttp)
 }
 
 func (d *DestinationHttpDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

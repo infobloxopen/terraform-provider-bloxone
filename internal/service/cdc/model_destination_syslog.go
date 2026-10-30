@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -36,6 +37,7 @@ type DestinationSyslogModel struct {
 	OutputDataFormat  types.String      `tfsdk:"output_data_format"`
 	Port              types.Int64       `tfsdk:"port"`
 	Tags              types.Map         `tfsdk:"tags"`
+	TagsAll           types.Map         `tfsdk:"tags_all"`
 	TransportProtocol types.String      `tfsdk:"transport_protocol"`
 	UpdatedAt         timetypes.RFC3339 `tfsdk:"updated_at"`
 }
@@ -52,6 +54,7 @@ var DestinationSyslogAttrTypes = map[string]attr.Type{
 	"output_data_format": types.StringType,
 	"port":               types.Int64Type,
 	"tags":               types.MapType{ElemType: types.StringType},
+	"tags_all":           types.MapType{ElemType: types.StringType},
 	"transport_protocol": types.StringType,
 	"updated_at":         timetypes.RFC3339Type{},
 }
@@ -130,7 +133,14 @@ var DestinationSyslogResourceSchemaAttributes = map[string]schema.Attribute{
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
+		Computed:            true,
+		Default:             mapdefault.StaticValue(types.MapNull(types.StringType)),
 		MarkdownDescription: "The tags for the syslog destination.",
+	},
+	"tags_all": schema.MapAttribute{
+		ElementType:         types.StringType,
+		Computed:            true,
+		MarkdownDescription: "The tags for the syslog destination, including default tags.",
 	},
 	"transport_protocol": schema.StringAttribute{
 		Optional: true,
@@ -179,12 +189,13 @@ func (m *DestinationSyslogModel) Expand(ctx context.Context, diags *diag.Diagnos
 	return to
 }
 
-func FlattenDestinationSyslog(ctx context.Context, from *cdc.DestinationSyslog, diags *diag.Diagnostics) types.Object {
+func DataSourceFlattenDestinationSyslog(ctx context.Context, from *cdc.DestinationSyslog, diags *diag.Diagnostics) types.Object {
 	if from == nil {
 		return types.ObjectNull(DestinationSyslogAttrTypes)
 	}
 	m := DestinationSyslogModel{}
 	m.Flatten(ctx, from, diags)
+	m.Tags = m.TagsAll
 	t, d := types.ObjectValueFrom(ctx, DestinationSyslogAttrTypes, m)
 	diags.Append(d...)
 	return t
@@ -208,7 +219,7 @@ func (m *DestinationSyslogModel) Flatten(ctx context.Context, from *cdc.Destinat
 	m.Name = flex.FlattenStringPointer(from.Name)
 	m.OutputDataFormat = flex.FlattenStringPointer(from.OutputDataFormat)
 	m.Port = flex.FlattenInt64Pointer(from.Port)
-	m.Tags = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
+	m.TagsAll = flex.FlattenFrameworkMapString(ctx, from.Tags, diags)
 	m.TransportProtocol = flex.FlattenStringPointer(from.TransportProtocol)
 	m.UpdatedAt = timetypes.NewRFC3339TimePointerValue(from.UpdatedAt)
 }

@@ -20,16 +20,16 @@ var _ MappedNullable = &ApplicationData{}
 
 // ApplicationData struct for ApplicationData
 type ApplicationData struct {
-	CreatedAt            *time.Time                        `json:"created_at,omitempty"`
-	Data                 map[string]map[string]interface{} `json:"data,omitempty"`
-	Description          *string                           `json:"description,omitempty"`
-	Enabled              *bool                             `json:"enabled,omitempty"`
-	Id                   *int64                            `json:"id,omitempty"`
-	Name                 *string                           `json:"name,omitempty"`
-	Tags                 map[string]interface{}            `json:"tags,omitempty"`
-	Type                 *string                           `json:"type,omitempty"`
-	UpdatedAt            *time.Time                        `json:"updated_at,omitempty"`
-	Variables            map[string]map[string]interface{} `json:"variables,omitempty"`
+	CreatedAt            *time.Time             `json:"created_at,omitempty"`
+	Data                 map[string]interface{} `json:"data,omitempty"`
+	Description          *string                `json:"description,omitempty"`
+	Enabled              *bool                  `json:"enabled,omitempty"`
+	Id                   *int64                 `json:"id,omitempty"`
+	Name                 *string                `json:"name,omitempty"`
+	Tags                 map[string]interface{} `json:"tags,omitempty"`
+	Type                 *string                `json:"type,omitempty"`
+	UpdatedAt            *time.Time             `json:"updated_at,omitempty"`
+	Variables            map[string]interface{} `json:"variables,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -85,9 +85,9 @@ func (o *ApplicationData) SetCreatedAt(v time.Time) {
 }
 
 // GetData returns the Data field value if set, zero value otherwise.
-func (o *ApplicationData) GetData() map[string]map[string]interface{} {
+func (o *ApplicationData) GetData() map[string]interface{} {
 	if o == nil || IsNil(o.Data) {
-		var ret map[string]map[string]interface{}
+		var ret map[string]interface{}
 		return ret
 	}
 	return o.Data
@@ -95,9 +95,9 @@ func (o *ApplicationData) GetData() map[string]map[string]interface{} {
 
 // GetDataOk returns a tuple with the Data field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ApplicationData) GetDataOk() (map[string]map[string]interface{}, bool) {
+func (o *ApplicationData) GetDataOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Data) {
-		return map[string]map[string]interface{}{}, false
+		return map[string]interface{}{}, false
 	}
 	return o.Data, true
 }
@@ -111,8 +111,8 @@ func (o *ApplicationData) HasData() bool {
 	return false
 }
 
-// SetData gets a reference to the given map[string]map[string]interface{} and assigns it to the Data field.
-func (o *ApplicationData) SetData(v map[string]map[string]interface{}) {
+// SetData gets a reference to the given map[string]interface{} and assigns it to the Data field.
+func (o *ApplicationData) SetData(v map[string]interface{}) {
 	o.Data = v
 }
 
@@ -341,9 +341,9 @@ func (o *ApplicationData) SetUpdatedAt(v time.Time) {
 }
 
 // GetVariables returns the Variables field value if set, zero value otherwise.
-func (o *ApplicationData) GetVariables() map[string]map[string]interface{} {
+func (o *ApplicationData) GetVariables() map[string]interface{} {
 	if o == nil || IsNil(o.Variables) {
-		var ret map[string]map[string]interface{}
+		var ret map[string]interface{}
 		return ret
 	}
 	return o.Variables
@@ -351,9 +351,9 @@ func (o *ApplicationData) GetVariables() map[string]map[string]interface{} {
 
 // GetVariablesOk returns a tuple with the Variables field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ApplicationData) GetVariablesOk() (map[string]map[string]interface{}, bool) {
+func (o *ApplicationData) GetVariablesOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Variables) {
-		return map[string]map[string]interface{}{}, false
+		return map[string]interface{}{}, false
 	}
 	return o.Variables, true
 }
@@ -367,8 +367,8 @@ func (o *ApplicationData) HasVariables() bool {
 	return false
 }
 
-// SetVariables gets a reference to the given map[string]map[string]interface{} and assigns it to the Variables field.
-func (o *ApplicationData) SetVariables(v map[string]map[string]interface{}) {
+// SetVariables gets a reference to the given map[string]interface{} and assigns it to the Variables field.
+func (o *ApplicationData) SetVariables(v map[string]interface{}) {
 	o.Variables = v
 }
 
