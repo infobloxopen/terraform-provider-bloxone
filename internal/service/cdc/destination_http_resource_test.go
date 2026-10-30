@@ -16,10 +16,6 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 )
 
-// TODO: the acceptance tests cannot create credentials, so this must be the ID of existing credential on the Portal.
-
-const testAccDestinationHttpCredentialID = "c3509ad0-9471-4584-92c5-e23e53e92b4b"
-
 func TestAccDestinationHttpResource_basic(t *testing.T) {
 	var resourceName = "bloxone_cdc_destination_http.test"
 	var v cdc.DestinationHttp
@@ -39,7 +35,7 @@ func TestAccDestinationHttpResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceName, "created_at"),
 					resource.TestCheckResourceAttrSet(resourceName, "id"),
 					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
-					resource.TestCheckResourceAttr(resourceName, "credential_id", testAccDestinationHttpCredentialID),
+					resource.TestCheckResourceAttr(resourceName, "credential_id", "c3509ad0-9471-4584-92c5-e23e53e92b4b"),
 					// Test fields with default value
 					resource.TestCheckResourceAttr(resourceName, "authentication", ""),
 					resource.TestCheckResourceAttr(resourceName, "description", ""),
@@ -358,7 +354,7 @@ func testAccDestinationHttpBasicConfig(name string) string {
 resource "bloxone_cdc_destination_http" "test" {
   name          = %[1]q
   address       = "https://%[1]s.example.com"
-  credential_id = "`+testAccDestinationHttpCredentialID+`"
+  credential_id = "c3509ad0-9471-4584-92c5-e23e53e92b4b"
 }
 `, name)
 }
@@ -368,7 +364,7 @@ func testAccDestinationHttpAddress(name string, address string) string {
 resource "bloxone_cdc_destination_http" "test_address" {
   name          = %[1]q
   address       = %[2]q
-  credential_id = "`+testAccDestinationHttpCredentialID+`"
+  credential_id = "c3509ad0-9471-4584-92c5-e23e53e92b4b"
 }
 `, name, address)
 }
@@ -378,7 +374,7 @@ func testAccDestinationHttpDescription(name string, description string) string {
 resource "bloxone_cdc_destination_http" "test_description" {
   name          = %[1]q
   address       = "https://%[1]s.example.com"
-  credential_id = "`+testAccDestinationHttpCredentialID+`"
+  credential_id = "c3509ad0-9471-4584-92c5-e23e53e92b4b"
   description   = %[2]q
 }
 `, name, description)
@@ -389,7 +385,7 @@ func testAccDestinationHttpEnabled(name string, enabled string) string {
 resource "bloxone_cdc_destination_http" "test_enabled" {
   name          = %[1]q
   address       = "https://%[1]s.example.com"
-  credential_id = "`+testAccDestinationHttpCredentialID+`"
+  credential_id = "c3509ad0-9471-4584-92c5-e23e53e92b4b"
   enabled       = %[2]s
 }
 `, name, enabled)
@@ -400,7 +396,7 @@ func testAccDestinationHttpOutputDataFormat(name string, outputDataFormat string
 resource "bloxone_cdc_destination_http" "test_output_data_format" {
   name               = %[1]q
   address            = "https://%[1]s.example.com"
-  credential_id      = "`+testAccDestinationHttpCredentialID+`"
+  credential_id      = "c3509ad0-9471-4584-92c5-e23e53e92b4b"
   output_data_format = %[2]q
 }
 `, name, outputDataFormat)
@@ -411,7 +407,7 @@ func testAccDestinationHttpTransportProtocol(name string, transportProtocol stri
 resource "bloxone_cdc_destination_http" "test_transport_protocol" {
   name               = %[1]q
   address            = "https://%[1]s.example.com"
-  credential_id      = "`+testAccDestinationHttpCredentialID+`"
+  credential_id      = "c3509ad0-9471-4584-92c5-e23e53e92b4b"
   transport_protocol = %[2]q
 }
 `, name, transportProtocol)
@@ -422,7 +418,7 @@ func testAccDestinationHttpName(name string) string {
 resource "bloxone_cdc_destination_http" "test_name" {
   name          = %[1]q
   address       = "https://%[1]s.example.com"
-  credential_id = "`+testAccDestinationHttpCredentialID+`"
+  credential_id = "c3509ad0-9471-4584-92c5-e23e53e92b4b"
 }
 `, name)
 }
@@ -438,7 +434,7 @@ func testAccDestinationHttpTags(name string, tags map[string]string) string {
 resource "bloxone_cdc_destination_http" "test_tags" {
   name          = %[1]q
   address       = "https://%[1]s.example.com"
-  credential_id = "`+testAccDestinationHttpCredentialID+`"
+  credential_id = "c3509ad0-9471-4584-92c5-e23e53e92b4b"
   tags          = %[2]s
 }
 `, name, tagsStr)

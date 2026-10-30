@@ -83,7 +83,7 @@ func testAccDestinationHttpDataSourceConfigFilters(name string) string {
 resource "bloxone_cdc_destination_http" "test" {
   name          = %[1]q
   address       = "https://%[1]s.example.com"
-  credential_id = "`+testAccDestinationHttpCredentialID+`"
+  credential_id = "c3509ad0-9471-4584-92c5-e23e53e92b4b"
 }
 
 data "bloxone_cdc_destination_https" "test" {
@@ -99,7 +99,7 @@ func testAccDestinationHttpDataSourceConfigTagFilters(name string, tagValue stri
 resource "bloxone_cdc_destination_http" "test" {
   name          = %[1]q
   address       = "https://%[1]s.example.com"
-  credential_id = "`+testAccDestinationHttpCredentialID+`"
+  credential_id = "c3509ad0-9471-4584-92c5-e23e53e92b4b"
   tags          = {
     tag1 = %[2]q
   }
