@@ -74,7 +74,7 @@ var ReservedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"cidr": schema.Int64Attribute{
 		Required:            true,
-		MarkdownDescription: "The CIDR of the reserved block. This is required field, if _address_ does not specify it in its input.",
+		MarkdownDescription: "The CIDR of the reserved block.",
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,

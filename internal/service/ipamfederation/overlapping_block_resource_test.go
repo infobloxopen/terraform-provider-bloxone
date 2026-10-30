@@ -109,6 +109,21 @@ func TestAccOverlappingBlockResource_AddressWithPrefixInvalid(t *testing.T) {
 	})
 }
 
+func TestAccOverlappingBlockResource_AddressRequired(t *testing.T) {
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccOverlappingBlockWithoutAddress(16, realmName),
+				ExpectError: regexp.MustCompile(`The argument "address" is required`),
+			},
+		},
+	})
+}
+
 func TestAccOverlappingBlockResource_disappears(t *testing.T) {
 	resourceName := "bloxone_federation_overlapping_block.test"
 	var v ipamfederation.OverlappingBlock
@@ -226,11 +241,10 @@ func TestAccOverlappingBlockResource_Comment(t *testing.T) {
 }
 
 func TestAccOverlappingBlockResource_FederatedPoolId(t *testing.T) {
-	t.Skip("TODO: Federated Pool support is yet to be added")
-
 	var resourceName = "bloxone_federation_overlapping_block.test_federated_pool_id"
 	var v ipamfederation.OverlappingBlock
 	realmName := acctest.RandomNameWithPrefix("federated-realm")
+	poolName := acctest.RandomNameWithPrefix("federated-pool")
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
@@ -238,18 +252,10 @@ func TestAccOverlappingBlockResource_FederatedPoolId(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read
 			{
-				Config: testAccOverlappingBlockFederatedPoolId("10.25.0.0", 16, realmName, "FEDERATED_POOL_ID_REPLACE_ME"),
+				Config: testAccOverlappingBlockFederatedPoolId("10.25.0.0", 16, realmName, poolName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOverlappingBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "federated_pool_id", "FEDERATED_POOL_ID_REPLACE_ME"),
-				),
-			},
-			// Update and Read
-			{
-				Config: testAccOverlappingBlockFederatedPoolId("10.25.0.0", 16, realmName, "FEDERATED_POOL_ID_UPDATE_REPLACE_ME"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOverlappingBlockExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(resourceName, "federated_pool_id", "FEDERATED_POOL_ID_UPDATE_REPLACE_ME"),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_pool_id", "bloxone_federation_federated_pool.test", "id"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
@@ -428,6 +434,16 @@ resource "bloxone_federation_overlapping_block" "test" {
 	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
 }
 
+func testAccOverlappingBlockWithoutAddress(cidr int, federatedRealm string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_federation_overlapping_block" "test" {
+    cidr = %d
+    federated_realm = bloxone_federation_federated_realm.test.id
+}
+`, cidr)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
+}
+
 func testAccOverlappingBlockAddress(address string, cidr int, federatedRealm string) string {
 	config := fmt.Sprintf(`
 resource "bloxone_federation_overlapping_block" "test_address" {
@@ -462,15 +478,21 @@ resource "bloxone_federation_overlapping_block" "test_comment" {
 	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
 }
 
-func testAccOverlappingBlockFederatedPoolId(address string, cidr int, federatedRealm string, federatedPoolId string) string {
+func testAccOverlappingBlockFederatedPoolId(address string, cidr int, federatedRealm string, poolName string) string {
 	config := fmt.Sprintf(`
+resource "bloxone_federation_federated_pool" "test" {
+    federated_realm = bloxone_federation_federated_realm.test.id
+    name            = %q
+    protocol        = "ip4"
+}
+
 resource "bloxone_federation_overlapping_block" "test_federated_pool_id" {
     address = %q
     cidr = %d
     federated_realm = bloxone_federation_federated_realm.test.id
-    federated_pool_id = %q
+    federated_pool_id = bloxone_federation_federated_pool.test.id
 }
-`, address, cidr, federatedPoolId)
+`, poolName, address, cidr)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
 }
 

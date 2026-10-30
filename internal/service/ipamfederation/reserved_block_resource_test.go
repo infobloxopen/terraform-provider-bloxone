@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -62,6 +63,21 @@ func TestAccReservedBlockResource_disappears(t *testing.T) {
 					testAccCheckReservedBlockDisappears(context.Background(), &v),
 				),
 				ExpectNonEmptyPlan: true,
+			},
+		},
+	})
+}
+
+func TestAccReservedBlockResource_AddressRequired(t *testing.T) {
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccReservedBlockWithoutAddress(realmName, 24),
+				ExpectError: regexp.MustCompile(`The argument "address" is required`),
 			},
 		},
 	})
@@ -351,6 +367,16 @@ resource "bloxone_federation_reserved_block" "test" {
     cidr = %d
 }
 `, address, cidr)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
+}
+
+func testAccReservedBlockWithoutAddress(federatedRealm string, cidr int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_federation_reserved_block" "test" {
+    federated_realm = bloxone_federation_federated_realm.test.id
+    cidr = %d
+}
+`, cidr)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
 }
 

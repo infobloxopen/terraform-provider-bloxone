@@ -64,7 +64,7 @@ data "bloxone_federation_federated_blocks" "example_all" {}
 
 Required:
 
-- `address` (String) The address of the federated block, an IPv4 address in form "a.b.c.d" or an IPv6 address. Do not include a prefix length ("/n"); use the _cidr_ field instead.
+- `address` (String) The address of the federated block, an IPv4 address in form "a.b.c.d" or an IPv6 address. Do not include a prefix length ("/n"); use the _cidr_ field instead. This field is immutable after creation.
 - `cidr` (Number) The CIDR of the federated block.
 - `federated_realm` (String) The resource identifier.
 

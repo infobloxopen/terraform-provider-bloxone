@@ -80,7 +80,7 @@ var FederatedBlockResourceSchemaAttributes = map[string]schema.Attribute{
 		PlanModifiers: []planmodifier.String{
 			internalplanmodifier.RequiresReplaceIfIPAddressChanged(),
 		},
-		MarkdownDescription: "The address of the federated block, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead.",
+		MarkdownDescription: "The address of the federated block, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead. This field is immutable after creation.",
 	},
 	"allocation_v4": schema.SingleNestedAttribute{
 		Attributes:          AllocationResourceSchemaAttributes,

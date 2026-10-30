@@ -67,7 +67,7 @@ var ForwardLookingDelegationResourceSchemaAttributes = map[string]schema.Attribu
 		PlanModifiers: []planmodifier.String{
 			internalplanmodifier.RequiresReplaceIfIPAddressChanged(),
 		},
-		MarkdownDescription: "The address of the delegation, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead.",
+		MarkdownDescription: "The address of the delegation, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead. This field is immutable after creation.",
 	},
 	"cidr": schema.Int64Attribute{
 		Required: true,
