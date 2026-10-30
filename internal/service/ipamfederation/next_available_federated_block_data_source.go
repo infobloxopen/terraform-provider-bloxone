@@ -244,9 +244,7 @@ func (d *NextAvailableFederatedBlockDataSource) findFederatedBlocks(ctx context.
 }
 
 // FetchFederatedBlocksByTagFilter is a helper function used to fetch federated blocks by tags.
-//
-// NOTE: this is also defined by the ReservedBlock next_available_id PR (#316); once that PR
-// merges, this duplicate definition should be removed in favor of the shared one.
+// Also used by the ReservedBlock and OverlappingBlock next-available data sources.
 func FetchFederatedBlocksByTagFilter(ctx context.Context, client *universalddiclient.APIClient, tagFilterStr string, diagnostics *diag.Diagnostics) ([]ipamfederation.FederatedBlock, error) {
 	federatedBlocks, err := utils.ReadWithPages(func(offset, limit int32) ([]ipamfederation.FederatedBlock, error) {
 		apiRes, _, err := client.IPAMFederationAPI.FederatedBlockAPI.

@@ -19,3 +19,11 @@ data "bloxone_federation_next_available_reserved_blocks" "example_default_count"
   id   = data.bloxone_federation_federated_blocks.example_by_attribute.results.0.id
   cidr = 24
 }
+
+# Instead of an explicit parent id, candidate Federated Blocks can be discovered by tags.
+data "bloxone_federation_next_available_reserved_blocks" "example_by_tag_filters" {
+  tag_filters = {
+    environment = "production"
+  }
+  cidr = 24
+}
