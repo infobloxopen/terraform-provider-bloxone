@@ -111,10 +111,6 @@ func (r *ReservedBlockResource) Create(ctx context.Context, req resource.CreateR
 		data.Flatten(ctx, &results[0], &resp.Diagnostics)
 
 		if !configuredFederatedPoolId.IsNull() {
-			// Remember what the backend actually persisted from the create call, so that if the
-			// follow-up Update below fails, state reflects reality rather than the desired config.
-			createdFederatedPoolId := data.FederatedPoolId
-
 			data.FederatedPoolId = configuredFederatedPoolId
 			updateRes, _, err := r.client.IPAMFederationAPI.
 				ReservedBlockAPI.
@@ -122,12 +118,20 @@ func (r *ReservedBlockResource) Create(ctx context.Context, req resource.CreateR
 				Body(*data.Expand(ctx, &resp.Diagnostics, false)).
 				Execute()
 			if err != nil {
-				// The ReservedBlock was already created successfully above. Save it to state now,
-				// using the backend's actual federated_pool_id, so it isn't orphaned outside of
-				// Terraform; a subsequent apply will retry setting federated_pool_id via Update.
-				data.FederatedPoolId = createdFederatedPoolId
+				// federated_pool_id can only be set at creation - its RequiresReplaceIfConfigured
+				// plan modifier means Terraform can never patch it in on a later apply, and saving
+				// state here would leave the resource tainted. Roll back instead: delete the block
+				// created above and report a clean failure, so nothing is left dangling.
+				if _, delErr := r.client.IPAMFederationAPI.
+					ReservedBlockAPI.
+					Delete(ctx, data.Id.ValueString()).
+					Execute(); delErr != nil {
+					resp.Diagnostics.AddError("Client Error", fmt.Sprintf(
+						"Unable to set federated_pool_id on next available ReservedBlock (got error: %s), and failed to roll back the created block (got error: %s); it must be deleted manually: %s",
+						err, delErr, data.Id.ValueString()))
+					return
+				}
 				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to set federated_pool_id on next available ReservedBlock, got error: %s", err))
-				resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 				return
 			}
 			res := updateRes.GetResult()
