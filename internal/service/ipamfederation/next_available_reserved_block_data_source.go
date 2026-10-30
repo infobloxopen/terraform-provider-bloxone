@@ -149,7 +149,7 @@ func (d *NextAvailableReservedBlockDataSource) Read(ctx context.Context, req dat
 
 		allFederatedBlocks, err := FetchFederatedBlocksByTagFilter(ctx, d.client, tagFilterStr, &resp.Diagnostics)
 		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Federated Blocks with tags, got error: %s", err))
+			// FetchFederatedBlocksByTagFilter already recorded the error in resp.Diagnostics.
 			return
 		}
 
@@ -172,20 +172,9 @@ func (d *NextAvailableReservedBlockDataSource) Read(ctx context.Context, req dat
 			remainingCount := count - findResultsLen
 			findResult, findErr := d.findReservedBlocks(ctx, *fb.Id, cidrData, remainingCount, data.Name, data.Comment)
 			if findErr != nil {
-				errorBody := []byte(findErr.Error())
-				availableCount := int64(utils.ExtractAvailableCountFromError(errorBody))
-
-				if availableCount > 0 {
-					partialResult, retryErr := d.findReservedBlocks(ctx, *fb.Id, cidrData, availableCount, data.Name, data.Comment)
-					if retryErr != nil {
-						resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Error finding Reserved Block after retry: %s", retryErr))
-						return
-					}
-					findResults = append(findResults, partialResult...)
-				} else {
-					resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read NextAvailableReservedBlock, got error: %s", findErr))
-					return
-				}
+				// findReservedBlocks already retried internally with any available count the API
+				// reported. This parent has no (or insufficient) space; move on to the next
+				// candidate parent instead of failing the whole search.
 				continue
 			}
 
