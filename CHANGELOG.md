@@ -50,6 +50,7 @@ FIXES:
 
 NOTES:
 * Added configurable client-side rate limiting and automatic retry on certain HTTP responses via the underlying `universal-ddi-go-client`. See [Rate Limiting and Retry](https://github.com/infobloxopen/terraform-provider-bloxone#rate-limiting-and-retry) for further details.
+* Added Unified Nameservers (v2) support for DNS. See [Unified Nameservers](https://github.com/infobloxopen/terraform-provider-bloxone#unified-nameservers) for further details.
 
 MAINTENANCE:
 * Updated Go version to 1.26
