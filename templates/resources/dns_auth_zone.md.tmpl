@@ -38,7 +38,7 @@ An authoritative zone assigns its nameservers using one of two models. Which mod
 | `v1`      | Disabled            | Original DNS Server Group (NSG) model |
 | `v2`      | Enabled             | Unified Nameservers model |
 
-An account can contain both `v1` and `v2` zones, so the applicable model is a per-zone question rather than an account-wide one. Read a zone's `version` attribute — for example through the `bloxone_dns_auth_zone` data source — before changing how it assigns nameservers.
+An account can contain both `v1` and `v2` zones, so the applicable model is a per-zone question rather than an account-wide one. Read a zone's `version` attribute — for example through the `bloxone_dns_auth_zones` data source — before changing how it assigns nameservers.
 
 ### Attribute availability
 
@@ -72,7 +72,7 @@ Under Unified Nameservers the following DNS Server Group configurations are depr
 - **Multiple DNS Server Groups on an authoritative zone** — only one DNS Server Group may be assigned to an authoritative zone. This is why a `v2` zone uses the single-valued `nsg` attribute in place of the `nsgs` list.
 - **DNS Server Groups combined with internal secondaries** — `nsg` and `internal_secondaries` cannot coexist on an authoritative zone.
 
-Review existing configurations for these patterns and update them before they are enforced.
+Review existing configurations for these patterns and update any that still use them.
 
 {{ if .HasExample -}}
 ## Example Usage
