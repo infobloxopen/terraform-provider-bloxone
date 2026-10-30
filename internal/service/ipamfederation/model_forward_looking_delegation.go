@@ -186,7 +186,7 @@ func (m *ForwardLookingDelegationModel) Flatten(ctx context.Context, from *ipamf
 	if m == nil {
 		*m = ForwardLookingDelegationModel{}
 	}
-	m.Address = iptypes.NewIPAddressPointerValue(from.Address)
+	m.Address = flex.FlattenIPAddress(from.Address)
 	m.Cidr = flex.FlattenInt64Pointer(from.Cidr)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)

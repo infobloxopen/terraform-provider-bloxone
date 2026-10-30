@@ -189,7 +189,7 @@ func (m *OverlappingBlockModel) Flatten(ctx context.Context, from *ipamfederatio
 	if m == nil {
 		*m = OverlappingBlockModel{}
 	}
-	m.Address = iptypes.NewIPAddressPointerValue(from.Address)
+	m.Address = flex.FlattenIPAddress(from.Address)
 	m.Cidr = flex.FlattenInt64Pointer(from.Cidr)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)

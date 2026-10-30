@@ -234,7 +234,7 @@ func (m *FederatedBlockModel) Flatten(ctx context.Context, from *ipamfederation.
 	if m == nil {
 		*m = FederatedBlockModel{}
 	}
-	m.Address = iptypes.NewIPAddressPointerValue(from.Address)
+	m.Address = flex.FlattenIPAddress(from.Address)
 	m.AllocationV4 = FlattenAllocation(ctx, from.AllocationV4, diags)
 	m.Cidr = flex.FlattenInt64Pointer(from.Cidr)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
