@@ -5,6 +5,7 @@ import (
 	"github.com/infobloxopen/universal-ddi-go-client/cdc"
 	"github.com/infobloxopen/universal-ddi-go-client/clouddiscovery"
 	"github.com/infobloxopen/universal-ddi-go-client/dfp"
+	"github.com/infobloxopen/universal-ddi-go-client/discoverycontroller"
 	"github.com/infobloxopen/universal-ddi-go-client/dnsconfig"
 	"github.com/infobloxopen/universal-ddi-go-client/dnsdata"
 	"github.com/infobloxopen/universal-ddi-go-client/dtc"
@@ -37,6 +38,7 @@ type APIClient struct {
 	AnycastAPI                  *anycast.APIClient
 	RedirectAPI                 *redirect.APIClient
 	UpgradePolicyClientAPI      *upgradepolicy.APIClient
+	DiscoveryControllerAPI      *discoverycontroller.APIClient
 	CDCAPI                      *cdc.APIClient
 }
 
@@ -56,6 +58,7 @@ type APIClient struct {
 // - FWAPI
 // - AnycastAPI
 // - UpgradePolicyClientAPI
+// - DiscoveryControllerAPI
 // - CDCAPI
 //
 // The client can be configured with a variadic option. The following options are available:
@@ -82,6 +85,7 @@ func NewAPIClient(options ...option.ClientOption) *APIClient {
 		AnycastAPI:                  anycast.NewAPIClient(options...),
 		RedirectAPI:                 redirect.NewAPIClient(options...),
 		UpgradePolicyClientAPI:      upgradepolicy.NewAPIClient(options...),
+		DiscoveryControllerAPI:      discoverycontroller.NewAPIClient(options...),
 		CDCAPI:                      cdc.NewAPIClient(options...),
 	}
 }
