@@ -66,7 +66,7 @@ var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Optional. DNS primaries external to Universal DDI. Order is not significant.",
+		MarkdownDescription: "Optional. DNS primaries external to Universal DDI. Order is not significant. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"external_secondaries": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
@@ -74,7 +74,7 @@ var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "DNS secondaries external to Universal DDI. Order is not significant.",
+		MarkdownDescription: "DNS secondaries external to Universal DDI. Order is not significant. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"grid_primaries": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
@@ -82,7 +82,7 @@ var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Optional. The list of the NIOS Grid Primaries assigned to an AuthNSG, only applicable for the NIOS.",
+		MarkdownDescription: "Optional. The list of the NIOS Grid Primaries assigned to an AuthNSG, only applicable for the NIOS. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"grid_secondaries": schema.ListNestedAttribute{
 		NestedObject: schema.NestedAttributeObject{
@@ -90,7 +90,7 @@ var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Optional. The list of the NIOS Grid Secondaries assigned to an AuthNSG, only applicable for the NIOS.",
+		MarkdownDescription: "Optional. The list of the NIOS Grid Secondaries assigned to an AuthNSG, only applicable for the NIOS. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"id": schema.StringAttribute{
 		Computed:            true,
@@ -105,7 +105,7 @@ var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional:            true,
 		Computed:            true,
-		MarkdownDescription: "Optional. Universal DDI hosts acting as internal secondaries. Order is not significant.",
+		MarkdownDescription: "Optional. Universal DDI hosts acting as internal secondaries. Order is not significant. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"name": schema.StringAttribute{
 		Required:            true,
@@ -130,12 +130,12 @@ var ConfigAuthNSGResourceSchemaAttributes = map[string]schema.Attribute{
 				path.MatchRoot("nsgs"),
 			),
 		},
-		MarkdownDescription: "Optional. A list of DNS Nameservers of various roles.",
+		MarkdownDescription: "Optional. A list of DNS Nameservers of various roles. Can be configured only when Unified Nameservers is enabled.",
 	},
 	"nsgs": schema.ListAttribute{
 		ElementType:         types.StringType,
 		Optional:            true,
-		MarkdownDescription: "The resource identifier.",
+		MarkdownDescription: "List of nameserver group identifiers nested within this DNS Server Group. Can be configured only when Unified Nameservers is disabled.",
 	},
 	"tags": schema.MapAttribute{
 		ElementType:         types.StringType,
