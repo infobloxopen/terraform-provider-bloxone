@@ -93,7 +93,7 @@ resource "bloxone_anycast_host" "example" {
 
 Optional:
 
-- `anycast_config_name` (String)
+- `anycast_config_name` (String) Name of the anycast configuration referenced by this host. Required in practice; left Optional/Computed so an existing API-assigned value survives a plan without triggering a diff.
 - `routing_protocols` (List of String) Routing protocols enabled for this anycast configuration, on a particular host. Valid protocol names are "BGP", "OSPF"/"OSPFv2", "OSPFv3".
 
 
