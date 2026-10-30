@@ -55,10 +55,6 @@ func Slice(str string, start, end int) string {
 		str = str[size:]
 	}
 
-	if start > 0 {
-		panic("out of range")
-	}
-
 	if end < 0 {
 		return origin[startPos:]
 	}
@@ -83,12 +79,10 @@ func Slice(str string, start, end int) string {
 // The return value is a slice of strings with head, match and tail.
 //
 // If str contains sep, for example "hello" and "l", Partition returns
-//
-//	"he", "l", "lo"
+//     "he", "l", "lo"
 //
 // If str doesn't contain sep, for example "hello" and "x", Partition returns
-//
-//	"hello", "", ""
+//     "hello", "", ""
 func Partition(str, sep string) (head, match, tail string) {
 	index := strings.Index(str, sep)
 
@@ -107,12 +101,10 @@ func Partition(str, sep string) (head, match, tail string) {
 // The return value is a slice of strings with head, match and tail.
 //
 // If str contains sep, for example "hello" and "l", LastPartition returns
-//
-//	"hel", "l", "o"
+//     "hel", "l", "o"
 //
 // If str doesn't contain sep, for example "hello" and "x", LastPartition returns
-//
-//	"", "", "hello"
+//     "", "", "hello"
 func LastPartition(str, sep string) (head, match, tail string) {
 	index := strings.LastIndex(str, sep)
 
@@ -135,13 +127,8 @@ func Insert(dst, src string, index int) string {
 	return Slice(dst, 0, index) + src + Slice(dst, index, -1)
 }
 
-// Scrub replaces invalid UTF-8 bytes and valid U+FFFD replacement characters in str with repl.
-// A consecutive run of invalid bytes or U+FFFD characters is replaced only once.
-//
-// Samples:
-//
-//	Scrub("a\uFFFDb", "?")       => "a?b"
-//	Scrub("a\uFFFD\uFFFDb", "?") => "a?b"
+// Scrub scrubs invalid utf8 bytes with repl string.
+// Adjacent invalid bytes are replaced only once.
 func Scrub(str, repl string) string {
 	var buf *stringBuilder
 	var r rune
@@ -175,11 +162,7 @@ func Scrub(str, repl string) string {
 	}
 
 	if buf != nil {
-		if hasError {
-			buf.WriteString(repl)
-		} else {
-			buf.WriteString(origin)
-		}
+		buf.WriteString(origin)
 		return buf.String()
 	}
 

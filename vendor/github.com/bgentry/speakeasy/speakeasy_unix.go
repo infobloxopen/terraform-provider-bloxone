@@ -4,20 +4,19 @@
 // Original code is based on code by RogerV in the golang-nuts thread:
 // https://groups.google.com/group/golang-nuts/browse_thread/thread/40cc41e9d9fc9247
 
-// +build aix darwin dragonfly freebsd linux netbsd openbsd solaris zos
+// +build darwin dragonfly freebsd linux netbsd openbsd solaris
 
 package speakeasy
 
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"os/signal"
 	"strings"
 	"syscall"
 )
 
-const sttyBin = "stty"
+const sttyArg0 = "/bin/stty"
 
 var (
 	sttyArgvEOff = []string{"stty", "-echo"}
@@ -65,11 +64,7 @@ func getPassword() (password string, err error) {
 
 // echoOff turns off the terminal echo.
 func echoOff(fd []uintptr) (int, error) {
-	path, err := exec.LookPath(sttyBin)
-	if err != nil {
-		return 0, fmt.Errorf("%s binary not found:\n\t%s", sttyBin, err)
-	}
-	pid, err := syscall.ForkExec(path, sttyArgvEOff, &syscall.ProcAttr{Dir: "", Files: fd})
+	pid, err := syscall.ForkExec(sttyArg0, sttyArgvEOff, &syscall.ProcAttr{Dir: "", Files: fd})
 	if err != nil {
 		return 0, fmt.Errorf("failed turning off console echo for password entry:\n\t%s", err)
 	}
@@ -79,11 +74,7 @@ func echoOff(fd []uintptr) (int, error) {
 // echoOn turns back on the terminal echo.
 func echoOn(fd []uintptr) {
 	// Turn on the terminal echo.
-	path, err := exec.LookPath(sttyBin)
-	if err != nil {
-		return
-	}
-	pid, e := syscall.ForkExec(path, sttyArgvEOn, &syscall.ProcAttr{Dir: "", Files: fd})
+	pid, e := syscall.ForkExec(sttyArg0, sttyArgvEOn, &syscall.ProcAttr{Dir: "", Files: fd})
 	if e == nil {
 		syscall.Wait4(pid, nil, 0, nil)
 	}

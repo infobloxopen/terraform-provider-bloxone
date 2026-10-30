@@ -158,10 +158,7 @@ func (ske *SymmetricKeyEncrypted) decryptV4(key []byte) ([]byte, CipherFunction,
 
 func (ske *SymmetricKeyEncrypted) aeadDecrypt(version int, key []byte) ([]byte, error) {
 	adata := []byte{0xc3, byte(version), byte(ske.CipherFunc), byte(ske.Mode)}
-	aead, err := getEncryptedKeyAeadInstance(ske.CipherFunc, ske.Mode, key, adata, version)
-	if err != nil {
-		return nil, err
-	}
+	aead := getEncryptedKeyAeadInstance(ske.CipherFunc, ske.Mode, key, adata, version)
 
 	plaintextKey, err := aead.Open(nil, ske.iv, ske.encryptedKey, adata)
 	if err != nil {
@@ -294,11 +291,7 @@ func SerializeSymmetricKeyEncryptedAEADReuseKey(w io.Writer, sessionKey []byte, 
 	case 5, 6:
 		mode := config.AEAD().Mode()
 		adata := []byte{0xc3, byte(version), byte(cipherFunc), byte(mode)}
-		var aead cipher.AEAD
-		aead, err = getEncryptedKeyAeadInstance(cipherFunc, mode, keyEncryptingKey, adata, version)
-		if err != nil {
-			return
-		}
+		aead := getEncryptedKeyAeadInstance(cipherFunc, mode, keyEncryptingKey, adata, version)
 
 		// Sample iv using random reader
 		iv := make([]byte, config.AEAD().Mode().IvLength())
@@ -322,7 +315,7 @@ func SerializeSymmetricKeyEncryptedAEADReuseKey(w io.Writer, sessionKey []byte, 
 	return
 }
 
-func getEncryptedKeyAeadInstance(c CipherFunction, mode AEADMode, inputKey, associatedData []byte, version int) (aead cipher.AEAD, err error) {
+func getEncryptedKeyAeadInstance(c CipherFunction, mode AEADMode, inputKey, associatedData []byte, version int) (aead cipher.AEAD) {
 	var blockCipher cipher.Block
 	if version > 5 {
 		hkdfReader := hkdf.New(sha256.New, inputKey, []byte{}, associatedData)

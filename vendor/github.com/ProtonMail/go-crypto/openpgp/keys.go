@@ -106,10 +106,6 @@ func shouldPreferIdentity(existingId, potentialNewId *Identity) bool {
 		return true
 	}
 
-	if potentialNewId.SelfSignature == nil {
-		return false
-	}
-
 	if existingId.SelfSignature.IsPrimaryId != nil && *existingId.SelfSignature.IsPrimaryId &&
 		!(potentialNewId.SelfSignature.IsPrimaryId != nil && *potentialNewId.SelfSignature.IsPrimaryId) {
 		return false
@@ -146,9 +142,7 @@ func (e *Entity) EncryptionKey(now time.Time) (Key, bool) {
 			!subkey.PublicKey.KeyExpired(subkey.Sig, now) &&
 			!subkey.Sig.SigExpired(now) &&
 			!subkey.Revoked(now) &&
-			(maxTime.IsZero() ||
-				subkey.Sig.CreationTime.After(maxTime) ||
-				(subkey.Sig.CreationTime.Equal(maxTime) && subkey.IsPQ())) {
+			(maxTime.IsZero() || subkey.Sig.CreationTime.After(maxTime)) {
 			candidateSubkey = i
 			maxTime = subkey.Sig.CreationTime
 		}
@@ -215,9 +209,7 @@ func (e *Entity) signingKeyByIdUsage(now time.Time, id uint64, flags int) (Key, 
 			!subkey.PublicKey.KeyExpired(subkey.Sig, now) &&
 			!subkey.Sig.SigExpired(now) &&
 			!subkey.Revoked(now) &&
-			(maxTime.IsZero() ||
-				subkey.Sig.CreationTime.After(maxTime) ||
-				(subkey.Sig.CreationTime.Equal(maxTime) && subkey.IsPQ())) &&
+			(maxTime.IsZero() || subkey.Sig.CreationTime.After(maxTime)) &&
 			(id == 0 || subkey.PublicKey.KeyId == id) {
 			candidateSubkey = idx
 			maxTime = subkey.Sig.CreationTime
@@ -311,11 +303,6 @@ func (i *Identity) Revoked(now time.Time) bool {
 // Note that third-party revocation signatures are not supported.
 func (s *Subkey) Revoked(now time.Time) bool {
 	return revoked(s.Revocations, now)
-}
-
-// IsPQ returns true if the algorithm is Post-Quantum safe.
-func (s *Subkey) IsPQ() bool {
-	return s.PublicKey.IsPQ()
 }
 
 // Revoked returns whether the key or subkey has been revoked by a self-signature.

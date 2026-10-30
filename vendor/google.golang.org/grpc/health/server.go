@@ -107,9 +107,6 @@ func (s *Server) Watch(in *healthpb.HealthCheckRequest, stream healthgrpc.Health
 	defer func() {
 		s.mu.Lock()
 		delete(s.updates[service], stream)
-		if len(s.updates[service]) == 0 {
-			delete(s.updates, service)
-		}
 		s.mu.Unlock()
 	}()
 	s.mu.Unlock()

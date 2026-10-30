@@ -1,12 +1,12 @@
 //line scan_string_lit.rl:1
-// Copyright IBM Corp. 2014, 2026
+// Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
 package hclsyntax
 
 // This file is generated from scan_string_lit.rl. DO NOT EDIT.
 
-//line scan_string_lit.go:9
+//line scan_string_lit.go:11
 var _hclstrtok_actions []byte = []byte{
 	0, 1, 0, 1, 1, 2, 1, 0,
 }
@@ -146,11 +146,11 @@ func scanStringLit(data []byte, quoted bool) [][]byte {
 	    ret = append(ret, data[ts:te])
 	}*/
 
-//line scan_string_lit.go:151
+//line scan_string_lit.go:156
 	{
 	}
 
-//line scan_string_lit.go:154
+//line scan_string_lit.go:160
 	{
 		var _klen int
 		var _trans int
@@ -246,7 +246,7 @@ func scanStringLit(data []byte, quoted bool) [][]byte {
 				te = p
 				ret = append(ret, data[ts:te])
 
-//line scan_string_lit.go:249
+//line scan_string_lit.go:255
 			}
 		}
 
@@ -274,7 +274,7 @@ func scanStringLit(data []byte, quoted bool) [][]byte {
 					te = p
 					ret = append(ret, data[ts:te])
 
-//line scan_string_lit.go:274
+//line scan_string_lit.go:280
 				}
 			}
 		}

@@ -50,9 +50,9 @@ func (b *thematicBreakPraser) Trigger() []byte {
 }
 
 func (b *thematicBreakPraser) Open(parent ast.Node, reader text.Reader, pc Context) (ast.Node, State) {
-	line, _ := reader.PeekLine()
+	line, segment := reader.PeekLine()
 	if isThematicBreak(line, reader.LineOffset()) {
-		reader.AdvanceToEOL()
+		reader.Advance(segment.Len() - 1)
 		return ast.NewThematicBreak(), NoChildren
 	}
 	return nil, NoChildren

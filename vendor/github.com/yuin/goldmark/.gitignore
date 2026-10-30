@@ -17,5 +17,3 @@ fuzz/corpus
 fuzz/crashers
 fuzz/suppressions
 fuzz/fuzz-fuzz.zip
-
-cmd

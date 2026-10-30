@@ -133,8 +133,7 @@ func (*Parser) CanAcceptIndentedLine() bool {
 	return false
 }
 
-// NodeKind is the AST node kind of the front matter block.
-var NodeKind = ast.NewNodeKind("frontmatter")
+var _kind = ast.NewNodeKind("frontmatter")
 
 // Hidden node to store information about the parse state
 // before the front matter is placed in the parser context.
@@ -162,7 +161,7 @@ func (n *frontmatterNode) Dump(source []byte, level int) {
 }
 
 func (n *frontmatterNode) Kind() ast.NodeKind {
-	return NodeKind
+	return _kind
 }
 
 var (

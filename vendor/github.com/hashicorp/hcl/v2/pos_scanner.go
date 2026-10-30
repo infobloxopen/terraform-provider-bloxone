@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2014, 2026
+// Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
 package hcl
@@ -7,7 +7,7 @@ import (
 	"bufio"
 	"bytes"
 
-	"github.com/hashicorp/hcl/v2/internal/unicodeutil"
+	"github.com/apparentlymart/go-textseg/v15/textseg"
 )
 
 // RangeScanner is a helper that will scan over a buffer using a bufio.SplitFunc
@@ -103,7 +103,7 @@ func (sc *RangeScanner) Scan() bool {
 	advR := bytes.NewReader(adv)
 	gsc := bufio.NewScanner(advR)
 	advanced := 0
-	gsc.Split(unicodeutil.ScanGraphemeClusters)
+	gsc.Split(textseg.ScanGraphemeClusters)
 	for gsc.Scan() {
 		gr := gsc.Bytes()
 		new.Byte += len(gr)

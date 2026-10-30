@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# Copyright IBM Corp. 2014, 2026
+# Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
 #
@@ -82,7 +82,7 @@ end
 # range and description.
 
 def each_alpha( url, property ) 
-  URI.open( url ) do |file|
+  open( url ) do |file|
     file.each_line do |line|
       next if line =~ /^#/;
       next if line !~ /; #{property} #/;

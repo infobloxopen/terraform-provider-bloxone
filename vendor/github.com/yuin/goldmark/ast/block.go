@@ -10,8 +10,8 @@ import (
 // A BaseBlock struct implements the Node interface partialliy.
 type BaseBlock struct {
 	BaseNode
-	lines              textm.Segments
 	blankPreviousLines bool
+	lines              *textm.Segments
 }
 
 // Type implements Node.Type.
@@ -36,19 +36,22 @@ func (b *BaseBlock) SetBlankPreviousLines(v bool) {
 
 // Lines implements Node.Lines.
 func (b *BaseBlock) Lines() *textm.Segments {
-	return &b.lines
+	if b.lines == nil {
+		b.lines = textm.NewSegments()
+	}
+	return b.lines
 }
 
 // SetLines implements Node.SetLines.
 func (b *BaseBlock) SetLines(v *textm.Segments) {
-	b.lines = *v
+	b.lines = v
 }
 
 // A Document struct is a root node of Markdown text.
 type Document struct {
 	BaseBlock
 
-	meta map[string]any
+	meta map[string]interface{}
 }
 
 // KindDocument is a NodeKind of the Document node.
@@ -64,11 +67,6 @@ func (n *Document) Type() NodeType {
 	return TypeDocument
 }
 
-// Pos implements Node.Pos.
-func (n *Document) Pos() int {
-	return 0
-}
-
 // Kind implements Node.Kind.
 func (n *Document) Kind() NodeKind {
 	return KindDocument
@@ -80,17 +78,17 @@ func (n *Document) OwnerDocument() *Document {
 }
 
 // Meta returns metadata of this document.
-func (n *Document) Meta() map[string]any {
+func (n *Document) Meta() map[string]interface{} {
 	if n.meta == nil {
-		n.meta = map[string]any{}
+		n.meta = map[string]interface{}{}
 	}
 	return n.meta
 }
 
 // SetMeta sets given metadata to this document.
-func (n *Document) SetMeta(meta map[string]any) {
+func (n *Document) SetMeta(meta map[string]interface{}) {
 	if n.meta == nil {
-		n.meta = map[string]any{}
+		n.meta = map[string]interface{}{}
 	}
 	for k, v := range meta {
 		n.meta[k] = v
@@ -98,9 +96,9 @@ func (n *Document) SetMeta(meta map[string]any) {
 }
 
 // AddMeta adds given metadata to this document.
-func (n *Document) AddMeta(key string, value any) {
+func (n *Document) AddMeta(key string, value interface{}) {
 	if n.meta == nil {
-		n.meta = map[string]any{}
+		n.meta = map[string]interface{}{}
 	}
 	n.meta[key] = value
 }
@@ -124,14 +122,6 @@ func (n *TextBlock) Dump(source []byte, level int) {
 	DumpHelper(n, source, level, nil, nil)
 }
 
-// Pos implements Node.Pos.
-func (n *TextBlock) Pos() int {
-	if n.lines.Len() == 0 {
-		return -1
-	}
-	return n.lines.At(0).Start
-}
-
 // KindTextBlock is a NodeKind of the TextBlock node.
 var KindTextBlock = NewNodeKind("TextBlock")
 
@@ -141,8 +131,6 @@ func (n *TextBlock) Kind() NodeKind {
 }
 
 // Text implements Node.Text.
-//
-// Deprecated: Use other properties of the node to get the text value(i.e. TextBlock.Lines).
 func (n *TextBlock) Text(source []byte) []byte {
 	return n.Lines().Value(source)
 }
@@ -164,14 +152,6 @@ func (n *Paragraph) Dump(source []byte, level int) {
 	DumpHelper(n, source, level, nil, nil)
 }
 
-// Pos implements Node.Pos.
-func (n *Paragraph) Pos() int {
-	if n.lines.Len() == 0 {
-		return -1
-	}
-	return n.lines.At(0).Start
-}
-
 // KindParagraph is a NodeKind of the Paragraph node.
 var KindParagraph = NewNodeKind("Paragraph")
 
@@ -181,8 +161,6 @@ func (n *Paragraph) Kind() NodeKind {
 }
 
 // Text implements Node.Text.
-//
-// Deprecated: Use other properties of the node to get the text value(i.e. Paragraph.Lines).
 func (n *Paragraph) Text(source []byte) []byte {
 	return n.Lines().Value(source)
 }
@@ -282,8 +260,6 @@ func (n *CodeBlock) Kind() NodeKind {
 }
 
 // Text implements Node.Text.
-//
-// Deprecated: Use other properties of the node to get the text value(i.e. CodeBlock.Lines).
 func (n *CodeBlock) Text(source []byte) []byte {
 	return n.Lines().Value(source)
 }
@@ -344,8 +320,6 @@ func (n *FencedCodeBlock) Kind() NodeKind {
 }
 
 // Text implements Node.Text.
-//
-// Deprecated: Use other properties of the node to get the text value(i.e. FencedCodeBlock.Lines).
 func (n *FencedCodeBlock) Text(source []byte) []byte {
 	return n.Lines().Value(source)
 }
@@ -520,9 +494,8 @@ func (n *HTMLBlock) Dump(source []byte, level int) {
 	indent := strings.Repeat("    ", level)
 	fmt.Printf("%s%s {\n", indent, "HTMLBlock")
 	indent2 := strings.Repeat("    ", level+1)
-	fmt.Printf("%sPos: %d\n", indent2, n.Pos())
 	fmt.Printf("%sRawText: \"", indent2)
-	for i := range n.Lines().Len() {
+	for i := 0; i < n.Lines().Len(); i++ {
 		s := n.Lines().At(i)
 		fmt.Print(string(source[s.Start:s.Stop]))
 	}
@@ -534,7 +507,6 @@ func (n *HTMLBlock) Dump(source []byte, level int) {
 		cl := n.ClosureLine
 		fmt.Printf("%sClosure: \"%s\"\n", indent2, string(cl.Value(source)))
 	}
-	fmt.Printf("%sHasBlankPreviousLines: %v\n", indent2, n.HasBlankPreviousLines())
 	fmt.Printf("%s}\n", indent)
 }
 
@@ -547,8 +519,6 @@ func (n *HTMLBlock) Kind() NodeKind {
 }
 
 // Text implements Node.Text.
-//
-// Deprecated: Use other properties of the node to get the text value(i.e. HTMLBlock.Lines).
 func (n *HTMLBlock) Text(source []byte) []byte {
 	ret := n.Lines().Value(source)
 	if n.HasClosure() {
@@ -563,60 +533,5 @@ func NewHTMLBlock(typ HTMLBlockType) *HTMLBlock {
 		BaseBlock:     BaseBlock{},
 		HTMLBlockType: typ,
 		ClosureLine:   textm.NewSegment(-1, -1),
-	}
-}
-
-// A LinkReferenceDefinition struct represents a list of Markdown text.
-type LinkReferenceDefinition struct {
-	BaseBlock
-
-	// Label is a label of this link reference definition.
-	Label []byte
-
-	// Destination is a destination of this link reference definition.
-	Destination []byte
-
-	// Title is a title of this link reference definition.
-	Title []byte
-}
-
-// IsRaw implements Node.IsRaw.
-func (l *LinkReferenceDefinition) IsRaw() bool {
-	return true
-}
-
-// Pos implements Node.Pos.
-func (l *LinkReferenceDefinition) Pos() int {
-	if l.lines.Len() == 0 {
-		return -1
-	}
-	return l.lines.At(0).Start
-}
-
-// Dump implements Node.Dump.
-func (l *LinkReferenceDefinition) Dump(source []byte, level int) {
-	m := map[string]string{
-		"Label":       string(l.Label),
-		"Destination": string(l.Destination),
-		"Title":       string(l.Title),
-	}
-	DumpHelper(l, source, level, m, nil)
-}
-
-// KindLinkReferenceDefinition is a NodeKind of the LinkReferenceDefinition node.
-var KindLinkReferenceDefinition = NewNodeKind("LinkReferenceDefinition")
-
-// Kind implements Node.Kind.
-func (l *LinkReferenceDefinition) Kind() NodeKind {
-	return KindLinkReferenceDefinition
-}
-
-// NewLinkReferenceDefinition returns a new LinkReferenceDefinition node.
-func NewLinkReferenceDefinition(label, destination, title []byte) *LinkReferenceDefinition {
-	return &LinkReferenceDefinition{
-		BaseBlock:   BaseBlock{},
-		Label:       label,
-		Destination: destination,
-		Title:       title,
 	}
 }

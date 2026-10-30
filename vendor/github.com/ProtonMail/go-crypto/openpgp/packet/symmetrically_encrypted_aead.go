@@ -68,11 +68,7 @@ func (se *SymmetricallyEncrypted) decryptAead(inputKey []byte) (io.ReadCloser, e
 		return nil, errors.StructuralError(fmt.Sprintf("invalid session key length for cipher: got %d bytes, but expected %d bytes", len(inputKey), se.Cipher.KeySize()))
 	}
 
-	aead, nonce, err := getSymmetricallyEncryptedAeadInstance(se.Cipher, se.Mode, inputKey, se.Salt[:], se.associatedData())
-	if err != nil {
-		return nil, err
-	}
-
+	aead, nonce := getSymmetricallyEncryptedAeadInstance(se.Cipher, se.Mode, inputKey, se.Salt[:], se.associatedData())
 	// Carry the first tagLen bytes
 	chunkSize := decodeAEADChunkSize(se.ChunkSizeByte)
 	tagLen := se.Mode.TagLength()
@@ -135,10 +131,7 @@ func serializeSymmetricallyEncryptedAead(ciphertext io.WriteCloser, cipherSuite 
 		return nil, err
 	}
 
-	aead, nonce, err := getSymmetricallyEncryptedAeadInstance(cipherSuite.Cipher, cipherSuite.Mode, inputKey, salt, prefix)
-	if err != nil {
-		return nil, err
-	}
+	aead, nonce := getSymmetricallyEncryptedAeadInstance(cipherSuite.Cipher, cipherSuite.Mode, inputKey, salt, prefix)
 
 	chunkSize := decodeAEADChunkSize(chunkSizeByte)
 	tagLen := aead.Overhead()
@@ -157,22 +150,19 @@ func serializeSymmetricallyEncryptedAead(ciphertext io.WriteCloser, cipherSuite 
 	}, nil
 }
 
-func getSymmetricallyEncryptedAeadInstance(c CipherFunction, mode AEADMode, inputKey, salt, associatedData []byte) (aead cipher.AEAD, nonce []byte, err error) {
+func getSymmetricallyEncryptedAeadInstance(c CipherFunction, mode AEADMode, inputKey, salt, associatedData []byte) (aead cipher.AEAD, nonce []byte) {
 	hkdfReader := hkdf.New(sha256.New, inputKey, salt, associatedData)
 
 	encryptionKey := make([]byte, c.KeySize())
 	_, _ = readFull(hkdfReader, encryptionKey)
 
-	blockCipher := c.new(encryptionKey)
-	aead, err = mode.new(blockCipher)
-	if err != nil {
-		return nil, nil, err
-	}
-
 	nonce = make([]byte, mode.IvLength())
 
 	// Last 64 bits of nonce are the counter
 	_, _ = readFull(hkdfReader, nonce[:len(nonce)-8])
+
+	blockCipher := c.new(encryptionKey)
+	aead = mode.new(blockCipher)
 
 	return
 }

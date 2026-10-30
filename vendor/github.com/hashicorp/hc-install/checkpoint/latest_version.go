@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"net/http"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -16,7 +15,6 @@ import (
 
 	checkpoint "github.com/hashicorp/go-checkpoint"
 	"github.com/hashicorp/go-version"
-	"github.com/hashicorp/hc-install/httpclient"
 	"github.com/hashicorp/hc-install/internal/pubkey"
 	rjson "github.com/hashicorp/hc-install/internal/releasesjson"
 	isrc "github.com/hashicorp/hc-install/internal/src"
@@ -45,15 +43,6 @@ type LatestVersion struct {
 	// instead of built-in pubkey to verify signature of downloaded checksums
 	ArmoredPublicKey string
 
-	// HTTPClient represents the client to use for making
-	// all round trips between the library (client) and the server.
-	//
-	// Defaults to [httpclient.New] with logger passed through if set via [SetLogger] earlier.
-	//
-	// Caller is responsible for passing logger to the client via [httpclient.WithLogger]
-	// when overriding defaults.
-	HTTPClient *http.Client
-
 	logger        *log.Logger
 	pathsToRemove []string
 }
@@ -62,10 +51,6 @@ func (*LatestVersion) IsSourceImpl() isrc.InstallSrcSigil {
 	return isrc.InstallSrcSigil{}
 }
 
-// SetLogger sets [log.Logger] to log internal debug messages.
-//
-// If you override HTTPClient you may also need to pass
-// logger there via [httpclient.WithLogger].
 func (lv *LatestVersion) SetLogger(logger *log.Logger) {
 	lv.logger = logger
 }
@@ -75,13 +60,6 @@ func (lv *LatestVersion) log() *log.Logger {
 		return discardLogger
 	}
 	return lv.logger
-}
-
-func (lv *LatestVersion) httpClient() *http.Client {
-	if lv.HTTPClient == nil {
-		return httpclient.New(httpclient.WithLogger(lv.log()))
-	}
-	return lv.HTTPClient
 }
 
 func (lv *LatestVersion) Validate() error {
@@ -136,11 +114,8 @@ func (lv *LatestVersion) Install(ctx context.Context) (string, error) {
 	}
 	lv.log().Printf("will install into dir at %s", dstDir)
 
-	client := lv.httpClient()
-
 	rels := rjson.NewReleases()
 	rels.SetLogger(lv.log())
-	rels.SetHTTPClient(client)
 	pv, err := rels.GetProductVersion(ctx, lv.Product.Name, latestVersion)
 	if err != nil {
 		return "", err
@@ -151,7 +126,6 @@ func (lv *LatestVersion) Install(ctx context.Context) (string, error) {
 		VerifyChecksum:   !lv.SkipChecksumVerification,
 		ArmoredPublicKey: pubkey.DefaultPublicKey,
 		BaseURL:          rels.BaseURL,
-		HTTPClient:       client,
 	}
 	if lv.ArmoredPublicKey != "" {
 		d.ArmoredPublicKey = lv.ArmoredPublicKey

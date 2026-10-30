@@ -1,7 +1,8 @@
-// Copyright IBM Corp. 2014, 2025
+// Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
 //go:build go1.18
+// +build go1.18
 
 package hcl
 

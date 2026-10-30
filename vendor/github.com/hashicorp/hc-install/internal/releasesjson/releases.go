@@ -14,7 +14,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/go-version"
-	"github.com/hashicorp/hc-install/httpclient"
+	"github.com/hashicorp/hc-install/internal/httpclient"
 )
 
 const defaultBaseURL = "https://releases.hashicorp.com"
@@ -49,37 +49,24 @@ type ProductBuild struct {
 }
 
 type Releases struct {
-	logger     *log.Logger
-	httpClient *http.Client
-	BaseURL    string
+	logger  *log.Logger
+	BaseURL string
 }
-
-var discardLogger = log.New(io.Discard, "", 0)
-var defaultClient = httpclient.New(httpclient.WithLogger(discardLogger))
 
 func NewReleases() *Releases {
-	r := &Releases{
-		logger:     discardLogger,
-		BaseURL:    defaultBaseURL,
-		httpClient: defaultClient,
+	return &Releases{
+		logger:  log.New(io.Discard, "", 0),
+		BaseURL: defaultBaseURL,
 	}
-
-	return r
 }
 
-// SetLogger sets [log.Logger] to log internal debug messages.
-//
-// If you wish to log HTTP roundtrips you need to override
-// the [http.Client] via SetHTTPClient.
 func (r *Releases) SetLogger(logger *log.Logger) {
 	r.logger = logger
 }
 
-func (r *Releases) SetHTTPClient(httpClient *http.Client) {
-	r.httpClient = httpClient
-}
-
 func (r *Releases) ListProductVersions(ctx context.Context, productName string) (ProductVersionsMap, error) {
+	client := httpclient.NewHTTPClient(r.logger)
+
 	productIndexURL := fmt.Sprintf("%s/%s/index.json",
 		r.BaseURL,
 		url.PathEscape(productName))
@@ -89,7 +76,7 @@ func (r *Releases) ListProductVersions(ctx context.Context, productName string) 
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request for %q: %w", productIndexURL, err)
 	}
-	resp, err := r.httpClient.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -135,6 +122,8 @@ func (r *Releases) ListProductVersions(ctx context.Context, productName string) 
 }
 
 func (r *Releases) GetProductVersion(ctx context.Context, product string, version *version.Version) (*ProductVersion, error) {
+	client := httpclient.NewHTTPClient(r.logger)
+
 	indexURL := fmt.Sprintf("%s/%s/%s/index.json",
 		r.BaseURL,
 		url.PathEscape(product),
@@ -145,7 +134,7 @@ func (r *Releases) GetProductVersion(ctx context.Context, product string, versio
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request for %q: %w", indexURL, err)
 	}
-	resp, err := r.httpClient.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}

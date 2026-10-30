@@ -79,13 +79,20 @@ func (b *fencedCodeBlockParser) Continue(node ast.Node, reader text.Reader, pc C
 		}
 		length := i - pos
 		if length >= fdata.length && util.IsBlank(line[i:]) {
-			reader.AdvanceToEOL()
+			newline := 1
+			if line[len(line)-1] != '\n' {
+				newline = 0
+			}
+			reader.Advance(segment.Stop - segment.Start - newline + segment.Padding)
 			return Close
 		}
 	}
 	pos, padding := util.IndentPositionPadding(line, reader.LineOffset(), segment.Padding, fdata.indent)
 	if pos < 0 {
-		pos = max(0, util.FirstNonSpacePosition(line)) - segment.Padding
+		pos = util.FirstNonSpacePosition(line)
+		if pos < 0 {
+			pos = 0
+		}
 		padding = 0
 	}
 	seg := text.NewSegmentPadding(segment.Start+pos, segment.Stop, padding)
@@ -95,7 +102,7 @@ func (b *fencedCodeBlockParser) Continue(node ast.Node, reader text.Reader, pc C
 	}
 	seg.ForceNewline = true // EOF as newline
 	node.Lines().Append(seg)
-	reader.AdvanceToEOL()
+	reader.AdvanceAndSetPadding(segment.Stop-segment.Start-pos-1, padding)
 	return Continue | NoChildren
 }
 

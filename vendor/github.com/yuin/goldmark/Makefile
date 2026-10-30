@@ -1,4 +1,4 @@
-.PHONY: test fuzz lint gen
+.PHONY: test fuzz lint
 
 lint:
 	golangci-lint run -c .golangci.yml ./...
@@ -10,7 +10,4 @@ cov: test
 	go tool cover -html=profile.out
 
 fuzz:
-	cd ./fuzz && go test -fuzz=FuzzDefault
-
-gen:
-	go generate ./...
+	cd ./fuzz && go test -fuzz=Fuzz

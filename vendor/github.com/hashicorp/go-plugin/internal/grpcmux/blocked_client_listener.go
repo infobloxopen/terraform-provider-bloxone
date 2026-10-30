@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2016, 2025
+// Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
 package grpcmux
