@@ -15,6 +15,7 @@ import (
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &AddressBlockResource{}
 var _ resource.ResourceWithImportState = &AddressBlockResource{}
+var _ resource.ResourceWithModifyPlan = &AddressBlockResource{}
 
 var inheritanceType = "full"
 
@@ -34,7 +35,10 @@ func (r *AddressBlockResource) Metadata(_ context.Context, req resource.Metadata
 func (r *AddressBlockResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manages an Address Block.\n\nThe Address Block object allows a uniform representation of the address space segmentation, " +
-			"supporting functions such as administrative grouping, routing aggregation, delegation etc.",
+			"supporting functions such as administrative grouping, routing aggregation, delegation etc.\n\n" +
+			"When `next_available_id` is set, `terraform plan` checks that an address block of the requested `cidr` is currently available in that " +
+			"address block. The plan fails if the address block does not exist, the `cidr` does not fit, or no space is left. The candidate " +
+			"shown in the plan is a preview only and is not reserved; the address block is allocated at apply and may differ.",
 		Attributes: IpamsvcAddressBlockResourceSchemaAttributes,
 	}
 }
@@ -57,6 +61,31 @@ func (r *AddressBlockResource) Configure(_ context.Context, req resource.Configu
 	}
 
 	r.client = client
+}
+
+// ModifyPlan checks at plan time that a next-available allocation can be satisfied when the object is created.
+func (r *AddressBlockResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+	if r.client == nil || !req.State.Raw.IsNull() || req.Plan.Raw.IsNull() {
+		return
+	}
+	var data IpamsvcAddressBlockModel
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() ||
+		data.NextAvailableId.IsNull() || data.NextAvailableId.IsUnknown() || data.Cidr.IsNull() || data.Cidr.IsUnknown() {
+		return
+	}
+	parentId, cidr := data.NextAvailableId.ValueString(), data.Cidr.ValueInt64()
+	checkNextAvailable("address block", parentId, cidr, func() (string, *http.Response, error) {
+		apiRes, httpRes, err := r.client.IPAddressManagementAPI.AddressBlockAPI.
+			ListNextAvailableAB(ctx, parentId).
+			Cidr(int32(cidr)).
+			Count(1).
+			Execute()
+		if err != nil || len(apiRes.GetResults()) == 0 {
+			return "", httpRes, err
+		}
+		return apiRes.GetResults()[0].GetAddress(), httpRes, nil
+	}, &resp.Diagnostics)
 }
 
 func (r *AddressBlockResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -83,6 +112,11 @@ func (r *AddressBlockResource) Create(ctx context.Context, req resource.CreateRe
 		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
+		if !data.NextAvailableId.IsUnknown() && !data.NextAvailableId.IsNull() {
+			resp.Diagnostics.AddError("Next-available allocation failed",
+				nextAvailableCreateError("address block", data.NextAvailableId.ValueString(), data.Cidr.ValueInt64(), err))
+			return
+		}
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create AddressBlock, got error: %s", err))
 		return
 	}

@@ -5,6 +5,7 @@ subcategory: "IPAM/DHCP"
 description: |-
   Manages an Address Block.
   The Address Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
+  When next_available_id is set, terraform plan checks that an address block of the requested cidr is currently available in that address block. The plan fails if the address block does not exist, the cidr does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved; the address block is allocated at apply and may differ.
 ---
 
 # bloxone_ipam_address_block (Resource)
@@ -12,6 +13,8 @@ description: |-
 Manages an Address Block.
 
 The Address Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
+
+When `next_available_id` is set, `terraform plan` checks that an address block of the requested `cidr` is currently available in that address block. The plan fails if the address block does not exist, the `cidr` does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved; the address block is allocated at apply and may differ.
 
 ## Example Usage
 
