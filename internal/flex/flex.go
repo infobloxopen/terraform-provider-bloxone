@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-framework-nettypes/iptypes"
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -109,6 +110,15 @@ func FlattenFloat64Pointer(f *float64) types.Float64 {
 		return types.Float64Null()
 	}
 	return FlattenFloat64(*f)
+}
+
+func FlattenIPAddress(ipaddr *string) iptypes.IPAddress {
+	if ipaddr == nil || *ipaddr == "" {
+		return iptypes.NewIPAddressNull()
+	}
+	return iptypes.IPAddress{
+		StringValue: FlattenStringPointer(ipaddr),
+	}
 }
 
 func FlattenFrameworkMapString(ctx context.Context, m map[string]interface{}, diags *diag.Diagnostics) types.Map {
@@ -249,6 +259,16 @@ func FlattenFrameworkListNestedBlock[T any, U any](ctx context.Context, data []T
 
 	diags.Append(d...)
 	return tfList
+}
+
+// FlattenFrameworkListNestedBlockPreserveEmpty behaves like FlattenFrameworkListNestedBlock, but keeps
+// the current value when it is an explicitly configured empty list and the API returns no items.
+// This avoids an inconsistent result error when the user sets the attribute to [].
+func FlattenFrameworkListNestedBlockPreserveEmpty[T any, U any](ctx context.Context, data []T, current types.List, attrTypes map[string]attr.Type, diags *diag.Diagnostics, f FrameworkElementFlExFunc[*T, U]) types.List {
+	if len(data) == 0 && !current.IsNull() && !current.IsUnknown() && len(current.Elements()) == 0 {
+		return current
+	}
+	return FlattenFrameworkListNestedBlock(ctx, data, attrTypes, diags, f)
 }
 
 func FlattenFrameworkUnorderedListNestedBlock[T any, U any](ctx context.Context, data []T, attrTypes map[string]attr.Type, diags *diag.Diagnostics, f FrameworkElementFlExFunc[*T, U]) internaltypes.UnorderedListValue {

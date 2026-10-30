@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/anycast"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/cdc"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/clouddiscovery"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dfp"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/service/dns_config"
@@ -159,6 +160,7 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 
 		ipamfederation.NewFederatedRealmResource,
 		ipamfederation.NewFederatedBlockResource,
+		ipamfederation.NewReservedBlockResource,
 		ipamfederation.NewOverlappingBlockResource,
 		ipamfederation.NewForwardLookingDelegationResource,
 		ipamfederation.NewFederatedPoolResource,
@@ -166,6 +168,23 @@ func (p *BloxOneProvider) Resources(_ context.Context) []func() resource.Resourc
 		redirect.NewCustomRedirectResource,
 
 		clouddiscovery.NewProviderResource,
+
+		cdc.NewFlowApiV2Resource,
+		cdc.NewDestinationSyslogResource,
+		cdc.NewDestinationApplicationResource,
+		cdc.NewDestinationHttpResource,
+		cdc.NewDestinationReportingResource,
+		cdc.NewDestinationSplunkResource,
+		cdc.NewDestinationSplunkCloudResource,
+		cdc.NewSourceApiResource,
+		cdc.NewEtlFilterFqdnResource,
+		cdc.NewEtlFilterHostnameResource,
+		cdc.NewEtlFilterIpNetworkResource,
+		cdc.NewEtlFilterOphidResource,
+		cdc.NewEtlFilterRecordTypeResource,
+		cdc.NewEtlFilterRegexResource,
+		cdc.NewEtlFilterThreatClassPropertyResource,
+		cdc.NewApplicationApiResource,
 	}
 }
 
@@ -238,13 +257,35 @@ func (p *BloxOneProvider) DataSources(ctx context.Context) []func() datasource.D
 
 		ipamfederation.NewFederatedRealmDataSource,
 		ipamfederation.NewFederatedBlockDataSource,
+		ipamfederation.NewReservedBlockDataSource,
+		ipamfederation.NewNextAvailableReservedBlockDataSource,
 		ipamfederation.NewOverlappingBlockDataSource,
 		ipamfederation.NewForwardLookingDelegationDataSource,
 		ipamfederation.NewFederatedPoolDataSource,
+		ipamfederation.NewNextAvailableFederatedBlockDataSource,
+		ipamfederation.NewNextAvailableOverlappingBlockDataSource,
 
 		redirect.NewCustomRedirectsDataSource,
 
 		clouddiscovery.NewProvidersDataSource,
+
+		cdc.NewDestinationSyslogDataSource,
+		cdc.NewDestinationApplicationDataSource,
+		cdc.NewDestinationHttpDataSource,
+		cdc.NewDestinationReportingDataSource,
+		cdc.NewDestinationSplunkDataSource,
+		cdc.NewDestinationSplunkCloudDataSource,
+		cdc.NewFlowApiV2DataSource,
+		cdc.NewSourceApiDataSource,
+		cdc.NewSourceDataSource,
+		cdc.NewEtlFilterFqdnDataSource,
+		cdc.NewEtlFilterHostnameDataSource,
+		cdc.NewEtlFilterIpNetworkDataSource,
+		cdc.NewEtlFilterOphidDataSource,
+		cdc.NewEtlFilterRecordTypeDataSource,
+		cdc.NewEtlFilterRegexDataSource,
+		cdc.NewEtlFilterThreatClassPropertyDataSource,
+		cdc.NewApplicationApiDataSource,
 	}
 }
 

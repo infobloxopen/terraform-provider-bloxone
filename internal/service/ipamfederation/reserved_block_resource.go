@@ -1,0 +1,245 @@
+package ipamfederation
+
+import (
+	"context"
+	"fmt"
+	"net/http"
+
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+
+	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
+	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
+)
+
+// Ensure provider defined types fully satisfy framework interfaces.
+var _ resource.Resource = &ReservedBlockResource{}
+var _ resource.ResourceWithImportState = &ReservedBlockResource{}
+
+func NewReservedBlockResource() resource.Resource {
+	return &ReservedBlockResource{}
+}
+
+// ReservedBlockResource defines the resource implementation.
+type ReservedBlockResource struct {
+	client *universalddiclient.APIClient
+}
+
+func (r *ReservedBlockResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + "federation_reserved_block"
+}
+
+func (r *ReservedBlockResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		MarkdownDescription: "Manages a Reserved Block.\n\nThe Reserved Block object (_federation/reserved_block_) is a set of contiguous IP addresses with no gap, expressed as a CIDR block. It is explicitly associated with a Federated Realm. A Reserved Block indicates an address range for which authority is expressly forbidden. Cooperating IPAM services must not make allocations in this range.",
+		Attributes:          ReservedBlockResourceSchemaAttributes,
+	}
+}
+
+func (r *ReservedBlockResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	// Prevent panic if the provider has not been configured.
+	if req.ProviderData == nil {
+		return
+	}
+
+	client, ok := req.ProviderData.(*universalddiclient.APIClient)
+
+	if !ok {
+		resp.Diagnostics.AddError(
+			"Unexpected Resource Configure Type",
+			fmt.Sprintf("Expected *universalddiclient.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+		)
+
+		return
+	}
+
+	r.client = client
+}
+
+func (r *ReservedBlockResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data ReservedBlockModel
+
+	// Read Terraform plan data into the model
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	if !data.NextAvailableId.IsUnknown() && !data.NextAvailableId.IsNull() {
+		// Lock the mutex to serialize operations with the same key.
+		// This is necessary to prevent the same block being returned.
+		utils.GlobalMutexStore.Lock(data.NextAvailableId.ValueString())
+		defer utils.GlobalMutexStore.Unlock(data.NextAvailableId.ValueString())
+
+		// The create-next-available endpoint does not persist federated_pool_id, so it
+		// needs to be patched in with a follow-up Update call if the user configured it.
+		configuredFederatedPoolId := data.FederatedPoolId
+
+		body := ipamfederation.NextAvailableBlockRequest{
+			Cidr:  flex.ExpandInt64Pointer(data.Cidr),
+			Count: utils.Ptr(int64(1)),
+			Tags:  flex.ExpandFrameworkMapString(ctx, data.Tags, &resp.Diagnostics),
+		}
+		if !data.Name.IsNull() {
+			body.Name = data.Name.ValueStringPointer()
+		}
+		if !data.Comment.IsNull() {
+			body.Comment = data.Comment.ValueStringPointer()
+		}
+
+		apiRes, _, err := r.client.IPAMFederationAPI.
+			NextAvailableReservedBlockAPI.
+			CreateNextAvailableReservedBlocks(ctx, data.NextAvailableId.ValueString()).
+			Body(body).
+			Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create next available ReservedBlock, got error: %s", err))
+			return
+		}
+
+		results := apiRes.GetResults()
+		if len(results) == 0 {
+			resp.Diagnostics.AddError("Client Error", "Unable to create next available ReservedBlock, no results were returned")
+			return
+		}
+
+		data.Flatten(ctx, &results[0], &resp.Diagnostics)
+
+		if !configuredFederatedPoolId.IsNull() {
+			data.FederatedPoolId = configuredFederatedPoolId
+			updateRes, _, err := r.client.IPAMFederationAPI.
+				ReservedBlockAPI.
+				Update(ctx, data.Id.ValueString()).
+				Body(*data.Expand(ctx, &resp.Diagnostics, false)).
+				Execute()
+			if err != nil {
+				// federated_pool_id can only be set at creation - its RequiresReplaceIfConfigured
+				// plan modifier means Terraform can never patch it in on a later apply, and saving
+				// state here would leave the resource tainted. Roll back instead: delete the block
+				// created above and report a clean failure, so nothing is left dangling.
+				if _, delErr := r.client.IPAMFederationAPI.
+					ReservedBlockAPI.
+					Delete(ctx, data.Id.ValueString()).
+					Execute(); delErr != nil {
+					resp.Diagnostics.AddError("Client Error", fmt.Sprintf(
+						"Unable to set federated_pool_id on next available ReservedBlock (got error: %s), and failed to roll back the created block (got error: %s); it must be deleted manually: %s",
+						err, delErr, data.Id.ValueString()))
+					return
+				}
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to set federated_pool_id on next available ReservedBlock, got error: %s", err))
+				return
+			}
+			res := updateRes.GetResult()
+			data.Flatten(ctx, &res, &resp.Diagnostics)
+		}
+
+		// Save data into Terraform state
+		resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+		return
+	}
+
+	apiRes, _, err := r.client.IPAMFederationAPI.
+		ReservedBlockAPI.
+		Create(ctx).
+		Body(*data.Expand(ctx, &resp.Diagnostics, true)).
+		Execute()
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create ReservedBlock, got error: %s", err))
+		return
+	}
+
+	res := apiRes.GetResult()
+	data.Flatten(ctx, &res, &resp.Diagnostics)
+
+	// Save data into Terraform state
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+}
+
+func (r *ReservedBlockResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data ReservedBlockModel
+
+	// Read Terraform prior state data into the model
+	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	apiRes, httpRes, err := r.client.IPAMFederationAPI.
+		ReservedBlockAPI.
+		Read(ctx, data.Id.ValueString()).
+		Execute()
+	if err != nil {
+		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read ReservedBlock, got error: %s", err))
+		return
+	}
+
+	res := apiRes.GetResult()
+	data.Flatten(ctx, &res, &resp.Diagnostics)
+
+	// Save updated data into Terraform state
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+}
+
+func (r *ReservedBlockResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var data ReservedBlockModel
+
+	// Read Terraform plan data into the model
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	apiRes, _, err := r.client.IPAMFederationAPI.
+		ReservedBlockAPI.
+		Update(ctx, data.Id.ValueString()).
+		Body(*data.Expand(ctx, &resp.Diagnostics, false)).
+		Execute()
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update ReservedBlock, got error: %s", err))
+		return
+	}
+
+	res := apiRes.GetResult()
+	data.Flatten(ctx, &res, &resp.Diagnostics)
+
+	// Save updated data into Terraform state
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+}
+
+func (r *ReservedBlockResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data ReservedBlockModel
+
+	// Read Terraform prior state data into the model
+	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	httpRes, err := r.client.IPAMFederationAPI.
+		ReservedBlockAPI.
+		Delete(ctx, data.Id.ValueString()).
+		Execute()
+	if err != nil {
+		if httpRes != nil && httpRes.StatusCode == http.StatusNotFound {
+			return
+		}
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete ReservedBlock, got error: %s", err))
+		return
+	}
+}
+
+func (r *ReservedBlockResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+}
