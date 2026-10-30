@@ -110,6 +110,21 @@ func TestAccFederatedBlockResource_AddressWithPrefixInvalid(t *testing.T) {
 	})
 }
 
+func TestAccFederatedBlockResource_AddressRequired(t *testing.T) {
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccFederatedBlockWithoutAddress(16, realmName),
+				ExpectError: regexp.MustCompile(`The argument "address" is required`),
+			},
+		},
+	})
+}
+
 func TestAccFederatedBlockResource_disappears(t *testing.T) {
 	resourceName := "bloxone_federation_federated_block.test"
 	var v ipamfederation.FederatedBlock
@@ -470,6 +485,16 @@ resource "bloxone_federation_federated_block" "test" {
     federated_realm = bloxone_federation_federated_realm.test.id
 }
 `, address, cidr)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
+}
+
+func testAccFederatedBlockWithoutAddress(cidr int, federatedRealm string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_federation_federated_block" "test" {
+    cidr = %d
+    federated_realm = bloxone_federation_federated_realm.test.id
+}
+`, cidr)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(federatedRealm), config}, "")
 }
 

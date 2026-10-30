@@ -22,6 +22,7 @@ import (
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
 	internalplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
 	internaltypes "github.com/infobloxopen/terraform-provider-bloxone/internal/types"
+	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
 type ForwardLookingDelegationModel struct {
@@ -60,10 +61,13 @@ var ForwardLookingDelegationResourceSchemaAttributes = map[string]schema.Attribu
 	"address": schema.StringAttribute{
 		CustomType: iptypes.IPAddressType{},
 		Required:   true,
+		Validators: []validator.String{
+			internalvalidator.IsValidIPAddress(),
+		},
 		PlanModifiers: []planmodifier.String{
 			internalplanmodifier.RequiresReplaceIfIPAddressChanged(),
 		},
-		MarkdownDescription: "The address of the delegation, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead.",
+		MarkdownDescription: "The address of the delegation, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead. This field is immutable after creation.",
 	},
 	"cidr": schema.Int64Attribute{
 		Required: true,
@@ -182,7 +186,7 @@ func (m *ForwardLookingDelegationModel) Flatten(ctx context.Context, from *ipamf
 	if m == nil {
 		*m = ForwardLookingDelegationModel{}
 	}
-	m.Address = iptypes.NewIPAddressPointerValue(from.Address)
+	m.Address = flex.FlattenIPAddress(from.Address)
 	m.Cidr = flex.FlattenInt64Pointer(from.Cidr)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)
