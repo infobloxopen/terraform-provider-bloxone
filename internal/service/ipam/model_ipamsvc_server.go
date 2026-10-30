@@ -45,7 +45,7 @@ type IpamsvcServerModel struct {
 	DdnsZones                       types.List                       `tfsdk:"ddns_zones"`
 	DhcpConfig                      types.Object                     `tfsdk:"dhcp_config"`
 	DhcpOptions                     internaltypes.UnorderedListValue `tfsdk:"dhcp_options"`
-	DhcpOptionsV6                   types.List                       `tfsdk:"dhcp_options_v6"`
+	DhcpOptionsV6                   internaltypes.UnorderedListValue `tfsdk:"dhcp_options_v6"`
 	GssTsigFallback                 types.Bool                       `tfsdk:"gss_tsig_fallback"`
 	HeaderOptionFilename            types.String                     `tfsdk:"header_option_filename"`
 	HeaderOptionServerAddress       types.String                     `tfsdk:"header_option_server_address"`
@@ -87,7 +87,7 @@ var IpamsvcServerAttrTypes = map[string]attr.Type{
 	"ddns_zones":                          types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcDDNSZoneAttrTypes}},
 	"dhcp_config":                         types.ObjectType{AttrTypes: IpamsvcDHCPConfigAttrTypes},
 	"dhcp_options":                        internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
-	"dhcp_options_v6":                     types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
+	"dhcp_options_v6":                     internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 	"gss_tsig_fallback":                   types.BoolType,
 	"header_option_filename":              types.StringType,
 	"header_option_server_address":        types.StringType,
@@ -245,6 +245,7 @@ var IpamsvcServerResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: "The list of DHCP options or group of options for IPv4. An option list is ordered and may include both option groups and specific options. Multiple occurrences of the same option or group is not an error. The last occurrence of an option in the list will be used. Error if the graph of referenced groups contains cycles. Defaults to empty list.",
 	},
 	"dhcp_options_v6": schema.ListNestedAttribute{
+		CustomType: internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: IpamsvcOptionItemResourceSchemaAttributes,
 		},
@@ -469,7 +470,7 @@ func (m *IpamsvcServerModel) Flatten(ctx context.Context, from *ipam.Server, dia
 	m.DdnsZones = flex.FlattenFrameworkListNestedBlock(ctx, from.DdnsZones, IpamsvcDDNSZoneAttrTypes, diags, FlattenIpamsvcDDNSZone)
 	m.DhcpConfig = FlattenIpamsvcDHCPConfig(ctx, from.DhcpConfig, diags)
 	m.DhcpOptions = flex.FlattenFrameworkUnorderedListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
-	m.DhcpOptionsV6 = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptionsV6, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
+	m.DhcpOptionsV6 = flex.FlattenFrameworkUnorderedListNestedBlock(ctx, from.DhcpOptionsV6, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.GssTsigFallback = types.BoolPointerValue(from.GssTsigFallback)
 	m.HeaderOptionFilename = flex.FlattenStringPointer(from.HeaderOptionFilename)
 	m.HeaderOptionServerAddress = flex.FlattenStringPointer(from.HeaderOptionServerAddress)

@@ -44,7 +44,7 @@ type IpamsvcIPSpaceModel struct {
 	DefaultRealms                   types.List                       `tfsdk:"default_realms"`
 	DhcpConfig                      types.Object                     `tfsdk:"dhcp_config"`
 	DhcpOptions                     internaltypes.UnorderedListValue `tfsdk:"dhcp_options"`
-	DhcpOptionsV6                   types.List                       `tfsdk:"dhcp_options_v6"`
+	DhcpOptionsV6                   internaltypes.UnorderedListValue `tfsdk:"dhcp_options_v6"`
 	HeaderOptionFilename            types.String                     `tfsdk:"header_option_filename"`
 	HeaderOptionServerAddress       types.String                     `tfsdk:"header_option_server_address"`
 	HeaderOptionServerName          types.String                     `tfsdk:"header_option_server_name"`
@@ -81,7 +81,7 @@ var IpamsvcIPSpaceAttrTypes = map[string]attr.Type{
 	"default_realms":                      types.ListType{ElemType: types.StringType},
 	"dhcp_config":                         types.ObjectType{AttrTypes: IpamsvcDHCPConfigAttrTypes},
 	"dhcp_options":                        internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
-	"dhcp_options_v6":                     types.ListType{ElemType: types.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}},
+	"dhcp_options_v6":                     internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 	"header_option_filename":              types.StringType,
 	"header_option_server_address":        types.StringType,
 	"header_option_server_name":           types.StringType,
@@ -242,6 +242,7 @@ var IpamsvcIPSpaceResourceSchemaAttributes = map[string]schema.Attribute{
 		MarkdownDescription: `The list of IPv4 DHCP options for IP space. May be either a specific option or a group of options.`,
 	},
 	"dhcp_options_v6": schema.ListNestedAttribute{
+		CustomType: internaltypes.UnorderedList{ListType: basetypes.ListType{ElemType: basetypes.ObjectType{AttrTypes: IpamsvcOptionItemAttrTypes}}},
 		NestedObject: schema.NestedAttributeObject{
 			Attributes: IpamsvcOptionItemResourceSchemaAttributes,
 		},
@@ -426,7 +427,7 @@ func (m *IpamsvcIPSpaceModel) Flatten(ctx context.Context, from *ipam.IPSpace, d
 	m.DefaultRealms = flex.FlattenFrameworkListStringNotNull(ctx, from.DefaultRealms, diags)
 	m.DhcpConfig = FlattenIpamsvcDHCPConfig(ctx, from.DhcpConfig, diags)
 	m.DhcpOptions = flex.FlattenFrameworkUnorderedListNestedBlock(ctx, from.DhcpOptions, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
-	m.DhcpOptionsV6 = flex.FlattenFrameworkListNestedBlock(ctx, from.DhcpOptionsV6, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
+	m.DhcpOptionsV6 = flex.FlattenFrameworkUnorderedListNestedBlock(ctx, from.DhcpOptionsV6, IpamsvcOptionItemAttrTypes, diags, FlattenIpamsvcOptionItem)
 	m.HeaderOptionFilename = flex.FlattenStringPointer(from.HeaderOptionFilename)
 	m.HeaderOptionServerAddress = flex.FlattenStringPointer(from.HeaderOptionServerAddress)
 	m.HeaderOptionServerName = flex.FlattenStringPointer(from.HeaderOptionServerName)
