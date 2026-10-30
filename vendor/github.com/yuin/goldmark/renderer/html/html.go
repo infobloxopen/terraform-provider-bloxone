@@ -34,7 +34,7 @@ func NewConfig() Config {
 }
 
 // SetOption implements renderer.NodeRenderer.SetOption.
-func (c *Config) SetOption(name renderer.OptionName, value interface{}) {
+func (c *Config) SetOption(name renderer.OptionName, value any) {
 	switch name {
 	case optHardWraps:
 		c.HardWraps = value.(bool)
@@ -273,6 +273,10 @@ func (r *Renderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
 	reg.Register(ast.KindParagraph, r.renderParagraph)
 	reg.Register(ast.KindTextBlock, r.renderTextBlock)
 	reg.Register(ast.KindThematicBreak, r.renderThematicBreak)
+	reg.Register(ast.KindLinkReferenceDefinition, func(
+		_ util.BufWriter, _ []byte, _ ast.Node, _ bool) (ast.WalkStatus, error) {
+		return ast.WalkSkipChildren, nil
+	})
 
 	// inlines
 
@@ -288,42 +292,14 @@ func (r *Renderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
 
 func (r *Renderer) writeLines(w util.BufWriter, source []byte, n ast.Node) {
 	l := n.Lines().Len()
-	for i := 0; i < l; i++ {
+	for i := range l {
 		line := n.Lines().At(i)
 		r.Writer.RawWrite(w, line.Value(source))
 	}
 }
 
 // GlobalAttributeFilter defines attribute names which any elements can have.
-var GlobalAttributeFilter = util.NewBytesFilter(
-	[]byte("accesskey"),
-	[]byte("autocapitalize"),
-	[]byte("autofocus"),
-	[]byte("class"),
-	[]byte("contenteditable"),
-	[]byte("dir"),
-	[]byte("draggable"),
-	[]byte("enterkeyhint"),
-	[]byte("hidden"),
-	[]byte("id"),
-	[]byte("inert"),
-	[]byte("inputmode"),
-	[]byte("is"),
-	[]byte("itemid"),
-	[]byte("itemprop"),
-	[]byte("itemref"),
-	[]byte("itemscope"),
-	[]byte("itemtype"),
-	[]byte("lang"),
-	[]byte("part"),
-	[]byte("role"),
-	[]byte("slot"),
-	[]byte("spellcheck"),
-	[]byte("style"),
-	[]byte("tabindex"),
-	[]byte("title"),
-	[]byte("translate"),
-)
+var GlobalAttributeFilter = util.NewBytesFilterString(`accesskey,autocapitalize,autofocus,class,contenteditable,dir,draggable,enterkeyhint,hidden,id,inert,inputmode,is,itemid,itemprop,itemref,itemscope,itemtype,lang,part,role,slot,spellcheck,style,tabindex,title,translate`) // nolint:lll
 
 func (r *Renderer) renderDocument(
 	w util.BufWriter, source []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {
@@ -353,9 +329,7 @@ func (r *Renderer) renderHeading(
 }
 
 // BlockquoteAttributeFilter defines attribute names which blockquote elements can have.
-var BlockquoteAttributeFilter = GlobalAttributeFilter.Extend(
-	[]byte("cite"),
-)
+var BlockquoteAttributeFilter = GlobalAttributeFilter.ExtendString(`cite`)
 
 func (r *Renderer) renderBlockquote(
 	w util.BufWriter, source []byte, n ast.Node, entering bool) (ast.WalkStatus, error) {
@@ -408,7 +382,7 @@ func (r *Renderer) renderHTMLBlock(
 	if entering {
 		if r.Unsafe {
 			l := n.Lines().Len()
-			for i := 0; i < l; i++ {
+			for i := range l {
 				line := n.Lines().At(i)
 				r.Writer.SecureWrite(w, line.Value(source))
 			}
@@ -429,11 +403,7 @@ func (r *Renderer) renderHTMLBlock(
 }
 
 // ListAttributeFilter defines attribute names which list elements can have.
-var ListAttributeFilter = GlobalAttributeFilter.Extend(
-	[]byte("start"),
-	[]byte("reversed"),
-	[]byte("type"),
-)
+var ListAttributeFilter = GlobalAttributeFilter.ExtendString(`start,reversed,type`)
 
 func (r *Renderer) renderList(w util.BufWriter, source []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {
 	n := node.(*ast.List)
@@ -460,9 +430,7 @@ func (r *Renderer) renderList(w util.BufWriter, source []byte, node ast.Node, en
 }
 
 // ListItemAttributeFilter defines attribute names which list item elements can have.
-var ListItemAttributeFilter = GlobalAttributeFilter.Extend(
-	[]byte("value"),
-)
+var ListItemAttributeFilter = GlobalAttributeFilter.ExtendString(`value`)
 
 func (r *Renderer) renderListItem(w util.BufWriter, source []byte, n ast.Node, entering bool) (ast.WalkStatus, error) {
 	if entering {
@@ -513,13 +481,7 @@ func (r *Renderer) renderTextBlock(w util.BufWriter, source []byte, n ast.Node, 
 }
 
 // ThematicAttributeFilter defines attribute names which hr elements can have.
-var ThematicAttributeFilter = GlobalAttributeFilter.Extend(
-	[]byte("align"),   // [Deprecated]
-	[]byte("color"),   // [Not Standardized]
-	[]byte("noshade"), // [Deprecated]
-	[]byte("size"),    // [Deprecated]
-	[]byte("width"),   // [Deprecated]
-)
+var ThematicAttributeFilter = GlobalAttributeFilter.ExtendString(`align,color,noshade,size,width`)
 
 func (r *Renderer) renderThematicBreak(
 	w util.BufWriter, source []byte, n ast.Node, entering bool) (ast.WalkStatus, error) {
@@ -539,17 +501,7 @@ func (r *Renderer) renderThematicBreak(
 }
 
 // LinkAttributeFilter defines attribute names which link elements can have.
-var LinkAttributeFilter = GlobalAttributeFilter.Extend(
-	[]byte("download"),
-	// []byte("href"),
-	[]byte("hreflang"),
-	[]byte("media"),
-	[]byte("ping"),
-	[]byte("referrerpolicy"),
-	[]byte("rel"),
-	[]byte("shape"),
-	[]byte("target"),
-)
+var LinkAttributeFilter = GlobalAttributeFilter.ExtendString(`download,href,lang,media,ping,referrerpolicy,rel,shape,target`) // nolint:lll
 
 func (r *Renderer) renderAutoLink(
 	w util.BufWriter, source []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {
@@ -558,12 +510,14 @@ func (r *Renderer) renderAutoLink(
 		return ast.WalkContinue, nil
 	}
 	_, _ = w.WriteString(`<a href="`)
-	url := n.URL(source)
+	url := util.URLEscape(n.URL(source), false)
 	label := n.Label(source)
 	if n.AutoLinkType == ast.AutoLinkEmail && !bytes.HasPrefix(bytes.ToLower(url), []byte("mailto:")) {
 		_, _ = w.WriteString("mailto:")
 	}
-	_, _ = w.Write(util.EscapeHTML(util.URLEscape(url, false)))
+	if r.Unsafe || !IsDangerousURL(url) {
+		_, _ = w.Write(util.EscapeHTML(url))
+	}
 	if n.Attributes() != nil {
 		_ = w.WriteByte('"')
 		RenderAttributes(w, n, LinkAttributeFilter)
@@ -633,8 +587,9 @@ func (r *Renderer) renderLink(w util.BufWriter, source []byte, node ast.Node, en
 	n := node.(*ast.Link)
 	if entering {
 		_, _ = w.WriteString("<a href=\"")
-		if r.Unsafe || !IsDangerousURL(n.Destination) {
-			_, _ = w.Write(util.EscapeHTML(util.URLEscape(n.Destination, true)))
+		dest := util.URLEscape(n.Destination, true)
+		if r.Unsafe || !IsDangerousURL(dest) {
+			_, _ = w.Write(util.EscapeHTML(dest))
 		}
 		_ = w.WriteByte('"')
 		if n.Title != nil {
@@ -653,22 +608,7 @@ func (r *Renderer) renderLink(w util.BufWriter, source []byte, node ast.Node, en
 }
 
 // ImageAttributeFilter defines attribute names which image elements can have.
-var ImageAttributeFilter = GlobalAttributeFilter.Extend(
-	[]byte("align"),
-	[]byte("border"),
-	[]byte("crossorigin"),
-	[]byte("decoding"),
-	[]byte("height"),
-	[]byte("importance"),
-	[]byte("intrinsicsize"),
-	[]byte("ismap"),
-	[]byte("loading"),
-	[]byte("referrerpolicy"),
-	[]byte("sizes"),
-	[]byte("srcset"),
-	[]byte("usemap"),
-	[]byte("width"),
-)
+var ImageAttributeFilter = GlobalAttributeFilter.ExtendString(`align,border,crossorigin,decoding,height,importance,intrinsicsize,ismap,loading,referrerpolicy,sizes,srcset,usemap,width`) // nolint: lll
 
 func (r *Renderer) renderImage(w util.BufWriter, source []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {
 	if !entering {
@@ -676,11 +616,12 @@ func (r *Renderer) renderImage(w util.BufWriter, source []byte, node ast.Node, e
 	}
 	n := node.(*ast.Image)
 	_, _ = w.WriteString("<img src=\"")
-	if r.Unsafe || !IsDangerousURL(n.Destination) {
-		_, _ = w.Write(util.EscapeHTML(util.URLEscape(n.Destination, true)))
+	dest := util.URLEscape(n.Destination, true)
+	if r.Unsafe || !IsDangerousURL(dest) {
+		_, _ = w.Write(util.EscapeHTML(dest))
 	}
 	_, _ = w.WriteString(`" alt="`)
-	r.renderAttribute(w, source, n)
+	r.renderTexts(w, source, n)
 	_ = w.WriteByte('"')
 	if n.Title != nil {
 		_, _ = w.WriteString(` title="`)
@@ -706,7 +647,7 @@ func (r *Renderer) renderRawHTML(
 	if r.Unsafe {
 		n := node.(*ast.RawHTML)
 		l := n.Segments.Len()
-		for i := 0; i < l; i++ {
+		for i := range l {
 			segment := n.Segments.At(i)
 			_, _ = w.Write(segment.Value(source))
 		}
@@ -737,7 +678,7 @@ func (r *Renderer) renderText(w util.BufWriter, source []byte, node ast.Node, en
 			if r.EastAsianLineBreaks != EastAsianLineBreaksNone && len(value) != 0 {
 				sibling := node.NextSibling()
 				if sibling != nil && sibling.Kind() == ast.KindText {
-					if siblingText := sibling.(*ast.Text).Text(source); len(siblingText) != 0 {
+					if siblingText := sibling.(*ast.Text).Value(source); len(siblingText) != 0 {
 						thisLastRune := util.ToRune(value, len(value)-1)
 						siblingFirstRune, _ := utf8.DecodeRune(siblingText)
 						if r.EastAsianLineBreaks.softLineBreak(thisLastRune, siblingFirstRune) {
@@ -770,19 +711,14 @@ func (r *Renderer) renderString(w util.BufWriter, source []byte, node ast.Node, 
 	return ast.WalkContinue, nil
 }
 
-func (r *Renderer) renderAttribute(w util.BufWriter, source []byte, n ast.Node) {
+func (r *Renderer) renderTexts(w util.BufWriter, source []byte, n ast.Node) {
 	for c := n.FirstChild(); c != nil; c = c.NextSibling() {
 		if s, ok := c.(*ast.String); ok {
 			_, _ = r.renderString(w, source, s, true)
-		} else if t, ok := c.(*ast.String); ok {
+		} else if t, ok := c.(*ast.Text); ok {
 			_, _ = r.renderText(w, source, t, true)
-		} else if !c.HasChildren() {
-			r.Writer.Write(w, c.Text(source))
-			if t, ok := c.(*ast.Text); ok && t.SoftLineBreak() {
-				_ = w.WriteByte('\n')
-			}
 		} else {
-			r.renderAttribute(w, source, c)
+			r.renderTexts(w, source, c)
 		}
 	}
 }
@@ -874,7 +810,7 @@ func escapeRune(writer util.BufWriter, r rune) {
 func (d *defaultWriter) SecureWrite(writer util.BufWriter, source []byte) {
 	n := 0
 	l := len(source)
-	for i := 0; i < l; i++ {
+	for i := range l {
 		if source[i] == '\u0000' {
 			_, _ = writer.Write(source[i-n : i])
 			n = 0
@@ -891,7 +827,7 @@ func (d *defaultWriter) SecureWrite(writer util.BufWriter, source []byte) {
 func (d *defaultWriter) RawWrite(writer util.BufWriter, source []byte) {
 	n := 0
 	l := len(source)
-	for i := 0; i < l; i++ {
+	for i := range l {
 		v := util.EscapeHTMLByte(source[i])
 		if v != nil {
 			_, _ = writer.Write(source[i-n : i])
@@ -999,7 +935,6 @@ var bPng = []byte("png;")
 var bGif = []byte("gif;")
 var bJpeg = []byte("jpeg;")
 var bWebp = []byte("webp;")
-var bSvg = []byte("svg+xml;")
 var bJs = []byte("javascript:")
 var bVb = []byte("vbscript:")
 var bFile = []byte("file:")
@@ -1015,8 +950,7 @@ func IsDangerousURL(url []byte) bool {
 	if hasPrefix(url, bDataImage) && len(url) >= 11 {
 		v := url[11:]
 		if hasPrefix(v, bPng) || hasPrefix(v, bGif) ||
-			hasPrefix(v, bJpeg) || hasPrefix(v, bWebp) ||
-			hasPrefix(v, bSvg) {
+			hasPrefix(v, bJpeg) || hasPrefix(v, bWebp) {
 			return false
 		}
 		return true
