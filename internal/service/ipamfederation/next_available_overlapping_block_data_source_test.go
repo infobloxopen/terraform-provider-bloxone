@@ -113,6 +113,23 @@ func TestAccNextAvailableOverlappingBlockDataSource_TagFilters(t *testing.T) {
 	})
 }
 
+func TestAccNextAvailableOverlappingBlockDataSource_NeitherIdNorTagFilters(t *testing.T) {
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: `
+data "bloxone_federation_next_available_overlapping_blocks" "test" {
+    cidr = 24
+}
+`,
+				ExpectError: regexp.MustCompile(`At least one attribute out of \[id,tag_filters\] must be specified`),
+			},
+		},
+	})
+}
+
 func TestAccNextAvailableOverlappingBlockDataSource_InvalidId(t *testing.T) {
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },

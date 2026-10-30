@@ -69,6 +69,7 @@ func (d *NextAvailableOverlappingBlockDataSource) Schema(_ context.Context, _ da
 				Validators: []validator.String{
 					stringvalidator.RegexMatches(regexp.MustCompile(`^federation/federated_block/[0-9a-f-].*$`), "invalid resource ID specified"),
 					stringvalidator.ConflictsWith(path.MatchRoot("tag_filters")),
+					stringvalidator.AtLeastOneOf(path.MatchRoot("id"), path.MatchRoot("tag_filters")),
 				},
 			},
 			"cidr": schema.Int64Attribute{
