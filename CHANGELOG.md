@@ -2,6 +2,9 @@
 
 ## v1.7.0 (October 31, 2026)
 
+NOTES:
+* Added configurable client-side rate limiting and automatic retry on certain HTTP responses via the underlying `universal-ddi-go-client`. See [Rate Limiting and Retry](https://github.com/infobloxopen/terraform-provider-bloxone#rate-limiting-and-retry) for further details.
+
 FEATURES:
 * **Cloud Data Connector (CDC):**
     * **New Resource and Data Source:** `bloxone_cdc_source_nios`, `bloxone_cdc_source_nios_list` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
@@ -49,7 +52,8 @@ FIXES:
 * DHCP: Marked `ddns_zones.tsig_key.secret` as sensitive in `bloxone_dhcp_server` ([#293](https://github.com/infobloxopen/terraform-provider-bloxone/pull/293))
 
 MAINTENANCE:
-* Dependency updates ([#283](https://github.com/infobloxopen/terraform-provider-bloxone/pull/283), [#292](https://github.com/infobloxopen/terraform-provider-bloxone/pull/292), [#313](https://github.com/infobloxopen/terraform-provider-bloxone/pull/313))
+* Updated Go version to 1.26
+* Dependency updates
 
 ## v1.6.0 (July 17, 2026)
 
