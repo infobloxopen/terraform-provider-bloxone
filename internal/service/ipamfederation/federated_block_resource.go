@@ -130,6 +130,9 @@ func (r *FederatedBlockResource) Create(ctx context.Context, req resource.Create
 		if !data.Comment.IsNull() {
 			body.Comment = data.Comment.ValueStringPointer()
 		}
+		if !data.FederatedPoolId.IsNull() && !data.FederatedPoolId.IsUnknown() {
+			body.FederatedPoolId = data.FederatedPoolId.ValueStringPointer()
+		}
 
 		if strings.HasPrefix(nextAvailableId, federatedPoolIdPrefix) {
 			// Allocating directly from a Federated Pool: the pool is already the parent, so there
@@ -157,9 +160,9 @@ func (r *FederatedBlockResource) Create(ctx context.Context, req resource.Create
 			return
 		}
 
-		// Allocating under a parent Federated Block. federated_pool_id does not persist on the
+		// Allocating under a parent Federated Block. network_compliance does not persist on the
 		// create-next-available endpoint, so it is patched in with a follow-up Update call if set.
-		configuredFederatedPoolId := data.FederatedPoolId
+		configuredNetworkCompliance := data.NetworkCompliance
 
 		apiRes, _, err := r.client.IPAMFederationAPI.
 			NextAvailableFederatedBlockAPI.
@@ -179,12 +182,12 @@ func (r *FederatedBlockResource) Create(ctx context.Context, req resource.Create
 
 		data.Flatten(ctx, &results[0], &resp.Diagnostics)
 
-		if !configuredFederatedPoolId.IsNull() {
+		if !configuredNetworkCompliance.IsNull() {
 			// Remember what the backend actually persisted from the create call, so that if the
 			// follow-up Update below fails, state reflects reality rather than the desired config.
-			createdFederatedPoolId := data.FederatedPoolId
+			createdNetworkCompliance := data.NetworkCompliance
 
-			data.FederatedPoolId = configuredFederatedPoolId
+			data.NetworkCompliance = configuredNetworkCompliance
 			updateRes, _, err := r.client.IPAMFederationAPI.
 				FederatedBlockAPI.
 				Update(ctx, data.Id.ValueString()).
@@ -192,10 +195,10 @@ func (r *FederatedBlockResource) Create(ctx context.Context, req resource.Create
 				Execute()
 			if err != nil {
 				// The FederatedBlock was already created successfully above. Save it to state now,
-				// using the backend's actual federated_pool_id, so it isn't orphaned outside of
-				// Terraform; a subsequent apply will retry setting federated_pool_id via Update.
-				data.FederatedPoolId = createdFederatedPoolId
-				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to set federated_pool_id on next available FederatedBlock, got error: %s", err))
+				// using the backend's actual network_compliance, so it isn't orphaned outside of
+				// Terraform; a subsequent apply will retry setting network_compliance via Update.
+				data.NetworkCompliance = createdNetworkCompliance
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to set network_compliance on next available FederatedBlock, got error: %s", err))
 				resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 				return
 			}

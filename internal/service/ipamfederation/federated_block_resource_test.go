@@ -328,6 +328,33 @@ func TestAccFederatedBlockResource_NextAvailableIdWithFederatedPoolId(t *testing
 	})
 }
 
+func TestAccFederatedBlockResource_NextAvailableIdWithNetworkCompliance(t *testing.T) {
+	var resourceName = "bloxone_federation_federated_block.test_next_available_id_with_network_compliance"
+	var v ipamfederation.FederatedBlock
+	realmName := acctest.RandomNameWithPrefix("federated-realm")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccFederatedBlockNextAvailableIdWithNetworkCompliance(realmName, "10.42.0.0", 16, 24, 28, 25, 30),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFederatedBlockExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrPair(resourceName, "next_available_id", "bloxone_federation_federated_block.test", "id"),
+					resource.TestCheckResourceAttrSet(resourceName, "address"),
+					resource.TestCheckResourceAttr(resourceName, "cidr", "24"),
+					resource.TestCheckResourceAttr(resourceName, "network_compliance.default_netmask_length", "28"),
+					resource.TestCheckResourceAttr(resourceName, "network_compliance.minimum_netmask_length", "25"),
+					resource.TestCheckResourceAttr(resourceName, "network_compliance.maximum_netmask_length", "30"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func TestAccFederatedBlockResource_NextAvailableIdFromPool(t *testing.T) {
 	t.Skip("CreateNextAvailableBlocks is only supported for AWS-backed Federated Pools; requires an AWS-linked Federated Realm, not available in this test environment")
 
@@ -650,6 +677,22 @@ resource "bloxone_federation_federated_block" "test_next_available_id_with_pool"
     cidr = %d
 }
 `, poolName, cidr)
+	return strings.Join([]string{testAccFederatedBlockBasicConfig(parentAddress, parentCidr, federatedRealm), config}, "")
+}
+
+func testAccFederatedBlockNextAvailableIdWithNetworkCompliance(federatedRealm string, parentAddress string, parentCidr int, cidr int, defaultMask, minMask, maxMask int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_federation_federated_block" "test_next_available_id_with_network_compliance" {
+    federated_realm   = bloxone_federation_federated_realm.test.id
+    next_available_id = bloxone_federation_federated_block.test.id
+    cidr = %d
+    network_compliance = {
+        default_netmask_length = %d
+        minimum_netmask_length = %d
+        maximum_netmask_length = %d
+    }
+}
+`, cidr, defaultMask, minMask, maxMask)
 	return strings.Join([]string{testAccFederatedBlockBasicConfig(parentAddress, parentCidr, federatedRealm), config}, "")
 }
 
