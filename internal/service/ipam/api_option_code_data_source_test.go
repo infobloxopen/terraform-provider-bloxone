@@ -34,8 +34,9 @@ func TestAccOptionCodeDataSource_Filters(t *testing.T) {
 			{
 				Config: testAccOptionCodeDataSourceConfigFilters(optionSpaceName, "234", "test_option_code", "boolean", "code"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
-					resource.TestCheckResourceAttr(dataSourceName, "results.0.code", "234"),
+					append([]resource.TestCheckFunc{
+						testAccCheckOptionCodeExists(context.Background(), resourceName, &v),
+					}, testAccCheckOptionCodeResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
 			},
 		},
@@ -68,7 +69,8 @@ resource "bloxone_dhcp_option_code" "test" {
 
 data "bloxone_dhcp_option_codes" "test" {
   filters = {
-    %[4]s = bloxone_dhcp_option_code.test.%[4]s
+    %[4]s         = bloxone_dhcp_option_code.test.%[4]s
+    option_space = bloxone_dhcp_option_code.test.option_space
   }
 }
 `, code, name, optionItemType, filterBy)

@@ -29,8 +29,9 @@ var ProtoAnycastConfigRefAttrTypes = map[string]attr.Type{
 
 var ProtoAnycastConfigRefResourceSchemaAttributes = map[string]schema.Attribute{
 	"anycast_config_name": schema.StringAttribute{
-		Computed: true,
-		Optional: true,
+		Computed:            true,
+		Optional:            true,
+		MarkdownDescription: "Name of the anycast configuration referenced by this host. Required in practice; left Optional/Computed so an existing API-assigned value survives a plan without triggering a diff.",
 		Validators: []validator.String{
 			stringvalidator.LengthAtLeast(1),
 		},
