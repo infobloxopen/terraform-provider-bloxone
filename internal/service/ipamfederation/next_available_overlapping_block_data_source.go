@@ -254,26 +254,4 @@ func (d *NextAvailableOverlappingBlockDataSource) findOverlappingBlocks(ctx cont
 	return apiRes.GetResults(), nil
 }
 
-// FetchFederatedBlocksByTagFilter is a helper function used to fetch federated blocks by tags.
-//
-// NOTE: this is also defined by the ReservedBlock next_available_id PR (#316); once that PR
-// merges, this duplicate definition should be removed in favor of the shared one.
-func FetchFederatedBlocksByTagFilter(ctx context.Context, client *universalddiclient.APIClient, tagFilterStr string, diagnostics *diag.Diagnostics) ([]ipamfederation.FederatedBlock, error) {
-	federatedBlocks, err := utils.ReadWithPages(func(offset, limit int32) ([]ipamfederation.FederatedBlock, error) {
-		apiRes, _, err := client.IPAMFederationAPI.FederatedBlockAPI.
-			List(ctx).
-			Tfilter(tagFilterStr).
-			Offset(offset).
-			Limit(limit).
-			Execute()
-		if err != nil {
-			if diagnostics != nil {
-				diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read Federated Blocks, got error: %s", err))
-			}
-			return nil, err
-		}
-		return apiRes.GetResults(), nil
-	})
-
-	return federatedBlocks, err
-}
+// FetchFederatedBlocksByTagFilter is defined in next_available_federated_block_data_source.go.
