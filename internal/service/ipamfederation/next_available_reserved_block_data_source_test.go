@@ -2,6 +2,7 @@ package ipamfederation_test
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -65,6 +66,23 @@ func TestAccNextAvailableReservedBlockDataSource_TagFilters(t *testing.T) {
 					resource.TestCheckResourceAttr(dataSourceName, "results.#", "1"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "results.0"),
 				),
+			},
+		},
+	})
+}
+
+func TestAccNextAvailableReservedBlockDataSource_NeitherIdNorTagFilters(t *testing.T) {
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: `
+data "bloxone_federation_next_available_reserved_blocks" "test" {
+    cidr = 24
+}
+`,
+				ExpectError: regexp.MustCompile(`At least one attribute out of \[id,tag_filters\] must be specified`),
 			},
 		},
 	})
