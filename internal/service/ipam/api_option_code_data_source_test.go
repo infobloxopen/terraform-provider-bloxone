@@ -59,6 +59,11 @@ func testAccCheckOptionCodeResourceAttrPair(resourceName, dataSourceName string)
 }
 
 func testAccOptionCodeDataSourceConfigFilters(optionSpaceName, code, name, optionItemType string, filterBy string) string {
+	filters := fmt.Sprintf("%[1]s        = bloxone_dhcp_option_code.test.%[1]s\n    option_space = bloxone_dhcp_option_code.test.option_space", filterBy)
+	if filterBy != "name" {
+		filters += "\n    name         = bloxone_dhcp_option_code.test.name"
+	}
+
 	config := fmt.Sprintf(`
 resource "bloxone_dhcp_option_code" "test" {
   code = %[1]q
@@ -69,11 +74,10 @@ resource "bloxone_dhcp_option_code" "test" {
 
 data "bloxone_dhcp_option_codes" "test" {
   filters = {
-    %[4]s         = bloxone_dhcp_option_code.test.%[4]s
-    option_space = bloxone_dhcp_option_code.test.option_space
+    %[4]s
   }
 }
-`, code, name, optionItemType, filterBy)
+`, code, name, optionItemType, filters)
 
 	return strings.Join([]string{testAccBaseWithOptionSpace(optionSpaceName, "ip4"), config}, "")
 }
