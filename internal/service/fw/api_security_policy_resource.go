@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
@@ -74,18 +75,36 @@ func (r *SecurityPolicyResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	apiRes, _, err := r.client.FWAPI.
-		SecurityPoliciesAPI.
-		CreateSecurityPolicy(ctx).
-		Body(*data.Expand(ctx, &resp.Diagnostics)).
-		Execute()
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create SecurityPolicies, got error: %s", err))
+	body := data.Expand(ctx, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	res := apiRes.GetResults()
-	data.Flatten(ctx, &res, &resp.Diagnostics)
+	err := retry.RetryContext(ctx, SecurityPolicyOperationTimeout, func() *retry.RetryError {
+		apiRes, _, err := r.client.FWAPI.
+			SecurityPoliciesAPI.
+			CreateSecurityPolicy(ctx).
+			Body(*body).
+			Execute()
+		if err != nil {
+			if strings.Contains(err.Error(), "Internal Server Error") {
+				tflog.Debug(ctx, "Waiting for NamedLists/NetworkLists to be available, will retry", map[string]interface{}{"error": err.Error()})
+				return retry.RetryableError(err)
+			}
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create SecurityPolicies, got error: %s", err))
+			return retry.NonRetryableError(err)
+		}
+		res := apiRes.GetResults()
+		data.Flatten(ctx, &res, &resp.Diagnostics)
+
+		return nil
+	})
+	if err != nil {
+		if !resp.Diagnostics.HasError() {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create SecurityPolicies, got error: %s", err))
+		}
+		return
+	}
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

@@ -13,7 +13,7 @@ require (
 	github.com/hashicorp/terraform-plugin-log v0.11.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.40.1
 	github.com/hashicorp/terraform-plugin-testing v1.14.0
-	github.com/infobloxopen/universal-ddi-go-client v0.5.1-0.20261030142151-df35a609f01f
+	github.com/infobloxopen/universal-ddi-go-client v0.5.1-0.20261030173207-b0b5ff0ae605
 	golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8
 )
 

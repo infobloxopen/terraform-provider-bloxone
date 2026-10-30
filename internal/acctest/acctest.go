@@ -49,6 +49,42 @@ func RandomIP() string {
 	return fmt.Sprintf("%d.%d.%d.%d", rand.Intn(255), rand.Intn(255), rand.Intn(255), rand.Intn(255))
 }
 
+// RandomPublicIP returns a random public (non-RFC-1918) IPv4 address.
+// Use this when the API rejects private IP ranges (e.g. FW network lists).
+func RandomPublicIP() string {
+	for {
+		a := rand.Intn(256)
+		b := rand.Intn(256)
+		c := rand.Intn(256)
+		d := rand.Intn(256)
+		if a == 0 || a == 10 || a == 127 || a >= 224 {
+			continue
+		}
+		if a == 100 && b >= 64 && b <= 127 { // RFC 6598 shared address
+			continue
+		}
+		if a == 169 && b == 254 { // link-local
+			continue
+		}
+		if a == 172 && b >= 16 && b <= 31 { // RFC 1918
+			continue
+		}
+		if a == 192 && b == 168 { // RFC 1918
+			continue
+		}
+		if a == 192 && b == 0 && c == 2 { // RFC 5737 TEST-NET-1
+			continue
+		}
+		if a == 198 && b == 51 && c == 100 { // RFC 5737 TEST-NET-2
+			continue
+		}
+		if a == 203 && b == 0 && c == 113 { // RFC 5737 TEST-NET-3
+			continue
+		}
+		return fmt.Sprintf("%d.%d.%d.%d", a, b, c, d)
+	}
+}
+
 func RandomName() string {
 	b := make([]byte, 6)
 	for i := range b {
@@ -65,6 +101,15 @@ func lookupEnvAny(names ...string) string {
 		}
 	}
 	return ""
+}
+
+func RandomAlphaNumeric(length int) string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(b)
 }
 
 func PreCheck(t *testing.T) {
