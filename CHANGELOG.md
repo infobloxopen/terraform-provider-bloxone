@@ -1,5 +1,53 @@
 # Changelog
 
+## v1.7.0 (October 31, 2026)
+
+FEATURES:
+* **New Resource and Data Source:** `bloxone_cdc_source_nios`, `bloxone_cdc_source_nios_list` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_cdc_destination_syslog`, `bloxone_cdc_destination_syslogs` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_cdc_destination_http`, `bloxone_cdc_destination_https` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_cdc_destination_splunk`, `bloxone_cdc_destination_splunks` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_cdc_destination_splunk_cloud`, `bloxone_cdc_destination_splunk_clouds` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_cdc_destination_reporting`, `bloxone_cdc_destination_reportings` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_cdc_destination_application`, `bloxone_cdc_destination_applications` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_cdc_etl_filter_record_type`, `bloxone_cdc_etl_filter_record_types` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_cdc_etl_filter_fqdn`, `bloxone_cdc_etl_filter_fqdns` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_cdc_etl_filter_hostname`, `bloxone_cdc_etl_filter_hostnames` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_cdc_etl_filter_ip_network`, `bloxone_cdc_etl_filter_ip_networks` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_cdc_etl_filter_ophid`, `bloxone_cdc_etl_filter_ophids` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_cdc_etl_filter_regex`, `bloxone_cdc_etl_filter_regexes` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_cdc_etl_filter_threat_class_property`, `bloxone_cdc_etl_filter_threat_class_properties` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_cdc_flow`, `bloxone_cdc_flows` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_cdc_application`, `bloxone_cdc_applications` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Data Source:** `bloxone_cdc_sources` ([#307](https://github.com/infobloxopen/terraform-provider-bloxone/pull/307))
+* **New Resource and Data Source:** `bloxone_federation_federated_pool`, `bloxone_federation_federated_pools` ([#298](https://github.com/infobloxopen/terraform-provider-bloxone/pull/298))
+* **New Resource and Data Source:** `bloxone_federation_forward_looking_delegation`, `bloxone_federation_forward_looking_delegations` ([#296](https://github.com/infobloxopen/terraform-provider-bloxone/pull/296))
+* **New Resource and Data Source:** `bloxone_federation_overlapping_block`, `bloxone_federation_overlapping_blocks` ([#295](https://github.com/infobloxopen/terraform-provider-bloxone/pull/295))
+* **New Resource and Data Source:** `bloxone_federation_reserved_block`, `bloxone_federation_reserved_blocks` ([#297](https://github.com/infobloxopen/terraform-provider-bloxone/pull/297))
+* **New Data Source:** `bloxone_federation_next_available_reserved_blocks` ([#297](https://github.com/infobloxopen/terraform-provider-bloxone/pull/297))
+* **New Data Source:** `bloxone_federation_next_available_overlapping_blocks` ([#306](https://github.com/infobloxopen/terraform-provider-bloxone/pull/306))
+* **New Data Source:** `bloxone_federation_next_available_federated_blocks` ([#309](https://github.com/infobloxopen/terraform-provider-bloxone/pull/309))
+
+ENHANCEMENTS:
+* DNS: Added Unified Nameservers (v2) support alongside existing v1 support, plus DNSSEC signing policy attributes, in `bloxone_dns_auth_zone` and `bloxone_dns_auth_nsg` ([#287](https://github.com/infobloxopen/terraform-provider-bloxone/pull/287))
+* IPAM FEDERATION: Added `tag_filters` to the next available data sources and `next_available_id` to `bloxone_federation_reserved_block`, `bloxone_federation_overlapping_block` and `bloxone_federation_federated_block` ([#316](https://github.com/infobloxopen/terraform-provider-bloxone/pull/316), [#318](https://github.com/infobloxopen/terraform-provider-bloxone/pull/318), [#319](https://github.com/infobloxopen/terraform-provider-bloxone/pull/319))
+* IPAM FEDERATION: Added `federated_pool_id`, `metadata`, `network_compliance`, `network_compliant`, `region`, `state`, `utilization`, `utilization_v6` and `tags_all` to `bloxone_federation_federated_block` ([#288](https://github.com/infobloxopen/terraform-provider-bloxone/pull/288))
+* IPAM FEDERATION: Exposed `provider_type` and `region` as read-only attributes in `bloxone_federation_federated_realm` ([#308](https://github.com/infobloxopen/terraform-provider-bloxone/pull/308))
+* Extended `tags_all` support to `bloxone_keys_tsig`, `bloxone_td_category_filter` and `bloxone_td_application_filter` ([#304](https://github.com/infobloxopen/terraform-provider-bloxone/pull/304), fixes issue [#300](https://github.com/infobloxopen/terraform-provider-bloxone/issues/300))
+* Updated NIOS-X VM version to 4.1.13 and OS version to Ubuntu 24 in GCP Marketplace Terraform module ([#278](https://github.com/infobloxopen/terraform-provider-bloxone/pull/278), [#284](https://github.com/infobloxopen/terraform-provider-bloxone/pull/284), [#289](https://github.com/infobloxopen/terraform-provider-bloxone/pull/289))
+
+FIXES:
+* Fixed provider `default_tags` being silently ignored ([#304](https://github.com/infobloxopen/terraform-provider-bloxone/pull/304), fixes issue [#300](https://github.com/infobloxopen/terraform-provider-bloxone/issues/300))
+* Fixed `terraform import` for Threat Defense, Anycast and DFP resources ([#303](https://github.com/infobloxopen/terraform-provider-bloxone/pull/303), fixes issue [#301](https://github.com/infobloxopen/terraform-provider-bloxone/issues/301))
+* DNS: Fixed unsetting of ACL attributes in `bloxone_dns_view` ([#305](https://github.com/infobloxopen/terraform-provider-bloxone/pull/305), fixes issue [#138](https://github.com/infobloxopen/terraform-provider-bloxone/issues/138))
+* DHCP/IPAM: Fixed "inconsistent result after apply" in `bloxone_ipam_subnet` when a DHCP option added on update matches its inherited value ([#310](https://github.com/infobloxopen/terraform-provider-bloxone/pull/310), fixes issue [#299](https://github.com/infobloxopen/terraform-provider-bloxone/issues/299))
+* DHCP: Marked `ddns_zones.tsig_key.secret` as sensitive in `bloxone_dhcp_server` ([#293](https://github.com/infobloxopen/terraform-provider-bloxone/pull/293))
+
+NOTES:
+* Upgraded `terraform-plugin-framework` to v1.19.0, `terraform-plugin-sdk/v2` to v2.40.1 and `terraform-plugin-go` to v0.31.0 ([#313](https://github.com/infobloxopen/terraform-provider-bloxone/pull/313))
+* Upgraded `google.golang.org/grpc` to v1.83.2 ([#283](https://github.com/infobloxopen/terraform-provider-bloxone/pull/283), [#292](https://github.com/infobloxopen/terraform-provider-bloxone/pull/292))
+* Fixed acceptance tests and CI workflows following the Terraform plugin framework/SDK upgrade ([#314](https://github.com/infobloxopen/terraform-provider-bloxone/pull/314))
+
 ## v1.6.0 (July 17, 2026)
 
 ENHANCEMENTS:
