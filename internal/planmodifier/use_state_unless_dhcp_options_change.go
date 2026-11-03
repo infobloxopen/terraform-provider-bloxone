@@ -2,6 +2,7 @@ package planmodifier
 
 import (
 	"context"
+	"slices"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -16,12 +17,14 @@ import (
 var dhcpOptionAttrs = []string{"dhcp_options", "dhcp_options_v6"}
 
 // UseStateForUnknownUnlessDhcpOptionsChange behaves like
-// objectplanmodifier.UseStateForUnknown, except when dhcp_options or
-// dhcp_options_v6 change. The API then turns an inherited option that the user
-// now sets into an "override", so the planned inheritance_sources entry for it
-// (under the matching list) is changed from "inherit" to "override". If the
-// result can't be worked out (an option was removed, or a code isn't known
-// yet) the value stays unknown.
+// objectplanmodifier.UseStateForUnknown, except for the inherited option lists.
+// If dhcp_options or dhcp_options_v6 change, the API turns an inherited option
+// that the user now sets into an "override", so the planned inheritance_sources
+// entry for it (under the matching list) is changed from "inherit" to
+// "override". If the result can't be worked out (an option was removed, or a
+// code isn't known yet) the value stays unknown. If neither list changes, the
+// inherited option lists are left unknown: they come from the parent, which
+// may change in the same apply.
 func UseStateForUnknownUnlessDhcpOptionsChange() planmodifier.Object {
 	return useStateForUnknownUnlessDhcpOptionsChange{}
 }
@@ -58,7 +61,22 @@ func (useStateForUnknownUnlessDhcpOptionsChange) PlanModifyObject(ctx context.Co
 		changed[name] = codes
 	}
 	if len(changed) == 0 {
-		resp.PlanValue = req.StateValue
+		// inheritance_sources.<list>.value: unknown, the rest from state
+		src, _ := req.StateValue.ToTerraformValue(ctx)
+		out, err := tftypes.Transform(src, func(p *tftypes.AttributePath, v tftypes.Value) (tftypes.Value, error) {
+			steps := p.Steps()
+			if len(steps) != 2 || steps[1] != tftypes.AttributeName("value") || v.IsNull() {
+				return v, nil
+			}
+			if name, _ := steps[0].(tftypes.AttributeName); slices.Contains(dhcpOptionAttrs, string(name)) {
+				return tftypes.NewValue(v.Type(), tftypes.UnknownValue), nil
+			}
+			return v, nil
+		})
+		if err != nil {
+			return
+		}
+		setPlanValue(ctx, req, resp, out)
 		return
 	}
 
@@ -97,6 +115,12 @@ func (useStateForUnknownUnlessDhcpOptionsChange) PlanModifyObject(ctx context.Co
 	if err != nil || unknown {
 		return
 	}
+	setPlanValue(ctx, req, resp, out)
+}
+
+// setPlanValue converts a transformed state value back to an object and uses it
+// as the plan. On failure the plan value stays unknown.
+func setPlanValue(ctx context.Context, req planmodifier.ObjectRequest, resp *planmodifier.ObjectResponse, out tftypes.Value) {
 	if val, err := req.StateValue.Type(ctx).ValueFromTerraform(ctx, out); err == nil {
 		if obj, ok := val.(basetypes.ObjectValue); ok {
 			resp.PlanValue = obj
