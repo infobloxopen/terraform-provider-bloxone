@@ -21,6 +21,25 @@ const (
 	RecordOperationTimeout = 2 * time.Minute
 )
 
+// retryableRecordErrorSubstrings are substrings of error messages returned by the DNS
+// Data API when a record references a Zone/View that was just created but has not yet
+// propagated from the DNS Configuration service. These are transient and worth retrying.
+var retryableRecordErrorSubstrings = []string{
+	"not found",
+	"reverse mapping zone",
+	"does not refer to a valid",
+}
+
+func isRetryableRecordError(err error) bool {
+	msg := err.Error()
+	for _, substr := range retryableRecordErrorSubstrings {
+		if strings.Contains(msg, substr) {
+			return true
+		}
+	}
+	return false
+}
+
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &RecordResource{}
 var _ resource.ResourceWithImportState = &RecordResource{}
@@ -94,7 +113,7 @@ func (r *RecordResource) Create(ctx context.Context, req resource.CreateRequest,
 			Inherit(inheritanceType).
 			Execute()
 		if err != nil {
-			if strings.Contains(err.Error(), "not found") {
+			if isRetryableRecordError(err) {
 				tflog.Debug(ctx, "Waiting for related objects to be present, will retry", map[string]interface{}{"error": err.Error()})
 				return retry.RetryableError(err)
 			}
@@ -107,6 +126,9 @@ func (r *RecordResource) Create(ctx context.Context, req resource.CreateRequest,
 		return nil
 	})
 	if err != nil {
+		if !resp.Diagnostics.HasError() {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Record, got error: %s", err))
+		}
 		return
 	}
 
@@ -162,7 +184,7 @@ func (r *RecordResource) Update(ctx context.Context, req resource.UpdateRequest,
 			Inherit(inheritanceType).
 			Execute()
 		if err != nil {
-			if strings.Contains(err.Error(), "record not found") {
+			if isRetryableRecordError(err) {
 				tflog.Debug(ctx, "Waiting for related objects to be present, will retry", map[string]interface{}{"error": err.Error()})
 				return retry.RetryableError(err)
 			}
@@ -175,6 +197,9 @@ func (r *RecordResource) Update(ctx context.Context, req resource.UpdateRequest,
 		return nil
 	})
 	if err != nil {
+		if !resp.Diagnostics.HasError() {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update Record, got error: %s", err))
+		}
 		return
 	}
 

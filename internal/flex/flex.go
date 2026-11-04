@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-framework-nettypes/iptypes"
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -109,6 +110,15 @@ func FlattenFloat64Pointer(f *float64) types.Float64 {
 		return types.Float64Null()
 	}
 	return FlattenFloat64(*f)
+}
+
+func FlattenIPAddress(ipaddr *string) iptypes.IPAddress {
+	if ipaddr == nil || *ipaddr == "" {
+		return iptypes.NewIPAddressNull()
+	}
+	return iptypes.IPAddress{
+		StringValue: FlattenStringPointer(ipaddr),
+	}
 }
 
 func FlattenFrameworkMapString(ctx context.Context, m map[string]interface{}, diags *diag.Diagnostics) types.Map {

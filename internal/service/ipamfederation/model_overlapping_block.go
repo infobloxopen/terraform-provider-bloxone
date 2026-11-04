@@ -2,11 +2,15 @@ package ipamfederation
 
 import (
 	"context"
+	"regexp"
 
+	"github.com/hashicorp/terraform-plugin-framework-nettypes/iptypes"
 	"github.com/hashicorp/terraform-plugin-framework-timetypes/timetypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	schema "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -19,10 +23,12 @@ import (
 	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
 
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	internalplanmodifier "github.com/infobloxopen/terraform-provider-bloxone/internal/planmodifier"
+	internalvalidator "github.com/infobloxopen/terraform-provider-bloxone/internal/validator"
 )
 
 type OverlappingBlockModel struct {
-	Address          types.String      `tfsdk:"address"`
+	Address          iptypes.IPAddress `tfsdk:"address"`
 	Cidr             types.Int64       `tfsdk:"cidr"`
 	Comment          types.String      `tfsdk:"comment"`
 	CreatedAt        timetypes.RFC3339 `tfsdk:"created_at"`
@@ -31,6 +37,7 @@ type OverlappingBlockModel struct {
 	Id               types.String      `tfsdk:"id"`
 	Name             types.String      `tfsdk:"name"`
 	NetworkCompliant types.Bool        `tfsdk:"network_compliant"`
+	NextAvailableId  types.String      `tfsdk:"next_available_id"`
 	Parent           types.String      `tfsdk:"parent"`
 	Protocol         types.String      `tfsdk:"protocol"`
 	Tags             types.Map         `tfsdk:"tags"`
@@ -48,6 +55,7 @@ var OverlappingBlockAttrTypes = map[string]attr.Type{
 	"id":                types.StringType,
 	"name":              types.StringType,
 	"network_compliant": types.BoolType,
+	"next_available_id": types.StringType,
 	"parent":            types.StringType,
 	"protocol":          types.StringType,
 	"tags":              types.MapType{ElemType: types.StringType},
@@ -57,19 +65,25 @@ var OverlappingBlockAttrTypes = map[string]attr.Type{
 
 var OverlappingBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"address": schema.StringAttribute{
-		Optional: true,
-		Computed: true,
-		PlanModifiers: []planmodifier.String{
-			stringplanmodifier.RequiresReplace(),
+		CustomType: iptypes.IPAddressType{},
+		Optional:   true,
+		Computed:   true,
+		Validators: []validator.String{
+			internalvalidator.IsValidIPAddress(),
+			stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
 		},
-		MarkdownDescription: "The address field in form “a.b.c.d/n” where the “/n” may be omitted. In this case, the CIDR value must be defined in the _cidr_ field. When reading, the _address_ field is always in the form “a.b.c.d”. This field is immutable after creation.",
+		PlanModifiers: []planmodifier.String{
+			internalplanmodifier.RequiresReplaceIfIPAddressChanged(),
+			stringplanmodifier.UseStateForUnknown(),
+		},
+		MarkdownDescription: "The address of the overlapping block, an IPv4 address in form \"a.b.c.d\" or an IPv6 address. Do not include a prefix length (\"/n\"); use the _cidr_ field instead. This field is immutable after creation. Exactly one of _address_ or _next_available_id_ must be specified.",
 	},
 	"cidr": schema.Int64Attribute{
 		Required: true,
 		Validators: []validator.Int64{
 			int64validator.Between(1, 128),
 		},
-		MarkdownDescription: "The CIDR of the overlapping block. This is required, if _address_ does not specify it in its input.",
+		MarkdownDescription: "The CIDR of the overlapping block.",
 	},
 	"comment": schema.StringAttribute{
 		Optional:            true,
@@ -106,6 +120,18 @@ var OverlappingBlockResourceSchemaAttributes = map[string]schema.Attribute{
 	"network_compliant": schema.BoolAttribute{
 		Computed:            true,
 		MarkdownDescription: "The compliance status of the overlapping block, as determined by the federation service.",
+	},
+	"next_available_id": schema.StringAttribute{
+		Optional: true,
+		Validators: []validator.String{
+			stringvalidator.ExactlyOneOf(path.MatchRoot("address"), path.MatchRoot("next_available_id")),
+			stringvalidator.RegexMatches(regexp.MustCompile(`^federation/federated_block/[0-9a-f-].*$`), "Should be the resource identifier of a Federated Block."),
+		},
+		PlanModifiers: []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+			stringplanmodifier.UseStateForUnknown(),
+		},
+		MarkdownDescription: "The resource identifier of the parent Federated Block under which the next available overlapping block should be allocated. Exactly one of _address_ or _next_available_id_ must be specified.",
 	},
 	"parent": schema.StringAttribute{
 		Computed:            true,
@@ -159,7 +185,7 @@ func (m *OverlappingBlockModel) Expand(ctx context.Context, diags *diag.Diagnost
 		Tags:            flex.ExpandFrameworkMapString(ctx, m.Tags, diags),
 	}
 	if isCreate {
-		to.Address = flex.ExpandStringPointer(m.Address)
+		to.Address = m.Address.ValueStringPointer()
 	}
 	return to
 }
@@ -183,7 +209,7 @@ func (m *OverlappingBlockModel) Flatten(ctx context.Context, from *ipamfederatio
 	if m == nil {
 		*m = OverlappingBlockModel{}
 	}
-	m.Address = flex.FlattenStringPointer(from.Address)
+	m.Address = flex.FlattenIPAddress(from.Address)
 	m.Cidr = flex.FlattenInt64Pointer(from.Cidr)
 	m.Comment = flex.FlattenStringPointer(from.Comment)
 	m.CreatedAt = timetypes.NewRFC3339TimePointerValue(from.CreatedAt)

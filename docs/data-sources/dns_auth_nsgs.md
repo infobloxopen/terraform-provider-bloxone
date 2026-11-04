@@ -53,13 +53,13 @@ Required:
 Optional:
 
 - `comment` (String) Optional. Comment for the object.
-- `external_primaries` (Attributes List) Optional. DNS primaries external to Universal DDI. Order is not significant. (see [below for nested schema](#nestedatt--results--external_primaries))
-- `external_secondaries` (Attributes List) DNS secondaries external to Universal DDI. Order is not significant. (see [below for nested schema](#nestedatt--results--external_secondaries))
-- `grid_primaries` (Attributes List) Optional. The list of the NIOS Grid Primaries assigned to an AuthNSG, only applicable for the NIOS. (see [below for nested schema](#nestedatt--results--grid_primaries))
-- `grid_secondaries` (Attributes List) Optional. The list of the NIOS Grid Secondaries assigned to an AuthNSG, only applicable for the NIOS. (see [below for nested schema](#nestedatt--results--grid_secondaries))
-- `internal_secondaries` (Attributes List) Optional. Universal DDI hosts acting as internal secondaries. Order is not significant. (see [below for nested schema](#nestedatt--results--internal_secondaries))
-- `nameservers` (Attributes List) Optional. A list of DNS Nameservers of various roles. (see [below for nested schema](#nestedatt--results--nameservers))
-- `nsgs` (List of String) The resource identifier.
+- `external_primaries` (Attributes List) Optional. DNS primaries external to Universal DDI. Order is not significant. Can be configured only when Unified Nameservers is disabled. (see [below for nested schema](#nestedatt--results--external_primaries))
+- `external_secondaries` (Attributes List) DNS secondaries external to Universal DDI. Order is not significant. Can be configured only when Unified Nameservers is disabled. (see [below for nested schema](#nestedatt--results--external_secondaries))
+- `grid_primaries` (Attributes List) Optional. The list of the NIOS Grid Primaries assigned to an AuthNSG, only applicable for the NIOS. Can be configured only when Unified Nameservers is disabled. (see [below for nested schema](#nestedatt--results--grid_primaries))
+- `grid_secondaries` (Attributes List) Optional. The list of the NIOS Grid Secondaries assigned to an AuthNSG, only applicable for the NIOS. Can be configured only when Unified Nameservers is disabled. (see [below for nested schema](#nestedatt--results--grid_secondaries))
+- `internal_secondaries` (Attributes List) Optional. Universal DDI hosts acting as internal secondaries. Order is not significant. Can be configured only when Unified Nameservers is disabled. (see [below for nested schema](#nestedatt--results--internal_secondaries))
+- `nameservers` (Attributes List) Optional. A list of DNS Nameservers of various roles. Can be configured only when Unified Nameservers is enabled. (see [below for nested schema](#nestedatt--results--nameservers))
+- `nsgs` (List of String) List of nameserver group identifiers nested within this DNS Server Group. Can be configured only when Unified Nameservers is disabled.
 - `tags` (Map of String) Tagging specifics.
 
 Read-Only:

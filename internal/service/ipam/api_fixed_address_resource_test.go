@@ -885,3 +885,96 @@ resource "bloxone_dhcp_fixed_address" "test_next_available_id_count" {
 `, count)
 	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), config}, "")
 }
+
+func TestAccFixedAddressResource_DhcpOptionsReorder(t *testing.T) {
+	var resourceName = "bloxone_dhcp_fixed_address.test_dhcp_options"
+	var v ipam.FixedAddress
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
+	fixedAddressName := acctest.RandomNameWithPrefix("fa")
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccFixedAddressDhcpOptionsReorder(spaceName, "10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", fixedAddressName, optionSpaceName, true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "2"),
+				),
+			},
+			// Reordering the options must apply cleanly (no inconsistent result after apply)
+			{
+				Config: testAccFixedAddressDhcpOptionsReorder(spaceName, "10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", fixedAddressName, optionSpaceName, false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "2"),
+				),
+			},
+			// ...and leave no residual diff
+			{
+				Config:   testAccFixedAddressDhcpOptionsReorder(spaceName, "10.0.0.10", "mac", "aa:aa:aa:aa:aa:aa", fixedAddressName, optionSpaceName, false),
+				PlanOnly: true,
+			},
+		},
+	})
+}
+
+func testAccFixedAddressDhcpOptionsReorder(spaceName, address, matchType, matchValue, name, optionSpace string, optionFirst bool) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_fixed_address" "test_dhcp_options" {
+    ip_space = bloxone_ipam_ip_space.test.id
+    address = %q
+    match_type = %q
+    match_value = %q
+    name = %q
+    depends_on = [bloxone_ipam_subnet.test]
+    dhcp_options = %s
+}
+`, address, matchType, matchValue, name, testAccDhcpOptionsOptionAndGroup(optionFirst))
+	return strings.Join([]string{testAccBaseWithIPSpaceAndSubnet(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+optionSpace, optionSpace, "ip4"), config}, "")
+}
+
+func TestAccFixedAddressResource_DhcpOptionsInheritedFromParent(t *testing.T) {
+	var resourceName = "bloxone_dhcp_fixed_address.test_child"
+	var v ipam.FixedAddress
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+	optionName := acctest.RandomNameWithPrefix("opt")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: testAccDhcpOptionsInheritedFromParentSteps(
+			resourceName,
+			testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+			func(childOptionValue string) string {
+				return testAccFixedAddressDhcpOptionsInheritedFromParent(spaceName, optionName, childOptionValue)
+			},
+		),
+	})
+}
+
+// testAccFixedAddressDhcpOptionsInheritedFromParent returns a parent subnet that sets an option and a
+// fixed address in it that sets the same option with childOptionValue (no option when empty).
+func testAccFixedAddressDhcpOptionsInheritedFromParent(spaceName, name, childOptionValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_subnet" "test_parent" {
+    address = "10.0.0.0"
+    cidr = 24
+    space = bloxone_ipam_ip_space.test.id
+    dhcp_options = %s
+}
+
+resource "bloxone_dhcp_fixed_address" "test_child" {
+    ip_space = bloxone_ipam_ip_space.test.id
+    address = "10.0.0.10"
+    match_type = "mac"
+    match_value = "aa:aa:aa:aa:aa:aa"
+    name = %q
+    %s
+    depends_on = [bloxone_ipam_subnet.test_parent]
+}
+`, testAccDhcpOptionList(testAccParentOptionValue), name, testAccDhcpOptionsAttribute(childOptionValue))
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip4"), config}, "")
+}

@@ -2,8 +2,6 @@ package infra_mgmt_test
 
 import (
 	"context"
-	"crypto/sha256"
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"net/http"
@@ -282,7 +280,7 @@ func testAccCheckServicesDisappears(ctx context.Context, v *inframgmt.Service) r
 	}
 }
 func testAccServicesBaseWithHost(hostName string) string {
-	sn := hex.EncodeToString(sha256.New().Sum([]byte(hostName)))
+	sn := acctest.RandomAlphaNumeric(10)
 	return fmt.Sprintf(`
 resource "bloxone_infra_host" "test" {
   display_name = %q

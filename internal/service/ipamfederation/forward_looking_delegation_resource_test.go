@@ -108,6 +108,21 @@ func TestAccForwardLookingDelegationResource_AddressWithPrefixInvalid(t *testing
 	})
 }
 
+func TestAccForwardLookingDelegationResource_AddressRequired(t *testing.T) {
+	realmName := acctest.RandomNameWithPrefix("fld-realm")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccForwardLookingDelegationWithoutAddress(realmName, 16),
+				ExpectError: regexp.MustCompile(`The argument "address" is required`),
+			},
+		},
+	})
+}
+
 func TestAccForwardLookingDelegationResource_disappears(t *testing.T) {
 	resourceName := "bloxone_federation_forward_looking_delegation.test"
 	var v ipamfederation.ForwardLookingDelegation
@@ -238,7 +253,26 @@ func TestAccForwardLookingDelegationResource_Comment(t *testing.T) {
 }
 
 func TestAccForwardLookingDelegationResource_FederatedPoolId(t *testing.T) {
-	t.Skip("FederatedPoolId requires a valid federated pool resource ID; to be added when a pool fixture is available")
+	var resourceName = "bloxone_federation_forward_looking_delegation.test_federated_pool_id"
+	var v ipamfederation.ForwardLookingDelegation
+	realmName := acctest.RandomNameWithPrefix("fld-realm")
+	poolName := acctest.RandomNameWithPrefix("fld-pool")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read
+			{
+				Config: testAccForwardLookingDelegationFederatedPoolId(realmName, poolName, "10.55.0.0", 16),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckForwardLookingDelegationExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttrPair(resourceName, "federated_pool_id", "bloxone_federation_federated_pool.test", "id"),
+				),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
 }
 
 func TestAccForwardLookingDelegationResource_FederatedRealms(t *testing.T) {
@@ -435,6 +469,34 @@ resource "bloxone_federation_forward_looking_delegation" "test" {
     federated_realms = [bloxone_federation_federated_realm.test.id]
 }
 `, address, cidr)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
+}
+
+func testAccForwardLookingDelegationWithoutAddress(realmName string, cidr int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_federation_forward_looking_delegation" "test" {
+    cidr             = %d
+    federated_realms = [bloxone_federation_federated_realm.test.id]
+}
+`, cidr)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
+}
+
+func testAccForwardLookingDelegationFederatedPoolId(realmName, poolName, address string, cidr int) string {
+	config := fmt.Sprintf(`
+resource "bloxone_federation_federated_pool" "test" {
+    federated_realm = bloxone_federation_federated_realm.test.id
+    name            = %q
+    protocol        = "ip4"
+}
+
+resource "bloxone_federation_forward_looking_delegation" "test_federated_pool_id" {
+    address           = %q
+    cidr              = %d
+    federated_realms  = [bloxone_federation_federated_realm.test.id]
+    federated_pool_id = bloxone_federation_federated_pool.test.id
+}
+`, poolName, address, cidr)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName), config}, "")
 }
 

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
@@ -47,6 +49,42 @@ func RandomIP() string {
 	return fmt.Sprintf("%d.%d.%d.%d", rand.Intn(255), rand.Intn(255), rand.Intn(255), rand.Intn(255))
 }
 
+// RandomPublicIP returns a random public (non-RFC-1918) IPv4 address.
+// Use this when the API rejects private IP ranges (e.g. FW network lists).
+func RandomPublicIP() string {
+	for {
+		a := rand.Intn(256)
+		b := rand.Intn(256)
+		c := rand.Intn(256)
+		d := rand.Intn(256)
+		if a == 0 || a == 10 || a == 127 || a >= 224 {
+			continue
+		}
+		if a == 100 && b >= 64 && b <= 127 { // RFC 6598 shared address
+			continue
+		}
+		if a == 169 && b == 254 { // link-local
+			continue
+		}
+		if a == 172 && b >= 16 && b <= 31 { // RFC 1918
+			continue
+		}
+		if a == 192 && b == 168 { // RFC 1918
+			continue
+		}
+		if a == 192 && b == 0 && c == 2 { // RFC 5737 TEST-NET-1
+			continue
+		}
+		if a == 198 && b == 51 && c == 100 { // RFC 5737 TEST-NET-2
+			continue
+		}
+		if a == 203 && b == 0 && c == 113 { // RFC 5737 TEST-NET-3
+			continue
+		}
+		return fmt.Sprintf("%d.%d.%d.%d", a, b, c, d)
+	}
+}
+
 func RandomName() string {
 	b := make([]byte, 6)
 	for i := range b {
@@ -63,6 +101,15 @@ func lookupEnvAny(names ...string) string {
 		}
 	}
 	return ""
+}
+
+func RandomAlphaNumeric(length int) string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(b)
 }
 
 func PreCheck(t *testing.T) {
@@ -88,6 +135,38 @@ func PreCheck(t *testing.T) {
 
 func VerifyDefaultTag(resourceName string) resource.TestCheckFunc {
 	return resource.TestCheckResourceAttr(resourceName, fmt.Sprintf("tags_all.%s", defaultKey), defaultValue)
+}
+
+// ReadTestdata reads a fixture file from internal/acctest/testdata/<service>/,
+// shared across every service's tests. Used to keep large or sensitive-looking
+// content (e.g. test certificates) out of test source files.
+//
+// The path is resolved relative to this source file (via runtime.Caller)
+// rather than the working directory, since go test sets the working
+// directory to the *calling* package's directory, not acctest's own -
+// a plain "testdata/..." relative path would only work for tests that
+// happen to live in this same package.
+func ReadTestdata(t *testing.T, service, name string) string {
+	t.Helper()
+	path := TestdataPath(t, service, name)
+	content, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("unable to read %s: %v", path, err)
+	}
+	return string(content)
+}
+
+// TestdataPath returns the absolute path of a fixture file in
+// internal/acctest/testdata/<service>/, for configs that load it themselves
+// (e.g. via Terraform's file() function), since Terraform runs acceptance
+// test configs from a temporary working directory.
+func TestdataPath(t *testing.T, service, name string) string {
+	t.Helper()
+	_, thisFile, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatalf("unable to determine acctest package location")
+	}
+	return filepath.Join(filepath.Dir(thisFile), "testdata", service, name)
 }
 
 // TestAccBase_DhcpHosts creates a Terraform datasource config that allows you to filter by tags

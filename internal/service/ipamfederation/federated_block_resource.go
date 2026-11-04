@@ -15,7 +15,27 @@ import (
 
 	universalddiclient "github.com/infobloxopen/universal-ddi-go-client/client"
 	"github.com/infobloxopen/universal-ddi-go-client/ipamfederation"
+
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/flex"
+	"github.com/infobloxopen/terraform-provider-bloxone/internal/utils"
 )
+
+// federatedPoolIdPrefix identifies a next_available_id that names a Federated Pool, as opposed to
+// a Federated Block. Next-available allocation from a Federated Pool has no preview (GET) support
+// and is routed through a different API service than allocation from a Federated Block.
+const federatedPoolIdPrefix = "federation/federated_pool/"
+
+// resolvePoolId returns the Federated Pool id that governs this block, either from federated_pool_id
+// directly, or from next_available_id when it names a Federated Pool rather than a Federated Block.
+func (m *FederatedBlockModel) resolvePoolId() (string, bool) {
+	if !m.FederatedPoolId.IsNull() && !m.FederatedPoolId.IsUnknown() {
+		return m.FederatedPoolId.ValueString(), true
+	}
+	if !m.NextAvailableId.IsNull() && !m.NextAvailableId.IsUnknown() && strings.HasPrefix(m.NextAvailableId.ValueString(), federatedPoolIdPrefix) {
+		return m.NextAvailableId.ValueString(), true
+	}
+	return "", false
+}
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &FederatedBlockResource{}
@@ -74,19 +94,121 @@ func (r *FederatedBlockResource) Create(ctx context.Context, req resource.Create
 
 	// network_compliance is not supported for blocks in an AWS pool. A block takes its provider from its pool,
 	// so look the pool up and reject the attribute before the API does.
-	if !data.NetworkCompliance.IsNull() && !data.NetworkCompliance.IsUnknown() && !data.FederatedPoolId.IsNull() && !data.FederatedPoolId.IsUnknown() {
-		poolRes, _, err := r.client.IPAMFederationAPI.
-			FederatedPoolAPI.
-			Read(ctx, data.FederatedPoolId.ValueString()).
-			Execute()
-		if err == nil {
-			pool := poolRes.GetResult()
-			if pool.GetProvider() == ipamfederation.PROVIDERTYPE_AWS {
-				resp.Diagnostics.AddAttributeError(path.Root("network_compliance"), "Unsupported attribute for provider type",
-					"network_compliance is not supported for blocks in a pool with provider_type \"AWS\".")
-				return
+	if !data.NetworkCompliance.IsNull() && !data.NetworkCompliance.IsUnknown() {
+		if poolId, ok := data.resolvePoolId(); ok {
+			poolRes, _, err := r.client.IPAMFederationAPI.
+				FederatedPoolAPI.
+				Read(ctx, poolId).
+				Execute()
+			if err == nil {
+				pool := poolRes.GetResult()
+				if pool.GetProvider() == ipamfederation.PROVIDERTYPE_AWS {
+					resp.Diagnostics.AddAttributeError(path.Root("network_compliance"), "Unsupported attribute for provider type",
+						"network_compliance is not supported for blocks in a pool with provider_type \"AWS\".")
+					return
+				}
 			}
 		}
+	}
+
+	if !data.NextAvailableId.IsUnknown() && !data.NextAvailableId.IsNull() {
+		nextAvailableId := data.NextAvailableId.ValueString()
+
+		// Lock the mutex to serialize operations with the same key.
+		// This is necessary to prevent the same block being returned.
+		utils.GlobalMutexStore.Lock(nextAvailableId)
+		defer utils.GlobalMutexStore.Unlock(nextAvailableId)
+
+		body := ipamfederation.NextAvailableBlockRequest{
+			Cidr:  flex.ExpandInt64Pointer(data.Cidr),
+			Count: utils.Ptr(int64(1)),
+			Tags:  flex.ExpandFrameworkMapString(ctx, data.Tags, &resp.Diagnostics),
+		}
+		if !data.Name.IsNull() {
+			body.Name = data.Name.ValueStringPointer()
+		}
+		if !data.Comment.IsNull() {
+			body.Comment = data.Comment.ValueStringPointer()
+		}
+		if !data.FederatedPoolId.IsNull() && !data.FederatedPoolId.IsUnknown() {
+			body.FederatedPoolId = data.FederatedPoolId.ValueStringPointer()
+		}
+
+		if strings.HasPrefix(nextAvailableId, federatedPoolIdPrefix) {
+			// Allocating directly from a Federated Pool: the pool is already the parent, so there
+			// is no separate federated_pool_id to reconcile afterwards.
+			apiRes, _, err := r.client.IPAMFederationAPI.
+				NextAvailablePoolBlockAPI.
+				CreateNextAvailableBlocks(ctx, nextAvailableId).
+				Body(body).
+				Execute()
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create next available FederatedBlock, got error: %s", err))
+				return
+			}
+
+			results := apiRes.GetResults()
+			if len(results) == 0 {
+				resp.Diagnostics.AddError("Client Error", "Unable to create next available FederatedBlock, no results were returned")
+				return
+			}
+
+			data.Flatten(ctx, &results[0], &resp.Diagnostics)
+
+			// Save data into Terraform state
+			resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+			return
+		}
+
+		// Allocating under a parent Federated Block. network_compliance does not persist on the
+		// create-next-available endpoint, so it is patched in with a follow-up Update call if set.
+		configuredNetworkCompliance := data.NetworkCompliance
+
+		apiRes, _, err := r.client.IPAMFederationAPI.
+			NextAvailableFederatedBlockAPI.
+			CreateNextAvailableFederatedBlocks(ctx, nextAvailableId).
+			Body(body).
+			Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create next available FederatedBlock, got error: %s", err))
+			return
+		}
+
+		results := apiRes.GetResults()
+		if len(results) == 0 {
+			resp.Diagnostics.AddError("Client Error", "Unable to create next available FederatedBlock, no results were returned")
+			return
+		}
+
+		data.Flatten(ctx, &results[0], &resp.Diagnostics)
+
+		if !configuredNetworkCompliance.IsNull() {
+			// Remember what the backend actually persisted from the create call, so that if the
+			// follow-up Update below fails, state reflects reality rather than the desired config.
+			createdNetworkCompliance := data.NetworkCompliance
+
+			data.NetworkCompliance = configuredNetworkCompliance
+			updateRes, _, err := r.client.IPAMFederationAPI.
+				FederatedBlockAPI.
+				Update(ctx, data.Id.ValueString()).
+				Body(*data.Expand(ctx, &resp.Diagnostics, false)).
+				Execute()
+			if err != nil {
+				// The FederatedBlock was already created successfully above. Save it to state now,
+				// using the backend's actual network_compliance, so it isn't orphaned outside of
+				// Terraform; a subsequent apply will retry setting network_compliance via Update.
+				data.NetworkCompliance = createdNetworkCompliance
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to set network_compliance on next available FederatedBlock, got error: %s", err))
+				resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+				return
+			}
+			res := updateRes.GetResult()
+			data.Flatten(ctx, &res, &resp.Diagnostics)
+		}
+
+		// Save data into Terraform state
+		resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+		return
 	}
 
 	apiRes, _, err := r.client.IPAMFederationAPI.
@@ -285,14 +407,17 @@ func (r *FederatedBlockResource) ModifyPlan(ctx context.Context, req resource.Mo
 
 	var config FederatedBlockModel
 	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
-	if resp.Diagnostics.HasError() || config.NetworkCompliance.IsNull() || config.NetworkCompliance.IsUnknown() ||
-		config.FederatedPoolId.IsNull() || config.FederatedPoolId.IsUnknown() {
+	if resp.Diagnostics.HasError() || config.NetworkCompliance.IsNull() || config.NetworkCompliance.IsUnknown() {
+		return
+	}
+	poolId, ok := config.resolvePoolId()
+	if !ok {
 		return
 	}
 
 	poolRes, _, err := r.client.IPAMFederationAPI.
 		FederatedPoolAPI.
-		Read(ctx, config.FederatedPoolId.ValueString()).
+		Read(ctx, poolId).
 		Execute()
 	if err != nil {
 		// If the pool cannot be read, the create request reports the problem, so it is not checked here.

@@ -559,9 +559,9 @@ func TestAccIpSpaceResource_DefaultRealms(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "default_realms.#", "1"),
 				),
 			},
-			// Update and Read
+			// Update and Read - Unassign realm from Space and Delete the Realm
 			{
-				Config: testAccIpSpaceDefaultRealmsNull(name),
+				Config: testAccIpSpaceDefaultRealmsNull(name, realmName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
 					resource.TestCheckResourceAttr(resourceName, "default_realms.#", "0"),
@@ -1208,20 +1208,20 @@ resource "bloxone_ipam_ip_space" "test_default_realms" {
 	default_realms = [
 		bloxone_federation_federated_realm.realm1.id
 	]
+	depends_on = [ bloxone_federation_federated_realm.realm1 ]
 }
 `, name)
 	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName, "realm1"), config}, "")
 }
 
-func testAccIpSpaceDefaultRealmsNull(name string) string {
-	return fmt.Sprintf(`
+func testAccIpSpaceDefaultRealmsNull(name, realmName string) string {
+	config := fmt.Sprintf(`
 resource "bloxone_ipam_ip_space" "test_default_realms" {
 	name = %q
-	default_realms = [
-		
-	]
+	default_realms = []
 }
 `, name)
+	return strings.Join([]string{testAccBaseWithFederatedRealm(realmName, "realm1"), config}, "")
 }
 
 func testAccBaseWithFederatedRealm(name, alias string) string {
@@ -1418,4 +1418,147 @@ resource "bloxone_ipam_ip_space" "test_tags" {
     tags = %s
 }
 `, name, tagsStr)
+}
+
+func TestAccIpSpaceResource_DhcpOptionsReorder(t *testing.T) {
+	var resourceName = "bloxone_ipam_ip_space.test_dhcp_options"
+	var v ipam.IPSpace
+	name := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccIpSpaceDhcpOptionsReorder(name, true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "2"),
+				),
+			},
+			// Reordering the options must apply cleanly (no inconsistent result after apply)
+			{
+				Config: testAccIpSpaceDhcpOptionsReorder(name, false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "2"),
+				),
+			},
+			// ...and leave no residual diff
+			{
+				Config:   testAccIpSpaceDhcpOptionsReorder(name, false),
+				PlanOnly: true,
+			},
+		},
+	})
+}
+
+func testAccIpSpaceDhcpOptionsReorder(name string, optionFirst bool) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_ip_space" "test_dhcp_options" {
+    name = %q
+    dhcp_options = %s
+}
+`, name, testAccDhcpOptionsOptionAndGroup(optionFirst))
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip4"), config}, "")
+}
+
+func TestAccIpSpaceResource_DhcpOptionsAddRemove(t *testing.T) {
+	var resourceName = "bloxone_ipam_ip_space.test_add_remove"
+	var v ipam.IPSpace
+	name := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: testAccDhcpOptionsAddRemoveSteps(
+			resourceName,
+			testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+			func(optionValue string) string {
+				return testAccIpSpaceDhcpOptionsAddRemove(name, optionValue)
+			},
+		),
+	})
+}
+
+func testAccIpSpaceDhcpOptionsAddRemove(name, optionValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_ip_space" "test_add_remove" {
+    name = %q
+    %s
+}
+`, name, testAccDhcpOptionsAttribute(optionValue))
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip4"), config}, "")
+}
+
+func TestAccIpSpaceResource_DhcpOptionsV6AddRemove(t *testing.T) {
+	var resourceName = "bloxone_ipam_ip_space.test_add_remove_v6"
+	var v ipam.IPSpace
+	name := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: testAccDhcpOptionsAddRemoveStepsFor(
+			"dhcp_options_v6",
+			resourceName,
+			testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+			func(optionValue string) string {
+				return testAccIpSpaceDhcpOptionsV6AddRemove(name, optionValue)
+			},
+		),
+	})
+}
+
+func testAccIpSpaceDhcpOptionsV6AddRemove(name, optionValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_ip_space" "test_add_remove_v6" {
+    name = %q
+    %s
+}
+`, name, testAccDhcpOptionsV6Attribute(optionValue))
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip6"), config}, "")
+}
+
+func TestAccIpSpaceResource_DhcpOptionsV6Reorder(t *testing.T) {
+	var resourceName = "bloxone_ipam_ip_space.test_dhcp_options_v6_reorder"
+	var v ipam.IPSpace
+	name := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccIpSpaceDhcpOptionsV6Reorder(name, true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6.#", "2"),
+				),
+			},
+			// Reordering the options must apply cleanly (no inconsistent result after apply)
+			{
+				Config: testAccIpSpaceDhcpOptionsV6Reorder(name, false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckIpSpaceExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6.#", "2"),
+				),
+			},
+			// ...and leave no residual diff
+			{
+				Config:   testAccIpSpaceDhcpOptionsV6Reorder(name, false),
+				PlanOnly: true,
+			},
+		},
+	})
+}
+
+func testAccIpSpaceDhcpOptionsV6Reorder(name string, optionFirst bool) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_ip_space" "test_dhcp_options_v6_reorder" {
+    name = %q
+    dhcp_options_v6 = %s
+}
+`, name, testAccDhcpOptionsOptionAndGroup(optionFirst))
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip6"), config}, "")
 }

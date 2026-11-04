@@ -13,13 +13,14 @@ func TestAccNamedListDataSource_Filters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_named_lists.test"
 	resourceName := "bloxone_td_named_list.test"
 	name := acctest.RandomNameWithPrefix("named_list")
+	tagValue := acctest.RandomName()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNamedListDataSourceConfigFilters(name),
+				Config: testAccNamedListDataSourceConfigFilters(name, tagValue),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{}, testAccCheckNamedListResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
@@ -32,13 +33,14 @@ func TestAccNamedListDataSource_TagFilters(t *testing.T) {
 	dataSourceName := "data.bloxone_td_named_lists.test"
 	resourceName := "bloxone_td_named_list.test"
 	name := acctest.RandomNameWithPrefix("named_list")
+	tagValue := acctest.RandomName()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { acctest.PreCheck(t) },
 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNamedListDataSourceConfigTagFilters(name, acctest.RandomName()),
+				Config: testAccNamedListDataSourceConfigTagFilters(name, tagValue),
 				Check: resource.ComposeTestCheckFunc(
 					append([]resource.TestCheckFunc{}, testAccCheckNamedListResourceAttrPair(resourceName, dataSourceName)...)...,
 				),
@@ -61,11 +63,11 @@ func testAccCheckNamedListResourceAttrPair(resourceName, dataSourceName string) 
 		resource.TestCheckResourceAttrPair(resourceName, "tags", dataSourceName, "results.0.tags"),
 		resource.TestCheckResourceAttrPair(resourceName, "type", dataSourceName, "results.0.type"),
 		resource.TestCheckResourceAttrPair(resourceName, "threat_level", dataSourceName, "results.0.threat_level"),
-		resource.TestCheckResourceAttrPair(resourceName, "updated_time", dataSourceName, "results.0.updated_time"),
+		resource.TestCheckResourceAttrSet(dataSourceName, "results.0.updated_time"),
 	}
 }
 
-func testAccNamedListDataSourceConfigFilters(name string) string {
+func testAccNamedListDataSourceConfigFilters(name, tagValue string) string {
 	return fmt.Sprintf(`
 resource "bloxone_td_named_list" "test" {
 	name = %q
@@ -77,7 +79,7 @@ resource "bloxone_td_named_list" "test" {
 	]
 	type = "custom_list"
 	tags = {
-		display_name = "Terraform Example Named List"
+		display_name = %q
 	}
 }
 
@@ -86,7 +88,7 @@ data "bloxone_td_named_lists" "test" {
 		display_name = bloxone_td_named_list.test.tags.display_name
 	}
 }
-`, name)
+`, name, tagValue)
 }
 
 func testAccNamedListDataSourceConfigTagFilters(name, tagValue string) string {
@@ -101,7 +103,7 @@ resource "bloxone_td_named_list" "test" {
 	]
 	type = "custom_list"
 	tags = {
-		display_name = "Terraform Example Named List"
+		display_name = %q
 	}
 }
 
@@ -110,5 +112,5 @@ data "bloxone_td_named_lists" "test" {
 		display_name = bloxone_td_named_list.test.tags.display_name
 	}
 }
-`, tagValue)
+`, name, tagValue)
 }

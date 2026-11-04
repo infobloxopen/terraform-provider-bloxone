@@ -1406,3 +1406,150 @@ resource "bloxone_dhcp_server" "test_tags" {
 }
 `, name, tagsStr)
 }
+
+func TestAccServerResource_DhcpOptionsReorder(t *testing.T) {
+	var resourceName = "bloxone_dhcp_server.test_dhcp_options"
+	var v ipam.Server
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
+	serverName := acctest.RandomNameWithPrefix("dhcp-server")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccServerDhcpOptionsReorder(serverName, optionSpaceName, true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "2"),
+				),
+			},
+			// Reordering the options must apply cleanly (no inconsistent result after apply)
+			{
+				Config: testAccServerDhcpOptionsReorder(serverName, optionSpaceName, false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "2"),
+				),
+			},
+			// ...and leave no residual diff
+			{
+				Config:   testAccServerDhcpOptionsReorder(serverName, optionSpaceName, false),
+				PlanOnly: true,
+			},
+		},
+	})
+}
+
+func testAccServerDhcpOptionsReorder(name, optionSpaceName string, optionFirst bool) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_server" "test_dhcp_options" {
+    name = %q
+    dhcp_options = %s
+}
+`, name, testAccDhcpOptionsOptionAndGroup(optionFirst))
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+optionSpaceName, optionSpaceName, "ip4"), config}, "")
+}
+
+func TestAccServerResource_DhcpOptionsAddRemove(t *testing.T) {
+	var resourceName = "bloxone_dhcp_server.test_add_remove"
+	var v ipam.Server
+	serverName := acctest.RandomNameWithPrefix("dhcp-server")
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: testAccDhcpOptionsAddRemoveSteps(
+			resourceName,
+			testAccCheckServerExists(context.Background(), resourceName, &v),
+			func(optionValue string) string {
+				return testAccServerDhcpOptionsAddRemove(serverName, optionSpaceName, optionValue)
+			},
+		),
+	})
+}
+
+func testAccServerDhcpOptionsAddRemove(name, optionSpaceName, optionValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_server" "test_add_remove" {
+    name = %q
+    %s
+}
+`, name, testAccDhcpOptionsAttribute(optionValue))
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+optionSpaceName, optionSpaceName, "ip4"), config}, "")
+}
+
+func TestAccServerResource_DhcpOptionsV6AddRemove(t *testing.T) {
+	var resourceName = "bloxone_dhcp_server.test_add_remove_v6"
+	var v ipam.Server
+	serverName := acctest.RandomNameWithPrefix("dhcp-server")
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: testAccDhcpOptionsAddRemoveStepsFor(
+			"dhcp_options_v6",
+			resourceName,
+			testAccCheckServerExists(context.Background(), resourceName, &v),
+			func(optionValue string) string {
+				return testAccServerDhcpOptionsV6AddRemove(serverName, optionSpaceName, optionValue)
+			},
+		),
+	})
+}
+
+func testAccServerDhcpOptionsV6AddRemove(name, optionSpaceName, optionValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_server" "test_add_remove_v6" {
+    name = %q
+    %s
+}
+`, name, testAccDhcpOptionsV6Attribute(optionValue))
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+optionSpaceName, optionSpaceName, "ip6"), config}, "")
+}
+
+func TestAccServerResource_DhcpOptionsV6Reorder(t *testing.T) {
+	var resourceName = "bloxone_dhcp_server.test_dhcp_options_v6_reorder"
+	var v ipam.Server
+	optionSpaceName := acctest.RandomNameWithPrefix("os")
+	serverName := acctest.RandomNameWithPrefix("dhcp-server")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccServerDhcpOptionsV6Reorder(serverName, optionSpaceName, true),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6.#", "2"),
+				),
+			},
+			// Reordering the options must apply cleanly (no inconsistent result after apply)
+			{
+				Config: testAccServerDhcpOptionsV6Reorder(serverName, optionSpaceName, false),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckServerExists(context.Background(), resourceName, &v),
+					resource.TestCheckResourceAttr(resourceName, "dhcp_options_v6.#", "2"),
+				),
+			},
+			// ...and leave no residual diff
+			{
+				Config:   testAccServerDhcpOptionsV6Reorder(serverName, optionSpaceName, false),
+				PlanOnly: true,
+			},
+		},
+	})
+}
+
+func testAccServerDhcpOptionsV6Reorder(name, optionSpaceName string, optionFirst bool) string {
+	config := fmt.Sprintf(`
+resource "bloxone_dhcp_server" "test_dhcp_options_v6_reorder" {
+    name = %q
+    dhcp_options_v6 = %s
+}
+`, name, testAccDhcpOptionsOptionAndGroup(optionFirst))
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode("og-"+optionSpaceName, optionSpaceName, "ip6"), config}, "")
+}

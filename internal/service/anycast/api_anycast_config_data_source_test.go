@@ -126,12 +126,18 @@ resource "bloxone_anycast_config" "test" {
     anycast_ip_address = %q
     name = %q
     service = %q
+    tags = {
+        tf_acc = %q
+    }
 }
 data "bloxone_anycast_configs" "test" {
 	is_configured = false
+	tag_filters = {
+		tf_acc = bloxone_anycast_config.test.tags.tf_acc
+	}
 	depends_on = [bloxone_anycast_config.test]
 }
-`, anycastIpAddress, name, service)
+`, anycastIpAddress, name, service, name)
 }
 
 func testAccAnycastConfigDataSourceConfigTagFilters(anycastIpAddress, name, service, tagValue string) string {

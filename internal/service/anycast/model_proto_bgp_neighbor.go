@@ -64,6 +64,7 @@ var ProtoBgpNeighborResourceSchemaAttributes = map[string]schema.Attribute{
 	},
 	"ip_address": schema.StringAttribute{
 		Optional:            true,
+		Computed:            true,
 		MarkdownDescription: "IPv4 address of the BGP neighbor",
 	},
 	"max_hop_count": schema.Int64Attribute{

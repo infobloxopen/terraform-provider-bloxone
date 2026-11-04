@@ -15,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
@@ -275,10 +276,13 @@ var ConfigAuthZoneResourceSchemaAttributes = map[string]schema.Attribute{
 		},
 		Optional: true,
 		Computed: true,
+		PlanModifiers: []planmodifier.List{
+			listplanmodifier.RequiresReplace(),
+		},
 		Validators: []validator.List{
 			listvalidator.SizeAtLeast(1),
 		},
-		MarkdownDescription: "Optional. BloxOne DDI hosts acting as internal secondaries. Order is not significant. Can be configured only when Unified Nameservers is disabled.",
+		MarkdownDescription: "Optional. BloxOne DDI hosts acting as internal secondaries. Order is not significant. Can be configured only when Unified Nameservers is disabled. Changing this value requires replacing the resource.",
 	},
 	"mapped_subnet": schema.StringAttribute{
 		Computed:            true,
