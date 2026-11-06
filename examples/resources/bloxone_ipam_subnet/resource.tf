@@ -43,6 +43,11 @@ resource "bloxone_ipam_subnet" "example" {
 }
 
 # Next available subnet
+# At plan time the provider checks that a /24 is free in next_available_id and
+# shows the candidate as a warning (a preview only, not reserved). Plan fails if:
+#  - the parent address block does not exist
+#  - cidr does not fit the parent (for example /8 from this /16)
+#  - no /24 is left in the parent
 resource "bloxone_ipam_subnet" "example_na_s" {
   next_available_id = bloxone_ipam_address_block.example.id
   cidr              = 24

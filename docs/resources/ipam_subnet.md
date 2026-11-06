@@ -5,6 +5,7 @@ subcategory: "IPAM/DHCP"
 description: |-
   Manages a Subnet.
   The Subnet object represents a set of addresses from which addresses are assigned to network equipment interfaces.
+  When next_available_id is set, terraform plan checks that a subnet of the requested cidr is currently available in that address block. The plan fails if the address block does not exist, the cidr does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved; the subnet is allocated at apply and may differ.
 ---
 
 # bloxone_ipam_subnet (Resource)
@@ -12,6 +13,8 @@ description: |-
 Manages a Subnet.
 
 The Subnet object represents a set of addresses from which addresses are assigned to network equipment interfaces.
+
+When `next_available_id` is set, `terraform plan` checks that a subnet of the requested `cidr` is currently available in that address block. The plan fails if the address block does not exist, the `cidr` does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved; the subnet is allocated at apply and may differ.
 
 ## Example Usage
 
@@ -61,6 +64,11 @@ resource "bloxone_ipam_subnet" "example" {
 }
 
 # Next available subnet
+# At plan time the provider checks that a /24 is free in next_available_id and
+# shows the candidate as a warning (a preview only, not reserved). Plan fails if:
+#  - the parent address block does not exist
+#  - cidr does not fit the parent (for example /8 from this /16)
+#  - no /24 is left in the parent
 resource "bloxone_ipam_subnet" "example_na_s" {
   next_available_id = bloxone_ipam_address_block.example.id
   cidr              = 24

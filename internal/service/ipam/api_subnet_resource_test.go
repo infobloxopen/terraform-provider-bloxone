@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -1063,6 +1064,44 @@ func TestAccSubnetResource_NextAvailableId(t *testing.T) {
 	})
 }
 
+func TestAccSubnetResource_NextAvailableIdPreflight(t *testing.T) {
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create the parent address block so its ID is known at plan time
+			{
+				Config: testAccSubnetNextAvailableIdPreflight(spaceName, "", 0, false),
+			},
+			// Requested CIDR larger than the parent fails at plan
+			{
+				Config:      testAccSubnetNextAvailableIdPreflight(spaceName, "bloxone_ipam_address_block.parent.id", 16, false),
+				PlanOnly:    true,
+				ExpectError: regexp.MustCompile(`Requested CIDR does not fit`),
+			},
+			// Parent address block that does not exist fails at plan
+			{
+				Config:      testAccSubnetNextAvailableIdPreflight(spaceName, `"ipam/address_block/00000000-0000-0000-0000-000000000000"`, 26, false),
+				PlanOnly:    true,
+				ExpectError: regexp.MustCompile(`Parent address block not found`),
+			},
+			// Fill the parent address block
+			{
+				Config: testAccSubnetNextAvailableIdPreflight(spaceName, "", 0, true),
+			},
+			// No space left in the parent fails at plan
+			{
+				Config:      testAccSubnetNextAvailableIdPreflight(spaceName, "bloxone_ipam_address_block.parent.id", 26, true),
+				PlanOnly:    true,
+				ExpectError: regexp.MustCompile(`No next-available allocation found`),
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func testAccCheckSubnetExists(ctx context.Context, resourceName string, v *ipam.Subnet) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
@@ -1640,6 +1679,36 @@ resource "bloxone_ipam_subnet" "test_next_available_id" {
     space = bloxone_ipam_ip_space.test.id
 }
 `, count, addressBlockResourceName, cidr)
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
+}
+
+func testAccSubnetNextAvailableIdPreflight(spaceName, nextAvailableId string, cidr int, fillParent bool) string {
+	config := `
+resource "bloxone_ipam_address_block" "parent" {
+    address = "12.0.0.0"
+    cidr = 24
+    space = bloxone_ipam_ip_space.test.id
+}
+`
+	if fillParent {
+		config += `
+resource "bloxone_ipam_subnet" "filler" {
+    count = 2
+    next_available_id = bloxone_ipam_address_block.parent.id
+    cidr = 25
+    space = bloxone_ipam_ip_space.test.id
+}
+`
+	}
+	if nextAvailableId != "" {
+		config += fmt.Sprintf(`
+resource "bloxone_ipam_subnet" "test_preflight" {
+    next_available_id = %s
+    cidr = %d
+    space = bloxone_ipam_ip_space.test.id
+}
+`, nextAvailableId, cidr)
+	}
 	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 

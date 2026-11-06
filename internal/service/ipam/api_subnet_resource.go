@@ -16,6 +16,7 @@ import (
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &SubnetResource{}
 var _ resource.ResourceWithImportState = &SubnetResource{}
+var _ resource.ResourceWithModifyPlan = &SubnetResource{}
 
 func NewSubnetResource() resource.Resource {
 	return &SubnetResource{}
@@ -32,7 +33,7 @@ func (r *SubnetResource) Metadata(ctx context.Context, req resource.MetadataRequ
 
 func (r *SubnetResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Manages a Subnet.\n\nThe Subnet object represents a set of addresses from which addresses are assigned to network equipment interfaces.",
+		MarkdownDescription: "Manages a Subnet.\n\nThe Subnet object represents a set of addresses from which addresses are assigned to network equipment interfaces.\n\nWhen `next_available_id` is set, `terraform plan` checks that a subnet of the requested `cidr` is currently available in that address block. The plan fails if the address block does not exist, the `cidr` does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved; the subnet is allocated at apply and may differ.",
 		Attributes:          IpamsvcSubnetResourceSchemaAttributes,
 	}
 }
@@ -55,6 +56,31 @@ func (r *SubnetResource) Configure(ctx context.Context, req resource.ConfigureRe
 	}
 
 	r.client = client
+}
+
+// ModifyPlan checks at plan time that a next-available allocation can be satisfied when the object is created.
+func (r *SubnetResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+	if r.client == nil || !req.State.Raw.IsNull() || req.Plan.Raw.IsNull() {
+		return
+	}
+	var data IpamsvcSubnetModel
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() ||
+		data.NextAvailableId.IsNull() || data.NextAvailableId.IsUnknown() || data.Cidr.IsNull() || data.Cidr.IsUnknown() {
+		return
+	}
+	parentId, cidr := data.NextAvailableId.ValueString(), data.Cidr.ValueInt64()
+	checkNextAvailable("subnet", parentId, cidr, func() (string, *http.Response, error) {
+		apiRes, httpRes, err := r.client.IPAddressManagementAPI.AddressBlockAPI.
+			ListNextAvailableSubnet(ctx, parentId).
+			Cidr(int32(cidr)).
+			Count(1).
+			Execute()
+		if err != nil || len(apiRes.GetResults()) == 0 {
+			return "", httpRes, err
+		}
+		return apiRes.GetResults()[0].GetAddress(), httpRes, nil
+	}, &resp.Diagnostics)
 }
 
 func (r *SubnetResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -81,6 +107,11 @@ func (r *SubnetResource) Create(ctx context.Context, req resource.CreateRequest,
 		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
+		if !data.NextAvailableId.IsUnknown() && !data.NextAvailableId.IsNull() {
+			resp.Diagnostics.AddError("Next-available allocation failed",
+				nextAvailableCreateError("subnet", data.NextAvailableId.ValueString(), data.Cidr.ValueInt64(), err))
+			return
+		}
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create Subnet, got error: %s", err))
 		return
 	}
