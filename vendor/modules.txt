@@ -38,7 +38,7 @@ github.com/ProtonMail/go-crypto/openpgp/packet
 github.com/ProtonMail/go-crypto/openpgp/s2k
 github.com/ProtonMail/go-crypto/openpgp/x25519
 github.com/ProtonMail/go-crypto/openpgp/x448
-# github.com/agext/levenshtein v1.2.2
+# github.com/agext/levenshtein v1.2.3
 ## explicit
 github.com/agext/levenshtein
 # github.com/apparentlymart/go-textseg/v15 v15.0.0
@@ -292,8 +292,8 @@ github.com/hashicorp/terraform-plugin-sdk/v2/internal/tfdiags
 github.com/hashicorp/terraform-plugin-sdk/v2/meta
 github.com/hashicorp/terraform-plugin-sdk/v2/plugin
 github.com/hashicorp/terraform-plugin-sdk/v2/terraform
-# github.com/hashicorp/terraform-plugin-testing v1.14.0
-## explicit; go 1.24.0
+# github.com/hashicorp/terraform-plugin-testing v1.16.0
+## explicit; go 1.25.8
 github.com/hashicorp/terraform-plugin-testing/compare
 github.com/hashicorp/terraform-plugin-testing/config
 github.com/hashicorp/terraform-plugin-testing/helper/resource
@@ -303,6 +303,13 @@ github.com/hashicorp/terraform-plugin-testing/internal/configs/configschema
 github.com/hashicorp/terraform-plugin-testing/internal/configs/hcl2shim
 github.com/hashicorp/terraform-plugin-testing/internal/logging
 github.com/hashicorp/terraform-plugin-testing/internal/plugintest
+github.com/hashicorp/terraform-plugin-testing/internal/testing/testprovider
+github.com/hashicorp/terraform-plugin-testing/internal/testing/testsdk/datasource
+github.com/hashicorp/terraform-plugin-testing/internal/testing/testsdk/list
+github.com/hashicorp/terraform-plugin-testing/internal/testing/testsdk/provider
+github.com/hashicorp/terraform-plugin-testing/internal/testing/testsdk/providerserver
+github.com/hashicorp/terraform-plugin-testing/internal/testing/testsdk/resource
+github.com/hashicorp/terraform-plugin-testing/internal/testing/testsdk/statestore
 github.com/hashicorp/terraform-plugin-testing/internal/teststep
 github.com/hashicorp/terraform-plugin-testing/internal/tfdiags
 github.com/hashicorp/terraform-plugin-testing/knownvalue
@@ -316,8 +323,8 @@ github.com/hashicorp/terraform-plugin-testing/tfversion
 # github.com/hashicorp/terraform-registry-address v0.4.0
 ## explicit; go 1.23.0
 github.com/hashicorp/terraform-registry-address
-# github.com/hashicorp/terraform-svchost v0.1.1
-## explicit; go 1.19
+# github.com/hashicorp/terraform-svchost v0.2.1
+## explicit; go 1.24.0
 github.com/hashicorp/terraform-svchost
 # github.com/hashicorp/yamux v0.1.2
 ## explicit; go 1.20
@@ -374,8 +381,8 @@ github.com/mitchellh/mapstructure
 # github.com/mitchellh/reflectwalk v1.0.2
 ## explicit
 github.com/mitchellh/reflectwalk
-# github.com/oklog/run v1.1.0
-## explicit; go 1.13
+# github.com/oklog/run v1.2.0
+## explicit; go 1.20
 github.com/oklog/run
 # github.com/posener/complete v1.2.3
 ## explicit; go 1.13
