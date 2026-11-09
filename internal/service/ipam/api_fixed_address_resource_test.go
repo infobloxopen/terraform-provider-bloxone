@@ -978,3 +978,48 @@ resource "bloxone_dhcp_fixed_address" "test_child" {
 `, testAccDhcpOptionList(testAccParentOptionValue), name, testAccDhcpOptionsAttribute(childOptionValue))
 	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip4"), config}, "")
 }
+
+func TestAccFixedAddressResource_DhcpOptionsParentChangesInSameApply(t *testing.T) {
+	var resourceName = "bloxone_dhcp_fixed_address.test_child"
+	var v ipam.FixedAddress
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+	optionName := acctest.RandomNameWithPrefix("opt")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: testAccDhcpOptionsParentChangesInSameApplySteps(
+			resourceName,
+			testAccCheckFixedAddressExists(context.Background(), resourceName, &v),
+			func(parentOptionValue, childComment, childOptionValue string) string {
+				return testAccFixedAddressDhcpOptionsParentChangesInSameApply(spaceName, optionName, parentOptionValue, childComment, childOptionValue)
+			},
+		),
+	})
+}
+
+// testAccFixedAddressDhcpOptionsParentChangesInSameApply returns a parent subnet that sets the test
+// option to parentOptionValue and a fixed address in it with childComment that sets the other test
+// option to childOptionValue (no option when it is empty).
+func testAccFixedAddressDhcpOptionsParentChangesInSameApply(spaceName, name, parentOptionValue, childComment, childOptionValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_subnet" "test_parent" {
+    address = "10.0.0.0"
+    cidr = 24
+    space = bloxone_ipam_ip_space.test.id
+    dhcp_options = %s
+}
+
+resource "bloxone_dhcp_fixed_address" "test_child" {
+    ip_space = bloxone_ipam_ip_space.test.id
+    address = "10.0.0.10"
+    match_type = "mac"
+    match_value = "aa:aa:aa:aa:aa:aa"
+    name = %q
+    comment = %q
+    %s
+    depends_on = [bloxone_ipam_subnet.test_parent]
+}
+`, testAccDhcpOptionList(parentOptionValue), name, childComment, testAccOtherDhcpOptionsAttribute(childOptionValue))
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), testAccBaseWithOptionSpaceAndCodes("og-"+name, "os-"+name), config}, "")
+}
