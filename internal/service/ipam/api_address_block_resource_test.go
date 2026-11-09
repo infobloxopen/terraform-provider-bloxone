@@ -1652,3 +1652,47 @@ resource "bloxone_ipam_address_block" "test_child" {
 `, testAccDhcpOptionList(testAccParentOptionValue), name, testAccDhcpOptionsAttribute(childOptionValue))
 	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), testAccBaseWithOptionSpaceAndCode("og-"+name, "os-"+name, "ip4"), config}, "")
 }
+
+func TestAccAddressBlockResource_DhcpOptionsParentChangesInSameApply(t *testing.T) {
+	var resourceName = "bloxone_ipam_address_block.test_child"
+	var v ipam.AddressBlock
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+	optionName := acctest.RandomNameWithPrefix("opt")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: testAccDhcpOptionsParentChangesInSameApplySteps(
+			resourceName,
+			testAccCheckAddressBlockExists(context.Background(), resourceName, &v),
+			func(parentOptionValue, childComment, childOptionValue string) string {
+				return testAccAddressBlockDhcpOptionsParentChangesInSameApply(spaceName, optionName, parentOptionValue, childComment, childOptionValue)
+			},
+		),
+	})
+}
+
+// testAccAddressBlockDhcpOptionsParentChangesInSameApply returns a parent address block that sets the
+// test option to parentOptionValue and a child address block with childComment that sets the other
+// test option to childOptionValue (no option when it is empty).
+func testAccAddressBlockDhcpOptionsParentChangesInSameApply(spaceName, name, parentOptionValue, childComment, childOptionValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test_parent" {
+    address = "10.0.0.0"
+    cidr = 16
+    space = bloxone_ipam_ip_space.test.id
+    dhcp_options = %s
+}
+
+resource "bloxone_ipam_address_block" "test_child" {
+    address = "10.0.1.0"
+    cidr = 24
+    space = bloxone_ipam_ip_space.test.id
+    name = %q
+    comment = %q
+    %s
+    depends_on = [bloxone_ipam_address_block.test_parent]
+}
+`, testAccDhcpOptionList(parentOptionValue), name, childComment, testAccOtherDhcpOptionsAttribute(childOptionValue))
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), testAccBaseWithOptionSpaceAndCodes("og-"+name, "os-"+name), config}, "")
+}
