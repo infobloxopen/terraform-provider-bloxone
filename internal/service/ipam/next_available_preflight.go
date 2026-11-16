@@ -124,6 +124,16 @@ func (p *preflightPool) next(preview func(count int32) ([]string, *http.Response
 	}
 }
 
+// cachedParentLabel returns the parent label already read in this Terraform run, or the identifier if none was read.
+func cachedParentLabel(scope any, parentId string) string {
+	preflightState.Lock()
+	defer preflightState.Unlock()
+	if label, ok := preflightState.parents[fmt.Sprintf("%p|%s", scope, parentId)]; ok {
+		return label
+	}
+	return parentId
+}
+
 // parentLabel returns the parent as "10.0.0.0/16 (ipam/address_block/...)", reading it once per plan.
 // If the parent cannot be read, only its resource identifier is returned.
 func parentLabel(scope any, parentId string, readParent func() (string, error)) string {
@@ -190,10 +200,14 @@ func checkNextAvailable(scope any, kind, parentId string, cidr int64, preview fu
 			fmt.Sprintf("Status: %s\nAddress block %q used in next_available_id does not exist.\nAPI: %s",
 				availabilityUnavailable, parentId, msg))
 	case status == http.StatusBadRequest && strings.Contains(msg, "must be greater than parent"):
+		parent := parentLabel(scope, parentId, readParent)
+		hint := "Check that cidr is greater than the parent's prefix length."
+		if strings.Contains(strings.SplitN(parent, " ", 2)[0], ":") {
+			hint = "Next-available allocation is supported only for IPv4 address blocks."
+		}
 		diags.AddAttributeError(path.Root("cidr"), "Requested CIDR does not fit the parent address block",
-			fmt.Sprintf("Status: %s\nA /%d %s cannot be allocated from parent %s.\nAPI: %s\n\n"+
-				"Check that cidr is greater than the parent's prefix length.",
-				availabilityUnavailable, cidr, kind, parentLabel(scope, parentId, readParent), msg))
+			fmt.Sprintf("Status: %s\nA /%d %s cannot be allocated from parent %s.\nAPI: %s\n\n%s",
+				availabilityUnavailable, cidr, kind, parent, msg, hint))
 	default:
 		diags.AddWarning("Next-available preflight check skipped",
 			fmt.Sprintf("Could not check whether a /%d %s is available in parent %s: %s",
@@ -201,10 +215,28 @@ func checkNextAvailable(scope any, kind, parentId string, cidr int64, preview fu
 	}
 }
 
-// nextAvailableCreateError describes a failed next-available allocation at apply time.
-func nextAvailableCreateError(kind, parentId string, cidr int64, err error) string {
-	return fmt.Sprintf("Unable to allocate the next available /%d %s from address block %q: %s\n\n"+
-		"Nothing was created. The space may have been allocated by another process after the plan was made. "+
-		"Run terraform plan again to check current availability, then apply.",
-		cidr, kind, parentId, apiErrorMessage(err))
+// addNextAvailableCreateError reports a failed next-available create at apply time and returns true when the
+// failure is an allocation problem. Any other error is left to the caller to report as a normal create error.
+//   - No space: the parent filled up after the plan was made; a new plan shows current availability.
+//   - Overlap: another process was allocated the same block at the same moment; space may still be left,
+//     so running apply again allocates the next free block.
+func addNextAvailableCreateError(scope any, kind, parentId string, cidr int64, err error, diags *diag.Diagnostics) bool {
+	msg := apiErrorMessage(err)
+	parent := cachedParentLabel(scope, parentId)
+	switch {
+	case strings.Contains(msg, "available networks"):
+		diags.AddError("Next-available allocation failed",
+			fmt.Sprintf("No /%d %s is left in parent %s.\nAPI: %s\n\n"+
+				"Nothing was created. The space was allocated after the plan was made. "+
+				"Run terraform plan again to check current availability.",
+				cidr, kind, parent, msg))
+	case strings.Contains(msg, "cannot be inserted because it would"):
+		diags.AddError("Next-available allocation conflict",
+			fmt.Sprintf("Another process was allocated the same /%d %s in parent %s at the same time.\nAPI: %s\n\n"+
+				"Nothing was created and the parent may still have space. Run terraform apply again to allocate the next free block.",
+				cidr, kind, parent, msg))
+	default:
+		return false
+	}
+	return true
 }

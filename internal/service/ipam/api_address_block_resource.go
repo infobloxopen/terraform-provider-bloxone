@@ -125,9 +125,8 @@ func (r *AddressBlockResource) Create(ctx context.Context, req resource.CreateRe
 		Inherit(inheritanceType).
 		Execute()
 	if err != nil {
-		if !data.NextAvailableId.IsUnknown() && !data.NextAvailableId.IsNull() {
-			resp.Diagnostics.AddError("Next-available allocation failed",
-				nextAvailableCreateError("address block", data.NextAvailableId.ValueString(), data.Cidr.ValueInt64(), err))
+		if !data.NextAvailableId.IsUnknown() && !data.NextAvailableId.IsNull() &&
+			addNextAvailableCreateError(r.client, "address block", data.NextAvailableId.ValueString(), data.Cidr.ValueInt64(), err, &resp.Diagnostics) {
 			return
 		}
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create AddressBlock, got error: %s", err))

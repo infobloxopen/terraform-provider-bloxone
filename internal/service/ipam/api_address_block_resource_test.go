@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 	"github.com/infobloxopen/universal-ddi-go-client/ipam"
@@ -1164,6 +1165,65 @@ func TestAccAddressBlockResource_NextAvailableIdPreflightStalePreview(t *testing
 	})
 }
 
+// TestAccAddressBlockResource_NextAvailableIdPreflightLifecycle covers a next-available object over its life with preflight_check:
+// creation together with its parent, flag toggles, import, and a replace onto a parent that does not exist.
+func TestAccAddressBlockResource_NextAvailableIdPreflightLifecycle(t *testing.T) {
+	var resourceName = "bloxone_ipam_address_block.test_lifecycle"
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+	parentId := "bloxone_ipam_address_block.parent.id"
+	missingId := `"ipam/address_block/00000000-0000-0000-0000-000000000000"`
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Parent created in the same apply: its ID is unknown at plan time, so the check is skipped and the create succeeds
+			{
+				Config: testAccAddressBlockPreflightLifecycle(spaceName, parentId, true),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceName, "address"),
+					resource.TestCheckResourceAttr(resourceName, "preflight_check", "true"),
+				),
+			},
+			// Turning preflight_check off is an in-place update
+			{
+				Config: testAccAddressBlockPreflightLifecycle(spaceName, parentId, false),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{plancheck.ExpectResourceAction(resourceName, plancheck.ResourceActionUpdate)},
+				},
+				Check: resource.TestCheckResourceAttr(resourceName, "preflight_check", "false"),
+			},
+			// Import defaults preflight_check to false, matching the configuration
+			{
+				ResourceName:            resourceName,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"next_available_id", "updated_at"},
+			},
+			// Turning preflight_check back on is an in-place update
+			{
+				Config: testAccAddressBlockPreflightLifecycle(spaceName, parentId, true),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{plancheck.ExpectResourceAction(resourceName, plancheck.ResourceActionUpdate)},
+				},
+				Check: resource.TestCheckResourceAttr(resourceName, "preflight_check", "true"),
+			},
+			// Changing next_available_id forces a replace, and the check runs for the new object
+			{
+				Config:      testAccAddressBlockPreflightLifecycle(spaceName, missingId, true),
+				PlanOnly:    true,
+				ExpectError: regexp.MustCompile(`Parent address block not found`),
+			},
+			// Restore the valid configuration; the failing check above would otherwise block the destroy
+			{
+				Config:   testAccAddressBlockPreflightLifecycle(spaceName, parentId, true),
+				PlanOnly: true,
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func testAccCheckAddressBlockExists(ctx context.Context, resourceName string, v *ipam.AddressBlock) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
@@ -1758,6 +1818,24 @@ resource "bloxone_ipam_address_block" %q {
     %s
 }
 `, name, count, cidr, extra)
+}
+
+func testAccAddressBlockPreflightLifecycle(spaceName, nextAvailableId string, preflightCheck bool) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "parent" {
+    address = "12.0.0.0"
+    cidr = 24
+    space = bloxone_ipam_ip_space.test.id
+}
+
+resource "bloxone_ipam_address_block" "test_lifecycle" {
+    next_available_id = %s
+    cidr = 26
+    space = bloxone_ipam_ip_space.test.id
+    preflight_check = %t
+}
+`, nextAvailableId, preflightCheck)
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
 func TestAccAddressBlockResource_DhcpOptionsReorder(t *testing.T) {
