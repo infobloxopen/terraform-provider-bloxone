@@ -5,7 +5,7 @@ subcategory: "IPAM/DHCP"
 description: |-
   Manages an Address Block.
   The Address Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
-  When next_available_id is set, terraform plan checks that an address block of the requested cidr is currently available in that address block. The plan fails if the address block does not exist, the cidr does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved; the address block is allocated at apply and may differ.
+  When next_available_id is set and preflight_check is true, terraform plan checks that an address block of the requested cidr is currently available in that address block. The plan fails if the address block does not exist, the cidr does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved; the address block is allocated at apply and may differ.
 ---
 
 # bloxone_ipam_address_block (Resource)
@@ -14,7 +14,7 @@ Manages an Address Block.
 
 The Address Block object allows a uniform representation of the address space segmentation, supporting functions such as administrative grouping, routing aggregation, delegation etc.
 
-When `next_available_id` is set, `terraform plan` checks that an address block of the requested `cidr` is currently available in that address block. The plan fails if the address block does not exist, the `cidr` does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved; the address block is allocated at apply and may differ.
+When `next_available_id` is set and `preflight_check` is `true`, `terraform plan` checks that an address block of the requested `cidr` is currently available in that address block. The plan fails if the address block does not exist, the `cidr` does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved; the address block is allocated at apply and may differ.
 
 ## Example Usage
 
@@ -97,7 +97,7 @@ resource "bloxone_ipam_address_block" "example_tags" {
 }
 
 # Next available address block
-# At plan time the provider checks that a /26 is free in next_available_id and
+# With preflight_check = true, plan checks that a /26 is free in next_available_id and
 # shows the candidate as a warning (a preview only, not reserved). Plan fails if:
 #  - the parent address block does not exist
 #  - cidr does not fit the parent (for example /16 from this /24)
@@ -106,6 +106,7 @@ resource "bloxone_ipam_address_block" "example_na_ab" {
   next_available_id = bloxone_ipam_address_block.example.id
   cidr              = 26
   space             = bloxone_ipam_ip_space.example.id
+  preflight_check   = true
 
   # Other optional fields
   name    = "example_address_block_tags"
@@ -197,6 +198,7 @@ resource "bloxone_ipam_address_block" "example_na_ab" {
 - `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources))
 - `name` (String) The name of the address block. May contain 1 to 256 characters. Can include UTF-8.
 - `next_available_id` (String) The resource identifier for the address block where the next available address block should be generated.
+- `preflight_check` (Boolean) Set to `true` to check at plan time that a address block of the requested `cidr` is currently available in `next_available_id`. The plan fails if the address block does not exist, the `cidr` does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved. Applies only when the address block is created with `next_available_id`. Defaults to `false`.
 - `tags` (Map of String) The tags for the address block in JSON format.
 
 ### Read-Only

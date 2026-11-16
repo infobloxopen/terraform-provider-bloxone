@@ -5,7 +5,7 @@ subcategory: "IPAM/DHCP"
 description: |-
   Manages a Subnet.
   The Subnet object represents a set of addresses from which addresses are assigned to network equipment interfaces.
-  When next_available_id is set, terraform plan checks that a subnet of the requested cidr is currently available in that address block. The plan fails if the address block does not exist, the cidr does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved; the subnet is allocated at apply and may differ.
+  When next_available_id is set and preflight_check is true, terraform plan checks that a subnet of the requested cidr is currently available in that address block. The plan fails if the address block does not exist, the cidr does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved; the subnet is allocated at apply and may differ.
 ---
 
 # bloxone_ipam_subnet (Resource)
@@ -14,7 +14,7 @@ Manages a Subnet.
 
 The Subnet object represents a set of addresses from which addresses are assigned to network equipment interfaces.
 
-When `next_available_id` is set, `terraform plan` checks that a subnet of the requested `cidr` is currently available in that address block. The plan fails if the address block does not exist, the `cidr` does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved; the subnet is allocated at apply and may differ.
+When `next_available_id` is set and `preflight_check` is `true`, `terraform plan` checks that a subnet of the requested `cidr` is currently available in that address block. The plan fails if the address block does not exist, the `cidr` does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved; the subnet is allocated at apply and may differ.
 
 ## Example Usage
 
@@ -64,7 +64,7 @@ resource "bloxone_ipam_subnet" "example" {
 }
 
 # Next available subnet
-# At plan time the provider checks that a /24 is free in next_available_id and
+# With preflight_check = true, plan checks that a /24 is free in next_available_id and
 # shows the candidate as a warning (a preview only, not reserved). Plan fails if:
 #  - the parent address block does not exist
 #  - cidr does not fit the parent (for example /8 from this /16)
@@ -73,6 +73,7 @@ resource "bloxone_ipam_subnet" "example_na_s" {
   next_available_id = bloxone_ipam_address_block.example.id
   cidr              = 24
   space             = bloxone_ipam_ip_space.example.id
+  preflight_check   = true
 
   # Other optional fields
   name    = "example_subnet"
@@ -133,6 +134,7 @@ resource "bloxone_ipam_subnet" "example_na_s" {
 - `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--inheritance_sources))
 - `name` (String) The name of the subnet. May contain 1 to 256 characters. Can include UTF-8.
 - `next_available_id` (String) The resource identifier for the address block where the next available subnet should be generated
+- `preflight_check` (Boolean) Set to `true` to check at plan time that a subnet of the requested `cidr` is currently available in `next_available_id`. The plan fails if the address block does not exist, the `cidr` does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved. Applies only when the subnet is created with `next_available_id`. Defaults to `false`.
 - `rebind_time` (Number) The lease rebind time (T2) in seconds.
 - `renew_time` (Number) The lease renew time (T1) in seconds.
 - `tags` (Map of String) The tags for the subnet in JSON format.

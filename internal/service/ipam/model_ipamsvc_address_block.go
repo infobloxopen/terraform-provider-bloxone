@@ -73,6 +73,7 @@ type IpamsvcAddressBlockModel struct {
 	Utilization                types.Object                     `tfsdk:"utilization"`
 	UtilizationV6              types.Object                     `tfsdk:"utilization_v6"`
 	NextAvailableId            types.String                     `tfsdk:"next_available_id"`
+	PreflightCheck             types.Bool                       `tfsdk:"preflight_check"`
 }
 
 var IpamsvcAddressBlockAttrTypes = map[string]attr.Type{
@@ -121,6 +122,7 @@ var IpamsvcAddressBlockAttrTypes = map[string]attr.Type{
 	"utilization":                   types.ObjectType{AttrTypes: IpamsvcUtilizationAttrTypes},
 	"utilization_v6":                types.ObjectType{AttrTypes: IpamsvcUtilizationV6AttrTypes},
 	"next_available_id":             types.StringType,
+	"preflight_check":               types.BoolType,
 }
 
 var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
@@ -430,6 +432,12 @@ var IpamsvcAddressBlockResourceSchemaAttributes = map[string]schema.Attribute{
 			stringplanmodifier.RequiresReplaceIfConfigured(),
 			stringplanmodifier.UseStateForUnknown(),
 		},
+	},
+	"preflight_check": schema.BoolAttribute{
+		Optional:            true,
+		Computed:            true,
+		Default:             booldefault.StaticBool(false),
+		MarkdownDescription: "Set to `true` to check at plan time that a address block of the requested `cidr` is currently available in `next_available_id`. The plan fails if the address block does not exist, the `cidr` does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved. Applies only when the address block is created with `next_available_id`. Defaults to `false`.",
 	},
 }
 
