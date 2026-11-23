@@ -1865,3 +1865,127 @@ func testAccDhcpOptionsAddRemoveStepsFor(attribute, resourceName string, exists 
 		},
 	}
 }
+
+func TestAccSubnetResource_DhcpOptionsParentChangesInSameApply(t *testing.T) {
+	var resourceName = "bloxone_ipam_subnet.test_child"
+	var v ipam.Subnet
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+	optionName := acctest.RandomNameWithPrefix("opt")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: testAccDhcpOptionsParentChangesInSameApplySteps(
+			resourceName,
+			testAccCheckSubnetExists(context.Background(), resourceName, &v),
+			func(parentOptionValue, childComment, childOptionValue string) string {
+				return testAccSubnetDhcpOptionsParentChangesInSameApply(spaceName, optionName, parentOptionValue, childComment, childOptionValue)
+			},
+		),
+	})
+}
+
+// testAccSubnetDhcpOptionsParentChangesInSameApply returns a parent address block that sets the test
+// option to parentOptionValue and a child subnet with childComment that sets the other test option to
+// childOptionValue (no option when it is empty).
+func testAccSubnetDhcpOptionsParentChangesInSameApply(spaceName, name, parentOptionValue, childComment, childOptionValue string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test_parent" {
+    address = "10.0.0.0"
+    cidr = 16
+    space = bloxone_ipam_ip_space.test.id
+    dhcp_options = %s
+}
+
+resource "bloxone_ipam_subnet" "test_child" {
+    address = "10.0.1.0"
+    cidr = 24
+    space = bloxone_ipam_ip_space.test.id
+    name = %q
+    comment = %q
+    %s
+    depends_on = [bloxone_ipam_address_block.test_parent]
+}
+`, testAccDhcpOptionList(parentOptionValue), name, childComment, testAccOtherDhcpOptionsAttribute(childOptionValue))
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), testAccBaseWithOptionSpaceAndCodes("og-"+name, "os-"+name), config}, "")
+}
+
+// testAccBaseWithOptionSpaceAndCodes is testAccBaseWithOptionSpaceAndCode plus a second ip4 option code,
+// so a child object can set its own option while it inherits the first one from its parent.
+func testAccBaseWithOptionSpaceAndCodes(optionGroup, optionSpace string) string {
+	config := `
+resource "bloxone_dhcp_option_code" "test_other" {
+    code = "235"
+    name = "test_other_dhcp_option_code"
+    option_space = bloxone_dhcp_option_space.test.id
+    type = "boolean"
+}
+`
+	return strings.Join([]string{testAccBaseWithOptionSpaceAndCode(optionGroup, optionSpace, "ip4"), config}, "")
+}
+
+// testAccOtherDhcpOptionsAttribute returns a dhcp_options attribute with the second test option, or
+// nothing when value is empty so the attribute is omitted from the config.
+func testAccOtherDhcpOptionsAttribute(value string) string {
+	if value == "" {
+		return ""
+	}
+	return fmt.Sprintf(`dhcp_options = [{
+       type = "option"
+       option_code = bloxone_dhcp_option_code.test_other.id
+       option_value = %q
+    }]`, value)
+}
+
+// testAccDhcpOptionsParentChangesInSameApplySteps returns the steps shared by the objects whose parent
+// changes an inherited option in the same apply as an update to the object itself (issue #299).
+// config receives the parent's option value, the child's comment and the value of the child's own
+// (different) option (empty = no dhcp_options), and must return the full config.
+func testAccDhcpOptionsParentChangesInSameApplySteps(resourceName string, exists resource.TestCheckFunc, config func(parentOptionValue, childComment, childOptionValue string) string) []resource.TestStep {
+	inherits := func(value string) resource.TestCheckFunc {
+		return resource.TestCheckTypeSetElemNestedAttrs(resourceName, "inheritance_sources.dhcp_options.value.*", map[string]string{
+			"action":                    "inherit",
+			"value.option.option_value": value,
+		})
+	}
+	return []resource.TestStep{
+		// Parent has the option, child inherits it
+		{
+			Config: config("true", "step 1", ""),
+			Check:  resource.ComposeTestCheckFunc(exists, inherits("true")),
+		},
+		// Parent changes the option while only the child's comment changes
+		{
+			Config: config("false", "step 2", ""),
+			Check: resource.ComposeTestCheckFunc(
+				exists,
+				resource.TestCheckResourceAttr(resourceName, "comment", "step 2"),
+				inherits("false"),
+			),
+		},
+		// Parent changes the option while the child adds its own, different option
+		{
+			Config: config("true", "step 2", "true"),
+			Check: resource.ComposeTestCheckFunc(
+				exists,
+				resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "1"),
+				resource.TestCheckResourceAttr(resourceName, "dhcp_options.0.option_value", "true"),
+				inherits("true"),
+			),
+		},
+		// Parent changes the option while the child removes its own option
+		{
+			Config: config("false", "step 2", ""),
+			Check: resource.ComposeTestCheckFunc(
+				exists,
+				resource.TestCheckResourceAttr(resourceName, "dhcp_options.#", "0"),
+				inherits("false"),
+			),
+		},
+		// ...and leave no residual diff
+		{
+			Config:   config("false", "step 2", ""),
+			PlanOnly: true,
+		},
+	}
+}
