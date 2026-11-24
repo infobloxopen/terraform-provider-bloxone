@@ -76,10 +76,16 @@ resource "bloxone_ipam_address_block" "example_tags" {
 }
 
 # Next available address block
+# With preflight_check = true, plan checks that a /26 is free in next_available_id and
+# shows the candidate as a warning (a preview only, not reserved). Plan fails if:
+#  - the parent address block does not exist
+#  - cidr does not fit the parent (for example /16 from this /24)
+#  - no /26 is left in the parent
 resource "bloxone_ipam_address_block" "example_na_ab" {
   next_available_id = bloxone_ipam_address_block.example.id
   cidr              = 26
   space             = bloxone_ipam_ip_space.example.id
+  preflight_check   = true
 
   # Other optional fields
   name    = "example_address_block_tags"

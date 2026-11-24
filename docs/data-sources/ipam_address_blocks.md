@@ -98,6 +98,7 @@ Optional:
 - `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources))
 - `name` (String) The name of the address block. May contain 1 to 256 characters. Can include UTF-8.
 - `next_available_id` (String) The resource identifier for the address block where the next available address block should be generated.
+- `preflight_check` (Boolean) Set to `true` to check at plan time that a address block of the requested `cidr` is currently available in `next_available_id`. The plan fails if the address block does not exist, the `cidr` does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved. Applies only when the address block is created with `next_available_id`. Defaults to `false`.
 - `tags` (Map of String) The tags for the address block in JSON format.
 
 Read-Only:

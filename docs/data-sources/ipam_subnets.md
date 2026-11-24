@@ -97,6 +97,7 @@ Optional:
 - `inheritance_sources` (Attributes) (see [below for nested schema](#nestedatt--results--inheritance_sources))
 - `name` (String) The name of the subnet. May contain 1 to 256 characters. Can include UTF-8.
 - `next_available_id` (String) The resource identifier for the address block where the next available subnet should be generated
+- `preflight_check` (Boolean) Set to `true` to check at plan time that a subnet of the requested `cidr` is currently available in `next_available_id`. The plan fails if the address block does not exist, the `cidr` does not fit, or no space is left. The candidate shown in the plan is a preview only and is not reserved. Applies only when the subnet is created with `next_available_id`. Defaults to `false`.
 - `rebind_time` (Number) The lease rebind time (T2) in seconds.
 - `renew_time` (Number) The lease renew time (T1) in seconds.
 - `tags` (Map of String) The tags for the subnet in JSON format.

@@ -5,10 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"regexp"
 	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/infobloxopen/terraform-provider-bloxone/internal/acctest"
 	"github.com/infobloxopen/universal-ddi-go-client/ipam"
@@ -1024,6 +1026,204 @@ func TestAccAddressBlockResource_NextAvailableId_Count(t *testing.T) {
 	})
 }
 
+func TestAccAddressBlockResource_NextAvailableIdPreflight(t *testing.T) {
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create the parent address block so its ID is known at plan time
+			{
+				Config: testAccAddressBlockNextAvailableIdPreflight(spaceName, "", 0, false, false),
+			},
+			// An unrelated create error is reported as is, not as a next-available allocation failure
+			{
+				Config:      testAccAddressBlockPreflightConfig(spaceName, 24, testAccAddressBlockPreflightResource("test_create_error", 1, 26, `header_option_server_address = "not-an-ip"`)),
+				ExpectError: regexp.MustCompile(`Unable to create AddressBlock`),
+			},
+			// Requested CIDR larger than the parent fails at plan
+			{
+				Config:      testAccAddressBlockNextAvailableIdPreflight(spaceName, "bloxone_ipam_address_block.parent.id", 16, false, true),
+				PlanOnly:    true,
+				ExpectError: regexp.MustCompile(`Requested CIDR does not fit`),
+			},
+			// Parent address block that does not exist fails at plan
+			{
+				Config:      testAccAddressBlockNextAvailableIdPreflight(spaceName, `"ipam/address_block/00000000-0000-0000-0000-000000000000"`, 26, false, true),
+				PlanOnly:    true,
+				ExpectError: regexp.MustCompile(`Parent address block not found`),
+			},
+			// Fill the parent address block
+			{
+				Config: testAccAddressBlockNextAvailableIdPreflight(spaceName, "", 0, true, false),
+			},
+			// No space left in the parent fails at plan
+			{
+				Config:      testAccAddressBlockNextAvailableIdPreflight(spaceName, "bloxone_ipam_address_block.parent.id", 26, true, true),
+				PlanOnly:    true,
+				ExpectError: regexp.MustCompile(`No next-available allocation found`),
+			},
+			// With preflight_check off the plan does not query availability, so it succeeds
+			{
+				Config:             testAccAddressBlockNextAvailableIdPreflight(spaceName, "bloxone_ipam_address_block.parent.id", 26, true, false),
+				PlanOnly:           true,
+				ExpectNonEmptyPlan: true,
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func TestAccAddressBlockResource_NextAvailableIdPreflightCount(t *testing.T) {
+	var resourceName = "bloxone_ipam_address_block.test_count"
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create the parent address block (room for four /26) so its ID is known at plan time
+			{
+				Config: testAccAddressBlockPreflightConfig(spaceName, 24, ""),
+			},
+			// Five /26 requested from room for four: partially available is a warning, so the plan succeeds
+			{
+				Config:             testAccAddressBlockPreflightConfig(spaceName, 24, testAccAddressBlockPreflightResource("test_count", 5, 26, "")),
+				PlanOnly:           true,
+				ExpectNonEmptyPlan: true,
+			},
+			// Four /26 fill the parent exactly: every instance is created with its own address
+			{
+				Config: testAccAddressBlockPreflightConfig(spaceName, 24, testAccAddressBlockPreflightResource("test_count", 4, 26, "")),
+				Check: func(s *terraform.State) error {
+					seen := map[string]bool{}
+					for i := 0; i < 4; i++ {
+						rs, ok := s.RootModule().Resources[fmt.Sprintf("%s.%d", resourceName, i)]
+						if !ok {
+							return fmt.Errorf("%s.%d not found in state", resourceName, i)
+						}
+						address := rs.Primary.Attributes["address"]
+						if seen[address] {
+							return fmt.Errorf("address %s allocated more than once", address)
+						}
+						seen[address] = true
+					}
+					return nil
+				},
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+// TestAccAddressBlockResource_NextAvailableIdPreflightStalePreview follows process A and B from issue #294: B previews a
+// candidate, A creates it first, and B is then allocated the next free block instead of its stale preview.
+func TestAccAddressBlockResource_NextAvailableIdPreflightStalePreview(t *testing.T) {
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+	processA := testAccAddressBlockPreflightResource("process_a", 1, 26, "")
+	processB := testAccAddressBlockPreflightResource("process_b", 1, 26, "")
+	processC := testAccAddressBlockPreflightResource("process_c", 1, 26, "")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create the parent address block (room for two /26) so its ID is known at plan time
+			{
+				Config: testAccAddressBlockPreflightConfig(spaceName, 25, ""),
+			},
+			// Process B plans and previews 12.0.0.0/26
+			{
+				Config:             testAccAddressBlockPreflightConfig(spaceName, 25, processB),
+				PlanOnly:           true,
+				ExpectNonEmptyPlan: true,
+			},
+			// Process A creates 12.0.0.0/26 first
+			{
+				Config: testAccAddressBlockPreflightConfig(spaceName, 25, processA),
+				Check:  resource.TestCheckResourceAttr("bloxone_ipam_address_block.process_a.0", "address", "12.0.0.0"),
+			},
+			// Process B applies and is allocated the next free block, not its stale preview
+			{
+				Config: testAccAddressBlockPreflightConfig(spaceName, 25, processA+processB),
+				Check:  resource.TestCheckResourceAttr("bloxone_ipam_address_block.process_b.0", "address", "12.0.0.64"),
+			},
+			// The parent is now full, so another allocation fails at plan with a clear error
+			{
+				Config:      testAccAddressBlockPreflightConfig(spaceName, 25, processA+processB+processC),
+				PlanOnly:    true,
+				ExpectError: regexp.MustCompile(`No next-available allocation found`),
+			},
+			// Drop the allocation that was never created; its preflight error would otherwise block the destroy
+			{
+				Config:   testAccAddressBlockPreflightConfig(spaceName, 25, processA+processB),
+				PlanOnly: true,
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+// TestAccAddressBlockResource_NextAvailableIdPreflightLifecycle covers a next-available object over its life with preflight_check:
+// creation together with its parent, flag toggles, import, and a replace onto a parent that does not exist.
+func TestAccAddressBlockResource_NextAvailableIdPreflightLifecycle(t *testing.T) {
+	var resourceName = "bloxone_ipam_address_block.test_lifecycle"
+	spaceName := acctest.RandomNameWithPrefix("ip-space")
+	parentId := "bloxone_ipam_address_block.parent.id"
+	missingId := `"ipam/address_block/00000000-0000-0000-0000-000000000000"`
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.PreCheck(t) },
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Parent created in the same apply: its ID is unknown at plan time, so the check is skipped and the create succeeds
+			{
+				Config: testAccAddressBlockPreflightLifecycle(spaceName, parentId, true),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceName, "address"),
+					resource.TestCheckResourceAttr(resourceName, "preflight_check", "true"),
+				),
+			},
+			// Turning preflight_check off is an in-place update
+			{
+				Config: testAccAddressBlockPreflightLifecycle(spaceName, parentId, false),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{plancheck.ExpectResourceAction(resourceName, plancheck.ResourceActionUpdate)},
+				},
+				Check: resource.TestCheckResourceAttr(resourceName, "preflight_check", "false"),
+			},
+			// Import defaults preflight_check to false, matching the configuration
+			{
+				ResourceName:            resourceName,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"next_available_id", "updated_at"},
+			},
+			// Turning preflight_check back on is an in-place update
+			{
+				Config: testAccAddressBlockPreflightLifecycle(spaceName, parentId, true),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{plancheck.ExpectResourceAction(resourceName, plancheck.ResourceActionUpdate)},
+				},
+				Check: resource.TestCheckResourceAttr(resourceName, "preflight_check", "true"),
+			},
+			// Changing next_available_id forces a replace, and the check runs for the new object
+			{
+				Config:      testAccAddressBlockPreflightLifecycle(spaceName, missingId, true),
+				PlanOnly:    true,
+				ExpectError: regexp.MustCompile(`Parent address block not found`),
+			},
+			// Restore the valid configuration; the failing check above would otherwise block the destroy
+			{
+				Config:   testAccAddressBlockPreflightLifecycle(spaceName, parentId, true),
+				PlanOnly: true,
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
 func testAccCheckAddressBlockExists(ctx context.Context, resourceName string, v *ipam.AddressBlock) resource.TestCheckFunc {
 	// Verify the resource exists in the cloud
 	return func(state *terraform.State) error {
@@ -1562,6 +1762,79 @@ resource "bloxone_ipam_address_block" "test_next_available_id_count" {
     space = bloxone_ipam_ip_space.test.id
 }
 `, count, addressBlockResourceName, cidr)
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
+}
+
+func testAccAddressBlockNextAvailableIdPreflight(spaceName, nextAvailableId string, cidr int, fillParent, preflightCheck bool) string {
+	config := `
+resource "bloxone_ipam_address_block" "parent" {
+    address = "12.0.0.0"
+    cidr = 24
+    space = bloxone_ipam_ip_space.test.id
+}
+`
+	if fillParent {
+		config += `
+resource "bloxone_ipam_address_block" "filler" {
+    count = 2
+    next_available_id = bloxone_ipam_address_block.parent.id
+    cidr = 25
+    space = bloxone_ipam_ip_space.test.id
+}
+`
+	}
+	if nextAvailableId != "" {
+		config += fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "test_preflight" {
+    next_available_id = %s
+    cidr = %d
+    space = bloxone_ipam_ip_space.test.id
+    preflight_check = %t
+}
+`, nextAvailableId, cidr, preflightCheck)
+	}
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
+}
+
+func testAccAddressBlockPreflightConfig(spaceName string, parentCidr int, resources string) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "parent" {
+    address = "12.0.0.0"
+    cidr = %d
+    space = bloxone_ipam_ip_space.test.id
+}
+%s`, parentCidr, resources)
+	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
+}
+
+func testAccAddressBlockPreflightResource(name string, count, cidr int, extra string) string {
+	return fmt.Sprintf(`
+resource "bloxone_ipam_address_block" %q {
+    count = %d
+    next_available_id = bloxone_ipam_address_block.parent.id
+    cidr = %d
+    space = bloxone_ipam_ip_space.test.id
+    preflight_check = true
+    %s
+}
+`, name, count, cidr, extra)
+}
+
+func testAccAddressBlockPreflightLifecycle(spaceName, nextAvailableId string, preflightCheck bool) string {
+	config := fmt.Sprintf(`
+resource "bloxone_ipam_address_block" "parent" {
+    address = "12.0.0.0"
+    cidr = 24
+    space = bloxone_ipam_ip_space.test.id
+}
+
+resource "bloxone_ipam_address_block" "test_lifecycle" {
+    next_available_id = %s
+    cidr = 26
+    space = bloxone_ipam_ip_space.test.id
+    preflight_check = %t
+}
+`, nextAvailableId, preflightCheck)
 	return strings.Join([]string{testAccBaseWithIPSpace(spaceName), config}, "")
 }
 
